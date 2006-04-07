@@ -1,0 +1,15 @@
+﻿<NUnitProject>
+  <Settings activeconfig="Debug" />
+  <Config name="Debug" binpathtype="Auto">
+    <assembly path="DemoFramework\bin\Debug\DemoFramework.dll" />
+    <assembly path="Direct3D\bin\Debug\Direct3D.dll" />
+    <assembly path="Phsyics\bin\Debug\Phsyics.dll" />
+    <assembly path="SceneGraph\bin\Debug\SceneGraph.dll" />
+  </Config>
+  <Config name="Release" binpathtype="Auto">
+    <assembly path="DemoFramework\bin\Release\DemoFramework.dll" />
+    <assembly path="Direct3D\bin\Release\Direct3D.dll" />
+    <assembly path="Phsyics\bin\Release\Phsyics.dll" />
+    <assembly path="SceneGraph\bin\Release\SceneGraph.dll" />
+  </Config>
+</NUnitProject>

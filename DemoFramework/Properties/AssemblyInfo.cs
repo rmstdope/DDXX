@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("DemoFramework")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Enea AB")]
+[assembly: AssemblyCompany("Dope")]
 [assembly: AssemblyProduct("DemoFramework")]
 [assembly: AssemblyCopyright("Copyright © Enea AB 2006")]
 [assembly: AssemblyTrademark("")]
