@@ -13,19 +13,32 @@ namespace Direct3D
     [TestFixture]
     public class D3DDriverTest
     {
+        D3DDriver driver = null;
+
+        [SetUp]
+        public void Setup()
+        {
+            driver = D3DDriver.GetInstance();
+        }
+
+        [TearDown]
+        public void Teardown()
+        {
+            driver.Reset();
+            driver = null;
+        }
+
         [Test]
         public void SingletonTest()
         {
-            D3DDriver driver1 = D3DDriver.GetInstance();
             D3DDriver driver2 = D3DDriver.GetInstance();
 
-            Assert.AreSame(driver1, driver2);
+            Assert.AreSame(driver, driver2);
         }
     
         [Test]
         public void InitTest()
         {
-            D3DDriver driver = D3DDriver.GetInstance();
             TestWindow window = new TestWindow();
             DeviceDescription desc = new DeviceDescription();
 
@@ -58,9 +71,32 @@ namespace Direct3D
                 Assert.Fail();
             }
 
+            desc.useStencil = false;
+            desc.useDepth = false;
             desc.windowed = true;
             driver.Init(window, desc);
             Assert.AreNotEqual(null, driver.GetDevice());
+
+            driver.Reset();
+
+            desc.windowed = true;
+            driver.Init(window, desc);
+            Assert.AreNotEqual(null, driver.GetDevice());
+
+        }
+
+        [Test]
+        public void TestInitDepthStencil()
+        {
+            TestWindow window = new TestWindow();
+            DeviceDescription desc = new DeviceDescription();
+            desc.deviceType = DeviceType.Reference;
+            desc.windowed = true;
+            desc.useStencil = false;
+            desc.useDepth = false;
+            driver.Init(window, desc);
+            //driver.GetDevice().GetPres
+            Assert.IsNull(driver.GetDevice().DepthStencilSurface);
         }
     }
 

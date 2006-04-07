@@ -20,9 +20,11 @@ namespace Direct3D
     {
         private static D3DDriver instance = null;
         private Device device = null;
+        private DisplayMode displayMode;
 
         private D3DDriver()
         {
+            GetDisplayMode();
         }
 
         public static D3DDriver GetInstance()
@@ -42,7 +44,20 @@ namespace Direct3D
             device = new Device(0, desc.deviceType, control, createFlags, present);
         }
 
-        private static CreateFlags GetCreateFlags(DeviceDescription desc)
+        private void GetDisplayMode()
+        {
+            AdapterInformation ai = Manager.Adapters[0];
+            displayMode = ai.CurrentDisplayMode;
+        }
+
+        public void Reset()
+        {
+            if (device != null)
+                device.Dispose();
+            device = null;
+        }
+
+        private CreateFlags GetCreateFlags(DeviceDescription desc)
         {
             CreateFlags createFlags;
             if (desc.deviceType == DeviceType.Reference)
@@ -59,8 +74,8 @@ namespace Direct3D
             }
             return createFlags;
         }
-
-        private static PresentParameters GetPresentParameters(DeviceDescription desc)
+    
+        private PresentParameters GetPresentParameters(DeviceDescription desc)
         {
             PresentParameters present = new PresentParameters();
             if (desc.windowed)
@@ -74,7 +89,21 @@ namespace Direct3D
                 present.SwapEffect = SwapEffect.Flip;
             }
 
+            SetDepthStencil(desc, present);
+
             return present;
+        }
+
+        private void SetDepthStencil(DeviceDescription desc, PresentParameters present)
+        {
+            if (desc.useDepth || desc.useStencil)
+            {
+
+            }
+            else
+            {
+                present.EnableAutoDepthStencil = false;
+            }
         }
 
 

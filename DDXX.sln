@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Physics", "Phsyics\Physics.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SceneGraph", "SceneGraph\SceneGraph.csproj", "{BF75F16E-5056-4484-BFE2-72F8733B8BF3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoFramework", "DemoFramework\DemoFramework.csproj", "{DBD3FD0B-0B65-4626-BABA-3C46457B1185}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{BF75F16E-5056-4484-BFE2-72F8733B8BF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF75F16E-5056-4484-BFE2-72F8733B8BF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF75F16E-5056-4484-BFE2-72F8733B8BF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBD3FD0B-0B65-4626-BABA-3C46457B1185}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBD3FD0B-0B65-4626-BABA-3C46457B1185}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBD3FD0B-0B65-4626-BABA-3C46457B1185}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBD3FD0B-0B65-4626-BABA-3C46457B1185}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
