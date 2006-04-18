@@ -22,7 +22,7 @@ namespace Direct3D
         private Device device = null;
         private DisplayMode displayMode;
 
-        private D3DDriver()
+        public D3DDriver()
         {
             GetDisplayMode();
         }

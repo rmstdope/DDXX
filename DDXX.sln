@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SceneGraph", "SceneGraph\Sc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoFramework", "DemoFramework\DemoFramework.csproj", "{DBD3FD0B-0B65-4626-BABA-3C46457B1185}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utility", "Utility\Utility.csproj", "{31D76405-2DD3-436A-BE65-963DE822511E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{DBD3FD0B-0B65-4626-BABA-3C46457B1185}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBD3FD0B-0B65-4626-BABA-3C46457B1185}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBD3FD0B-0B65-4626-BABA-3C46457B1185}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31D76405-2DD3-436A-BE65-963DE822511E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31D76405-2DD3-436A-BE65-963DE822511E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31D76405-2DD3-436A-BE65-963DE822511E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31D76405-2DD3-436A-BE65-963DE822511E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
