@@ -31,7 +31,7 @@ namespace DemoFramework
         {
         }
 
-        internal void Initialize(int width, int height, string name)
+        public void Initialize(int width, int height, string name)
         {
             ClientSize = new Size(width, height);
             if (AspectRatio == Aspect.ASPECT_INVALID)

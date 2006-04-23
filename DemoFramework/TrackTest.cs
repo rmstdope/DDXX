@@ -34,6 +34,8 @@ namespace DemoFramework
 
             track.Register(e1);
 
+            Assert.AreEqual(new IEffect[] { e1 }, track.Effects);
+
             Assert.AreEqual(new IEffect[] { }, track.GetEffects(-5.0f));
             Assert.AreEqual(new IEffect[] { e1 }, track.GetEffects(0.0f));
             Assert.AreEqual(new IEffect[] { e1 }, track.GetEffects(5.0f));
@@ -53,6 +55,8 @@ namespace DemoFramework
 
             track.Register(e1);
             track.Register(e2);
+
+            Assert.AreEqual(new IEffect[] { e1, e2 }, track.Effects);
 
             Assert.AreEqual(new IEffect[] { }, track.GetEffects(-5.0f));
             Assert.AreEqual(new IEffect[] { e1 }, track.GetEffects(0.0f));
@@ -84,6 +88,8 @@ namespace DemoFramework
             track.Register(e3);
             track.Register(e4);
             track.Register(e5);
+
+            Assert.AreEqual(new IEffect[] { e4, e2, e1, e5, e3 }, track.Effects);
 
             Assert.AreEqual(new IEffect[] { e4, e2, e1, e5, e3 }, track.GetEffects(5.0f));
         }

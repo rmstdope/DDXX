@@ -55,6 +55,10 @@
       <Project>{0DB06E67-9BEA-430C-97E0-4662DE6FE77F}</Project>
       <Name>Direct3D</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Utility\Utility.csproj">
+      <Project>{31D76405-2DD3-436A-BE65-963DE822511E}</Project>
+      <Name>Utility</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

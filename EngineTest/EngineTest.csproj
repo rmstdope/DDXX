@@ -41,7 +41,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EngineTest.cs">
-      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -65,6 +64,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DemoFramework\DemoFramework.csproj">
+      <Project>{DBD3FD0B-0B65-4626-BABA-3C46457B1185}</Project>
+      <Name>DemoFramework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Direct3D\Direct3D.csproj">
       <Project>{0DB06E67-9BEA-430C-97E0-4662DE6FE77F}</Project>
       <Name>Direct3D</Name>

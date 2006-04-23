@@ -29,6 +29,14 @@ namespace DemoFramework
             return 0;
         }
 
+        internal IEffect[] Effects
+        {
+            get
+            {
+                return effects.ToArray();
+            }
+        }
+
         internal void Register(IEffect effect)
         {
             effects.Add(effect);
