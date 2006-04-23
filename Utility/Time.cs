@@ -13,7 +13,7 @@ namespace Utility
         static long frequency = 0;
         static float deltaTime = 0;
         static bool paused = false;
-        static long pausedTime = 0;
+        //static long pausedTime = 0;
 
         [DllImport("Kernel32.dll")]
         private static extern bool QueryPerformanceCounter(out long lpPerformanceCount);
@@ -28,14 +28,7 @@ namespace Utility
                 if (!initialized)
                     throw new InvalidOperationException("Time.Initialize() must be called first.");
 
-                if (paused)
-                {
-                    return (float)pausedTime / (float)frequency;
-                }
-                else
-                {
-                    return (float)lastTime / (float)frequency;
-                }
+                return (float)lastTime / (float)frequency;
             }
         }
 
@@ -48,12 +41,27 @@ namespace Utility
                 long time;
                 if (paused)
                 {
-                    return (float)pausedTime / (float)frequency;
+                    return StepTime;
                 }
                 else
                 {
                     QueryPerformanceCounter(out time);
                     return (float)(time - startTime) / (float)frequency;
+                }
+            }
+            set
+            {
+                if (!initialized)
+                    throw new InvalidOperationException("Time.Initialize() must be called first.");
+                if (paused)
+                {
+                    lastTime = (long)(value * frequency);
+                }
+                else
+                {
+                    float delta = value - CurrentTime;
+                    startTime -= (long)(delta * frequency);
+                    lastTime = (long)(value * frequency);
                 }
             }
         }
@@ -68,15 +76,17 @@ namespace Utility
             }
         }
 
-        internal static void Initialize()
+        public static void Initialize()
         {
             initialized = true;
             QueryPerformanceFrequency(out frequency);
             QueryPerformanceCounter(out startTime);
             lastTime = 0;
+            deltaTime = 0.0f;
+            paused = false;
         }
 
-        internal static void Step()
+        public static void Step()
         {
             long time;
             if (paused)
@@ -91,15 +101,18 @@ namespace Utility
             }
         }
 
-        internal static void Pause()
+        public static void Pause()
         {
             paused = true;
-            pausedTime = lastTime;
         }
 
-        internal static void Resume()
+        public static void Resume()
         {
-            paused = false;
+            if (paused)
+            {
+                paused = false;
+                CurrentTime = (float)lastTime / (float)frequency;
+            }
         }
     }
 }

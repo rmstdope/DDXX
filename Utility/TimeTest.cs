@@ -1,6 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Runtime.InteropServices;
+using System.ComponentModel;
+using System.Threading;
 
 namespace Utility
 {
@@ -9,6 +10,12 @@ namespace Utility
     [TestFixture]
     public class TimeTest
     {
+        [DllImport("Kernel32.dll")]
+        private static extern bool QueryPerformanceCounter(out long lpPerformanceCount);
+
+        [DllImport("Kernel32.dll")]
+        private static extern bool QueryPerformanceFrequency(out long lpFrequency);
+
         [SetUp]
         public void Setup()
         {
@@ -70,6 +77,7 @@ namespace Utility
         [Test]
         public void TestPause()
         {
+            float epsilon = 0.000001f;
             Time.Initialize();
             Time.Step();
             Time.Pause();
@@ -86,6 +94,15 @@ namespace Utility
             Assert.AreNotEqual(0.0f, dt1);
             Assert.AreEqual(0.0f, dt2);
 
+            long frequency;
+            long startTime;
+            long currentTime;
+            QueryPerformanceFrequency(out frequency);
+            QueryPerformanceCounter(out startTime);
+            QueryPerformanceCounter(out currentTime);
+            while((float)(currentTime - startTime) / (float)frequency < 2.0f)
+                QueryPerformanceCounter(out currentTime);
+
             Time.Resume();
             float ct3 = Time.CurrentTime;
             float st3 = Time.StepTime;
@@ -95,13 +112,39 @@ namespace Utility
             float st4 = Time.StepTime;
             float dt4 = Time.DeltaTime;
 
+            // Check dependencies between values
             Assert.AreNotEqual(ct1, ct3);
             Assert.AreNotEqual(ct3, ct4);
-            Assert.AreEqual(st2, st3);
+            Assert.AreEqual(st2, st3, epsilon);
             Assert.AreNotEqual(st3, st4);
             Assert.AreEqual(0.0f, dt3);
             Assert.AreNotEqual(0.0f, dt4);
 
+            // Sanity check actual values
+            Assert.Less(dt4, 0.1f);
+            Assert.AreEqual(dt4, st4 - st3, epsilon);
+            Assert.Less(ct3 - ct1, 0.1f);
+
+        }
+
+        [Test]
+        public void TestSet()
+        {
+            Time.Initialize();
+            Time.Pause();
+            Time.CurrentTime = 2.3f;
+            Assert.AreEqual(2.3f, Time.StepTime);
+            Assert.AreEqual(2.3f, Time.CurrentTime);
+            Time.Resume();
+            Assert.AreEqual(2.3f, Time.StepTime);
+            Assert.Greater(Time.CurrentTime, 2.3f);
+            Assert.Less(Time.CurrentTime, 2.31f);
+            Time.Step();
+            Assert.AreNotEqual(2.3f, Time.StepTime);
+            Time.CurrentTime = 2.3f;
+            Assert.AreEqual(2.3f, Time.StepTime);
+            Assert.Greater(Time.CurrentTime, 2.3f);
+            Assert.Less(Time.CurrentTime, 2.31f);
         }
 
     }
