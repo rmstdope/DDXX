@@ -3,38 +3,33 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
+using Direct3D;
+using Utility;
 
 namespace DemoFramework
 {
     public class DemoWindow : Form
     {
-        public enum Aspect
-        {
-            ASPECT_INVALID,
-            ASPECT_4_3,
-            ASPECT_16_9
-        }
-
-        public Aspect AspectRatio
+        public AspectRatio AspectRatio
         {
             get
             {
-                if (ClientSize.Width * 3 / 4 == ClientSize.Height)
-                    return Aspect.ASPECT_4_3;
-                if (ClientSize.Width * 9 / 16 == ClientSize.Height)
-                    return Aspect.ASPECT_16_9;
-                return Aspect.ASPECT_INVALID;
+                return new AspectRatio(ClientSize.Width, ClientSize.Height); 
             }
         }
 
-        public DemoWindow()
+        public DemoWindow(IFactory deviceFactory)
         {
+            D3DDriver.SetFactory(deviceFactory);
         }
 
-        public void Initialize(int width, int height, string name)
+        public void Initialize(string name, DeviceDescription desc)
         {
-            ClientSize = new Size(width, height);
-            if (AspectRatio == Aspect.ASPECT_INVALID)
+            D3DDriver driver = D3DDriver.GetInstance();
+            driver.Init(this, desc);
+
+            ClientSize = new Size(desc.width, desc.height);
+            if (AspectRatio.Ratios.RATIO_INVALID == new AspectRatio(ClientSize.Width, ClientSize.Height).Ratio)
                 throw new ArgumentOutOfRangeException("Width, Height", "Window dimensions must have an spect ratio of 4:3 or 16:9");
 
             this.Text = name;

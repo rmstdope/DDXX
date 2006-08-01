@@ -78,12 +78,15 @@ namespace Utility
 
         public static void Initialize()
         {
-            initialized = true;
-            QueryPerformanceFrequency(out frequency);
-            QueryPerformanceCounter(out startTime);
-            lastTime = 0;
-            deltaTime = 0.0f;
-            paused = false;
+            if (!initialized)
+            {
+                initialized = true;
+                QueryPerformanceFrequency(out frequency);
+                QueryPerformanceCounter(out startTime);
+                lastTime = 0;
+                deltaTime = 0.0f;
+                paused = false;
+            }
         }
 
         public static void Step()

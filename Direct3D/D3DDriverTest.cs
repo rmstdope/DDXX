@@ -1,23 +1,69 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using Utility;
 
 namespace Direct3D
 {
     using NUnit.Framework;
+    using NMock;
+
+    public class IsEqualPP : NMock.Constraints.BaseConstraint
+    {
+        PresentParameters param1;
+
+        public IsEqualPP(PresentParameters param)
+        {
+            param1 = param;
+        }
+
+        public override bool Eval(object val)
+        {
+            PresentParameters param2 = (PresentParameters)val;
+            return
+                param1.AutoDepthStencilFormat == param2.AutoDepthStencilFormat &&
+                param1.BackBufferCount == param2.BackBufferCount &&
+                param1.BackBufferFormat == param2.BackBufferFormat &&
+                param1.BackBufferHeight == param2.BackBufferHeight &&
+                param1.BackBufferWidth == param2.BackBufferWidth &&
+                param1.DeviceWindow == param2.DeviceWindow &&
+                param1.DeviceWindowHandle == param2.DeviceWindowHandle &&
+                param1.EnableAutoDepthStencil == param2.EnableAutoDepthStencil &&
+                param1.ForceNoMultiThreadedFlag == param2.ForceNoMultiThreadedFlag &&
+                param1.FullScreenRefreshRateInHz == param2.FullScreenRefreshRateInHz &&
+                param1.MultiSample == param2.MultiSample &&
+                param1.MultiSampleQuality == param2.MultiSampleQuality &&
+                param1.PresentationInterval == param2.PresentationInterval &&
+                param1.PresentFlag == param2.PresentFlag &&
+                param1.SwapEffect == param2.SwapEffect &&
+                param1.Windowed == param2.Windowed;
+        }
+
+        public override string Message
+        {
+            get { return "<" + param1 + ">"; }
+        }
+    }
 
     [TestFixture]
     public class D3DDriverTest
     {
-        D3DDriver driver = null;
+        D3DDriver driver;
+        DynamicMock mockFactory;
+        DynamicMock mockDevice;
 
         [SetUp]
         public void Setup()
         {
+            mockFactory = new DynamicMock(typeof(IFactory));
+            mockDevice = new DynamicMock(typeof(IDevice));
+            //mockFactory.SetupResult("CreateDevice", (IDevice)mockDevice.MockInstance, typeof(int), typeof(DeviceType), typeof(Control), typeof(CreateFlags), typeof(PresentParameters));
+            D3DDriver.SetFactory((IFactory)mockFactory.MockInstance);
             driver = D3DDriver.GetInstance();
         }
 
@@ -35,97 +81,150 @@ namespace Direct3D
 
             Assert.AreSame(driver, driver2);
         }
-    
-        [Test]
-        public void InitTest()
-        {
-            TestWindow window = new TestWindow();
-            DeviceDescription desc = new DeviceDescription();
 
+        [Test]
+        public void AdapterTest()
+        {
+            DisplayMode[] modes = driver.GetDisplayModes(0, delegate(DisplayMode mode) { return true; });
+            Assert.AreEqual(2, driver.NumAdapters);
+        }
+
+        private DeviceDescription CreateDescription()
+        {
+            DeviceDescription desc = new DeviceDescription();
+            desc.width = 800;
+            desc.height = 600;
+            desc.colorFormat = Format.X8R8G8B8;
+            return desc;
+        }
+
+        [Test]
+        public void InitTestFail1()
+        {
+            DeviceDescription desc = CreateDescription();
+            PresentParameters param = new PresentParameters();
+
+            // Test undefined Software device type
             try
             {
                 desc.deviceType = DeviceType.Software;
                 desc.windowed = true;
-                driver.Init(window, desc);
+                param.Windowed = true;
+                param.SwapEffect = SwapEffect.Discard;
+                driver.Init(null, desc);
                 Assert.Fail();
             }
-            catch (Exception)
+            catch (DDXXException)
             {
                 Assert.AreEqual(null, driver.GetDevice());
             }
+            mockFactory.Verify();
+        }
 
+        [Test]
+        public void InitTestFail2()
+        {
+            DeviceDescription desc = CreateDescription();
+            PresentParameters param = new PresentParameters();
+
+            // Test faked DX exception
             try
             {
                 desc.deviceType = DeviceType.Reference;
-                desc.windowed = false;
-                driver.Init(window, desc);
+                desc.windowed = true;
+                param.Windowed = true;
+                param.SwapEffect = SwapEffect.Discard;
+                mockFactory.ExpectAndThrow("CreateDevice", new DirectXException(), 0, desc.deviceType, null, CreateFlags.SoftwareVertexProcessing, new IsEqualPP(param));
+                driver.Init(null, desc);
                 Assert.Fail();
             }
             catch (DirectXException)
             {
-                // This should trigger an DX exception
                 Assert.AreEqual(null, driver.GetDevice());
             }
-            catch (Exception)
-            {
-                Assert.Fail();
-            }
+            mockFactory.Verify();
 
-            desc.useStencil = false;
-            desc.useDepth = false;
-            desc.windowed = true;
-            driver.Init(window, desc);
-            Assert.AreNotEqual(null, driver.GetDevice());
+        }
 
+        [Test]
+        public void InitTestOK1()
+        {
+            DeviceDescription desc = CreateDescription();
+            PresentParameters param = new PresentParameters();
+
+            // Test a valid call with full screen reference
+            desc.deviceType = DeviceType.Reference;
+            desc.windowed = false;
+            param.Windowed = false;
+            param.SwapEffect = SwapEffect.Flip;
+            param.BackBufferCount = 2;
+            param.BackBufferWidth = desc.width;
+            param.BackBufferHeight = desc.height;
+            param.BackBufferFormat = desc.colorFormat;
+            mockFactory.ExpectAndReturn("CreateDevice", (IDevice)mockDevice.MockInstance, 0, desc.deviceType, null, CreateFlags.SoftwareVertexProcessing, new IsEqualPP(param));
+            driver.Init(null, desc);
+            Assert.AreEqual((IDevice)mockDevice.MockInstance, driver.GetDevice());
+            mockFactory.Verify();
+
+            mockDevice.Expect("Dispose");
             driver.Reset();
+            mockDevice.Verify();
+        }
 
+        [Test]
+        public void InitTestOK2()
+        {
+            DeviceDescription desc = CreateDescription();
+            PresentParameters param = new PresentParameters();
+
+            // Test a valid call with windowed HAL
+            desc.deviceType = DeviceType.Hardware;
             desc.windowed = true;
-            driver.Init(window, desc);
-            Assert.AreNotEqual(null, driver.GetDevice());
+            param.Windowed = true;
+            param.SwapEffect = SwapEffect.Discard;
+            mockFactory.ExpectAndReturn("CreateDevice", (IDevice)mockDevice.MockInstance, 0, desc.deviceType, null, CreateFlags.HardwareVertexProcessing, new IsEqualPP(param));
+            driver.Init(null, desc);
+            Assert.AreEqual((IDevice)mockDevice.MockInstance, driver.GetDevice());
+            mockFactory.Verify();
 
+            mockDevice.Expect("Dispose");
+            driver.Reset();
+            mockDevice.Verify();
         }
 
         [Test]
         public void TestInitDepthStencil()
         {
-            TestWindow window = new TestWindow();
-            DeviceDescription desc = new DeviceDescription();
-            desc.deviceType = DeviceType.Reference;
-            desc.windowed = true;
-            desc.useStencil = false;
-            desc.useDepth = false;
-            driver.Init(window, desc);
-            //driver.GetDevice().GetPres
-            //Assert.IsNull(driver.GetDevice().DepthStencilSurface);
-        }
-    }
+            DeviceDescription desc = CreateDescription();
+            PresentParameters param = new PresentParameters();
+            desc.deviceType = DeviceType.Hardware;
+            param.SwapEffect = SwapEffect.Flip;
+            param.BackBufferCount = 2;
+            param.BackBufferWidth = desc.width;
+            param.BackBufferHeight = desc.height;
+            param.BackBufferFormat = desc.colorFormat;
 
-    public class TestWindow : System.Windows.Forms.Form
-    {
-        private System.ComponentModel.Container components = null;
+            desc.depthFormat = DepthFormat.Unknown;
+            mockFactory.ExpectAndReturn("CreateDevice", (IDevice)mockDevice.MockInstance, 0, desc.deviceType, null, CreateFlags.HardwareVertexProcessing, new IsEqualPP(param));
+            driver.Init(null, desc);
+            Assert.AreEqual((IDevice)mockDevice.MockInstance, driver.GetDevice());
+            mockFactory.Verify();
 
-        public TestWindow()
-        {
-            InitializeComponent();
-        }
+            param.EnableAutoDepthStencil = true;
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (components != null)
-                {
-                    components.Dispose();
-                }
-            }
-            base.Dispose(disposing);
-        }
+            // 32 bit depth, no stencil
+            desc.depthFormat = DepthFormat.D32;
+            param.AutoDepthStencilFormat = desc.depthFormat;
+            mockFactory.ExpectAndReturn("CreateDevice", (IDevice)mockDevice.MockInstance, 0, desc.deviceType, null, CreateFlags.HardwareVertexProcessing, new IsEqualPP(param));
+            mockDevice.Expect("Dispose");
+            driver.Init(null, desc);
+            Assert.AreEqual((IDevice)mockDevice.MockInstance, driver.GetDevice());
+            mockFactory.Verify();
+            mockDevice.Verify();
 
-        private void InitializeComponent()
-        {
-            this.components = new System.ComponentModel.Container();
-            this.Size = new System.Drawing.Size(800, 600);
-            this.Text = "Engine Test";
+            mockDevice.Expect("Dispose");
+            driver.Reset();
+            mockDevice.Verify();
         }
     }
 }

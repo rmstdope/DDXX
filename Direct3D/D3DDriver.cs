@@ -1,30 +1,40 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using Utility;
 
 namespace Direct3D
 {
     public struct DeviceDescription
     {
+        public int width;
+        public int height;
+        public Format colorFormat;
         public bool windowed;
-        public bool useDepth;
-        public bool useStencil;
+        public DepthFormat depthFormat;
         public DeviceType deviceType;
     }
 
     public class D3DDriver
     {
-        private static D3DDriver instance = null;
-        private Device device = null;
+        private static D3DDriver instance;
+        private IDevice device;
         private DisplayMode displayMode;
+        private static IFactory factory = new D3DFactory();
 
-        public D3DDriver()
+        private D3DDriver()
         {
             GetDisplayMode();
+        }
+
+        public static void SetFactory(IFactory d3dFactory)
+        {
+            factory = d3dFactory;
         }
 
         public static D3DDriver GetInstance()
@@ -38,10 +48,13 @@ namespace Direct3D
 
         public void Init(Control control, DeviceDescription desc)
         {
+            if (device != null)
+                Reset();
+
             PresentParameters present = GetPresentParameters(desc);
             CreateFlags createFlags = GetCreateFlags(desc);
 
-            device = new Device(0, desc.deviceType, control, createFlags, present);
+            device = factory.CreateDevice(0, desc.deviceType, control, createFlags, present);
         }
 
         private void GetDisplayMode()
@@ -70,7 +83,7 @@ namespace Direct3D
             }
             else
             {
-                throw new Exception("Only Hardware and Reference drivers are supported.");
+                throw new DDXXException("Only Hardware and Reference drivers are supported.");
             }
             return createFlags;
         }
@@ -87,6 +100,10 @@ namespace Direct3D
             {
                 present.Windowed = false;
                 present.SwapEffect = SwapEffect.Flip;
+                present.BackBufferCount = 2;
+                present.BackBufferWidth = desc.width;
+                present.BackBufferHeight = desc.height;
+                present.BackBufferFormat = desc.colorFormat;
             }
 
             SetDepthStencil(desc, present);
@@ -96,9 +113,10 @@ namespace Direct3D
 
         private void SetDepthStencil(DeviceDescription desc, PresentParameters present)
         {
-            if (desc.useDepth || desc.useStencil)
+            if (desc.depthFormat != DepthFormat.Unknown)
             {
-
+                present.EnableAutoDepthStencil = true;
+                present.AutoDepthStencilFormat = desc.depthFormat;
             }
             else
             {
@@ -107,9 +125,47 @@ namespace Direct3D
         }
 
 
-        public Device GetDevice()
+        public IDevice GetDevice()
         {
             return device;
+        }
+
+        public int NumAdapters
+        {
+            get
+            {
+                return Manager.Adapters.Count;
+            }
+        }
+
+        public delegate bool ValidMode(DisplayMode mode);
+        private IEnumerable<DisplayMode> EnumerateDisplayModes(int adapter, ValidMode validMode)
+        {
+            foreach (DisplayMode mode in Manager.Adapters[adapter].SupportedDisplayModes)
+            {
+                if (validMode(mode))
+                {
+                    yield return mode;
+                }
+            }
+        }
+        public DisplayMode[] GetDisplayModes(int adapter, ValidMode validMode)
+        {
+            IEnumerable<DisplayMode> modes = EnumerateDisplayModes(adapter, validMode);
+            int num = 0;
+            foreach (DisplayMode m in modes)
+            {
+                num++;
+            }
+            DisplayMode[] ret = new DisplayMode[num];
+            num = 0;
+            foreach (DisplayMode m in modes)
+            {
+                ret[num] = m;
+                num++;
+            }
+
+            return ret;
         }
     }
 }
