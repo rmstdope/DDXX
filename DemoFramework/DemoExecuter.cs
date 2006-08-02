@@ -5,12 +5,17 @@ using System.Drawing;
 using System.Text;
 using Microsoft.DirectX.Direct3D;
 using Direct3D;
+using FMOD;
+using Sound;
 using Utility;
 
 namespace DemoFramework
 {
     public class DemoExecuter
     {
+        SoundDriver soundDriver;
+        FMOD.Sound sound;
+        Channel channel;
         IDevice device;
         List<Track> tracks = new List<Track>();
 
@@ -51,9 +56,14 @@ namespace DemoFramework
         {
         }
 
-        public void Initialize()
+        public void Initialize(string song)
         {
             device = D3DDriver.GetInstance().GetDevice();
+            
+            soundDriver = SoundDriver.GetInstance();
+            soundDriver.Init();
+            if (song != null && song != "")
+                sound = soundDriver.CreateSound(song);
         }
 
         internal void Register(int track, IEffect effect)
@@ -82,6 +92,12 @@ namespace DemoFramework
         public void Run()
         {
             Time.Initialize();
+
+            if (sound != null)
+            {
+                channel = soundDriver.PlaySound(sound);
+            }
+
             while (Time.StepTime <= EndTime + 2.0f)
             {
                 Step();

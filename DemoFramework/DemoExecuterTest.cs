@@ -4,75 +4,82 @@ using System.Windows.Forms;
 using System.Text;
 using Microsoft.DirectX.Direct3D;
 using Direct3D;
+using FMOD;
+using Sound;
 using Utility;
+using NUnit.Framework;
+using NMock2;
 
 namespace DemoFramework
 {
-    using NUnit.Framework;
-    using NMock;
 
     [TestFixture]
     public class DemoExecuterTest : TrackTest
     {
         DemoExecuter executer;
-        DynamicMock mockFactory;
-        DynamicMock mockDevice;
+        private Direct3D.IFactory factory;
+        private IDevice device;
+        private Sound.IFactory sFactory;
+        private ISystem system;
 
         [SetUp]
         public override void Setup()
         {
+            base.Setup();
+
             Time.Initialize();
 
-            mockFactory = new DynamicMock(typeof(IFactory));
-            mockDevice = new DynamicMock(typeof(IDevice));
-            mockFactory.SetupResult("CreateDevice", (IDevice)mockDevice.MockInstance, typeof(int), typeof(DeviceType), typeof(Control), typeof(CreateFlags), typeof(PresentParameters));
+            factory = mockery.NewMock<Direct3D.IFactory>();
+            device = mockery.NewMock<IDevice>();
+            D3DDriver.SetFactory(factory);
+            Stub.On(factory).
+                Method("CreateDevice").
+                WithAnyArguments().
+                Will(Return.Value(device));
+
+            sFactory = mockery.NewMock<Sound.IFactory>();
+            system = mockery.NewMock<ISystem>();
+            Stub.On(sFactory).
+                Method("CreateSystem").
+                Will(Return.Value(system));
+            SoundDriver.SetFactory(sFactory);
+
             DeviceDescription desc = new DeviceDescription();
             desc.deviceType = DeviceType.Hardware;
-            D3DDriver.SetFactory((IFactory)mockFactory.MockInstance);
             D3DDriver.GetInstance().Init(null, desc);
-            mockDevice.Strict = true;
-            mockFactory.Strict = true;
 
-            base.Setup();
             executer = new DemoExecuter();
         }
 
         [TearDown]
         public void TearDown()
         {
-            mockDevice.Expect("Dispose");
+            Expect.Once.On(device).
+                Method("Dispose");
             D3DDriver.GetInstance().Reset();
+            mockery.VerifyAllExpectationsHaveBeenMet();
         }
 
         [Test]
         public void TestTracks()
         {
-            DynamicMock mock1 = CreateMockEffect(0, 10);
-            IEffect t0e1 = (IEffect)mock1.MockInstance;
-            DynamicMock mock2 = CreateMockEffect(5, 15);
-            IEffect t1e1 = (IEffect)mock2.MockInstance;
+            IEffect t0e1 = CreateMockEffect(0, 10);
+            IEffect t1e1 = CreateMockEffect(5, 15);
 
             Assert.AreEqual(0, executer.NumTracks);
             executer.Register(0, t0e1);
             Assert.AreEqual(1, executer.NumTracks);
             executer.Register(1, t1e1);
             Assert.AreEqual(2, executer.NumTracks);
-
-            //mock1.Expect("Step");
-            mock1.Verify();
         }
 
         [Test]
         public void TestStep()
         {
-            DynamicMock mock1 = CreateMockEffect(0, 10);
-            IEffect t0e1 = (IEffect)mock1.MockInstance;
-            DynamicMock mock2 = CreateMockEffect(10, 15);
-            IEffect t0e2 = (IEffect)mock2.MockInstance;
-            DynamicMock mock3 = CreateMockEffect(3, 12);
-            IEffect t1e1 = (IEffect)mock3.MockInstance;
-            DynamicMock mock4 = CreateMockEffect(1, 2);
-            IEffect t1e2 = (IEffect)mock4.MockInstance;
+            IEffect t0e1 = CreateMockEffect(0, 10);
+            IEffect t0e2 = CreateMockEffect(10, 15);
+            IEffect t1e1 = CreateMockEffect(3, 12);
+            IEffect t1e2 = CreateMockEffect(1, 2);
 
             executer.Register(0, t0e1);
             executer.Register(0, t0e2);
@@ -83,30 +90,97 @@ namespace DemoFramework
             Time.Initialize();
             Time.Pause();
 
-            mock1.Expect("Step");
-            mock3.Expect("Step");
+            Expect.Once.On(t0e1).
+                Method("Step");
+            Expect.Once.On(t1e1).
+                Method("Step");
             Time.CurrentTime = 5;
             executer.Step();
-            mock1.Verify();
-            mock2.Verify();
-            mock3.Verify();
-            mock4.Verify();
 
-            mock1.Expect("Step");
-            mock4.Expect("Step");
+            Expect.Once.On(t0e1).
+                Method("Step");
+            Expect.Once.On(t1e2).
+                Method("Step");
             Time.CurrentTime = 1;
             executer.Step();
-            mock1.Verify();
-            mock2.Verify();
-            mock3.Verify();
-            mock4.Verify();
 
             Time.CurrentTime = 20;
             executer.Step();
-            mock1.Verify();
-            mock2.Verify();
-            mock3.Verify();
-            mock4.Verify();
+
+            Time.Resume();
+        }
+
+        [Test]
+        public void TestInitializeFail1()
+        {
+            Expect.Once.On(system).
+                Method("GetVersion").
+                Will(Return.Value(FMOD.RESULT.ERR_VERSION));
+            try
+            {
+                executer.Initialize("");
+                Assert.Fail();
+            }
+            catch (DDXXException) { }
+        }
+
+        [Test]
+        public void TestInitializeFail2()
+        {
+            Expect.Once.On(system).
+                 Method("GetVersion").
+                 Will(Return.Value(FMOD.RESULT.OK));
+            Expect.Once.On(system).
+                Method("Init").
+                Will(Return.Value(FMOD.RESULT.OK));
+            Expect.Once.On(system).
+                Method("CreateSound").
+                Will(Return.Value(FMOD.RESULT.ERR_VERSION));
+            try
+            {
+                executer.Initialize("test.mp3");
+                Assert.Fail();
+            }
+            catch (DDXXException) { }
+        }
+
+        [Test]
+        public void TestInitializeOKNoSong1()
+        {
+            Expect.Once.On(system).
+                Method("GetVersion").
+                Will(Return.Value(FMOD.RESULT.OK));
+            Expect.Once.On(system).
+                Method("Init").
+                Will(Return.Value(FMOD.RESULT.OK));
+            executer.Initialize("");
+        }
+
+        [Test]
+        public void TestInitializeOKNoSong2()
+        {
+            Expect.Once.On(system).
+                Method("GetVersion").
+                Will(Return.Value(FMOD.RESULT.OK));
+            Expect.Once.On(system).
+                Method("Init").
+                Will(Return.Value(FMOD.RESULT.OK));
+            executer.Initialize(null);
+        }
+
+        [Test]
+        public void TestInitializeOKSong()
+        {
+            Expect.Once.On(system).
+                 Method("GetVersion").
+                 Will(Return.Value(FMOD.RESULT.OK));
+            Expect.Once.On(system).
+                Method("Init").
+                Will(Return.Value(FMOD.RESULT.OK));
+            Expect.Once.On(system).
+                Method("CreateSound").
+                Will(Return.Value(FMOD.RESULT.OK));
+            executer.Initialize("test.mp3");
         }
 
         [Test]
@@ -115,15 +189,13 @@ namespace DemoFramework
             Assert.AreEqual(0.0f, executer.StartTime);
             Assert.AreEqual(0.0f, executer.EndTime);
 
-            DynamicMock mock1 = CreateMockEffect(1, 2);
-            IEffect t0e1 = (IEffect)mock1.MockInstance;
+            IEffect t0e1 = CreateMockEffect(1, 2);
             executer.Register(0, t0e1);
 
             Assert.AreEqual(0.0f, executer.StartTime);
             Assert.AreEqual(2.0f, executer.EndTime);
 
-            DynamicMock mock2 = CreateMockEffect(5, 100);
-            IEffect t10e1 = (IEffect)mock2.MockInstance;
+            IEffect t10e1 = CreateMockEffect(5, 100);
             executer.Register(0, t10e1);
 
             Assert.AreEqual(0.0f, executer.StartTime);
@@ -131,21 +203,52 @@ namespace DemoFramework
         }
 
         [Test]
-        public void TestEmptyRun()
+        public void TestRunSongFail()
         {
-            executer.Initialize();
+            TestInitializeOKSong();
 
-            mockDevice.Expect("Clear", ClearFlags.Target, System.Drawing.Color.Blue, 1.0f, 0);
-            mockDevice.Expect("Present");
+            Expect.Once.On(system).
+                Method("PlaySound").
+                Will(Return.Value(FMOD.RESULT.ERR_VERSION));
+
+            try
+            {
+                executer.Run();
+                Assert.Fail();
+            }
+            catch (DDXXException) { }
+        }
+
+        [Test]
+        public void TestRunNoEffect()
+        {
+            TestInitializeOKSong();
+
+            Expect.Once.On(system).
+                Method("PlaySound").
+                Will(Return.Value(FMOD.RESULT.OK));
+            Expect.Once.On(device).
+                Method("Clear").
+                With(ClearFlags.Target, System.Drawing.Color.Blue, 1.0f, 0);
+            Expect.Once.On(device).
+                Method("Present");
             Time.CurrentTime = 2.0f;
             executer.Run();
             Assert.Greater(Time.StepTime, 2.0f);
-            
-            mockDevice.Expect("Clear", ClearFlags.Target, System.Drawing.Color.Blue, 1.0f, 0);
-            mockDevice.Expect("Present");
+        }
+
+        [Test]
+        public void TestRun1Effect()
+        {
+            TestInitializeOKNoSong1();
+
+            Expect.Once.On(device).
+                Method("Clear").
+                With(ClearFlags.Target, System.Drawing.Color.Blue, 1.0f, 0);
+            Expect.Once.On(device).
+                Method("Present");
             Time.CurrentTime = 2.1f;
-            DynamicMock mock1 = CreateMockEffect(0, 0.1f);
-            IEffect t0e1 = (IEffect)mock1.MockInstance;
+            IEffect t0e1 = CreateMockEffect(0, 0.1f);
             executer.Register(0, t0e1);
             executer.Run();
             Assert.Greater(Time.StepTime, 2.1f);

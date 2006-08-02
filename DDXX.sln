@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utility", "Utility\Utility.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Physics", "Physics\Physics.csproj", "{6F7E70F2-FC19-4399-84BD-F60AC491E970}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sound", "Sound\Sound.csproj", "{FFA67C42-A1E3-4C9F-887A-E5DEB52DDEB4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FMOD", "FMOD\FMOD.csproj", "{1A7A1C62-87D6-4798-BBBD-8472DC2D755B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +47,14 @@ Global
 		{6F7E70F2-FC19-4399-84BD-F60AC491E970}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F7E70F2-FC19-4399-84BD-F60AC491E970}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F7E70F2-FC19-4399-84BD-F60AC491E970}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFA67C42-A1E3-4C9F-887A-E5DEB52DDEB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFA67C42-A1E3-4C9F-887A-E5DEB52DDEB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFA67C42-A1E3-4C9F-887A-E5DEB52DDEB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFA67C42-A1E3-4C9F-887A-E5DEB52DDEB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A7A1C62-87D6-4798-BBBD-8472DC2D755B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A7A1C62-87D6-4798-BBBD-8472DC2D755B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A7A1C62-87D6-4798-BBBD-8472DC2D755B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A7A1C62-87D6-4798-BBBD-8472DC2D755B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

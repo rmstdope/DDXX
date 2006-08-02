@@ -30,7 +30,7 @@ namespace DemoFramework
 
             ClientSize = new Size(desc.width, desc.height);
             if (AspectRatio.Ratios.RATIO_INVALID == new AspectRatio(ClientSize.Width, ClientSize.Height).Ratio)
-                throw new ArgumentOutOfRangeException("Width, Height", "Window dimensions must have an spect ratio of 4:3 or 16:9");
+                throw new DDXXException("Width and height of window does not match any valid aspect ratio.");
 
             this.Text = name;
 

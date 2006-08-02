@@ -5,22 +5,39 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Direct3D;
 using Utility;
+using NUnit.Framework;
+using NMock2;
 
 namespace DemoFramework
 {
-    using NUnit.Framework;
-    using NMock;
-
     [TestFixture]
     public class DemoWindowTest
     {
         DemoWindow window;
+        private Mockery mockery;
+        private IFactory factory;
+        private IDevice device;
 
         [SetUp]
         public void Setup()
         {
-            DynamicMock mockFactory = new DynamicMock(typeof(IFactory));
-            window = new DemoWindow((IFactory)mockFactory.MockInstance);
+            mockery = new Mockery();
+            factory = mockery.NewMock<IFactory>();
+            device = mockery.NewMock<IDevice>();
+            window = new DemoWindow(factory);
+            Stub.On(factory).
+                Method("CreateDevice").
+                WithAnyArguments().
+                Will(Return.Value(device));
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Expect.Once.On(device).
+                Method("Dispose");
+            D3DDriver.GetInstance().Reset();
+            mockery.VerifyAllExpectationsHaveBeenMet();
         }
 
         [Test]
@@ -64,7 +81,7 @@ namespace DemoFramework
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        [ExpectedException(typeof(DDXXException))]
         public void TestInitializeFail()
         {
             DeviceDescription desc = new DeviceDescription();

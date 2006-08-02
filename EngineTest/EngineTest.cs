@@ -29,17 +29,17 @@ namespace EngineTest
                     DemoWindow window = new DemoWindow(new D3DFactory());
                     DemoExecuter executer = new DemoExecuter();
                     window.Initialize("RolemasterTest", desc);
-                    executer.Initialize();
+                    executer.Initialize("test.mp3");
                     executer.Run();
                 }
             }
             catch (DDXXException exception)
             {
-                MessageBox.Show("Exception handled by the engine: " + exception.Message);
+                MessageBox.Show(exception.ToString());
             }
             catch (Exception exception)
             {
-                MessageBox.Show("Exception not handled by the engine: " + exception.Message);
+                MessageBox.Show(exception.ToString());
             }
 
         }

@@ -31,10 +31,7 @@
   <ItemGroup>
     <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="nmock, Version=1.0.1536.20687, Culture=neutral">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Program Files\NUnit-Net-2.0 2.2.7\bin\nmock.dll</HintPath>
-    </Reference>
+    <Reference Include="NMock2, Version=1.0.2313.18049, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -45,6 +42,7 @@
   <ItemGroup>
     <Compile Include="D3DDriver.cs" />
     <Compile Include="D3DDriverTest.cs">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="D3DFactory.cs" />
     <Compile Include="DeviceAdapter.cs" />

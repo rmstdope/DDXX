@@ -4,25 +4,26 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
+using System.IO;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Utility;
+using NUnit.Framework;
+using NMock2;
 
 namespace Direct3D
 {
-    using NUnit.Framework;
-    using NMock;
 
-    public class IsEqualPP : NMock.Constraints.BaseConstraint
+    public class IsEqualPP : Matcher
     {
-        PresentParameters param1;
+        private PresentParameters param1;
 
         public IsEqualPP(PresentParameters param)
         {
             param1 = param;
         }
 
-        public override bool Eval(object val)
+        public override bool Matches(object val)
         {
             PresentParameters param2 = (PresentParameters)val;
             return
@@ -44,26 +45,27 @@ namespace Direct3D
                 param1.Windowed == param2.Windowed;
         }
 
-        public override string Message
+        public override void DescribeTo(TextWriter writer)
         {
-            get { return "<" + param1 + ">"; }
+            writer.Write(param1.ToString());
         }
     }
 
     [TestFixture]
     public class D3DDriverTest
     {
-        D3DDriver driver;
-        DynamicMock mockFactory;
-        DynamicMock mockDevice;
+        private D3DDriver driver;
+        private Mockery mockery;
+        private IFactory factory;
+        private IDevice device;
 
         [SetUp]
         public void Setup()
         {
-            mockFactory = new DynamicMock(typeof(IFactory));
-            mockDevice = new DynamicMock(typeof(IDevice));
-            //mockFactory.SetupResult("CreateDevice", (IDevice)mockDevice.MockInstance, typeof(int), typeof(DeviceType), typeof(Control), typeof(CreateFlags), typeof(PresentParameters));
-            D3DDriver.SetFactory((IFactory)mockFactory.MockInstance);
+            mockery = new Mockery();
+            factory = mockery.NewMock<IFactory>();
+            device = mockery.NewMock<IDevice>();
+            D3DDriver.SetFactory(factory);
             driver = D3DDriver.GetInstance();
         }
 
@@ -72,6 +74,7 @@ namespace Direct3D
         {
             driver.Reset();
             driver = null;
+            mockery.VerifyAllExpectationsHaveBeenMet();
         }
 
         [Test]
@@ -118,7 +121,6 @@ namespace Direct3D
             {
                 Assert.AreEqual(null, driver.GetDevice());
             }
-            mockFactory.Verify();
         }
 
         [Test]
@@ -134,7 +136,10 @@ namespace Direct3D
                 desc.windowed = true;
                 param.Windowed = true;
                 param.SwapEffect = SwapEffect.Discard;
-                mockFactory.ExpectAndThrow("CreateDevice", new DirectXException(), 0, desc.deviceType, null, CreateFlags.SoftwareVertexProcessing, new IsEqualPP(param));
+                Expect.Once.On(factory).
+                    Method("CreateDevice").
+                    With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(null), Is.EqualTo(CreateFlags.SoftwareVertexProcessing), new IsEqualPP(param)).
+                    Will(Throw.Exception(new DirectXException()));
                 driver.Init(null, desc);
                 Assert.Fail();
             }
@@ -142,8 +147,6 @@ namespace Direct3D
             {
                 Assert.AreEqual(null, driver.GetDevice());
             }
-            mockFactory.Verify();
-
         }
 
         [Test]
@@ -161,14 +164,16 @@ namespace Direct3D
             param.BackBufferWidth = desc.width;
             param.BackBufferHeight = desc.height;
             param.BackBufferFormat = desc.colorFormat;
-            mockFactory.ExpectAndReturn("CreateDevice", (IDevice)mockDevice.MockInstance, 0, desc.deviceType, null, CreateFlags.SoftwareVertexProcessing, new IsEqualPP(param));
+            Expect.Once.On(factory).
+                Method("CreateDevice").
+                With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(null), Is.EqualTo(CreateFlags.SoftwareVertexProcessing), new IsEqualPP(param)).
+                Will(Return.Value(device));
             driver.Init(null, desc);
-            Assert.AreEqual((IDevice)mockDevice.MockInstance, driver.GetDevice());
-            mockFactory.Verify();
+            Assert.AreEqual(device, driver.GetDevice());
 
-            mockDevice.Expect("Dispose");
+            Expect.Once.On(device).
+                Method("Dispose");
             driver.Reset();
-            mockDevice.Verify();
         }
 
         [Test]
@@ -182,14 +187,17 @@ namespace Direct3D
             desc.windowed = true;
             param.Windowed = true;
             param.SwapEffect = SwapEffect.Discard;
-            mockFactory.ExpectAndReturn("CreateDevice", (IDevice)mockDevice.MockInstance, 0, desc.deviceType, null, CreateFlags.HardwareVertexProcessing, new IsEqualPP(param));
+            Expect.Once.On(factory).
+                Method("CreateDevice").
+                With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(null), Is.EqualTo(CreateFlags.HardwareVertexProcessing), new IsEqualPP(param)).
+                Will(Return.Value(device));
+            //mockFactory.ExpectAndReturn("CreateDevice", (IDevice)mockDevice.MockInstance, 0, desc.deviceType, null, CreateFlags.HardwareVertexProcessing, new IsEqualPP(param));
             driver.Init(null, desc);
-            Assert.AreEqual((IDevice)mockDevice.MockInstance, driver.GetDevice());
-            mockFactory.Verify();
+            Assert.AreEqual(device, driver.GetDevice());
 
-            mockDevice.Expect("Dispose");
+            Expect.Once.On(device).
+                Method("Dispose");
             driver.Reset();
-            mockDevice.Verify();
         }
 
         [Test]
@@ -205,26 +213,33 @@ namespace Direct3D
             param.BackBufferFormat = desc.colorFormat;
 
             desc.depthFormat = DepthFormat.Unknown;
-            mockFactory.ExpectAndReturn("CreateDevice", (IDevice)mockDevice.MockInstance, 0, desc.deviceType, null, CreateFlags.HardwareVertexProcessing, new IsEqualPP(param));
+            Expect.Once.On(factory).
+                Method("CreateDevice").
+                With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(null), Is.EqualTo(CreateFlags.HardwareVertexProcessing), new IsEqualPP(param)).
+                Will(Return.Value(device));
+            //mockFactory.ExpectAndReturn("CreateDevice", (IDevice)mockDevice.MockInstance, 0, desc.deviceType, null, CreateFlags.HardwareVertexProcessing, new IsEqualPP(param));
             driver.Init(null, desc);
-            Assert.AreEqual((IDevice)mockDevice.MockInstance, driver.GetDevice());
-            mockFactory.Verify();
+            Assert.AreEqual(device, driver.GetDevice());
 
             param.EnableAutoDepthStencil = true;
 
             // 32 bit depth, no stencil
             desc.depthFormat = DepthFormat.D32;
             param.AutoDepthStencilFormat = desc.depthFormat;
-            mockFactory.ExpectAndReturn("CreateDevice", (IDevice)mockDevice.MockInstance, 0, desc.deviceType, null, CreateFlags.HardwareVertexProcessing, new IsEqualPP(param));
-            mockDevice.Expect("Dispose");
+            Expect.Once.On(factory).
+                Method("CreateDevice").
+                With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(null), Is.EqualTo(CreateFlags.HardwareVertexProcessing), new IsEqualPP(param)).
+                Will(Return.Value(device));
+            Expect.Once.On(device).
+                Method("Dispose");
+            //mockFactory.ExpectAndReturn("CreateDevice", (IDevice)mockDevice.MockInstance, 0, desc.deviceType, null, CreateFlags.HardwareVertexProcessing, new IsEqualPP(param));
+            //mockDevice.Expect("Dispose");
             driver.Init(null, desc);
-            Assert.AreEqual((IDevice)mockDevice.MockInstance, driver.GetDevice());
-            mockFactory.Verify();
-            mockDevice.Verify();
+            Assert.AreEqual(device, driver.GetDevice());
 
-            mockDevice.Expect("Dispose");
+            Expect.Once.On(device).
+                Method("Dispose");
             driver.Reset();
-            mockDevice.Verify();
         }
     }
 }
