@@ -9,5 +9,6 @@ namespace Direct3D
     public interface IFactory
     {
         IDevice CreateDevice(int adapter, DeviceType deviceType, Control renderWindow, CreateFlags behaviorFlags, PresentParameters presentationParameters);
+        IManager CreateManager();
     }
 }

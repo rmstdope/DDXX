@@ -16,19 +16,29 @@ namespace Direct3D
         public int height;
         public Format colorFormat;
         public bool windowed;
-        public DepthFormat depthFormat;
+        public bool useDepth;
+        public bool useStencil;
         public DeviceType deviceType;
     }
 
     public class D3DDriver
     {
         private static D3DDriver instance;
+
+        private IManager manager;
         private IDevice device;
+
         private DisplayMode displayMode;
-        private static IFactory factory = new D3DFactory();
+        private static IFactory factory;
 
         private D3DDriver()
         {
+            if (factory == null)
+            {
+                throw new DDXXException("The DX factory needs to be set before the D3DDriver can be created.");
+            }
+
+            manager = factory.CreateManager();
             GetDisplayMode();
         }
 
@@ -59,8 +69,7 @@ namespace Direct3D
 
         private void GetDisplayMode()
         {
-            AdapterInformation ai = Manager.Adapters[0];
-            displayMode = ai.CurrentDisplayMode;
+            displayMode = manager.CurrentDisplayMode(0);
         }
 
         public void Reset()
@@ -113,15 +122,39 @@ namespace Direct3D
 
         private void SetDepthStencil(DeviceDescription desc, PresentParameters present)
         {
-            if (desc.depthFormat != DepthFormat.Unknown)
+            DepthFormat[] depthFormats = { DepthFormat.D32, DepthFormat.D24X8, DepthFormat.D16 };
+            DepthFormat[] stencilFormats = { DepthFormat.D24S8, DepthFormat.D24X4S4, DepthFormat.D15S1 };
+            DepthFormat[] formats = depthFormats;
+            
+            if (desc.useDepth)
             {
+                if (desc.useStencil)
+                    formats = stencilFormats;
+
                 present.EnableAutoDepthStencil = true;
-                present.AutoDepthStencilFormat = desc.depthFormat;
+                present.AutoDepthStencilFormat = DepthFormat.Unknown;
+
+                foreach (DepthFormat format in formats)
+                {
+                    if (manager.CheckDepthStencilMatch(0, DeviceType.Hardware,
+                        present.BackBufferFormat, present.BackBufferFormat, format))
+                    {
+                        present.AutoDepthStencilFormat = format;
+                        break;
+                    }
+                }
+            }
+            else if (desc.useStencil)
+            {
+                throw new DDXXException("Can not initialize device with stencil but no depth buffer.");
             }
             else
             {
                 present.EnableAutoDepthStencil = false;
             }
+
+            if (present.EnableAutoDepthStencil && present.AutoDepthStencilFormat == DepthFormat.Unknown)
+                throw new DDXXException("Could not find a depth/stencil buffer to use.");
         }
 
 
@@ -134,38 +167,41 @@ namespace Direct3D
         {
             get
             {
-                return Manager.Adapters.Count;
+                return manager.NumAdapters();
             }
         }
 
         public delegate bool ValidMode(DisplayMode mode);
-        private IEnumerable<DisplayMode> EnumerateDisplayModes(int adapter, ValidMode validMode)
-        {
-            foreach (DisplayMode mode in Manager.Adapters[adapter].SupportedDisplayModes)
-            {
-                if (validMode(mode))
-                {
-                    yield return mode;
-                }
-            }
-        }
         public DisplayMode[] GetDisplayModes(int adapter, ValidMode validMode)
         {
-            IEnumerable<DisplayMode> modes = EnumerateDisplayModes(adapter, validMode);
+            DisplayMode[] modes = manager.SupportedDisplayModes(adapter);
             int num = 0;
             foreach (DisplayMode m in modes)
             {
-                num++;
+                if (validMode(m))
+                    num++;
             }
             DisplayMode[] ret = new DisplayMode[num];
             num = 0;
             foreach (DisplayMode m in modes)
             {
-                ret[num] = m;
-                num++;
+                if (validMode(m))
+                {
+                    ret[num] = m;
+                    num++;
+                }
             }
 
             return ret;
+        }
+
+        public static void DestroyInstance()
+        {
+            if (instance != null)
+            {
+                instance.Reset();
+            }
+            instance = null;
         }
     }
 }

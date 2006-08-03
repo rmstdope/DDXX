@@ -58,38 +58,103 @@ namespace Direct3D
         private Mockery mockery;
         private IFactory factory;
         private IDevice device;
+        private IManager manager;
+
+        private DisplayMode displayMode = new DisplayMode();
+        private DisplayMode[] supportedDisplayModes = { new DisplayMode(), new DisplayMode() };
 
         [SetUp]
         public void Setup()
         {
+            displayMode.Width = 800;
+            displayMode.Height = 600;
+            displayMode.Format = Format.R8G8B8G8;
+
+            supportedDisplayModes[0].Width = 640;
+            supportedDisplayModes[0].Height = 480;
+            supportedDisplayModes[0].Format = Format.R8G8B8;
+            supportedDisplayModes[1].Width = 800;
+            supportedDisplayModes[1].Height = 600;
+            supportedDisplayModes[1].Format = Format.A16B16G16R16F;
+
             mockery = new Mockery();
             factory = mockery.NewMock<IFactory>();
             device = mockery.NewMock<IDevice>();
+            manager = mockery.NewMock<IManager>();
+
+            Stub.On(factory).
+                Method("CreateManager").
+                Will(Return.Value(manager));
+
+            Expect.Once.On(manager).
+                Method("CurrentDisplayMode").
+                With(0).
+                Will(Return.Value(displayMode));
+
             D3DDriver.SetFactory(factory);
             driver = D3DDriver.GetInstance();
+
         }
 
         [TearDown]
         public void Teardown()
         {
-            driver.Reset();
-            driver = null;
+            D3DDriver.DestroyInstance();
             mockery.VerifyAllExpectationsHaveBeenMet();
         }
 
         [Test]
-        public void SingletonTest()
+        public void TestCreateFail()
+        {
+            // No factory set
+            try
+            {
+                D3DDriver.DestroyInstance();
+                D3DDriver.SetFactory(null);
+                driver = D3DDriver.GetInstance();
+                Assert.Fail();
+            }
+            catch (DDXXException) { }
+        }
+
+        [Test]
+        public void TestCreateOK()
         {
             D3DDriver driver2 = D3DDriver.GetInstance();
-
             Assert.AreSame(driver, driver2);
         }
 
         [Test]
-        public void AdapterTest()
+        public void TestDisplayModes1()
         {
+            Expect.Once.On(manager).
+                Method("SupportedDisplayModes").
+                With(0).
+                Will(Return.Value(supportedDisplayModes));
+
             DisplayMode[] modes = driver.GetDisplayModes(0, delegate(DisplayMode mode) { return true; });
-            Assert.AreEqual(2, driver.NumAdapters);
+            Assert.AreEqual(2, modes.Length);
+            Assert.AreEqual(640, modes[0].Width);
+            Assert.AreEqual(480, modes[0].Height);
+            Assert.AreEqual(Format.R8G8B8, modes[0].Format);
+            Assert.AreEqual(800, modes[1].Width);
+            Assert.AreEqual(600, modes[1].Height);
+            Assert.AreEqual(Format.A16B16G16R16F, modes[1].Format);
+        }
+
+        [Test]
+        public void TestDisplayModes2()
+        {
+            Expect.Once.On(manager).
+                Method("SupportedDisplayModes").
+                With(0).
+                Will(Return.Value(supportedDisplayModes));
+
+            DisplayMode[] modes = driver.GetDisplayModes(0, delegate(DisplayMode mode) { return mode.Format == Format.R8G8B8; });
+            Assert.AreEqual(1, modes.Length);
+            Assert.AreEqual(640, modes[0].Width);
+            Assert.AreEqual(480, modes[0].Height);
+            Assert.AreEqual(Format.R8G8B8, modes[0].Format);
         }
 
         private DeviceDescription CreateDescription()
@@ -191,7 +256,6 @@ namespace Direct3D
                 Method("CreateDevice").
                 With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(null), Is.EqualTo(CreateFlags.HardwareVertexProcessing), new IsEqualPP(param)).
                 Will(Return.Value(device));
-            //mockFactory.ExpectAndReturn("CreateDevice", (IDevice)mockDevice.MockInstance, 0, desc.deviceType, null, CreateFlags.HardwareVertexProcessing, new IsEqualPP(param));
             driver.Init(null, desc);
             Assert.AreEqual(device, driver.GetDevice());
 
@@ -201,39 +265,92 @@ namespace Direct3D
         }
 
         [Test]
-        public void TestInitDepthStencil()
+        public void TestInitDepthFail1()
         {
             DeviceDescription desc = CreateDescription();
             PresentParameters param = new PresentParameters();
-            desc.deviceType = DeviceType.Hardware;
-            param.SwapEffect = SwapEffect.Flip;
-            param.BackBufferCount = 2;
-            param.BackBufferWidth = desc.width;
-            param.BackBufferHeight = desc.height;
-            param.BackBufferFormat = desc.colorFormat;
+            desc.deviceType = DeviceType.Reference;
+            desc.useStencil = true;
 
-            desc.depthFormat = DepthFormat.Unknown;
-            Expect.Once.On(factory).
-                Method("CreateDevice").
-                With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(null), Is.EqualTo(CreateFlags.HardwareVertexProcessing), new IsEqualPP(param)).
-                Will(Return.Value(device));
-            //mockFactory.ExpectAndReturn("CreateDevice", (IDevice)mockDevice.MockInstance, 0, desc.deviceType, null, CreateFlags.HardwareVertexProcessing, new IsEqualPP(param));
-            driver.Init(null, desc);
-            Assert.AreEqual(device, driver.GetDevice());
+            // Can not use only stencil
+            try
+            {
+                driver.Init(null, desc);
+                Assert.Fail();
+            }
+            catch (DDXXException) { }
+        }
 
+        [Test]
+        public void TestInitDepthFail2()
+        {
+            DeviceDescription desc = CreateDescription();
+            PresentParameters param = new PresentParameters();
+            desc.deviceType = DeviceType.Reference;
+            desc.useDepth = true;
+
+            Expect.Exactly(3).On(manager).
+                Method("CheckDepthStencilMatch").
+                WithAnyArguments().
+                Will(Return.Value(false));
+            // No depth buffer available
+            try
+            {
+                driver.Init(null, desc);
+                Assert.Fail();
+            }
+            catch (DDXXException) { }
+        }
+
+        [Test]
+        public void TestInitDepthFail3()
+        {
+            DeviceDescription desc = CreateDescription();
+            PresentParameters param = new PresentParameters();
+            desc.deviceType = DeviceType.Reference;
+            desc.useDepth = true;
+            desc.useStencil = true;
+
+            Expect.Exactly(3).On(manager).
+                Method("CheckDepthStencilMatch").
+                WithAnyArguments().
+                Will(Return.Value(false));
+
+            // No depth/stencil buffer available
+            try
+            {
+                driver.Init(null, desc);
+                Assert.Fail();
+            }
+            catch (DDXXException) { }
+        }
+
+        [Test]
+        public void TestInitDepthOK1()
+        {
+            DeviceDescription desc = CreateDescription();
+            PresentParameters param = new PresentParameters();
+            desc.deviceType = DeviceType.Reference;
+            desc.windowed = true;
+            param.Windowed = true;
+            desc.useDepth = true;
+            param.SwapEffect = SwapEffect.Discard;
+            param.AutoDepthStencilFormat = DepthFormat.D16;
             param.EnableAutoDepthStencil = true;
 
-            // 32 bit depth, no stencil
-            desc.depthFormat = DepthFormat.D32;
-            param.AutoDepthStencilFormat = desc.depthFormat;
+            // Create device with depth only
+            Expect.Exactly(2).On(manager).
+                Method("CheckDepthStencilMatch").
+                WithAnyArguments().
+                Will(Return.Value(false));
+            Expect.Once.On(manager).
+                Method("CheckDepthStencilMatch").
+                WithAnyArguments().
+                Will(Return.Value(true));
             Expect.Once.On(factory).
                 Method("CreateDevice").
-                With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(null), Is.EqualTo(CreateFlags.HardwareVertexProcessing), new IsEqualPP(param)).
+                With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(null), Is.EqualTo(CreateFlags.SoftwareVertexProcessing), new IsEqualPP(param)).
                 Will(Return.Value(device));
-            Expect.Once.On(device).
-                Method("Dispose");
-            //mockFactory.ExpectAndReturn("CreateDevice", (IDevice)mockDevice.MockInstance, 0, desc.deviceType, null, CreateFlags.HardwareVertexProcessing, new IsEqualPP(param));
-            //mockDevice.Expect("Dispose");
             driver.Init(null, desc);
             Assert.AreEqual(device, driver.GetDevice());
 
@@ -241,5 +358,41 @@ namespace Direct3D
                 Method("Dispose");
             driver.Reset();
         }
+
+        [Test]
+        public void TestInitDepthOK2()
+        {
+            DeviceDescription desc = CreateDescription();
+            PresentParameters param = new PresentParameters();
+            desc.deviceType = DeviceType.Reference;
+            desc.windowed = true;
+            param.Windowed = true;
+            desc.useDepth = true;
+            desc.useStencil= true;
+            param.SwapEffect = SwapEffect.Discard;
+            param.AutoDepthStencilFormat = DepthFormat.D24X4S4;
+            param.EnableAutoDepthStencil = true;
+
+            // Create device with depth and stencil
+            Expect.Exactly(1).On(manager).
+                Method("CheckDepthStencilMatch").
+                WithAnyArguments().
+                Will(Return.Value(false));
+            Expect.Once.On(manager).
+                Method("CheckDepthStencilMatch").
+                WithAnyArguments().
+                Will(Return.Value(true));
+            Expect.Once.On(factory).
+                Method("CreateDevice").
+                With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(null), Is.EqualTo(CreateFlags.SoftwareVertexProcessing), new IsEqualPP(param)).
+                Will(Return.Value(device));
+            driver.Init(null, desc);
+            Assert.AreEqual(device, driver.GetDevice());
+
+            Expect.Once.On(device).
+                Method("Dispose");
+            driver.Reset();
+        }
+
     }
 }

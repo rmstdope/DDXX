@@ -17,18 +17,33 @@ namespace DemoFramework
         private Mockery mockery;
         private IFactory factory;
         private IDevice device;
+        private IManager manager;
+        private DisplayMode displayMode = new DisplayMode();
 
         [SetUp]
         public void Setup()
         {
+            displayMode.Width = 800;
+            displayMode.Height = 600;
+            displayMode.Format = Format.R8G8B8G8;
+
             mockery = new Mockery();
             factory = mockery.NewMock<IFactory>();
             device = mockery.NewMock<IDevice>();
-            window = new DemoWindow(factory);
+            manager = mockery.NewMock<IManager>();
+            Stub.On(factory).
+                Method("CreateManager").
+                Will(Return.Value(manager));
             Stub.On(factory).
                 Method("CreateDevice").
                 WithAnyArguments().
                 Will(Return.Value(device));
+            Expect.Once.On(manager).
+                Method("CurrentDisplayMode").
+                With(0).
+                Will(Return.Value(displayMode));
+
+            window = new DemoWindow(factory);
         }
 
         [TearDown]
@@ -36,7 +51,7 @@ namespace DemoFramework
         {
             Expect.Once.On(device).
                 Method("Dispose");
-            D3DDriver.GetInstance().Reset();
+            D3DDriver.DestroyInstance();
             mockery.VerifyAllExpectationsHaveBeenMet();
         }
 
