@@ -37,37 +37,11 @@ namespace Sound
         }
 
         [Test]
-        public void SingletonTest()
+        public void TestSingleton()
         {
             SoundDriver driver2 = SoundDriver.GetInstance();
-
             Assert.AreSame(driver, driver2);
         }
-
-        //internal class ReturnVersion : IAction
-        //{
-        //    private uint number;
-
-        //    #region ISelfDescribing Members
-
-        //    public ReturnVersion(uint version)
-        //    {
-        //        number = version;
-        //    }
-
-        //    public void Invoke(Invocation inv)
-        //    {
-        //        uint version = (uint)inv.Parameters[0];
-        //        version = number;
-        //    }
-
-        //    public void DescribeTo(System.IO.TextWriter writer)
-        //    {
-        //        writer.Write("Setting version number to : " + number);
-        //    }
-
-        //    #endregion
-        //}
 
         [Test]
         public void TestInitFail1()
@@ -78,7 +52,7 @@ namespace Sound
                     Method("GetVersion").
                     WithAnyArguments().
                     Will(Return.Value(RESULT.ERR_SUBSOUNDS));
-                driver.Init();
+                driver.Initialize();
                 Assert.Fail();
             }
             catch (DDXXException) { }
@@ -97,7 +71,7 @@ namespace Sound
                     Method("Init").
                     With(64, FMOD.INITFLAG.NORMAL, (IntPtr)null).
                     Will(Return.Value(RESULT.ERR_SUBSOUNDS));
-                driver.Init();
+                driver.Initialize();
                 Assert.Fail();
             }
             catch (DDXXException) { }
@@ -114,7 +88,7 @@ namespace Sound
                 Method("Init").
                 With(64, FMOD.INITFLAG.NORMAL, (IntPtr)null).
                 Will(Return.Value(RESULT.OK));
-            driver.Init();
+            driver.Initialize();
         }
 
         [Test]

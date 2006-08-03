@@ -30,7 +30,7 @@ namespace Sound
             return instance;
         }
 
-        public void Init()
+        public void Initialize()
         {
             RESULT result;
 

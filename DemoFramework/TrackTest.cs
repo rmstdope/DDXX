@@ -7,9 +7,8 @@ using NMock2;
 namespace DemoFramework
 {
     [TestFixture]
-    public class TrackTest
+    public class TrackTest : D3DMockTest
     {
-        protected Mockery mockery;
         private Track track;
 
         protected IEffect CreateMockEffect(float start, float end)
@@ -25,10 +24,16 @@ namespace DemoFramework
         }
 
         [SetUp]
-        public virtual void Setup()
+        public override void SetUp()
         {
-            mockery = new Mockery();
+            base.SetUp();
             track = new Track();
+        }
+
+        [TearDown]
+        public override void TearDown()
+        {
+            base.TearDown();
         }
 
         [Test]

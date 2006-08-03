@@ -61,12 +61,12 @@ namespace DemoFramework
             device = D3DDriver.GetInstance().GetDevice();
             
             soundDriver = SoundDriver.GetInstance();
-            soundDriver.Init();
+            soundDriver.Initialize();
             if (song != null && song != "")
                 sound = soundDriver.CreateSound(song);
         }
 
-        internal void Register(int track, IEffect effect)
+        public void Register(int track, IEffect effect)
         {
             while (NumTracks <= track)
             {

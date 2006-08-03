@@ -4,11 +4,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{54A5AA11-1E81-4874-A50A-056D3327CA10}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <ProjectGuid>{E2280509-C330-4684-90FD-336B8CD4D7EF}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EngineTest</RootNamespace>
-    <AssemblyName>EngineTest</AssemblyName>
+    <RootNamespace>Input</RootNamespace>
+    <AssemblyName>Input</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -28,50 +28,23 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2910.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="Microsoft.DirectX.DirectInput, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="NMock2, Version=1.0.2313.18049, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EngineTest.cs">
-    </Compile>
+    <Compile Include="DIFactory.cs" />
+    <Compile Include="IFactory.cs" />
+    <Compile Include="IDevice.cs" />
+    <Compile Include="InputDriver.cs" />
+    <Compile Include="InputDriverTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <Compile Include="TestEffect.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DemoFramework\DemoFramework.csproj">
-      <Project>{DBD3FD0B-0B65-4626-BABA-3C46457B1185}</Project>
-      <Name>DemoFramework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Direct3D\Direct3D.csproj">
-      <Project>{0DB06E67-9BEA-430C-97E0-4662DE6FE77F}</Project>
-      <Name>Direct3D</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Utility\Utility.csproj">
       <Project>{31D76405-2DD3-436A-BE65-963DE822511E}</Project>
       <Name>Utility</Name>

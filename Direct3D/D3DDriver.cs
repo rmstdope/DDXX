@@ -24,12 +24,12 @@ namespace Direct3D
     public class D3DDriver
     {
         private static D3DDriver instance;
+        private static IFactory factory = new D3DFactory();
 
         private IManager manager;
         private IDevice device;
 
         private DisplayMode displayMode;
-        private static IFactory factory;
 
         private D3DDriver()
         {
