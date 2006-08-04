@@ -16,9 +16,10 @@ namespace Sound
         {
         }
 
-        public static void SetFactory(IFactory soundFactory)
+        public static IFactory Factory
         {
-            factory = soundFactory;
+            get { return factory; }
+            set { factory = value; }
         }
 
         public static SoundDriver GetInstance()

@@ -18,9 +18,10 @@ namespace Input
         {
         }
 
-        public static void SetFactory(IFactory InputFactory)
+        public static IFactory Factory
         {
-            factory = InputFactory;
+            get { return factory; }
+            set { factory = value; }
         }
 
         public static InputDriver GetInstance()

@@ -30,14 +30,14 @@ namespace DemoFramework
             Time.Initialize();
 
             iFactory = mockery.NewMock<Input.IFactory>();
-            InputDriver.SetFactory(iFactory);
+            InputDriver.Factory = iFactory;
 
             sFactory = mockery.NewMock<Sound.IFactory>();
             system = mockery.NewMock<ISystem>();
             Stub.On(sFactory).
                 Method("CreateSystem").
                 Will(Return.Value(system));
-            SoundDriver.SetFactory(sFactory);
+            SoundDriver.Factory = sFactory;
 
             DeviceDescription desc = new DeviceDescription();
             desc.deviceType = DeviceType.Hardware;

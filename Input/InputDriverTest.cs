@@ -23,7 +23,7 @@ namespace Input
             mockery = new Mockery();
             factory = mockery.NewMock<IFactory>();
 
-            InputDriver.SetFactory(factory);
+            InputDriver.Factory = factory;
             driver = InputDriver.GetInstance();
         }
 

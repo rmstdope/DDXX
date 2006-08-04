@@ -24,7 +24,7 @@ namespace DemoFramework
             base.SetUp();
 
             iFactory = mockery.NewMock<Input.IFactory>();
-            InputDriver.SetFactory(iFactory);
+            InputDriver.Factory = iFactory;
             Stub.On(iFactory).
                 GetProperty("Keyboard").
                 Will(Return.Value(new Microsoft.DirectX.DirectInput.Device(SystemGuid.Keyboard)));

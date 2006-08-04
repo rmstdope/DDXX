@@ -27,7 +27,7 @@ namespace Sound
             Stub.On(factory).
                 Method("CreateSystem").
                 Will(Return.Value(system));
-            SoundDriver.SetFactory(factory);
+            SoundDriver.Factory = factory;
         }
 
         [TearDown]
