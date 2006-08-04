@@ -18,6 +18,11 @@ namespace Direct3D
             device = new Device(adapter, deviceType, renderWindow, behaviorFlags, presentationParameters);
         }
 
+        internal Device DXDevice
+        {
+            get { return device; }
+        }
+
         #region IDevice Members
 
         public int AvailableTextureMemory

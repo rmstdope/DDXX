@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Text;
-using Microsoft.DirectX.Direct3D;
 using System.Windows.Forms;
+using Microsoft.DirectX.Direct3D;
 
 namespace Direct3D
 {
@@ -18,6 +20,21 @@ namespace Direct3D
         public IManager CreateManager()
         {
             return new DeviceManager();
+        }
+
+        public ITexture CreateTexture(IDevice device, Bitmap image, Usage usage, Pool pool)
+        {
+            return new TextureAdapter(((DeviceAdapter)device).DXDevice, image, usage, pool);
+        }
+
+        public ITexture CreateTexture(IDevice device, Stream data, Usage usage, Pool pool)
+        {
+            return new TextureAdapter(((DeviceAdapter)device).DXDevice, data, usage, pool);
+        }
+
+        public ITexture CreateTexture(IDevice device, int width, int height, int numLevels, Usage usage, Format format, Pool pool)
+        {
+            return new TextureAdapter(((DeviceAdapter)device).DXDevice, width, height, numLevels, usage, format, pool);
         }
 
         #endregion
