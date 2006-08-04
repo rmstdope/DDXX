@@ -42,9 +42,10 @@ namespace Direct3D
             GetDisplayMode();
         }
 
-        public static void SetFactory(IFactory d3dFactory)
+        public static IFactory Factory
         {
-            factory = d3dFactory;
+            get { return factory; }
+            set { factory = value; }
         }
 
         public static D3DDriver GetInstance()
@@ -56,7 +57,7 @@ namespace Direct3D
             return instance;
         }
 
-        public void Init(Control control, DeviceDescription desc)
+        public void Initialize(Control control, DeviceDescription desc)
         {
             if (device != null)
                 Reset();
@@ -103,6 +104,7 @@ namespace Direct3D
             if (desc.windowed)
             {
                 present.Windowed = true;
+                present.BackBufferCount = 1;
                 present.SwapEffect = SwapEffect.Discard;
             }
             else

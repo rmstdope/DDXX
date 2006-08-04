@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Drawing;
 using System.Text;
+using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using Microsoft.DirectX.DirectInput;
 using Direct3D;
 using FMOD;
+using Input;
 using Sound;
 using Utility;
 
@@ -16,9 +19,14 @@ namespace DemoFramework
         SoundDriver soundDriver;
         FMOD.Sound sound;
         Channel channel;
+
         IDevice device;
+        ITexture backBuffer;
+
+        InputDriver inputDriver;
+
         List<Track> tracks = new List<Track>();
-        int activeTrack;
+        int activeTrack = 0;
 
         public float StartTime
         {
@@ -59,14 +67,30 @@ namespace DemoFramework
 
         public void Initialize(string song)
         {
+            InitializeGraphics();
+
+            InitializeSound(song);
+
+            InitializeInput();
+        }
+
+        private void InitializeInput()
+        {
+            inputDriver = InputDriver.GetInstance();
+        }
+
+        private void InitializeGraphics()
+        {
             device = D3DDriver.GetInstance().GetDevice();
-            
+            backBuffer = D3DDriver.Factory.CreateTexture(device, device.DisplayMode.Width, device.DisplayMode.Height, 1, Usage.RenderTarget, device.DisplayMode.Format, Pool.Default);
+        }
+
+        private void InitializeSound(string song)
+        {
             soundDriver = SoundDriver.GetInstance();
             soundDriver.Initialize();
             if (song != null && song != "")
                 sound = soundDriver.CreateSound(song);
-
-            //Texture backBuffer = new Texture(device, device.DisplayMode.Width, device.DisplayMode.Height, 1, Usage.RenderTarget, device.DisplayMode.Format, Pool.Managed);
         }
 
         public void Register(int track, IEffect effect)
@@ -101,7 +125,7 @@ namespace DemoFramework
                 channel = soundDriver.PlaySound(sound);
             }
 
-            while (Time.StepTime <= EndTime + 2.0f)
+            while (Time.StepTime <= EndTime + 2.0f && !inputDriver.KeyPressed(Key.Escape))
             {
                 Step();
 
@@ -111,18 +135,39 @@ namespace DemoFramework
 
         internal void Render()
         {
-            // Clear the back buffer to a blue color (ARGB = 000000ff)
+            RenderActiveTrack();
+
+            Surface source = backBuffer.GetSurfaceLevel(0);
+            Surface destination = device.GetRenderTarget(0);
+            device.StretchRectangle(source, new Rectangle(0, 0, device.DisplayMode.Width, device.DisplayMode.Height),
+                                    destination, new Rectangle(0, 0, device.DisplayMode.Width, device.DisplayMode.Height),
+                                    TextureFilter.None);
+            
+            device.Present();
+        }
+
+        private void RenderActiveTrack()
+        {
+            Surface originalTarget = device.GetRenderTarget(0);
+            device.SetRenderTarget(0, backBuffer.GetSurfaceLevel(0));
             device.Clear(ClearFlags.Target, System.Drawing.Color.Blue, 1.0f, 0);
 
-            if (tracks.Count != 0 &&
-                tracks[activeTrack].GetEffects(Time.StepTime).Length != 0)
+            if (tracks.Count != 0)
             {
-                device.BeginScene();
+                IEffect[] activeEffects = tracks[activeTrack].GetEffects(Time.StepTime);
 
-                device.EndScene();
+                if (activeEffects.Length != 0)
+                {
+                    device.BeginScene();
+                    foreach (IEffect effect in activeEffects)
+                    {
+                        effect.Render();
+                    }
+                    device.EndScene();
+                }
             }
 
-            device.Present();
+            device.SetRenderTarget(0, originalTarget);
         }
     }
 }

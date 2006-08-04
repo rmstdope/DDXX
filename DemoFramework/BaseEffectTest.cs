@@ -22,6 +22,10 @@ namespace DemoFramework
         {
         }
 
+        public override void Render()
+        {
+        }
+
         public override void StartTimeUpdated()
         {
             startCalled = true;

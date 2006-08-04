@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using Microsoft.DirectX.DirectInput;
 using Direct3D;
+using Input;
 using Utility;
 using NUnit.Framework;
 using NMock2;
@@ -14,13 +16,24 @@ namespace DemoFramework
     public class DemoWindowTest : D3DMockTest
     {
         DemoWindow window;
+        Input.IFactory iFactory;
 
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
 
-            window = new DemoWindow(factory);
+            iFactory = mockery.NewMock<Input.IFactory>();
+            InputDriver.SetFactory(iFactory);
+            Stub.On(iFactory).
+                GetProperty("Keyboard").
+                Will(Return.Value(new Microsoft.DirectX.DirectInput.Device(SystemGuid.Keyboard)));
+            Stub.On(iFactory).
+                Method("SetCooperativeLevel");
+            Stub.On(iFactory).
+                Method("Acquire"); 
+
+            window = new DemoWindow();
         }
 
         [TearDown]
@@ -34,7 +47,7 @@ namespace DemoFramework
         {
             string WindowText = "4_3_Window";
             DeviceDescription desc = new DeviceDescription();
-            desc.deviceType = DeviceType.Hardware;
+            desc.deviceType = Microsoft.DirectX.Direct3D.DeviceType.Hardware;
             desc.width = 800;
             desc.height = 600;
 
@@ -54,7 +67,7 @@ namespace DemoFramework
         {
             string WindowText = "16_9_Window";
             DeviceDescription desc = new DeviceDescription();
-            desc.deviceType = DeviceType.Hardware;
+            desc.deviceType = Microsoft.DirectX.Direct3D.DeviceType.Hardware;
             desc.width = 800;
             desc.height = 450;
 
@@ -74,7 +87,7 @@ namespace DemoFramework
         public void TestInitializeFail()
         {
             DeviceDescription desc = new DeviceDescription();
-            desc.deviceType = DeviceType.Hardware;
+            desc.deviceType = Microsoft.DirectX.Direct3D.DeviceType.Hardware;
             desc.height = 601;
 
             window.Initialize("nisse", desc);

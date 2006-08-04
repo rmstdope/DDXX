@@ -60,7 +60,7 @@ namespace EngineTest
         private static void SetupFramework(SetupDialog setup, out DemoWindow window, out DemoExecuter executer, out DeviceDescription desc)
         {
             desc = setup.DeviceDescription;
-            window = new DemoWindow(new D3DFactory());
+            window = new DemoWindow();
             executer = new DemoExecuter();
         }
 

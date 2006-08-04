@@ -14,5 +14,9 @@ namespace EngineTest
         public override void Step()
         {
         }
+
+        public override void Render()
+        {
+        }
     }
 }

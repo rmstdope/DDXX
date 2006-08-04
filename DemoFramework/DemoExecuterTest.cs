@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.DirectX.Direct3D;
 using Direct3D;
 using FMOD;
+using Input;
 using Sound;
 using Utility;
 using NUnit.Framework;
@@ -17,6 +18,7 @@ namespace DemoFramework
     public class DemoExecuterTest : TrackTest
     {
         DemoExecuter executer;
+        private Input.IFactory iFactory;
         private Sound.IFactory sFactory;
         private ISystem system;
 
@@ -27,6 +29,9 @@ namespace DemoFramework
 
             Time.Initialize();
 
+            iFactory = mockery.NewMock<Input.IFactory>();
+            InputDriver.SetFactory(iFactory);
+
             sFactory = mockery.NewMock<Sound.IFactory>();
             system = mockery.NewMock<ISystem>();
             Stub.On(sFactory).
@@ -36,7 +41,7 @@ namespace DemoFramework
 
             DeviceDescription desc = new DeviceDescription();
             desc.deviceType = DeviceType.Hardware;
-            D3DDriver.GetInstance().Init(null, desc);
+            D3DDriver.GetInstance().Initialize(null, desc);
 
             executer = new DemoExecuter();
         }
@@ -211,12 +216,25 @@ namespace DemoFramework
         {
             TestInitializeOKSong();
 
+            Stub.On(iFactory).
+                Method("KeyPressed").
+                WithAnyArguments().
+                Will(Return.Value(false));
             Expect.Once.On(system).
                 Method("PlaySound").
                 Will(Return.Value(FMOD.RESULT.OK));
+            Expect.Exactly(2).On(device).
+                Method("GetRenderTarget").
+                With(0).
+                Will(Return.Value(null));
+            Expect.Exactly(2).On(device).
+                Method("SetRenderTarget").
+                With(0, null);
             Expect.Once.On(device).
                 Method("Clear").
                 With(ClearFlags.Target, System.Drawing.Color.Blue, 1.0f, 0);
+            Expect.Once.On(device).
+                Method("StretchRectangle");
             Expect.Once.On(device).
                 Method("Present");
             Time.CurrentTime = 2.0f;
@@ -229,16 +247,39 @@ namespace DemoFramework
         {
             TestInitializeOKNoSong1();
 
+            Expect.Once.On(iFactory).
+                Method("KeyPressed").
+                WithAnyArguments().
+                Will(Return.Value(false));
+            Expect.Once.On(iFactory).
+                Method("KeyPressed").
+                WithAnyArguments().
+                Will(Return.Value(true));
             Expect.Once.On(device).
                 Method("Clear").
                 With(ClearFlags.Target, System.Drawing.Color.Blue, 1.0f, 0);
             Expect.Once.On(device).
+                Method("BeginScene");
+            Expect.Exactly(2).On(device).
+                Method("GetRenderTarget").
+                With(0).
+                Will(Return.Value(null));
+            Expect.Exactly(2).On(device).
+                Method("SetRenderTarget").
+                With(0, null);
+            Expect.Once.On(device).
+                Method("EndScene");
+            Expect.Once.On(device).
+                Method("StretchRectangle");
+            Expect.Once.On(device).
                 Method("Present");
-            Time.CurrentTime = 2.1f;
-            IEffect t0e1 = CreateMockEffect(0, 0.1f);
-            executer.Register(0, t0e1);
+            IEffect effect = CreateMockEffect(0, 10.0f);
+            Expect.Once.On(effect).
+                Method("Step");
+            Expect.Once.On(effect).
+                Method("Render");
+            executer.Register(0, effect);
             executer.Run();
-            Assert.Greater(Time.StepTime, 2.1f);
         }
 
         [Test]
@@ -251,17 +292,25 @@ namespace DemoFramework
                 With(ClearFlags.Target, System.Drawing.Color.Blue, 1.0f, 0);
             Expect.Once.On(device).
                 Method("BeginScene");
-            //Expect.Once.On(device).
-            //    Method("SetRenderTarget").
-            //    With(Is.EqualTo(0), Is.NotNull);
+            Expect.Exactly(2).On(device).
+                Method("GetRenderTarget").
+                With(0).
+                Will(Return.Value(null));
+            Expect.Exactly(2).On(device).
+                Method("SetRenderTarget").
+                With(0, null);
             Expect.Once.On(device).
                 Method("EndScene");
+            Expect.Once.On(device).
+                Method("StretchRectangle");
             Expect.Once.On(device).
                 Method("Present");
 
             Time.CurrentTime = 5.0f;
-            IEffect t0e1 = CreateMockEffect(0, 10.0f);
-            executer.Register(0, t0e1);
+            IEffect effect = CreateMockEffect(0, 10.0f);
+            Expect.Once.On(effect).
+                Method("Render");
+            executer.Register(0, effect);
             executer.Render();
         }
 

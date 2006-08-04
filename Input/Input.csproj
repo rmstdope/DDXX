@@ -39,7 +39,6 @@
   <ItemGroup>
     <Compile Include="DIFactory.cs" />
     <Compile Include="IFactory.cs" />
-    <Compile Include="IDevice.cs" />
     <Compile Include="InputDriver.cs" />
     <Compile Include="InputDriverTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

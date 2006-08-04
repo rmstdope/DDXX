@@ -4,6 +4,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using Direct3D;
+using Input;
 using Utility;
 
 namespace DemoFramework
@@ -18,15 +19,17 @@ namespace DemoFramework
             }
         }
 
-        public DemoWindow(IFactory deviceFactory)
+        public DemoWindow()
         {
-            D3DDriver.SetFactory(deviceFactory);
         }
 
         public void Initialize(string name, DeviceDescription desc)
         {
-            D3DDriver driver = D3DDriver.GetInstance();
-            driver.Init(this, desc);
+            D3DDriver gDriver = D3DDriver.GetInstance();
+            gDriver.Initialize(this, desc);
+
+            InputDriver iDriver = InputDriver.GetInstance();
+            iDriver.Initialize(this);
 
             ClientSize = new Size(desc.width, desc.height);
             if (AspectRatio.Ratios.RATIO_INVALID == new AspectRatio(ClientSize.Width, ClientSize.Height).Ratio)

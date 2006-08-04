@@ -91,7 +91,7 @@ namespace Direct3D
                 With(0).
                 Will(Return.Value(displayMode));
 
-            D3DDriver.SetFactory(factory);
+            D3DDriver.Factory = factory;
             driver = D3DDriver.GetInstance();
 
         }
@@ -110,7 +110,7 @@ namespace Direct3D
             try
             {
                 D3DDriver.DestroyInstance();
-                D3DDriver.SetFactory(null);
+                D3DDriver.Factory = null;
                 driver = D3DDriver.GetInstance();
                 Assert.Fail();
             }
@@ -179,7 +179,7 @@ namespace Direct3D
                 desc.windowed = true;
                 param.Windowed = true;
                 param.SwapEffect = SwapEffect.Discard;
-                driver.Init(null, desc);
+                driver.Initialize(null, desc);
                 Assert.Fail();
             }
             catch (DDXXException)
@@ -201,11 +201,12 @@ namespace Direct3D
                 desc.windowed = true;
                 param.Windowed = true;
                 param.SwapEffect = SwapEffect.Discard;
+                param.BackBufferCount = 1;
                 Expect.Once.On(factory).
                     Method("CreateDevice").
                     With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(null), Is.EqualTo(CreateFlags.SoftwareVertexProcessing), new IsEqualPP(param)).
                     Will(Throw.Exception(new DirectXException()));
-                driver.Init(null, desc);
+                driver.Initialize(null, desc);
                 Assert.Fail();
             }
             catch (DirectXException)
@@ -233,7 +234,7 @@ namespace Direct3D
                 Method("CreateDevice").
                 With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(null), Is.EqualTo(CreateFlags.SoftwareVertexProcessing), new IsEqualPP(param)).
                 Will(Return.Value(device));
-            driver.Init(null, desc);
+            driver.Initialize(null, desc);
             Assert.AreEqual(device, driver.GetDevice());
 
             Expect.Once.On(device).
@@ -252,11 +253,12 @@ namespace Direct3D
             desc.windowed = true;
             param.Windowed = true;
             param.SwapEffect = SwapEffect.Discard;
+            param.BackBufferCount = 1;
             Expect.Once.On(factory).
                 Method("CreateDevice").
                 With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(null), Is.EqualTo(CreateFlags.HardwareVertexProcessing), new IsEqualPP(param)).
                 Will(Return.Value(device));
-            driver.Init(null, desc);
+            driver.Initialize(null, desc);
             Assert.AreEqual(device, driver.GetDevice());
 
             Expect.Once.On(device).
@@ -275,7 +277,7 @@ namespace Direct3D
             // Can not use only stencil
             try
             {
-                driver.Init(null, desc);
+                driver.Initialize(null, desc);
                 Assert.Fail();
             }
             catch (DDXXException) { }
@@ -296,7 +298,7 @@ namespace Direct3D
             // No depth buffer available
             try
             {
-                driver.Init(null, desc);
+                driver.Initialize(null, desc);
                 Assert.Fail();
             }
             catch (DDXXException) { }
@@ -319,7 +321,7 @@ namespace Direct3D
             // No depth/stencil buffer available
             try
             {
-                driver.Init(null, desc);
+                driver.Initialize(null, desc);
                 Assert.Fail();
             }
             catch (DDXXException) { }
@@ -337,6 +339,7 @@ namespace Direct3D
             param.SwapEffect = SwapEffect.Discard;
             param.AutoDepthStencilFormat = DepthFormat.D16;
             param.EnableAutoDepthStencil = true;
+            param.BackBufferCount = 1;
 
             // Create device with depth only
             Expect.Exactly(2).On(manager).
@@ -351,7 +354,7 @@ namespace Direct3D
                 Method("CreateDevice").
                 With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(null), Is.EqualTo(CreateFlags.SoftwareVertexProcessing), new IsEqualPP(param)).
                 Will(Return.Value(device));
-            driver.Init(null, desc);
+            driver.Initialize(null, desc);
             Assert.AreEqual(device, driver.GetDevice());
 
             Expect.Once.On(device).
@@ -372,6 +375,7 @@ namespace Direct3D
             param.SwapEffect = SwapEffect.Discard;
             param.AutoDepthStencilFormat = DepthFormat.D24X4S4;
             param.EnableAutoDepthStencil = true;
+            param.BackBufferCount = 1;
 
             // Create device with depth and stencil
             Expect.Exactly(1).On(manager).
@@ -386,7 +390,7 @@ namespace Direct3D
                 Method("CreateDevice").
                 With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(null), Is.EqualTo(CreateFlags.SoftwareVertexProcessing), new IsEqualPP(param)).
                 Will(Return.Value(device));
-            driver.Init(null, desc);
+            driver.Initialize(null, desc);
             Assert.AreEqual(device, driver.GetDevice());
 
             Expect.Once.On(device).

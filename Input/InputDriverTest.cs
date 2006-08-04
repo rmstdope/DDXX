@@ -13,7 +13,6 @@ namespace Input
     {
         private Mockery mockery;
         private IFactory factory;
-        private IDevice device;
 
         private InputDriver driver;
         Device keyboard = new Device(SystemGuid.Keyboard);
@@ -23,7 +22,6 @@ namespace Input
         {
             mockery = new Mockery();
             factory = mockery.NewMock<IFactory>();
-            device = mockery.NewMock<IDevice>();
 
             InputDriver.SetFactory(factory);
             driver = InputDriver.GetInstance();

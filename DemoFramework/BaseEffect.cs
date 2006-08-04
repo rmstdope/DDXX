@@ -42,7 +42,11 @@ namespace DemoFramework
         }
 
         public abstract void Step();
+
+        public abstract void Render();
+
         public virtual void StartTimeUpdated() { }
+
         public virtual void EndTimeUpdated() { }
 
         #endregion
