@@ -18,6 +18,7 @@ namespace DemoFramework
         Channel channel;
         IDevice device;
         List<Track> tracks = new List<Track>();
+        int activeTrack;
 
         public float StartTime
         {
@@ -64,6 +65,8 @@ namespace DemoFramework
             soundDriver.Initialize();
             if (song != null && song != "")
                 sound = soundDriver.CreateSound(song);
+
+            //Texture backBuffer = new Texture(device, device.DisplayMode.Width, device.DisplayMode.Height, 1, Usage.RenderTarget, device.DisplayMode.Format, Pool.Managed);
         }
 
         public void Register(int track, IEffect effect)
@@ -111,9 +114,13 @@ namespace DemoFramework
             // Clear the back buffer to a blue color (ARGB = 000000ff)
             device.Clear(ClearFlags.Target, System.Drawing.Color.Blue, 1.0f, 0);
 
-            device.BeginScene();
+            if (tracks.Count != 0 &&
+                tracks[activeTrack].GetEffects(Time.StepTime).Length != 0)
+            {
+                device.BeginScene();
 
-            device.EndScene();
+                device.EndScene();
+            }
 
             device.Present();
         }

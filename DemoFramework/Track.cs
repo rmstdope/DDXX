@@ -49,5 +49,10 @@ namespace DemoFramework
             List<IEffect> valid = effects.FindAll(IsWithinTime);
             return valid.ToArray();
         }
+
+        internal bool IsActive(float p)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
     }
 }

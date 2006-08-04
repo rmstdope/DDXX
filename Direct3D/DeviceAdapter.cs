@@ -15,14 +15,7 @@ namespace Direct3D
 
         public DeviceAdapter(int adapter, DeviceType deviceType, Control renderWindow, CreateFlags behaviorFlags, PresentParameters presentationParameters)
         {
-            try
-            {   
-                device = new Device(adapter, deviceType, renderWindow, behaviorFlags, presentationParameters);
-            }
-            catch (InvalidCallException exception)
-            {
-                throw new DDXXException(exception.Message);
-            }
+            device = new Device(adapter, deviceType, renderWindow, behaviorFlags, presentationParameters);
         }
 
         #region IDevice Members
