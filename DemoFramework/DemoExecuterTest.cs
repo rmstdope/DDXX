@@ -218,6 +218,10 @@ namespace DemoFramework
                 Method("Clear").
                 With(ClearFlags.Target, System.Drawing.Color.Blue, 1.0f, 0);
             Expect.Once.On(device).
+                Method("BeginScene");
+            Expect.Once.On(device).
+                Method("EndScene");
+            Expect.Once.On(device).
                 Method("Present");
             Time.CurrentTime = 2.0f;
             executer.Run();
@@ -233,12 +237,39 @@ namespace DemoFramework
                 Method("Clear").
                 With(ClearFlags.Target, System.Drawing.Color.Blue, 1.0f, 0);
             Expect.Once.On(device).
+                Method("BeginScene");
+            Expect.Once.On(device).
+                Method("EndScene");
+            Expect.Once.On(device).
                 Method("Present");
             Time.CurrentTime = 2.1f;
             IEffect t0e1 = CreateMockEffect(0, 0.1f);
             executer.Register(0, t0e1);
             executer.Run();
             Assert.Greater(Time.StepTime, 2.1f);
+        }
+
+        [Test]
+        public void TestRenderOneTrack()
+        {
+            TestInitializeOKNoSong1();
+
+            Expect.Once.On(device).
+                Method("Clear").
+                With(ClearFlags.Target, System.Drawing.Color.Blue, 1.0f, 0);
+            Expect.Once.On(device).
+                Method("BeginScene");
+            //Expect.Once.On(device).
+            //    Method("SetRenderTarget").
+            //    With(Is.EqualTo(0), Is.NotNull);
+            Expect.Once.On(device).
+                Method("EndScene");
+            Expect.Once.On(device).
+                Method("Present");
+
+            IEffect t0e1 = CreateMockEffect(0, 0.1f);
+            executer.Register(0, t0e1);
+            executer.Render();
         }
 
     }

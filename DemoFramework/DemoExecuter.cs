@@ -110,6 +110,11 @@ namespace DemoFramework
         {
             // Clear the back buffer to a blue color (ARGB = 000000ff)
             device.Clear(ClearFlags.Target, System.Drawing.Color.Blue, 1.0f, 0);
+
+            device.BeginScene();
+
+            device.EndScene();
+
             device.Present();
         }
     }
