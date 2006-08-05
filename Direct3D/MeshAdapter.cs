@@ -10,7 +10,12 @@ namespace Direct3D
 {
     public class MeshAdapter : IMesh
     {
-        private IMesh mesh;
+        private Mesh mesh;
+
+        public MeshAdapter(Device device, float width, float height, float depth)
+        {
+            mesh = Mesh.Box(device, width, height, depth);
+        }
 
         #region IMesh Members
 

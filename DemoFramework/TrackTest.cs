@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Direct3D;
 using NUnit.Framework;
 using NMock2;
 

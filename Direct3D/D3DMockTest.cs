@@ -6,7 +6,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using NMock2;
 
-namespace DemoFramework
+namespace Direct3D
 {
     public class D3DMockTest
     {

@@ -8,7 +8,7 @@ using Microsoft.DirectX.Direct3D;
 
 namespace Direct3D
 {
-    interface IMesh
+    public interface IMesh
     {
         //
         // Summary:

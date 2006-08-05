@@ -37,6 +37,11 @@ namespace Direct3D
             return new TextureAdapter(((DeviceAdapter)device).DXDevice, width, height, numLevels, usage, format, pool);
         }
 
+        public IMesh CreateBoxMesh(IDevice device, float width, float height, float depth)
+        {
+            return new MeshAdapter(((DeviceAdapter)device).DXDevice, width, height, depth);
+        }
+
         #endregion
     }
 }
