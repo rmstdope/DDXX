@@ -54,7 +54,7 @@ namespace Direct3D
         // Returns:
         //     A Microsoft.DirectX.Direct3D.Surface object that represents the returned
         //     surface.
-        Surface GetSurfaceLevel(int level);
+        ISurface GetSurfaceLevel(int level);
         //
         // Summary:
         //     Locks a rectangle on a texture resource.

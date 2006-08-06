@@ -132,9 +132,9 @@ namespace Direct3D
             return texture.GetLevelDescription(level);
         }
 
-        public Surface GetSurfaceLevel(int level)
+        public ISurface GetSurfaceLevel(int level)
         {
-            return texture.GetSurfaceLevel(level);
+            return new SurfaceAdapter(texture.GetSurfaceLevel(level));
         }
 
         public GraphicsStream LockRectangle(int level, LockFlags flags)

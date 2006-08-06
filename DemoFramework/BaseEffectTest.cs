@@ -41,6 +41,11 @@ namespace DemoFramework
             return compareWith == Device;
         }
 
+        public bool IsFactoryEqual(IFactory compareWith)
+        {
+            return compareWith == Factory;
+        }
+
     }
 
     [TestFixture]
@@ -67,6 +72,7 @@ namespace DemoFramework
             effect.Initialize();
 
             Assert.IsTrue(effect.IsDeviceEqual(D3DDriver.GetInstance().GetDevice()));
+            Assert.IsTrue(effect.IsFactoryEqual(D3DDriver.Factory));
         }
 
         [Test]

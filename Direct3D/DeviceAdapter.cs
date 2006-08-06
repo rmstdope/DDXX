@@ -64,15 +64,15 @@ namespace Direct3D
             }
         }
 
-        public Surface DepthStencilSurface
+        public ISurface DepthStencilSurface
         {
             get
             {
-                return device.DepthStencilSurface;
+                return new SurfaceAdapter(device.DepthStencilSurface);
             }
             set
             {
-                device.DepthStencilSurface = value;
+                device.DepthStencilSurface = value.DXSurface;
             }
         }
 
@@ -291,29 +291,29 @@ namespace Direct3D
             device.Clear(flags, color, zdepth, stencil, regions);
         }
 
-        public void ColorFill(Surface surface, Rectangle rect, Color color)
+        public void ColorFill(ISurface surface, Rectangle rect, Color color)
         {
-            device.ColorFill(surface, rect, color);
+            device.ColorFill(surface.DXSurface, rect, color);
         }
 
-        public void ColorFill(Surface surface, Rectangle rect, int color)
+        public void ColorFill(ISurface surface, Rectangle rect, int color)
         {
-            device.ColorFill(surface, rect, color);
+            device.ColorFill(surface.DXSurface, rect, color);
         }
 
-        public Surface CreateDepthStencilSurface(int width, int height, DepthFormat format, MultiSampleType multiSample, int multiSampleQuality, bool discard)
+        public ISurface CreateDepthStencilSurface(int width, int height, DepthFormat format, MultiSampleType multiSample, int multiSampleQuality, bool discard)
         {
-            return device.CreateDepthStencilSurface(width, height, format, multiSample, multiSampleQuality, discard);
+            return new SurfaceAdapter(device.CreateDepthStencilSurface(width, height, format, multiSample, multiSampleQuality, discard));
         }
 
-        public Surface CreateOffscreenPlainSurface(int width, int height, Format format, Pool pool)
+        public ISurface CreateOffscreenPlainSurface(int width, int height, Format format, Pool pool)
         {
-            return device.CreateOffscreenPlainSurface(width, height, format, pool);
+            return new SurfaceAdapter(device.CreateOffscreenPlainSurface(width, height, format, pool));
         }
 
-        public Surface CreateRenderTarget(int width, int height, Format format, MultiSampleType multiSample, int multiSampleQuality, bool lockable)
+        public ISurface CreateRenderTarget(int width, int height, Format format, MultiSampleType multiSample, int multiSampleQuality, bool lockable)
         {
-            return device.CreateRenderTarget(width, height, format, multiSample, multiSampleQuality, lockable);
+            return new SurfaceAdapter(device.CreateRenderTarget(width, height, format, multiSample, multiSampleQuality, lockable));
         }
 
         public void DeletePatch(int handle)
@@ -401,9 +401,9 @@ namespace Direct3D
             device.EvictManagedResources();
         }
 
-        public Surface GetBackBuffer(int swapChain, int backBuffer, BackBufferType backBufferType)
+        public ISurface GetBackBuffer(int swapChain, int backBuffer, BackBufferType backBufferType)
         {
-            return device.GetBackBuffer(swapChain, backBuffer, backBufferType);
+            return new SurfaceAdapter(device.GetBackBuffer(swapChain, backBuffer, backBufferType));
         }
 
         public CubeTexture GetCubeTexture(int stage)
@@ -411,9 +411,9 @@ namespace Direct3D
             return GetCubeTexture(stage);
         }
 
-        public void GetFrontBufferData(int swapChain, Surface buffer)
+        public void GetFrontBufferData(int swapChain, ISurface buffer)
         {
-            device.GetFrontBufferData(swapChain, buffer);
+            device.GetFrontBufferData(swapChain, buffer.DXSurface);
         }
 
         public GammaRamp GetGammaRamp(int swapChain)
@@ -461,14 +461,14 @@ namespace Direct3D
             return device.GetRenderStateSingle(state);
         }
 
-        public Surface GetRenderTarget(int renderTargetIndex)
+        public ISurface GetRenderTarget(int renderTargetIndex)
         {
-            return device.GetRenderTarget(renderTargetIndex);
+            return new SurfaceAdapter(device.GetRenderTarget(renderTargetIndex));
         }
 
-        public void GetRenderTargetData(Surface renderTarget, Surface destSurface)
+        public void GetRenderTargetData(ISurface renderTarget, ISurface destSurface)
         {
-            device.GetRenderTargetData(renderTarget, destSurface);
+            device.GetRenderTargetData(renderTarget.DXSurface, destSurface.DXSurface);
         }
 
         public bool GetSamplerStageStateBoolean(int stage, SamplerStageStates state)
@@ -616,9 +616,9 @@ namespace Direct3D
             device.SetCursorPosition(positionX, positionY, updateImmediate);
         }
 
-        public void SetCursorProperties(int hotSpotX, int hotSpotY, Surface cursorBitmap)
+        public void SetCursorProperties(int hotSpotX, int hotSpotY, ISurface cursorBitmap)
         {
-            device.SetCursorProperties(hotSpotX, hotSpotY, cursorBitmap);
+            device.SetCursorProperties(hotSpotX, hotSpotY, cursorBitmap.DXSurface);
         }
 
         public void SetDialogBoxesEnabled(bool value)
@@ -701,9 +701,9 @@ namespace Direct3D
             device.SetRenderState(state, value);
         }
 
-        public void SetRenderTarget(int renderTargetIndex, Surface renderTarget)
+        public void SetRenderTarget(int renderTargetIndex, ISurface renderTarget)
         {
-            device.SetRenderTarget(renderTargetIndex, renderTarget);
+            device.SetRenderTarget(renderTargetIndex, renderTarget.DXSurface);
         }
 
         public void SetSamplerState(int stage, SamplerStageStates state, bool value)
@@ -816,9 +816,9 @@ namespace Direct3D
             return device.ShowCursor(canShow);
         }
 
-        public void StretchRectangle(Surface sourceSurface, Rectangle sourceRectangle, Surface destSurface, Rectangle destRectangle, TextureFilter filter)
+        public void StretchRectangle(ISurface sourceSurface, Rectangle sourceRectangle, ISurface destSurface, Rectangle destRectangle, TextureFilter filter)
         {
-            device.StretchRectangle(sourceSurface, sourceRectangle, destSurface, destRectangle, filter);
+            device.StretchRectangle(sourceSurface.DXSurface, sourceRectangle, destSurface.DXSurface, destRectangle, filter);
         }
 
         public void TestCooperativeLevel()
@@ -826,24 +826,24 @@ namespace Direct3D
             device.TestCooperativeLevel();
         }
 
-        public void UpdateSurface(Surface sourceSurface, Surface destinationSurface)
+        public void UpdateSurface(ISurface sourceSurface, ISurface destinationSurface)
         {
-            device.UpdateSurface(sourceSurface, destinationSurface);
+            device.UpdateSurface(sourceSurface.DXSurface, destinationSurface.DXSurface);
         }
 
-        public void UpdateSurface(Surface sourceSurface, Rectangle sourceRect, Surface destinationSurface)
+        public void UpdateSurface(ISurface sourceSurface, Rectangle sourceRect, ISurface destinationSurface)
         {
-            device.UpdateSurface(sourceSurface, sourceRect, destinationSurface);
+            device.UpdateSurface(sourceSurface.DXSurface, sourceRect, destinationSurface.DXSurface);
         }
 
-        public void UpdateSurface(Surface sourceSurface, Surface destinationSurface, Point destPoint)
+        public void UpdateSurface(ISurface sourceSurface, ISurface destinationSurface, Point destPoint)
         {
-            device.UpdateSurface(sourceSurface, destinationSurface, destPoint);
+            device.UpdateSurface(sourceSurface.DXSurface, destinationSurface.DXSurface, destPoint);
         }
 
-        public void UpdateSurface(Surface sourceSurface, Rectangle sourceRect, Surface destinationSurface, Point destPoint)
+        public void UpdateSurface(ISurface sourceSurface, Rectangle sourceRect, ISurface destinationSurface, Point destPoint)
         {
-            device.UpdateSurface(sourceSurface, sourceRect, destinationSurface, destPoint);
+            device.UpdateSurface(sourceSurface.DXSurface, sourceRect, destinationSurface.DXSurface, destPoint);
         }
 
         public void UpdateTexture(BaseTexture sourceTexture, BaseTexture destinationTexture)

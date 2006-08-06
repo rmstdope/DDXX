@@ -226,10 +226,10 @@ namespace DemoFramework
             Expect.Exactly(2).On(device).
                 Method("GetRenderTarget").
                 With(0).
-                Will(Return.Value(null));
+                Will(Return.Value(surface));
             Expect.Exactly(2).On(device).
                 Method("SetRenderTarget").
-                With(0, null);
+                With(0, surface);
             Expect.Once.On(device).
                 Method("Clear").
                 With(ClearFlags.Target, System.Drawing.Color.Blue, 1.0f, 0);
@@ -263,10 +263,10 @@ namespace DemoFramework
             Expect.Exactly(2).On(device).
                 Method("GetRenderTarget").
                 With(0).
-                Will(Return.Value(null));
+                Will(Return.Value(surface));
             Expect.Exactly(2).On(device).
                 Method("SetRenderTarget").
-                With(0, null);
+                With(0, surface);
             Expect.Once.On(device).
                 Method("EndScene");
             Expect.Once.On(device).
@@ -295,10 +295,10 @@ namespace DemoFramework
             Expect.Exactly(2).On(device).
                 Method("GetRenderTarget").
                 With(0).
-                Will(Return.Value(null));
+                Will(Return.Value(surface));
             Expect.Exactly(2).On(device).
                 Method("SetRenderTarget").
-                With(0, null);
+                With(0, surface);
             Expect.Once.On(device).
                 Method("EndScene");
             Expect.Once.On(device).

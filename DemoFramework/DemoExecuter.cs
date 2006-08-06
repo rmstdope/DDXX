@@ -137,10 +137,10 @@ namespace DemoFramework
         {
             RenderActiveTrack();
 
-            Surface source = backBuffer.GetSurfaceLevel(0);
-            Surface destination = device.GetRenderTarget(0);
-            device.StretchRectangle(source, new Rectangle(0, 0, device.DisplayMode.Width, device.DisplayMode.Height),
-                                    destination, new Rectangle(0, 0, device.DisplayMode.Width, device.DisplayMode.Height),
+            ISurface source = backBuffer.GetSurfaceLevel(0);
+            ISurface destination = device.GetRenderTarget(0);
+            device.StretchRectangle(source, new Rectangle(0, 0, source.Description.Width, source.Description.Height),
+                                    destination, new Rectangle(0, 0, destination.Description.Width, destination.Description.Height),
                                     TextureFilter.None);
             
             device.Present();
@@ -148,7 +148,7 @@ namespace DemoFramework
 
         private void RenderActiveTrack()
         {
-            Surface originalTarget = device.GetRenderTarget(0);
+            ISurface originalTarget = device.GetRenderTarget(0);
             device.SetRenderTarget(0, backBuffer.GetSurfaceLevel(0));
             device.Clear(ClearFlags.Target, System.Drawing.Color.Blue, 1.0f, 0);
 

@@ -10,6 +10,7 @@ namespace DemoFramework
         private float startTime;
         private float endTime;
         private IDevice device;
+        private IFactory factory;
 
         protected BaseEffect(float startTime, float endTime)
         {
@@ -22,9 +23,15 @@ namespace DemoFramework
             get { return device; }
         }
 
+        protected IFactory Factory
+        {
+            get { return factory; }
+        }
+
         public virtual void Initialize()
         {
             device = D3DDriver.GetInstance().GetDevice();
+            factory = D3DDriver.Factory;
         }
 
         #region IEffect Members

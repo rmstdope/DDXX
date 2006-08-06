@@ -14,6 +14,7 @@ namespace Direct3D
         protected IFactory factory;
         protected IDevice device;
         protected ITexture texture;
+        protected ISurface surface;
         protected IManager manager;
         protected DisplayMode displayMode = new DisplayMode();
 
@@ -28,6 +29,7 @@ namespace Direct3D
             device = mockery.NewMock<IDevice>();
             manager = mockery.NewMock<IManager>();
             texture = mockery.NewMock<ITexture>();
+            surface = mockery.NewMock<ISurface>();
 
             Stub.On(factory).
                 Method("CreateManager").
@@ -52,7 +54,10 @@ namespace Direct3D
             Stub.On(texture).
                 Method("GetSurfaceLevel").
                 With(0).
-                Will(Return.Value(null));
+                Will(Return.Value(surface));
+            Stub.On(surface).
+                GetProperty("Description").
+                Will(Return.Value(new SurfaceDescription()));
 
             D3DDriver.Factory = factory;
         }

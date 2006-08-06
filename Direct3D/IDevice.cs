@@ -33,7 +33,7 @@ namespace Direct3D
         // Summary:
         //     Retrieves or sets the depth stencil surface owned by the Microsoft.DirectX.Direct3D.Device
         //     object.
-        Surface DepthStencilSurface { get; set; }
+        ISurface DepthStencilSurface { get; set; }
         //
         // Summary:
         //     Retrieves the capabilities of the rendering device.
@@ -304,7 +304,7 @@ namespace Direct3D
         //
         //   color:
         //     Color used for filling.
-        void ColorFill(Surface surface, Rectangle rect, Color color);
+        void ColorFill(ISurface surface, Rectangle rect, Color color);
         //
         // Summary:
         //     Allows an application to fill a rectangular area of a Microsoft.DirectX.Direct3D.Pool.Default
@@ -319,7 +319,7 @@ namespace Direct3D
         //
         //   color:
         //     Color used for filling.
-        void ColorFill(Surface surface, Rectangle rect, int color);
+        void ColorFill(ISurface surface, Rectangle rect, int color);
         //
         // Summary:
         //     Creates a depth stencil resource.
@@ -364,7 +364,7 @@ namespace Direct3D
         // Returns:
         //     A Microsoft.DirectX.Direct3D.Surface that represents the created depth stencil
         //     surface resource.
-        Surface CreateDepthStencilSurface(int width, int height, DepthFormat format, MultiSampleType multiSample, int multiSampleQuality, bool discard);
+        ISurface CreateDepthStencilSurface(int width, int height, DepthFormat format, MultiSampleType multiSample, int multiSampleQuality, bool discard);
         //
         // Summary:
         //     Creates an off-screen surface.
@@ -384,7 +384,7 @@ namespace Direct3D
         //
         // Returns:
         //     The Microsoft.DirectX.Direct3D.Surface object that is created.
-        Surface CreateOffscreenPlainSurface(int width, int height, Format format, Pool pool);
+        ISurface CreateOffscreenPlainSurface(int width, int height, Format format, Pool pool);
         //
         // Summary:
         //     Creates a render target surface.
@@ -422,7 +422,7 @@ namespace Direct3D
         //
         // Returns:
         //     A Microsoft.DirectX.Direct3D.Surface.
-        Surface CreateRenderTarget(int width, int height, Format format, MultiSampleType multiSample, int multiSampleQuality, bool lockable);
+        ISurface CreateRenderTarget(int width, int height, Format format, MultiSampleType multiSample, int multiSampleQuality, bool lockable);
         //
         // Summary:
         //     Frees a cached high-order patch.
@@ -716,7 +716,7 @@ namespace Direct3D
         // Returns:
         //     A Microsoft.DirectX.Direct3D.Surface that represents the returned back buffer
         //     surface.
-        Surface GetBackBuffer(int swapChain, int backBuffer, BackBufferType backBufferType);
+        ISurface GetBackBuffer(int swapChain, int backBuffer, BackBufferType backBufferType);
         //
         // Summary:
         //     Retrieves the cube texture assigned to a stage for a device.
@@ -746,7 +746,7 @@ namespace Direct3D
         //     output to the lowest. For windowed mode, the size of the destination surface
         //     should be the desktop size. For full-screen mode, the size of the destination
         //     surface should be the screen size.
-        void GetFrontBufferData(int swapChain, Surface buffer);
+        void GetFrontBufferData(int swapChain, ISurface buffer);
         //
         // Summary:
         //     Retrieves the gamma correction ramp for the swap chain.
@@ -881,7 +881,7 @@ namespace Direct3D
         // Returns:
         //     A Microsoft.DirectX.Direct3D.Surface that represents the returned render
         //     target surface for the current device.
-        Surface GetRenderTarget(int renderTargetIndex);
+        ISurface GetRenderTarget(int renderTargetIndex);
         //
         // Summary:
         //     Copies the render target data from device memory to system memory.
@@ -893,7 +893,7 @@ namespace Direct3D
         //   destSurface:
         //     [in, out] A Microsoft.DirectX.Direct3D.Surface object that represents a destination
         //     surface.
-        void GetRenderTargetData(Surface renderTarget, Surface destSurface);
+        void GetRenderTargetData(ISurface renderTarget, ISurface destSurface);
         //
         // Summary:
         //     Retrieves the Boolean value of a given sampler stage state.
@@ -1365,7 +1365,7 @@ namespace Direct3D
         //     less than the dimensions of the display mode, and must be a power of two
         //     in each direction, although not necessarily the same power of two. The alpha
         //     channel must be either 0.0 or 1.0.
-        void SetCursorProperties(int hotSpotX, int hotSpotY, Surface cursorBitmap);
+        void SetCursorProperties(int hotSpotX, int hotSpotY, ISurface cursorBitmap);
         //
         // Summary:
         //     Enables the use of Microsoft Windows Graphics Device Interface (GDI) dialog
@@ -1579,7 +1579,7 @@ namespace Direct3D
         //     is disabled. Devices must always be associated with a color buffer. The new
         //     render-target surface must have at least Microsoft.DirectX.Direct3D.Usage.RenderTarget
         //     specified.
-        void SetRenderTarget(int renderTargetIndex, Surface renderTarget);
+        void SetRenderTarget(int renderTargetIndex, ISurface renderTarget);
         //
         // Summary:
         //     Sets a sampler stage state value.
@@ -1898,7 +1898,7 @@ namespace Direct3D
         //     Filter type. Allowable values are Microsoft.DirectX.Direct3D.TextureFilter.None,
         //     Microsoft.DirectX.Direct3D.TextureFilter.Point, or Microsoft.DirectX.Direct3D.TextureFilter.Linear.
         //     For more information, see Microsoft.DirectX.Direct3D.TextureFilter.
-        void StretchRectangle(Surface sourceSurface, Rectangle sourceRectangle, Surface destSurface, Rectangle destRectangle, TextureFilter filter);
+        void StretchRectangle(ISurface sourceSurface, Rectangle sourceRectangle, ISurface destSurface, Rectangle destRectangle, TextureFilter filter);
         //
         // Summary:
         //     Reports the current cooperative-level status of the Microsoft Direct3D device
@@ -1916,7 +1916,7 @@ namespace Direct3D
         //   destinationSurface:
         //     A Microsoft.DirectX.Direct3D.Surface object that represents the destination
         //     surface.
-        void UpdateSurface(Surface sourceSurface, Surface destinationSurface);
+        void UpdateSurface(ISurface sourceSurface, ISurface destinationSurface);
         //
         // Summary:
         //     Copies rectangular subsets of pixels from one surface to another.
@@ -1934,7 +1934,7 @@ namespace Direct3D
         //   destinationSurface:
         //     A Microsoft.DirectX.Direct3D.Surface object that represents the destination
         //     surface.
-        void UpdateSurface(Surface sourceSurface, Rectangle sourceRect, Surface destinationSurface);
+        void UpdateSurface(ISurface sourceSurface, Rectangle sourceRect, ISurface destinationSurface);
         //
         // Summary:
         //     Copies rectangular subsets of pixels from one surface to another.
@@ -1952,7 +1952,7 @@ namespace Direct3D
         //     A System.Drawing.Point object that represents the upper-left corner of the
         //     destination rectangle. Specifying null for this parameter causes the entire
         //     surface to be copied.
-        void UpdateSurface(Surface sourceSurface, Surface destinationSurface, Point destPoint);
+        void UpdateSurface(ISurface sourceSurface, ISurface destinationSurface, Point destPoint);
         //
         // Summary:
         //     Copies rectangular subsets of pixels from one surface to another.
@@ -1975,7 +1975,7 @@ namespace Direct3D
         //     A System.Drawing.Point object that represents the upper-left corner of the
         //     destination rectangle. Specifying null for this parameter causes the entire
         //     surface to be copied.
-        void UpdateSurface(Surface sourceSurface, Rectangle sourceRect, Surface destinationSurface, Point destPoint);
+        void UpdateSurface(ISurface sourceSurface, Rectangle sourceRect, ISurface destinationSurface, Point destPoint);
         //
         // Summary:
         //     Updates the dirty portions of a texture.
