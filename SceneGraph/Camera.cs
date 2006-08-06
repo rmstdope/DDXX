@@ -5,7 +5,7 @@ using Microsoft.DirectX;
 
 namespace SceneGraph
 {
-    class Camera : Node
+    class Camera : NodeBase
     {
         private float fov = (float)Math.PI / 4;
 
@@ -20,9 +20,10 @@ namespace SceneGraph
         {
         }
 
-        public Camera(String name, Node parent)
-            : base(name, parent)
+        public Camera(String name, NodeBase parent)
+            : base(name)
         {
+            parent.AddChild(this);
         }
 
         internal object GetFOV()
@@ -53,7 +54,7 @@ namespace SceneGraph
 
         internal Matrix GetViewMatrix()
         {
-            Matrix res = GetWorldMatrix();
+            Matrix res = WorldState.GetWorldMatrix();
             res.Invert();
             return res;
         }
