@@ -6,7 +6,7 @@ namespace SceneGraph
 {
     public class SceneGraph
     {
-        private DummyNode rootNode;
+        private NodeBase rootNode;
 
         public SceneGraph()
         {

@@ -7,17 +7,20 @@ using Utility;
 
 namespace SceneGraph
 {
-    public class DummyNode : INode
+    public abstract class NodeBase : INode
     {
-        private DummyNode parent = null;
+        private NodeBase parent = null;
         private WorldState worldState = new WorldState();
         private String name;
         private List<INode> children = new List<INode>();
 
-        public DummyNode(String name) : base()
+        public NodeBase(String name) : base()
         {
             this.name = name;
         }
+
+        protected abstract void StepNode();
+        protected abstract void RenderNode();
 
         #region INode Members
 
@@ -51,18 +54,30 @@ namespace SceneGraph
         {
             children.Add(child);
 
-            if (child is DummyNode)
+            if (child is NodeBase)
             {
-                DummyNode dummyChild = (DummyNode)child;
+                NodeBase dummyChild = (NodeBase)child;
                 dummyChild.parent = this;
             }
         }
 
-        public virtual void Step()
+        public void Step()
         {
+            StepNode();
+
             foreach (INode node in children)
             {
                 node.Step();
+            }
+        }
+
+        public void Render()
+        {
+            RenderNode();
+
+            foreach (INode node in children)
+            {
+                node.Render();
             }
         }
 

@@ -14,5 +14,6 @@ namespace SceneGraph
         Matrix WorldMatrix { get; }
         void AddChild(INode child);
         void Step();
+        void Render();
     }
 }

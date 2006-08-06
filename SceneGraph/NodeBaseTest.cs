@@ -9,50 +9,58 @@ using Microsoft.DirectX;
 namespace SceneGraph
 {
     [TestFixture]
-    public class DummyNodeTest
+    public class NodeBaseTest
     {
+        class DerivedNode : NodeBase
+        {
+            public bool stepCalled;
+            public bool renderCalled;
+            public DerivedNode(string name) : base(name) { }
+            protected override void StepNode() { stepCalled = true; }
+            protected override void RenderNode() { renderCalled = true; }
+        }
+
         [Test]
         public void TestConnecions()
         {
-            DummyNode node1 = new DummyNode("NodeName");
+            NodeBase node1 = new DerivedNode("NodeName");
             Assert.AreEqual(null, node1.Parent);
             Assert.AreEqual("NodeName", node1.Name);
 
-            node1 = new DummyNode("NewNodeName");
+            node1 = new DerivedNode("NewNodeName");
             Assert.AreEqual("NewNodeName", node1.Name);
 
-            DummyNode node2 = new DummyNode("NewNewNodeName");
+            NodeBase node2 = new DerivedNode("NewNewNodeName");
             node1.AddChild(node2);
             Assert.AreEqual(node1, node2.Parent);
             Assert.AreEqual("NewNewNodeName", node2.Name);
 
         }
 
-        class DerivedNode : DummyNode
-        {
-            public bool stepCalled;
-            public DerivedNode() : base("test")
-            {
-            }
-            public override void Step()
-            {
-                base.Step();
-
-                stepCalled = true;
-            }
-        }
-
         [Test]
         public void TestStep()
         {
-            DerivedNode node1 = new DerivedNode();// ("NodeName");
-            DerivedNode node2 = new DerivedNode();//("NewNewNodeName");
+            DerivedNode node1 = new DerivedNode("NodeName");
+            DerivedNode node2 = new DerivedNode("NewNewNodeName");
             node1.AddChild(node2);
 
             node1.Step();
 
             Assert.IsTrue(node1.stepCalled);
             Assert.IsTrue(node2.stepCalled);
+        }
+
+        [Test]
+        public void TestRender()
+        {
+            DerivedNode node1 = new DerivedNode("NodeName");
+            DerivedNode node2 = new DerivedNode("NewNewNodeName");
+            node1.AddChild(node2);
+
+            node1.Render();
+
+            Assert.IsTrue(node1.renderCalled);
+            Assert.IsTrue(node2.renderCalled);
         }
 
         public void AssertVectors(Vector3 vec1, Vector3 vec2)
@@ -66,8 +74,8 @@ namespace SceneGraph
         public void TestWorldMatrix()
         {
             Vector3 vec = new Vector3(1, 2, 3);
-            DummyNode node1 = new DummyNode("NodeName");
-            DummyNode node2 = new DummyNode("NodeName");
+            NodeBase node1 = new DerivedNode("NodeName");
+            NodeBase node2 = new DerivedNode("NodeName");
             node1.AddChild(node2);
             Assert.AreEqual(Matrix.Identity, node2.WorldMatrix);
 

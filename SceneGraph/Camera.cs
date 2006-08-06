@@ -5,7 +5,7 @@ using Microsoft.DirectX;
 
 namespace SceneGraph
 {
-    class Camera : DummyNode
+    class Camera : NodeBase
     {
         private float fov = (float)Math.PI / 4;
 
@@ -20,7 +20,7 @@ namespace SceneGraph
         {
         }
 
-        public Camera(String name, DummyNode parent)
+        public Camera(String name, NodeBase parent)
             : base(name)
         {
             parent.AddChild(this);
@@ -57,6 +57,14 @@ namespace SceneGraph
             Matrix res = WorldState.GetWorldMatrix();
             res.Invert();
             return res;
+        }
+
+        protected override void StepNode()
+        {
+        }
+
+        protected override void RenderNode()
+        {
         }
     }
 }

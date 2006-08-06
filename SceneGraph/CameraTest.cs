@@ -7,7 +7,7 @@ using Microsoft.DirectX;
 namespace SceneGraph
 {
     [TestFixture]
-    class CameraTest
+    public class CameraTest
     {
         [Test]
         public void TestCamera()

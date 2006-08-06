@@ -1,15 +1,25 @@
 ﻿<NUnitProject>
   <Settings activeconfig="Debug" />
   <Config name="Debug" binpathtype="Auto">
+    <assembly path="Physics\bin\Debug\Phsyics.dll" />
+    <assembly path="Utility\bin\Debug\Utility.dll" />
+    <assembly path="Sound\bin\Debug\Sound.dll" />
+    <assembly path="Input\bin\Debug\Input.dll" />
+    <assembly path="SceneGraph\bin\Debug\SceneGraph.dll" />
     <assembly path="DemoFramework\bin\Debug\DemoFramework.dll" />
     <assembly path="Direct3D\bin\Debug\Direct3D.dll" />
-    <assembly path="Phsyics\bin\Debug\Phsyics.dll" />
-    <assembly path="SceneGraph\bin\Debug\SceneGraph.dll" />
+    <assembly path="EngineTest\bin\Debug\EngineTest.exe" />
+    <assembly path="FMOD\bin\Debug\FMOD.dll" />
   </Config>
   <Config name="Release" binpathtype="Auto">
+    <assembly path="Physics\bin\Release\Phsyics.dll" />
+    <assembly path="Utility\bin\Release\Utility.dll" />
+    <assembly path="Sound\bin\Release\Sound.dll" />
+    <assembly path="Input\bin\Release\Input.dll" />
+    <assembly path="SceneGraph\bin\Release\SceneGraph.dll" />
     <assembly path="DemoFramework\bin\Release\DemoFramework.dll" />
     <assembly path="Direct3D\bin\Release\Direct3D.dll" />
-    <assembly path="Phsyics\bin\Release\Phsyics.dll" />
-    <assembly path="SceneGraph\bin\Release\SceneGraph.dll" />
+    <assembly path="EngineTest\bin\Release\EngineTest.exe" />
+    <assembly path="FMOD\bin\Release\FMOD.dll" />
   </Config>
 </NUnitProject>
