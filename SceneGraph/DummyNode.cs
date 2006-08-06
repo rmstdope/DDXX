@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX;
 using Physics;
+using Utility;
 
 namespace SceneGraph
 {
-    public class NodeBase : INode
+    public class DummyNode : INode
     {
-        private NodeBase parent = null;
+        private DummyNode parent = null;
         private WorldState worldState = new WorldState();
         private String name;
+        private List<INode> children = new List<INode>();
 
-        public NodeBase(String name) : base()
+        public DummyNode(String name) : base()
         {
             this.name = name;
         }
@@ -24,7 +26,7 @@ namespace SceneGraph
             get { return name; }
         }
 
-        public NodeBase Parent
+        public  INode Parent
         {
             get { return parent; }
         }
@@ -45,12 +47,25 @@ namespace SceneGraph
             get { return worldState; }
         }
 
-        public void AddChild(NodeBase child)
+        public void AddChild(INode child)
         {
-            child.parent = this;
+            children.Add(child);
+
+            if (child is DummyNode)
+            {
+                DummyNode dummyChild = (DummyNode)child;
+                dummyChild.parent = this;
+            }
+        }
+
+        public virtual void Step()
+        {
+            foreach (INode node in children)
+            {
+                node.Step();
+            }
         }
 
         #endregion
-
     }
 }

@@ -9,9 +9,10 @@ namespace SceneGraph
     public interface INode
     {
         string Name { get; }
-        NodeBase Parent { get; }
+        INode Parent { get; }
         WorldState WorldState { get; }
         Matrix WorldMatrix { get; }
-        void AddChild(NodeBase child);
+        void AddChild(INode child);
+        void Step();
     }
 }

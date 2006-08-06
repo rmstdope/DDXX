@@ -40,8 +40,8 @@
     <Compile Include="Camera.cs" />
     <Compile Include="CameraTest.cs" />
     <Compile Include="INode.cs" />
-    <Compile Include="NodeBase.cs" />
-    <Compile Include="NodeBaseTest.cs" />
+    <Compile Include="DummyNode.cs" />
+    <Compile Include="DummyNodeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SceneGraph.cs" />
     <Compile Include="SceneGraphTest.cs" />
@@ -50,6 +50,10 @@
     <ProjectReference Include="..\Physics\Physics.csproj">
       <Project>{6F7E70F2-FC19-4399-84BD-F60AC491E970}</Project>
       <Name>Physics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utility\Utility.csproj">
+      <Project>{31D76405-2DD3-436A-BE65-963DE822511E}</Project>
+      <Name>Utility</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
