@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using NMock2;
+using Utility;
 
 namespace SceneGraph
 {
     [TestFixture]
-    public class SceneGraphTest
+    public class SceneTest
     {
-        SceneGraph graph;
+        Scene graph;
 
         Mockery mockery;
         INode node1;
@@ -22,7 +23,7 @@ namespace SceneGraph
             node1 = mockery.NewMock<INode>();
             node2 = mockery.NewMock<INode>();
 
-            graph = new SceneGraph();
+            graph = new Scene();
         }
 
         [TearDown]
@@ -32,7 +33,7 @@ namespace SceneGraph
         }
 
         [Test]
-        public void NodeTest()
+        public void StepTest()
         {
             graph.AddNode(node1);
             graph.AddNode(node2);
@@ -41,6 +42,32 @@ namespace SceneGraph
             Expect.Once.On(node2).Method("Step");
 
             graph.Step();
+        }
+
+        [Test]
+        public void RenderTest()
+        {
+            graph.AddNode(node1);
+            graph.AddNode(node2);
+
+            graph.Render();
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void CameraTestFail()
+        {
+            Camera camera = new Camera("Camera");
+            graph.ActiveCamera = camera;
+        }
+
+        [Test]
+        public void CameraTestOK()
+        {
+            Camera camera = new Camera("Camera");
+            graph.AddNode(camera);
+            graph.ActiveCamera = camera;
+            Assert.AreSame(camera, graph.ActiveCamera);
         }
     }
 }

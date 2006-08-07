@@ -61,6 +61,14 @@ namespace SceneGraph
             }
         }
 
+        public bool HasChild(INode node)
+        {
+            if (children.Exists(delegate(INode node2) { return node == node2; }))
+                return true;
+            else
+                return false;
+        }
+
         public void Step()
         {
             StepNode();
@@ -82,5 +90,6 @@ namespace SceneGraph
         }
 
         #endregion
+
     }
 }

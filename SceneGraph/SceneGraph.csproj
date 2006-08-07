@@ -45,8 +45,8 @@
     <Compile Include="NodeBase.cs" />
     <Compile Include="NodeBaseTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SceneGraph.cs" />
-    <Compile Include="SceneGraphTest.cs" />
+    <Compile Include="Scene.cs" />
+    <Compile Include="SceneTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Direct3D\Direct3D.csproj">

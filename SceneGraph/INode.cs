@@ -13,6 +13,7 @@ namespace SceneGraph
         WorldState WorldState { get; }
         Matrix WorldMatrix { get; }
         void AddChild(INode child);
+        bool HasChild(INode node);
         void Step();
         void Render();
     }

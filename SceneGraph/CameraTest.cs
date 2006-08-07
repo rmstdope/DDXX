@@ -13,11 +13,8 @@ namespace SceneGraph
         public void TestCamera()
         {
             Camera c1 = new Camera("C1");
-            Camera c2 = new Camera("C2", c1);
             Assert.AreEqual(null, c1.Parent);
-            Assert.AreEqual(c1, c2.Parent);
             Assert.AreEqual("C1", c1.Name);
-            Assert.AreEqual("C2", c2.Name);
         }
 
         [Test]
@@ -67,8 +64,8 @@ namespace SceneGraph
             Camera c1 = new Camera("Name");
             AssertVectors(new Vector3(1, 2, 3), Vector3.TransformCoordinate(vec, c1.GetViewMatrix()));
 
-            c1.WorldState.SetPosition(new Vector3(100, 200, 300));
-            c1.WorldState.SetRotation(new Quaternion(0, 1, 0, 0));
+            c1.WorldState.Position = new Vector3(100, 200, 300);
+            c1.WorldState.Rotation = new Quaternion(0, 1, 0, 0);
             AssertVectors(new Vector3(99, -198, 297), Vector3.TransformCoordinate(vec, c1.GetViewMatrix()));
         }
     }

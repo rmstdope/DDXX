@@ -22,29 +22,54 @@ namespace Physics
             this.scaling = scaling;
         }
 
-        public Vector3 GetPosition()
+        public Vector3 Forward
         {
-            return position;
+            get 
+            { 
+                Matrix m = Matrix.RotationQuaternion(rotation);
+                return new Vector3(m.M31, m.M32, m.M33);
+            }
         }
 
-        public void SetPosition(Vector3 position)
+        public Vector3 Up
         {
-            this.position = position;
+            get
+            {
+                Matrix m = Matrix.RotationQuaternion(rotation);
+                return new Vector3(m.M21, m.M22, m.M23);
+            }
+        }
+
+        public Vector3 Right
+        {
+            get
+            {
+                Matrix m = Matrix.RotationQuaternion(rotation);
+                return new Vector3(m.M11, m.M12, m.M13);
+            }
+        }
+
+        public Vector3 Position
+        {
+            get { return position; }
+            set { position = value; }
+        }
+
+        public Vector3 Scaling
+        {
+            get { return scaling; }
+            set { scaling = value; }
+        }
+
+        public Quaternion Rotation
+        {
+            get { return rotation; }
+            set { rotation = value; }
         }
 
         public void MoveDelta(Vector3 delta)
         {
             position += delta;
-        }
-
-        public Vector3 GetScaling()
-        {
-            return scaling;
-        }
-
-        public void SetScaling(Vector3 scaling)
-        {
-            this.scaling = scaling;
         }
 
         public void Scale(Vector3 scale)
@@ -59,27 +84,11 @@ namespace Physics
             scaling *= scale;
         }
 
-        public Quaternion GetRotation()
-        {
-            return rotation;
-        }
-
-        public void Turn(float angle)
-        {
-            Quaternion q = Quaternion.RotationAxis(new Vector3(0, 1, 0), angle);
-            rotation = q * rotation;
-        }
-
-        public void SetRotation(Quaternion rot)
-        {
-            rotation = rot;
-        }
-
         public virtual Matrix GetWorldMatrix()
         {
-            Matrix rot = Matrix.RotationQuaternion(GetRotation());
-            Matrix scale = Matrix.Scaling(GetScaling());
-            Matrix trans = Matrix.Translation(GetPosition());
+            Matrix rot = Matrix.RotationQuaternion(Rotation);
+            Matrix scale = Matrix.Scaling(Scaling);
+            Matrix trans = Matrix.Translation(Position);
             return scale * rot * trans;
         }
 
@@ -88,6 +97,24 @@ namespace Physics
             position = new Vector3(0, 0, 0);
             scaling = new Vector3(1, 1, 1);
             rotation = new Quaternion(0, 0, 0, 1);
+        }
+
+        public void Turn(float angle)
+        {
+            Quaternion q = Quaternion.RotationAxis(new Vector3(0, 1, 0), angle);
+            rotation = Quaternion.Multiply(q, rotation);
+        }
+
+        public void Tilt(float angle)
+        {
+            Quaternion q = Quaternion.RotationAxis(new Vector3(1, 0, 0), angle);
+            rotation = Quaternion.Multiply(q, rotation);
+        }
+
+        public void Roll(float angle)
+        {
+            Quaternion q = Quaternion.RotationAxis(new Vector3(0, 0, 1), angle);
+            rotation = Quaternion.Multiply(q, rotation);
         }
     }
 }

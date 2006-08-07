@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Text;
 using DemoFramework;
 using Direct3D;
+using Physics;
+using SceneGraph;
 
 namespace EngineTest
 {
     public class TestEffect : BaseEffect
     {
-        public TestEffect(float startTime, float endTime) : base(startTime, endTime)
+        public TestEffect(float startTime, float endTime) 
+            : base(startTime, endTime)
         {
         }
 
@@ -17,14 +20,21 @@ namespace EngineTest
             base.Initialize();
 
             IMesh mesh = Factory.CreateBoxMesh(Device, 10.0f, 10.0f, 10.0f);
+
+            Camera camera = new Camera("Camera");
+            //camera.WorldState.
+            Scene.AddNode(camera);
+            Scene.ActiveCamera = camera;
         }
 
         public override void Step()
         {
+            Scene.Step();
         }
 
         public override void Render()
         {
+            Scene.Render();
         }
     }
 }

@@ -77,6 +77,10 @@
       <Project>{E2280509-C330-4684-90FD-336B8CD4D7EF}</Project>
       <Name>Input</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SceneGraph\SceneGraph.csproj">
+      <Project>{BF75F16E-5056-4484-BFE2-72F8733B8BF3}</Project>
+      <Name>SceneGraph</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sound\Sound.csproj">
       <Project>{FFA67C42-A1E3-4C9F-887A-E5DEB52DDEB4}</Project>
       <Name>Sound</Name>

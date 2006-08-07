@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Direct3D;
+using SceneGraph;
 
 namespace DemoFramework
 {
@@ -11,11 +12,14 @@ namespace DemoFramework
         private float endTime;
         private IDevice device;
         private IFactory factory;
+        private Scene scene;
 
         protected BaseEffect(float startTime, float endTime)
         {
             StartTime = startTime;
             EndTime = endTime;
+
+            scene = new Scene();
         }
 
         protected IDevice Device
@@ -26,6 +30,11 @@ namespace DemoFramework
         protected IFactory Factory
         {
             get { return factory; }
+        }
+
+        protected Scene Scene
+        {
+            get { return scene; }
         }
 
         public virtual void Initialize()
