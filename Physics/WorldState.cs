@@ -72,6 +72,21 @@ namespace Physics
             position += delta;
         }
 
+        public void MoveForward(float delta)
+        {
+            MoveDelta(Forward * delta);
+        }
+
+        public void MoveRight(float delta)
+        {
+            MoveDelta(Right * delta);
+        }
+
+        public void MoveUp(float delta)
+        {
+            MoveDelta(Up * delta);
+        }
+
         public void Scale(Vector3 scale)
         {
             scaling.X *= scale.X;

@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
+using Direct3D;
 using Utility;
 
 namespace SceneGraph
@@ -9,10 +12,12 @@ namespace SceneGraph
     {
         private NodeBase rootNode;
         private Camera activeCamera;
+        private IDevice device;
 
         public Scene()
         {
             rootNode = new DummyNode("Scene Root Node");
+            device = D3DDriver.GetInstance().GetDevice();
         }
 
         public Camera ActiveCamera
@@ -39,6 +44,12 @@ namespace SceneGraph
 
         public void Render()
         {
+            if (ActiveCamera == null)
+                throw new DDXXException("Must have an active camera set before a scene can be rendered.");
+            device.SetTransform(TransformType.View, ActiveCamera.GetViewMatrix());
+            device.SetTransform(TransformType.Projection, ActiveCamera.GetProjectionMatrix());
+
+            rootNode.Render();
         }
     }
 }

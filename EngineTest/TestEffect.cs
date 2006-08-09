@@ -20,9 +20,11 @@ namespace EngineTest
             base.Initialize();
 
             IMesh mesh = Factory.CreateBoxMesh(Device, 10.0f, 10.0f, 10.0f);
+            MeshNode node = new MeshNode("Mesh", mesh);
+            Scene.AddNode(node);
 
             Camera camera = new Camera("Camera");
-            //camera.WorldState.
+            camera.WorldState.MoveForward(-100.0f);
             Scene.AddNode(camera);
             Scene.ActiveCamera = camera;
         }
