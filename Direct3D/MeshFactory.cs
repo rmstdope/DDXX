@@ -78,7 +78,6 @@ namespace Direct3D
 
         public void AutoExpire()
         {
-            GC.Collect();
             boxes.RemoveAll(DeadNode);
         }
     }

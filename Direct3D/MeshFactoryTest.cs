@@ -61,6 +61,7 @@ namespace Direct3D
         public ITexture CreateTexture(IDevice device, System.IO.Stream data, Usage usage, Pool pool) { return null; }
         public ITexture CreateTexture(IDevice device, int width, int height, int numLevels, Usage usage, Format format, Pool pool) { return null; }
         public IMesh CreateBoxMesh(IDevice device, float width, float height, float depth) { return new TestMesh(); }
+        public IEffect CreateEffectFromFile(IDevice device, string sourceDataFile, Include includeFile, string skipConstants, ShaderFlags flags, EffectPool pool) { return null; }
     }
 
     [TestFixture]
@@ -101,22 +102,27 @@ namespace Direct3D
             Assert.AreEqual(2, meshFactory.Count);
             Assert.AreEqual(2, meshFactory.CountBoxes);
 
+            GC.Collect();
             meshFactory.AutoExpire();
             Assert.AreEqual(2, meshFactory.Count);
             Assert.AreEqual(2, meshFactory.CountBoxes);
 
+            mesh2.Validate((int[])null);
             mesh2 = null;
             Assert.AreEqual(2, meshFactory.Count);
             Assert.AreEqual(2, meshFactory.CountBoxes);
 
+            GC.Collect();
             meshFactory.AutoExpire();
             Assert.AreEqual(1, meshFactory.Count);
             Assert.AreEqual(1, meshFactory.CountBoxes);
 
+            mesh3.Validate((int[])null);
             mesh3 = null;
             Assert.AreEqual(1, meshFactory.Count);
             Assert.AreEqual(1, meshFactory.CountBoxes);
 
+            GC.Collect();
             meshFactory.AutoExpire();
             Assert.AreEqual(0, meshFactory.Count);
             Assert.AreEqual(0, meshFactory.CountBoxes);

@@ -39,7 +39,12 @@ namespace Direct3D
 
         public IMesh CreateBoxMesh(IDevice device, float width, float height, float depth)
         {
-            return new MeshAdapter(((DeviceAdapter)device).DXDevice, width, height, depth);
+            return MeshAdapter.Box(((DeviceAdapter)device).DXDevice, width, height, depth);
+        }
+
+        public IEffect CreateEffectFromFile(IDevice device, string sourceDataFile, Include includeFile, string skipConstants, ShaderFlags flags, EffectPool pool)
+        {
+            return EffectAdapter.FromFile(((DeviceAdapter)device).DXDevice, sourceDataFile, includeFile, skipConstants, flags, pool);
         }
 
         #endregion

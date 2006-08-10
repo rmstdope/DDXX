@@ -12,9 +12,194 @@ namespace Direct3D
     {
         private Mesh mesh;
 
-        public MeshAdapter(Device device, float width, float height, float depth)
+        public MeshAdapter(Mesh mesh)
         {
-            mesh = Mesh.Box(device, width, height, depth);
+            this.mesh = mesh;
+        }
+
+        public static MeshAdapter Box(Device device, float width, float height, float depth)
+        {
+            return new MeshAdapter(Mesh.Box(device, width, height, depth));
+        }
+        public static MeshAdapter Box(Device device, float width, float height, float depth, out GraphicsStream adjacency)
+        {
+            return new MeshAdapter(Mesh.Box(device, width, height, depth, out adjacency));
+        }
+        public static MeshAdapter Clean(CleanType cleanType, Mesh mesh, GraphicsStream adjacency, GraphicsStream adjacencyOut)
+        {
+            return new MeshAdapter(Mesh.Clean(cleanType, mesh, adjacency, adjacencyOut));
+        }
+        public static MeshAdapter Clean(CleanType cleanType, Mesh mesh, int[] adjacency, out int[] adjacencyOut)
+        {
+            return new MeshAdapter(Mesh.Clean(cleanType, mesh, adjacency, out adjacencyOut));
+        }
+        public static MeshAdapter Clean(CleanType cleanType, Mesh mesh, GraphicsStream adjacency, GraphicsStream adjacencyOut, out string errorsAndWarnings)
+        {
+            return new MeshAdapter(Mesh.Clean(cleanType, mesh, adjacency, adjacencyOut, out errorsAndWarnings));
+        }
+        public static MeshAdapter Clean(CleanType cleanType, Mesh mesh, int[] adjacency, out int[] adjacencyOut, out string errorsAndWarnings)
+        {
+            return new MeshAdapter(Mesh.Clean(cleanType, mesh, adjacency, out adjacencyOut, out errorsAndWarnings));
+        }
+        public static MeshAdapter Cylinder(Device device, float radius1, float radius2, float length, int slices, int stacks)
+        {
+            return new MeshAdapter(Mesh.Cylinder(device, radius1, radius2, length, slices, stacks));
+        }
+        public static MeshAdapter Cylinder(Device device, float radius1, float radius2, float length, int slices, int stacks, out GraphicsStream adjacency)
+        {
+            return new MeshAdapter(Mesh.Cylinder(device, radius1, radius2, length, slices, stacks, out adjacency));
+        }
+        public static MeshAdapter FromFile(string filename, MeshFlags options, Device device)
+        {
+            return new MeshAdapter(Mesh.FromFile(filename, options, device));
+        }
+        public static MeshAdapter FromFile(string filename, MeshFlags options, Device device, out EffectInstance[] effects)
+        {
+            return new MeshAdapter(Mesh.FromFile(filename, options, device, out effects));
+        }
+        public static MeshAdapter FromFile(string filename, MeshFlags options, Device device, out ExtendedMaterial[] materials)
+        {
+            return new MeshAdapter(Mesh.FromFile(filename, options, device, out materials));
+        }
+        public static MeshAdapter FromFile(string filename, MeshFlags options, Device device, out GraphicsStream adjacency)
+        {
+            return new MeshAdapter(Mesh.FromFile(filename, options, device, out adjacency));
+        }
+        public static MeshAdapter FromFile(string filename, MeshFlags options, Device device, out ExtendedMaterial[] materials, out EffectInstance[] effects)
+        {
+            return new MeshAdapter(Mesh.FromFile(filename, options, device, out materials, out effects));
+        }
+        public static MeshAdapter FromFile(string filename, MeshFlags options, Device device, out GraphicsStream adjacency, out EffectInstance[] effects)
+        {
+            return new MeshAdapter(Mesh.FromFile(filename, options, device, out adjacency, out effects));
+        }
+        public static MeshAdapter FromFile(string filename, MeshFlags options, Device device, out GraphicsStream adjacency, out ExtendedMaterial[] materials)
+        {
+            return new MeshAdapter(Mesh.FromFile(filename, options, device, out adjacency, out materials));
+        }
+        public static MeshAdapter FromFile(string filename, MeshFlags options, Device device, out GraphicsStream adjacency, out ExtendedMaterial[] materials, out EffectInstance[] effects)
+        {
+            return new MeshAdapter(Mesh.FromFile(filename, options, device, out adjacency, out materials, out effects));
+        }
+        public static MeshAdapter FromStream(Stream stream, MeshFlags options, Device device)
+        {
+            return new MeshAdapter(Mesh.FromStream(stream, options, device));
+        }
+        public static MeshAdapter FromStream(Stream stream, int readBytes, MeshFlags options, Device device)
+        {
+            return new MeshAdapter(Mesh.FromStream(stream, readBytes, options, device));
+        }
+        public static MeshAdapter FromStream(Stream stream, MeshFlags options, Device device, out EffectInstance[] effects)
+        {
+            return new MeshAdapter(Mesh.FromStream(stream, options, device, out effects));
+        }
+        public static MeshAdapter FromStream(Stream stream, MeshFlags options, Device device, out ExtendedMaterial[] materials)
+        {
+            return new MeshAdapter(Mesh.FromStream(stream, options, device, out materials));
+        }
+        public static MeshAdapter FromStream(Stream stream, MeshFlags options, Device device, out GraphicsStream adjacency)
+        {
+            return new MeshAdapter(Mesh.FromStream(stream, options, device, out adjacency));
+        }
+        public static MeshAdapter FromStream(Stream stream, int readBytes, MeshFlags options, Device device, out EffectInstance[] effects)
+        {
+            return new MeshAdapter(Mesh.FromStream(stream, readBytes, options, device, out effects));
+        }
+        public static MeshAdapter FromStream(Stream stream, int readBytes, MeshFlags options, Device device, out ExtendedMaterial[] materials)
+        {
+            return new MeshAdapter(Mesh.FromStream(stream, readBytes, options, device, out materials));
+        }
+        public static MeshAdapter FromStream(Stream stream, int readBytes, MeshFlags options, Device device, out GraphicsStream adjacency)
+        {
+            return new MeshAdapter(Mesh.FromStream(stream, readBytes, options, device, out adjacency));
+        }
+        public static MeshAdapter FromStream(Stream stream, MeshFlags options, Device device, out ExtendedMaterial[] materials, out EffectInstance[] effects)
+        {
+            return new MeshAdapter(Mesh.FromStream(stream, options, device, out materials, out effects));
+        }
+        public static MeshAdapter FromStream(Stream stream, MeshFlags options, Device device, out GraphicsStream adjacency, out EffectInstance[] effects)
+        {
+            return new MeshAdapter(Mesh.FromStream(stream, options, device, out adjacency, out effects));
+        }
+        public static MeshAdapter FromStream(Stream stream, MeshFlags options, Device device, out GraphicsStream adjacency, out ExtendedMaterial[] materials)
+        {
+            return new MeshAdapter(Mesh.FromStream(stream, options, device, out adjacency, out materials));
+        }
+        public static MeshAdapter FromStream(Stream stream, int readBytes, MeshFlags options, Device device, out ExtendedMaterial[] materials, out EffectInstance[] effects)
+        {
+            return new MeshAdapter(Mesh.FromStream(stream, readBytes, options, device, out materials, out effects));
+        }
+        public static MeshAdapter FromStream(Stream stream, int readBytes, MeshFlags options, Device device, out GraphicsStream adjacency, out EffectInstance[] effects)
+        {
+            return new MeshAdapter(Mesh.FromStream(stream, readBytes, options, device, out adjacency, out effects));
+        }
+        public static MeshAdapter FromStream(Stream stream, int readBytes, MeshFlags options, Device device, out GraphicsStream adjacency, out ExtendedMaterial[] materials)
+        {
+            return new MeshAdapter(Mesh.FromStream(stream, readBytes, options, device, out adjacency, out materials));
+        }
+        public static MeshAdapter FromStream(Stream stream, int readBytes, MeshFlags options, Device device, out GraphicsStream adjacency, out ExtendedMaterial[] materials, out EffectInstance[] effects)
+        {
+            return new MeshAdapter(Mesh.FromStream(stream, readBytes, options, device, out adjacency, out materials, out effects));
+        }
+        public static MeshAdapter FromX(XFileData xofObjMesh, MeshFlags options, Device device)
+        {
+            return new MeshAdapter(Mesh.FromX(xofObjMesh, options, device));
+        }
+        public static MeshAdapter FromX(XFileData xofObjMesh, MeshFlags options, Device device, out EffectInstance[] effects)
+        {
+            return new MeshAdapter(Mesh.FromX(xofObjMesh, options, device, out effects));
+        }
+        public static MeshAdapter FromX(XFileData xofObjMesh, MeshFlags options, Device device, out ExtendedMaterial[] materials)
+        {
+            return new MeshAdapter(Mesh.FromX(xofObjMesh, options, device, out materials));
+        }
+        public static MeshAdapter FromX(XFileData xofObjMesh, MeshFlags options, Device device, out GraphicsStream adjacency)
+        {
+            return new MeshAdapter(Mesh.FromX(xofObjMesh, options, device, out adjacency));
+        }
+        public static MeshAdapter FromX(XFileData xofObjMesh, MeshFlags options, Device device, out ExtendedMaterial[] materials, out EffectInstance[] effects)
+        {
+            return new MeshAdapter(Mesh.FromX(xofObjMesh, options, device, out materials, out effects));
+        }
+        public static MeshAdapter FromX(XFileData xofObjMesh, MeshFlags options, Device device, out GraphicsStream adjacency, out EffectInstance[] effects)
+        {
+            return new MeshAdapter(Mesh.FromX(xofObjMesh, options, device, out adjacency, out effects));
+        }
+        public static MeshAdapter FromX(XFileData xofObjMesh, MeshFlags options, Device device, out GraphicsStream adjacency, out ExtendedMaterial[] materials, out EffectInstance[] effects)
+        {
+            return new MeshAdapter(Mesh.FromX(xofObjMesh, options, device, out adjacency, out materials, out effects));
+        }
+        public static MeshAdapter Polygon(Device device, float length, int sides)
+        {
+            return new MeshAdapter(Mesh.Polygon(device, length, sides));
+        }
+        public static MeshAdapter Polygon(Device device, float length, int sides, out GraphicsStream adjacency)
+        {
+            return new MeshAdapter(Mesh.Polygon(device, length, sides, out adjacency));
+        }
+        public static MeshAdapter Sphere(Device device, float radius, int slices, int stacks)
+        {
+            return new MeshAdapter(Mesh.Sphere(device, radius, slices, stacks));
+        }
+        public static MeshAdapter Sphere(Device device, float radius, int slices, int stacks, out GraphicsStream adjacency)
+        {
+            return new MeshAdapter(Mesh.Sphere(device, radius, slices, stacks, out adjacency));
+        }
+        public static MeshAdapter Teapot(Device device)
+        {
+            return new MeshAdapter(Mesh.Teapot(device));
+        }
+        public static MeshAdapter Teapot(Device device, out GraphicsStream adjacency)
+        {
+            return new MeshAdapter(Mesh.Teapot(device, out adjacency));
+        }
+        public static MeshAdapter Torus(Device device, float innerRadius, float outerRadius, int sides, int rings)
+        {
+            return new MeshAdapter(Mesh.Torus(device, innerRadius, outerRadius, sides, rings));
+        }
+        public static MeshAdapter Torus(Device device, float innerRadius, float outerRadius, int sides, int rings, out GraphicsStream adjacency)
+        {
+            return new MeshAdapter(Mesh.Torus(device, innerRadius, outerRadius, sides, rings, out adjacency));
         }
 
         #region IMesh Members
