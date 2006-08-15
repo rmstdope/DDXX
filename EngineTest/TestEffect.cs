@@ -23,7 +23,7 @@ namespace EngineTest
             MeshNode node = new MeshNode("Mesh", mesh);
             Scene.AddNode(node);
 
-            Camera camera = new Camera("Camera");
+            CameraNode camera = new CameraNode("Camera");
             camera.WorldState.MoveForward(-100.0f);
             Scene.AddNode(camera);
             Scene.ActiveCamera = camera;

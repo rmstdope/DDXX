@@ -18,9 +18,9 @@ namespace DemoFramework
     public class DemoExecuterTest : TrackTest
     {
         DemoExecuter executer;
-        private Input.IFactory iFactory;
-        private Sound.IFactory sFactory;
-        private ISystem system;
+        private Input.IInputFactory iFactory;
+        private Sound.ISoundFactory sFactory;
+        private ISoundSystem system;
 
         [SetUp]
         public override void SetUp()
@@ -29,11 +29,11 @@ namespace DemoFramework
 
             Time.Initialize();
 
-            iFactory = mockery.NewMock<Input.IFactory>();
+            iFactory = mockery.NewMock<Input.IInputFactory>();
             InputDriver.Factory = iFactory;
 
-            sFactory = mockery.NewMock<Sound.IFactory>();
-            system = mockery.NewMock<ISystem>();
+            sFactory = mockery.NewMock<Sound.ISoundFactory>();
+            system = mockery.NewMock<ISoundSystem>();
             Stub.On(sFactory).
                 Method("CreateSystem").
                 Will(Return.Value(system));

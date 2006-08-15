@@ -16,14 +16,14 @@ namespace DemoFramework
     public class DemoWindowTest : D3DMockTest
     {
         DemoWindow window;
-        Input.IFactory iFactory;
+        Input.IInputFactory iFactory;
 
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
 
-            iFactory = mockery.NewMock<Input.IFactory>();
+            iFactory = mockery.NewMock<Input.IInputFactory>();
             InputDriver.Factory = iFactory;
             Stub.On(iFactory).
                 GetProperty("Keyboard").

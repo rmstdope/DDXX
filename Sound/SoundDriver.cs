@@ -9,14 +9,14 @@ namespace Sound
     public class SoundDriver
     {
         private static SoundDriver instance;
-        private ISystem system;
-        private static IFactory factory = new FMODFactory();
+        private ISoundSystem system;
+        private static ISoundFactory factory = new FMODFactory();
 
         private SoundDriver()
         {
         }
 
-        public static IFactory Factory
+        public static ISoundFactory Factory
         {
             get { return factory; }
             set { factory = value; }
@@ -35,7 +35,7 @@ namespace Sound
         {
             RESULT result;
 
-            ISystem sys = factory.CreateSystem();
+            ISoundSystem sys = factory.CreateSystem();
 
             CheckVersion(sys);
         
@@ -60,7 +60,7 @@ namespace Sound
             return sound;
         }
 
-        private void CheckVersion(ISystem sys)
+        private void CheckVersion(ISoundSystem sys)
         {
             RESULT result;
             uint version = VERSION.number;

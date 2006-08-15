@@ -39,8 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Camera.cs" />
-    <Compile Include="CameraTest.cs" />
+    <Compile Include="CameraNode.cs" />
+    <Compile Include="CameraNodeTest.cs" />
     <Compile Include="DummyNode.cs" />
     <Compile Include="INode.cs" />
     <Compile Include="MeshNode.cs" />

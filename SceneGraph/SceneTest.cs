@@ -63,7 +63,7 @@ namespace SceneGraph
         [Test]
         public void RenderTest()
         {
-            Camera camera = new Camera("Camera");
+            CameraNode camera = new CameraNode("Camera");
             graph.AddNode(node1);
             graph.AddNode(node2);
             graph.AddNode(camera);
@@ -86,14 +86,14 @@ namespace SceneGraph
         [ExpectedException(typeof(DDXXException))]
         public void CameraTestFail()
         {
-            Camera camera = new Camera("Camera");
+            CameraNode camera = new CameraNode("Camera");
             graph.ActiveCamera = camera;
         }
 
         [Test]
         public void CameraTestOK()
         {
-            Camera camera = new Camera("Camera");
+            CameraNode camera = new CameraNode("Camera");
             graph.AddNode(camera);
             graph.ActiveCamera = camera;
             Assert.AreSame(camera, graph.ActiveCamera);

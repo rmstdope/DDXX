@@ -10,7 +10,7 @@ namespace Input
     public class InputDriver
     {
         private static InputDriver instance;
-        private static IFactory factory = new DIFactory();
+        private static IInputFactory factory = new DirectInputFactory();
 
         private Device keyboard;
 
@@ -18,7 +18,7 @@ namespace Input
         {
         }
 
-        public static IFactory Factory
+        public static IInputFactory Factory
         {
             get { return factory; }
             set { factory = value; }

@@ -5,7 +5,7 @@ using Microsoft.DirectX;
 
 namespace SceneGraph
 {
-    public class Camera : NodeBase
+    public class CameraNode : NodeBase
     {
         private float fov = (float)Math.PI / 4;
 
@@ -15,7 +15,7 @@ namespace SceneGraph
 
         private float aspectRatio = 4.0f / 3.0f;
 
-        public Camera(String name)
+        public CameraNode(String name)
             : base(name)
         {
         }

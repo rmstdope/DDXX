@@ -11,7 +11,7 @@ namespace SceneGraph
     public class Scene
     {
         private NodeBase rootNode;
-        private Camera activeCamera;
+        private CameraNode activeCamera;
         private IDevice device;
 
         public Scene()
@@ -20,7 +20,7 @@ namespace SceneGraph
             device = D3DDriver.GetInstance().GetDevice();
         }
 
-        public Camera ActiveCamera
+        public CameraNode ActiveCamera
         {
             get { return activeCamera; }
             set

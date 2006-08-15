@@ -6,7 +6,7 @@ using Utility;
 
 namespace Sound
 {
-    public class FMODSystem : ISystem
+    public class FMODSystem : ISoundSystem
     {
         private FMOD.System system = null;
 

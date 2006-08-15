@@ -6,7 +6,7 @@ using Microsoft.DirectX.DirectInput;
 
 namespace Input
 {
-    class DIFactory : IFactory
+    class DirectInputFactory : IInputFactory
     {
         #region IFactory Members
 

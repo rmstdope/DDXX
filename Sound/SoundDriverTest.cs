@@ -14,16 +14,16 @@ namespace Sound
     {
         SoundDriver driver = SoundDriver.GetInstance();
         private Mockery mockery;
-        private IFactory factory;
-        private ISystem system;
+        private ISoundFactory factory;
+        private ISoundSystem system;
         private Channel channel;
 
         [SetUp]
         public void SetUp()
         {
             mockery = new Mockery();
-            factory = mockery.NewMock<IFactory>();
-            system = mockery.NewMock<ISystem>();
+            factory = mockery.NewMock<ISoundFactory>();
+            system = mockery.NewMock<ISoundSystem>();
             Stub.On(factory).
                 Method("CreateSystem").
                 Will(Return.Value(system));

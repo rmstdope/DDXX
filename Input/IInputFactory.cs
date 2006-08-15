@@ -6,7 +6,7 @@ using Microsoft.DirectX.DirectInput;
 
 namespace Input
 {
-    public interface IFactory
+    public interface IInputFactory
     {
         Device Keyboard { get; }
         void SetCooperativeLevel(Device device, Control control, CooperativeLevelFlags cooperativeLevelFlags);

@@ -5,7 +5,7 @@ using FMOD;
 
 namespace Sound
 {
-    public interface ISystem
+    public interface ISoundSystem
     {
         RESULT GetVersion(ref uint version);
         RESULT Init(int maxchannels, INITFLAG flags, IntPtr extradata);

@@ -37,8 +37,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DIFactory.cs" />
-    <Compile Include="IFactory.cs" />
+    <Compile Include="DirectInputFactory.cs" />
+    <Compile Include="IInputFactory.cs" />
     <Compile Include="InputDriver.cs" />
     <Compile Include="InputDriverTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

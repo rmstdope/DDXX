@@ -7,12 +7,12 @@ using Microsoft.DirectX;
 namespace SceneGraph
 {
     [TestFixture]
-    public class CameraTest
+    public class CameraNodeTest
     {
         [Test]
         public void TestCamera()
         {
-            Camera c1 = new Camera("C1");
+            CameraNode c1 = new CameraNode("C1");
             Assert.AreEqual(null, c1.Parent);
             Assert.AreEqual("C1", c1.Name);
         }
@@ -20,7 +20,7 @@ namespace SceneGraph
         [Test]
         public void TestFOV()
         {
-            Camera c1 = new Camera("C1");
+            CameraNode c1 = new CameraNode("C1");
 
             Assert.AreEqual((float)Math.PI / 4, c1.GetFOV());
 
@@ -42,7 +42,7 @@ namespace SceneGraph
             Matrix exp1 = Matrix.PerspectiveFovLH(fov1, aspect1, zNear1, zFar1);
             Matrix exp2 = Matrix.PerspectiveFovLH(fov2, aspect2, zNear2, zFar2);
 
-            Camera c1 = new Camera("Name");
+            CameraNode c1 = new CameraNode("Name");
             Assert.IsTrue(exp1.Equals(c1.GetProjectionMatrix()));
             c1.SetFOV(fov2);
             c1.SetClippingPlanes(zNear2, zFar2);
@@ -61,7 +61,7 @@ namespace SceneGraph
         public void TestView()
         {
             Vector3 vec = new Vector3(1, 2, 3);
-            Camera c1 = new Camera("Name");
+            CameraNode c1 = new CameraNode("Name");
             AssertVectors(new Vector3(1, 2, 3), Vector3.TransformCoordinate(vec, c1.GetViewMatrix()));
 
             c1.WorldState.Position = new Vector3(100, 200, 300);

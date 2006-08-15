@@ -37,9 +37,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FMODFactory.cs" />
-    <Compile Include="ISystem.cs" />
-    <Compile Include="IFactory.cs" />
+    <Compile Include="ISoundFactory.cs" />
     <Compile Include="FMODSystem.cs" />
+    <Compile Include="ISoundSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SoundDriver.cs" />
     <Compile Include="SoundDriverTest.cs" />

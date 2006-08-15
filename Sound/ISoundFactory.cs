@@ -4,8 +4,8 @@ using System.Text;
 
 namespace Sound
 {
-    public interface IFactory
+    public interface ISoundFactory
     {
-        ISystem CreateSystem();
+        ISoundSystem CreateSystem();
     }
 }

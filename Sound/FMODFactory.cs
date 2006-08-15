@@ -4,11 +4,11 @@ using System.Text;
 
 namespace Sound
 {
-    class FMODFactory : IFactory
+    class FMODFactory : ISoundFactory
     {
         #region IFactory Members
 
-        public ISystem CreateSystem()
+        public ISoundSystem CreateSystem()
         {
             return new FMODSystem();
         }
