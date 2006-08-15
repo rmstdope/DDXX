@@ -4,11 +4,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{BF75F16E-5056-4484-BFE2-72F8733B8BF3}</ProjectGuid>
+    <ProjectGuid>{B64087ED-595E-4597-84D8-D273FF00B2DA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SceneGraph</RootNamespace>
-    <AssemblyName>SceneGraph</AssemblyName>
+    <RootNamespace>Graphics</RootNamespace>
+    <AssemblyName>Direct3D</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,34 +31,42 @@
   <ItemGroup>
     <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2911.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="NMock2, Version=1.0.2313.18049, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Camera.cs" />
-    <Compile Include="CameraTest.cs" />
-    <Compile Include="DummyNode.cs" />
-    <Compile Include="INode.cs" />
-    <Compile Include="MeshNode.cs" />
-    <Compile Include="NodeBase.cs" />
-    <Compile Include="NodeBaseTest.cs" />
+    <Compile Include="D3DDriver.cs" />
+    <Compile Include="D3DDriverTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="D3DFactory.cs" />
+    <Compile Include="D3DMockTest.cs" />
+    <Compile Include="DeviceAdapter.cs" />
+    <Compile Include="DeviceManager.cs" />
+    <Compile Include="EffectAdapter.cs" />
+    <Compile Include="EffectFactory.cs" />
+    <Compile Include="EffectFactoryTest.cs" />
+    <Compile Include="IDevice.cs" />
+    <Compile Include="IEffect.cs" />
+    <Compile Include="IFactory.cs" />
+    <Compile Include="IManager.cs" />
+    <Compile Include="IMesh.cs" />
+    <Compile Include="ISurface.cs" />
+    <Compile Include="ITexture.cs" />
+    <Compile Include="MeshAdapter.cs" />
+    <Compile Include="MeshFactory.cs" />
+    <Compile Include="MeshFactoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scene.cs" />
-    <Compile Include="SceneTest.cs" />
+    <Compile Include="SurfaceAdapter.cs" />
+    <Compile Include="TextureAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Graphics\Graphics.csproj">
-      <Project>{B64087ED-595E-4597-84D8-D273FF00B2DA}</Project>
-      <Name>Graphics</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Physics\Physics.csproj">
-      <Project>{6F7E70F2-FC19-4399-84BD-F60AC491E970}</Project>
-      <Name>Physics</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Utility\Utility.csproj">
       <Project>{31D76405-2DD3-436A-BE65-963DE822511E}</Project>
       <Name>Utility</Name>

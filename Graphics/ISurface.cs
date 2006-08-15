@@ -6,7 +6,7 @@ using System.Text;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 
-namespace Direct3D
+namespace Graphics
 {
     public interface ISurface
     {
@@ -29,7 +29,7 @@ namespace Direct3D
         // Returns:
         //     A System.Drawing.Graphics object that represents the device context for the
         //     surface.
-        Graphics GetGraphics();
+        System.Drawing.Graphics GetGraphics();
         //
         // Summary:
         //     Locks a rectangle on a surface.

@@ -6,7 +6,7 @@ using System.Text;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 
-namespace Direct3D
+namespace Graphics
 {
     public class SurfaceAdapter : ISurface
     {
@@ -39,7 +39,7 @@ namespace Direct3D
             surface.Dispose();
         }
 
-        public Graphics GetGraphics()
+        public System.Drawing.Graphics GetGraphics()
         {
             return surface.GetGraphics();
         }

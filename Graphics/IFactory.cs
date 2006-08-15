@@ -6,7 +6,7 @@ using System.Text;
 using Microsoft.DirectX.Direct3D;
 using System.Windows.Forms;
 
-namespace Direct3D
+namespace Graphics
 {
     public interface IFactory
     {

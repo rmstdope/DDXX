@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using DemoFramework;
-using Direct3D;
+using Graphics;
 using Physics;
 using SceneGraph;
 

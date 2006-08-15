@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
-using Direct3D;
+using Graphics;
 using Input;
 using Utility;
 using NUnit.Framework;

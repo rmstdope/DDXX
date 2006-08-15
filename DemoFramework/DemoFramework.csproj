@@ -48,7 +48,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="DemoWindowTest.cs" />
-    <Compile Include="IEffect.cs" />
+    <Compile Include="IDemoEffect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -65,13 +65,13 @@
     <Compile Include="TrackTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Direct3D\Direct3D.csproj">
-      <Project>{0DB06E67-9BEA-430C-97E0-4662DE6FE77F}</Project>
-      <Name>Direct3D</Name>
-    </ProjectReference>
     <ProjectReference Include="..\FMOD\FMOD.csproj">
       <Project>{1A7A1C62-87D6-4798-BBBD-8472DC2D755B}</Project>
       <Name>FMOD</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Graphics\Graphics.csproj">
+      <Project>{B64087ED-595E-4597-84D8-D273FF00B2DA}</Project>
+      <Name>Graphics</Name>
     </ProjectReference>
     <ProjectReference Include="..\Input\Input.csproj">
       <Project>{E2280509-C330-4684-90FD-336B8CD4D7EF}</Project>

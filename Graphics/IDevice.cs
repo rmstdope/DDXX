@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 
-namespace Direct3D
+namespace Graphics
 {
     public interface IDevice
     {

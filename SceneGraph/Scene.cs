@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using Direct3D;
+using Graphics;
 using Utility;
 
 namespace SceneGraph

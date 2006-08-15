@@ -6,7 +6,7 @@ using System.Text;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
-using Direct3D;
+using Graphics;
 using FMOD;
 using Input;
 using Sound;
@@ -43,7 +43,7 @@ namespace DemoFramework
                 float t = 0.0f;
                 foreach (Track track in tracks)
                 {
-                    foreach (IEffect effect in track.Effects)
+                    foreach (IDemoEffect effect in track.Effects)
                     {
                         if (effect.EndTime > t)
                             t = effect.EndTime;
@@ -93,7 +93,7 @@ namespace DemoFramework
                 sound = soundDriver.CreateSound(song);
         }
 
-        public void Register(int track, IEffect effect)
+        public void Register(int track, IDemoEffect effect)
         {
             while (NumTracks <= track)
             {
@@ -109,7 +109,7 @@ namespace DemoFramework
 
             foreach (Track track in tracks)
             {
-                foreach (IEffect effect in track.GetEffects(Time.StepTime))
+                foreach (IDemoEffect effect in track.GetEffects(Time.StepTime))
                 {
                     effect.Step();
                 }
@@ -154,12 +154,12 @@ namespace DemoFramework
 
             if (tracks.Count != 0)
             {
-                IEffect[] activeEffects = tracks[activeTrack].GetEffects(Time.StepTime);
+                IDemoEffect[] activeEffects = tracks[activeTrack].GetEffects(Time.StepTime);
 
                 if (activeEffects.Length != 0)
                 {
                     device.BeginScene();
-                    foreach (IEffect effect in activeEffects)
+                    foreach (IDemoEffect effect in activeEffects)
                     {
                         effect.Render();
                     }

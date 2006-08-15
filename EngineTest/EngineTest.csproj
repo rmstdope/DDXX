@@ -68,9 +68,9 @@
       <Project>{DBD3FD0B-0B65-4626-BABA-3C46457B1185}</Project>
       <Name>DemoFramework</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Direct3D\Direct3D.csproj">
-      <Project>{0DB06E67-9BEA-430C-97E0-4662DE6FE77F}</Project>
-      <Name>Direct3D</Name>
+    <ProjectReference Include="..\Graphics\Graphics.csproj">
+      <Project>{B64087ED-595E-4597-84D8-D273FF00B2DA}</Project>
+      <Name>Graphics</Name>
     </ProjectReference>
     <ProjectReference Include="..\Physics\Physics.csproj">
       <Project>{6F7E70F2-FC19-4399-84BD-F60AC491E970}</Project>

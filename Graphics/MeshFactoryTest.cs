@@ -6,7 +6,7 @@ using Microsoft.DirectX.Direct3D;
 using NUnit.Framework;
 using NMock2;
 
-namespace Direct3D
+namespace Graphics
 {
     class TestMesh : IMesh
     {

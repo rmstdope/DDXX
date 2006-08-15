@@ -7,7 +7,7 @@ using Microsoft.DirectX.Direct3D;
 using System.Windows.Forms;
 using Utility;
 
-namespace Direct3D
+namespace Graphics
 {
     class DeviceAdapter : IDevice
     {

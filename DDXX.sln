@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EngineTest", "EngineTest\EngineTest.csproj", "{54A5AA11-1E81-4874-A50A-056D3327CA10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Direct3D", "Direct3D\Direct3D.csproj", "{0DB06E67-9BEA-430C-97E0-4662DE6FE77F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SceneGraph", "SceneGraph\SceneGraph.csproj", "{BF75F16E-5056-4484-BFE2-72F8733B8BF3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoFramework", "DemoFramework\DemoFramework.csproj", "{DBD3FD0B-0B65-4626-BABA-3C46457B1185}"
@@ -19,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FMOD", "FMOD\FMOD.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Input", "Input\Input.csproj", "{E2280509-C330-4684-90FD-336B8CD4D7EF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Graphics", "Graphics\Graphics.csproj", "{B64087ED-595E-4597-84D8-D273FF00B2DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +29,6 @@ Global
 		{54A5AA11-1E81-4874-A50A-056D3327CA10}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54A5AA11-1E81-4874-A50A-056D3327CA10}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54A5AA11-1E81-4874-A50A-056D3327CA10}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0DB06E67-9BEA-430C-97E0-4662DE6FE77F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0DB06E67-9BEA-430C-97E0-4662DE6FE77F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0DB06E67-9BEA-430C-97E0-4662DE6FE77F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0DB06E67-9BEA-430C-97E0-4662DE6FE77F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BF75F16E-5056-4484-BFE2-72F8733B8BF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BF75F16E-5056-4484-BFE2-72F8733B8BF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF75F16E-5056-4484-BFE2-72F8733B8BF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -61,6 +57,10 @@ Global
 		{E2280509-C330-4684-90FD-336B8CD4D7EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2280509-C330-4684-90FD-336B8CD4D7EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2280509-C330-4684-90FD-336B8CD4D7EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B64087ED-595E-4597-84D8-D273FF00B2DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B64087ED-595E-4597-84D8-D273FF00B2DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B64087ED-595E-4597-84D8-D273FF00B2DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B64087ED-595E-4597-84D8-D273FF00B2DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

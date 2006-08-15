@@ -6,7 +6,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using NUnit.Framework;
 using NMock2;
-using Direct3D;
+using Graphics;
 using Utility;
 
 namespace SceneGraph

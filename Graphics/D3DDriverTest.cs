@@ -11,7 +11,7 @@ using Utility;
 using NUnit.Framework;
 using NMock2;
 
-namespace Direct3D
+namespace Graphics
 {
 
     public class IsEqualPP : Matcher

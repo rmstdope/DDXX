@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using Direct3D;
+using Graphics;
 using Utility;
 
 namespace DemoFramework

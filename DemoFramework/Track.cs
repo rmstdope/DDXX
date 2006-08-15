@@ -6,17 +6,17 @@ namespace DemoFramework
 {
     public class Track
     {
-        List<IEffect> effects = new List<IEffect>();
+        List<IDemoEffect> effects = new List<IDemoEffect>();
 
         private static float searchTime;
-        private static bool IsWithinTime(IEffect effect)
+        private static bool IsWithinTime(IDemoEffect effect)
         {
             if (effect.StartTime <= searchTime && effect.EndTime >= searchTime)
                 return true;
             return false;
         }
 
-        private static int CompareEffectsByTime(IEffect x, IEffect y)
+        private static int CompareEffectsByTime(IDemoEffect x, IDemoEffect y)
         {
             if (x.StartTime < y.StartTime)
                 return -1;
@@ -29,7 +29,7 @@ namespace DemoFramework
             return 0;
         }
 
-        internal IEffect[] Effects
+        internal IDemoEffect[] Effects
         {
             get
             {
@@ -37,16 +37,16 @@ namespace DemoFramework
             }
         }
 
-        internal void Register(IEffect effect)
+        internal void Register(IDemoEffect effect)
         {
             effects.Add(effect);
             effects.Sort(CompareEffectsByTime);
         }
 
-        internal IEffect[] GetEffects(float time)
+        internal IDemoEffect[] GetEffects(float time)
         {
             searchTime = time;
-            List<IEffect> valid = effects.FindAll(IsWithinTime);
+            List<IDemoEffect> valid = effects.FindAll(IsWithinTime);
             return valid.ToArray();
         }
 

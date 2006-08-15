@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Direct3D;
+using Graphics;
 
 namespace SceneGraph
 {

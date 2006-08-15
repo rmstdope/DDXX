@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Direct3D;
+using Graphics;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using NMock2;
 
-namespace Direct3D
+namespace Graphics
 {
     public class D3DMockTest
     {

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DemoFramework
 {
-    public interface IEffect
+    public interface IDemoEffect
     {
         float StartTime
         {

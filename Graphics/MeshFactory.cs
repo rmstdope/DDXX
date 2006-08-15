@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Direct3D
+namespace Graphics
 {
     public class MeshFactory
     {

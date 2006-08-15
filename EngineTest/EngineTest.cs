@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using System.Data;
 using DemoFramework;
 using Microsoft.DirectX.Direct3D;
-using Direct3D;
+using Graphics;
 using Utility;
 
 namespace EngineTest

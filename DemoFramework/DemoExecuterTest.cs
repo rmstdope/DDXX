@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Text;
 using Microsoft.DirectX.Direct3D;
-using Direct3D;
+using Graphics;
 using FMOD;
 using Input;
 using Sound;
@@ -55,8 +55,8 @@ namespace DemoFramework
         [Test]
         public void TestTracks()
         {
-            IEffect t0e1 = CreateMockEffect(0, 10);
-            IEffect t1e1 = CreateMockEffect(5, 15);
+            IDemoEffect t0e1 = CreateMockEffect(0, 10);
+            IDemoEffect t1e1 = CreateMockEffect(5, 15);
 
             Assert.AreEqual(0, executer.NumTracks);
             executer.Register(0, t0e1);
@@ -68,10 +68,10 @@ namespace DemoFramework
         [Test]
         public void TestStep()
         {
-            IEffect t0e1 = CreateMockEffect(0, 10);
-            IEffect t0e2 = CreateMockEffect(10, 15);
-            IEffect t1e1 = CreateMockEffect(3, 12);
-            IEffect t1e2 = CreateMockEffect(1, 2);
+            IDemoEffect t0e1 = CreateMockEffect(0, 10);
+            IDemoEffect t0e2 = CreateMockEffect(10, 15);
+            IDemoEffect t1e1 = CreateMockEffect(3, 12);
+            IDemoEffect t1e2 = CreateMockEffect(1, 2);
 
             executer.Register(0, t0e1);
             executer.Register(0, t0e2);
@@ -181,13 +181,13 @@ namespace DemoFramework
             Assert.AreEqual(0.0f, executer.StartTime);
             Assert.AreEqual(0.0f, executer.EndTime);
 
-            IEffect t0e1 = CreateMockEffect(1, 2);
+            IDemoEffect t0e1 = CreateMockEffect(1, 2);
             executer.Register(0, t0e1);
 
             Assert.AreEqual(0.0f, executer.StartTime);
             Assert.AreEqual(2.0f, executer.EndTime);
 
-            IEffect t10e1 = CreateMockEffect(5, 100);
+            IDemoEffect t10e1 = CreateMockEffect(5, 100);
             executer.Register(0, t10e1);
 
             Assert.AreEqual(0.0f, executer.StartTime);
@@ -273,7 +273,7 @@ namespace DemoFramework
                 Method("StretchRectangle");
             Expect.Once.On(device).
                 Method("Present");
-            IEffect effect = CreateMockEffect(0, 10.0f);
+            IDemoEffect effect = CreateMockEffect(0, 10.0f);
             Expect.Once.On(effect).
                 Method("Step");
             Expect.Once.On(effect).
@@ -307,7 +307,7 @@ namespace DemoFramework
                 Method("Present");
 
             Time.CurrentTime = 5.0f;
-            IEffect effect = CreateMockEffect(0, 10.0f);
+            IDemoEffect effect = CreateMockEffect(0, 10.0f);
             Expect.Once.On(effect).
                 Method("Render");
             executer.Register(0, effect);

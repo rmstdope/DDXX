@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Direct3D;
+using Graphics;
 using SceneGraph;
 
 namespace DemoFramework
 {
-    public abstract class BaseEffect : IEffect
+    public abstract class BaseEffect : IDemoEffect
     {
         private float startTime;
         private float endTime;

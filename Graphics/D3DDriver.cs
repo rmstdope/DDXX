@@ -8,7 +8,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Utility;
 
-namespace Direct3D
+namespace Graphics
 {
     public struct DeviceDescription
     {
