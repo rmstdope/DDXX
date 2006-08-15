@@ -56,7 +56,7 @@ namespace Graphics
     {
         private D3DDriver driver;
         private Mockery mockery;
-        private IFactory factory;
+        private IGraphicsFactory factory;
         private IDevice device;
         private IManager manager;
 
@@ -78,7 +78,7 @@ namespace Graphics
             supportedDisplayModes[1].Format = Format.A16B16G16R16F;
 
             mockery = new Mockery();
-            factory = mockery.NewMock<IFactory>();
+            factory = mockery.NewMock<IGraphicsFactory>();
             device = mockery.NewMock<IDevice>();
             manager = mockery.NewMock<IManager>();
 

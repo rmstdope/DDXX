@@ -20,12 +20,12 @@ namespace Graphics
             }
         }
 
-        private IFactory factory;
+        private IGraphicsFactory factory;
         private IDevice device;
         private List<FileEntry> files = new List<FileEntry>();
         private EffectPool pool;
 
-        public EffectFactory(IDevice device, IFactory factory)
+        public EffectFactory(IDevice device, IGraphicsFactory factory)
         {
             this.device = device;
             this.factory = factory;

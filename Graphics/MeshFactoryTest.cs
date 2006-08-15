@@ -53,7 +53,7 @@ namespace Graphics
         public void WeldVertices(WeldEpsilonsFlags flags, WeldEpsilons epsilons, GraphicsStream adjacencyIn, GraphicsStream adjacencyOut, out int[] faceRemap, out GraphicsStream vertexRemap) { adjacencyIn = null; adjacencyOut = null; vertexRemap = null; faceRemap = null; }
         public void WeldVertices(WeldEpsilonsFlags flags, WeldEpsilons epsilons, int[] adjacencyIn, out int[] adjacencyOut, out int[] faceRemap, out GraphicsStream vertexRemap) { adjacencyIn = null; adjacencyOut = null; faceRemap = null; vertexRemap = null; }
     }
-    class TestFactory : IFactory
+    class TestFactory : IGraphicsFactory
     {
         public IDevice CreateDevice(int adapter, DeviceType deviceType, System.Windows.Forms.Control renderWindow, CreateFlags behaviorFlags, PresentParameters presentationParameters) { return null; }
         public IManager CreateManager() { return null; }
@@ -67,7 +67,7 @@ namespace Graphics
     [TestFixture]
     public class MeshFactoryTest
     {
-        IFactory factory = new TestFactory();
+        IGraphicsFactory factory = new TestFactory();
         MeshFactory meshFactory;
 
         [SetUp]

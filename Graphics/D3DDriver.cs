@@ -24,7 +24,7 @@ namespace Graphics
     public class D3DDriver
     {
         private static D3DDriver instance;
-        private static IFactory factory = new D3DFactory();
+        private static IGraphicsFactory factory = new D3DFactory();
 
         private IManager manager;
         private IDevice device;
@@ -42,7 +42,7 @@ namespace Graphics
             GetDisplayMode();
         }
 
-        public static IFactory Factory
+        public static IGraphicsFactory Factory
         {
             get { return factory; }
             set { factory = value; }

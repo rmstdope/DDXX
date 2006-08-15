@@ -23,7 +23,7 @@ namespace Graphics
             }
         }
 
-        private IFactory factory;
+        private IGraphicsFactory factory;
         private IDevice device;
 
         private List<BoxEntry> boxes = new List<BoxEntry>();
@@ -34,7 +34,7 @@ namespace Graphics
             Dynamic
         }
 
-        public MeshFactory(IDevice device, IFactory factory)
+        public MeshFactory(IDevice device, IGraphicsFactory factory)
         {
             this.device = device;
             this.factory = factory;

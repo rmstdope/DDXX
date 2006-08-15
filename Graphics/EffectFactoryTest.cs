@@ -15,7 +15,7 @@ namespace Graphics
         EffectFactory effectFactory;
 
         Mockery mockery;
-        IFactory factory;
+        IGraphicsFactory factory;
         IEffect effect1;
         IEffect effect2;
 
@@ -25,7 +25,7 @@ namespace Graphics
             mockery = new Mockery();
             effect1 = mockery.NewMock<IEffect>();
             effect2 = mockery.NewMock<IEffect>();
-            factory = mockery.NewMock<IFactory>();
+            factory = mockery.NewMock<IGraphicsFactory>();
             effectFactory = new EffectFactory(null, factory);
         }
 

@@ -8,7 +8,7 @@ using Microsoft.DirectX.Direct3D;
 
 namespace Graphics
 {
-    public class D3DFactory : IFactory
+    public class D3DFactory : IGraphicsFactory
     {
         #region IFactory Members
 

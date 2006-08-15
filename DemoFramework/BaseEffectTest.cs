@@ -41,7 +41,7 @@ namespace DemoFramework
             return compareWith == Device;
         }
 
-        public bool IsFactoryEqual(IFactory compareWith)
+        public bool IsFactoryEqual(IGraphicsFactory compareWith)
         {
             return compareWith == Factory;
         }

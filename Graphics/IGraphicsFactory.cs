@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Graphics
 {
-    public interface IFactory
+    public interface IGraphicsFactory
     {
         IDevice CreateDevice(int adapter, DeviceType deviceType, Control renderWindow, CreateFlags behaviorFlags, PresentParameters presentationParameters);
         IManager CreateManager();

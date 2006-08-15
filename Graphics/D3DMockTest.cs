@@ -11,7 +11,7 @@ namespace Graphics
     public class D3DMockTest
     {
         protected Mockery mockery;
-        protected IFactory factory;
+        protected IGraphicsFactory factory;
         protected IDevice device;
         protected ITexture texture;
         protected ISurface surface;
@@ -25,7 +25,7 @@ namespace Graphics
             displayMode.Format = Format.R8G8B8;
 
             mockery = new Mockery();
-            factory = mockery.NewMock<IFactory>();
+            factory = mockery.NewMock<IGraphicsFactory>();
             device = mockery.NewMock<IDevice>();
             manager = mockery.NewMock<IManager>();
             texture = mockery.NewMock<ITexture>();

@@ -11,7 +11,7 @@ namespace DemoFramework
         private float startTime;
         private float endTime;
         private IDevice device;
-        private IFactory factory;
+        private IGraphicsFactory factory;
         private Scene scene;
 
         protected BaseEffect(float startTime, float endTime)
@@ -27,7 +27,7 @@ namespace DemoFramework
             get { return device; }
         }
 
-        protected IFactory Factory
+        protected IGraphicsFactory Factory
         {
             get { return factory; }
         }
