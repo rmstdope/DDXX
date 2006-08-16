@@ -18,7 +18,7 @@ namespace Utility
         XMLReader reader;
         static string twoEffectContents =
 @"<Effects>
-<Effect name=""fooeffect"">
+<Effect name=""fooeffect"" track=""1"">
 <Parameter name=""fooparam"" int=""3"" />
 <Parameter name=""barparam"" float=""4.3f"" />
 </Effect>
@@ -61,6 +61,19 @@ namespace Utility
             Assert.IsTrue(reader.NextEffect());
             Assert.AreEqual("bareffect", reader.EffectName);
             Assert.IsFalse(reader.NextEffect());
+            reader.Close();
+        }
+
+        [Test]
+        public void TestEffectTrack()
+        {
+            reader = OpenXML(twoEffectContents);
+            Assert.IsTrue(reader.NextEffect());
+            Assert.AreEqual("fooeffect", reader.EffectName);
+            Assert.AreEqual(1, reader.EffectTrack);
+            Assert.IsTrue(reader.NextEffect());
+            Assert.AreEqual("bareffect", reader.EffectName);
+            Assert.AreEqual(0, reader.EffectTrack);
             reader.Close();
         }
 

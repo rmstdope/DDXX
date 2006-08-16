@@ -29,10 +29,16 @@ namespace Utility
         private Stream inputStream;
         private XmlReader reader;
         private string effectName;
+        private int effectTrack;
 
         public string EffectName
         {
             get { return effectName; }
+        }
+
+        public int EffectTrack
+        {
+            get { return effectTrack; }
         }
 
         public void Start(Stream input)
@@ -85,6 +91,15 @@ namespace Utility
                 if (reader.NodeType == XmlNodeType.Element && reader.Name == "Effect")
                 {
                     effectName = reader.GetAttribute("name");
+                    string track = reader.GetAttribute("track");
+                    if (track != null)
+                    {
+                        effectTrack = int.Parse(track);
+                    }
+                    else
+                    {
+                        effectTrack = 0;
+                    }
                     return true;
                 }
             }
@@ -121,10 +136,10 @@ namespace Utility
                 string value = reader.Value;
                 switch (name)
                 {
-                    case "name": 
-                        parameterName = value; 
+                    case "name":
+                        parameterName = value;
                         break;
-                    default: 
+                    default:
                         parameterType = GetParameterType(name);
                         if (parameterType != ParameterType.Unknown)
                         {
