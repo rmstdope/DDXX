@@ -7,8 +7,8 @@
     <ProjectGuid>{B64087ED-595E-4597-84D8-D273FF00B2DA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Graphics</RootNamespace>
-    <AssemblyName>Direct3D</AssemblyName>
+    <RootNamespace>Dope.DDXX.Graphics</RootNamespace>
+    <AssemblyName>Dope.DDXX.Graphics</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

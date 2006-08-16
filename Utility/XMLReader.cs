@@ -4,7 +4,7 @@ using System.Text;
 using System.Xml;
 using System.IO;
 
-namespace Utility
+namespace Dope.DDXX.Utility
 {
     public enum ParameterType
     {

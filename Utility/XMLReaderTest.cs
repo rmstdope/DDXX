@@ -9,7 +9,7 @@ using System.Xml;
 
 // TODO:
 
-namespace Utility
+namespace Dope.DDXX.Utility
 {
     [TestFixture]
     public class XMLReaderTest

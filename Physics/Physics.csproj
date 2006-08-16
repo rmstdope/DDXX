@@ -7,8 +7,8 @@
     <ProjectGuid>{6F7E70F2-FC19-4399-84BD-F60AC491E970}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Physics</RootNamespace>
-    <AssemblyName>Phsyics</AssemblyName>
+    <RootNamespace>Dope.DDXX.Physics</RootNamespace>
+    <AssemblyName>Dope.DDXX.Phsyics</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

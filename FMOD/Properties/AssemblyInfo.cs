@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("FMOD")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("FMOD Import into DDXX")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Enea AB")]
+[assembly: AssemblyCompany("Dope Demo Production")]
 [assembly: AssemblyProduct("FMOD")]
-[assembly: AssemblyCopyright("Copyright © Enea AB 2006")]
+[assembly: AssemblyCopyright("Copyright © Dope 2006")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

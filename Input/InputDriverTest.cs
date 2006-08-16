@@ -4,9 +4,9 @@ using System.Text;
 using NUnit.Framework;
 using NMock2;
 using Microsoft.DirectX.DirectInput;
-using Utility;
+using Dope.DDXX.Utility;
 
-namespace Input
+namespace Dope.DDXX.Input
 {
     [TestFixture]
     public class InputDriverTest

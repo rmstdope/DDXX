@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX;
 
-namespace SceneGraph
+namespace Dope.DDXX.SceneGraph
 {
     public class CameraNode : NodeBase
     {
@@ -57,7 +57,7 @@ namespace SceneGraph
         {
         }
 
-        protected override void RenderNode(SceneGraph.CameraNode camera)
+        protected override void RenderNode(Dope.DDXX.SceneGraph.CameraNode camera)
         {
         }
     }

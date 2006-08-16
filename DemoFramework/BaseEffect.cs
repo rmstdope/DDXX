@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Graphics;
-using SceneGraph;
+using Dope.DDXX.Graphics;
+using Dope.DDXX.SceneGraph;
 
-namespace DemoFramework
+namespace Dope.DDXX.DemoFramework
 {
     public abstract class BaseEffect : IDemoEffect
     {

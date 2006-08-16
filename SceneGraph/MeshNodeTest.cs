@@ -5,10 +5,10 @@ using NUnit.Framework;
 using NMock2;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using Graphics;
-using Utility;
+using Dope.DDXX.Graphics;
+using Dope.DDXX.Utility;
 
-namespace SceneGraph
+namespace Dope.DDXX.SceneGraph
 {
     [TestFixture]
     public class MeshNodeTest
@@ -31,7 +31,7 @@ namespace SceneGraph
             instances[0] = new EffectInstance();
             instances[1] = new EffectInstance();
 
-            node = new MeshNode("Name", new Graphics.MeshContainer(mesh, instances));
+            node = new MeshNode("Name", new Dope.DDXX.Graphics.MeshContainer(mesh, instances));
         }
 
         [TearDown]

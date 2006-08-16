@@ -7,8 +7,8 @@
     <ProjectGuid>{31D76405-2DD3-436A-BE65-963DE822511E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Utility</RootNamespace>
-    <AssemblyName>Utility</AssemblyName>
+    <RootNamespace>Dope.DDXX.Utility</RootNamespace>
+    <AssemblyName>Dope.DDXX.Utility</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX;
 
-namespace Physics
+namespace Dope.DDXX.Physics
 {
     public class WorldState
     {

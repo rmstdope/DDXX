@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX.Direct3D;
 
-namespace Graphics
+namespace Dope.DDXX.Graphics
 {
     public class DeviceManager : IManager
     {

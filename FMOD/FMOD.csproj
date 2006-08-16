@@ -7,8 +7,8 @@
     <ProjectGuid>{1A7A1C62-87D6-4798-BBBD-8472DC2D755B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FMOD</RootNamespace>
-    <AssemblyName>FMOD</AssemblyName>
+    <RootNamespace>Dope.DDXX.FMOD</RootNamespace>
+    <AssemblyName>Dope.DDXX.FMOD</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Graphics;
+using Dope.DDXX.Graphics;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using NMock2;
 
-namespace Graphics
+namespace Dope.DDXX.Graphics
 {
     public class D3DMockTest
     {

@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Threading;
 
-namespace Utility
+namespace Dope.DDXX.Utility
 {
     public class Time
     {

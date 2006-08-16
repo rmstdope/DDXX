@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DemoFramework
+namespace Dope.DDXX.DemoFramework
 {
     public interface IDemoEffect
     {

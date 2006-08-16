@@ -6,7 +6,7 @@ using System.Text;
 using Microsoft.DirectX.Direct3D;
 using System.Windows.Forms;
 
-namespace Graphics
+namespace Dope.DDXX.Graphics
 {
     public interface IGraphicsFactory
     {

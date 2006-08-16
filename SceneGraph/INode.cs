@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX;
-using Physics;
+using Dope.DDXX.Physics;
 
-namespace SceneGraph
+namespace Dope.DDXX.SceneGraph
 {
     public interface INode
     {

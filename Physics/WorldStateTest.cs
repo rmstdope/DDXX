@@ -4,7 +4,7 @@ using System.Text;
 using NUnit.Framework;
 using Microsoft.DirectX;
 
-namespace Physics
+namespace Dope.DDXX.Physics
 {
     [TestFixture]
     public class WorldStateTest

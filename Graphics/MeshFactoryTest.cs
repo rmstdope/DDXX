@@ -6,7 +6,7 @@ using Microsoft.DirectX.Direct3D;
 using NUnit.Framework;
 using NMock2;
 
-namespace Graphics
+namespace Dope.DDXX.Graphics
 {
     class TestMesh : IMesh
     {

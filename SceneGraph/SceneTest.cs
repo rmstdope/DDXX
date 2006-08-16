@@ -6,10 +6,10 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using NUnit.Framework;
 using NMock2;
-using Graphics;
-using Utility;
+using Dope.DDXX.Graphics;
+using Dope.DDXX.Utility;
 
-namespace SceneGraph
+namespace Dope.DDXX.SceneGraph
 {
     [TestFixture]
     public class SceneTest : D3DMockTest

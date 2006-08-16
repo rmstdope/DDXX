@@ -4,7 +4,7 @@ using System.Text;
 using NUnit.Framework;
 using Microsoft.DirectX;
 
-namespace SceneGraph
+namespace Dope.DDXX.SceneGraph
 {
     [TestFixture]
     public class CameraNodeTest

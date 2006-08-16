@@ -2,18 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX;
-using Graphics;
+using Dope.DDXX.Graphics;
 using Microsoft.DirectX.Direct3D;
-using Utility;
+using Dope.DDXX.Utility;
 
-namespace SceneGraph
+namespace Dope.DDXX.SceneGraph
 {
     public class MeshNode : NodeBase
     {
-        private Graphics.MeshContainer mesh;
+        private Dope.DDXX.Graphics.MeshContainer mesh;
         private EffectContainer effect;
 
-        public MeshNode(string name, Graphics.MeshContainer mesh) 
+        public MeshNode(string name, Dope.DDXX.Graphics.MeshContainer mesh) 
             : base(name)
         {
             this.mesh = mesh;

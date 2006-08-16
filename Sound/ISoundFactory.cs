@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Sound
+namespace Dope.DDXX.Sound
 {
     public interface ISoundFactory
     {

@@ -11,7 +11,7 @@ using System;
 using System.Text;
 using System.Runtime.InteropServices;
 
-namespace FMOD
+namespace Dope.DDXX.FMOD
 {
     /* 
         DSP callbacks

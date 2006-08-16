@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Utility
+namespace Dope.DDXX.Utility
 {
     public class AspectRatio
     {

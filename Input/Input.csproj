@@ -7,8 +7,8 @@
     <ProjectGuid>{E2280509-C330-4684-90FD-336B8CD4D7EF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Input</RootNamespace>
-    <AssemblyName>Input</AssemblyName>
+    <RootNamespace>Dope.DDXX.Input</RootNamespace>
+    <AssemblyName>Dope.DDXX.Input</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

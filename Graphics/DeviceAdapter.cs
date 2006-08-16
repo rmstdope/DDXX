@@ -5,9 +5,9 @@ using System.Text;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Windows.Forms;
-using Utility;
+using Dope.DDXX.Utility;
 
-namespace Graphics
+namespace Dope.DDXX.Graphics
 {
     class DeviceAdapter : IDevice
     {

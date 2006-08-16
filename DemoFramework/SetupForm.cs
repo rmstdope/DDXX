@@ -8,10 +8,10 @@ using System.Text;
 using System.Windows.Forms;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using Graphics;
-using Utility;
+using Dope.DDXX.Graphics;
+using Dope.DDXX.Utility;
 
-namespace DemoFramework
+namespace Dope.DDXX.DemoFramework
 {
     public partial class SetupDialog : Form
     {

@@ -4,11 +4,11 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
-using DemoFramework;
+using Dope.DDXX.DemoFramework;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using Graphics;
-using Utility;
+using Dope.DDXX.Graphics;
+using Dope.DDXX.Utility;
 
 namespace EngineTest
 {

@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using DemoFramework;
-using Graphics;
-using Physics;
-using SceneGraph;
+using Dope.DDXX.DemoFramework;
+using Dope.DDXX.Graphics;
+using Dope.DDXX.Physics;
+using Dope.DDXX.SceneGraph;
 
 namespace EngineTest
 {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.DirectX.DirectInput;
-using Utility;
+using Dope.DDXX.Utility;
 
-namespace Input
+namespace Dope.DDXX.Input
 {
     public class InputDriver
     {

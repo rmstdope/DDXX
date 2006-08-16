@@ -6,9 +6,9 @@ using System.Windows.Forms;
 using System.Data;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using Utility;
+using Dope.DDXX.Utility;
 
-namespace Graphics
+namespace Dope.DDXX.Graphics
 {
     public struct DeviceDescription
     {

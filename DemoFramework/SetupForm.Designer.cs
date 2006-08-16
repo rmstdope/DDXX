@@ -1,4 +1,4 @@
-namespace DemoFramework
+namespace Dope.DDXX.DemoFramework
 {
     partial class SetupDialog
     {

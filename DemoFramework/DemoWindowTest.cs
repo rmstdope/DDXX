@@ -4,26 +4,26 @@ using System.Text;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
-using Graphics;
-using Input;
-using Utility;
+using Dope.DDXX.Graphics;
+using Dope.DDXX.Input;
+using Dope.DDXX.Utility;
 using NUnit.Framework;
 using NMock2;
 
-namespace DemoFramework
+namespace Dope.DDXX.DemoFramework
 {
     [TestFixture]
     public class DemoWindowTest : D3DMockTest
     {
         DemoWindow window;
-        Input.IInputFactory iFactory;
+        Dope.DDXX.Input.IInputFactory iFactory;
 
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
 
-            iFactory = mockery.NewMock<Input.IInputFactory>();
+            iFactory = mockery.NewMock<Dope.DDXX.Input.IInputFactory>();
             InputDriver.Factory = iFactory;
             Stub.On(iFactory).
                 GetProperty("Keyboard").

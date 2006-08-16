@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using Graphics;
-using Utility;
+using Dope.DDXX.Graphics;
+using Dope.DDXX.Utility;
 
-namespace SceneGraph
+namespace Dope.DDXX.SceneGraph
 {
     public class Scene
     {

@@ -3,23 +3,23 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Text;
 using Microsoft.DirectX.Direct3D;
-using Graphics;
-using FMOD;
-using Input;
-using Sound;
-using Utility;
+using Dope.DDXX.Graphics;
+using Dope.DDXX.FMOD;
+using Dope.DDXX.Input;
+using Dope.DDXX.Sound;
+using Dope.DDXX.Utility;
 using NUnit.Framework;
 using NMock2;
 
-namespace DemoFramework
+namespace Dope.DDXX.DemoFramework
 {
 
     [TestFixture]
     public class DemoExecuterTest : TrackTest
     {
         DemoExecuter executer;
-        private Input.IInputFactory iFactory;
-        private Sound.ISoundFactory sFactory;
+        private Dope.DDXX.Input.IInputFactory iFactory;
+        private Dope.DDXX.Sound.ISoundFactory sFactory;
         private ISoundSystem system;
 
         [SetUp]
@@ -29,10 +29,10 @@ namespace DemoFramework
 
             Time.Initialize();
 
-            iFactory = mockery.NewMock<Input.IInputFactory>();
+            iFactory = mockery.NewMock<Dope.DDXX.Input.IInputFactory>();
             InputDriver.Factory = iFactory;
 
-            sFactory = mockery.NewMock<Sound.ISoundFactory>();
+            sFactory = mockery.NewMock<Dope.DDXX.Sound.ISoundFactory>();
             system = mockery.NewMock<ISoundSystem>();
             Stub.On(sFactory).
                 Method("CreateSystem").
@@ -107,7 +107,7 @@ namespace DemoFramework
         {
             Expect.Once.On(system).
                 Method("GetVersion").
-                Will(Return.Value(FMOD.RESULT.ERR_VERSION));
+                Will(Return.Value(Dope.DDXX.FMOD.RESULT.ERR_VERSION));
             try
             {
                 executer.Initialize("");
@@ -121,13 +121,13 @@ namespace DemoFramework
         {
             Expect.Once.On(system).
                  Method("GetVersion").
-                 Will(Return.Value(FMOD.RESULT.OK));
+                 Will(Return.Value(Dope.DDXX.FMOD.RESULT.OK));
             Expect.Once.On(system).
                 Method("Init").
-                Will(Return.Value(FMOD.RESULT.OK));
+                Will(Return.Value(Dope.DDXX.FMOD.RESULT.OK));
             Expect.Once.On(system).
                 Method("CreateSound").
-                Will(Return.Value(FMOD.RESULT.ERR_VERSION));
+                Will(Return.Value(Dope.DDXX.FMOD.RESULT.ERR_VERSION));
             try
             {
                 executer.Initialize("test.mp3");
@@ -141,10 +141,10 @@ namespace DemoFramework
         {
             Expect.Once.On(system).
                 Method("GetVersion").
-                Will(Return.Value(FMOD.RESULT.OK));
+                Will(Return.Value(Dope.DDXX.FMOD.RESULT.OK));
             Expect.Once.On(system).
                 Method("Init").
-                Will(Return.Value(FMOD.RESULT.OK));
+                Will(Return.Value(Dope.DDXX.FMOD.RESULT.OK));
             executer.Initialize("");
         }
 
@@ -153,10 +153,10 @@ namespace DemoFramework
         {
             Expect.Once.On(system).
                 Method("GetVersion").
-                Will(Return.Value(FMOD.RESULT.OK));
+                Will(Return.Value(Dope.DDXX.FMOD.RESULT.OK));
             Expect.Once.On(system).
                 Method("Init").
-                Will(Return.Value(FMOD.RESULT.OK));
+                Will(Return.Value(Dope.DDXX.FMOD.RESULT.OK));
             executer.Initialize(null);
         }
 
@@ -165,13 +165,13 @@ namespace DemoFramework
         {
             Expect.Once.On(system).
                  Method("GetVersion").
-                 Will(Return.Value(FMOD.RESULT.OK));
+                 Will(Return.Value(Dope.DDXX.FMOD.RESULT.OK));
             Expect.Once.On(system).
                 Method("Init").
-                Will(Return.Value(FMOD.RESULT.OK));
+                Will(Return.Value(Dope.DDXX.FMOD.RESULT.OK));
             Expect.Once.On(system).
                 Method("CreateSound").
-                Will(Return.Value(FMOD.RESULT.OK));
+                Will(Return.Value(Dope.DDXX.FMOD.RESULT.OK));
             executer.Initialize("test.mp3");
         }
 
@@ -185,10 +185,10 @@ namespace DemoFramework
 
             Expect.Once.On(system).
                 Method("GetVersion").
-                Will(Return.Value(FMOD.RESULT.OK));
+                Will(Return.Value(Dope.DDXX.FMOD.RESULT.OK));
             Expect.Once.On(system).
                 Method("Init").
-                Will(Return.Value(FMOD.RESULT.OK));
+                Will(Return.Value(Dope.DDXX.FMOD.RESULT.OK));
             Expect.Once.On(effect1).
                 Method("Initialize");
             Expect.Once.On(effect2).
@@ -224,7 +224,7 @@ namespace DemoFramework
 
             Expect.Once.On(system).
                 Method("PlaySound").
-                Will(Return.Value(FMOD.RESULT.ERR_VERSION));
+                Will(Return.Value(Dope.DDXX.FMOD.RESULT.ERR_VERSION));
 
             try
             {
@@ -245,7 +245,7 @@ namespace DemoFramework
                 Will(Return.Value(false));
             Expect.Once.On(system).
                 Method("PlaySound").
-                Will(Return.Value(FMOD.RESULT.OK));
+                Will(Return.Value(Dope.DDXX.FMOD.RESULT.OK));
             Expect.Exactly(2).On(device).
                 Method("GetRenderTarget").
                 With(0).

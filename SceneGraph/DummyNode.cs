@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SceneGraph
+namespace Dope.DDXX.SceneGraph
 {
     public class DummyNode : NodeBase
     {

@@ -7,8 +7,8 @@
     <ProjectGuid>{DBD3FD0B-0B65-4626-BABA-3C46457B1185}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DemoFramework</RootNamespace>
-    <AssemblyName>DemoFramework</AssemblyName>
+    <RootNamespace>Dope.DDXX.DemoFramework</RootNamespace>
+    <AssemblyName>Dope.DDXX.DemoFramework</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

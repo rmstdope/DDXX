@@ -7,8 +7,8 @@
     <ProjectGuid>{BF75F16E-5056-4484-BFE2-72F8733B8BF3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SceneGraph</RootNamespace>
-    <AssemblyName>SceneGraph</AssemblyName>
+    <RootNamespace>Dope.DDXX.SceneGraph</RootNamespace>
+    <AssemblyName>Dope.DDXX.SceneGraph</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

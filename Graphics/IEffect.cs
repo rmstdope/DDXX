@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 
-namespace Graphics
+namespace Dope.DDXX.Graphics
 {
     public interface IEffect
     {

@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using SceneGraph;
-using Utility;
+using Dope.DDXX.SceneGraph;
+using Dope.DDXX.Utility;
 using Microsoft.DirectX;
 
-namespace SceneGraph
+namespace Dope.DDXX.SceneGraph
 {
     [TestFixture]
     public class NodeBaseTest

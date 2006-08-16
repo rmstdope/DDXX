@@ -4,7 +4,7 @@ using System.Text;
 using NUnit.Framework;
 using NMock2;
 
-namespace Utility
+namespace Dope.DDXX.Utility
 {
     [TestFixture]
     class AspectRatioTest

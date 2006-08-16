@@ -6,18 +6,18 @@ using System.Text;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
-using Graphics;
-using FMOD;
-using Input;
-using Sound;
-using Utility;
+using Dope.DDXX.Graphics;
+using Dope.DDXX.FMOD;
+using Dope.DDXX.Input;
+using Dope.DDXX.Sound;
+using Dope.DDXX.Utility;
 
-namespace DemoFramework
+namespace Dope.DDXX.DemoFramework
 {
     public class DemoExecuter
     {
         SoundDriver soundDriver;
-        FMOD.Sound sound;
+        Dope.DDXX.FMOD.Sound sound;
         Channel channel;
 
         IDevice device;

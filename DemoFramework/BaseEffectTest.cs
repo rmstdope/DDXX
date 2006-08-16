@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Graphics;
+using Dope.DDXX.Graphics;
 using NUnit.Framework;
 
-namespace DemoFramework
+namespace Dope.DDXX.DemoFramework
 {
     public class TestEffect : BaseEffect
     {

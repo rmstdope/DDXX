@@ -7,11 +7,11 @@ using System.Data;
 using System.IO;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using Utility;
+using Dope.DDXX.Utility;
 using NUnit.Framework;
 using NMock2;
 
-namespace Graphics
+namespace Dope.DDXX.Graphics
 {
 
     public class IsEqualPP : Matcher

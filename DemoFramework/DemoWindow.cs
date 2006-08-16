@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
-using Graphics;
-using Input;
-using Utility;
+using Dope.DDXX.Graphics;
+using Dope.DDXX.Input;
+using Dope.DDXX.Utility;
 
-namespace DemoFramework
+namespace Dope.DDXX.DemoFramework
 {
     public class DemoWindow : Form
     {

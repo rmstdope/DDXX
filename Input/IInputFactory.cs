@@ -4,7 +4,7 @@ using System.Text;
 using System.Windows.Forms;
 using Microsoft.DirectX.DirectInput;
 
-namespace Input
+namespace Dope.DDXX.Input
 {
     public interface IInputFactory
     {

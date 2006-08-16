@@ -4,10 +4,10 @@ using System.Text;
 using NUnit.Framework;
 using NMock2;
 using NMock2.Monitoring;
-using Utility;
-using FMOD;
+using Dope.DDXX.Utility;
+using Dope.DDXX.FMOD;
 
-namespace Sound
+namespace Dope.DDXX.Sound
 {
     [TestFixture]
     public class SoundDriverTest
@@ -69,7 +69,7 @@ namespace Sound
                     Will(Return.Value(RESULT.OK));
                 Expect.Once.On(system).
                     Method("Init").
-                    With(64, FMOD.INITFLAG.NORMAL, (IntPtr)null).
+                    With(64, Dope.DDXX.FMOD.INITFLAG.NORMAL, (IntPtr)null).
                     Will(Return.Value(RESULT.ERR_SUBSOUNDS));
                 driver.Initialize();
                 Assert.Fail();
@@ -86,7 +86,7 @@ namespace Sound
                 Will(Return.Value(RESULT.OK));
             Expect.Once.On(system).
                 Method("Init").
-                With(64, FMOD.INITFLAG.NORMAL, (IntPtr)null).
+                With(64, Dope.DDXX.FMOD.INITFLAG.NORMAL, (IntPtr)null).
                 Will(Return.Value(RESULT.OK));
             driver.Initialize();
         }
@@ -94,14 +94,14 @@ namespace Sound
         [Test]
         public void TestCreateSound()
         {
-            FMOD.Sound sound;
+            Dope.DDXX.FMOD.Sound sound;
 
             TestInitOK();
 
             try
             {
                 Expect.Once.On(system).
-                    Method("CreateSound").With(Is.EqualTo("../../Data/test.mp3"), Is.EqualTo(FMOD.MODE._2D | FMOD.MODE.HARDWARE | FMOD.MODE.CREATESTREAM), Is.Anything).
+                    Method("CreateSound").With(Is.EqualTo("../../Data/test.mp3"), Is.EqualTo(Dope.DDXX.FMOD.MODE._2D | Dope.DDXX.FMOD.MODE.HARDWARE | Dope.DDXX.FMOD.MODE.CREATESTREAM), Is.Anything).
                     Will(Return.Value(RESULT.ERR_SUBSOUNDS));
                 sound = driver.CreateSound("test.mp3");
                 Assert.Fail();
@@ -109,7 +109,7 @@ namespace Sound
             catch (DDXXException) { }
 
             Expect.Once.On(system).
-                Method("CreateSound").With(Is.EqualTo("../../Data/test.mp3"), Is.EqualTo(FMOD.MODE._2D | FMOD.MODE.HARDWARE | FMOD.MODE.CREATESTREAM), Is.Anything).
+                Method("CreateSound").With(Is.EqualTo("../../Data/test.mp3"), Is.EqualTo(Dope.DDXX.FMOD.MODE._2D | Dope.DDXX.FMOD.MODE.HARDWARE | Dope.DDXX.FMOD.MODE.CREATESTREAM), Is.Anything).
                 Will(Return.Value(RESULT.OK));
             sound = driver.CreateSound("test.mp3");
             Assert.IsNotNull(sound);
@@ -118,11 +118,11 @@ namespace Sound
         [Test]
         public void TestPlaySoundFail()
         {
-            FMOD.Sound sound = new FMOD.Sound();
+            Dope.DDXX.FMOD.Sound sound = new Dope.DDXX.FMOD.Sound();
 
             TestInitOK();
             Expect.Once.On(system).
-                Method("PlaySound").With(Is.EqualTo(FMOD.CHANNELINDEX.FREE), Is.EqualTo(sound), Is.EqualTo(false), Is.NotNull).
+                Method("PlaySound").With(Is.EqualTo(Dope.DDXX.FMOD.CHANNELINDEX.FREE), Is.EqualTo(sound), Is.EqualTo(false), Is.NotNull).
                 Will(Return.Value(RESULT.ERR_ALREADYLOCKED));
 
             try
@@ -135,11 +135,11 @@ namespace Sound
         [Test]
         public void TestPlaySoundOK()
         {
-            FMOD.Sound sound = new FMOD.Sound();
+            Dope.DDXX.FMOD.Sound sound = new Dope.DDXX.FMOD.Sound();
             TestInitOK();
 
             Expect.Once.On(system).
-                Method("PlaySound").With(Is.EqualTo(FMOD.CHANNELINDEX.FREE), Is.EqualTo(sound), Is.EqualTo(false), Is.NotNull).
+                Method("PlaySound").With(Is.EqualTo(Dope.DDXX.FMOD.CHANNELINDEX.FREE), Is.EqualTo(sound), Is.EqualTo(false), Is.NotNull).
                 Will(Return.Value(RESULT.OK));
             channel = driver.PlaySound(sound);
         }

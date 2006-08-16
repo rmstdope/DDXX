@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX;
-using Physics;
-using Utility;
+using Dope.DDXX.Physics;
+using Dope.DDXX.Utility;
 
-namespace SceneGraph
+namespace Dope.DDXX.SceneGraph
 {
     public abstract class NodeBase : INode
     {

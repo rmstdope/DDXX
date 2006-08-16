@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Graphics;
+using Dope.DDXX.Graphics;
 using NUnit.Framework;
 using NMock2;
 
-namespace DemoFramework
+namespace Dope.DDXX.DemoFramework
 {
     [TestFixture]
     public class TrackTest : D3DMockTest
