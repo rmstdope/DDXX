@@ -21,5 +21,7 @@ namespace DemoFramework
         void Step();
 
         void Render();
+
+        void Initialize();
     }
 }

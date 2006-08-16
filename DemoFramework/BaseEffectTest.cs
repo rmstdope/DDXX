@@ -14,8 +14,6 @@ namespace DemoFramework
         public TestEffect(float startTime, float endTime)
             : base(startTime, endTime)
         {
-            startCalled = false;
-            endCalled = false;
         }
 
         public override void Step()
@@ -39,11 +37,6 @@ namespace DemoFramework
         public bool IsDeviceEqual(IDevice compareWith)
         {
             return compareWith == Device;
-        }
-
-        public bool IsFactoryEqual(IGraphicsFactory compareWith)
-        {
-            return compareWith == Factory;
         }
 
     }
@@ -72,7 +65,6 @@ namespace DemoFramework
             effect.Initialize();
 
             Assert.IsTrue(effect.IsDeviceEqual(D3DDriver.GetInstance().GetDevice()));
-            Assert.IsTrue(effect.IsFactoryEqual(D3DDriver.Factory));
         }
 
         [Test]

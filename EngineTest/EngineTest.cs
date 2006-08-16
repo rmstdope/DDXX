@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
 using DemoFramework;
+using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Graphics;
 using Utility;

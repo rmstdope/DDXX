@@ -46,10 +46,8 @@ namespace SceneGraph
         {
             if (ActiveCamera == null)
                 throw new DDXXException("Must have an active camera set before a scene can be rendered.");
-            device.SetTransform(TransformType.View, ActiveCamera.GetViewMatrix());
-            device.SetTransform(TransformType.Projection, ActiveCamera.GetProjectionMatrix());
 
-            rootNode.Render();
+            rootNode.Render(ActiveCamera);
         }
     }
 }

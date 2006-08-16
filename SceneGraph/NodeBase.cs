@@ -20,7 +20,7 @@ namespace SceneGraph
         }
 
         protected abstract void StepNode();
-        protected abstract void RenderNode();
+        protected abstract void RenderNode(CameraNode camera);
 
         #region INode Members
 
@@ -79,13 +79,13 @@ namespace SceneGraph
             }
         }
 
-        public void Render()
+        public void Render(CameraNode camera)
         {
-            RenderNode();
+            RenderNode(camera);
 
             foreach (INode node in children)
             {
-                node.Render();
+                node.Render(camera);
             }
         }
 

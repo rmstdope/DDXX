@@ -25,6 +25,8 @@ namespace Graphics
     {
         private static D3DDriver instance;
         private static IGraphicsFactory factory = new D3DFactory();
+        private static EffectFactory effectFactory;
+        private static MeshFactory meshFactory;
 
         private IManager manager;
         private IDevice device;
@@ -48,6 +50,16 @@ namespace Graphics
             set { factory = value; }
         }
 
+        public static EffectFactory EffectFactory
+        {
+            get { return effectFactory; }
+        }
+
+        public static MeshFactory MeshFactory
+        {
+            get { return meshFactory; }
+        }
+
         public static D3DDriver GetInstance()
         {
             if (instance == null)
@@ -66,6 +78,9 @@ namespace Graphics
             CreateFlags createFlags = GetCreateFlags(desc);
 
             device = factory.CreateDevice(0, desc.deviceType, control, createFlags, present);
+
+            effectFactory = new EffectFactory(device, factory);
+            meshFactory = new MeshFactory(device, factory);
         }
 
         private void GetDisplayMode()

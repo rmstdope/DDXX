@@ -72,6 +72,14 @@ namespace DemoFramework
             InitializeSound(song);
 
             InitializeInput();
+
+            foreach (Track track in tracks)
+            {
+                foreach (IDemoEffect effect in track.Effects)
+                {
+                    effect.Initialize();
+                }
+            }
         }
 
         private void InitializeInput()

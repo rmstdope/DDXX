@@ -15,6 +15,6 @@ namespace SceneGraph
         void AddChild(INode child);
         bool HasChild(INode node);
         void Step();
-        void Render();
+        void Render(CameraNode camera);
     }
 }

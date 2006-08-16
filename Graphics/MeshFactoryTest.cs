@@ -52,6 +52,159 @@ namespace Graphics
         public void WeldVertices(WeldEpsilonsFlags flags, WeldEpsilons epsilons, int[] adjacencyIn, out GraphicsStream vertexRemap) { adjacencyIn = null; vertexRemap = null; }
         public void WeldVertices(WeldEpsilonsFlags flags, WeldEpsilons epsilons, GraphicsStream adjacencyIn, GraphicsStream adjacencyOut, out int[] faceRemap, out GraphicsStream vertexRemap) { adjacencyIn = null; adjacencyOut = null; vertexRemap = null; faceRemap = null; }
         public void WeldVertices(WeldEpsilonsFlags flags, WeldEpsilons epsilons, int[] adjacencyIn, out int[] adjacencyOut, out int[] faceRemap, out GraphicsStream vertexRemap) { adjacencyIn = null; adjacencyOut = null; faceRemap = null; vertexRemap = null; }
+        public VertexElement[] Declaration { get { return null; } }
+        public Device Device { get { return null; } } 
+        public bool Disposed { get { return true; } }
+        public IndexBuffer IndexBuffer { get { return null; } } 
+        public int NumberAttributes
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public int NumberBytesPerVertex
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public int NumberFaces
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public int NumberVertices
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public MeshOptions Options
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public VertexBuffer VertexBuffer
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public VertexFormats VertexFormat
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public Mesh Clone(MeshFlags options, GraphicsStream declaration, Device device)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Mesh Clone(MeshFlags options, VertexElement[] declaration, Device device)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Mesh Clone(MeshFlags options, VertexFormats vertexFormat, Device device)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void ComputeNormals()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void ComputeNormals(GraphicsStream adjacency)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void ComputeNormals(int[] adjacency)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public int[] ConvertAdjacencyToPointReps(GraphicsStream adjacency)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public int[] ConvertAdjacencyToPointReps(int[] adjaceny)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public int[] ConvertPointRepsToAdjacency(GraphicsStream pointReps)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public int[] ConvertPointRepsToAdjacency(int[] pointReps)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void DrawSubset(int attributeID)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void GenerateAdjacency(float epsilon, int[] adjacency)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public AttributeRange[] GetAttributeTable()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public GraphicsStream LockIndexBuffer(LockFlags flags)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Array LockIndexBuffer(Type typeIndex, LockFlags flags, params int[] ranks)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public GraphicsStream LockVertexBuffer(LockFlags flags)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Array LockVertexBuffer(Type typeVertex, LockFlags flags, params int[] ranks)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetIndexBufferData(object data, LockFlags flags)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetVertexBufferData(object data, LockFlags flags)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void UnlockIndexBuffer()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void UnlockVertexBuffer()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void UpdateSemantics(GraphicsStream declaration)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void UpdateSemantics(VertexElement[] declaration)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
     }
     class TestFactory : IGraphicsFactory
     {
@@ -62,6 +215,7 @@ namespace Graphics
         public ITexture CreateTexture(IDevice device, int width, int height, int numLevels, Usage usage, Format format, Pool pool) { return null; }
         public IMesh CreateBoxMesh(IDevice device, float width, float height, float depth) { return new TestMesh(); }
         public IEffect CreateEffectFromFile(IDevice device, string sourceDataFile, Include includeFile, string skipConstants, ShaderFlags flags, EffectPool pool) { return null; }
+        public IMesh MeshFromFile(IDevice device, string fileName, out EffectInstance[] effectInstance) { effectInstance = new EffectInstance[2]; return new TestMesh(); }
     }
 
     [TestFixture]
@@ -84,14 +238,15 @@ namespace Graphics
         [Test]
         public void CreateBoxTest()
         {
-            IMesh mesh1 = meshFactory.CreateBox(10.0f, 20.0f, 30.0f, MeshFactory.Usage.Static);
+            MeshContainer mesh1 = meshFactory.CreateBox(10.0f, 20.0f, 30.0f);
+
+            MeshContainer mesh2 = meshFactory.CreateBox(10.0f, 20.0f, 30.0f);
+
+            MeshContainer mesh3 = meshFactory.CreateBox(10.0f, 22.0f, 30.0f);
+
             Assert.IsNotNull(mesh1);
-
-            IMesh mesh2 = meshFactory.CreateBox(10.0f, 20.0f, 30.0f, MeshFactory.Usage.Static);
+            Assert.IsNotNull(mesh3);
             Assert.AreSame(mesh1, mesh2);
-
-            IMesh mesh3 = meshFactory.CreateBox(10.0f, 22.0f, 30.0f, MeshFactory.Usage.Static);
-
             Assert.AreNotSame(mesh1, mesh3);
             Assert.AreNotSame(mesh2, mesh3);
 
@@ -107,7 +262,7 @@ namespace Graphics
             Assert.AreEqual(2, meshFactory.Count);
             Assert.AreEqual(2, meshFactory.CountBoxes);
 
-            mesh2.Validate((int[])null);
+            mesh2.Mesh.Validate((int[])null);
             mesh2 = null;
             Assert.AreEqual(2, meshFactory.Count);
             Assert.AreEqual(2, meshFactory.CountBoxes);
@@ -117,7 +272,7 @@ namespace Graphics
             Assert.AreEqual(1, meshFactory.Count);
             Assert.AreEqual(1, meshFactory.CountBoxes);
 
-            mesh3.Validate((int[])null);
+            mesh3.Mesh.Validate((int[])null);
             mesh3 = null;
             Assert.AreEqual(1, meshFactory.Count);
             Assert.AreEqual(1, meshFactory.CountBoxes);
@@ -126,6 +281,54 @@ namespace Graphics
             meshFactory.AutoExpire();
             Assert.AreEqual(0, meshFactory.Count);
             Assert.AreEqual(0, meshFactory.CountBoxes);
+        }
+
+        [Test]
+        public void CreateFileTest()
+        {
+            MeshContainer mesh1 = meshFactory.FromFile("file1");
+
+            MeshContainer mesh2 = meshFactory.FromFile("file1");
+
+            MeshContainer mesh3 = meshFactory.FromFile("file2");
+
+            Assert.IsNotNull(mesh1);
+            Assert.IsNotNull(mesh3);
+            Assert.AreSame(mesh1, mesh2);
+            Assert.AreNotSame(mesh1, mesh3);
+            Assert.AreNotSame(mesh2, mesh3);
+
+            Assert.AreEqual(2, meshFactory.Count);
+            Assert.AreEqual(2, meshFactory.CountFiles);
+
+            mesh1 = null;
+            Assert.AreEqual(2, meshFactory.Count);
+            Assert.AreEqual(2, meshFactory.CountFiles);
+
+            GC.Collect();
+            meshFactory.AutoExpire();
+            Assert.AreEqual(2, meshFactory.Count);
+            Assert.AreEqual(2, meshFactory.CountFiles);
+
+            mesh2.Mesh.Validate((int[])null);
+            mesh2 = null;
+            Assert.AreEqual(2, meshFactory.Count);
+            Assert.AreEqual(2, meshFactory.CountFiles);
+
+            GC.Collect();
+            meshFactory.AutoExpire();
+            Assert.AreEqual(1, meshFactory.Count);
+            Assert.AreEqual(1, meshFactory.CountFiles);
+
+            mesh3.Mesh.Validate((int[])null);
+            mesh3 = null;
+            Assert.AreEqual(1, meshFactory.Count);
+            Assert.AreEqual(1, meshFactory.CountFiles);
+
+            GC.Collect();
+            meshFactory.AutoExpire();
+            Assert.AreEqual(0, meshFactory.Count);
+            Assert.AreEqual(0, meshFactory.CountFiles);
         }
     }
 }

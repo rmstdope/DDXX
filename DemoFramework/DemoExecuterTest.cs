@@ -176,6 +176,29 @@ namespace DemoFramework
         }
 
         [Test]
+        public void TestInitializeOKEffect()
+        {
+            IDemoEffect effect1 = CreateMockEffect(1, 2);
+            executer.Register(0, effect1);
+            IDemoEffect effect2 = CreateMockEffect(1, 2);
+            executer.Register(100, effect2);
+
+            Expect.Once.On(system).
+                Method("GetVersion").
+                Will(Return.Value(FMOD.RESULT.OK));
+            Expect.Once.On(system).
+                Method("Init").
+                Will(Return.Value(FMOD.RESULT.OK));
+            Expect.Once.On(effect1).
+                Method("Initialize");
+            Expect.Once.On(effect2).
+                Method("Initialize");
+
+            executer.Initialize(null);
+        }
+
+
+        [Test]
         public void TestRegister()
         {
             Assert.AreEqual(0.0f, executer.StartTime);

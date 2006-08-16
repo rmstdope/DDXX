@@ -57,7 +57,7 @@ namespace SceneGraph
         {
         }
 
-        protected override void RenderNode()
+        protected override void RenderNode(SceneGraph.CameraNode camera)
         {
         }
     }

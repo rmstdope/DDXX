@@ -37,6 +37,11 @@ namespace Graphics
             return new TextureAdapter(((DeviceAdapter)device).DXDevice, width, height, numLevels, usage, format, pool);
         }
 
+        public IMesh MeshFromFile(IDevice device, string fileName, out EffectInstance[] effectInstance)
+        {
+            return MeshAdapter.FromFile(fileName, MeshFlags.Managed, ((DeviceAdapter)device).DXDevice, out effectInstance); 
+        }
+
         public IMesh CreateBoxMesh(IDevice device, float width, float height, float depth)
         {
             return MeshAdapter.Box(((DeviceAdapter)device).DXDevice, width, height, depth);

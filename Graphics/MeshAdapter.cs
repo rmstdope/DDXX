@@ -414,6 +414,177 @@ namespace Graphics
             mesh.WeldVertices(flags, epsilons, adjacencyIn, out adjacencyOut, out faceRemap, out vertexRemap);
         }
 
+        public VertexElement[] Declaration
+        {
+            get { return mesh.Declaration; }
+        }
+
+        public Device Device
+        {
+            get { return mesh.Device; }
+        }
+
+        public bool Disposed
+        {
+            get { return mesh.Disposed; }
+        }
+
+        public IndexBuffer IndexBuffer
+        {
+            get { return mesh.IndexBuffer; }
+        }
+
+        public int NumberAttributes
+        {
+            get { return mesh.NumberAttributes; }
+        }
+
+        public int NumberBytesPerVertex
+        {
+            get { return mesh.NumberBytesPerVertex; }
+        }
+
+        public int NumberFaces
+        {
+            get { return mesh.NumberFaces; }
+        }
+
+        public int NumberVertices
+        {
+            get { return mesh.NumberVertices; }
+        }
+
+        public MeshOptions Options
+        {
+            get { return mesh.Options; }
+        }
+
+        public VertexBuffer VertexBuffer
+        {
+            get { return mesh.VertexBuffer; }
+        }
+
+        public VertexFormats VertexFormat
+        {
+            get { return mesh.VertexFormat; }
+        }
+
+        public Mesh Clone(MeshFlags options, GraphicsStream declaration, Device device)
+        {
+            return mesh.Clone(options, declaration, device);
+        }
+
+        public Mesh Clone(MeshFlags options, VertexElement[] declaration, Device device)
+        {
+            return mesh.Clone(options, declaration, device);
+        }
+
+        public Mesh Clone(MeshFlags options, VertexFormats vertexFormat, Device device)
+        {
+            return mesh.Clone(options, vertexFormat, device);
+        }
+
+        public void ComputeNormals()
+        {
+            mesh.ComputeNormals();
+        }
+
+        public void ComputeNormals(GraphicsStream adjacency)
+        {
+            mesh.ComputeNormals(adjacency);
+        }
+
+        public void ComputeNormals(int[] adjacency)
+        {
+            mesh.ComputeNormals(adjacency);
+        }
+
+        public int[] ConvertAdjacencyToPointReps(GraphicsStream adjacency)
+        {
+            return mesh.ConvertAdjacencyToPointReps(adjacency);
+        }
+
+        public int[] ConvertAdjacencyToPointReps(int[] adjaceny)
+        {
+            return mesh.ConvertAdjacencyToPointReps(adjaceny);
+        }
+
+        public int[] ConvertPointRepsToAdjacency(GraphicsStream pointReps)
+        {
+            return mesh.ConvertPointRepsToAdjacency(pointReps);
+        }
+
+        public int[] ConvertPointRepsToAdjacency(int[] pointReps)
+        {
+            return mesh.ConvertPointRepsToAdjacency(pointReps);
+        }
+
+        public void DrawSubset(int attributeID)
+        {
+            mesh.DrawSubset(attributeID);
+        }
+
+        public void GenerateAdjacency(float epsilon, int[] adjacency)
+        {
+            mesh.GenerateAdjacency(epsilon, adjacency);
+        }
+
+        public AttributeRange[] GetAttributeTable()
+        {
+            return mesh.GetAttributeTable();
+        }
+
+        public GraphicsStream LockIndexBuffer(LockFlags flags)
+        {
+            return mesh.LockIndexBuffer(flags);
+        }
+
+        public Array LockIndexBuffer(Type typeIndex, LockFlags flags, params int[] ranks)
+        {
+            return mesh.LockIndexBuffer(typeIndex, flags, ranks);
+        }
+
+        public GraphicsStream LockVertexBuffer(LockFlags flags)
+        {
+            return mesh.LockVertexBuffer(flags);
+        }
+
+        public Array LockVertexBuffer(Type typeVertex, LockFlags flags, params int[] ranks)
+        {
+            return mesh.LockVertexBuffer(typeVertex, flags, ranks);
+        }
+
+        public void SetIndexBufferData(object data, LockFlags flags)
+        {
+            mesh.SetIndexBufferData(data, flags);
+        }
+
+        public void SetVertexBufferData(object data, LockFlags flags)
+        {
+            
+            mesh.SetVertexBufferData(data, flags);
+        }
+
+        public void UnlockIndexBuffer()
+        {
+            mesh.UnlockIndexBuffer();
+        }
+
+        public void UnlockVertexBuffer()
+        {
+            mesh.UnlockVertexBuffer();
+        }
+
+        public void UpdateSemantics(GraphicsStream declaration)
+        {
+            mesh.UpdateSemantics(declaration);
+        }
+
+        public void UpdateSemantics(VertexElement[] declaration)
+        {
+            mesh.UpdateSemantics(declaration);
+        }
+
         #endregion
     }
 }

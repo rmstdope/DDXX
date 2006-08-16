@@ -69,12 +69,6 @@ namespace SceneGraph
             graph.AddNode(camera);
             graph.ActiveCamera = camera;
 
-            Expect.Once.On(device).
-                Method("SetTransform").
-                With(TransformType.View, camera.GetViewMatrix());
-            Expect.Once.On(device).
-                Method("SetTransform").
-                With(TransformType.Projection, camera.GetProjectionMatrix());
             Expect.Once.On(node1).
                 Method("Render");
             Expect.Once.On(node2).

@@ -15,9 +15,10 @@ namespace SceneGraph
         {
             public bool stepCalled;
             public bool renderCalled;
+            public CameraNode renderCamera;
             public DerivedNode(string name) : base(name) { }
             protected override void StepNode() { stepCalled = true; }
-            protected override void RenderNode() { renderCalled = true; }
+            protected override void RenderNode(CameraNode camera) { renderCalled = true; renderCamera = camera; }
         }
 
         [Test]
@@ -59,12 +60,15 @@ namespace SceneGraph
         {
             DerivedNode node1 = new DerivedNode("NodeName");
             DerivedNode node2 = new DerivedNode("NewNewNodeName");
+            CameraNode camera = new CameraNode("Camera");
             node1.AddChild(node2);
 
-            node1.Render();
+            node1.Render(camera);
 
             Assert.IsTrue(node1.renderCalled);
+            Assert.AreSame(node1.renderCamera, camera);
             Assert.IsTrue(node2.renderCalled);
+            Assert.AreSame(node2.renderCamera, camera);
         }
 
         public void AssertVectors(Vector3 vec1, Vector3 vec2)

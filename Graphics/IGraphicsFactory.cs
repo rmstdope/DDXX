@@ -15,6 +15,7 @@ namespace Graphics
         ITexture CreateTexture(IDevice device, Bitmap image, Usage usage, Pool pool);
         ITexture CreateTexture(IDevice device, Stream data, Usage usage, Pool pool);
         ITexture CreateTexture(IDevice device, int width, int height, int numLevels, Usage usage, Format format, Pool pool);
+        IMesh MeshFromFile(IDevice device, string fileName, out EffectInstance[] effectInstance);
         IMesh CreateBoxMesh(IDevice device, float width, float height, float depth);
         IEffect CreateEffectFromFile(IDevice device, string sourceDataFile, Include includeFile, string skipConstants, ShaderFlags flags, EffectPool pool);
     }

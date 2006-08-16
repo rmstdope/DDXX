@@ -11,7 +11,9 @@ namespace DemoFramework
         private float startTime;
         private float endTime;
         private IDevice device;
-        private IGraphicsFactory factory;
+        //private IFactory factory;
+        private EffectFactory effectFactory;
+        private MeshFactory meshFactory;
         private Scene scene;
 
         protected BaseEffect(float startTime, float endTime)
@@ -27,20 +29,24 @@ namespace DemoFramework
             get { return device; }
         }
 
-        protected IGraphicsFactory Factory
+        //protected IFactory Factory
+        //{
+        //    get { return factory; }
+        //}
+
+        protected EffectFactory EffectFactory
         {
-            get { return factory; }
+            get { return effectFactory; }
+        }
+
+        protected MeshFactory MeshFactory
+        {
+            get { return meshFactory; }
         }
 
         protected Scene Scene
         {
             get { return scene; }
-        }
-
-        public virtual void Initialize()
-        {
-            device = D3DDriver.GetInstance().GetDevice();
-            factory = D3DDriver.Factory;
         }
 
         #region IEffect Members
@@ -61,9 +67,16 @@ namespace DemoFramework
 
         public abstract void Render();
 
-        public virtual void StartTimeUpdated() { }
+        public abstract void StartTimeUpdated();
 
-        public virtual void EndTimeUpdated() { }
+        public abstract void EndTimeUpdated();
+
+        public virtual void Initialize()
+        {
+            device = D3DDriver.GetInstance().GetDevice();
+            effectFactory = D3DDriver.EffectFactory;
+            meshFactory = D3DDriver.MeshFactory;
+        }
 
         #endregion
     }
