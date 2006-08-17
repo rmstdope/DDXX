@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using NUnit.Framework;
 using NMock2;
 using System.Xml;
+using Microsoft.DirectX;
 
 // TODO:
 
@@ -20,10 +21,12 @@ namespace Dope.DDXX.Utility
 @"<Effects>
 <Effect name=""fooeffect"" track=""1"">
 <Parameter name=""fooparam"" int=""3"" />
-<Parameter name=""barparam"" float=""4.3f"" />
+<Parameter name=""barparam"" float=""4.3"" />
+<Parameter name=""strparam"" string=""foostr"" />
 </Effect>
 <Effect name=""bareffect"">
 <Parameter name=""goo"" string=""string value"" />
+<Parameter name=""vecparam"" Vector3=""5.4, 4.3, 3.2"" />
 </Effect>
 </Effects>
 ";
@@ -84,14 +87,33 @@ namespace Dope.DDXX.Utility
             reader.NextEffect();
             Assert.AreEqual("fooeffect", reader.EffectName);
             Dictionary<string, Parameter> parameters = reader.GetParameters();
-            Assert.AreEqual(2, parameters.Count);
+            Assert.AreEqual(3, parameters.Count);
             Parameter parameter;
             Assert.IsTrue(parameters.TryGetValue("fooparam", out parameter));
             Assert.AreEqual(ParameterType.Integer, parameter.Type);
-            Assert.AreEqual("3", parameter.Value);
+            Assert.AreEqual(3, parameter.IntValue);
             Assert.IsTrue(parameters.TryGetValue("barparam", out parameter));
             Assert.AreEqual(ParameterType.Float, parameter.Type);
-            Assert.AreEqual("4.3f", parameter.Value);
+            Assert.AreEqual(4.3f, parameter.FloatValue);
+            Assert.IsTrue(parameters.TryGetValue("strparam", out parameter));
+            Assert.AreEqual(ParameterType.String, parameter.Type);
+            Assert.AreEqual("foostr", parameter.StringValue);
+            reader.Close();
+        }
+
+        [Test]
+        public void TestVector3Param()
+        {
+            reader = OpenXML(twoEffectContents);
+            reader.NextEffect();
+            reader.NextEffect();
+            Assert.AreEqual("bareffect", reader.EffectName);
+            Dictionary<string, Parameter> parameters = reader.GetParameters();
+            Assert.AreEqual(2, parameters.Count);
+            Parameter parameter;
+            Assert.IsTrue(parameters.TryGetValue("vecparam", out parameter));
+            Assert.AreEqual(ParameterType.Vector3, parameter.Type);
+            Assert.AreEqual(new Vector3(5.4f, 4.3f, 3.2f), parameter.Vector3Value);
             reader.Close();
         }
 

@@ -3,24 +3,57 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.IO;
+using Microsoft.DirectX;
 
 namespace Dope.DDXX.Utility
 {
     public enum ParameterType
     {
-        Unknown = 0, Integer, Float, String
+        Unknown = 0, Integer, Float, String, Vector3
     }
 
     public struct Parameter
     {
-        public string Name;
-        public string Value;
+        public string name;
+        public string value;
         public ParameterType Type;
+
+        #region Value access
+        public int IntValue
+        {
+            get { return int.Parse(value); }
+        }
+
+        public string StringValue
+        {
+            get { return value; }
+        }
+
+        public float FloatValue
+        {
+            get { return ParseFloat(value); }
+        }
+
+        public Vector3 Vector3Value
+        {
+            get
+            {
+                string[] s = value.Split(new char[] { ',' }, 3);
+                return new Vector3(ParseFloat(s[0]), ParseFloat(s[1]), ParseFloat(s[2]));
+            }
+        }
+
+        private float ParseFloat(string s)
+        {
+            return float.Parse(s, System.Globalization.NumberFormatInfo.InvariantInfo);
+        }
+        #endregion
+
         public Parameter(string name, ParameterType type, string value)
         {
-            this.Name = name;
+            this.name = name;
             this.Type = type;
-            this.Value = value;
+            this.value = value;
         }
     }
 
@@ -118,7 +151,7 @@ namespace Dope.DDXX.Utility
                 if (reader.NodeType == XmlNodeType.Element && reader.Name == "Parameter")
                 {
                     Parameter p = ReadParameter();
-                    parameters.Add(p.Name, p);
+                    parameters.Add(p.name, p);
                 }
             }
             return parameters;
@@ -166,6 +199,7 @@ namespace Dope.DDXX.Utility
                 case "int": return ParameterType.Integer;
                 case "float": return ParameterType.Float;
                 case "string": return ParameterType.String;
+                case "Vector3": return ParameterType.Vector3;
                 default: return ParameterType.Unknown;
             }
         }
