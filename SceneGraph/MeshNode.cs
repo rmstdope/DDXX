@@ -2,21 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX;
-using Dope.DDXX.Graphics;
 using Microsoft.DirectX.Direct3D;
+using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.SceneGraph
 {
     public class MeshNode : NodeBase
     {
-        private Dope.DDXX.Graphics.MeshContainer mesh;
+        private Model model;
         private EffectContainer effect;
 
-        public MeshNode(string name, Dope.DDXX.Graphics.MeshContainer mesh) 
+        public MeshNode(string name, Model model) 
             : base(name)
         {
-            this.mesh = mesh;
+            this.model = model;
         }
 
         public EffectContainer EffectTechnique
@@ -33,7 +33,7 @@ namespace Dope.DDXX.SceneGraph
             if (effect == null)
                 throw new DDXXException("MeshNode \"" + Name + "\" does not have an effect set.");
 
-            for (int j = 0; j < mesh.EffectInstance.Length; j++)
+            for (int j = 0; j < model.Materials.Length; j++)
             {
                 int passes = effect.Effect.Begin(FX.None);
 
@@ -41,7 +41,7 @@ namespace Dope.DDXX.SceneGraph
                 {
                     effect.Effect.BeginPass(i);
 
-                    mesh.Mesh.DrawSubset(j);
+                    model.Mesh.DrawSubset(j);
 
                     effect.Effect.EndPass();
                 }

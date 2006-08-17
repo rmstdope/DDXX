@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public class TestEffect : BaseEffect
+    public class TestEffect : BaseDemoEffect
     {
         public bool startCalled;
         public bool endCalled;
@@ -42,7 +42,7 @@ namespace Dope.DDXX.DemoFramework
     }
 
     [TestFixture]
-    public class BaseEffectTest : D3DMockTest
+    public class BaseDemoEffectTest : D3DMockTest
     {
         [SetUp]
         public override void SetUp()

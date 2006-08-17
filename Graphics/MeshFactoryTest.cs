@@ -216,6 +216,7 @@ namespace Dope.DDXX.Graphics
         public IMesh CreateBoxMesh(IDevice device, float width, float height, float depth) { return new TestMesh(); }
         public IEffect CreateEffectFromFile(IDevice device, string sourceDataFile, Include includeFile, string skipConstants, ShaderFlags flags, EffectPool pool) { return null; }
         public IMesh MeshFromFile(IDevice device, string fileName, out EffectInstance[] effectInstance) { effectInstance = new EffectInstance[2]; return new TestMesh(); }
+        public IMesh MeshFromFile(IDevice device, string fileName, out ExtendedMaterial[] materials) { materials = new ExtendedMaterial[2]; return new TestMesh(); }
     }
 
     [TestFixture]
@@ -236,13 +237,13 @@ namespace Dope.DDXX.Graphics
         }
 
         [Test]
-        public void CreateBoxTest()
+        public void CreateBoxAutoExpireTest()
         {
-            MeshContainer mesh1 = meshFactory.CreateBox(10.0f, 20.0f, 30.0f);
+            Model mesh1 = meshFactory.CreateBox(10.0f, 20.0f, 30.0f);
 
-            MeshContainer mesh2 = meshFactory.CreateBox(10.0f, 20.0f, 30.0f);
+            Model mesh2 = meshFactory.CreateBox(10.0f, 20.0f, 30.0f);
 
-            MeshContainer mesh3 = meshFactory.CreateBox(10.0f, 22.0f, 30.0f);
+            Model mesh3 = meshFactory.CreateBox(10.0f, 22.0f, 30.0f);
 
             Assert.IsNotNull(mesh1);
             Assert.IsNotNull(mesh3);
@@ -284,13 +285,11 @@ namespace Dope.DDXX.Graphics
         }
 
         [Test]
-        public void CreateFileTest()
+        public void CreateFileAutoExpireTest()
         {
-            MeshContainer mesh1 = meshFactory.FromFile("file1");
-
-            MeshContainer mesh2 = meshFactory.FromFile("file1");
-
-            MeshContainer mesh3 = meshFactory.FromFile("file2");
+            Model mesh1 = meshFactory.FromFile("MeshFile1");
+            Model mesh2 = meshFactory.FromFile("MeshFile1");
+            Model mesh3 = meshFactory.FromFile("MeshFile2");
 
             Assert.IsNotNull(mesh1);
             Assert.IsNotNull(mesh3);
@@ -330,5 +329,6 @@ namespace Dope.DDXX.Graphics
             Assert.AreEqual(0, meshFactory.Count);
             Assert.AreEqual(0, meshFactory.CountFiles);
         }
+
     }
 }

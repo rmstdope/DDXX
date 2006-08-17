@@ -42,6 +42,11 @@ namespace Dope.DDXX.Graphics
             return MeshAdapter.FromFile(fileName, MeshFlags.Managed, ((DeviceAdapter)device).DXDevice, out effectInstance); 
         }
 
+        public IMesh MeshFromFile(IDevice device, string fileName, out ExtendedMaterial[] materials)
+        {
+            return MeshAdapter.FromFile(fileName, MeshFlags.Managed, ((DeviceAdapter)device).DXDevice, out materials);
+        }
+
         public IMesh CreateBoxMesh(IDevice device, float width, float height, float depth)
         {
             return MeshAdapter.Box(((DeviceAdapter)device).DXDevice, width, height, depth);

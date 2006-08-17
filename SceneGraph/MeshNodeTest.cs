@@ -17,7 +17,7 @@ namespace Dope.DDXX.SceneGraph
         private IMesh mesh;
         private IEffect effect;
         private CameraNode camera;
-        private EffectInstance[] instances = new EffectInstance[2];
+        private ExtendedMaterial[] materials = new ExtendedMaterial[2];
 
         private MeshNode node;
 
@@ -28,10 +28,10 @@ namespace Dope.DDXX.SceneGraph
             mesh = mockery.NewMock<IMesh>();
             effect = mockery.NewMock<IEffect>();
             camera = new CameraNode("Camera");
-            instances[0] = new EffectInstance();
-            instances[1] = new EffectInstance();
+            materials[0] = new ExtendedMaterial();
+            materials[1] = new ExtendedMaterial();
 
-            node = new MeshNode("Name", new Dope.DDXX.Graphics.MeshContainer(mesh, instances));
+            node = new MeshNode("Name", new Dope.DDXX.Graphics.Model(mesh, materials));
         }
 
         [TearDown]

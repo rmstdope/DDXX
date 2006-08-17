@@ -14,7 +14,7 @@ namespace Dope.DDXX.Graphics
             public float depth;
             public WeakReference meshReference;
 
-            public BoxEntry(float width, float height, float depth, MeshContainer mesh)
+            public BoxEntry(float width, float height, float depth, Model mesh)
             {
                 this.width = width;
                 this.height = height;
@@ -28,7 +28,7 @@ namespace Dope.DDXX.Graphics
             public string file;
             public WeakReference meshReference;
 
-            public FileEntry(string file, MeshContainer mesh)
+            public FileEntry(string file, Model mesh)
             {
                 this.file = file;
                 if (mesh != null)
@@ -52,7 +52,7 @@ namespace Dope.DDXX.Graphics
         public int CountFiles { get { return files.Count; } }
         public int Count { get { return CountBoxes + CountFiles; } }
 
-        public MeshContainer CreateBox(float width, float height, float depth)
+        public Model CreateBox(float width, float height, float depth)
         {
             AutoExpire();
 
@@ -68,17 +68,17 @@ namespace Dope.DDXX.Graphics
             });
             if (result != null)
             {
-                return (MeshContainer)result.meshReference.Target;
+                return (Model)result.meshReference.Target;
             }
-            EffectInstance[] instance = new EffectInstance[1];
-            instance[0] = new EffectInstance();
-            MeshContainer mesh = new MeshContainer(factory.CreateBoxMesh(device, width, height, depth), instance);
+            ExtendedMaterial[] materials = new ExtendedMaterial[1];
+            materials[0] = new ExtendedMaterial();
+            Model mesh = new Model(factory.CreateBoxMesh(device, width, height, depth), materials);
             needle.meshReference = new WeakReference(mesh);
             boxes.Add(needle);
             return mesh;
         }
 
-        public MeshContainer FromFile(string file)
+        public Model FromFile(string file)
         {
             AutoExpire();
 
@@ -92,11 +92,11 @@ namespace Dope.DDXX.Graphics
             });
             if (result != null)
             {
-                return (MeshContainer)result.meshReference.Target;
+                return (Model)result.meshReference.Target;
             }
-            EffectInstance[] effects;
-            IMesh mesh = factory.MeshFromFile(device, file, out effects);
-            MeshContainer container = new MeshContainer(mesh, effects);
+            ExtendedMaterial[] materials;
+            IMesh mesh = factory.MeshFromFile(device, file, out materials);
+            Model container = new Model(mesh, materials);
             needle.meshReference = new WeakReference(container);
             files.Add(needle);
             return container;

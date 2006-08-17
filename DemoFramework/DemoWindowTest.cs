@@ -55,7 +55,7 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual(window.Text, WindowText);
             Assert.AreEqual(window.ClientSize.Height, 600);
             Assert.AreEqual(window.ClientSize.Width, 800);
-            Assert.AreEqual(window.CompanyName, "Dope");
+            Assert.AreEqual(window.CompanyName, "Dope Demo Production");
             Assert.IsTrue(window.Created);
             Assert.IsTrue(window.Enabled);
             Assert.IsTrue(window.Visible);
@@ -75,7 +75,7 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual(window.Text, WindowText);
             Assert.AreEqual(window.ClientSize.Height, 450);
             Assert.AreEqual(window.ClientSize.Width, 800);
-            Assert.AreEqual(window.CompanyName, "Dope");
+            Assert.AreEqual(window.CompanyName, "Dope Demo Production");
             Assert.IsTrue(window.Created);
             Assert.IsTrue(window.Enabled);
             Assert.IsTrue(window.Visible);

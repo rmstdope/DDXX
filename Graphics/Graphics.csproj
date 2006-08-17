@@ -61,7 +61,7 @@
     <Compile Include="ITexture.cs" />
     <Compile Include="ManagerAdapter.cs" />
     <Compile Include="MeshAdapter.cs" />
-    <Compile Include="MeshContainer.cs" />
+    <Compile Include="MeshContainerBase.cs" />
     <Compile Include="MeshFactory.cs" />
     <Compile Include="MeshFactoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

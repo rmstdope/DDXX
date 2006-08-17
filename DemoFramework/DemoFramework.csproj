@@ -40,8 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseEffect.cs" />
-    <Compile Include="BaseEffectTest.cs" />
+    <Compile Include="BaseDemoEffect.cs" />
+    <Compile Include="BaseDemoEffectTest.cs" />
     <Compile Include="DemoExecuter.cs" />
     <Compile Include="DemoExecuterTest.cs" />
     <Compile Include="DemoWindow.cs">

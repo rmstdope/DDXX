@@ -6,7 +6,7 @@ using Dope.DDXX.SceneGraph;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public abstract class BaseEffect : IDemoEffect
+    public abstract class BaseDemoEffect : IDemoEffect
     {
         private float startTime;
         private float endTime;
@@ -16,7 +16,7 @@ namespace Dope.DDXX.DemoFramework
         private MeshFactory meshFactory;
         private Scene scene;
 
-        protected BaseEffect(float startTime, float endTime)
+        protected BaseDemoEffect(float startTime, float endTime)
         {
             StartTime = startTime;
             EndTime = endTime;
