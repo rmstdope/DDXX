@@ -44,6 +44,8 @@
     <Compile Include="CameraNodeTest.cs" />
     <Compile Include="DummyNode.cs" />
     <Compile Include="INode.cs" />
+    <Compile Include="LightNode.cs" />
+    <Compile Include="LightNodeTest.cs" />
     <Compile Include="MeshNode.cs" />
     <Compile Include="MeshNodeTest.cs" />
     <Compile Include="NodeBase.cs" />
