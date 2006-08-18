@@ -6,34 +6,20 @@ using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.Graphics
 {
-    public class Model
+    public class Model : MeshContainer
     {
         private IMesh mesh;
-        private ExtendedMaterial[] materials;
-        //private EffectInstance[] effectInstance;
 
-        public IMesh Mesh
+        public IMesh IMesh
         {
             get { return mesh; }
             set { mesh = value; }
         }
 
-        public ExtendedMaterial[] Materials
-        {
-            get { return materials; }
-            set { materials = value; }
-        }
-
-        //public EffectInstance[] EffectInstance
-        //{
-        //    get { return effectInstance; }
-        //    set { effectInstance = value; }
-        //}
-
         public Model(IMesh mesh, ExtendedMaterial[] materials)
         {
-            Mesh = mesh;
-            Materials = materials;
+            IMesh = mesh;
+            SetMaterials(materials);
         }
     }
 }

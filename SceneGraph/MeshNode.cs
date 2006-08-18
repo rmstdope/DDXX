@@ -33,7 +33,7 @@ namespace Dope.DDXX.SceneGraph
             if (effect == null)
                 throw new DDXXException("MeshNode \"" + Name + "\" does not have an effect set.");
 
-            for (int j = 0; j < model.Materials.Length; j++)
+            for (int j = 0; j < model.GetMaterials().Length; j++)
             {
                 int passes = effect.Effect.Begin(FX.None);
 
@@ -41,7 +41,7 @@ namespace Dope.DDXX.SceneGraph
                 {
                     effect.Effect.BeginPass(i);
 
-                    model.Mesh.DrawSubset(j);
+                    model.IMesh.DrawSubset(j);
 
                     effect.Effect.EndPass();
                 }

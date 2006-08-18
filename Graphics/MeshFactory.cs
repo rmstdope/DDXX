@@ -12,27 +12,27 @@ namespace Dope.DDXX.Graphics
             public float width;
             public float height;
             public float depth;
-            public WeakReference meshReference;
+            public Model model;
 
-            public BoxEntry(float width, float height, float depth, Model mesh)
+            public BoxEntry(float width, float height, float depth, Model model)
             {
                 this.width = width;
                 this.height = height;
                 this.depth = depth;
-                if (mesh != null)
-                    this.meshReference = new WeakReference(mesh);
+                if (model != null)
+                    this.model = model;
             }
         }
         private class FileEntry
         {
             public string file;
-            public WeakReference meshReference;
+            public Model model;
 
-            public FileEntry(string file, Model mesh)
+            public FileEntry(string file, Model model)
             {
                 this.file = file;
-                if (mesh != null)
-                    this.meshReference = new WeakReference(mesh);
+                if (model != null)
+                    this.model = model;
             }
         }
 
@@ -54,8 +54,6 @@ namespace Dope.DDXX.Graphics
 
         public Model CreateBox(float width, float height, float depth)
         {
-            AutoExpire();
-
             BoxEntry needle = new BoxEntry(width, height, depth, null);
             BoxEntry result = boxes.Find(delegate (BoxEntry item)
             {
@@ -68,20 +66,18 @@ namespace Dope.DDXX.Graphics
             });
             if (result != null)
             {
-                return (Model)result.meshReference.Target;
+                return result.model;
             }
             ExtendedMaterial[] materials = new ExtendedMaterial[1];
             materials[0] = new ExtendedMaterial();
-            Model mesh = new Model(factory.CreateBoxMesh(device, width, height, depth), materials);
-            needle.meshReference = new WeakReference(mesh);
+            Model model = new Model(factory.CreateBoxMesh(device, width, height, depth), materials);
+            needle.model = model;
             boxes.Add(needle);
-            return mesh;
+            return model;
         }
 
         public Model FromFile(string file)
         {
-            AutoExpire();
-
             FileEntry needle = new FileEntry(file, null);
             FileEntry result = files.Find(delegate(FileEntry item)
             {
@@ -92,20 +88,20 @@ namespace Dope.DDXX.Graphics
             });
             if (result != null)
             {
-                return (Model)result.meshReference.Target;
+                return result.model;
             }
             ExtendedMaterial[] materials;
             IMesh mesh = factory.MeshFromFile(device, file, out materials);
-            Model container = new Model(mesh, materials);
-            needle.meshReference = new WeakReference(container);
+            Model model = new Model(mesh, materials);
+            needle.model = model;
             files.Add(needle);
-            return container;
+            return model;
         }
 
-        public void AutoExpire()
-        {
-            boxes.RemoveAll(delegate(BoxEntry item) { if (!item.meshReference.IsAlive) return true; return false; });
-            files.RemoveAll(delegate(FileEntry item) { if (!item.meshReference.IsAlive) return true; return false; });
-        }
+        //public void AutoExpire()
+        //{
+        //    boxes.RemoveAll(delegate(BoxEntry item) { if (!item.meshReference.IsAlive) return true; return false; });
+        //    files.RemoveAll(delegate(FileEntry item) { if (!item.meshReference.IsAlive) return true; return false; });
+        //}
     }
 }
