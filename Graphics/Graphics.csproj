@@ -62,8 +62,8 @@
     <Compile Include="ManagerAdapter.cs" />
     <Compile Include="MeshAdapter.cs" />
     <Compile Include="Model.cs" />
-    <Compile Include="MeshFactory.cs" />
-    <Compile Include="MeshFactoryTest.cs" />
+    <Compile Include="ModelFactory.cs" />
+    <Compile Include="ModelFactoryTest.cs" />
     <Compile Include="ModelTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SurfaceAdapter.cs" />

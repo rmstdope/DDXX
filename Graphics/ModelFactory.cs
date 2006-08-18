@@ -5,7 +5,7 @@ using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.Graphics
 {
-    public class MeshFactory
+    public class ModelFactory
     {
         private class BoxEntry
         {
@@ -42,7 +42,7 @@ namespace Dope.DDXX.Graphics
         private List<BoxEntry> boxes = new List<BoxEntry>();
         private List<FileEntry> files = new List<FileEntry>();
 
-        public MeshFactory(IDevice device, IGraphicsFactory factory)
+        public ModelFactory(IDevice device, IGraphicsFactory factory)
         {
             this.device = device;
             this.factory = factory;

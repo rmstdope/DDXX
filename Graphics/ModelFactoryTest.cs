@@ -9,9 +9,9 @@ using NMock2;
 namespace Dope.DDXX.Graphics
 {
     [TestFixture]
-    public class MeshFactoryTest
+    public class ModelFactoryTest
     {
-        MeshFactory meshFactory;
+        ModelFactory meshFactory;
 
         Mockery mockery;
         IGraphicsFactory graphicsFactory;
@@ -23,7 +23,7 @@ namespace Dope.DDXX.Graphics
             mockery = new Mockery();
             graphicsFactory = mockery.NewMock<IGraphicsFactory>();
             mesh = mockery.NewMock<IMesh>();
-            meshFactory = new MeshFactory(null, graphicsFactory);
+            meshFactory = new ModelFactory(null, graphicsFactory);
         }
 
         [TearDown]
