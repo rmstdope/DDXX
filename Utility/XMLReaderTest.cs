@@ -7,16 +7,120 @@ using NUnit.Framework;
 using NMock2;
 using System.Xml;
 using Microsoft.DirectX;
-
-// TODO:
+using System.Reflection;
 
 namespace Dope.DDXX.Utility
 {
     [TestFixture]
     public class XMLReaderTest
     {
+        #region Builder stub
+        class BuilderStub : IDemoEffectBuilder
+        {
+            class Effect
+            {
+                public string name;
+                public int track;
+                public Dictionary<string, Parameter> parameters;
+                public Effect(string name, int track)
+                {
+                    this.name = name;
+                    this.track = track;
+                    parameters = new Dictionary<string, Parameter>();
+                }
+            }
+            private Queue<Effect> effects = new Queue<Effect>();
+            private Effect lastEffect;
+            private Effect currentEffect;
+
+            #region IDemoEffectBuilder implementation
+            public void AddEffect(string name, int track)
+            {
+                lastEffect = new Effect(name, track);
+                effects.Enqueue(lastEffect);
+            }
+
+            private void AddParameter(string name, Parameter value)
+            {
+                if (lastEffect != null)
+                {
+                    lastEffect.parameters.Add(value.name, value);
+                }
+                else
+                {
+                    throw new InvalidOperationException("Adding parameters before any effects");
+                }
+            }
+
+            public void AddIntParameter(string name, int value)
+            {
+                AddParameter(name, new Parameter(name, ParameterType.Integer, value));
+            }
+            public void AddFloatParameter(string name, float value)
+            {
+                AddParameter(name, new Parameter(name, ParameterType.Float, value));
+            }
+            public void AddStringParameter(string name, string value)
+            {
+                AddParameter(name, new Parameter(name, ParameterType.String, value));
+            }
+            public void AddVector3Parameter(string name, Vector3 value)
+            {
+                AddParameter(name, new Parameter(name, ParameterType.Vector3, value));
+            }
+            #endregion
+
+            #region Test access
+
+            public bool NextEffect()
+            {
+                if (effects.Count > 0)
+                {
+                    currentEffect = effects.Dequeue();
+                    return true;
+                }
+                else
+                {
+                    currentEffect = null;
+                    return false;
+                }
+            }
+            public int EffectTrack
+            {
+                get
+                {
+                    if (currentEffect != null)
+                        return currentEffect.track;
+                    else
+                        throw new InvalidOperationException("No current effect");
+                }
+            }
+            public string EffectName
+            {
+                get
+                {
+                    if (currentEffect != null)
+                        return currentEffect.name;
+                    else
+                        throw new InvalidOperationException("No current effect");
+                }
+            }
+            #endregion
+
+            public Dictionary<string, Parameter> GetParameters()
+            {
+                if (currentEffect != null)
+                    return currentEffect.parameters;
+                else
+                    throw new InvalidOperationException("No current effect");
+            }
+        }
+        #endregion
+
+
         List<string> tempFiles = new List<string>();
-        XMLReader reader;
+        BuilderStub effectBuilder;
+
         static string twoEffectContents =
 @"<Effects>
 <Effect name=""fooeffect"" track=""1"">
@@ -30,6 +134,11 @@ namespace Dope.DDXX.Utility
 </Effect>
 </Effects>
 ";
+        [SetUp]
+        public void SetUp()
+        {
+            effectBuilder = new BuilderStub();
+        }
 
         [TearDown]
         public void TearDown()
@@ -46,9 +155,8 @@ namespace Dope.DDXX.Utility
         {
             try
             {
-                reader = OpenXML(@"<Foo></Foo>");
+                ReadXML(@"<Foo></Foo>");
                 Assert.Fail("Expected XmlException because no <Effects> node found");
-                reader.Close();
             }
             catch (XmlException)
             {
@@ -58,35 +166,33 @@ namespace Dope.DDXX.Utility
         [Test]
         public void TestNextEffect()
         {
-            reader = OpenXML(twoEffectContents);
-            Assert.IsTrue(reader.NextEffect());
-            Assert.AreEqual("fooeffect", reader.EffectName);
-            Assert.IsTrue(reader.NextEffect());
-            Assert.AreEqual("bareffect", reader.EffectName);
-            Assert.IsFalse(reader.NextEffect());
-            reader.Close();
+            ReadXML(twoEffectContents);
+            Assert.IsTrue(effectBuilder.NextEffect());
+            Assert.AreEqual("fooeffect", effectBuilder.EffectName);
+            Assert.IsTrue(effectBuilder.NextEffect());
+            Assert.AreEqual("bareffect", effectBuilder.EffectName);
+            Assert.IsFalse(effectBuilder.NextEffect());
         }
 
         [Test]
         public void TestEffectTrack()
         {
-            reader = OpenXML(twoEffectContents);
-            Assert.IsTrue(reader.NextEffect());
-            Assert.AreEqual("fooeffect", reader.EffectName);
-            Assert.AreEqual(1, reader.EffectTrack);
-            Assert.IsTrue(reader.NextEffect());
-            Assert.AreEqual("bareffect", reader.EffectName);
-            Assert.AreEqual(0, reader.EffectTrack);
-            reader.Close();
+            ReadXML(twoEffectContents);
+            Assert.IsTrue(effectBuilder.NextEffect());
+            Assert.AreEqual("fooeffect", effectBuilder.EffectName);
+            Assert.AreEqual(1, effectBuilder.EffectTrack);
+            Assert.IsTrue(effectBuilder.NextEffect());
+            Assert.AreEqual("bareffect", effectBuilder.EffectName);
+            Assert.AreEqual(0, effectBuilder.EffectTrack);
         }
 
         [Test]
         public void TestGetParameters()
         {
-            reader = OpenXML(twoEffectContents);
-            reader.NextEffect();
-            Assert.AreEqual("fooeffect", reader.EffectName);
-            Dictionary<string, Parameter> parameters = reader.GetParameters();
+            ReadXML(twoEffectContents);
+            effectBuilder.NextEffect();
+            Assert.AreEqual("fooeffect", effectBuilder.EffectName);
+            Dictionary<string, Parameter> parameters = effectBuilder.GetParameters();
             Assert.AreEqual(3, parameters.Count);
             Parameter parameter;
             Assert.IsTrue(parameters.TryGetValue("fooparam", out parameter));
@@ -98,23 +204,21 @@ namespace Dope.DDXX.Utility
             Assert.IsTrue(parameters.TryGetValue("strparam", out parameter));
             Assert.AreEqual(ParameterType.String, parameter.Type);
             Assert.AreEqual("foostr", parameter.StringValue);
-            reader.Close();
         }
 
         [Test]
         public void TestVector3Param()
         {
-            reader = OpenXML(twoEffectContents);
-            reader.NextEffect();
-            reader.NextEffect();
-            Assert.AreEqual("bareffect", reader.EffectName);
-            Dictionary<string, Parameter> parameters = reader.GetParameters();
+            ReadXML(twoEffectContents);
+            effectBuilder.NextEffect();
+            effectBuilder.NextEffect();
+            Assert.AreEqual("bareffect", effectBuilder.EffectName);
+            Dictionary<string, Parameter> parameters = effectBuilder.GetParameters();
             Assert.AreEqual(2, parameters.Count);
             Parameter parameter;
             Assert.IsTrue(parameters.TryGetValue("vecparam", out parameter));
             Assert.AreEqual(ParameterType.Vector3, parameter.Type);
             Assert.AreEqual(new Vector3(5.4f, 4.3f, 3.2f), parameter.Vector3Value);
-            reader.Close();
         }
 
         [Test]
@@ -122,19 +226,13 @@ namespace Dope.DDXX.Utility
         {
             string wrongParamContents =
 @"<Effects><Effect><Parameter name=""foo"" /></Effect></Effects>";
-            reader = OpenXML(wrongParamContents);
-            reader.NextEffect();
             try
             {
-                reader.GetParameters();
+                ReadXML(wrongParamContents);
                 Assert.Fail("Expected exception due to missing parameter type");
             }
             catch (XmlException)
             {
-            }
-            finally
-            {
-                reader.Close();
             }
         }
 
@@ -143,38 +241,22 @@ namespace Dope.DDXX.Utility
         {
             string wrongParamTypeContents =
 @"<Effects><Effect><Parameter name=""foo"" sunktype=""44"" /></Effect></Effects>";
-            reader = OpenXML(wrongParamTypeContents);
-            reader.NextEffect();
             try
             {
-                reader.GetParameters();
+                ReadXML(wrongParamTypeContents);
                 Assert.Fail("Expected exception due to unknown parameter type");
             }
             catch (XmlException)
             {
             }
-            finally
-            {
-                reader.Close();
-            }
         }
 
-
-        private XMLReader OpenXML(string contents)
+        private void ReadXML(string contents)
         {
             string tempFilename = WriteTempFile(contents);
             Stream inputStream = new FileStream(tempFilename, FileMode.Open);
-            XMLReader reader = new XMLReader();
-            try
-            {
-                reader.Start(inputStream);
-                return reader;
-            }
-            catch (Exception e)
-            {
-                reader.Close();
-                throw e;
-            }
+            XMLReader reader = new XMLReader(effectBuilder);
+            reader.Read(inputStream);
         }
 
         internal string WriteTempFile(string contents)

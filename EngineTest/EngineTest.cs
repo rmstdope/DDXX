@@ -9,6 +9,8 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
+using System.Reflection;
+using System.Text;
 
 namespace EngineTest
 {
@@ -54,8 +56,32 @@ namespace EngineTest
 
         private static void RegisterEffects(DemoExecuter executer)
         {
-            TestEffect effect = new TestEffect(0.0f, 10.0f);
-            executer.Register(0, effect);
+            //TestEffect effect = new TestEffect(0.0f, 10.0f);
+            //executer.Register(0, effect);
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            foreach (Type t in assembly.GetTypes())
+            {
+                TypeFilter filter = new TypeFilter(delegate(Type ty, object comp)
+                {
+                    if (ty.FullName == (string)comp)
+                        return true;
+                    else
+                        return false;
+                });
+                Type[] interfaces = t.FindInterfaces(filter, "Dope.DDXX.DemoFramework.IDemoEffect");
+                if (interfaces.Length > 0)
+                {
+                    Type effect = t;
+                    Type[] constrArgs = new Type[] { typeof(float), typeof(float) };
+                    ConstructorInfo constrInfo = effect.GetConstructor(constrArgs);
+                    if (constrInfo == null)
+                        throw new DDXXException("Couldn't find constructor (float,float) in " + effect.FullName);
+                    IDemoEffect demoEffect = (IDemoEffect)constrInfo.Invoke(new object[] { 0.0f, 10.0f });
+                    if (demoEffect == null)
+                        throw new DDXXException("Couldn't create instance of " + effect.FullName);
+                    executer.Register(0, demoEffect);
+                }
+            }
         }
 
         private static void SetupFramework(SetupDialog setup, out DemoWindow window, out DemoExecuter executer, out DeviceDescription desc)
