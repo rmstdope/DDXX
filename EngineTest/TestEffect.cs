@@ -21,7 +21,7 @@ namespace EngineTest
             base.Initialize();
 
             Model model = MeshFactory.FromFile("../../Data/airplane 2.x");
-            IEffect effect = EffectFactory.CreateFromFile("Effects.fx");
+            IEffect effect = EffectFactory.CreateFromFile("../../../Effects/BlinnPhongShaders.fxo");
             MeshNode node = new MeshNode("Mesh", model);
             node.EffectTechnique = new EffectContainer(effect, effect.FindNextValidTechnique(null));
             Scene.AddNode(node);

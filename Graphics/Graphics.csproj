@@ -61,7 +61,6 @@
     <Compile Include="ITexture.cs" />
     <Compile Include="ManagerAdapter.cs" />
     <Compile Include="MeshAdapter.cs" />
-    <Compile Include="Model.cs" />
     <Compile Include="ModelFactory.cs" />
     <Compile Include="ModelFactoryTest.cs" />
     <Compile Include="ModelTest.cs" />
