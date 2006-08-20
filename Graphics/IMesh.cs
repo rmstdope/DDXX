@@ -23,6 +23,11 @@ namespace Dope.DDXX.Graphics
         bool Disposed { get; }
         //
         // Summary:
+        //     Immediately releases the unmanaged resources used by the Microsoft.DirectX.Direct3D.Mesh
+        //     object.
+        void Dispose();
+        //
+        // Summary:
         //     Retrieves the data in an index buffer.
         IndexBuffer IndexBuffer { get; }
         //
@@ -71,7 +76,7 @@ namespace Dope.DDXX.Graphics
         //
         // Returns:
         //     Cloned mesh.
-        Mesh Clone(MeshFlags options, GraphicsStream declaration, Device device);
+        IMesh Clone(MeshFlags options, GraphicsStream declaration, IDevice device);
         //
         // Summary:
         //     Clones, or copies, a mesh object.
@@ -91,7 +96,7 @@ namespace Dope.DDXX.Graphics
         //
         // Returns:
         //     Cloned mesh.
-        Mesh Clone(MeshFlags options, VertexElement[] declaration, Device device);
+        IMesh Clone(MeshFlags options, VertexElement[] declaration, IDevice device);
         //
         // Summary:
         //     Clones, or copies, a mesh object.
@@ -111,7 +116,7 @@ namespace Dope.DDXX.Graphics
         //
         // Returns:
         //     Cloned mesh.
-        Mesh Clone(MeshFlags options, VertexFormats vertexFormat, Device device);
+        IMesh Clone(MeshFlags options, VertexFormats vertexFormat, IDevice device);
         //
         // Summary:
         //     Computes normals for each vertex in a mesh.

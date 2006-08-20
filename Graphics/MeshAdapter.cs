@@ -429,6 +429,11 @@ namespace Dope.DDXX.Graphics
             get { return mesh.Disposed; }
         }
 
+        public void Dispose()
+        {
+            mesh.Dispose();
+        }
+
         public IndexBuffer IndexBuffer
         {
             get { return mesh.IndexBuffer; }
@@ -469,19 +474,19 @@ namespace Dope.DDXX.Graphics
             get { return mesh.VertexFormat; }
         }
 
-        public Mesh Clone(MeshFlags options, GraphicsStream declaration, Device device)
+        public IMesh Clone(MeshFlags options, GraphicsStream declaration, IDevice device)
         {
-            return mesh.Clone(options, declaration, device);
+            return new MeshAdapter(mesh.Clone(options, declaration, ((DeviceAdapter)device).DXDevice));
         }
 
-        public Mesh Clone(MeshFlags options, VertexElement[] declaration, Device device)
+        public IMesh Clone(MeshFlags options, VertexElement[] declaration, IDevice device)
         {
-            return mesh.Clone(options, declaration, device);
+            return new MeshAdapter(mesh.Clone(options, declaration, ((DeviceAdapter)device).DXDevice));
         }
 
-        public Mesh Clone(MeshFlags options, VertexFormats vertexFormat, Device device)
+        public IMesh Clone(MeshFlags options, VertexFormats vertexFormat, IDevice device)
         {
-            return mesh.Clone(options, vertexFormat, device);
+            return new MeshAdapter(mesh.Clone(options, vertexFormat, ((DeviceAdapter)device).DXDevice));
         }
 
         public void ComputeNormals()

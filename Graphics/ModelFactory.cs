@@ -7,6 +7,14 @@ namespace Dope.DDXX.Graphics
 {
     public class ModelFactory
     {
+        public enum Options
+        {
+            None            = 0,
+            NoOptimization  = 1,
+            EnsureTangents  = 2,
+            // Continue with 4, 8, 16, 32, etc.
+        }
+
         private class BoxEntry
         {
             public float width;
@@ -27,10 +35,12 @@ namespace Dope.DDXX.Graphics
         {
             public string file;
             public Model model;
+            public Options options;
 
-            public FileEntry(string file, Model model)
+            public FileEntry(string file, Options options, Model model)
             {
                 this.file = file;
+                this.options = options;
                 if (model != null)
                     this.model = model;
             }
@@ -76,26 +86,132 @@ namespace Dope.DDXX.Graphics
             return model;
         }
 
-        public Model FromFile(string file)
+        public Model FromFile(string file, Options options)
         {
-            FileEntry needle = new FileEntry(file, null);
-            FileEntry result = files.Find(delegate(FileEntry item)
-            {
-                if (needle.file == item.file)
-                    return true;
-                else
-                    return false;
-            });
+            FileEntry needle = new FileEntry(file, options, null);
+            FileEntry result = FindInFiles(needle);
             if (result != null)
             {
                 return result.model;
             }
+            needle.model = CreateModelFromFile(file, options);
+            files.Add(needle);
+            return needle.model;
+        }
+
+        private FileEntry FindInFiles(FileEntry needle)
+        {
+            FileEntry result = files.Find(delegate(FileEntry item)
+            {
+                if (needle.file == item.file && needle.options == item.options)
+                    return true;
+                else
+                    return false;
+            });
+            return result;
+        }
+
+        private Model CreateModelFromFile(string file, Options options)
+        {
             ExtendedMaterial[] materials;
             IMesh mesh = factory.MeshFromFile(device, file, out materials);
+            HandleOptions(ref mesh, options);
             Model model = new Model(mesh, materials);
-            needle.model = model;
-            files.Add(needle);
             return model;
+        }
+
+        private void HandleOptions(ref IMesh mesh, Options options)
+        {
+            if (!DeclarationHasTangents(mesh.Declaration) &&
+                (options & Options.EnsureTangents) == Options.EnsureTangents)
+            {
+                if (!DeclarationHasNormals(mesh.Declaration))
+                {
+                    AddNormalsAndTangents(ref mesh);
+                }
+                else
+                {
+                    AddTangents(ref mesh);
+                }
+            }
+            else if (!DeclarationHasNormals(mesh.Declaration))
+            {
+                AddNormals(ref mesh);
+            }
+            if ((options & Options.NoOptimization) != Options.NoOptimization)
+            {
+                int[] adj = new int[mesh.NumberFaces * 3];
+                mesh.GenerateAdjacency(1e-6f, adj);
+                mesh.OptimizeInPlace(MeshFlags.OptimizeVertexCache | MeshFlags.OptimizeStripeReorder | MeshFlags.OptimizeAttributeSort, adj);
+            }
+        }
+
+        public void AddNormalsAndTangents(ref IMesh mesh)
+        {
+            VertexElement[] elements = new VertexElement[]
+            {
+                new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
+                new VertexElement(0, 12, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Normal, 0),
+                new VertexElement(0, 24, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.TextureCoordinate, 0),
+                new VertexElement(0, 36, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Tangent, 0),
+                VertexElement.VertexDeclarationEnd,
+            };
+            IMesh tempMesh = mesh.Clone(MeshFlags.Managed, elements, device);
+            mesh.Dispose();
+            mesh = tempMesh;
+            mesh.ComputeNormals();
+            mesh.ComputeTangentFrame(TangentOptions.GenerateInPlace | TangentOptions.WeightEqual);
+        }
+
+        public void AddTangents(ref IMesh mesh)
+        {
+            VertexElement[] elements = new VertexElement[]
+            {
+                new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
+                new VertexElement(0, 12, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Normal, 0),
+                new VertexElement(0, 24, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.TextureCoordinate, 0),
+                new VertexElement(0, 36, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Tangent, 0),
+                VertexElement.VertexDeclarationEnd,
+            };
+            IMesh tempMesh = mesh.Clone(MeshFlags.Managed, elements, device);
+            mesh.Dispose();
+            mesh = tempMesh;
+            mesh.ComputeTangentFrame(TangentOptions.GenerateInPlace | TangentOptions.WeightEqual);
+        }
+
+        public void AddNormals(ref IMesh mesh)
+        {
+            VertexElement[] elements = new VertexElement[]
+            {
+                new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
+                new VertexElement(0, 12, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Normal, 0),
+                new VertexElement(0, 24, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.TextureCoordinate, 0),
+                VertexElement.VertexDeclarationEnd,
+            };
+            IMesh tempMesh = mesh.Clone(MeshFlags.Managed, elements, device);
+            mesh.Dispose();
+            mesh = tempMesh;
+            mesh.ComputeNormals();
+        }
+
+        private bool DeclarationHasTangents(VertexElement[] vertexElement)
+        {
+            for (int i = 0; i < vertexElement.Length; i++)
+            {
+                if (vertexElement[i].DeclarationUsage == DeclarationUsage.Tangent)
+                    return true;
+            }
+            return false;
+        }
+
+        private bool DeclarationHasNormals(VertexElement[] vertexElement)
+        {
+            for (int i = 0; i < vertexElement.Length; i++)
+            {
+                if (vertexElement[i].DeclarationUsage == DeclarationUsage.Normal)
+                    return true;
+            }
+            return false;
         }
 
         //public void AutoExpire()
