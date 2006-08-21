@@ -76,6 +76,11 @@ namespace Dope.DDXX.Utility
             }
         }
 
+        public static void UnInitialize()
+        {
+        	initialized = false;
+        }
+        
         public static void Initialize()
         {
             if (!initialized)

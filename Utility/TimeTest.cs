@@ -17,7 +17,13 @@ namespace Dope.DDXX.Utility
         private static extern bool QueryPerformanceFrequency(out long lpFrequency);
 
         [SetUp]
-        public void Setup()
+        public void SetUp()
+        {
+        	Time.UnInitialize();
+        }
+        
+        [TearDown]
+        public void TearDown()
         {
         }
 
