@@ -26,11 +26,18 @@ namespace Dope.DDXX.Utility {
             }
             private Queue<Effect> effects = new Queue<Effect>();
             private Queue<Effect> postEffects = new Queue<Effect>();
+            private Queue<Effect> transitions = new Queue<Effect>();
             private Effect lastEffect;
             private Effect currentEffect;
             private Effect currentPostEffect;
+            private Effect currentTransition;
 
             #region IDemoEffectBuilder implementation
+
+            public void AddTransition(string name, int destinationTrack) {
+                lastEffect = new Effect(name, destinationTrack);
+                transitions.Enqueue(lastEffect);
+            }
 
             public void AddPostEffect(string name, int track) {
                 lastEffect = new Effect(name, track);
@@ -86,6 +93,16 @@ namespace Dope.DDXX.Utility {
                 }
             }
 
+            public bool NextTransition() {
+                if (transitions.Count > 0) {
+                    currentTransition = transitions.Dequeue();
+                    return true;
+                } else {
+                    currentTransition = null;
+                    return false;
+                }
+            }
+
             public int EffectTrack {
                 get {
                     if (currentEffect != null)
@@ -120,6 +137,23 @@ namespace Dope.DDXX.Utility {
                 }
             }
 
+            public int TransitionDestinationTrack {
+                get {
+                    if (currentTransition != null)
+                        return currentTransition.track;
+                    else
+                        throw new InvalidOperationException("No current transition");
+                }
+            }
+            public string TransitionName {
+                get {
+                    if (currentTransition != null)
+                        return currentTransition.name;
+                    else
+                        throw new InvalidOperationException("No current transition");
+                }
+            }
+
             #endregion
 
             public Dictionary<string, Parameter> GetParameters() {
@@ -136,6 +170,12 @@ namespace Dope.DDXX.Utility {
                     throw new InvalidOperationException("No current post effect");
             }
 
+            public Dictionary<string, Parameter> GetTransitionParameters() {
+                if (currentTransition != null)
+                    return currentTransition.parameters;
+                else
+                    throw new InvalidOperationException("No current transition");
+            }
         }
         #endregion
 
@@ -207,6 +247,21 @@ namespace Dope.DDXX.Utility {
             Assert.AreEqual(ParameterType.Float, parameter.Type);
             Assert.AreEqual(5.4, parameter.FloatValue);
             Assert.IsFalse(effectBuilder.NextPostEffect());
+        }
+
+        [Test]
+        public void TestTransition() {
+            ReadXML(twoEffectContents);
+            Assert.IsTrue(effectBuilder.NextTransition());
+            Assert.AreEqual("footrans", effectBuilder.TransitionName);
+            Assert.AreEqual(1, effectBuilder.TransitionDestinationTrack);
+            Dictionary<string, Parameter> parameters = effectBuilder.GetTransitionParameters();
+            Assert.AreEqual(1, parameters.Count);
+            Parameter parameter;
+            Assert.IsTrue(parameters.TryGetValue("transparam", out parameter));
+            Assert.AreEqual(ParameterType.String, parameter.Type);
+            Assert.AreEqual("tranny", parameter.StringValue);
+            Assert.IsFalse(effectBuilder.NextTransition());
         }
 
         [Test]

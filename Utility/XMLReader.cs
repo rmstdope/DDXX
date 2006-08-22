@@ -86,6 +86,8 @@ namespace Dope.DDXX.Utility {
                     ReadEffect();
                 } else if (reader.NodeType == XmlNodeType.Element && reader.Name == "PostEffect") {
                     ReadPostEffect();
+                } else if (reader.NodeType == XmlNodeType.Element && reader.Name == "Transition") {
+                    ReadTransition();
                 }
             }
         }
@@ -106,6 +108,19 @@ namespace Dope.DDXX.Utility {
             ReadParameters();
         }
 
+        private void ReadTransition() {
+            string effectName = reader.GetAttribute("name");
+            string track = reader.GetAttribute("destinationTrack");
+            int destinationTrack;
+            if (track != null) {
+                destinationTrack = int.Parse(track);
+            } else {
+                destinationTrack = 0;
+            }
+            effectBuilder.AddTransition(effectName, destinationTrack);
+            ReadParameters();
+        }
+
         private void ReadNameTrack(out string effectName, out int effectTrack) {
             effectName = reader.GetAttribute("name");
             string track = reader.GetAttribute("track");
@@ -120,7 +135,9 @@ namespace Dope.DDXX.Utility {
         public void ReadParameters() {
             while (reader.Read()) {
                 if (reader.NodeType == XmlNodeType.EndElement &&
-                    (reader.Name == "Effect" || reader.Name == "PostEffect")) {
+                    (reader.Name == "Effect" ||
+                    reader.Name == "PostEffect" || 
+                    reader.Name == "Transition")) {
                     break;
                 }
                 if (reader.NodeType == XmlNodeType.Element && reader.Name == "Parameter") {

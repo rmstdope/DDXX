@@ -8,9 +8,9 @@ namespace Dope.DDXX.Utility
     public interface IDemoEffectBuilder
     {
 
-        void AddPostEffect(string effectName, int effectTrack);
-
         void AddEffect(string effectName, int effectTrack);
+        void AddPostEffect(string effectName, int effectTrack);
+        void AddTransition(string effectName, int destinationTrack);
 
         void AddFloatParameter(string name, float value);
         void AddIntParameter(string name, int value);
