@@ -53,19 +53,8 @@ namespace Dope.DDXX.Utility
     {
         private Stream inputStream;
         private XmlReader reader;
-        private string effectName;
-        private int effectTrack;
         private IDemoEffectBuilder effectBuilder;
 
-        public string EffectName
-        {
-            get { return effectName; }
-        }
-
-        public int EffectTrack
-        {
-            get { return effectTrack; }
-        }
 
         public XMLReader(IDemoEffectBuilder builder)
         {
@@ -118,23 +107,38 @@ namespace Dope.DDXX.Utility
                 {
                     ReadEffect();
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "PostEffect") {
+                    ReadPostEffect();
+                }
             }
         }
 
         private void ReadEffect()
         {
-            effectName = reader.GetAttribute("name");
-            string track = reader.GetAttribute("track");
-            if (track != null)
-            {
-                effectTrack = int.Parse(track);
-            }
-            else
-            {
-                effectTrack = 0;
-            }
+            string effectName;
+            int effectTrack;
+            ReadNameTrack(out effectName, out effectTrack);
             effectBuilder.AddEffect(effectName, effectTrack);
             ReadParameters();
+        }
+
+        private void ReadPostEffect() {
+            string effectName;
+            int effectTrack;
+            ReadNameTrack(out effectName, out effectTrack);
+            effectBuilder.AddPostEffect(effectName, effectTrack);
+            ReadParameters();
+        }
+
+        private void ReadNameTrack(out string effectName, out int effectTrack) {
+            effectName = reader.GetAttribute("name");
+            string track = reader.GetAttribute("track");
+
+            if (track != null) {
+                effectTrack = int.Parse(track);
+            } else {
+                effectTrack = 0;
+            }
         }
 
         public void ReadParameters()
