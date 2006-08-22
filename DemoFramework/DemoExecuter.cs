@@ -7,7 +7,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using Dope.DDXX.Graphics;
-using Dope.DDXX.FMOD;
+using FMOD;
 using Dope.DDXX.Input;
 using Dope.DDXX.Sound;
 using Dope.DDXX.Utility;
@@ -17,7 +17,7 @@ namespace Dope.DDXX.DemoFramework
     public class DemoExecuter
     {
         SoundDriver soundDriver;
-        Dope.DDXX.FMOD.Sound sound;
+        FMOD.Sound sound;
         Channel channel;
 
         IDevice device;

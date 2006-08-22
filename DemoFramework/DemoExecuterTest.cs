@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using System.Text;
 using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Graphics;
-using Dope.DDXX.FMOD;
+using FMOD;
 using Dope.DDXX.Input;
 using Dope.DDXX.Sound;
 using Dope.DDXX.Utility;
@@ -107,7 +107,7 @@ namespace Dope.DDXX.DemoFramework
         {
             Expect.Once.On(system).
                 Method("GetVersion").
-                Will(Return.Value(Dope.DDXX.FMOD.RESULT.ERR_VERSION));
+                Will(Return.Value(FMOD.RESULT.ERR_VERSION));
             try
             {
                 executer.Initialize("");
@@ -121,13 +121,13 @@ namespace Dope.DDXX.DemoFramework
         {
             Expect.Once.On(system).
                  Method("GetVersion").
-                 Will(Return.Value(Dope.DDXX.FMOD.RESULT.OK));
+                 Will(Return.Value(FMOD.RESULT.OK));
             Expect.Once.On(system).
                 Method("Init").
-                Will(Return.Value(Dope.DDXX.FMOD.RESULT.OK));
+                Will(Return.Value(FMOD.RESULT.OK));
             Expect.Once.On(system).
                 Method("CreateSound").
-                Will(Return.Value(Dope.DDXX.FMOD.RESULT.ERR_VERSION));
+                Will(Return.Value(FMOD.RESULT.ERR_VERSION));
             try
             {
                 executer.Initialize("test.mp3");
@@ -141,10 +141,10 @@ namespace Dope.DDXX.DemoFramework
         {
             Expect.Once.On(system).
                 Method("GetVersion").
-                Will(Return.Value(Dope.DDXX.FMOD.RESULT.OK));
+                Will(Return.Value(FMOD.RESULT.OK));
             Expect.Once.On(system).
                 Method("Init").
-                Will(Return.Value(Dope.DDXX.FMOD.RESULT.OK));
+                Will(Return.Value(FMOD.RESULT.OK));
             executer.Initialize("");
         }
 
@@ -153,10 +153,10 @@ namespace Dope.DDXX.DemoFramework
         {
             Expect.Once.On(system).
                 Method("GetVersion").
-                Will(Return.Value(Dope.DDXX.FMOD.RESULT.OK));
+                Will(Return.Value(FMOD.RESULT.OK));
             Expect.Once.On(system).
                 Method("Init").
-                Will(Return.Value(Dope.DDXX.FMOD.RESULT.OK));
+                Will(Return.Value(FMOD.RESULT.OK));
             executer.Initialize(null);
         }
 
@@ -165,13 +165,13 @@ namespace Dope.DDXX.DemoFramework
         {
             Expect.Once.On(system).
                  Method("GetVersion").
-                 Will(Return.Value(Dope.DDXX.FMOD.RESULT.OK));
+                 Will(Return.Value(FMOD.RESULT.OK));
             Expect.Once.On(system).
                 Method("Init").
-                Will(Return.Value(Dope.DDXX.FMOD.RESULT.OK));
+                Will(Return.Value(FMOD.RESULT.OK));
             Expect.Once.On(system).
                 Method("CreateSound").
-                Will(Return.Value(Dope.DDXX.FMOD.RESULT.OK));
+                Will(Return.Value(FMOD.RESULT.OK));
             executer.Initialize("test.mp3");
         }
 
@@ -185,10 +185,10 @@ namespace Dope.DDXX.DemoFramework
 
             Expect.Once.On(system).
                 Method("GetVersion").
-                Will(Return.Value(Dope.DDXX.FMOD.RESULT.OK));
+                Will(Return.Value(FMOD.RESULT.OK));
             Expect.Once.On(system).
                 Method("Init").
-                Will(Return.Value(Dope.DDXX.FMOD.RESULT.OK));
+                Will(Return.Value(FMOD.RESULT.OK));
             Expect.Once.On(effect1).
                 Method("Initialize");
             Expect.Once.On(effect2).
@@ -224,7 +224,7 @@ namespace Dope.DDXX.DemoFramework
 
             Expect.Once.On(system).
                 Method("PlaySound").
-                Will(Return.Value(Dope.DDXX.FMOD.RESULT.ERR_VERSION));
+                Will(Return.Value(FMOD.RESULT.ERR_VERSION));
 
             try
             {
@@ -245,7 +245,7 @@ namespace Dope.DDXX.DemoFramework
                 Will(Return.Value(false));
             Expect.Once.On(system).
                 Method("PlaySound").
-                Will(Return.Value(Dope.DDXX.FMOD.RESULT.OK));
+                Will(Return.Value(FMOD.RESULT.OK));
             Expect.Exactly(2).On(device).
                 Method("GetRenderTarget").
                 With(0).

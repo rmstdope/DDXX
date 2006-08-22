@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX.Direct3D;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.Graphics
 {
@@ -138,6 +139,11 @@ namespace Dope.DDXX.Graphics
             {
                 AddNormals(ref mesh);
             }
+            Optimize(mesh, options);
+        }
+
+        private static void Optimize(IMesh mesh, Options options)
+        {
             if ((options & Options.NoOptimization) != Options.NoOptimization)
             {
                 int[] adj = new int[mesh.NumberFaces * 3];
@@ -146,52 +152,64 @@ namespace Dope.DDXX.Graphics
             }
         }
 
-        public void AddNormalsAndTangents(ref IMesh mesh)
+        private void AddNormalsAndTangents(ref IMesh mesh)
         {
-            VertexElement[] elements = new VertexElement[]
-            {
-                new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
-                new VertexElement(0, 12, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Normal, 0),
-                new VertexElement(0, 24, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.TextureCoordinate, 0),
-                new VertexElement(0, 36, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Tangent, 0),
-                VertexElement.VertexDeclarationEnd,
-            };
-            IMesh tempMesh = mesh.Clone(MeshFlags.Managed, elements, device);
+            VertexElementArray elements = new VertexElementArray(mesh.Declaration);
+            elements.AddNormals();
+            elements.AddTangents();
+            IMesh tempMesh = mesh.Clone(MeshFlags.Managed, elements.VertexElements, device);
             mesh.Dispose();
             mesh = tempMesh;
             mesh.ComputeNormals();
             mesh.ComputeTangentFrame(TangentOptions.GenerateInPlace | TangentOptions.WeightEqual);
         }
 
-        public void AddTangents(ref IMesh mesh)
+        private void AddTangents(ref IMesh mesh)
         {
-            VertexElement[] elements = new VertexElement[]
-            {
-                new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
-                new VertexElement(0, 12, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Normal, 0),
-                new VertexElement(0, 24, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.TextureCoordinate, 0),
-                new VertexElement(0, 36, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Tangent, 0),
-                VertexElement.VertexDeclarationEnd,
-            };
-            IMesh tempMesh = mesh.Clone(MeshFlags.Managed, elements, device);
+            VertexElementArray elements = new VertexElementArray(mesh.Declaration);
+            elements.AddTangents();
+            IMesh tempMesh = mesh.Clone(MeshFlags.Managed, elements.VertexElements, device);
             mesh.Dispose();
             mesh = tempMesh;
             mesh.ComputeTangentFrame(TangentOptions.GenerateInPlace | TangentOptions.WeightEqual);
         }
 
-        public void AddNormals(ref IMesh mesh)
+        private void AddNormals(ref IMesh mesh)
         {
-            VertexElement[] elements = new VertexElement[]
-            {
-                new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
-                new VertexElement(0, 12, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Normal, 0),
-                new VertexElement(0, 24, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.TextureCoordinate, 0),
-                VertexElement.VertexDeclarationEnd,
-            };
+            VertexElement[] elements = AddDeclarationElement(mesh.Declaration, new VertexElement(0, 12, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Normal, 0));
             IMesh tempMesh = mesh.Clone(MeshFlags.Managed, elements, device);
             mesh.Dispose();
             mesh = tempMesh;
             mesh.ComputeNormals();
+        }
+
+        private VertexElement[] AddDeclarationElement(VertexElement[] elements, VertexElement element)
+        {
+            VertexElement[] newElements = new VertexElement[elements.Length + 1];
+            short offset = 0;
+            for (int i = 0; i < elements.Length - 1; i++)
+            {
+                newElements[i] = elements[i];
+                offset = elements[i].Offset;
+            }
+            switch (elements[elements.Length - 2].DeclarationType)
+            {
+                case DeclarationType.Float2:
+                    offset += 8;
+                    break;
+                case DeclarationType.Float3:
+                    offset += 12;
+                    break;
+                case DeclarationType.Float4:
+                    offset += 12;
+                    break;
+                default:
+                    throw new DDXXException("DeclarationType not implemented.");
+            }
+            newElements[elements.Length - 1] = element;
+            newElements[elements.Length - 1].Offset = offset;
+            newElements[elements.Length] = VertexElement.VertexDeclarationEnd;
+            return newElements;
         }
 
         private bool DeclarationHasTangents(VertexElement[] vertexElement)

@@ -1,5 +1,5 @@
 ﻿<NUnitProject>
-  <Settings activeconfig="Release" />
+  <Settings activeconfig="Debug" />
   <Config name="Debug" binpathtype="Auto">
     <assembly path="Physics\bin\Debug\Phsyics.dll" />
     <assembly path="Utility\bin\Debug\Utility.dll" />

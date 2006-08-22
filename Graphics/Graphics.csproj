@@ -68,6 +68,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SurfaceAdapter.cs" />
     <Compile Include="TextureAdapter.cs" />
+    <Compile Include="VertexElementArray.cs" />
+    <Compile Include="VertexElementArrayTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utility\Utility.csproj">

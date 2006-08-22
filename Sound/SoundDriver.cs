@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Utility;
-using Dope.DDXX.FMOD;
+using FMOD;
 
 namespace Dope.DDXX.Sound
 {
@@ -39,20 +39,20 @@ namespace Dope.DDXX.Sound
 
             CheckVersion(sys);
         
-            result = sys.Init(64, Dope.DDXX.FMOD.INITFLAG.NORMAL, (IntPtr)null);
+            result = sys.Init(64, FMOD.INITFLAG.NORMAL, (IntPtr)null);
             if (result != RESULT.OK)
                 throw new DDXXException("Could not initialize FMOD.");
 
             system = sys;
         }
 
-        public Dope.DDXX.FMOD.Sound CreateSound(string file)
+        public FMOD.Sound CreateSound(string file)
         {
             RESULT result;
 
-            Dope.DDXX.FMOD.Sound sound = new Dope.DDXX.FMOD.Sound();
+            FMOD.Sound sound = new FMOD.Sound();
 
-            result = system.CreateSound("../../Data/" + file, Dope.DDXX.FMOD.MODE._2D | Dope.DDXX.FMOD.MODE.HARDWARE | Dope.DDXX.FMOD.MODE.CREATESTREAM, ref sound);
+            result = system.CreateSound("../../Data/" + file, FMOD.MODE._2D | FMOD.MODE.HARDWARE | FMOD.MODE.CREATESTREAM, ref sound);
 
             if (result != RESULT.OK)
                 throw new DDXXException("Could not load FMOD file " + file + ".");
@@ -75,12 +75,12 @@ namespace Dope.DDXX.Sound
         }
 
 
-        public Channel PlaySound(Dope.DDXX.FMOD.Sound sound)
+        public Channel PlaySound(FMOD.Sound sound)
         {
             RESULT result;
             Channel channel = new Channel();
             
-            result = system.PlaySound(Dope.DDXX.FMOD.CHANNELINDEX.FREE, sound, false, ref channel);
+            result = system.PlaySound(FMOD.CHANNELINDEX.FREE, sound, false, ref channel);
 
             if (result != RESULT.OK)
                 throw new DDXXException("Could not start playing FMOD sound.");

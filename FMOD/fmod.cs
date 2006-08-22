@@ -8,7 +8,7 @@ using System;
 using System.Text;
 using System.Runtime.InteropServices;
 
-namespace Dope.DDXX.FMOD
+namespace FMOD
 {
     /*
         FMOD version number.  Check this against FMOD::System::getVersion / System_GetVersion

@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Dope.DDXX.FMOD;
+using FMOD;
 using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.Sound
 {
     public class FMODSystem : ISoundSystem
     {
-        private Dope.DDXX.FMOD.System system = null;
+        private FMOD.System system = null;
 
         public FMODSystem()
         {
@@ -31,17 +31,17 @@ namespace Dope.DDXX.Sound
             return system.init(maxchannels, flags, extradata);
         }
 
-        internal Dope.DDXX.FMOD.System GetSystem()
+        internal FMOD.System GetSystem()
         {
             return system;
         }
 
-        public RESULT CreateSound(string name_or_data, MODE mode, ref Dope.DDXX.FMOD.Sound sound)
+        public RESULT CreateSound(string name_or_data, MODE mode, ref FMOD.Sound sound)
         {
             return system.createSound(name_or_data, mode, ref sound);
         }
 
-        public RESULT PlaySound(CHANNELINDEX channelid, Dope.DDXX.FMOD.Sound sound, bool paused, ref Channel channel)
+        public RESULT PlaySound(CHANNELINDEX channelid, FMOD.Sound sound, bool paused, ref Channel channel)
         {
             return system.playSound(channelid, sound, paused, ref channel);
         }
