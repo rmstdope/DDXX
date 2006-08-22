@@ -129,6 +129,13 @@ namespace Dope.DDXX.Utility {
                     throw new InvalidOperationException("No current effect");
             }
 
+            public Dictionary<string, Parameter> GetPostEffectParameters() {
+                if (currentPostEffect != null)
+                    return currentPostEffect.parameters;
+                else
+                    throw new InvalidOperationException("No current post effect");
+            }
+
         }
         #endregion
 
@@ -150,6 +157,9 @@ namespace Dope.DDXX.Utility {
 <PostEffect name=""fooglow"" track=""2"">
 <Parameter name=""glowparam"" float=""5.4"" />
 </PostEffect>
+<Transition name=""footrans"" destinationTrack=""1"">
+<Parameter name=""transparam"" string=""tranny"" />
+</Transition>
 </Effects>
 ";
         [SetUp]
@@ -185,10 +195,17 @@ namespace Dope.DDXX.Utility {
         }
 
         [Test]
-        public void TestNextPostEffect() {
+        public void TestPostEffect() {
             ReadXML(twoEffectContents);
             Assert.IsTrue(effectBuilder.NextPostEffect());
             Assert.AreEqual("fooglow", effectBuilder.PostEffectName);
+            Assert.AreEqual(2, effectBuilder.PostEffectTrack);
+            Dictionary<string, Parameter> parameters = effectBuilder.GetPostEffectParameters();
+            Assert.AreEqual(1, parameters.Count);
+            Parameter parameter;
+            Assert.IsTrue(parameters.TryGetValue("glowparam", out parameter));
+            Assert.AreEqual(ParameterType.Float, parameter.Type);
+            Assert.AreEqual(5.4, parameter.FloatValue);
             Assert.IsFalse(effectBuilder.NextPostEffect());
         }
 

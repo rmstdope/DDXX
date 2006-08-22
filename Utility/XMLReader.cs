@@ -5,64 +5,53 @@ using System.Xml;
 using System.IO;
 using Microsoft.DirectX;
 
-namespace Dope.DDXX.Utility
-{
-    public enum ParameterType
-    {
+namespace Dope.DDXX.Utility {
+    public enum ParameterType {
         Unknown = 0, Integer, Float, String, Vector3
     }
 
-    public struct Parameter
-    {
+    public struct Parameter {
         public string name;
         public object value;
         public ParameterType Type;
 
         #region Value access
-        public int IntValue
-        {
+        public int IntValue {
             get { return (int)value; }
         }
 
-        public string StringValue
-        {
+        public string StringValue {
             get { return (string)value; }
         }
 
-        public float FloatValue
-        {
+        public float FloatValue {
             get { return (float)value; }
         }
 
-        public Vector3 Vector3Value
-        {
+        public Vector3 Vector3Value {
             get { return (Vector3)value; }
         }
 
         #endregion
 
-        public Parameter(string name, ParameterType type, object value)
-        {
+        public Parameter(string name, ParameterType type, object value) {
             this.name = name;
             this.Type = type;
             this.value = value;
         }
     }
 
-    public class XMLReader
-    {
+    public class XMLReader {
         private Stream inputStream;
         private XmlReader reader;
         private IDemoEffectBuilder effectBuilder;
 
 
-        public XMLReader(IDemoEffectBuilder builder)
-        {
+        public XMLReader(IDemoEffectBuilder builder) {
             this.effectBuilder = builder;
         }
 
-        public void Read(Stream input)
-        {
+        public void Read(Stream input) {
             this.inputStream = input;
             XmlReaderSettings settings = new XmlReaderSettings();
             settings.ConformanceLevel = ConformanceLevel.Document;
@@ -70,51 +59,38 @@ namespace Dope.DDXX.Utility
             settings.IgnoreComments = true;
             reader = XmlReader.Create(inputStream, settings);
             //reader.MoveToContent();
-            try
-            {
-                while (reader.Read())
-                {
+            try {
+                while (reader.Read()) {
                     // PrintElement(reader);
                     if (reader.NodeType != XmlNodeType.Element)
                         continue;
-                    if (reader.Name == "Effects")
-                    {
+                    if (reader.Name == "Effects") {
                         ReadEffects();
-                    }
-                    else
-                    {
+                    } else {
                         throw new XmlException("Expected <Effects>, found <" + reader.Name + ">");
                     }
                 }
-            }
-            finally
-            {
+            } finally {
                 Close();
             }
         }
 
-        public void Close()
-        {
+        public void Close() {
             reader.Close();
             inputStream.Close();
         }
 
-        public void ReadEffects()
-        {
-            while (reader.Read())
-            {
-                if (reader.NodeType == XmlNodeType.Element && reader.Name == "Effect")
-                {
+        public void ReadEffects() {
+            while (reader.Read()) {
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == "Effect") {
                     ReadEffect();
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "PostEffect") {
+                } else if (reader.NodeType == XmlNodeType.Element && reader.Name == "PostEffect") {
                     ReadPostEffect();
                 }
             }
         }
 
-        private void ReadEffect()
-        {
+        private void ReadEffect() {
             string effectName;
             int effectTrack;
             ReadNameTrack(out effectName, out effectTrack);
@@ -141,60 +117,48 @@ namespace Dope.DDXX.Utility
             }
         }
 
-        public void ReadParameters()
-        {
-            while (reader.Read())
-            {
-                if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "Effect")
-                {
+        public void ReadParameters() {
+            while (reader.Read()) {
+                if (reader.NodeType == XmlNodeType.EndElement &&
+                    (reader.Name == "Effect" || reader.Name == "PostEffect")) {
                     break;
                 }
-                if (reader.NodeType == XmlNodeType.Element && reader.Name == "Parameter")
-                {
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == "Parameter") {
                     ReadParameter();
                 }
             }
         }
 
-        private void ReadParameter()
-        {
+        private void ReadParameter() {
             bool keepOn = reader.MoveToFirstAttribute();
             ParameterType parameterType = ParameterType.Unknown;
             string parameterName = null;
             string parameterValue = "";
-            while (keepOn)
-            {
+            while (keepOn) {
                 string name = reader.Name;
                 string value = reader.Value;
-                switch (name)
-                {
+                switch (name) {
                     case "name":
                         parameterName = value;
                         break;
                     default:
                         parameterType = GetParameterType(name);
-                        if (parameterType != ParameterType.Unknown)
-                        {
+                        if (parameterType != ParameterType.Unknown) {
                             parameterValue = value;
                         }
                         break;
                 }
                 keepOn = reader.MoveToNextAttribute();
             }
-            if (parameterName != null && parameterType != ParameterType.Unknown)
-            {
+            if (parameterName != null && parameterType != ParameterType.Unknown) {
                 AddParameter(parameterName, parameterType, parameterValue);
-            }
-            else
-            {
+            } else {
                 throw new XmlException("Failed to parse parameter");
             }
         }
 
-        private void AddParameter(string parameterName, ParameterType parameterType, string parameterValue)
-        {
-            switch (parameterType)
-            {
+        private void AddParameter(string parameterName, ParameterType parameterType, string parameterValue) {
+            switch (parameterType) {
                 case ParameterType.Float:
                     effectBuilder.AddFloatParameter(parameterName, ParseFloat(parameterValue));
                     break;
@@ -214,15 +178,12 @@ namespace Dope.DDXX.Utility
             }
         }
 
-        private float ParseFloat(string s)
-        {
+        private float ParseFloat(string s) {
             return float.Parse(s, System.Globalization.NumberFormatInfo.InvariantInfo);
         }
 
-        private ParameterType GetParameterType(string name)
-        {
-            switch (name)
-            {
+        private ParameterType GetParameterType(string name) {
+            switch (name) {
                 case "int": return ParameterType.Integer;
                 case "float": return ParameterType.Float;
                 case "string": return ParameterType.String;
@@ -232,12 +193,10 @@ namespace Dope.DDXX.Utility
         }
 
         #region debugging
-        private void PrintElement()
-        {
+        private void PrintElement() {
             Console.WriteLine("{0}: {1} = {2}",
                 reader.NodeType.ToString(), reader.Name, reader.Value);
-            for (int i = 0, c = reader.AttributeCount; i < c; i++)
-            {
+            for (int i = 0, c = reader.AttributeCount; i < c; i++) {
                 reader.MoveToAttribute(i);
                 Console.WriteLine("  {0} = {1} ", reader.Name, reader.Value);
             }
