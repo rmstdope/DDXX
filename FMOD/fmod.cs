@@ -16,7 +16,7 @@ namespace Dope.DDXX.FMOD
     */
     public class VERSION
     {
-        public const int    number = 0x00040424;
+        public const int    number = 0x00040426;
         public const string dll    = "fmodex.dll";
     }
 
