@@ -5,7 +5,7 @@ using Microsoft.DirectX;
 
 namespace Dope.DDXX.SceneGraph
 {
-    public class CameraNode : NodeBase
+    public class CameraNode : NodeBase, ICamera
     {
         private float fov = (float)Math.PI / 4;
 
@@ -30,11 +30,6 @@ namespace Dope.DDXX.SceneGraph
             fov = f;
         }
 
-        internal Matrix GetProjectionMatrix()
-        {
-            return Matrix.PerspectiveFovLH(fov, aspectRatio, nearZ, farZ);
-        }
-
         internal void SetClippingPlanes(float near, float far)
         {
             nearZ = near;
@@ -46,19 +41,31 @@ namespace Dope.DDXX.SceneGraph
             aspectRatio = aspect;
         }
 
-        internal Matrix GetViewMatrix()
-        {
-            Matrix res = WorldState.GetWorldMatrix();
-            res.Invert();
-            return res;
-        }
-
         protected override void StepNode()
         {
         }
 
-        protected override void RenderNode(Dope.DDXX.SceneGraph.CameraNode camera)
+        protected override void RenderNode(IRenderableScene scene)
         {
         }
+
+        #region ICamera Members
+
+        public Matrix ProjectionMatrix
+        {
+            get { return Matrix.PerspectiveFovLH(fov, aspectRatio, nearZ, farZ); }
+        }
+
+        public Matrix ViewMatrix
+        {
+            get 
+            { 
+                Matrix res = WorldState.GetWorldMatrix();
+                res.Invert();
+                return res;
+            }
+        }
+
+        #endregion
     }
 }

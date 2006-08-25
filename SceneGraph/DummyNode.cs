@@ -15,7 +15,7 @@ namespace Dope.DDXX.SceneGraph
         {
         }
 
-        protected override void RenderNode(CameraNode camera)
+        protected override void RenderNode(IRenderableScene scene)
         {
         }
     }

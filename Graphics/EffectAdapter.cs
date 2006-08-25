@@ -199,6 +199,271 @@ namespace Dope.DDXX.Graphics
             effect.ValidateTechnique(technique);
         }
 
+        public EffectDescription Description
+        {
+            get { return effect.Description; }
+        }
+
+        public EffectHandle GetAnnotation(EffectHandle technique, int index)
+        {
+            return effect.GetAnnotation(technique, index);
+        }
+
+        public EffectHandle GetAnnotation(EffectHandle technique, string name)
+        {
+            return effect.GetAnnotation(technique, name);
+        }
+
+        public EffectHandle GetFunction(int index)
+        {
+            return effect.GetFunction(index);
+        }
+
+        public EffectHandle GetFunction(string name)
+        {
+            return effect.GetFunction(name);
+        }
+
+        public FunctionDescription GetFunctionDescription(EffectHandle shader)
+        {
+            return effect.GetFunctionDescription(shader);
+        }
+
+        public EffectHandle GetParameter(EffectHandle constant, int index)
+        {
+            return effect.GetParameter(constant, index);
+        }
+
+        public EffectHandle GetParameter(EffectHandle constant, string name)
+        {
+            return effect.GetParameter(constant, name);
+        }
+
+        public EffectHandle GetParameterBySemantic(EffectHandle constant, string name)
+        {
+            return effect.GetParameterBySemantic(constant, name);
+        }
+
+        public ParameterDescription GetParameterDescription(EffectHandle parameter)
+        {
+            return effect.GetParameterDescription(parameter);
+        }
+
+        public EffectHandle GetParameterElement(EffectHandle constant, int index)
+        {
+            return effect.GetParameterElement(constant, index);
+        }
+
+        public EffectHandle GetPass(EffectHandle technique, int index)
+        {
+            return effect.GetPass(technique, index);
+        }
+
+        public EffectHandle GetPass(EffectHandle technique, string name)
+        {
+            return effect.GetPass(technique, name);
+        }
+
+        public PassDescription GetPassDescription(EffectHandle pass)
+        {
+            return effect.GetPassDescription(pass);
+        }
+
+        public EffectHandle GetTechnique(int index)
+        {
+            return effect.GetTechnique(index);
+        }
+
+        public EffectHandle GetTechnique(string name)
+        {
+            return effect.GetTechnique(name);
+        }
+
+        public TechniqueDescription GetTechniqueDescription(EffectHandle technique)
+        {
+            return effect.GetTechniqueDescription(technique);
+        }
+
+        public GraphicsStream GetValue(EffectHandle parameter, int numberBytes)
+        {
+            return effect.GetValue(parameter, numberBytes);
+        }
+
+        public bool GetValueBoolean(EffectHandle parameter)
+        {
+            return effect.GetValueBoolean(parameter);
+        }
+
+        public bool[] GetValueBooleanArray(EffectHandle parameter, int count)
+        {
+            return effect.GetValueBooleanArray(parameter, count);
+        }
+
+        public ColorValue GetValueColor(EffectHandle parameter)
+        {
+            return effect.GetValueColor(parameter);
+        }
+
+        public ColorValue[] GetValueColorArray(EffectHandle parameter, int count)
+        {
+            return effect.GetValueColorArray(parameter, count);
+        }
+
+        public float GetValueFloat(EffectHandle parameter)
+        {
+            return effect.GetValueFloat(parameter);
+        }
+
+        public float[] GetValueFloatArray(EffectHandle parameter, int count)
+        {
+            return effect.GetValueFloatArray(parameter, count);
+        }
+
+        public int GetValueInteger(EffectHandle parameter)
+        {
+            return effect.GetValueInteger(parameter);
+        }
+
+        public int[] GetValueIntegerArray(EffectHandle parameter, int count)
+        {
+            return effect.GetValueIntegerArray(parameter, count);
+        }
+
+        public Matrix GetValueMatrix(EffectHandle parameter)
+        {
+            return effect.GetValueMatrix(parameter);
+        }
+
+        public Matrix[] GetValueMatrixArray(EffectHandle parameter, int count)
+        {
+            return effect.GetValueMatrixArray(parameter, count);
+        }
+
+        public Matrix GetValueMatrixTranspose(EffectHandle parameter)
+        {
+            return effect.GetValueMatrixTranspose(parameter);
+        }
+
+        public Matrix[] GetValueMatrixTransposeArray(EffectHandle parameter, int count)
+        {
+            return effect.GetValueMatrixTransposeArray(parameter, count);
+        }
+
+        public PixelShader GetValuePixelShader(EffectHandle parameter)
+        {
+            return effect.GetValuePixelShader(parameter);
+        }
+
+        public string GetValueString(EffectHandle parameter)
+        {
+            return effect.GetValueString(parameter);
+        }
+
+        public Texture GetValueTexture(EffectHandle parameter)
+        {
+            return effect.GetValueTexture(parameter);
+        }
+
+        public Vector4 GetValueVector(EffectHandle parameter)
+        {
+            return effect.GetValueVector(parameter);
+        }
+
+        public Vector4[] GetValueVectorArray(EffectHandle parameter, int count)
+        {
+            return effect.GetValueVectorArray(parameter, count);
+        }
+
+        public VertexShader GetValueVertexShader(EffectHandle parameter)
+        {
+            return effect.GetValueVertexShader(parameter);
+        }
+
+        public void SetValue(EffectHandle parameter, BaseTexture texture)
+        {
+            effect.SetValue(parameter, texture);
+        }
+
+        public void SetValue(EffectHandle parameter, bool b)
+        {
+            effect.SetValue(parameter, b);
+        }
+
+        public void SetValue(EffectHandle parameter, bool[] b)
+        {
+            effect.SetValue(parameter, b);
+        }
+
+        public void SetValue(EffectHandle parameter, ColorValue color)
+        {
+            effect.SetValue(parameter, color);
+        }
+
+        public void SetValue(EffectHandle parameter, ColorValue[] color)
+        {
+            effect.SetValue(parameter, color);
+        }
+
+        public void SetValue(EffectHandle parameter, float f)
+        {
+            effect.SetValue(parameter, f);
+        }
+
+        public void SetValue(EffectHandle parameter, float[] f)
+        {
+            effect.SetValue(parameter, f);
+        }
+
+        public void SetValue(EffectHandle parameter, GraphicsStream data)
+        {
+            effect.SetValue(parameter, data);
+        }
+
+        public void SetValue(EffectHandle parameter, int n)
+        {
+            effect.SetValue(parameter, n);
+        }
+
+        public void SetValue(EffectHandle parameter, int[] n)
+        {
+            effect.SetValue(parameter, n);
+        }
+
+        public void SetValue(EffectHandle parameter, Matrix matrix)
+        {
+            effect.SetValue(parameter, matrix);
+        }
+
+        public void SetValue(EffectHandle parameter, Matrix[] matrix)
+        {
+            effect.SetValue(parameter, matrix);
+        }
+
+        public void SetValue(EffectHandle parameter, string str)
+        {
+            effect.SetValue(parameter, str);
+        }
+
+        public void SetValue(EffectHandle parameter, Vector4 vector)
+        {
+            effect.SetValue(parameter, vector);
+        }
+
+        public void SetValue(EffectHandle parameter, Vector4[] vector)
+        {
+            effect.SetValue(parameter, vector);
+        }
+
+        public void SetValueTranspose(EffectHandle parameter, Matrix matrix)
+        {
+            effect.SetValue(parameter, matrix);
+        }
+
+        public void SetValueTranspose(EffectHandle parameter, Matrix[] matrix)
+        {
+            effect.SetValue(parameter, matrix);
+        }
+
         #endregion
     }
 }

@@ -26,7 +26,7 @@ namespace Dope.DDXX.SceneGraph
             throw new Exception("The method or operation is not implemented.");
         }
 
-        protected override void RenderNode(CameraNode camera)
+        protected override void RenderNode(IRenderableScene scene)
         {
             throw new Exception("The method or operation is not implemented.");
         }

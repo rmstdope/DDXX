@@ -49,7 +49,6 @@
     <Compile Include="D3DMockTest.cs" />
     <Compile Include="DeviceAdapter.cs" />
     <Compile Include="EffectAdapter.cs" />
-    <Compile Include="EffectContainer.cs" />
     <Compile Include="EffectFactory.cs" />
     <Compile Include="EffectFactoryTest.cs" />
     <Compile Include="IDevice.cs" />

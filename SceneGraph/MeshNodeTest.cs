@@ -16,6 +16,8 @@ namespace Dope.DDXX.SceneGraph
         private Mockery mockery;
         private IMesh mesh;
         private IEffect effect;
+        private IEffectHandler effectHandler;
+        private IRenderableScene scene;
         private CameraNode camera;
         private ExtendedMaterial[] materials = new ExtendedMaterial[2];
 
@@ -27,11 +29,17 @@ namespace Dope.DDXX.SceneGraph
             mockery = new Mockery();
             mesh = mockery.NewMock<IMesh>();
             effect = mockery.NewMock<IEffect>();
+            effectHandler = mockery.NewMock<IEffectHandler>();
+            scene = mockery.NewMock<IRenderableScene>();
             camera = new CameraNode("Camera");
             materials[0] = new ExtendedMaterial();
             materials[1] = new ExtendedMaterial();
 
-            node = new MeshNode("Name", new Dope.DDXX.Graphics.Model(mesh, materials));
+            Stub.On(effectHandler).
+                GetProperty("Effect").
+                Will(Return.Value(effect));
+
+            node = new MeshNode("Name", new Dope.DDXX.Graphics.Model(mesh, materials), effectHandler);
         }
 
         [TearDown]
@@ -41,21 +49,12 @@ namespace Dope.DDXX.SceneGraph
         }
 
         [Test]
-        [ExpectedException(typeof(DDXXException))]
-        public void RenderTestFail()
-        {
-            // No effect set
-            node.Render(camera);
-        }
-
-        [Test]
         public void RenderTestOK()
         {
-            node.EffectTechnique = new EffectContainer(effect, null);
-
             using (mockery.Ordered)
             {
                 //Subset 1
+                Expect.Once.On(effectHandler).Method("SetMeshConstants").With(scene, node);
                 Expect.Once.On(effect).Method("Begin").With(FX.None).Will(Return.Value(1));
                 Expect.Once.On(effect).Method("BeginPass").With(0);
                 Expect.Once.On(mesh).Method("DrawSubset").With(0);
@@ -73,7 +72,7 @@ namespace Dope.DDXX.SceneGraph
             }
 
 
-            node.Render(camera);
+            node.Render(scene);
         }
     }
 }

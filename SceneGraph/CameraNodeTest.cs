@@ -43,11 +43,11 @@ namespace Dope.DDXX.SceneGraph
             Matrix exp2 = Matrix.PerspectiveFovLH(fov2, aspect2, zNear2, zFar2);
 
             CameraNode c1 = new CameraNode("Name");
-            Assert.IsTrue(exp1.Equals(c1.GetProjectionMatrix()));
+            Assert.IsTrue(exp1.Equals(c1.ProjectionMatrix));
             c1.SetFOV(fov2);
             c1.SetClippingPlanes(zNear2, zFar2);
             c1.SetAspect(aspect2);
-            Assert.IsTrue(exp2.Equals(c1.GetProjectionMatrix()));
+            Assert.IsTrue(exp2.Equals(c1.ProjectionMatrix));
         }
 
         public void AssertVectors(Vector3 vec1, Vector3 vec2)
@@ -62,11 +62,11 @@ namespace Dope.DDXX.SceneGraph
         {
             Vector3 vec = new Vector3(1, 2, 3);
             CameraNode c1 = new CameraNode("Name");
-            AssertVectors(new Vector3(1, 2, 3), Vector3.TransformCoordinate(vec, c1.GetViewMatrix()));
+            AssertVectors(new Vector3(1, 2, 3), Vector3.TransformCoordinate(vec, c1.ViewMatrix));
 
             c1.WorldState.Position = new Vector3(100, 200, 300);
             c1.WorldState.Rotation = new Quaternion(0, 1, 0, 0);
-            AssertVectors(new Vector3(99, -198, 297), Vector3.TransformCoordinate(vec, c1.GetViewMatrix()));
+            AssertVectors(new Vector3(99, -198, 297), Vector3.TransformCoordinate(vec, c1.ViewMatrix));
         }
     }
 }

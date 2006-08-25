@@ -15,6 +15,6 @@ namespace Dope.DDXX.SceneGraph
         void AddChild(INode child);
         bool HasChild(INode node);
         void Step();
-        void Render(CameraNode camera);
+        void Render(IRenderableScene scene);
     }
 }

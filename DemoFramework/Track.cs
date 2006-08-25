@@ -31,10 +31,7 @@ namespace Dope.DDXX.DemoFramework
 
         internal IDemoEffect[] Effects
         {
-            get
-            {
-                return effects.ToArray();
-            }
+            get { return effects.ToArray(); }
         }
 
         internal void Register(IDemoEffect effect)

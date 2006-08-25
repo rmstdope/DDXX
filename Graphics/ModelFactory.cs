@@ -148,7 +148,7 @@ namespace Dope.DDXX.Graphics
             {
                 int[] adj = new int[mesh.NumberFaces * 3];
                 mesh.GenerateAdjacency(1e-6f, adj);
-                mesh.OptimizeInPlace(MeshFlags.OptimizeVertexCache | MeshFlags.OptimizeStripeReorder | MeshFlags.OptimizeAttributeSort, adj);
+                mesh.OptimizeInPlace(MeshFlags.OptimizeStripeReorder | MeshFlags.OptimizeAttributeSort, adj);
             }
         }
 
@@ -157,6 +157,7 @@ namespace Dope.DDXX.Graphics
             VertexElementArray elements = new VertexElementArray(mesh.Declaration);
             elements.AddNormals();
             elements.AddTangents();
+            elements.AddBiNormals();
             IMesh tempMesh = mesh.Clone(MeshFlags.Managed, elements.VertexElements, device);
             mesh.Dispose();
             mesh = tempMesh;
@@ -168,10 +169,21 @@ namespace Dope.DDXX.Graphics
         {
             VertexElementArray elements = new VertexElementArray(mesh.Declaration);
             elements.AddTangents();
+            elements.AddBiNormals();
             IMesh tempMesh = mesh.Clone(MeshFlags.Managed, elements.VertexElements, device);
             mesh.Dispose();
             mesh = tempMesh;
-            mesh.ComputeTangentFrame(TangentOptions.GenerateInPlace | TangentOptions.WeightEqual);
+            int[] adjacency = new int[mesh.NumberFaces * 3];
+            int[] adjacencyOut;
+            mesh.GenerateAdjacency(1e-6f, adjacency);
+            tempMesh = mesh.Clean(CleanType.BowTies | CleanType.BackFacing, adjacency, out adjacencyOut);
+            if (mesh != tempMesh)
+            {
+                mesh.Dispose();
+                mesh = tempMesh;
+            }
+            mesh.ComputeTangent(0, 0, 0, 0);
+            //mesh.ComputeTangentFrame(TangentOptions.GenerateInPlace | TangentOptions.WeightEqual | TangentOptions.DontOrthogonalize);
         }
 
         private void AddNormals(ref IMesh mesh)
@@ -231,11 +243,5 @@ namespace Dope.DDXX.Graphics
             }
             return false;
         }
-
-        //public void AutoExpire()
-        //{
-        //    boxes.RemoveAll(delegate(BoxEntry item) { if (!item.meshReference.IsAlive) return true; return false; });
-        //    files.RemoveAll(delegate(FileEntry item) { if (!item.meshReference.IsAlive) return true; return false; });
-        //}
     }
 }

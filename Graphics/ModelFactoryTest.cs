@@ -18,6 +18,15 @@ namespace Dope.DDXX.Graphics
         IGraphicsFactory graphicsFactory;
         IMesh mesh;
 
+        VertexElement[] pntbxDeclaration = new VertexElement[]
+        {
+            new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
+            new VertexElement(0, 12, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Normal, 0),
+            new VertexElement(0, 24, DeclarationType.Float2, DeclarationMethod.Default, DeclarationUsage.TextureCoordinate, 0),
+            new VertexElement(0, 32, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Tangent, 0),
+            new VertexElement(0, 44, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.BiNormal, 0),
+            VertexElement.VertexDeclarationEnd,
+        };
         VertexElement[] pntxDeclaration = new VertexElement[]
         {
             new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
@@ -93,6 +102,30 @@ namespace Dope.DDXX.Graphics
             #endregion
         }
 
+        internal class SetOutAdjaceny : IAction
+        {
+            private IMesh mesh;
+
+            public SetOutAdjaceny(IMesh mesh)
+            {
+                this.mesh = mesh;
+            }
+
+            #region IInvokable Members
+            public void Invoke(NMock2.Monitoring.Invocation invocation)
+            {
+                invocation.Result = mesh;
+                invocation.Parameters[2] = null;
+            }
+            #endregion
+            #region ISelfDescribing Members
+            void ISelfDescribing.DescribeTo(System.IO.TextWriter writer)
+            {
+                writer.Write("Setting adjacencyOut.");
+            }
+            #endregion
+        }
+
         [Test]
         public void CreateBoxTest()
         {
@@ -140,13 +173,20 @@ namespace Dope.DDXX.Graphics
                 Will(new SetMaterial(mesh));
             Expect.Once.On(mesh).
                 Method("Clone").
-                With(MeshFlags.Managed, pntxDeclaration, null).
+                With(MeshFlags.Managed, pntbxDeclaration, null).
                 Will(Return.Value(mesh));
             Expect.Once.On(mesh).
                 Method("Dispose");
             Expect.Once.On(mesh).
-                Method("ComputeTangentFrame").
-                With(TangentOptions.GenerateInPlace | TangentOptions.WeightEqual);
+                Method("GenerateAdjacency").
+                WithAnyArguments();
+            Expect.Once.On(mesh).
+                Method("Clean").
+                With(Is.EqualTo(CleanType.BowTies | CleanType.BackFacing), Is.Anything, Is.Anything).
+                Will(new SetOutAdjaceny(mesh));
+            Expect.Once.On(mesh).
+                Method("ComputeTangent").
+                With(0, 0, 0, 0);
             Model mesh1 = modelFactory.FromFile("MeshFile1", ModelFactory.Options.EnsureTangents | ModelFactory.Options.NoOptimization);
             Assert.IsNotNull(mesh1);
         }
@@ -186,7 +226,7 @@ namespace Dope.DDXX.Graphics
                 Will(new SetMaterial(mesh));
             Expect.Once.On(mesh).
                 Method("Clone").
-                With(MeshFlags.Managed, pntxDeclaration, null).
+                With(MeshFlags.Managed, pntbxDeclaration, null).
                 Will(Return.Value(mesh));
             Expect.Once.On(mesh).
                 Method("Dispose");

@@ -8,28 +8,16 @@ using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.SceneGraph
 {
-    public class Scene
+    public class Scene : IRenderableScene
     {
         private NodeBase rootNode;
-        private CameraNode activeCamera;
+        private ICamera activeCamera;
         private IDevice device;
 
         public Scene()
         {
             rootNode = new DummyNode("Scene Root Node");
             device = D3DDriver.GetInstance().GetDevice();
-        }
-
-        public CameraNode ActiveCamera
-        {
-            get { return activeCamera; }
-            set
-            {
-                if (rootNode.HasChild(value))
-                    activeCamera = value;
-                else
-                    throw new DDXXException("The active camera must be part of the scene graph.");
-            }
         }
 
         public void AddNode(INode node1)
@@ -47,7 +35,23 @@ namespace Dope.DDXX.SceneGraph
             if (ActiveCamera == null)
                 throw new DDXXException("Must have an active camera set before a scene can be rendered.");
 
-            rootNode.Render(ActiveCamera);
+            rootNode.Render(this);
         }
+
+        #region IRenderableScene Members
+
+        public ICamera ActiveCamera
+        {
+            get { return activeCamera; }
+            set
+            {
+                if (rootNode.HasChild(value))
+                    activeCamera = value;
+                else
+                    throw new DDXXException("The active camera must be part of the scene graph.");
+            }
+        }
+
+        #endregion
     }
 }

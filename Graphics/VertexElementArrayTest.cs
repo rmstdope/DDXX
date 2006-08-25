@@ -10,6 +10,15 @@ namespace Dope.DDXX.Graphics
     [TestFixture]
     public class VertexElementArrayTest
     {
+        private VertexElement[] elementsPNTBX2 = new VertexElement[]
+        {
+            new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
+            new VertexElement(0, 12, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Normal, 0),
+            new VertexElement(0, 24, DeclarationType.Float2, DeclarationMethod.Default, DeclarationUsage.TextureCoordinate, 0),
+            new VertexElement(0, 32, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Tangent, 0),
+            new VertexElement(0, 44, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.BiNormal, 0),
+            VertexElement.VertexDeclarationEnd,
+        };
         private VertexElement[] elementsPNTX2 = new VertexElement[]
         {
             new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
@@ -110,6 +119,24 @@ namespace Dope.DDXX.Graphics
         }
 
         [Test]
+        public void TestAddBiNormals1()
+        {
+            VertexElementArray array = new VertexElementArray(elementsPNTX2);
+            array.AddBiNormals();
+            Assert.AreEqual(elementsPNTBX2.Length, array.VertexElements.Length);
+            for (int i = 0; i < elementsPNTBX2.Length; i++)
+                Assert.IsTrue(elementsPNTBX2[i].Equals(array.VertexElements[i]), "Index is " + i);
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestAddBiNormals2()
+        {
+            VertexElementArray array = new VertexElementArray(elementsPNX2);
+            array.AddBiNormals();
+        }
+
+        [Test]
         [ExpectedException(typeof(DDXXException))]
         public void TestAddTexCoords0()
         {
@@ -155,6 +182,21 @@ namespace Dope.DDXX.Graphics
             Assert.AreEqual(elementsPX4.Length, array.VertexElements.Length);
             for (int i = 0; i < elementsPX4.Length; i++)
                 Assert.IsTrue(elementsPX4[i].Equals(array.VertexElements[i]), "Index is " + i);
+        }
+
+        [Test]
+        public void TestLongArray()
+        {
+            VertexElement[] elements = new VertexElement[]
+            {
+                new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
+                VertexElement.VertexDeclarationEnd,
+                new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0)
+            };
+            VertexElementArray array = new VertexElementArray(elements);
+            Assert.AreEqual(elementsP.Length, array.VertexElements.Length);
+            for (int i = 0; i < elementsP.Length; i++)
+                Assert.IsTrue(elementsP[i].Equals(array.VertexElements[i]), "Index is " + i);
         }
     }
 }

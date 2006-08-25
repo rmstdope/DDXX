@@ -58,6 +58,106 @@ namespace Dope.DDXX.Graphics
         // Summary:
         //     Retrieves the vertex format that describes the contents of vertices.
         VertexFormats VertexFormat { get; }
+        //
+        // Summary:
+        //     Cleans a mesh, preparing it for simplification.
+        //
+        // Parameters:
+        //   cleanType:
+        //     A flag from the Microsoft.DirectX.Direct3D.CleanType enumeration that specifies
+        //     the type of mesh cleaning to perform.
+        //
+        //   adjacency:
+        //     A Microsoft.DirectX.GraphicsStream object filled with three System.Int32
+        //     values per face that specify the three neighbors for each face in the mesh
+        //     to be cleaned.
+        //
+        //   adjacencyOut:
+        //     A Microsoft.DirectX.GraphicsStream object. When the method returns, this
+        //     parameter is filled with three System.Int32 values per face that specify
+        //     the three neighbors for each face in the output mesh.
+        //
+        // Returns:
+        //     A Microsoft.DirectX.Direct3D.Mesh object that represents the returned cleaned
+        //     mesh. If no cleaning is necessary, the returned mesh is the same as the one
+        //     that was passed in.
+        IMesh Clean(CleanType cleanType, GraphicsStream adjacency, GraphicsStream adjacencyOut);
+        //
+        // Summary:
+        //     Cleans a mesh, preparing it for simplification.
+        //
+        // Parameters:
+        //   cleanType:
+        //     A flag from the Microsoft.DirectX.Direct3D.CleanType enumeration that specifies
+        //     the type of mesh cleaning to perform.
+        //
+        //   adjacency:
+        //     Array of three System.Int32 values per face that specify the three neighbors
+        //     for each face in the mesh to be cleaned.
+        //
+        //   adjacencyOut:
+        //     Array of three System.Int32 values per face that specify the three neighbors
+        //     for each face in the output mesh.
+        //
+        // Returns:
+        //     A Microsoft.DirectX.Direct3D.Mesh object that represents the returned cleaned
+        //     mesh. If no cleaning is necessary, the returned mesh is the same as the one
+        //     that was passed in.
+        IMesh Clean(CleanType cleanType, int[] adjacency, out int[] adjacencyOut);
+        //
+        // Summary:
+        //     Cleans a mesh, preparing it for simplification.
+        //
+        // Parameters:
+        //   cleanType:
+        //     A flag from the Microsoft.DirectX.Direct3D.CleanType enumeration that specifies
+        //     the type of mesh cleaning to perform.
+        //
+        //   adjacency:
+        //     A Microsoft.DirectX.GraphicsStream object filled with three System.Int32
+        //     values per face that specify the three neighbors for each face in the mesh
+        //     to be cleaned.
+        //
+        //   adjacencyOut:
+        //     A Microsoft.DirectX.GraphicsStream object. When the method returns, this
+        //     parameter is filled with three System.Int32 values per face that specify
+        //     the three neighbors for each face in the output mesh.
+        //
+        //   errorsAndWarnings:
+        //     A System.String that contains a list of errors and warnings that explain
+        //     the problems found in the mesh.
+        //
+        // Returns:
+        //     A Microsoft.DirectX.Direct3D.Mesh object that represents the returned cleaned
+        //     mesh. If no cleaning is necessary, the returned mesh is the same as the one
+        //     that was passed in.
+        IMesh Clean(CleanType cleanType, GraphicsStream adjacency, GraphicsStream adjacencyOut, out string errorsAndWarnings);
+        //
+        // Summary:
+        //     Cleans a mesh, preparing it for simplification.
+        //
+        // Parameters:
+        //   cleanType:
+        //     A flag from the Microsoft.DirectX.Direct3D.CleanType enumeration that specifies
+        //     the type of mesh cleaning to perform.
+        //
+        //   adjacency:
+        //     Array of three System.Int32 values per face that specify the three neighbors
+        //     for each face in the mesh to be cleaned.
+        //
+        //   adjacencyOut:
+        //     Array of three System.Int32 values per face that specify the three neighbors
+        //     for each face in the output mesh.
+        //
+        //   errorsAndWarnings:
+        //     A System.String that contains a list of errors and warnings that explain
+        //     the problems found in the mesh.
+        //
+        // Returns:
+        //     A Microsoft.DirectX.Direct3D.Mesh object that represents the returned cleaned
+        //     mesh. If no cleaning is necessary, the returned mesh is the same as the one
+        //     that was passed in.
+        IMesh Clean(CleanType cleanType, int[] adjacency, out int[] adjacencyOut, out string errorsAndWarnings);
         // Summary:
         //     Clones, or copies, a mesh object.
         //

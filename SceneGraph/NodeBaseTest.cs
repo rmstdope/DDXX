@@ -15,10 +15,10 @@ namespace Dope.DDXX.SceneGraph
         {
             public bool stepCalled;
             public bool renderCalled;
-            public CameraNode renderCamera;
+            public IRenderableScene renderScene;
             public DerivedNode(string name) : base(name) { }
             protected override void StepNode() { stepCalled = true; }
-            protected override void RenderNode(CameraNode camera) { renderCalled = true; renderCamera = camera; }
+            protected override void RenderNode(IRenderableScene scene) { renderCalled = true; renderScene = scene; }
         }
 
         [Test]
@@ -63,12 +63,12 @@ namespace Dope.DDXX.SceneGraph
             CameraNode camera = new CameraNode("Camera");
             node1.AddChild(node2);
 
-            node1.Render(camera);
+            node1.Render(null);
 
             Assert.IsTrue(node1.renderCalled);
-            Assert.AreSame(node1.renderCamera, camera);
+            Assert.IsNull(node1.renderScene);
             Assert.IsTrue(node2.renderCalled);
-            Assert.AreSame(node2.renderCamera, camera);
+            Assert.IsNull(node2.renderScene);
         }
 
         public void AssertVectors(Vector3 vec1, Vector3 vec2)

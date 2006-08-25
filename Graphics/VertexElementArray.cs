@@ -20,6 +20,14 @@ namespace Dope.DDXX.Graphics
         internal VertexElementArray(VertexElement[] elements)
         {
             vertexElements = elements;
+            for (int i = 0; i < vertexElements.Length; i++)
+            {
+                if (vertexElements[i].DeclarationType == DeclarationType.Unused)
+                {
+                    Array.Resize(ref vertexElements, i + 1);
+                    break;
+                }
+            }
         }
 
         internal void AddNormals()
@@ -32,6 +40,23 @@ namespace Dope.DDXX.Graphics
             if (!HasTexCoords(0))
                 throw new DDXXException("Tangents can not be added to vertex declaration if no texture coordinates (0) exists.");
             AddElement(DeclarationType.Float3, DeclarationUsage.Tangent, 0);
+        }
+
+        internal void AddBiNormals()
+        {
+            if (!HasTangents())
+                throw new DDXXException("Tangents can not be added to vertex declaration if no texture coordinates (0) exists.");
+            AddElement(DeclarationType.Float3, DeclarationUsage.BiNormal, 0);
+        }
+
+        private bool HasTangents()
+        {
+            for (int i = 0; i < vertexElements.Length; i++)
+            {
+                if (vertexElements[i].DeclarationUsage == DeclarationUsage.Tangent)
+                    return true;
+            }
+            return false;
         }
 
         private bool HasTexCoords(int index)

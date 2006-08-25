@@ -43,7 +43,12 @@
     <Compile Include="CameraNode.cs" />
     <Compile Include="CameraNodeTest.cs" />
     <Compile Include="DummyNode.cs" />
+    <Compile Include="EffectHandler.cs" />
+    <Compile Include="EffectHandlerTest.cs" />
+    <Compile Include="ICamera.cs" />
+    <Compile Include="IEffectHandler.cs" />
     <Compile Include="INode.cs" />
+    <Compile Include="IRenderableScene.cs" />
     <Compile Include="LightNode.cs" />
     <Compile Include="LightNodeTest.cs" />
     <Compile Include="MeshNode.cs" />

@@ -25,22 +25,6 @@ namespace Dope.DDXX.Graphics
         {
             return new MeshAdapter(Mesh.Box(device, width, height, depth, out adjacency));
         }
-        public static MeshAdapter Clean(CleanType cleanType, Mesh mesh, GraphicsStream adjacency, GraphicsStream adjacencyOut)
-        {
-            return new MeshAdapter(Mesh.Clean(cleanType, mesh, adjacency, adjacencyOut));
-        }
-        public static MeshAdapter Clean(CleanType cleanType, Mesh mesh, int[] adjacency, out int[] adjacencyOut)
-        {
-            return new MeshAdapter(Mesh.Clean(cleanType, mesh, adjacency, out adjacencyOut));
-        }
-        public static MeshAdapter Clean(CleanType cleanType, Mesh mesh, GraphicsStream adjacency, GraphicsStream adjacencyOut, out string errorsAndWarnings)
-        {
-            return new MeshAdapter(Mesh.Clean(cleanType, mesh, adjacency, adjacencyOut, out errorsAndWarnings));
-        }
-        public static MeshAdapter Clean(CleanType cleanType, Mesh mesh, int[] adjacency, out int[] adjacencyOut, out string errorsAndWarnings)
-        {
-            return new MeshAdapter(Mesh.Clean(cleanType, mesh, adjacency, out adjacencyOut, out errorsAndWarnings));
-        }
         public static MeshAdapter Cylinder(Device device, float radius1, float radius2, float length, int slices, int stacks)
         {
             return new MeshAdapter(Mesh.Cylinder(device, radius1, radius2, length, slices, stacks));
@@ -472,6 +456,42 @@ namespace Dope.DDXX.Graphics
         public VertexFormats VertexFormat
         {
             get { return mesh.VertexFormat; }
+        }
+
+        public IMesh Clean(CleanType cleanType, GraphicsStream adjacency, GraphicsStream adjacencyOut)
+        {
+            Mesh mesh = Mesh.Clean(cleanType, this.mesh, adjacency, adjacencyOut);
+            if (mesh == this.mesh)
+                return this;
+            else
+                return new MeshAdapter(mesh);
+        }
+
+        public IMesh Clean(CleanType cleanType, int[] adjacency, out int[] adjacencyOut)
+        {
+            Mesh mesh = Mesh.Clean(cleanType, this.mesh, adjacency, out adjacencyOut);
+            if (mesh == this.mesh)
+                return this;
+            else
+                return new MeshAdapter(mesh);
+        }
+
+        public IMesh Clean(CleanType cleanType, GraphicsStream adjacency, GraphicsStream adjacencyOut, out string errorsAndWarnings)
+        {
+            Mesh mesh = Mesh.Clean(cleanType, this.mesh, adjacency, adjacencyOut, out errorsAndWarnings);
+            if (mesh == this.mesh)
+                return this;
+            else
+                return new MeshAdapter(mesh);
+        }
+
+        public IMesh Clean(CleanType cleanType, int[] adjacency, out int[] adjacencyOut, out string errorsAndWarnings)
+        {
+            Mesh mesh = Mesh.Clean(cleanType, this.mesh, adjacency, out adjacencyOut, out errorsAndWarnings);
+            if (mesh == this.mesh)
+                return this;
+            else
+                return new MeshAdapter(mesh);
         }
 
         public IMesh Clone(MeshFlags options, GraphicsStream declaration, IDevice device)

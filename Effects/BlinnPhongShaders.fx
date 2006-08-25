@@ -313,7 +313,8 @@ BlinnPhongPixelShader_2_0(BlinnPhongInputPS inp,
 		output.rgb = lightVector;
 #endif
 
-	return output;
+	return float4(1,1,1,1);
+	//return output;
 }
 
 
@@ -561,25 +562,6 @@ BlinnPhongPixelShader_1_1_Pass1(VertexOutputStream_1_1_Pass1 inp) : COLOR0
 	
 	return float4(1, 1, 1, att);
 }
-
-/*technique BlinnPhongPoint_1_4
-{
-	pass BasePass
-	{
-		VertexShader			= compile vs_1_1 BlinnPhongVertexShader_1_4(0, POINT);
-		PixelShader				= compile ps_1_4 BlinnPhongPixelShader_1_4(true, false, false, 16, POINT);
-		AlphaBlendEnable	= true;
-		BlendOp						= <BlendOperation>;
-		SrcBlend					= <SourceBlend>;
-		DestBlend					= <DestBlend>;
-		BlendFactor				= <BlendFactor>;
-		FillMode					= <FillMode>;
-		ZFunc							= Equal;
-		StencilEnable			= true;
-		StencilFunc				= Equal;
-		StencilPass				= Incr;
-	}
-}*/
 
 technique BlinnPhongPoint_2_0
 {

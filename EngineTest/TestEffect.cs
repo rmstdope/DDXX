@@ -20,10 +20,10 @@ namespace EngineTest
         {
             base.Initialize();
 
-            Model model = MeshFactory.FromFile("../../Data/airplane 2.x", ModelFactory.Options.None);
+            Model model = MeshFactory.FromFile("../../Data/airplane 2.x", ModelFactory.Options.EnsureTangents);
             IEffect effect = EffectFactory.CreateFromFile("../../../Effects/BlinnPhongShaders.fxo");
-            MeshNode node = new MeshNode("Mesh", model);
-            node.EffectTechnique = new EffectContainer(effect, effect.FindNextValidTechnique(null));
+            EffectHandler handler = new EffectHandler(effect);
+            MeshNode node = new MeshNode("Mesh", model, handler);
             Scene.AddNode(node);
 
             //IMesh mesh = MeshFactory.CreateBox(10.0f, 10.0f, 10.0f, MeshFactory.Usage.Static);

@@ -11,42 +11,37 @@ namespace Dope.DDXX.SceneGraph
     public class MeshNode : NodeBase
     {
         private Model model;
-        private EffectContainer effect;
+        private IEffectHandler effectHandler;
 
-        public MeshNode(string name, Model model) 
+        public MeshNode(string name, Model model, IEffectHandler effectHandler) 
             : base(name)
         {
             this.model = model;
-        }
-
-        public EffectContainer EffectTechnique
-        {
-            set { effect = value; }
+            this.effectHandler = effectHandler;
         }
 
         protected override void StepNode()
         {
         }
 
-        protected override void RenderNode(CameraNode camera)
+        protected override void RenderNode(IRenderableScene scene)
         {
-            if (effect == null)
-                throw new DDXXException("MeshNode \"" + Name + "\" does not have an effect set.");
+            effectHandler.SetMeshConstants(scene, this);
 
             for (int j = 0; j < model.GetMaterials().Length; j++)
             {
-                int passes = effect.Effect.Begin(FX.None);
+                int passes = effectHandler.Effect.Begin(FX.None);
 
                 for (int i = 0; i < passes; i++)
                 {
-                    effect.Effect.BeginPass(i);
+                    effectHandler.Effect.BeginPass(i);
 
                     model.IMesh.DrawSubset(j);
 
-                    effect.Effect.EndPass();
+                    effectHandler.Effect.EndPass();
                 }
 
-                effect.Effect.End();
+                effectHandler.Effect.End();
             }
         }
     }
