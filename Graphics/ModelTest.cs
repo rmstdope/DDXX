@@ -35,9 +35,9 @@ namespace Dope.DDXX.Graphics
         {
             Model model = new Model(mesh, materials);            
             Assert.AreSame(mesh, model.IMesh);
-            Assert.AreEqual(materials.Length, model.GetMaterials().Length);
-            Assert.AreEqual(materials[0].ToString(), model.GetMaterials()[0].ToString());
-            Assert.AreEqual(materials[1].ToString(), model.GetMaterials()[1].ToString());
+            Assert.AreEqual(materials.Length, model.Materials.Length);
+            Assert.AreEqual(materials[0].ToString(), model.Materials[0].ToString());
+            Assert.AreEqual(materials[1].ToString(), model.Materials[1].ToString());
         }
     }
 }

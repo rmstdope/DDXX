@@ -5,7 +5,7 @@ using Microsoft.DirectX;
 
 namespace Dope.DDXX.SceneGraph
 {
-    public class CameraNode : NodeBase, ICamera
+    public class CameraNode : NodeBase, IRenderableCamera
     {
         private float fov = (float)Math.PI / 4;
 

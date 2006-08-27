@@ -116,6 +116,12 @@ namespace Dope.DDXX.Graphics
         {
             ExtendedMaterial[] materials;
             IMesh mesh = factory.MeshFromFile(device, file, out materials);
+            for (int i = 0; i < materials.Length; i++)
+            {
+                Material material = materials[i].Material3D;
+                material.AmbientColor = material.DiffuseColor;
+                materials[i].Material3D = material;
+            }
             HandleOptions(ref mesh, options);
             Model model = new Model(mesh, materials);
             return model;

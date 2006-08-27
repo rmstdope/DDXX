@@ -8,7 +8,7 @@ using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.SceneGraph
 {
-    public class MeshNode : NodeBase
+    public class MeshNode : NodeBase, IRenderableMesh
     {
         private Model model;
         private IEffectHandler effectHandler;
@@ -28,8 +28,10 @@ namespace Dope.DDXX.SceneGraph
         {
             effectHandler.SetMeshConstants(scene, this);
 
-            for (int j = 0; j < model.GetMaterials().Length; j++)
+            for (int j = 0; j < model.Materials.Length; j++)
             {
+                effectHandler.SetMaterialConstants(scene, model.Materials[j]);
+
                 int passes = effectHandler.Effect.Begin(FX.None);
 
                 for (int i = 0; i < passes; i++)

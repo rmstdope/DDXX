@@ -11,13 +11,15 @@ namespace Dope.DDXX.SceneGraph
     public class Scene : IRenderableScene
     {
         private NodeBase rootNode;
-        private ICamera activeCamera;
+        private IRenderableCamera activeCamera;
         private IDevice device;
+        private ColorValue ambientColor;
 
         public Scene()
         {
             rootNode = new DummyNode("Scene Root Node");
             device = D3DDriver.GetInstance().GetDevice();
+            ambientColor = new ColorValue(0.5f, 0.5f, 0.5f, 0.5f);
         }
 
         public void AddNode(INode node1)
@@ -40,7 +42,7 @@ namespace Dope.DDXX.SceneGraph
 
         #region IRenderableScene Members
 
-        public ICamera ActiveCamera
+        public IRenderableCamera ActiveCamera
         {
             get { return activeCamera; }
             set
@@ -50,6 +52,12 @@ namespace Dope.DDXX.SceneGraph
                 else
                     throw new DDXXException("The active camera must be part of the scene graph.");
             }
+        }
+
+        public ColorValue AmbientColor
+        {
+            get { return ambientColor; }
+            set { ambientColor = value; }
         }
 
         #endregion

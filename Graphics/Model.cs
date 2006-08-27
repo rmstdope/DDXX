@@ -6,9 +6,16 @@ using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.Graphics
 {
-    public class Model : MeshContainer
+    public class Model// : MeshContainer
     {
         private IMesh mesh;
+        ExtendedMaterial[] materials;
+
+        public ExtendedMaterial[] Materials
+        {
+            get { return materials; }
+            set { materials = value; }
+        }
 
         public IMesh IMesh
         {
@@ -19,7 +26,7 @@ namespace Dope.DDXX.Graphics
         public Model(IMesh mesh, ExtendedMaterial[] materials)
         {
             IMesh = mesh;
-            SetMaterials(materials);
+            Materials = materials;
         }
     }
 }

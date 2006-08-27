@@ -313,7 +313,7 @@ BlinnPhongPixelShader_2_0(BlinnPhongInputPS inp,
 		output.rgb = lightVector;
 #endif
 
-	return float4(1,1,1,1);
+	return float4(1,1,1,1) * AmbientColor;
 	//return output;
 }
 

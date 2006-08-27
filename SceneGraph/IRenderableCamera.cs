@@ -5,7 +5,7 @@ using Microsoft.DirectX;
 
 namespace Dope.DDXX.SceneGraph
 {
-    public interface ICamera : INode
+    public interface IRenderableCamera : INode
     {
         Matrix ProjectionMatrix
         {
