@@ -108,6 +108,7 @@ namespace Dope.DDXX.DemoFramework
                 desc.colorFormat = ColorFormat;
                 desc.width = ResolutionWidth;
                 desc.height = ResolutionHeight;
+                desc.useDepth = true;
                 return desc;
             }
         }

@@ -575,7 +575,6 @@ technique BlinnPhongPoint_2_0
 		DestBlend					= <DestBlend>;
 		BlendFactor				= <BlendFactor>;
 		FillMode					= Solid;//<FillMode>;
-		CullMode					= CW;
 		ZEnable						=	true;
 		ZFunc							= Less;
 		StencilEnable			= false; //true;

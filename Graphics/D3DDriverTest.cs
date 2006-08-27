@@ -293,7 +293,7 @@ namespace Dope.DDXX.Graphics
 
             Expect.Exactly(3).On(manager).
                 Method("CheckDepthStencilMatch").
-                WithAnyArguments().
+                With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(displayMode.Format), Is.EqualTo(displayMode.Format), Is.Anything).
                 Will(Return.Value(false));
             // No depth buffer available
             try
@@ -315,7 +315,7 @@ namespace Dope.DDXX.Graphics
 
             Expect.Exactly(3).On(manager).
                 Method("CheckDepthStencilMatch").
-                WithAnyArguments().
+                With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(displayMode.Format), Is.EqualTo(displayMode.Format), Is.Anything).
                 Will(Return.Value(false));
 
             // No depth/stencil buffer available
@@ -344,11 +344,11 @@ namespace Dope.DDXX.Graphics
             // Create device with depth only
             Expect.Exactly(2).On(manager).
                 Method("CheckDepthStencilMatch").
-                WithAnyArguments().
+                With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(displayMode.Format), Is.EqualTo(displayMode.Format), Is.Anything).
                 Will(Return.Value(false));
             Expect.Once.On(manager).
                 Method("CheckDepthStencilMatch").
-                WithAnyArguments().
+                With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(displayMode.Format), Is.EqualTo(displayMode.Format), Is.Anything).
                 Will(Return.Value(true));
             Expect.Once.On(factory).
                 Method("CreateDevice").
@@ -380,11 +380,11 @@ namespace Dope.DDXX.Graphics
             // Create device with depth and stencil
             Expect.Exactly(1).On(manager).
                 Method("CheckDepthStencilMatch").
-                WithAnyArguments().
+                With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(displayMode.Format), Is.EqualTo(displayMode.Format), Is.Anything).
                 Will(Return.Value(false));
             Expect.Once.On(manager).
                 Method("CheckDepthStencilMatch").
-                WithAnyArguments().
+                With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(displayMode.Format), Is.EqualTo(displayMode.Format), Is.Anything).
                 Will(Return.Value(true));
             Expect.Once.On(factory).
                 Method("CreateDevice").

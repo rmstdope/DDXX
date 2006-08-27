@@ -255,7 +255,7 @@ namespace Dope.DDXX.DemoFramework
                 With(0, surface);
             Expect.Once.On(device).
                 Method("Clear").
-                With(ClearFlags.Target, System.Drawing.Color.Blue, 1.0f, 0);
+                With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Blue, 1.0f, 0);
             Expect.Once.On(device).
                 Method("StretchRectangle");
             Expect.Once.On(device).
@@ -280,7 +280,7 @@ namespace Dope.DDXX.DemoFramework
                 Will(Return.Value(true));
             Expect.Once.On(device).
                 Method("Clear").
-                With(ClearFlags.Target, System.Drawing.Color.Blue, 1.0f, 0);
+                With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Blue, 1.0f, 0);
             Expect.Once.On(device).
                 Method("BeginScene");
             Expect.Exactly(2).On(device).
@@ -312,7 +312,7 @@ namespace Dope.DDXX.DemoFramework
 
             Expect.Once.On(device).
                 Method("Clear").
-                With(ClearFlags.Target, System.Drawing.Color.Blue, 1.0f, 0);
+                With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Blue, 1.0f, 0);
             Expect.Once.On(device).
                 Method("BeginScene");
             Expect.Exactly(2).On(device).

@@ -58,6 +58,9 @@ namespace Dope.DDXX.Graphics
             Stub.On(surface).
                 GetProperty("Description").
                 Will(Return.Value(new SurfaceDescription()));
+            Stub.On(device).
+                GetProperty("PresentationParameters").
+                Will(Return.Value(new PresentParameters()));
 
             D3DDriver.Factory = factory;
         }

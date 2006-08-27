@@ -90,7 +90,7 @@ namespace Dope.DDXX.DemoFramework
         private void InitializeGraphics()
         {
             device = D3DDriver.GetInstance().GetDevice();
-            backBuffer = D3DDriver.Factory.CreateTexture(device, device.DisplayMode.Width, device.DisplayMode.Height, 1, Usage.RenderTarget, device.DisplayMode.Format, Pool.Default);
+            backBuffer = D3DDriver.Factory.CreateTexture(device, device.PresentationParameters.BackBufferWidth, device.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget, device.PresentationParameters.BackBufferFormat, Pool.Default);
         }
 
         private void InitializeSound(string song)
@@ -158,7 +158,7 @@ namespace Dope.DDXX.DemoFramework
         {
             ISurface originalTarget = device.GetRenderTarget(0);
             device.SetRenderTarget(0, backBuffer.GetSurfaceLevel(0));
-            device.Clear(ClearFlags.Target, System.Drawing.Color.Blue, 1.0f, 0);
+            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Blue, 1.0f, 0);
 
             if (tracks.Count != 0)
             {
