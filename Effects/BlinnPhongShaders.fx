@@ -285,12 +285,12 @@ BlinnPhongPixelShader_2_0(BlinnPhongInputPS inp,
 		float3 tex = tex2D(BaseTextureSampler, inp.TextureCoord.xy).rgb;
 		if(reflectionMapping) {
 			float3 ref = tex2D(ReflectionTextureSampler, inp.TextureCoord.xy).rgb;
-			output.rgb =  (tex * InvReflectionFactor + ref * ReflectionFactor) * light.Diffuse * DiffuseColor + light.Specular * SpecularColor;
+			output.rgb =  (tex * InvReflectionFactor + ref * ReflectionFactor) * (light.Diffuse * DiffuseColor + AmbientColor) + light.Specular * SpecularColor;
 		} else {
-			output.rgb = tex * light.Diffuse * DiffuseColor + light.Specular * SpecularColor;
+			output.rgb = tex * (light.Diffuse * DiffuseColor + AmbientColor) + light.Specular * SpecularColor;
 		}
 	} else {
-		output.rgb = light.Diffuse * DiffuseColor + light.Specular * SpecularColor;
+		output.rgb = (light.Diffuse * DiffuseColor + AmbientColor) + light.Specular * SpecularColor;
 	}
 
 
@@ -313,8 +313,8 @@ BlinnPhongPixelShader_2_0(BlinnPhongInputPS inp,
 		output.rgb = lightVector;
 #endif
 
-	return float4(1,1,1,1) * AmbientColor;
-	//return output;
+	//return float4(1,1,1,1) * AmbientColor;
+	return output;
 }
 
 
@@ -569,14 +569,16 @@ technique BlinnPhongPoint_2_0
 	{
 		VertexShader			= compile vs_2_0 BlinnPhongVertexShader_2_0(true, 0, POINT);
 		PixelShader				= compile ps_2_0 BlinnPhongPixelShader_2_0(true, false, false, POINT);
-		AlphaBlendEnable	= true;
+		AlphaBlendEnable	= false;//true;
 		BlendOp						= <BlendOperation>;
 		SrcBlend					= <SourceBlend>;
 		DestBlend					= <DestBlend>;
 		BlendFactor				= <BlendFactor>;
-		FillMode					= <FillMode>;
-		ZFunc							= Equal;
-		StencilEnable			= true;
+		FillMode					= Solid;//<FillMode>;
+		CullMode					= CW;
+		ZEnable						=	true;
+		ZFunc							= Less;
+		StencilEnable			= false; //true;
 		StencilFunc				= Equal;
 		StencilPass				= Incr;
 	}

@@ -39,7 +39,7 @@ namespace Dope.DDXX.DemoFramework
             get { return effectFactory; }
         }
 
-        protected ModelFactory MeshFactory
+        protected ModelFactory ModelFactory
         {
             get { return meshFactory; }
         }

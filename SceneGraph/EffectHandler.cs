@@ -17,6 +17,7 @@ namespace Dope.DDXX.SceneGraph
         private EffectHandle worldViewProjT;
 
         private EffectHandle ambientColor;
+        private EffectHandle baseTexture;
 
         public EffectHandler(IEffect effect)
         {
@@ -27,6 +28,7 @@ namespace Dope.DDXX.SceneGraph
             worldViewProjT = effect.GetParameter(null, "WorldViewProjectionT");
 
             ambientColor = effect.GetParameter(null, "AmbientColor");
+            baseTexture = effect.GetParameter(null, "BaseTexture");
 
             if (worldT == null || worldViewProjT == null)
                 throw new DDXXException("Invalid effect. Not all mandatory parameters are present.");
@@ -50,10 +52,12 @@ namespace Dope.DDXX.SceneGraph
             effect.SetValueTranspose(worldViewProjT, node.WorldMatrix * scene.ActiveCamera.ViewMatrix * scene.ActiveCamera.ProjectionMatrix);
         }
 
-        public void SetMaterialConstants(IRenderableScene scene, ExtendedMaterial material)
+        public void SetMaterialConstants(IRenderableScene scene, ModelMaterial material)
         {
             if (ambientColor != null)
-                effect.SetValue(ambientColor, ColorOperator.Modulate(scene.AmbientColor, material.Material3D.AmbientColor));
+                effect.SetValue(ambientColor, ColorOperator.Modulate(scene.AmbientColor, material.Material.AmbientColor));
+            if (baseTexture != null)
+                effect.SetValue(baseTexture, material.DiffuseTexture);
         }
 
         #endregion

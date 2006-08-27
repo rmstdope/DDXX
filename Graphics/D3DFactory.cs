@@ -57,6 +57,11 @@ namespace Dope.DDXX.Graphics
             return EffectAdapter.FromFile(((DeviceAdapter)device).DXDevice, sourceDataFile, includeFile, skipConstants, flags, pool);
         }
 
+        public ITexture TextureFromFile(IDevice device, string srcFile, int width, int height, int mipLevels, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey)
+        {
+            return TextureAdapter.FromFile(((DeviceAdapter)device).DXDevice, srcFile, width, height, mipLevels, usage, format, pool, filter, mipFilter, colorKey);
+        }
+
         #endregion
     }
 }

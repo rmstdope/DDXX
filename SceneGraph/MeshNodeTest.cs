@@ -20,7 +20,7 @@ namespace Dope.DDXX.SceneGraph
         private IEffectHandler effectHandler;
         private IRenderableScene scene;
         private CameraNode camera;
-        private ExtendedMaterial[] materials = new ExtendedMaterial[2];
+        private ModelMaterial[] materials;
 
         private MeshNode node;
 
@@ -33,11 +33,11 @@ namespace Dope.DDXX.SceneGraph
             effectHandler = mockery.NewMock<IEffectHandler>();
             scene = mockery.NewMock<IRenderableScene>();
             camera = new CameraNode("Camera");
-            materials[0] = new ExtendedMaterial();
             Material m = new Material();
             m.AmbientColor = new ColorValue(1, 1, 1);
-            materials[0].Material3D = m;
-            materials[1] = new ExtendedMaterial();
+            materials = new ModelMaterial[2];
+            materials[0] = new ModelMaterial(m, null);
+            materials[1] = new ModelMaterial(new Material(), null);
 
             Stub.On(effectHandler).
                 GetProperty("Effect").
@@ -54,20 +54,20 @@ namespace Dope.DDXX.SceneGraph
 
         class MaterialMatcher : Matcher
         {
-            private ExtendedMaterial material;
+            private ModelMaterial material;
 
-            public MaterialMatcher(ExtendedMaterial material)
+            public MaterialMatcher(ModelMaterial material)
             {
                 this.material = material;
             }
 
             public override bool Matches(object o)
             {
-                if (!(o is ExtendedMaterial)) return false;
-                ExtendedMaterial m = (ExtendedMaterial)o;
+                if (!(o is ModelMaterial)) return false;
+                ModelMaterial m = (ModelMaterial)o;
 
-                if (m.Material3D == material.Material3D ||
-                    m.TextureFilename == material.TextureFilename)
+                if (m.Material == material.Material &&
+                    m.DiffuseTexture == m.DiffuseTexture)
                     return true;
 
                 return false;

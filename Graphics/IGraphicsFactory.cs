@@ -19,5 +19,6 @@ namespace Dope.DDXX.Graphics
         IMesh MeshFromFile(IDevice device, string fileName, out ExtendedMaterial[] materials);
         IMesh CreateBoxMesh(IDevice device, float width, float height, float depth);
         IEffect CreateEffectFromFile(IDevice device, string sourceDataFile, Include includeFile, string skipConstants, ShaderFlags flags, EffectPool pool);
+        ITexture TextureFromFile(IDevice device, string srcFile, int width, int height, int mipLevels, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey);
     }
 }

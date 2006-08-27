@@ -359,9 +359,9 @@ namespace Dope.DDXX.Graphics
             return effect.GetValueString(parameter);
         }
 
-        public Texture GetValueTexture(EffectHandle parameter)
+        public ITexture GetValueTexture(EffectHandle parameter)
         {
-            return effect.GetValueTexture(parameter);
+            return new TextureAdapter(effect.GetValueTexture(parameter));
         }
 
         public Vector4 GetValueVector(EffectHandle parameter)
@@ -379,9 +379,12 @@ namespace Dope.DDXX.Graphics
             return effect.GetValueVertexShader(parameter);
         }
 
-        public void SetValue(EffectHandle parameter, BaseTexture texture)
+        public void SetValue(EffectHandle parameter, ITexture texture)
         {
-            effect.SetValue(parameter, texture);
+            if (texture == null)
+                effect.SetValue(parameter, (BaseTexture)null);
+            else
+                effect.SetValue(parameter, ((TextureAdapter)texture).TextureDX);
         }
 
         public void SetValue(EffectHandle parameter, bool b)

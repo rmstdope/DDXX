@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.Graphics
 {
     public class Model// : MeshContainer
     {
         private IMesh mesh;
-        ExtendedMaterial[] materials;
+        ModelMaterial[] materials;
 
-        public ExtendedMaterial[] Materials
+        public ModelMaterial[] Materials
         {
             get { return materials; }
             set { materials = value; }
@@ -23,7 +24,7 @@ namespace Dope.DDXX.Graphics
             set { mesh = value; }
         }
 
-        public Model(IMesh mesh, ExtendedMaterial[] materials)
+        public Model(IMesh mesh, ModelMaterial[] materials)
         {
             IMesh = mesh;
             Materials = materials;

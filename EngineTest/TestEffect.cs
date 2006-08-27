@@ -11,6 +11,8 @@ namespace EngineTest
 {
     public class TestEffect : BaseDemoEffect
     {
+        private MeshNode mesh;
+
         public TestEffect(float startTime, float endTime) 
             : base(startTime, endTime)
         {
@@ -20,21 +22,21 @@ namespace EngineTest
         {
             base.Initialize();
 
-            Model model = MeshFactory.FromFile("../../Data/airplane 2.x", ModelFactory.Options.EnsureTangents);
+            Model model = ModelFactory.FromFile("../../Data/airplane 2.x", ModelFactory.Options.EnsureTangents);
             IEffect effect = EffectFactory.CreateFromFile("../../../Effects/BlinnPhongShaders.fxo");
             EffectHandler handler = new EffectHandler(effect);
-            MeshNode node = new MeshNode("Mesh", model, handler);
-            Scene.AddNode(node);
+            mesh = new MeshNode("Mesh", model, handler);
+            Scene.AddNode(mesh);
 
-            //IMesh mesh = MeshFactory.CreateBox(10.0f, 10.0f, 10.0f, MeshFactory.Usage.Static);
-            //IMesh mesh = MeshFactory.FromFile("tiger.x", out EffectInstance[] );
+            //IMesh mesh = ModelFactory.CreateBox(10.0f, 10.0f, 10.0f, ModelFactory.Usage.Static);
+            //IMesh mesh = ModelFactory.FromFile("tiger.x", out EffectInstance[] );
             //Direct3D.IEffect effect = EffectFactory.CreateFromFile("Effects.fx");
-            //MeshNode node = new MeshNode("Mesh", mesh);
-            //node.EffectTechnique = new EffectTechnique(effect, effect.FindNextValidTechnique(null));
-            //Scene.AddNode(node);
+            //MeshNode mesh = new MeshNode("Mesh", mesh);
+            //mesh.EffectTechnique = new EffectTechnique(effect, effect.FindNextValidTechnique(null));
+            //Scene.AddNode(mesh);
 
             CameraNode camera = new CameraNode("Camera");
-            camera.WorldState.MoveForward(-100.0f);
+            camera.WorldState.MoveForward(-20.0f);
             Scene.AddNode(camera);
             Scene.ActiveCamera = camera;
 
@@ -51,6 +53,8 @@ namespace EngineTest
         public override void Step()
         {
             Scene.Step();
+            mesh.WorldState.Roll(0.01f);
+            mesh.WorldState.Turn(0.021f);
         }
 
         public override void Render()

@@ -4,6 +4,7 @@ using System.Text;
 using NUnit.Framework;
 using NMock2;
 using Microsoft.DirectX.Direct3D;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.Graphics
 {
@@ -12,16 +13,16 @@ namespace Dope.DDXX.Graphics
     {
         Mockery mockery;
         IMesh mesh;
-        ExtendedMaterial[] materials;
+        ModelMaterial[] materials;
 
         [SetUp]
         public void SetUp()
         {
             mockery = new Mockery();
             mesh = mockery.NewMock<IMesh>();
-            materials = new ExtendedMaterial[2];
-            materials[0] = new ExtendedMaterial();
-            materials[1] = new ExtendedMaterial();
+            materials = new ModelMaterial[2];
+            materials[0] = new ModelMaterial(new Material());
+            materials[1] = new ModelMaterial(new Material(), mockery.NewMock<ITexture>());
         }
 
         [TearDown]
@@ -33,11 +34,13 @@ namespace Dope.DDXX.Graphics
         [Test]
         public void ConstructorTest()
         {
-            Model model = new Model(mesh, materials);            
+            Model model = new Model(mesh, materials);
             Assert.AreSame(mesh, model.IMesh);
             Assert.AreEqual(materials.Length, model.Materials.Length);
-            Assert.AreEqual(materials[0].ToString(), model.Materials[0].ToString());
-            Assert.AreEqual(materials[1].ToString(), model.Materials[1].ToString());
+            Assert.AreEqual(materials[0].Material.ToString(), model.Materials[0].Material.ToString());
+            Assert.AreEqual(materials[1].Material.ToString(), model.Materials[1].Material.ToString());
+            Assert.AreEqual(materials[0].DiffuseTexture, model.Materials[0].DiffuseTexture);
+            Assert.AreEqual(materials[1].DiffuseTexture, model.Materials[1].DiffuseTexture);
         }
     }
 }

@@ -12,6 +12,21 @@ namespace Dope.DDXX.Graphics
     {
         Texture texture;
 
+        public TextureAdapter(Texture texture)
+        {
+            this.texture = texture;
+        }
+
+        public Texture TextureDX
+        {
+            get { return texture; }
+        }
+
+        public static ITexture FromFile(Device device, string srcFile, int width, int height, int mipLevels, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey)
+        {
+            return new TextureAdapter(TextureLoader.FromFile(device, srcFile, width, height, mipLevels, usage, format, pool, filter, mipFilter, colorKey));
+        }
+
         //
         // Summary:
         //     Creates a new instance of the Texture class.

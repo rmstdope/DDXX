@@ -27,6 +27,7 @@ namespace Dope.DDXX.Graphics
         private static IGraphicsFactory factory = new D3DFactory();
         private static EffectFactory effectFactory;
         private static ModelFactory meshFactory;
+        private static TextureFactory textureFactory;
 
         private IManager manager;
         private IDevice device;
@@ -80,7 +81,8 @@ namespace Dope.DDXX.Graphics
             device = factory.CreateDevice(0, desc.deviceType, control, createFlags, present);
 
             effectFactory = new EffectFactory(device, factory);
-            meshFactory = new ModelFactory(device, factory);
+            textureFactory = new TextureFactory(device, factory);
+            meshFactory = new ModelFactory(device, factory, textureFactory);
         }
 
         private void GetDisplayMode()

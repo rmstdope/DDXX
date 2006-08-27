@@ -13,6 +13,7 @@ namespace Dope.DDXX.Graphics
     public class ModelFactoryTest
     {
         ModelFactory modelFactory;
+        TextureFactory textureFactory;
 
         Mockery mockery;
         IGraphicsFactory graphicsFactory;
@@ -66,7 +67,8 @@ namespace Dope.DDXX.Graphics
             mockery = new Mockery();
             graphicsFactory = mockery.NewMock<IGraphicsFactory>();
             mesh = mockery.NewMock<IMesh>();
-            modelFactory = new ModelFactory(null, graphicsFactory);
+            textureFactory = new TextureFactory(null, graphicsFactory);
+            modelFactory = new ModelFactory(null, graphicsFactory, textureFactory);
             Stub.On(mesh).
                 GetProperty("NumberFaces").
                 Will(Return.Value(1));
@@ -90,8 +92,15 @@ namespace Dope.DDXX.Graphics
             #region IInvokable Members
             public void Invoke(NMock2.Monitoring.Invocation invocation)
             {
+                ExtendedMaterial[] materials = new ExtendedMaterial[2];
+                Material material = new Material();
                 invocation.Result = mesh;
-                invocation.Parameters[2] = new ExtendedMaterial[1];
+                material.AmbientColor = new ColorValue(1, 1, 1, 1);
+                material.DiffuseColor = new ColorValue(2, 2, 2, 2);
+                materials[0].Material3D = material;
+                materials[1].Material3D = material;
+                materials[0].TextureFilename = "TextureFileName";
+                invocation.Parameters[2] = materials;
             }
             #endregion
             #region ISelfDescribing Members
@@ -150,6 +159,7 @@ namespace Dope.DDXX.Graphics
         [Test]
         public void FromFileTest()
         {
+            ITexture texture = mockery.NewMock<ITexture>();
             Stub.On(mesh).
                 GetProperty("Declaration").
                 Will(Return.Value(pntxDeclaration));
@@ -157,8 +167,17 @@ namespace Dope.DDXX.Graphics
                 Method("MeshFromFile").
                 WithAnyArguments().
                 Will(new SetMaterial(mesh));
-            Model mesh1 = modelFactory.FromFile("MeshFile1", ModelFactory.Options.EnsureTangents | ModelFactory.Options.NoOptimization);
-            Assert.IsNotNull(mesh1);
+            Expect.Once.On(graphicsFactory).
+                Method("TextureFromFile").
+                WithAnyArguments().
+                Will(Return.Value(texture));
+            Model model1 = modelFactory.FromFile("MeshFile1", ModelFactory.Options.EnsureTangents | ModelFactory.Options.NoOptimization);
+            Assert.AreEqual(2, model1.Materials.Length);
+            Assert.AreEqual(model1.Materials[0].Material.AmbientColor, model1.Materials[0].Material.DiffuseColor);
+            Assert.AreEqual(model1.Materials[1].Material.AmbientColor, model1.Materials[1].Material.DiffuseColor);
+            Assert.AreEqual(texture, model1.Materials[0].DiffuseTexture);
+            Assert.AreEqual(null, model1.Materials[1].DiffuseTexture);
+            Assert.IsNotNull(model1);
         }
 
         [Test]
@@ -171,6 +190,10 @@ namespace Dope.DDXX.Graphics
                 Method("MeshFromFile").
                 WithAnyArguments().
                 Will(new SetMaterial(mesh));
+            Expect.Once.On(graphicsFactory).
+                Method("TextureFromFile").
+                WithAnyArguments().
+                Will(Return.Value(null));
             Expect.Once.On(mesh).
                 Method("Clone").
                 With(MeshFlags.Managed, pntbxDeclaration, null).
@@ -201,6 +224,10 @@ namespace Dope.DDXX.Graphics
                 Method("MeshFromFile").
                 WithAnyArguments().
                 Will(new SetMaterial(mesh));
+            Expect.Once.On(graphicsFactory).
+                Method("TextureFromFile").
+                WithAnyArguments().
+                Will(Return.Value(null));
             //FIXME: Do the real test!
             Expect.Once.On(mesh).
                 Method("Clone").
@@ -224,6 +251,10 @@ namespace Dope.DDXX.Graphics
                 Method("MeshFromFile").
                 WithAnyArguments().
                 Will(new SetMaterial(mesh));
+            Expect.Once.On(graphicsFactory).
+                Method("TextureFromFile").
+                WithAnyArguments().
+                Will(Return.Value(null));
             Expect.Once.On(mesh).
                 Method("Clone").
                 With(MeshFlags.Managed, pntbxDeclaration, null).
@@ -249,6 +280,10 @@ namespace Dope.DDXX.Graphics
                 Method("MeshFromFile").
                 WithAnyArguments().
                 Will(new SetMaterial(mesh));
+            Expect.Once.On(graphicsFactory).
+                Method("TextureFromFile").
+                WithAnyArguments().
+                Will(Return.Value(null));
             Expect.Once.On(mesh).
                 Method("Clone").
                 With(MeshFlags.Managed, pnDeclaration, null).
@@ -271,6 +306,10 @@ namespace Dope.DDXX.Graphics
                 Method("MeshFromFile").
                 WithAnyArguments().
                 Will(new SetMaterial(mesh));
+            Expect.Once.On(graphicsFactory).
+                Method("TextureFromFile").
+                WithAnyArguments().
+                Will(Return.Value(null));
             Expect.Once.On(mesh).
                 Method("GenerateAdjacency").
                 WithAnyArguments();
@@ -291,6 +330,10 @@ namespace Dope.DDXX.Graphics
                 Method("MeshFromFile").
                 WithAnyArguments().
                 Will(new SetMaterial(mesh));
+            Expect.Once.On(graphicsFactory).
+                Method("TextureFromFile").
+                WithAnyArguments().
+                Will(Return.Value(null));
             Expect.Exactly(2).On(mesh).
                 Method("GenerateAdjacency").
                 WithAnyArguments();
@@ -321,6 +364,10 @@ namespace Dope.DDXX.Graphics
                 Method("MeshFromFile").
                 WithAnyArguments().
                 Will(new SetMaterial(mesh));
+            Expect.Once.On(graphicsFactory).
+                Method("TextureFromFile").
+                WithAnyArguments().
+                Will(Return.Value(null));
             Expect.Once.On(mesh).
                 Method("GenerateAdjacency").
                 WithAnyArguments();

@@ -49,14 +49,16 @@ namespace Dope.DDXX.Graphics
 
         private IGraphicsFactory factory;
         private IDevice device;
+        private TextureFactory textureFactory;
 
         private List<BoxEntry> boxes = new List<BoxEntry>();
         private List<FileEntry> files = new List<FileEntry>();
 
-        public ModelFactory(IDevice device, IGraphicsFactory factory)
+        public ModelFactory(IDevice device, IGraphicsFactory factory, TextureFactory textureFactory)
         {
             this.device = device;
             this.factory = factory;
+            this.textureFactory = textureFactory;
         }
 
         public int CountBoxes { get { return boxes.Count; } }
@@ -79,8 +81,8 @@ namespace Dope.DDXX.Graphics
             {
                 return result.model;
             }
-            ExtendedMaterial[] materials = new ExtendedMaterial[1];
-            materials[0] = new ExtendedMaterial();
+            ModelMaterial[] materials = new ModelMaterial[1];
+            materials[0] = new ModelMaterial(new Material());
             Model model = new Model(factory.CreateBoxMesh(device, width, height, depth), materials);
             needle.model = model;
             boxes.Add(needle);
@@ -114,16 +116,22 @@ namespace Dope.DDXX.Graphics
 
         private Model CreateModelFromFile(string file, Options options)
         {
-            ExtendedMaterial[] materials;
-            IMesh mesh = factory.MeshFromFile(device, file, out materials);
-            for (int i = 0; i < materials.Length; i++)
+            ExtendedMaterial[] extendedMaterials;
+            IMesh mesh = factory.MeshFromFile(device, file, out extendedMaterials);
+            ModelMaterial[] modelMaterials = new ModelMaterial[extendedMaterials.Length];
+            for (int i = 0; i < extendedMaterials.Length; i++)
             {
-                Material material = materials[i].Material3D;
+                if (extendedMaterials[i].TextureFilename == null ||
+                    extendedMaterials[i].TextureFilename == "")
+                    modelMaterials[i] = new ModelMaterial(extendedMaterials[i].Material3D);
+                else
+                    modelMaterials[i] = new ModelMaterial(extendedMaterials[i].Material3D, textureFactory.CreateFromFile("../../Data/" + extendedMaterials[i].TextureFilename));
+                Material material = modelMaterials[i].Material;
                 material.AmbientColor = material.DiffuseColor;
-                materials[i].Material3D = material;
+                modelMaterials[i].Material = material;
             }
             HandleOptions(ref mesh, options);
-            Model model = new Model(mesh, materials);
+            Model model = new Model(mesh, modelMaterials);
             return model;
         }
 

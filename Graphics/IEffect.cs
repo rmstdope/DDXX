@@ -563,7 +563,7 @@ namespace Dope.DDXX.Graphics
         //
         // Returns:
         //     A Microsoft.DirectX.Direct3D.Texture object.
-        Texture GetValueTexture(EffectHandle parameter);
+        ITexture GetValueTexture(EffectHandle parameter);
         //
         // Summary:
         //     Retrieves a vector.
@@ -678,7 +678,7 @@ namespace Dope.DDXX.Graphics
         //
         //   texture:
         //     A Microsoft.DirectX.Direct3D.BaseTexture object to set.
-        void SetValue(EffectHandle parameter, BaseTexture texture);
+        void SetValue(EffectHandle parameter, ITexture texture);
         //
         // Summary:
         //     Sets the value of an arbitrary parameter or annotation, including simple

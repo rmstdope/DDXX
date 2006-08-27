@@ -11,6 +11,6 @@ namespace Dope.DDXX.SceneGraph
         IEffect Effect { get; }
         EffectHandle Technique { get; }
         void SetMeshConstants(IRenderableScene scene, IRenderableMesh node);
-        void SetMaterialConstants(IRenderableScene scene, ExtendedMaterial mesh);
+        void SetMaterialConstants(IRenderableScene scene, ModelMaterial mesh);
     }
 }
