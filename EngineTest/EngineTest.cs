@@ -41,6 +41,7 @@ namespace EngineTest
                     window.Initialize("RolemasterTest", desc);
                     executer.Initialize("");//test.mp3");
                     executer.Run();
+                    window.CleanUp();
                 }
             }
             catch (DDXXException exception)

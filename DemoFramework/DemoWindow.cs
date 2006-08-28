@@ -47,5 +47,11 @@ namespace Dope.DDXX.DemoFramework
             
             Show();
         }
+
+        public void CleanUp()
+        {
+            D3DDriver gDriver = D3DDriver.GetInstance();
+            gDriver.GetDevice().Dispose();
+        }
     }
 }

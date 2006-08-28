@@ -92,5 +92,13 @@ namespace Dope.DDXX.DemoFramework
 
             window.Initialize("nisse", desc);
         }
+
+        [Test]
+        public void TestCleanUp()
+        {
+            TestInitialize_16_9();
+            // Dispose is stubbed
+            window.CleanUp();
+        }
     }
 }
