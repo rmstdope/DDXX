@@ -54,11 +54,13 @@ namespace Dope.DDXX.Graphics
         public static EffectFactory EffectFactory
         {
             get { return effectFactory; }
+            set { effectFactory = value; }
         }
 
         public static ModelFactory MeshFactory
         {
             get { return meshFactory; }
+            set { meshFactory = value; }
         }
 
         public static D3DDriver GetInstance()

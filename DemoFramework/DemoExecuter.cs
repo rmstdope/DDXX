@@ -18,7 +18,7 @@ namespace Dope.DDXX.DemoFramework
     {
         SoundDriver soundDriver;
         FMOD.Sound sound;
-        Channel channel;
+        FMOD.Channel channel;
 
         IDevice device;
         ITexture backBuffer;

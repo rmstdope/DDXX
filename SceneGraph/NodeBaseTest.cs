@@ -11,14 +11,23 @@ namespace Dope.DDXX.SceneGraph
     [TestFixture]
     public class NodeBaseTest
     {
+        class NodeBaseImpl : NodeBase
+        {
+            public NodeBaseImpl(string name) : base(name) { }
+            protected override void StepNode() { }
+            protected override void RenderNode(IRenderableScene scene) { }
+        }
+
         class DerivedNode : NodeBase
         {
             public bool stepCalled;
             public bool renderCalled;
+            public bool setLightStateCalled;
             public IRenderableScene renderScene;
             public DerivedNode(string name) : base(name) { }
             protected override void StepNode() { stepCalled = true; }
             protected override void RenderNode(IRenderableScene scene) { renderCalled = true; renderScene = scene; }
+            protected override void SetLightStateNode(LightState state) { setLightStateCalled = true; }
         }
 
         [Test]
@@ -40,6 +49,9 @@ namespace Dope.DDXX.SceneGraph
             Assert.IsFalse(node1.HasChild(node1));
             Assert.IsFalse(node2.HasChild(node1));
             Assert.IsFalse(node2.HasChild(node2));
+            Assert.AreEqual(node1.Children.Count, 1);
+            Assert.AreEqual(node2.Children.Count, 0);
+            Assert.AreEqual(node1.Children[0], node2);
         }
 
         [Test]
@@ -113,6 +125,19 @@ namespace Dope.DDXX.SceneGraph
             node2.WorldState.Rotation = new Quaternion(0, 1, 0, 0);
             node2.WorldState.Scaling = new Vector3(2, 3, 4);
             AssertVectors(new Vector3(100 - 98 * 2, 200 + 206 * 3, 300 - 288 * 4), Vector3.TransformCoordinate(vec, node2.WorldMatrix));
+        }
+
+        [Test]
+        public void TestSetLightState()
+        {
+            DerivedNode node1 = new DerivedNode("NewNewNodeName1");
+            DerivedNode node2 = new DerivedNode("NewNewNodeName2");
+            node1.AddChild(node2);
+
+            node1.SetLightState(null);
+
+            Assert.IsTrue(node1.setLightStateCalled);
+            Assert.IsTrue(node2.setLightStateCalled);
         }
     }
 }

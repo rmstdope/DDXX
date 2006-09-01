@@ -155,6 +155,10 @@
 				RelativePath=".\BlinnPhongShaders.fx"
 				>
 			</File>
+			<File
+				RelativePath=".\PoolEffect.fx"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="HLSL Files"

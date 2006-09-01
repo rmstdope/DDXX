@@ -19,6 +19,10 @@ namespace Dope.DDXX.SceneGraph
             this.name = name;
         }
 
+        protected virtual void SetLightStateNode(LightState state)
+        {
+        }
+
         protected abstract void StepNode();
         protected abstract void RenderNode(IRenderableScene scene);
 
@@ -32,6 +36,11 @@ namespace Dope.DDXX.SceneGraph
         public  INode Parent
         {
             get { return parent; }
+        }
+
+        public List<INode> Children
+        {
+            get { return children; }
         }
 
         public Matrix WorldMatrix
@@ -89,7 +98,16 @@ namespace Dope.DDXX.SceneGraph
             }
         }
 
-        #endregion
+        public void SetLightState(LightState state)
+        {
+            SetLightStateNode(state);
 
+            foreach (INode node in children)
+            {
+                node.SetLightState(state);
+            }
+        }
+
+        #endregion
     }
 }

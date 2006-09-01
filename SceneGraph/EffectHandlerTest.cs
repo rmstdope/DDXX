@@ -28,12 +28,16 @@ namespace Dope.DDXX.SceneGraph
         private EffectHandle worldViewProjectionT;
         private EffectHandle ambientColor;
         private EffectHandle baseTexture;
+        private EffectHandle materialDiffuseColor;
+        private EffectHandle materialSpecularColor;
 
         private Matrix worldMatrix;
         private Matrix viewMatrix;
         private Matrix projMatrix;
         private ColorValue sceneAmbient;
         private ColorValue materialAmbient;
+        private ColorValue materialDiffuse;
+        private ColorValue materialSpecular;
 
         [SetUp]
         public void SetUp()
@@ -54,14 +58,20 @@ namespace Dope.DDXX.SceneGraph
             worldViewProjectionT = EffectHandle.FromString("WorldViewProjectionT");
             ambientColor = EffectHandle.FromString("AmbientColor");
             baseTexture = EffectHandle.FromString("BaseTexture");
+            materialDiffuseColor = EffectHandle.FromString("MaterialDiffuseColor");
+            materialSpecularColor = EffectHandle.FromString("MaterialSpecularColor");
 
             worldMatrix = Matrix.Scaling(1, 3, 5);
             viewMatrix = Matrix.RotationYawPitchRoll(1, 2, 3);
             projMatrix = Matrix.PerspectiveLH(1, 1, 1, 10);
             sceneAmbient = new ColorValue(0.1f, 0.2f, 0.3f, 0.4f);
             materialAmbient = new ColorValue(0.8f, 0.7f, 0.6f, 0.5f);
+            materialDiffuse = new ColorValue(0.81f, 0.71f, 0.61f, 0.51f);
+            materialSpecular = new ColorValue(0.82f, 0.72f, 0.62f, 0.52f);
             material = new Material();
             material.AmbientColor = materialAmbient;
+            material.DiffuseColor = materialDiffuse;
+            material.SpecularColor = materialSpecular;
             modelMaterial = new ModelMaterial(material, texture);
 
             Stub.On(effect).
@@ -105,6 +115,14 @@ namespace Dope.DDXX.SceneGraph
                 Method("GetParameter").
                 With(null, "BaseTexture").
                 Will(Return.Value(null));
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "MaterialDiffuseColor").
+                Will(Return.Value(null));
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "MaterialSpecularColor").
+                Will(Return.Value(null));
             EffectHandler effectHandler = new EffectHandler(effect);
             Assert.AreSame(effect, effectHandler.Effect);
             Assert.AreSame(defaultTechnique, effectHandler.Technique);
@@ -128,6 +146,14 @@ namespace Dope.DDXX.SceneGraph
                 Method("GetParameter").
                 With(null, "BaseTexture").
                 Will(Return.Value(null));
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "MaterialDiffuseColor").
+                Will(Return.Value(null));
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "MaterialSpecularColor").
+                Will(Return.Value(null));
             EffectHandler effectHandler = new EffectHandler(effect);
         }
 
@@ -148,6 +174,14 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(effect).
                 Method("GetParameter").
                 With(null, "BaseTexture").
+                Will(Return.Value(null));
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "MaterialDiffuseColor").
+                Will(Return.Value(null));
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "MaterialSpecularColor").
                 Will(Return.Value(null));
             EffectHandler effectHandler = new EffectHandler(effect);
         }
@@ -170,6 +204,14 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(effect).
                 Method("GetParameter").
                 With(null, "BaseTexture").
+                Will(Return.Value(null));
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "MaterialDiffuseColor").
+                Will(Return.Value(null));
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "MaterialSpecularColor").
                 Will(Return.Value(null));
             EffectHandler effectHandler = new EffectHandler(effect);
 
@@ -201,6 +243,14 @@ namespace Dope.DDXX.SceneGraph
                 Method("GetParameter").
                 With(null, "BaseTexture").
                 Will(Return.Value(baseTexture));
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "MaterialDiffuseColor").
+                Will(Return.Value(materialDiffuseColor));
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "MaterialSpecularColor").
+                Will(Return.Value(materialSpecularColor));
             EffectHandler effectHandler = new EffectHandler(effect);
 
             Expect.Once.On(effect).
@@ -209,6 +259,12 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(effect).
                 Method("SetValue").
                 With(baseTexture, texture);
+            Expect.Once.On(effect).
+                Method("SetValue").
+                With(materialDiffuseColor, materialDiffuse);
+            Expect.Once.On(effect).
+                Method("SetValue").
+                With(materialSpecularColor, materialSpecular);
             effectHandler.SetMaterialConstants(scene, modelMaterial);
         }
     }

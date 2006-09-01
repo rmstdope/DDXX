@@ -53,6 +53,8 @@
     <Compile Include="IRenderableScene.cs" />
     <Compile Include="LightNode.cs" />
     <Compile Include="LightNodeTest.cs" />
+    <Compile Include="LightState.cs" />
+    <Compile Include="LightStateTest.cs" />
     <Compile Include="MeshNode.cs" />
     <Compile Include="MeshNodeTest.cs" />
     <Compile Include="NodeBase.cs" />

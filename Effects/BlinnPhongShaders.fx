@@ -8,6 +8,7 @@
 #include <CommonFunctions.hlsl>
  
 //#define DEBUG_SHOW_NORMALS_AS_COLORS
+//#define DEBUG_SHOW_TANGENTS_AS_COLORS
 //#define DEBUG_SHOW_LIGHTVECTORS_AS_COLORS
 
 struct BlinnPhongInputVS
@@ -47,7 +48,7 @@ CalculateLightVectors(float4 Position,
 	if(LightType == DIRECTIONAL) {
 		output.L = LightDirection;
 	} else if(LightType == POINT) {
-		output.L = LightPosition - Position;
+		output.L = LightPosition[0] - Position;
 	}
 	
 	// Normalize Light and View vectors
@@ -80,7 +81,7 @@ CalculateLightVectors_2(float4 Position,
 	if(LightType == DIRECTIONAL) {
 		output.L = LightDirection;
 	} else if(LightType == POINT) {
-		output.L = LightPosition - Position;
+		output.L = LightPosition[0] - Position;
 	}
 	
 	output.L = output.L;
@@ -116,7 +117,7 @@ GetAttenuation(float4 Position,
 	if(LightType == DIRECTIONAL) {
 		output = float3(0.5f, 0.5f, 0.5f);
 	} else if(LightType == POINT) {
-		float3 lightDir = LightPosition - Position;
+		float3 lightDir = LightPosition[0] - Position;
 		// Make [-LightRange..LightRange] become [0..1]
 		output = (lightDir / LightRange) * 0.5f + 0.5f;
 	}
@@ -151,7 +152,7 @@ GetDiffuseAndSpecular2(float3 normalVector,
 	// Get half vector
 	//halfVector = normalize(eyeVector + lightVector);
 	//float specular = saturate(dot(normalVector, halfVector));
-	light.Specular = pow(specular, Shininess);
+	light.Specular = pow(specular, MaterialShininess);
 	
 	return light;
 }
@@ -230,6 +231,9 @@ BlinnPhongVertexShader_2_0(BlinnPhongInputVS inp,
 #ifdef DEBUG_SHOW_NORMALS_AS_COLORS
 	output.LightVector = mul(vertex.Normal, (float3x3)WorldT);
 #endif
+#ifdef DEBUG_SHOW_TANGENTS_AS_COLORS
+	output.LightVector = mul(vertex.Tangent, (float3x3)WorldT);
+#endif
 #ifdef DEBUG_SHOW_LIGHTVECTORS_AS_COLORS
 		output.LightVector = LightPosition - vertexPosition;
 #endif
@@ -277,36 +281,32 @@ BlinnPhongPixelShader_2_0(BlinnPhongInputPS inp,
 	// Get diffuse and specular components
 	LightComponents light = GetDiffuseAndSpecular2(normal, lightVector, eyeVector);
 	
-	if(LightType == POINT) {
-		att = tex2D(AttenuationTextureXYSampler, inp.AttCoord1.xy).w;
-		att *= tex2D(AttenuationTextureZSampler, inp.AttCoord2.xy).w;
-	}
+	//if(LightType == POINT) {
+	//	att = tex2D(AttenuationTextureXYSampler, inp.AttCoord1.xy).w;
+	//	att *= tex2D(AttenuationTextureZSampler, inp.AttCoord2.xy).w;
+	//}
 	if(useTextures) {
 		float3 tex = tex2D(BaseTextureSampler, inp.TextureCoord.xy).rgb;
 		if(reflectionMapping) {
 			float3 ref = tex2D(ReflectionTextureSampler, inp.TextureCoord.xy).rgb;
-			output.rgb =  (tex * InvReflectionFactor + ref * ReflectionFactor) * (light.Diffuse * DiffuseColor + AmbientColor) + light.Specular * SpecularColor;
+			output.rgb =  (tex * InvReflectionFactor + ref * ReflectionFactor) * (light.Diffuse * (LightDiffuseColor[0] * MaterialDiffuseColor) + AmbientColor) + light.Specular * (LightSpecularColor[0] * MaterialSpecularColor);
 		} else {
-			output.rgb = tex * (light.Diffuse * DiffuseColor + AmbientColor) + light.Specular * SpecularColor;
+			output.rgb = tex * (light.Diffuse * (LightDiffuseColor[0] * MaterialDiffuseColor) + AmbientColor) + light.Specular * (LightSpecularColor[0] * MaterialSpecularColor);
 		}
 	} else {
-		output.rgb = (light.Diffuse * DiffuseColor + AmbientColor) + light.Specular * SpecularColor;
+		output.rgb = (light.Diffuse * (LightDiffuseColor[0] * MaterialDiffuseColor) + AmbientColor) + light.Specular * (LightSpecularColor[0] * MaterialSpecularColor);
 	}
 
-
-	// Lookup mesh texture and modulate it with ambient
-	//if(light.Diffuse > 0.0f) {
-	//output.RGBColor.rgb *= (light.Diffuse + light.Specular);
-	//} else {
-	//	output.RGBColor.rgb = 0;
+	//if(LightType == POINT) {
+	//	output.rgb *= att;
 	//}
-	if(LightType == POINT) {
-		output.rgb *= att;
-	}
 	output.a = 1.0;
 
 	//output.rgb = light.Diffuse;
 #ifdef DEBUG_SHOW_NORMALS_AS_COLORS
+		output.rgb = lightVector;
+#endif
+#ifdef DEBUG_SHOW_TANGENTS_AS_COLORS
 		output.rgb = lightVector;
 #endif
 #ifdef DEBUG_SHOW_LIGHTVECTORS_AS_COLORS
@@ -406,13 +406,13 @@ BlinnPhongPixelShader_1_4(VertexOutputStream_1_4 inp,
 		float4 tex = tex2D(BaseTextureSampler, inp.TextureCoord.xy);
 		if(reflectionMapping) {
 			float3 ref = tex2D(ReflectionTextureSampler, inp.TextureCoord.xy).rgb;
-			output.rgb = (tex.rgb * tex.a + ref * (tex.a - 1)) * light.Diffuse * DiffuseColor + light.Specular * SpecularColor;
-			//output.rgb = (tex * InvReflectionFactor + ref * ReflectionFactor) * light.Diffuse * DiffuseColor + light.Specular * SpecularColor;
+			output.rgb = (tex.rgb * tex.a + ref * (tex.a - 1)) * light.Diffuse * (LightDiffuseColor[0] * MaterialDiffuseColor) + light.Specular * (LightSpecularColor[0] * MaterialSpecularColor);
+			//output.rgb = (tex * InvReflectionFactor + ref * ReflectionFactor) * light.Diffuse * (LightDiffuseColor[0] * MaterialDiffuseColor) + light.Specular * (LightSpecularColor[0] * MaterialSpecularColor);
 		} else {
-			output.rgb = tex * light.Diffuse * DiffuseColor + light.Specular * SpecularColor;
+			output.rgb = tex * light.Diffuse * (LightDiffuseColor[0] * MaterialDiffuseColor) + light.Specular * (LightSpecularColor[0] * MaterialSpecularColor);
 		}
 	} else {
-		output.rgb = light.Diffuse * DiffuseColor + light.Specular * SpecularColor;
+		output.rgb = light.Diffuse * (LightDiffuseColor[0] * MaterialDiffuseColor) + light.Specular * (LightSpecularColor[0] * MaterialSpecularColor);
 	}
 
 
@@ -537,9 +537,9 @@ BlinnPhongPixelShader_1_1_Pass2(VertexOutputStream_1_1_Pass2 inp,
 	LightComponents light = GetDiffuseAndSpecular(normal, lightVector, halfVector, glossiness);
 
 	if(useTextures) {
-		output.rgb = tex2D(BaseTextureSampler, inp.TextureCoord.xy).rgb * light.Diffuse * DiffuseColor + light.Specular * SpecularColor;
+		output.rgb = tex2D(BaseTextureSampler, inp.TextureCoord.xy).rgb * light.Diffuse * (LightDiffuseColor[0] * MaterialDiffuseColor) + light.Specular * (LightSpecularColor[0] * MaterialSpecularColor);
 	} else {
-		output.rgb = light.Diffuse * DiffuseColor + light.Specular * SpecularColor;
+		output.rgb = light.Diffuse * (LightDiffuseColor[0] * MaterialDiffuseColor) + light.Specular * (LightSpecularColor[0] * MaterialSpecularColor);
 	}
 
 	output.a = 1.0;

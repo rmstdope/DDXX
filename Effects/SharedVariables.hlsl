@@ -29,20 +29,22 @@ shared float3 LightDirection;
  * Diffuse Light and Material color
  * Used for all types of lights
  */
-shared float4 DiffuseColor;
+shared float4 LightDiffuseColor[5];
+shared float4 MaterialDiffuseColor;
 
 /** 
  * Specular Light and Material color
  * Used for all types of lights
  */
-shared float4 SpecularColor;
-shared float Shininess;
+shared float4 LightSpecularColor[5];
+shared float4 MaterialSpecularColor;
+shared float MaterialShininess;
 
 /** 
  * Light position
  * Used for point lights and spot lights
  */
-shared float3 LightPosition;
+shared float4 LightPosition[5];
 
 /** 
  * Light range

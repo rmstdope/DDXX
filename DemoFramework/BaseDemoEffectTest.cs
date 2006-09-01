@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Dope.DDXX.Graphics;
 using NUnit.Framework;
+using NMock2;
+using Microsoft.DirectX.Direct3D;
+using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -44,10 +46,16 @@ namespace Dope.DDXX.DemoFramework
     [TestFixture]
     public class BaseDemoEffectTest : D3DMockTest
     {
+        private IEffect poolEffect;
+        private EffectHandle handle;
+
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
+
+            D3DDriver.EffectFactory = new EffectFactory(null, factory);
+            poolEffect = mockery.NewMock<IEffect>();
         }
 
         [TearDown]
@@ -62,6 +70,14 @@ namespace Dope.DDXX.DemoFramework
             TestEffect effect = new TestEffect(0.0f, 10.0f);
             Assert.IsTrue(effect.IsDeviceEqual(null));
 
+            Expect.Once.On(factory).
+                Method("CreateEffectFromFile").
+                WithAnyArguments().
+                Will(Return.Value(poolEffect));
+            handle = EffectHandle.FromString("Handle");
+            Stub.On(poolEffect).Method("GetParameter").
+                WithAnyArguments().
+                Will(Return.Value(handle));
             effect.Initialize();
 
             Assert.IsTrue(effect.IsDeviceEqual(D3DDriver.GetInstance().GetDevice()));

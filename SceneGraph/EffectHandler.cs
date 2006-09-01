@@ -18,6 +18,8 @@ namespace Dope.DDXX.SceneGraph
 
         private EffectHandle ambientColor;
         private EffectHandle baseTexture;
+        private EffectHandle materialDiffuseColor;
+        private EffectHandle materialSpecularColor;
 
         public EffectHandler(IEffect effect)
         {
@@ -29,6 +31,8 @@ namespace Dope.DDXX.SceneGraph
 
             ambientColor = effect.GetParameter(null, "AmbientColor");
             baseTexture = effect.GetParameter(null, "BaseTexture");
+            materialDiffuseColor = effect.GetParameter(null, "MaterialDiffuseColor");
+            materialSpecularColor = effect.GetParameter(null, "MaterialSpecularColor");
 
             if (worldT == null || worldViewProjT == null)
                 throw new DDXXException("Invalid effect. Not all mandatory parameters are present.");
@@ -58,6 +62,10 @@ namespace Dope.DDXX.SceneGraph
                 effect.SetValue(ambientColor, ColorOperator.Modulate(scene.AmbientColor, material.Material.AmbientColor));
             if (baseTexture != null)
                 effect.SetValue(baseTexture, material.DiffuseTexture);
+            if (materialDiffuseColor != null)
+                effect.SetValue(materialDiffuseColor, material.Material.DiffuseColor);
+            if (materialSpecularColor != null)
+                effect.SetValue(materialSpecularColor, material.Material.SpecularColor);
         }
 
         #endregion

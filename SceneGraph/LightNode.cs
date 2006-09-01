@@ -5,7 +5,7 @@ using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.SceneGraph
 {
-    class LightNode : NodeBase
+    public class LightNode : NodeBase
     {
         private Light light;
 
@@ -23,12 +23,16 @@ namespace Dope.DDXX.SceneGraph
 
         protected override void StepNode()
         {
-            throw new Exception("The method or operation is not implemented.");
         }
 
         protected override void RenderNode(IRenderableScene scene)
         {
-            throw new Exception("The method or operation is not implemented.");
+        }
+
+
+        protected override void SetLightStateNode(LightState state)
+        {
+            state.NewState(WorldState.Position, Light.DiffuseColor, Light.SpecularColor);
         }
     }
 }

@@ -20,8 +20,6 @@ namespace Dope.DDXX.DemoFramework
         {
             StartTime = startTime;
             EndTime = endTime;
-
-            scene = new Scene();
         }
 
         protected IDevice Device
@@ -76,6 +74,7 @@ namespace Dope.DDXX.DemoFramework
             device = D3DDriver.GetInstance().GetDevice();
             effectFactory = D3DDriver.EffectFactory;
             meshFactory = D3DDriver.MeshFactory;
+            scene = new Scene();
         }
 
         #endregion
