@@ -4,12 +4,9 @@ using System.Text;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public interface IDemoEffect : IRegisterable
+    public interface IDemoPostEffect : IRegisterable
     {
-        void Step();
-
-        void Render();
-
         void Initialize();
+        void Render();
     }
 }

@@ -57,8 +57,8 @@ namespace EngineTest
 
         private static void RegisterEffects(DemoExecuter executer)
         {
-            //TestEffect effect = new TestEffect(0.0f, 10.0f);
-            //executer.Register(0, effect);
+            //TestEffect postEffect = new TestEffect(0.0f, 10.0f);
+            //executer.Register(0, postEffect);
             Assembly assembly = Assembly.GetExecutingAssembly();
             foreach (Type t in assembly.GetTypes())
             {

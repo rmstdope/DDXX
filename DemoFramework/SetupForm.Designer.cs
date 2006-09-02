@@ -214,7 +214,7 @@ namespace Dope.DDXX.DemoFramework
             this.groupBox3.Size = new System.Drawing.Size(264, 87);
             this.groupBox3.TabIndex = 5;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "and give me the following level of effect...";
+            this.groupBox3.Text = "and give me the following level of postEffect...";
             // 
             // effectBar
             // 
