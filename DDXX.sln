@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Graphics", "Graphics\Graphi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Effects", "Effects\Effects.vcproj", "{31EADBD1-17AA-4177-9809-6A8FE6CF30D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoEffects", "DemoEffects\DemoEffects.csproj", "{971A8760-50EE-4932-99F3-D226081FBD53}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -154,6 +156,16 @@ Global
 		{31EADBD1-17AA-4177-9809-6A8FE6CF30D8}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{31EADBD1-17AA-4177-9809-6A8FE6CF30D8}.Release|Win32.ActiveCfg = Release|Win32
 		{31EADBD1-17AA-4177-9809-6A8FE6CF30D8}.Release|Win32.Build.0 = Release|Win32
+		{971A8760-50EE-4932-99F3-D226081FBD53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{971A8760-50EE-4932-99F3-D226081FBD53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{971A8760-50EE-4932-99F3-D226081FBD53}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{971A8760-50EE-4932-99F3-D226081FBD53}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{971A8760-50EE-4932-99F3-D226081FBD53}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{971A8760-50EE-4932-99F3-D226081FBD53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{971A8760-50EE-4932-99F3-D226081FBD53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{971A8760-50EE-4932-99F3-D226081FBD53}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{971A8760-50EE-4932-99F3-D226081FBD53}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{971A8760-50EE-4932-99F3-D226081FBD53}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

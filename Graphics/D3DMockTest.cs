@@ -40,11 +40,8 @@ namespace Dope.DDXX.Graphics
                 Will(Return.Value(device));
             Stub.On(factory).
                 Method("CreateTexture").
-                WithAnyArguments().
+                With(device, displayMode.Width, displayMode.Height, 1, Usage.RenderTarget, displayMode.Format, Pool.Default).
                 Will(Return.Value(texture));
-            Stub.On(device).
-                GetProperty("DisplayMode").
-                Will(Return.Value(displayMode));
             Stub.On(manager).
                 Method("CurrentDisplayMode").
                 With(0).

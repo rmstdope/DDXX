@@ -50,7 +50,7 @@ namespace Dope.DDXX.Graphics
 #if __DEBUG__
             flags |= (ShaderFlags.Debug | ShaderFlags.SkipOptimization);
 #endif
-            IEffect effect = factory.CreateEffectFromFile(device, file, null, "", flags, pool);
+            IEffect effect = factory.EffectFromFile(device, file, null, "", flags, pool);
             needle.effect = effect;
             files.Add(needle);
             return effect;

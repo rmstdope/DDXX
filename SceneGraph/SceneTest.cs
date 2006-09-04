@@ -56,7 +56,7 @@ namespace Dope.DDXX.SceneGraph
         public void TestConstructorOK()
         {
             Expect.Once.On(factory).
-                Method("CreateEffectFromFile").
+                Method("EffectFromFile").
                 WithAnyArguments().
                 Will(Return.Value(effect));
             Expect.Once.On(effect).Method("GetParameter").
@@ -79,7 +79,7 @@ namespace Dope.DDXX.SceneGraph
         public void TestConstructorFail1()
         {
             Expect.Once.On(factory).
-                Method("CreateEffectFromFile").
+                Method("EffectFromFile").
                 WithAnyArguments().
                 Will(Return.Value(effect));
             Expect.Once.On(effect).Method("GetParameter").
@@ -102,7 +102,7 @@ namespace Dope.DDXX.SceneGraph
         public void TestConstructorFail2()
         {
             Expect.Once.On(factory).
-                Method("CreateEffectFromFile").
+                Method("EffectFromFile").
                 WithAnyArguments().
                 Will(Return.Value(effect));
             Expect.Once.On(effect).Method("GetParameter").
@@ -125,7 +125,7 @@ namespace Dope.DDXX.SceneGraph
         public void TestConstructorFail3()
         {
             Expect.Once.On(factory).
-                Method("CreateEffectFromFile").
+                Method("EffectFromFile").
                 WithAnyArguments().
                 Will(Return.Value(effect));
             Expect.Once.On(effect).Method("GetParameter").
@@ -148,7 +148,7 @@ namespace Dope.DDXX.SceneGraph
         public void TestConstructorFail4()
         {
             Expect.Once.On(factory).
-                Method("CreateEffectFromFile").
+                Method("EffectFromFile").
                 WithAnyArguments().
                 Will(Return.Value(effect));
             Expect.Once.On(effect).Method("GetParameter").

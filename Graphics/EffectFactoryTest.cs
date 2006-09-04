@@ -39,7 +39,7 @@ namespace Dope.DDXX.Graphics
         public void CreateFromFileTest()
         {
             Expect.Once.On(factory).
-                Method("CreateEffectFromFile").
+                Method("EffectFromFile").
                 WithAnyArguments().
                 Will(Return.Value(effect1));
             IEffect newEffect1 = effectFactory.CreateFromFile("fileName");
@@ -48,7 +48,7 @@ namespace Dope.DDXX.Graphics
             Assert.AreSame(newEffect1, newEffect2);
 
             Expect.Once.On(factory).
-                Method("CreateEffectFromFile").
+                Method("EffectFromFile").
                 WithAnyArguments().
                 Will(Return.Value(effect2));
             IEffect newEffect3 = effectFactory.CreateFromFile("fileName2");

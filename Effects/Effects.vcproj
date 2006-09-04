@@ -159,6 +159,10 @@
 				RelativePath=".\PoolEffect.fx"
 				>
 			</File>
+			<File
+				RelativePath=".\PostEffects.fx"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="HLSL Files"

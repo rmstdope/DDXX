@@ -52,6 +52,7 @@ namespace Dope.DDXX.SceneGraph
 
         public void SetMeshConstants(IRenderableScene scene, IRenderableMesh node)
         {
+            effect.Technique = technique;
             effect.SetValueTranspose(worldT, node.WorldMatrix);
             effect.SetValueTranspose(worldViewProjT, node.WorldMatrix * scene.ActiveCamera.ViewMatrix * scene.ActiveCamera.ProjectionMatrix);
         }

@@ -16,17 +16,18 @@ namespace Dope.DDXX.DemoFramework
 {
     public class DemoExecuter
     {
-        SoundDriver soundDriver;
-        FMOD.Sound sound;
-        FMOD.Channel channel;
+        private SoundDriver soundDriver;
+        private FMOD.Sound sound;
+        private FMOD.Channel channel;
 
-        IDevice device;
-        ITexture backBuffer;
+        private IDevice device;
+        private ITexture backBuffer;
+        private PostProcessor postProcessor;
 
-        InputDriver inputDriver;
+        private InputDriver inputDriver;
 
-        List<Track> tracks = new List<Track>();
-        int activeTrack = 0;
+        private List<Track> tracks = new List<Track>();
+        private int activeTrack = 0;
 
         public float StartTime
         {
@@ -48,6 +49,11 @@ namespace Dope.DDXX.DemoFramework
                         if (effect.EndTime > t)
                             t = effect.EndTime;
                     }
+                    foreach (IDemoPostEffect postEffect in track.PostEffects)
+                    {
+                        if (postEffect.EndTime > t)
+                            t = postEffect.EndTime;
+                    }
                 }
                 return t;
             }
@@ -63,6 +69,7 @@ namespace Dope.DDXX.DemoFramework
 
         public DemoExecuter()
         {
+            postProcessor = new PostProcessor();
         }
 
         public void Initialize(string song)
@@ -73,11 +80,17 @@ namespace Dope.DDXX.DemoFramework
 
             InitializeInput();
 
+            postProcessor.Initialize(device);
+
             foreach (Track track in tracks)
             {
                 foreach (IDemoEffect effect in track.Effects)
                 {
                     effect.Initialize();
+                }
+                foreach (IDemoPostEffect postEffect in track.PostEffects)
+                {
+                    postEffect.Initialize(postProcessor);
                 }
             }
         }
@@ -90,7 +103,7 @@ namespace Dope.DDXX.DemoFramework
         private void InitializeGraphics()
         {
             device = D3DDriver.GetInstance().GetDevice();
-            backBuffer = D3DDriver.Factory.CreateTexture(device, device.PresentationParameters.BackBufferWidth, device.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget, device.PresentationParameters.BackBufferFormat, Pool.Default);
+            backBuffer = D3DDriver.TextureFactory.CreateFullsizeRenderTarget();
         }
 
         private void InitializeSound(string song)
@@ -110,6 +123,14 @@ namespace Dope.DDXX.DemoFramework
             tracks[track].Register(effect);
         }
 
+        public void Register(int track, IDemoPostEffect postEffect)
+        {
+            while (NumTracks <= track)
+            {
+                tracks.Add(new Track());
+            }
+            tracks[track].Register(postEffect);
+        }
 
         internal void Step()
         {
@@ -145,7 +166,9 @@ namespace Dope.DDXX.DemoFramework
         {
             RenderActiveTrack();
 
-            ISurface source = backBuffer.GetSurfaceLevel(0);
+            //postProcessor.DebugWriteAllTextures();
+
+            ISurface source = postProcessor.OutputTexture.GetSurfaceLevel(0);
             ISurface destination = device.GetRenderTarget(0);
             device.StretchRectangle(source, new Rectangle(0, 0, source.Description.Width, source.Description.Height),
                                     destination, new Rectangle(0, 0, destination.Description.Width, destination.Description.Height),
@@ -159,11 +182,11 @@ namespace Dope.DDXX.DemoFramework
             ISurface originalTarget = device.GetRenderTarget(0);
             device.SetRenderTarget(0, backBuffer.GetSurfaceLevel(0));
             device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Blue, 1.0f, 0);
+            postProcessor.StartFrame(backBuffer);
 
             if (tracks.Count != 0)
             {
                 IDemoEffect[] activeEffects = tracks[activeTrack].GetEffects(Time.StepTime);
-
                 if (activeEffects.Length != 0)
                 {
                     device.BeginScene();
@@ -172,6 +195,12 @@ namespace Dope.DDXX.DemoFramework
                         effect.Render();
                     }
                     device.EndScene();
+                }
+
+                IDemoPostEffect[] activePostEffects = tracks[activeTrack].GetPostEffects(Time.StepTime);
+                foreach (IDemoPostEffect postEffect in activePostEffects)
+                {
+                    postEffect.Render();
                 }
             }
 

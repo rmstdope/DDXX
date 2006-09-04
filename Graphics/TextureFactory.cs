@@ -22,11 +22,13 @@ namespace Dope.DDXX.Graphics
         private IGraphicsFactory factory;
         private IDevice device;
         private List<FileEntry> files = new List<FileEntry>();
+        private PresentParameters presentParameters;
 
-        public TextureFactory(IDevice device, IGraphicsFactory factory)
+        public TextureFactory(IDevice device, IGraphicsFactory factory, PresentParameters presentParameters)
         {
             this.device = device;
             this.factory = factory;
+            this.presentParameters = presentParameters;
         }
 
         public ITexture CreateFromFile(string file)
@@ -48,6 +50,16 @@ namespace Dope.DDXX.Graphics
             files.Add(needle);
             return texture;
 
+        }
+
+        public ITexture CreateFullsizeRenderTarget()
+        {
+            return factory.CreateTexture(device, presentParameters.BackBufferWidth, presentParameters.BackBufferHeight, 1, Usage.RenderTarget, presentParameters.BackBufferFormat, Pool.Default);
+        }
+
+        public ITexture CreateFullsizeRenderTarget(Format format)
+        {
+            return factory.CreateTexture(device, presentParameters.BackBufferWidth, presentParameters.BackBufferHeight, 1, Usage.RenderTarget, format, Pool.Default);
         }
     }
 }

@@ -64,6 +64,10 @@
     <Compile Include="TestEffect.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DemoEffects\DemoEffects.csproj">
+      <Project>{971A8760-50EE-4932-99F3-D226081FBD53}</Project>
+      <Name>DemoEffects</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DemoFramework\DemoFramework.csproj">
       <Project>{DBD3FD0B-0B65-4626-BABA-3C46457B1185}</Project>
       <Name>DemoFramework</Name>

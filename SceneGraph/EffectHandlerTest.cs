@@ -190,6 +190,9 @@ namespace Dope.DDXX.SceneGraph
         public void SetMeshConstantsTest()
         {
             Expect.Once.On(effect).
+                SetProperty("Technique").
+                To(Is.Anything);
+            Expect.Once.On(effect).
                 Method("GetParameter").
                 With(null, "WorldT").
                 Will(Return.Value(worldT));

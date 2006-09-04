@@ -11,7 +11,6 @@ namespace Dope.DDXX.DemoFramework
         private float startTime;
         private float endTime;
         private IDevice device;
-        //private IFactory factory;
         private EffectFactory effectFactory;
         private ModelFactory meshFactory;
         private Scene scene;
@@ -26,11 +25,6 @@ namespace Dope.DDXX.DemoFramework
         {
             get { return device; }
         }
-
-        //protected IFactory Factory
-        //{
-        //    get { return factory; }
-        //}
 
         protected EffectFactory EffectFactory
         {
@@ -73,7 +67,7 @@ namespace Dope.DDXX.DemoFramework
         {
             device = D3DDriver.GetInstance().GetDevice();
             effectFactory = D3DDriver.EffectFactory;
-            meshFactory = D3DDriver.MeshFactory;
+            meshFactory = D3DDriver.ModelFactory;
             scene = new Scene();
         }
 

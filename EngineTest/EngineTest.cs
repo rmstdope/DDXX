@@ -7,10 +7,11 @@ using System.Data;
 using Dope.DDXX.DemoFramework;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using Dope.DDXX.Graphics;
-using Dope.DDXX.Utility;
 using System.Reflection;
 using System.Text;
+using Dope.DDXX.Graphics;
+using Dope.DDXX.Utility;
+using Dope.DDXX.DemoEffects;
 
 namespace EngineTest
 {
@@ -83,6 +84,8 @@ namespace EngineTest
                     executer.Register(0, demoEffect);
                 }
             }
+            MonochromePostEffect postEffect = new MonochromePostEffect(0.0f, 10.0f);
+            executer.Register(0, postEffect);
         }
 
         private static void SetupFramework(SetupDialog setup, out DemoWindow window, out DemoExecuter executer, out DeviceDescription desc)

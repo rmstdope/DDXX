@@ -22,6 +22,23 @@ namespace Dope.DDXX.DemoFramework
         private Dope.DDXX.Sound.ISoundFactory sFactory;
         private ISoundSystem system;
 
+        private void ExpectPostProcessorInitialize()
+        {
+            IEffect effect = mockery.NewMock<IEffect>();
+            Expect.Once.On(factory).
+                Method("EffectFromFile").
+                With(Is.EqualTo(device), Is.EqualTo("../../../Effects/PostEffects.fxo"), Is.Null, Is.EqualTo(""), Is.EqualTo(ShaderFlags.None), Is.Anything).
+                Will(Return.Value(effect));
+            Expect.Once.On(effect).
+                Method("GetTechnique").
+                With("Monochrome").
+                Will(Return.Value(EffectHandle.FromString("")));
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "SourceTexture").
+                Will(Return.Value(EffectHandle.FromString("")));
+        }
+
         [SetUp]
         public override void SetUp()
         {
@@ -41,6 +58,9 @@ namespace Dope.DDXX.DemoFramework
 
             DeviceDescription desc = new DeviceDescription();
             desc.deviceType = DeviceType.Hardware;
+            desc.width = displayMode.Width;
+            desc.height = displayMode.Height;
+            desc.colorFormat = displayMode.Format;
             D3DDriver.GetInstance().Initialize(null, desc);
 
             executer = new DemoExecuter();
@@ -56,7 +76,7 @@ namespace Dope.DDXX.DemoFramework
         public void TestTracks()
         {
             IDemoEffect t0e1 = CreateMockEffect(0, 10);
-            IDemoEffect t1e1 = CreateMockEffect(5, 15);
+            IDemoPostEffect t1e1 = CreateMockPostEffect(5, 15);
 
             Assert.AreEqual(0, executer.NumTracks);
             executer.Register(0, t0e1);
@@ -103,20 +123,17 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
+        [ExpectedException(typeof(DDXXException))]
         public void TestInitializeFail1()
         {
             Expect.Once.On(system).
                 Method("GetVersion").
                 Will(Return.Value(FMOD.RESULT.ERR_VERSION));
-            try
-            {
-                executer.Initialize("");
-                Assert.Fail();
-            }
-            catch (DDXXException) { }
+            executer.Initialize("");
         }
 
         [Test]
+        [ExpectedException(typeof(DDXXException))]
         public void TestInitializeFail2()
         {
             Expect.Once.On(system).
@@ -128,12 +145,7 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(system).
                 Method("CreateSound").
                 Will(Return.Value(FMOD.RESULT.ERR_VERSION));
-            try
-            {
-                executer.Initialize("test.mp3");
-                Assert.Fail();
-            }
-            catch (DDXXException) { }
+            executer.Initialize("test.mp3");
         }
 
         [Test]
@@ -145,6 +157,8 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(system).
                 Method("Init").
                 Will(Return.Value(FMOD.RESULT.OK));
+            ExpectPostProcessorInitialize();
+
             executer.Initialize("");
         }
 
@@ -157,6 +171,8 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(system).
                 Method("Init").
                 Will(Return.Value(FMOD.RESULT.OK));
+            ExpectPostProcessorInitialize();
+
             executer.Initialize(null);
         }
 
@@ -172,31 +188,42 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(system).
                 Method("CreateSound").
                 Will(Return.Value(FMOD.RESULT.OK));
+            ExpectPostProcessorInitialize();
+
             executer.Initialize("test.mp3");
         }
 
         [Test]
-        public void TestInitializeOKEffect()
+        public void TestInitializeOKEffects()
         {
             IDemoEffect effect1 = CreateMockEffect(1, 2);
             executer.Register(0, effect1);
             IDemoEffect effect2 = CreateMockEffect(1, 2);
             executer.Register(100, effect2);
+            IDemoPostEffect postEffect = CreateMockPostEffect(1, 2);
+            executer.Register(1, postEffect);
 
+            // SoundDriver
             Expect.Once.On(system).
                 Method("GetVersion").
                 Will(Return.Value(FMOD.RESULT.OK));
             Expect.Once.On(system).
                 Method("Init").
                 Will(Return.Value(FMOD.RESULT.OK));
+
+            ExpectPostProcessorInitialize();
+
+            // Effects
             Expect.Once.On(effect1).
                 Method("Initialize");
             Expect.Once.On(effect2).
                 Method("Initialize");
+            Expect.Once.On(postEffect).
+                Method("Initialize").
+                With(Is.NotNull);
 
             executer.Initialize(null);
         }
-
 
         [Test]
         public void TestRegister()
@@ -210,14 +237,21 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual(0.0f, executer.StartTime);
             Assert.AreEqual(2.0f, executer.EndTime);
 
-            IDemoEffect t10e1 = CreateMockEffect(5, 100);
-            executer.Register(0, t10e1);
+            IDemoEffect t0e2 = CreateMockEffect(5, 100);
+            executer.Register(0, t0e2);
 
             Assert.AreEqual(0.0f, executer.StartTime);
             Assert.AreEqual(100.0f, executer.EndTime);
+
+            IDemoPostEffect t0e3 = CreateMockPostEffect(99, 101);
+            executer.Register(0, t0e3);
+
+            Assert.AreEqual(0.0f, executer.StartTime);
+            Assert.AreEqual(101.0f, executer.EndTime);
         }
 
         [Test]
+        [ExpectedException(typeof(DDXXException))]
         public void TestRunSongFail()
         {
             TestInitializeOKSong();
@@ -226,12 +260,7 @@ namespace Dope.DDXX.DemoFramework
                 Method("PlaySound").
                 Will(Return.Value(FMOD.RESULT.ERR_VERSION));
 
-            try
-            {
-                executer.Run();
-                Assert.Fail();
-            }
-            catch (DDXXException) { }
+            executer.Run();
         }
 
         [Test]
@@ -306,7 +335,7 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
-        public void TestRenderOneTrack()
+        public void TestRenderOneTrack1()
         {
             TestInitializeOKNoSong1();
 
@@ -334,6 +363,42 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(effect).
                 Method("Render");
             executer.Register(0, effect);
+            executer.Render();
+        }
+
+        [Test]
+        public void TestRenderOneTrack2()
+        {
+            TestInitializeOKNoSong1();
+
+            Expect.Once.On(device).
+                Method("Clear").
+                With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Blue, 1.0f, 0);
+            Expect.Once.On(device).
+                Method("BeginScene");
+            Expect.Exactly(2).On(device).
+                Method("GetRenderTarget").
+                With(0).
+                Will(Return.Value(surface));
+            Expect.Exactly(2).On(device).
+                Method("SetRenderTarget").
+                With(0, surface);
+            Expect.Once.On(device).
+                Method("EndScene");
+            Expect.Once.On(device).
+                Method("StretchRectangle");
+            Expect.Once.On(device).
+                Method("Present");
+
+            Time.CurrentTime = 5.0f;
+            IDemoEffect effect = CreateMockEffect(0, 10.0f);
+            IDemoPostEffect postEffect = CreateMockPostEffect(0, 10.0f);
+            Expect.Once.On(effect).
+                Method("Render");
+            Expect.Once.On(postEffect).
+                Method("Render");
+            executer.Register(0, effect);
+            executer.Register(0, postEffect);
             executer.Render();
         }
 

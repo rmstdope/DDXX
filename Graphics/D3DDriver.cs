@@ -47,7 +47,6 @@ namespace Dope.DDXX.Graphics
 
         public static IGraphicsFactory Factory
         {
-            get { return factory; }
             set { factory = value; }
         }
 
@@ -57,10 +56,16 @@ namespace Dope.DDXX.Graphics
             set { effectFactory = value; }
         }
 
-        public static ModelFactory MeshFactory
+        public static ModelFactory ModelFactory
         {
             get { return meshFactory; }
             set { meshFactory = value; }
+        }
+
+        public static TextureFactory TextureFactory
+        {
+            get { return textureFactory; }
+            set { textureFactory = value; }
         }
 
         public static D3DDriver GetInstance()
@@ -83,7 +88,7 @@ namespace Dope.DDXX.Graphics
             device = factory.CreateDevice(0, desc.deviceType, control, createFlags, present);
 
             effectFactory = new EffectFactory(device, factory);
-            textureFactory = new TextureFactory(device, factory);
+            textureFactory = new TextureFactory(device, factory, present);
             meshFactory = new ModelFactory(device, factory, textureFactory);
         }
 

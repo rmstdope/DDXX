@@ -67,7 +67,7 @@ namespace Dope.DDXX.Graphics
             mockery = new Mockery();
             graphicsFactory = mockery.NewMock<IGraphicsFactory>();
             mesh = mockery.NewMock<IMesh>();
-            textureFactory = new TextureFactory(null, graphicsFactory);
+            textureFactory = new TextureFactory(null, graphicsFactory, new PresentParameters());
             modelFactory = new ModelFactory(null, graphicsFactory, textureFactory);
             Stub.On(mesh).
                 GetProperty("NumberFaces").

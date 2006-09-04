@@ -52,7 +52,7 @@ namespace Dope.DDXX.Graphics
             return MeshAdapter.Box(((DeviceAdapter)device).DXDevice, width, height, depth);
         }
 
-        public IEffect CreateEffectFromFile(IDevice device, string sourceDataFile, Include includeFile, string skipConstants, ShaderFlags flags, EffectPool pool)
+        public IEffect EffectFromFile(IDevice device, string sourceDataFile, Include includeFile, string skipConstants, ShaderFlags flags, EffectPool pool)
         {
             return EffectAdapter.FromFile(((DeviceAdapter)device).DXDevice, sourceDataFile, includeFile, skipConstants, flags, pool);
         }

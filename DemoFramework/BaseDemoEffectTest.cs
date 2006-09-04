@@ -71,7 +71,7 @@ namespace Dope.DDXX.DemoFramework
             Assert.IsTrue(effect.IsDeviceEqual(null));
 
             Expect.Once.On(factory).
-                Method("CreateEffectFromFile").
+                Method("EffectFromFile").
                 WithAnyArguments().
                 Will(Return.Value(poolEffect));
             handle = EffectHandle.FromString("Handle");

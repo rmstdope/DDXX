@@ -6,7 +6,7 @@ namespace Dope.DDXX.DemoFramework
 {
     public interface IDemoPostEffect : IRegisterable
     {
-        void Initialize();
+        void Initialize(PostProcessor postProcessor);
         void Render();
     }
 }
