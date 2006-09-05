@@ -47,6 +47,7 @@ namespace Dope.DDXX.Graphics
 
         public static IGraphicsFactory Factory
         {
+            get { return factory; }
             set { factory = value; }
         }
 

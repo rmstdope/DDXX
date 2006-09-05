@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
@@ -15,6 +16,8 @@ namespace EngineTest
     {
         private MeshNode mesh;
         private LightNode light;
+        private ISprite sprite;
+        private ITexture texture;
 
         public TestEffect(float startTime, float endTime) 
             : base(startTime, endTime)
@@ -43,6 +46,9 @@ namespace EngineTest
             camera.WorldState.MoveForward(-20.0f);
             Scene.AddNode(camera);
             Scene.ActiveCamera = camera;
+
+            texture = D3DDriver.TextureFactory.CreateFromFile("../../Data/wings.bmp");
+            sprite = D3DDriver.Factory.CreateSprite(Device);
         }
 
         public override void StartTimeUpdated()
@@ -65,7 +71,16 @@ namespace EngineTest
 
         public override void Render()
         {
+            IDevice device = D3DDriver.GetInstance().GetDevice();
             Scene.Render();
+            sprite.Begin(SpriteFlags.AlphaBlend);
+            //device.RenderState.AlphaBlendEnable = true;
+            //device.RenderState.AlphaBlendOperation = BlendOperation.Add;
+            //device.RenderState.AlphaSourceBlend = Blend.BlendFactor;
+            //device.RenderState.AlphaDestinationBlend = Blend.InvBlendFactor;
+            //device.RenderState.BlendFactor = Color.FromArgb(128, 128, 128, 128);
+            sprite.Draw2D(texture, Rectangle.Empty, SizeF.Empty, new PointF(400.0f, 300.0f), Color.FromArgb(80,255,255,255));
+            sprite.End();
         }
     }
 }

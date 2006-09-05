@@ -62,6 +62,11 @@ namespace Dope.DDXX.Graphics
             return TextureAdapter.FromFile(((DeviceAdapter)device).DXDevice, srcFile, width, height, mipLevels, usage, format, pool, filter, mipFilter, colorKey);
         }
 
+        public ISprite CreateSprite(IDevice device)
+        {
+            return new SpriteAdapter(((DeviceAdapter)device).DXDevice);
+        }
+
         #endregion
     }
 }

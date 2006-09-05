@@ -191,7 +191,7 @@ namespace Dope.DDXX.SceneGraph
         {
             Expect.Once.On(effect).
                 SetProperty("Technique").
-                To(Is.Anything);
+                To(defaultTechnique);
             Expect.Once.On(effect).
                 Method("GetParameter").
                 With(null, "WorldT").
