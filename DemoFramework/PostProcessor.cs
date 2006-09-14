@@ -119,6 +119,8 @@ namespace Dope.DDXX.DemoFramework
             CustomVertex.TransformedTextured[] vertices = new CustomVertex.TransformedTextured[4];
             float fromScale = GetScale(source);
             float toScale = fromScale * effect.GetValueFloat(effect.GetAnnotation(effect.GetPass(technique, pass), "Scale"));
+            if (toScale > 1.0f)
+                throw new DDXXException("Can not scale larger than back buffer size");
             int height = device.PresentationParameters.BackBufferHeight;
             int width = device.PresentationParameters.BackBufferWidth;
             vertices = new CustomVertex.TransformedTextured[4];

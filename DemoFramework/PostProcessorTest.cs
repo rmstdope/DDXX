@@ -135,33 +135,37 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestUpSample()
         {
+            TestDownSample();
+            mockery.VerifyAllExpectationsHaveBeenMet();
+
             CustomVertex.TransformedTextured[] vertices = new CustomVertex.TransformedTextured[4];
             vertices[0] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, -0.5f, 1.0f, 1.0f), 0, 0);
-            vertices[1] = new CustomVertex.TransformedTextured(new Vector4(200 - 0.5f, -0.5f, 1.0f, 1.0f), 1, 0);
-            vertices[2] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, 100 - 0.5f, 1.0f, 1.0f), 0, 1);
-            vertices[3] = new CustomVertex.TransformedTextured(new Vector4(200 - 0.5f, 100 - 0.5f, 1.0f, 1.0f), 1, 1);
+            vertices[1] = new CustomVertex.TransformedTextured(new Vector4(400 - 0.5f, -0.5f, 1.0f, 1.0f), 0.5f, 0);
+            vertices[2] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, 200 - 0.5f, 1.0f, 1.0f), 0, 0.5f);
+            vertices[3] = new CustomVertex.TransformedTextured(new Vector4(400 - 0.5f, 200 - 0.5f, 1.0f, 1.0f), 0.5f, 0.5f);
+            SetupPostEffect(fullsizeTexture1, "UpSample4x", vertices, 2.0f);
+            postProcessor.Process("UpSample4x", TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_2);
+            Assert.AreEqual(TextureID.FULLSIZE_TEXTURE_2, postProcessor.OutputTextureID);
+
+            vertices[0] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, -0.5f, 1.0f, 1.0f), 0, 0);
+            vertices[1] = new CustomVertex.TransformedTextured(new Vector4(400 - 0.5f, -0.5f, 1.0f, 1.0f), 1, 0);
+            vertices[2] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, 200 - 0.5f, 1.0f, 1.0f), 0, 1);
+            vertices[3] = new CustomVertex.TransformedTextured(new Vector4(400 - 0.5f, 200 - 0.5f, 1.0f, 1.0f), 1, 1);
+            SetupPostEffect(fullsizeTexture1, "Monochrome", vertices, 1.0f);
+            postProcessor.Process("Monochrome", TextureID.FULLSIZE_TEXTURE_2, TextureID.FULLSIZE_TEXTURE_1);
+            Assert.AreEqual(TextureID.FULLSIZE_TEXTURE_1, postProcessor.OutputTextureID);
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestUpSampleFail()
+        {
+            CustomVertex.TransformedTextured[] vertices = new CustomVertex.TransformedTextured[4];
 
             TestInitializeOK();
             postProcessor.StartFrame(startTexture);
-            SetupPostEffect(startTexture, "DownSample4x", vertices, 0.5f);
-            postProcessor.Process("DownSample4x", TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1);
-            Assert.AreSame(fullsizeTexture1, postProcessor.OutputTexture);
-            Assert.AreEqual(TextureID.FULLSIZE_TEXTURE_1, postProcessor.OutputTextureID);
-
-            vertices[0] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, -0.5f, 1.0f, 1.0f), 0, 0);
-            vertices[1] = new CustomVertex.TransformedTextured(new Vector4(100 - 0.5f, -0.5f, 1.0f, 1.0f), 0.5f, 0);
-            vertices[2] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, 50 - 0.5f, 1.0f, 1.0f), 0, 0.5f);
-            vertices[3] = new CustomVertex.TransformedTextured(new Vector4(100 - 0.5f, 50 - 0.5f, 1.0f, 1.0f), 0.5f, 0.5f);
-            SetupPostEffect(fullsizeTexture1, "DownSample4x", vertices, 0.5f);
-            postProcessor.Process("DownSample4x", TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_2);
-
-            vertices[0] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, -0.5f, 1.0f, 1.0f), 0, 0);
-            vertices[1] = new CustomVertex.TransformedTextured(new Vector4(200 - 0.5f, -0.5f, 1.0f, 1.0f), 1, 0);
-            vertices[2] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, 100 - 0.5f, 1.0f, 1.0f), 0, 1);
-            vertices[3] = new CustomVertex.TransformedTextured(new Vector4(200 - 0.5f, 100 - 0.5f, 1.0f, 1.0f), 1, 1);
-            postProcessor.StartFrame(startTexture);
-            SetupPostEffect(startTexture, "DownSample4x", vertices, 0.5f);
-            postProcessor.Process("DownSample4x", TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1);
+            SetupPostEffect(startTexture, "UpSample4x", vertices, 2.0f);
+            postProcessor.Process("UpSample4x", TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1);
         }
 
         private void SetupPostEffect(ITexture startTexture, string technique, CustomVertex.TransformedTextured[] vertices, float scale)
@@ -221,7 +225,7 @@ namespace Dope.DDXX.DemoFramework
                 Method("GetSurfaceLevel").
                 With(0).
                 Will(Return.Value(surface));
-            Stub.On(effect).
+            Expect.Once.On(effect).
                 Method("GetValueFloat").
                 With(scaleHandle).
                 Will(Return.Value(scale));
