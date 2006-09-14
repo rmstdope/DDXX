@@ -29,9 +29,8 @@ namespace Dope.DDXX.DemoFramework
                 Method("EffectFromFile").
                 With(Is.EqualTo(device), Is.EqualTo("../../../Effects/PostEffects.fxo"), Is.Null, Is.EqualTo(""), Is.EqualTo(ShaderFlags.None), Is.Anything).
                 Will(Return.Value(effect));
-            Expect.Once.On(effect).
+            Stub.On(effect).
                 Method("GetTechnique").
-                With("Monochrome").
                 Will(Return.Value(EffectHandle.FromString("")));
             Expect.Once.On(effect).
                 Method("GetParameter").

@@ -8,22 +8,29 @@ using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public class PostProcessor
+    public class PostProcessor : IPostProcessor
     {
-        public enum TextureID
+        private class TextureContainer
         {
-            FULLSIZE_TEXTURE_1 = 0,
-            FULLSIZE_TEXTURE_2,
-            INPUT_TEXTURE
-        };
-
+            private ITexture texture;
+            public ITexture Texture
+            {
+                get { return texture; }
+                set { texture = value; }
+            }
+            public float scale;
+            public TextureContainer(ITexture texture)
+            {
+                this.texture = texture;
+                scale = 1.0f;
+            }
+        }
         private IDevice device;
         private TextureID lastUsedTexture;
         private ITexture inputTexture;
-        private ITexture[] textures;
+        private TextureContainer[] textures;
         private IEffect effect;
 
-        private EffectHandle monochromeHandle;
         private EffectHandle sourceTextureParameter;
 
         public PostProcessor()
@@ -35,16 +42,12 @@ namespace Dope.DDXX.DemoFramework
             this.device = device;
             effect = D3DDriver.EffectFactory.CreateFromFile("../../../Effects/PostEffects.fxo");
 
-            monochromeHandle = effect.GetTechnique("Monochrome");
-            if (monochromeHandle == null)
-                throw new DDXXException("Could not find Monochrome technique in PostEffects effect file.");
-
             sourceTextureParameter = effect.GetParameter(null, "SourceTexture");
 
-            textures = new ITexture[(int)TextureID.INPUT_TEXTURE];
+            textures = new TextureContainer[(int)TextureID.INPUT_TEXTURE];
             for (int i = 0; i < (int)TextureID.INPUT_TEXTURE; i++)
             {
-                textures[i] = D3DDriver.TextureFactory.CreateFullsizeRenderTarget();
+                textures[i] = new TextureContainer(D3DDriver.TextureFactory.CreateFullsizeRenderTarget());
             }
         }
 
@@ -54,7 +57,7 @@ namespace Dope.DDXX.DemoFramework
             {
                 if (lastUsedTexture == TextureID.INPUT_TEXTURE)
                     return inputTexture;
-                return textures[(int)lastUsedTexture];
+                return textures[(int)lastUsedTexture].Texture;
             }
         }
 
@@ -73,52 +76,79 @@ namespace Dope.DDXX.DemoFramework
         {
             if (texture == TextureID.INPUT_TEXTURE)
                 return inputTexture;
-            return textures[(int)texture];
+            return textures[(int)texture].Texture;
         }
 
-        public void Monochrome(TextureID source, TextureID destination)
+        public void Process(string technique, TextureID source, TextureID destination)
         {
-            int height = device.PresentationParameters.BackBufferHeight;
-            int width = device.PresentationParameters.BackBufferWidth;
-            CustomVertex.TransformedTextured[] vertices = new CustomVertex.TransformedTextured[4];
-            vertices[0].Position = new Vector4(-0.5f, -0.5f, 1.0f, 1.0f);
-            vertices[1].Position = new Vector4(width - 0.5f, -0.5f, 1.0f, 1.0f);
-            vertices[2].Position = new Vector4(-0.5f, height - 0.5f, 1.0f, 1.0f);
-            vertices[3].Position = new Vector4(width - 0.5f, height - 0.5f, 1.0f, 1.0f);
-            vertices[0].Tu = 0.0f;
-            vertices[0].Tv = 0.0f;
-            vertices[1].Tu = 1.0f;
-            vertices[1].Tv = 0.0f;
-            vertices[2].Tu = 0.0f;
-            vertices[2].Tv = 1.0f;
-            vertices[3].Tu = 1.0f;
-            vertices[3].Tv = 1.0f;
+            if (destination == TextureID.INPUT_TEXTURE)
+                throw new DDXXException("Input texture not valid as output!");
 
-            device.SetRenderTarget(0, GetTexture(destination).GetSurfaceLevel(0));
-            effect.SetValue(sourceTextureParameter, GetTexture(source));
-            effect.Technique = monochromeHandle;
-            device.VertexFormat = CustomVertex.TransformedTextured.Format;
+            SetupProcessParameters(technique, source, destination);
 
             device.BeginScene();
-            int passes = effect.Begin(FX.None);
-            for (int i = 0; i < passes; i++)
-            {
-                effect.BeginPass(i);
-                device.DrawUserPrimitives(PrimitiveType.TriangleStrip, 2, vertices);
-                effect.EndPass();
-            }
-            effect.End();
+            ProcessPasses(technique, source, destination);
             device.EndScene();
 
             lastUsedTexture = destination;
         }
 
+        private void SetupProcessParameters(string technique, TextureID source, TextureID destination)
+        {
+            device.SetRenderTarget(0, GetTexture(destination).GetSurfaceLevel(0));
+            effect.SetValue(sourceTextureParameter, GetTexture(source));
+            effect.Technique = technique;
+            device.VertexFormat = CustomVertex.TransformedTextured.Format;
+        }
+
+        private void ProcessPasses(string technique, TextureID source, TextureID destination)
+        {
+            int passes = effect.Begin(FX.None);
+            for (int pass = 0; pass < passes; pass++)
+            {
+                CustomVertex.TransformedTextured[] vertices = CreateVertexStruct(technique, source, destination, pass);
+                effect.BeginPass(pass);
+                device.DrawUserPrimitives(PrimitiveType.TriangleStrip, 2, vertices);
+                effect.EndPass();
+            }
+            effect.End();
+        }
+
+        private CustomVertex.TransformedTextured[] CreateVertexStruct(string technique, TextureID source, TextureID destination, int pass)
+        {
+            CustomVertex.TransformedTextured[] vertices = new CustomVertex.TransformedTextured[4];
+            float fromScale = GetScale(source);
+            float toScale = fromScale * effect.GetValueFloat(effect.GetAnnotation(effect.GetPass(technique, pass), "Scale"));
+            int height = device.PresentationParameters.BackBufferHeight;
+            int width = device.PresentationParameters.BackBufferWidth;
+            vertices = new CustomVertex.TransformedTextured[4];
+            vertices[0] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, -0.5f, 1.0f, 1.0f), 0, 0);
+            vertices[1] = new CustomVertex.TransformedTextured(new Vector4(width * toScale - 0.5f, -0.5f, 1.0f, 1.0f), fromScale, 0);
+            vertices[2] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, height * toScale - 0.5f, 1.0f, 1.0f), 0, fromScale);
+            vertices[3] = new CustomVertex.TransformedTextured(new Vector4(width * toScale - 0.5f, height * toScale - 0.5f, 1.0f, 1.0f), fromScale, fromScale);
+            SetScale(destination, toScale);
+            return vertices;
+        }
+
+        private void SetScale(TextureID destination, float toScale)
+        {
+            textures[(int)destination].scale = toScale;
+        }
+
+        private float GetScale(TextureID source)
+        {
+            if (source == TextureID.INPUT_TEXTURE)
+                return 1.0f;
+            else
+                return textures[(int)source].scale;
+        }
 
         internal void DebugWriteAllTextures()
         {
             TextureLoader.Save("INPUT.jpg", ImageFileFormat.Jpg, ((TextureAdapter)inputTexture).TextureDX);
-            TextureLoader.Save("FULLSCREEN_1.jpg", ImageFileFormat.Jpg, ((TextureAdapter)textures[(int)TextureID.FULLSIZE_TEXTURE_1]).TextureDX);
-            TextureLoader.Save("FULLSCREEN_2.jpg", ImageFileFormat.Jpg, ((TextureAdapter)textures[(int)TextureID.FULLSIZE_TEXTURE_2]).TextureDX);
+            TextureLoader.Save("FULLSCREEN_1.jpg", ImageFileFormat.Jpg, ((TextureAdapter)textures[(int)TextureID.FULLSIZE_TEXTURE_1].Texture).TextureDX);
+            TextureLoader.Save("FULLSCREEN_2.jpg", ImageFileFormat.Jpg, ((TextureAdapter)textures[(int)TextureID.FULLSIZE_TEXTURE_2].Texture).TextureDX);
+            TextureLoader.Save("FULLSCREEN_3.jpg", ImageFileFormat.Jpg, ((TextureAdapter)textures[(int)TextureID.FULLSIZE_TEXTURE_3].Texture).TextureDX);
         }
     }
 }

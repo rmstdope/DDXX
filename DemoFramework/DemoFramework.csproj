@@ -54,6 +54,7 @@
     <Compile Include="DemoWindowTest.cs" />
     <Compile Include="IDemoEffect.cs" />
     <Compile Include="IDemoPostEffect.cs" />
+    <Compile Include="IPostProcessor.cs" />
     <Compile Include="IRegisterable.cs" />
     <Compile Include="PostProcessor.cs" />
     <Compile Include="PostProcessorTest.cs" />

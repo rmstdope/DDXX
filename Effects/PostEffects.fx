@@ -6,17 +6,9 @@
 
 #include "EffectConstants.h"
 
-#define INCLUDE_PS_1_4
-#define INCLUDE_PS_2_0
-
 ////////////////////////////////////
 // Texture Variables
 ///////////////////////////////////
-
-//DWORD SourceBlend = ONE;
-//DWORD DestBlend = ZERO;
-//DWORD BlendFactor = 0xFFFFFFFF;
-
 texture SourceTexture;
 texture SourceTexture2;
 
@@ -275,35 +267,15 @@ DownSample4x(float2 Tex : TEXCOORD0) : COLOR0
 }
 
 //-----------------------------------------------------------------------------
-// Pixel Shader: HSmearPixelShader14
+// Pixel Shader: HSmearPixelShader
 // Desc: Smear the image horizontally.
 //-----------------------------------------------------------------------------
 float4
-HSmearPixelShader14(float2 Tex : TEXCOORD0) : COLOR0
+HSmearPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 {
 	float4 Color = 0;
 
-	for(int i = 0; i < cKernelSize14; i++) {    
-		if(i == 2) {
-			Color += tex2D(PointTextureSampler,  Tex + HorizontalKernel14[i].xy ) * SmearWeight14;
-		} else {
-			Color += tex2D(LinearTextureSampler,  Tex + HorizontalKernel14[i].xy ) * SmearWeight14;
-		}
-	}
-
-	return Color;
-}
-
-//-----------------------------------------------------------------------------
-// Pixel Shader: HSmearPixelShader20
-// Desc: Smear the image horizontally.
-//-----------------------------------------------------------------------------
-float4
-HSmearPixelShader20(float2 Tex : TEXCOORD0) : COLOR0
-{
-	float4 Color = 0;
-
-	for(int i = 0; i < cKernelSize14; i++) {    
+	for(int i = 0; i < cKernelSize20; i++) {    
 		Color += tex2D(PointTextureSampler,  Tex + HorizontalKernel20[i].xy ) * SmearWeight20;
 	}
 
@@ -311,31 +283,11 @@ HSmearPixelShader20(float2 Tex : TEXCOORD0) : COLOR0
 }
 
 //-----------------------------------------------------------------------------
-// Pixel Shader: VSmearPixelShader14
+// Pixel Shader: VSmearPixelShader
 // Desc: Smear the image vertically.
 //-----------------------------------------------------------------------------
 float4
-VSmearPixelShader14(float2 Tex : TEXCOORD0) : COLOR0
-{
-	float4 Color = 0;
-
-	for(int i = 0; i < cKernelSize14; i++) {    
-		if(i == 2) {
-			Color += tex2D(PointTextureSampler,  Tex + VerticalKernel14[i].xy ) * SmearWeight14;
-		} else {
-			Color += tex2D(LinearTextureSampler,  Tex + VerticalKernel14[i].xy ) * SmearWeight14;
-		}
-	}
-
-	return Color;
-}
-
-//-----------------------------------------------------------------------------
-// Pixel Shader: VSmearPixelShader20
-// Desc: Smear the image vertically.
-//-----------------------------------------------------------------------------
-float4
-VSmearPixelShader20(float2 Tex : TEXCOORD0) : COLOR0
+VSmearPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 {
 	float4 Color = 0;
 
@@ -347,31 +299,11 @@ VSmearPixelShader20(float2 Tex : TEXCOORD0) : COLOR0
 }
 
 //-----------------------------------------------------------------------------
-// Pixel Shader: HBlurPixelShader14
+// Pixel Shader: HBlurPixelShader
 // Desc: Blurs the image horizontally
 //-----------------------------------------------------------------------------
 float4
-HBlurPixelShader14(float2 Tex : TEXCOORD0) : COLOR0
-{
-	float4 Color = 0;
-
-	for(int i = 0; i < cKernelSize14; i++) {    
-		if(i == 2) {
-			Color += tex2D(PointTextureSampler,  Tex + HorizontalKernel14[i].xy ) * BlurWeights14[i];
-		} else {
-			Color += tex2D(LinearTextureSampler,  Tex + HorizontalKernel14[i].xy ) * BlurWeights14[i];
-		}
-	}
-
-	return Color;
-}
-
-//-----------------------------------------------------------------------------
-// Pixel Shader: HBlurPixelShader20
-// Desc: Blurs the image horizontally
-//-----------------------------------------------------------------------------
-float4
-HBlurPixelShader20(float2 Tex : TEXCOORD0) : COLOR0
+HBlurPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 {
 	float4 Color = 0;
 
@@ -383,31 +315,11 @@ HBlurPixelShader20(float2 Tex : TEXCOORD0) : COLOR0
 }
 
 //-----------------------------------------------------------------------------
-// Pixel Shader: VBlurPixelShader14
+// Pixel Shader: VBlurPixelShader
 // Desc: Blurs the image vertically
 //-----------------------------------------------------------------------------
 float4
-VBlurPixelShader14(float2 Tex : TEXCOORD0) : COLOR0
-{
-	float4 Color = 0;
-
-	for(int i = 0; i < cKernelSize14; i++) {    
-		if(i == 2) {
-			Color += tex2D(PointTextureSampler,  Tex + VerticalKernel14[i].xy ) * BlurWeights14[i];
-		} else {
-			Color += tex2D(LinearTextureSampler,  Tex + VerticalKernel14[i].xy ) * BlurWeights14[i];
-		}
-	}
-
-	return Color;
-}
-
-//-----------------------------------------------------------------------------
-// Pixel Shader: VBlurPixelShader20
-// Desc: Blurs the image vertically
-//-----------------------------------------------------------------------------
-float4
-VBlurPixelShader20(float2 Tex : TEXCOORD0) : COLOR0
+VBlurPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 {
 	float4 Color = 0;
 
@@ -459,13 +371,13 @@ MonoPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 }
 
 //-----------------------------------------------------------------------------
-// Pixel Shader: DoFPixelShader20
+// Pixel Shader: DoFPixelShader
 // Desc: Post effect shader for ps 2.0 that creates a depth of field feel.
 //       Alpha channel needs to be filled with focus values [0.5..1] where
 //       0.5 is in focus and 1 is not.
 //-----------------------------------------------------------------------------
 float4
-DoFPixelShader20(float2 Tex					: TEXCOORD0,
+DoFPixelShader(float2 Tex					: TEXCOORD0,
 								 uniform float2 kernelArray[12],
 								 uniform int numSamples) : COLOR0
 {
@@ -483,39 +395,6 @@ DoFPixelShader20(float2 Tex					: TEXCOORD0,
 
 	return float4(blurred / numSamples, 1.0f);
 }
-
-//-----------------------------------------------------------------------------
-// Pixel Shader: DoFPixelShader14
-// Desc: Post effect shader for ps 1.4 that creates a depth of field feel.
-//       Alpha channel needs to be filled with focus values [0.5..1] where
-//       0.5 is in focus and 1 is not.
-//-----------------------------------------------------------------------------
-float4
-DoFPixelShader14(float2 Tex					: TEXCOORD0,
-								 float2 JitterUV[3]	: TEXCOORD1) : COLOR0
-{
-	float4 Original = tex2D(LinearTextureSampler, Tex);
-	float4 Jitter[3];
-	float3 Blurred;
-	
-	for(int i = 0; i < 3; i++) {
-		// Lookup into the rendertarget based on a texture coord.
-		Jitter[i] = tex2D(LinearTextureSampler, JitterUV[i]);
-        
-		// Lerp between original rgb and the jitter rgb based on the alpha value
-		//Jitter[i].rgb = lerp(Original.rgb, Jitter[i].rgb, Original.a);
-		Jitter[i].rgb = lerp(Original.rgb, Jitter[i].rgb, saturate(Original.a*Jitter[i].a));
-	}
-        
-	// Average the first two jitter samples
-	Blurred = lerp(Jitter[0].rgb, Jitter[1].rgb, 0.5);
-    
-	// Equally weight all three jitter samples
-	Blurred = lerp(Jitter[2].rgb, Blurred, 0.66666);
-    
-	return float4(Blurred, Original.a);
-}
-
 
 //-----------------------------------------------------------------------------
 // Pixel Shader: TestPixelShader
@@ -540,43 +419,11 @@ TestPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 }
 
 //-----------------------------------------------------------------------------
-// Pixel Shader: BrightenPixelShader14
-// Desc: Post effect shader for ps 1.4 that filters out the brightest pixels
-//-----------------------------------------------------------------------------
-float4
-BrightenPixelShader14(float2 Tex : TEXCOORD0) : COLOR0
-{
-	//static const float middleGray = 0.18f;
-	//static float luminance = 0.08f;
-	//static const float whiteCutoff = 0.5f;
-	float4 ColorOut = tex2D( LinearTextureSampler, Tex );
-
-	//ColorOut = saturate(ColorOut - whiteCutoff);
-	//if(ColorOut.r > 0)
-	//	ColorOut.r += whiteCutoff;
-	//if(ColorOut.g > 0)
-	//	ColorOut.g += whiteCutoff;
-	//if(ColorOut.b > 0)
-	//	ColorOut.b += whiteCutoff;
-
-	//ColorOut *= middleGray / (luminance + 0.001f);									// 2.222f
-	//ColorOut *= (1.0f + (ColorOut / (whiteCutoff * whiteCutoff)));	//	1 + (c / 0.64f)
-	//ColorOut -= 5.0f;
-
-	//ColorOut = max(ColorOut, 0.0f);
-
-	//ColorOut /= (10.0f + ColorOut);
-
-	//return float4(1,1,1,1);
-	return ColorOut;
-}
-
-//-----------------------------------------------------------------------------
-// Pixel Shader: BrightenPixelShader20
+// Pixel Shader: BrightenPixelShader
 // Desc: Post effect shader for ps 2.0 that filters out the brightest pixels
 //-----------------------------------------------------------------------------
 float4
-BrightenPixelShader20(float2 Tex : TEXCOORD0) : COLOR0
+BrightenPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 {
 	float4 sample = tex2D( PointTextureSampler, Tex );
 	float3 ColorOut = sample.rgb;
@@ -607,32 +454,11 @@ BrightenPixelShader20(float2 Tex : TEXCOORD0) : COLOR0
 }
 
 //-----------------------------------------------------------------------------
-// Pixel Shader: HBloomPixelShader14
+// Pixel Shader: HBloomPixelShader
 // Desc: Blooms the image horizontally
 //-----------------------------------------------------------------------------
 float4
-HBloomPixelShader14(float2 Tex : TEXCOORD0) : COLOR0
-{
-	static const float BloomScale = 1.4f;
-	float4 Color = 0;
-
-	for(int i = 0; i < cKernelSize14; i++) {    
-		if(i == 2) {
-			Color += tex2D(PointTextureSampler,  Tex + HorizontalKernel14[i].xy ) * BlurWeights14[i] * BloomScale;
-		} else {
-			Color += tex2D(LinearTextureSampler,  Tex + HorizontalKernel14[i].xy ) * BlurWeights14[i] * BloomScale;
-		}
-	}
-
-	return Color;
-}
-
-//-----------------------------------------------------------------------------
-// Pixel Shader: HBloomPixelShader20
-// Desc: Blooms the image horizontally
-//-----------------------------------------------------------------------------
-float4
-HBloomPixelShader20(float2 Tex : TEXCOORD0) : COLOR0
+HBloomPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 {
 	//static const float BloomScale = 1.5f;
 	float4 Color = 0;
@@ -645,32 +471,11 @@ HBloomPixelShader20(float2 Tex : TEXCOORD0) : COLOR0
 }
 
 //-----------------------------------------------------------------------------
-// Pixel Shader: VBloomPixelShader14
+// Pixel Shader: VBloomPixelShader
 // Desc: Blooms the image vertically
 //-----------------------------------------------------------------------------
 float4
-VBloomPixelShader14(float2 Tex : TEXCOORD0) : COLOR0
-{
-	static const float BloomScale = 1.4f;
-	float4 Color = 0;
-
-	for(int i = 0; i < cKernelSize14; i++) {    
-		if(i == 2) {
-			Color += tex2D(PointTextureSampler,  Tex + VerticalKernel14[i].xy ) * BlurWeights14[i] * BloomScale;
-		} else {
-			Color += tex2D(LinearTextureSampler,  Tex + VerticalKernel14[i].xy ) * BlurWeights14[i] * BloomScale;
-		}
-	}
-
-	return Color;
-}
-
-//-----------------------------------------------------------------------------
-// Pixel Shader: VBloomPixelShader20
-// Desc: Blooms the image vertically
-//-----------------------------------------------------------------------------
-float4
-VBloomPixelShader20(float2 Tex : TEXCOORD0) : COLOR0
+VBloomPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 {
 	//static const float BloomScale = 1.5f;
 	float4 Color = 0;
@@ -695,11 +500,11 @@ InversePixelShader(float2 Tex : TEXCOORD0) : COLOR0
 }
 
 //-----------------------------------------------------------------------------
-// Pixel Shader: ToneMapPixelShader20
+// Pixel Shader: ToneMapPixelShader
 // Desc: Post effect shader for ps 2.0 that filter using a tone map filter.
 //-----------------------------------------------------------------------------
 float4
-ToneMapPixelShader20(float2 Tex : TEXCOORD0) : COLOR0
+ToneMapPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 {
 	// sample color
 	float4 color = tex2D(PointTextureSampler, Tex);
@@ -712,13 +517,13 @@ ToneMapPixelShader20(float2 Tex : TEXCOORD0) : COLOR0
 }
 
 //-----------------------------------------------------------------------------
-// Pixel Shader: FinalHDR_PixelShader20
+// Pixel Shader: FinalHDR_PixelShader
 // Desc: Post effect shader for ps 2.0 that constructs final image for HDR.
 // For average luminance the 1x1 LuminanceTexture is assumed to contain the average 
 // luminance
 //-----------------------------------------------------------------------------
 float4
-FinalHDR_PixelShader20(float2 Tex : TEXCOORD0,
+FinalHDR_PixelShader(float2 Tex : TEXCOORD0,
 											 uniform bool linearBlend) : COLOR0
 {
 	// sample color
@@ -764,44 +569,11 @@ FinalHDR_PixelShader20(float2 Tex : TEXCOORD0,
 }
 
 //-----------------------------------------------------------------------------
-// Pixel Shader: FinalHDR_PixelShader14
-// Desc: Post effect shader for ps 1.4 that constructs final image for HDR.
-//-----------------------------------------------------------------------------
-float4
-FinalHDR_PixelShader14(float2 Tex : TEXCOORD0) : COLOR0
-{
-	// sample color
-	float4 color = tex2D(PointTextureSampler, Tex);
-	float4 bloom = tex2D(LinearTextureSampler2, Tex);
-
-	// Map to LDR
-	//color *= Exposure / (Luminance + 0.001f);
-	// Tone map
-	//color /= (1.0f + color);
-
-	// Add bloom
-	color += bloom;
-
-	return color;
-	//return bloom;
-}
-//-----------------------------------------------------------------------------
-// Pixel Shader: ToneMapPixelShader14
-// Desc: Post effect shader for ps 1.4 that filter using a tone map filter.
-//-----------------------------------------------------------------------------
-float4
-ToneMapPixelShader14(float2 Tex : TEXCOORD0) : COLOR0
-{
-	return tex2D(PointTextureSampler, Tex);
-}
-
-
-//-----------------------------------------------------------------------------
-// Pixel Shader: HDRLuminanceGreyDS20
+// Pixel Shader: HDRLuminanceGreyDS
 // Desc: First step of HDR luminance downsampling, includes conversion to greyscale
 //-----------------------------------------------------------------------------
 float4
-HDRLuminanceGreyDS20(float2 Tex : TEXCOORD0) : COLOR0
+HDRLuminanceGreyDS(float2 Tex : TEXCOORD0) : COLOR0
 {
 	const float3 LuminanceWeights = float3(0.33f, 0.34f, 0.33f);
 	
@@ -811,11 +583,11 @@ HDRLuminanceGreyDS20(float2 Tex : TEXCOORD0) : COLOR0
 }
 
 //-----------------------------------------------------------------------------
-// Pixel Shader: HDRLuminanceDS20
+// Pixel Shader: HDRLuminanceDS
 // Desc: Consecutive steps of HDR luminance downsampling
 //-----------------------------------------------------------------------------
 float4
-HDRLuminanceDS20(float2 Tex : TEXCOORD0) : COLOR0
+HDRLuminanceDS(float2 Tex : TEXCOORD0) : COLOR0
 {
 	float4 sample = tex2D( LinearTextureSampler, Tex );
 
@@ -828,7 +600,6 @@ HDRLuminanceDS20(float2 Tex : TEXCOORD0) : COLOR0
  * ------------------
 ***********************************************************************************/
 
-#ifdef INCLUDE_PS_2_0
 technique DownSample4x
 {
 	pass p0
@@ -857,27 +628,27 @@ technique UpSample4x
 	}
 }
 
-technique ToneMap_2_0
+technique ToneMap
 {
 	pass BasePass
 	{
 		VertexShader			= null;
-		PixelShader				= compile ps_2_0 ToneMapPixelShader20();
+		PixelShader				= compile ps_2_0 ToneMapPixelShader();
 		ZEnable						= false;
 	}
 }
 
-technique FinalHDR_2_0
+technique FinalHDR
 {
 	pass BasePass
 	{
 		VertexShader			= null;
-		PixelShader				= compile ps_2_0 FinalHDR_PixelShader20(true);
+		PixelShader				= compile ps_2_0 FinalHDR_PixelShader(true);
 		ZEnable						= false;
 	}
 }
 
-technique InverseColor_2_0
+technique InverseColor
 {
 	pass BasePass
 	{
@@ -887,47 +658,32 @@ technique InverseColor_2_0
 	}
 }
 
-technique HorizontalBloom_2_0
+technique HorizontalBloom
 {
 	pass BasePass
 	{
 		VertexShader			= null;
-		PixelShader				= compile ps_2_0 HBloomPixelShader20();
+		PixelShader				= compile ps_2_0 HBloomPixelShader();
 		ZEnable						= false;
 	}
 }
 
-technique VerticalBloom_2_0
+technique VerticalBloom
 {
 	pass BasePass
 	{
 		VertexShader			= null;
-		PixelShader				= compile ps_2_0 VBloomPixelShader20();
+		PixelShader				= compile ps_2_0 VBloomPixelShader();
 		ZEnable						= false;
 	}
 }
 
-technique Brighten_2_0
+technique Brighten
 {
 	pass BasePass
 	{
 		VertexShader			= null;
-		PixelShader				= compile ps_2_0 BrightenPixelShader20();
-		ZEnable						= false;
-		//AlphaBlendEnable	= false;
-		//BlendOp						= Add;
-		//SrcBlend					= <SourceBlend>;
-		//DestBlend					= <DestBlend>;
-		//BlendFactor				= <BlendFactor>;
-	}
-}
-
-technique HDRLuminanceGreyDS_2_0
-{
-	pass BasePass
-	{
-		VertexShader			= null;
-		PixelShader				= compile ps_2_0 HDRLuminanceGreyDS20();
+		PixelShader				= compile ps_2_0 BrightenPixelShader();
 		ZEnable						= false;
 		//AlphaBlendEnable	= false;
 		//BlendOp						= Add;
@@ -937,12 +693,27 @@ technique HDRLuminanceGreyDS_2_0
 	}
 }
 
-technique HDRLuminanceDS_2_0
+technique HDRLuminanceGreyDS
 {
 	pass BasePass
 	{
 		VertexShader			= null;
-		PixelShader				= compile ps_2_0 HDRLuminanceDS20();
+		PixelShader				= compile ps_2_0 HDRLuminanceGreyDS();
+		ZEnable						= false;
+		//AlphaBlendEnable	= false;
+		//BlendOp						= Add;
+		//SrcBlend					= <SourceBlend>;
+		//DestBlend					= <DestBlend>;
+		//BlendFactor				= <BlendFactor>;
+	}
+}
+
+technique HDRLuminanceDS
+{
+	pass BasePass
+	{
+		VertexShader			= null;
+		PixelShader				= compile ps_2_0 HDRLuminanceDS();
 		ZEnable						= false;
 		//AlphaBlendEnable	= false;
 		//BlendOp						= Add;
@@ -962,47 +733,47 @@ technique Monochrome
 	}
 }
 
-technique HorizontalSmear_2_0
+technique HorizontalSmear
 {
 	pass BasePass
 	{
 		VertexShader			= null;
-		PixelShader				= compile ps_2_0 HSmearPixelShader20();
+		PixelShader				= compile ps_2_0 HSmearPixelShader();
 		ZEnable						= false;
 	}
 }
 
-technique VerticalSmear_2_0
+technique VerticalSmear
 {
 	pass BasePass
 	{
 		VertexShader			= null;
-		PixelShader				= compile ps_2_0 VSmearPixelShader20();
+		PixelShader				= compile ps_2_0 VSmearPixelShader();
 		ZEnable						= false;
 	}
 }
 
-technique HorizontalBlur_2_0
+technique HorizontalBlur
 {
 	pass BasePass
 	{
 		VertexShader			= null;
-		PixelShader				= compile ps_2_0 HBlurPixelShader20();
+		PixelShader				= compile ps_2_0 HBlurPixelShader();
 		ZEnable						= false;
 	}
 }
 
-technique VerticalBlur_2_0
+technique VerticalBlur
 {
 	pass BasePass
 	{
 		VertexShader			= null;
-		PixelShader				= compile ps_2_0 VBlurPixelShader20();
+		PixelShader				= compile ps_2_0 VBlurPixelShader();
 		ZEnable						= false;
 	}
 }
 
-technique Copy_2_0
+technique Copy
 {
 	pass BasePass
 	{
@@ -1013,7 +784,7 @@ technique Copy_2_0
 	}
 }
 
-technique Blend_2_0
+technique Blend
 {
 	pass BasePass
 	{
@@ -1030,17 +801,17 @@ technique Blend_2_0
 	}
 }
 
-technique DoF_2_0
+technique DoF
 {
 	pass BasePass
 	{
 		VertexShader			= null;
-		PixelShader				= compile ps_2_0 DoFPixelShader20(DofKernel20, 12);
+		PixelShader				= compile ps_2_0 DoFPixelShader(DofKernel20, 12);
 		ZEnable						= false;
 	}
 }
 
-technique Color_2_0
+technique Color
 {
 	pass BasePass
 	{
@@ -1055,7 +826,7 @@ technique Color_2_0
 	}
 }
 
-/*technique Test_2_0
+/*technique Test
 {
 	pass BasePass
 	{
@@ -1065,194 +836,5 @@ technique Color_2_0
 	}
 }*/
 
-#endif
-
-#ifdef INCLUDE_PS_1_4
-technique ToneMap_1_4
-{
-	pass BasePass
-	{
-		VertexShader			= null;
-		PixelShader				= compile ps_1_4 ToneMapPixelShader14();
-		ZEnable						= false;
-	}
-}
-
-technique HDRLuminanceGreyDS_1_4
-{
-	pass BasePass
-	{
-		VertexShader			= null;
-		PixelShader				= compile ps_1_4 ToneMapPixelShader14();
-		ZEnable						= false;
-	}
-}
-
-technique HDRLuminanceDS_1_4
-{
-	pass BasePass
-	{
-		VertexShader			= null;
-		PixelShader				= compile ps_1_4 ToneMapPixelShader14();
-		ZEnable						= false;
-	}
-}
-
-technique FinalHDR_1_4
-{
-	pass BasePass
-	{
-		VertexShader			= null;
-		PixelShader				= compile ps_1_4 FinalHDR_PixelShader14();
-		ZEnable						= false;
-	}
-}
-
-technique InverseColor_1_4
-{
-	pass BasePass
-	{
-		VertexShader			= null;
-		PixelShader				= compile ps_1_4 InversePixelShader();
-		ZEnable						= false;
-	}
-}
-
-technique HorizontalBloom_1_4
-{
-	pass BasePass
-	{
-		VertexShader			= null;
-		PixelShader				= compile ps_1_4 HBloomPixelShader14();
-		ZEnable						= false;
-	}
-}
-
-technique VerticalBloom_1_4
-{
-	pass BasePass
-	{
-		VertexShader			= null;
-		PixelShader				= compile ps_1_4 VBloomPixelShader14();
-		ZEnable						= false;
-	}
-}
-
-technique Brighten_1_4
-{
-	pass BasePass
-	{
-		VertexShader			= null;
-		PixelShader				= compile ps_1_4 BrightenPixelShader14();
-		ZEnable						= false;
-	}
-}
-
-technique HorizontalSmear_1_4
-{
-	pass BasePass
-	{
-		VertexShader			= null;
-		PixelShader				= compile ps_1_4 HSmearPixelShader14();
-		ZEnable						= false;
-		Wrap0							= 0;
-		AddressU[0]				= Clamp;
-		AddressV[0]				= Clamp;
-		AddressW[0]				= Clamp;
-	}
-}
-
-technique VerticalSmear_1_4
-{
-	pass BasePass
-	{
-		VertexShader			= null;
-		PixelShader				= compile ps_1_4 VSmearPixelShader14();
-		ZEnable						= false;
-	}
-}
-
-technique HorizontalBlur_1_4
-{
-	pass BasePass
-	{
-		VertexShader			= null;
-		PixelShader				= compile ps_1_4 HBlurPixelShader14();
-		ZEnable						= false;
-	}
-}
-
-technique VerticalBlur_1_4
-{
-	pass BasePass
-	{
-		VertexShader			= null;
-		PixelShader				= compile ps_1_4 VBlurPixelShader14();
-		ZEnable						= false;
-	}
-}
-
-technique Copy_1_4
-{
-	pass BasePass
-	{
-		VertexShader			= null;
-		PixelShader				= compile ps_1_4 CopyPixelShader();
-		//AlphaBlendEnable	= false;
-		ZEnable						= false;
-	}
-}
-
-technique Blend_1_4
-{
-	pass BasePass
-	{
-		VertexShader			= null;
-		PixelShader				= compile ps_1_4 BlendPixelShader(false);
-		//AlphaBlendEnable	= true;
-		//BlendOp						= Add;
-		//SrcBlend					= <SourceBlend>;
-		//DestBlend					= <DestBlend>;
-		//BlendFactor					= <BlendFactor>;
-		ZEnable						= false;
-	}
-}
-
-technique DoF_1_4
-{
-	pass BasePass
-	{
-		VertexShader			= null;
-		PixelShader				= compile ps_1_4 DoFPixelShader14();
-		ZEnable						= false;
-	}
-}
-
-technique Test_1_4
-{
-	pass BasePass
-	{
-		VertexShader			= null;
-		PixelShader				= compile ps_1_4 TestPixelShader();
-		ZEnable						= false;
-	}
-}
-
-technique Color_1_4
-{
-	pass BasePass
-	{
-		VertexShader			= null;
-		PixelShader				= compile ps_1_4 ColorPixelShader();
-		//AlphaBlendEnable	= true;
-		//BlendOp						= Add;
-		//SrcBlend					= <SourceBlend>;
-		//DestBlend					= <DestBlend>;
-		//BlendFactor					= <BlendFactor>;
-		ZEnable						= false;
-	}
-}
-
-#endif
 
 

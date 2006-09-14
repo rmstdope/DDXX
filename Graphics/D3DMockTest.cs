@@ -17,12 +17,18 @@ namespace Dope.DDXX.Graphics
         protected ISurface surface;
         protected IManager manager;
         protected DisplayMode displayMode = new DisplayMode();
+        protected PresentParameters presentParameters;
 
         public virtual void SetUp()
         {
             displayMode.Width = 800;
             displayMode.Height = 600;
             displayMode.Format = Format.R8G8B8;
+
+            presentParameters = new PresentParameters();
+            presentParameters.BackBufferFormat = Format.R32F;
+            presentParameters.BackBufferHeight = 200;
+            presentParameters.BackBufferWidth = 400;
 
             mockery = new Mockery();
             factory = mockery.NewMock<IGraphicsFactory>();
@@ -57,7 +63,7 @@ namespace Dope.DDXX.Graphics
                 Will(Return.Value(new SurfaceDescription()));
             Stub.On(device).
                 GetProperty("PresentationParameters").
-                Will(Return.Value(new PresentParameters()));
+                Will(Return.Value(presentParameters));
 
             D3DDriver.Factory = factory;
         }

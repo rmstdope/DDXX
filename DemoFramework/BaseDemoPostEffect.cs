@@ -10,9 +10,9 @@ namespace Dope.DDXX.DemoFramework
     {
         private float startTime;
         private float endTime;
-        private PostProcessor postProcessor;
+        private IPostProcessor postProcessor;
 
-        protected PostProcessor PostProcessor
+        protected IPostProcessor PostProcessor
         {
             get { return postProcessor; }
         }
@@ -47,7 +47,7 @@ namespace Dope.DDXX.DemoFramework
         {
         }
 
-        public virtual void Initialize(PostProcessor postProcessor)
+        public virtual void Initialize(IPostProcessor postProcessor)
         {
             this.postProcessor = postProcessor;
         }

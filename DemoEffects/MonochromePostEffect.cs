@@ -14,7 +14,10 @@ namespace Dope.DDXX.DemoEffects
 
         public override void Render()
         {
-            PostProcessor.Monochrome(PostProcessor.OutputTextureID, PostProcessor.TextureID.FULLSIZE_TEXTURE_1);
+            if (PostProcessor.OutputTextureID != TextureID.FULLSIZE_TEXTURE_1)
+                PostProcessor.Process("Monochrome", PostProcessor.OutputTextureID, TextureID.FULLSIZE_TEXTURE_1);
+            else
+                PostProcessor.Process("Monochrome", PostProcessor.OutputTextureID, TextureID.FULLSIZE_TEXTURE_2);
         }
     }
 }
