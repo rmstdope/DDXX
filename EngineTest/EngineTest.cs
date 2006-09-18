@@ -85,6 +85,10 @@ namespace EngineTest
                 }
             }
             GlowPostEffect postEffect = new GlowPostEffect(0.0f, 10.0f);
+            postEffect.Luminance = 0.06f;
+            postEffect.Exposure = 0.3f;
+            postEffect.WhiteCutoff = 0.1f;
+            postEffect.BloomScale = 1.5f;
             executer.Register(0, postEffect);
         }
 

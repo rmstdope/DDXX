@@ -10,9 +10,42 @@ namespace Dope.DDXX.DemoEffects
 {
     public class GlowPostEffect : BaseDemoPostEffect
     {
+        private float luminance;
+        private float exposure;
+        private float whiteCutoff;
+        private float bloomScale;
+
+        public float BloomScale
+        {
+            get { return bloomScale; }
+            set { bloomScale = value; }
+        }
+
+        public float WhiteCutoff
+        {
+            get { return whiteCutoff; }
+            set { whiteCutoff = value; }
+        }
+
+        public float Exposure
+        {
+            get { return exposure; }
+            set { exposure = value; }
+        }
+
+        public float Luminance
+        {
+            get { return luminance; }
+            set { luminance = value; }
+        }
+
         public GlowPostEffect(float startTime, float endTime)
             : base(startTime, endTime)
         {
+            Luminance = 0.2f;
+            Exposure = 0.1f;
+            WhiteCutoff = 0.1f;
+            BloomScale = 1.4f;
         }
 
         public override void Render()
@@ -34,6 +67,10 @@ namespace Dope.DDXX.DemoEffects
                 temp[0] = TextureID.FULLSIZE_TEXTURE_1;
                 temp[1] = TextureID.FULLSIZE_TEXTURE_2;
             }
+            PostProcessor.SetValue("Luminance", luminance);
+            PostProcessor.SetValue("Exposure", exposure);
+            PostProcessor.SetValue("WhiteCutoff", whiteCutoff);
+            PostProcessor.SetValue("BloomScale", bloomScale);
             PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
             PostProcessor.Process("DownSample4x", PostProcessor.OutputTextureID, temp[0]);
             PostProcessor.Process("DownSample4x", temp[0], temp[1]);

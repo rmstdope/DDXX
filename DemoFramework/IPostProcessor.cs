@@ -24,5 +24,7 @@ namespace Dope.DDXX.DemoFramework
         void StartFrame(ITexture startTexture);
         void Process(string technique, TextureID textureID, TextureID textureID_2);
         void SetBlendParameters(BlendOperation blendOperation, Blend sourceBlend, Blend destinatonBlend, Color blendFactor);
+
+        void SetValue(string p, float luminance);
     }
 }

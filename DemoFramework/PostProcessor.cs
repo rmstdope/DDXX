@@ -209,5 +209,10 @@ namespace Dope.DDXX.DemoFramework
             TextureLoader.Save("FULLSCREEN_2.jpg", ImageFileFormat.Jpg, ((TextureAdapter)textures[(int)TextureID.FULLSIZE_TEXTURE_2].Texture).TextureDX);
             TextureLoader.Save("FULLSCREEN_3.jpg", ImageFileFormat.Jpg, ((TextureAdapter)textures[(int)TextureID.FULLSIZE_TEXTURE_3].Texture).TextureDX);
         }
+
+        public void SetValue(string name, float value)
+        {
+            effect.SetValue(name, value);
+        }
     }
 }
