@@ -56,6 +56,7 @@
     <Compile Include="IGraphicsFactory.cs" />
     <Compile Include="IManager.cs" />
     <Compile Include="IMesh.cs" />
+    <Compile Include="IRenderStateManager.cs" />
     <Compile Include="ISprite.cs" />
     <Compile Include="ISurface.cs" />
     <Compile Include="ITexture.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="ModelTest.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RenderStateManagerAdapter.cs" />
     <Compile Include="SpriteAdapter.cs" />
     <Compile Include="SurfaceAdapter.cs" />
     <Compile Include="TextureAdapter.cs" />

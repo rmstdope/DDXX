@@ -89,7 +89,7 @@ namespace Dope.DDXX.Graphics
         //
         // Summary:
         //     Retrieves a render-state value for a device.
-        RenderStateManager RenderState { get; }
+        IRenderStateManager RenderState { get; }
         //
         // Summary:
         //     Retrieves a device's sampler states.

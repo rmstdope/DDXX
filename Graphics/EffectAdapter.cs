@@ -199,6 +199,11 @@ namespace Dope.DDXX.Graphics
             effect.ValidateTechnique(technique);
         }
 
+        public int Description_Parameters 
+        {
+            get { return effect.Description.Parameters; }
+        }
+
         public EffectDescription Description
         {
             get { return effect.Description; }
@@ -247,6 +252,11 @@ namespace Dope.DDXX.Graphics
         public ParameterDescription GetParameterDescription(EffectHandle parameter)
         {
             return effect.GetParameterDescription(parameter);
+        }
+
+        public int GetParameterDescription_Elements(EffectHandle parameter)
+        {
+            return effect.GetParameterDescription(parameter).Elements;
         }
 
         public EffectHandle GetParameterElement(EffectHandle constant, int index)

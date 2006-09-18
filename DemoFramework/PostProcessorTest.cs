@@ -7,6 +7,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
+using System.Drawing;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -45,8 +46,7 @@ namespace Dope.DDXX.DemoFramework
             base.TearDown();
         }
 
-        [Test]
-        public void TestInitializeOK()
+        public void InitializeSetup()
         {
             effect = mockery.NewMock<IEffect>();
             Expect.Once.On(factory).
@@ -61,6 +61,104 @@ namespace Dope.DDXX.DemoFramework
                 Method("CreateTexture").
                 With(device, presentParameters.BackBufferWidth, presentParameters.BackBufferHeight, 1, Usage.RenderTarget, presentParameters.BackBufferFormat, Pool.Default).
                 Will(Return.Value(fullsizeTexture1));
+        }
+
+        [Test]
+        public void TestInitializeOK()
+        {
+            InitializeSetup();
+            Stub.On(effect).
+                GetProperty("Description_Parameters").
+                Will(Return.Value(0));
+            postProcessor.Initialize(device);
+        }
+
+        [Test]
+        public void TestAnnotations()
+        {
+            EffectHandle toParameter1 = EffectHandle.FromString("1");
+            EffectHandle toParameter2 = EffectHandle.FromString("2");
+            EffectHandle toParameter3 = EffectHandle.FromString("3");
+            EffectHandle annotation1 = EffectHandle.FromString("11");
+            EffectHandle annotation3 = EffectHandle.FromString("33");
+            EffectHandle fromParameter1 = EffectHandle.FromString("111");
+            EffectHandle fromParameter3 = EffectHandle.FromString("333");
+            EffectDescription effectDescription = new EffectDescription();
+            ParameterDescription pDescription1 = new ParameterDescription();
+            ParameterDescription pDescription2 = new ParameterDescription();
+
+            InitializeSetup();
+            
+            Stub.On(effect).
+                GetProperty("Description_Parameters").
+                Will(Return.Value(3));
+            Stub.On(effect).
+                Method("GetParameter").
+                With(null, 0).
+                Will(Return.Value(toParameter1));
+            Stub.On(effect).
+                Method("GetParameter").
+                With(null, 1).
+                Will(Return.Value(toParameter2));
+            Stub.On(effect).
+                Method("GetParameter").
+                With(null, 2).
+                Will(Return.Value(toParameter3));
+            Stub.On(effect).
+                Method("GetAnnotation").
+                With(toParameter1, "ConvertPixelsToTexels").
+                Will(Return.Value(annotation1));
+            Stub.On(effect).
+                Method("GetAnnotation").
+                With(toParameter2, "ConvertPixelsToTexels").
+                Will(Return.Value(null));
+            Stub.On(effect).
+                Method("GetAnnotation").
+                With(toParameter3, "ConvertPixelsToTexels").
+                Will(Return.Value(annotation3));
+            Stub.On(effect).
+                Method("GetValueString").
+                With(annotation1).
+                Will(Return.Value("Convert1"));
+            Stub.On(effect).
+                Method("GetValueString").
+                With(annotation3).
+                Will(Return.Value("Convert3"));
+            Stub.On(effect).
+                Method("GetParameter").
+                With(null, "Convert1").
+                Will(Return.Value(fromParameter1));
+            Stub.On(effect).
+                Method("GetParameter").
+                With(null, "Convert3").
+                Will(Return.Value(fromParameter3));
+            Stub.On(effect).
+                Method("GetParameterDescription_Elements").
+                With(fromParameter1).
+                Will(Return.Value(1));
+            Stub.On(effect).
+                Method("GetParameterDescription_Elements").
+                With(fromParameter3).
+                Will(Return.Value(2));
+            Expect.Once.On(effect).
+                Method("GetValueFloatArray").
+                With(fromParameter1, 2).
+                Will(Return.Value(new float[] { 1, 2 }));
+            Expect.Once.On(effect).
+                Method("GetValueFloatArray").
+                With(fromParameter3, 4).
+                Will(Return.Value(new float[] { 3, 4, 5, 6 }));
+            Expect.Once.On(effect).
+                Method("SetValue").
+                With(toParameter1, new float[] { 1.0f / device.PresentationParameters.BackBufferWidth, 
+                                                 2.0f / device.PresentationParameters.BackBufferHeight });
+            Expect.Once.On(effect).
+                Method("SetValue").
+                With(toParameter3, new float[] { 3.0f / device.PresentationParameters.BackBufferWidth, 
+                                                 4.0f / device.PresentationParameters.BackBufferHeight,
+                                                 5.0f / device.PresentationParameters.BackBufferWidth, 
+                                                 6.0f / device.PresentationParameters.BackBufferHeight});
+
             postProcessor.Initialize(device);
         }
 
@@ -71,16 +169,6 @@ namespace Dope.DDXX.DemoFramework
             postProcessor.StartFrame(startTexture);
             Assert.AreSame(startTexture, postProcessor.OutputTexture);
             Assert.AreEqual(TextureID.INPUT_TEXTURE, postProcessor.OutputTextureID);
-        }
-
-        [Test]
-        [ExpectedException(typeof(DDXXException))]
-        public void TestInvalidSource()
-        {
-            TestInitializeOK();
-            postProcessor.StartFrame(startTexture);
-            Assert.AreSame(startTexture, postProcessor.OutputTexture);
-            postProcessor.Process("Monochrome", TextureID.FULLSIZE_TEXTURE_1, TextureID.INPUT_TEXTURE);
         }
 
         [Test]
@@ -95,6 +183,7 @@ namespace Dope.DDXX.DemoFramework
             TestInitializeOK();
             postProcessor.StartFrame(startTexture);
             SetupPostEffect(startTexture, "Monochrome", vertices, 1.0f);
+            SetupBlend(BlendOperation.Max, Blend.SourceAlpha, Blend.SourceAlphaSat, Color.Fuchsia);
             postProcessor.Process("Monochrome", TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1);
             Assert.AreSame(fullsizeTexture1, postProcessor.OutputTexture);
             Assert.AreEqual(TextureID.FULLSIZE_TEXTURE_1, postProcessor.OutputTextureID);
@@ -112,6 +201,7 @@ namespace Dope.DDXX.DemoFramework
             TestInitializeOK();
             postProcessor.StartFrame(startTexture);
             SetupPostEffect(startTexture, "DownSample4x", vertices, 0.5f);
+            SetupBlend(BlendOperation.RevSubtract, Blend.DestinationColor, Blend.BothInvSourceAlpha, Color.DodgerBlue);
             postProcessor.Process("DownSample4x", TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1);
             Assert.AreSame(fullsizeTexture1, postProcessor.OutputTexture);
             Assert.AreEqual(TextureID.FULLSIZE_TEXTURE_1, postProcessor.OutputTextureID);
@@ -121,6 +211,7 @@ namespace Dope.DDXX.DemoFramework
             vertices[2] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, 50 - 0.5f, 1.0f, 1.0f), 0, 0.5f);
             vertices[3] = new CustomVertex.TransformedTextured(new Vector4(100 - 0.5f, 50 - 0.5f, 1.0f, 1.0f), 0.5f, 0.5f);
             SetupPostEffect(fullsizeTexture1, "DownSample4x", vertices, 0.5f);
+            SetupBlend(BlendOperation.Add, Blend.One, Blend.Zero, Color.DodgerBlue);
             postProcessor.Process("DownSample4x", TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_2);
 
             vertices[0] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, -0.5f, 1.0f, 1.0f), 0, 0);
@@ -129,6 +220,7 @@ namespace Dope.DDXX.DemoFramework
             vertices[3] = new CustomVertex.TransformedTextured(new Vector4(200 - 0.5f, 100 - 0.5f, 1.0f, 1.0f), 1, 1);
             postProcessor.StartFrame(startTexture);
             SetupPostEffect(startTexture, "DownSample4x", vertices, 0.5f);
+            SetupBlend(BlendOperation.Subtract, Blend.DestinationColor, Blend.BothInvSourceAlpha, Color.DimGray);
             postProcessor.Process("DownSample4x", TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1);
         }
 
@@ -144,6 +236,7 @@ namespace Dope.DDXX.DemoFramework
             vertices[2] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, 200 - 0.5f, 1.0f, 1.0f), 0, 0.5f);
             vertices[3] = new CustomVertex.TransformedTextured(new Vector4(400 - 0.5f, 200 - 0.5f, 1.0f, 1.0f), 0.5f, 0.5f);
             SetupPostEffect(fullsizeTexture1, "UpSample4x", vertices, 2.0f);
+            SetupBlend(BlendOperation.Subtract, Blend.DestinationColor, Blend.BothInvSourceAlpha, Color.DimGray);
             postProcessor.Process("UpSample4x", TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_2);
             Assert.AreEqual(TextureID.FULLSIZE_TEXTURE_2, postProcessor.OutputTextureID);
 
@@ -152,6 +245,7 @@ namespace Dope.DDXX.DemoFramework
             vertices[2] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, 200 - 0.5f, 1.0f, 1.0f), 0, 1);
             vertices[3] = new CustomVertex.TransformedTextured(new Vector4(400 - 0.5f, 200 - 0.5f, 1.0f, 1.0f), 1, 1);
             SetupPostEffect(fullsizeTexture1, "Monochrome", vertices, 1.0f);
+            SetupBlend(BlendOperation.RevSubtract, Blend.DestinationColor, Blend.BothInvSourceAlpha, Color.DimGray);
             postProcessor.Process("Monochrome", TextureID.FULLSIZE_TEXTURE_2, TextureID.FULLSIZE_TEXTURE_1);
             Assert.AreEqual(TextureID.FULLSIZE_TEXTURE_1, postProcessor.OutputTextureID);
         }
@@ -165,7 +259,39 @@ namespace Dope.DDXX.DemoFramework
             TestInitializeOK();
             postProcessor.StartFrame(startTexture);
             SetupPostEffect(startTexture, "UpSample4x", vertices, 2.0f);
+            SetupBlend(BlendOperation.RevSubtract, Blend.DestinationColor, Blend.BothInvSourceAlpha, Color.DimGray);
             postProcessor.Process("UpSample4x", TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1);
+        }
+
+        private void SetupBlend(BlendOperation operation, Blend source, Blend destination, Color factor)
+        {
+            if (BlendOperation.Add == operation &&
+                Blend.One == source &&
+                Blend.Zero == destination)
+            {
+                Expect.Once.On(renderStateManager).
+                    SetProperty("AlphaBlendEnable").
+                    To(false);
+            }
+            else
+            {
+                Expect.Once.On(renderStateManager).
+                    SetProperty("AlphaBlendEnable").
+                    To(true);
+                Expect.Once.On(renderStateManager).
+                    SetProperty("BlendOperation").
+                    To(operation);
+                Expect.Once.On(renderStateManager).
+                    SetProperty("SourceBlend").
+                    To(source);
+                Expect.Once.On(renderStateManager).
+                    SetProperty("DestinationBlend").
+                    To(destination);
+                Expect.Once.On(renderStateManager).
+                    SetProperty("BlendFactor").
+                    To(factor);
+            }
+            postProcessor.SetBlendParameters(operation, source, destination, factor);
         }
 
         private void SetupPostEffect(ITexture startTexture, string technique, CustomVertex.TransformedTextured[] vertices, float scale)

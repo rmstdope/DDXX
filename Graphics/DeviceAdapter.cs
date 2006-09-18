@@ -159,9 +159,9 @@ namespace Dope.DDXX.Graphics
             get { return device.RasterStatus; }
         }
 
-        public RenderStateManager RenderState
+        public IRenderStateManager RenderState
         {
-            get { return device.RenderState; }
+            get { return new RenderStateManagerAdapter(device.RenderState); }
         }
 
         public SamplerStateManagerCollection SamplerState

@@ -16,6 +16,7 @@ namespace Dope.DDXX.Graphics
         protected ITexture texture;
         protected ISurface surface;
         protected IManager manager;
+        protected IRenderStateManager renderStateManager;
         protected DisplayMode displayMode = new DisplayMode();
         protected PresentParameters presentParameters;
 
@@ -36,6 +37,7 @@ namespace Dope.DDXX.Graphics
             manager = mockery.NewMock<IManager>();
             texture = mockery.NewMock<ITexture>();
             surface = mockery.NewMock<ISurface>();
+            renderStateManager = mockery.NewMock<IRenderStateManager>();
 
             Stub.On(factory).
                 Method("CreateManager").
@@ -64,6 +66,9 @@ namespace Dope.DDXX.Graphics
             Stub.On(device).
                 GetProperty("PresentationParameters").
                 Will(Return.Value(presentParameters));
+            Stub.On(device).
+                GetProperty("RenderState").
+                Will(Return.Value(renderStateManager));
 
             D3DDriver.Factory = factory;
         }

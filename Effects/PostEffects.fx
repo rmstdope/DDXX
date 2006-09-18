@@ -16,9 +16,9 @@ texture SourceTexture2;
 texture LuminanceTexture;
 
 float Luminance = 0.06;
-float Exposure = 0.18;
-float WhiteCutoff = 0.9f;
-float BloomScale = 1.0f;//5f;
+float Exposure = 0.3f;//0.18;
+float WhiteCutoff = 0.1f;
+float BloomScale = 1.5f;
 float4 Color = float4(1,1,1,1);
 float2 Offset = float2(0,0);
 
@@ -229,7 +229,7 @@ float2 TextureDimensions
 	string ConvertPixelsToTexels = "PreScaledTextureDimensions";
 >;
 
-float2 PreScaledTextureDimensions = { 1, 1 };
+float2 PreScaledTextureDimensions[1] = { 1, 1 };
 
 
 float2 PreScaledDownSample4xKernel[16] =
@@ -442,14 +442,6 @@ BrightenPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 	// objects.
 	ColorOut /= (10.0f + ColorOut);
 
-	/*ColorOut *= middleGray / (Luminance + 0.001f);
-	ColorOut *= (1.0f + (ColorOut / (WhiteCutoff * WhiteCutoff)));
-	ColorOut -= 5.0f;
-
-	ColorOut = max(ColorOut, 0.0f);
-
-	ColorOut /= (10.0f + ColorOut);*/
-
 	return float4(ColorOut, sample.a);
 }
 
@@ -604,8 +596,7 @@ technique DownSample4x
 {
 	pass p0
 	<
-		float ScaleX = 0.25f;
-		float ScaleY = 0.25f;
+		float Scale = 0.25f;
 	>
 	{
 		VertexShader = null;
@@ -618,8 +609,7 @@ technique UpSample4x
 {
 	pass p0
 	<
-		float ScaleX = 4.0f;
-		float ScaleY = 4.0f;
+		float Scale = 4.0f;
 	>
 	{
 		VertexShader = null;
@@ -631,6 +621,9 @@ technique UpSample4x
 technique ToneMap
 {
 	pass BasePass
+	<
+		float Scale = 1.0f;
+	>
 	{
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 ToneMapPixelShader();
@@ -641,6 +634,9 @@ technique ToneMap
 technique FinalHDR
 {
 	pass BasePass
+	<
+		float Scale = 1.0f;
+	>
 	{
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 FinalHDR_PixelShader(true);
@@ -651,6 +647,9 @@ technique FinalHDR
 technique InverseColor
 {
 	pass BasePass
+	<
+		float Scale = 1.0f;
+	>
 	{
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 InversePixelShader();
@@ -661,6 +660,9 @@ technique InverseColor
 technique HorizontalBloom
 {
 	pass BasePass
+	<
+		float Scale = 1.0f;
+	>
 	{
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 HBloomPixelShader();
@@ -671,6 +673,9 @@ technique HorizontalBloom
 technique VerticalBloom
 {
 	pass BasePass
+	<
+		float Scale = 1.0f;
+	>
 	{
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 VBloomPixelShader();
@@ -681,6 +686,9 @@ technique VerticalBloom
 technique Brighten
 {
 	pass BasePass
+	<
+		float Scale = 1.0f;
+	>
 	{
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 BrightenPixelShader();
@@ -696,6 +704,9 @@ technique Brighten
 technique HDRLuminanceGreyDS
 {
 	pass BasePass
+	<
+		float Scale = 1.0f;
+	>
 	{
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 HDRLuminanceGreyDS();
@@ -711,6 +722,9 @@ technique HDRLuminanceGreyDS
 technique HDRLuminanceDS
 {
 	pass BasePass
+	<
+		float Scale = 1.0f;
+	>
 	{
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 HDRLuminanceDS();
@@ -726,6 +740,9 @@ technique HDRLuminanceDS
 technique Monochrome
 {
 	pass BasePass
+	<
+		float Scale = 1.0f;
+	>
 	{
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 MonoPixelShader();
@@ -736,6 +753,9 @@ technique Monochrome
 technique HorizontalSmear
 {
 	pass BasePass
+	<
+		float Scale = 1.0f;
+	>
 	{
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 HSmearPixelShader();
@@ -746,6 +766,9 @@ technique HorizontalSmear
 technique VerticalSmear
 {
 	pass BasePass
+	<
+		float Scale = 1.0f;
+	>
 	{
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 VSmearPixelShader();
@@ -756,6 +779,9 @@ technique VerticalSmear
 technique HorizontalBlur
 {
 	pass BasePass
+	<
+		float Scale = 1.0f;
+	>
 	{
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 HBlurPixelShader();
@@ -766,6 +792,9 @@ technique HorizontalBlur
 technique VerticalBlur
 {
 	pass BasePass
+	<
+		float Scale = 1.0f;
+	>
 	{
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 VBlurPixelShader();
@@ -776,6 +805,9 @@ technique VerticalBlur
 technique Copy
 {
 	pass BasePass
+	<
+		float Scale = 1.0f;
+	>
 	{
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 CopyPixelShader();
@@ -787,6 +819,9 @@ technique Copy
 technique Blend
 {
 	pass BasePass
+	<
+		float Scale = 1.0f;
+	>
 	{
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 BlendPixelShader(false);
@@ -804,6 +839,9 @@ technique Blend
 technique DoF
 {
 	pass BasePass
+	<
+		float Scale = 1.0f;
+	>
 	{
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 DoFPixelShader(DofKernel20, 12);
@@ -814,6 +852,9 @@ technique DoF
 technique Color
 {
 	pass BasePass
+	<
+		float Scale = 1.0f;
+	>
 	{
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 ColorPixelShader();
@@ -829,6 +870,9 @@ technique Color
 /*technique Test
 {
 	pass BasePass
+	<
+		float Scale = 1.0f;
+	>
 	{
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 DoFPixelShader20(DofKernel20, 12);

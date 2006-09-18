@@ -9,6 +9,9 @@ namespace Dope.DDXX.Graphics
     public interface IEffect
     {
         // Summary:
+        //     Retrieves an the number of parameters in an effect description.
+        int Description_Parameters { get; }
+        // Summary:
         //     Retrieves an effect description.
         EffectDescription Description { get; }
         // Summary:
@@ -270,6 +273,7 @@ namespace Dope.DDXX.Graphics
         //     Description of the specified parameter or annotation. For more information,
         //     see Microsoft.DirectX.Direct3D.ParameterDescription.
         ParameterDescription GetParameterDescription(EffectHandle parameter);
+        int GetParameterDescription_Elements(EffectHandle parameter);
         //
         // Summary:
         //     Retrieves the Microsoft.DirectX.Direct3D.EffectHandle of an array element

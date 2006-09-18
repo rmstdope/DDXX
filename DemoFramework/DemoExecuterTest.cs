@@ -36,6 +36,9 @@ namespace Dope.DDXX.DemoFramework
                 Method("GetParameter").
                 With(null, "SourceTexture").
                 Will(Return.Value(EffectHandle.FromString("")));
+            Stub.On(effect).
+                GetProperty("Description_Parameters").
+                Will(Return.Value(0));
         }
 
         [SetUp]
@@ -283,7 +286,7 @@ namespace Dope.DDXX.DemoFramework
                 With(0, surface);
             Expect.Once.On(device).
                 Method("Clear").
-                With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Blue, 1.0f, 0);
+                With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Black, 1.0f, 0);
             Expect.Once.On(device).
                 Method("StretchRectangle");
             Expect.Once.On(device).
@@ -308,7 +311,7 @@ namespace Dope.DDXX.DemoFramework
                 Will(Return.Value(true));
             Expect.Once.On(device).
                 Method("Clear").
-                With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Blue, 1.0f, 0);
+                With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Black, 1.0f, 0);
             Expect.Once.On(device).
                 Method("BeginScene");
             Expect.Exactly(2).On(device).
@@ -340,7 +343,7 @@ namespace Dope.DDXX.DemoFramework
 
             Expect.Once.On(device).
                 Method("Clear").
-                With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Blue, 1.0f, 0);
+                With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Black, 1.0f, 0);
             Expect.Once.On(device).
                 Method("BeginScene");
             Expect.Exactly(2).On(device).
@@ -372,7 +375,7 @@ namespace Dope.DDXX.DemoFramework
 
             Expect.Once.On(device).
                 Method("Clear").
-                With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Blue, 1.0f, 0);
+                With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Black, 1.0f, 0);
             Expect.Once.On(device).
                 Method("BeginScene");
             Expect.Exactly(2).On(device).

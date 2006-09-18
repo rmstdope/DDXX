@@ -181,7 +181,7 @@ namespace Dope.DDXX.DemoFramework
         {
             ISurface originalTarget = device.GetRenderTarget(0);
             device.SetRenderTarget(0, backBuffer.GetSurfaceLevel(0));
-            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Blue, 1.0f, 0);
+            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Black, 1.0f, 0);
             postProcessor.StartFrame(backBuffer);
 
             if (tracks.Count != 0)

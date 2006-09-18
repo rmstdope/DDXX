@@ -1,25 +1,23 @@
 ﻿<NUnitProject>
   <Settings activeconfig="Debug" />
   <Config name="Debug" binpathtype="Auto">
-    <assembly path="Physics\bin\Debug\Phsyics.dll" />
-    <assembly path="Utility\bin\Debug\Utility.dll" />
-    <assembly path="Sound\bin\Debug\Sound.dll" />
-    <assembly path="Input\bin\Debug\Input.dll" />
-    <assembly path="SceneGraph\bin\Debug\SceneGraph.dll" />
-    <assembly path="DemoFramework\bin\Debug\DemoFramework.dll" />
-    <assembly path="Direct3D\bin\Debug\Direct3D.dll" />
-    <assembly path="EngineTest\bin\Debug\EngineTest.exe" />
-    <assembly path="FMOD\bin\Debug\FMOD.dll" />
+    <assembly path="DemoEffects\bin\Debug\Dope.DDXX.DemoEffects.dll" />
+    <assembly path="DemoFramework\bin\Debug\Dope.DDXX.DemoFramework.dll" />
+    <assembly path="Graphics\bin\Debug\Dope.DDXX.Graphics.dll" />
+    <assembly path="Input\bin\Debug\Dope.DDXX.Input.dll" />
+    <assembly path="Physics\bin\Debug\Dope.DDXX.Phsyics.dll" />
+    <assembly path="SceneGraph\bin\Debug\Dope.DDXX.SceneGraph.dll" />
+    <assembly path="Sound\bin\Debug\Dope.DDXX.Sound.dll" />
+    <assembly path="Utility\bin\Debug\Dope.DDXX.Utility.dll" />
   </Config>
   <Config name="Release" binpathtype="Auto">
-    <assembly path="Physics\bin\Release\Phsyics.dll" />
-    <assembly path="Utility\bin\Release\Utility.dll" />
-    <assembly path="Sound\bin\Release\Sound.dll" />
-    <assembly path="Input\bin\Release\Input.dll" />
-    <assembly path="SceneGraph\bin\Release\SceneGraph.dll" />
-    <assembly path="DemoFramework\bin\Release\DemoFramework.dll" />
-    <assembly path="Direct3D\bin\Release\Direct3D.dll" />
-    <assembly path="EngineTest\bin\Release\EngineTest.exe" />
-    <assembly path="FMOD\bin\Release\FMOD.dll" />
+    <assembly path="DemoEffects\bin\Release\Dope.DDXX.DemoEffects.dll" />
+    <assembly path="DemoFramework\bin\Release\Dope.DDXX.DemoFramework.dll" />
+    <assembly path="Graphics\bin\Release\Dope.DDXX.Graphics.dll" />
+    <assembly path="Input\bin\Release\Dope.DDXX.Input.dll" />
+    <assembly path="Physics\bin\Release\Dope.DDXX.Phsyics.dll" />
+    <assembly path="SceneGraph\bin\Release\Dope.DDXX.SceneGraph.dll" />
+    <assembly path="Sound\bin\Release\Dope.DDXX.Sound.dll" />
+    <assembly path="Utility\bin\Release\Dope.DDXX.Utility.dll" />
   </Config>
 </NUnitProject>
