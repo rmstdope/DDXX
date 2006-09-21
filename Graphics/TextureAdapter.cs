@@ -8,11 +8,12 @@ using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.Graphics
 {
-    public class TextureAdapter : ITexture
+    public class TextureAdapter : BaseTextureAdapter, ITexture
     {
-        Texture texture;
+        private Texture texture;
 
-        public TextureAdapter(Texture texture)
+        public TextureAdapter(Texture texture) : 
+            base(texture)
         {
             this.texture = texture;
         }
@@ -25,99 +26,6 @@ namespace Dope.DDXX.Graphics
         public static ITexture FromFile(Device device, string srcFile, int width, int height, int mipLevels, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey)
         {
             return new TextureAdapter(TextureLoader.FromFile(device, srcFile, width, height, mipLevels, usage, format, pool, filter, mipFilter, colorKey));
-        }
-
-        //
-        // Summary:
-        //     Creates a new instance of the Texture class.
-        //
-        // Parameters:
-        //   device:
-        //     A Device object to associate with the Texture.
-        //
-        //   image:
-        //     A System.Drawing.Bitmap used to create the texture.
-        //
-        //   usage:
-        //     Usage can be 0, which indicates no usage value. However, if usage is desired,
-        //     use one or more Usage constants. It is good practice
-        //     to match the usage parameter with the CreateFlags
-        //     in the Device.#ctor() constructor.
-        //
-        //   pool:
-        //     Member of the Pool enumerated type that describes
-        //     the memory class into which the texture should be placed.
-        public TextureAdapter(Device device, Bitmap image, Usage usage, Pool pool)
-        {
-            texture = new Texture(device, image, usage, pool);
-        }
-        //
-        // Summary:
-        //     Creates a new instance of the Texture class.
-        //
-        // Parameters:
-        //   device:
-        //     A Device object to associate with the Texture.
-        //
-        //   data:
-        //     A System.IO.Stream object that contains the image data. The texture is created
-        //     with the data in the stream.
-        //
-        //   usage:
-        //     Usage can be 0, which indicates no usage value. However, if usage is desired,
-        //     use one or more Usage constants. It is good practice
-        //     to match the usage parameter with the CreateFlags
-        //     in the Device.#ctor() constructor.
-        //
-        //   pool:
-        //     Member of the Pool enumerated type that describes
-        //     the memory class into which the texture should be placed.
-        public TextureAdapter(Device device, Stream data, Usage usage, Pool pool)
-        {
-            texture = new Texture(device, data, usage, pool);
-        }
-        //
-        // Summary:
-        //     Creates a new instance of the Texture class.
-        //
-        // Parameters:
-        //   device:
-        //     A Device object to associate with the Texture.
-        //
-        //   width:
-        //     Width of the texture's top level, in pixels. The pixel dimensions of subsequent
-        //     levels are the truncated value of half of the previous level's pixel dimension
-        //     (independently). Each dimension clamps at a size of one pixel. Thus, if the
-        //     division by 2 results in 0, 1 is taken instead.
-        //
-        //   height:
-        //     Height of the texture's top level, in pixels. The pixel dimensions of subsequent
-        //     levels are the truncated value of half of the previous level's pixel dimension
-        //     (independently). Each dimension clamps at a size of one pixel. Thus, if the
-        //     division by 2 results in 0, 1 is taken instead.
-        //
-        //   numLevels:
-        //     Number of levels in the texture. If this is 0, Microsoft Direct3D generates
-        //     all texture sublevels down to 1 by 1 pixels for hardware that supports mipmapped
-        //     textures. Check the BaseTexture.LevelCount parameter
-        //     to see the number of levels generated.
-        //
-        //   usage:
-        //     Usage can be 0, which indicates no usage value. However, if usage is desired,
-        //     use one or more Usage constants. It is good practice
-        //     to match the usage parameter with the CreateFlags
-        //     in the Device.#ctor() constructor.
-        //
-        //   format:
-        //     Member of the Format enumerated type that describes
-        //     the format of all levels in the texture.
-        //
-        //   pool:
-        //     Member of the Pool enumerated type that describes
-        //     the memory class into which the texture should be placed.
-        public TextureAdapter(Device device, int width, int height, int numLevels, Usage usage, Format format, Pool pool)
-        {
-            texture = new Texture(device, width, height, numLevels, usage, format, pool);
         }
         
         #region ITexture Members
@@ -135,11 +43,6 @@ namespace Dope.DDXX.Graphics
         public void AddDirtyRectangle(Rectangle rect)
         {
             texture.AddDirtyRectangle(rect);
-        }
-
-        public void Dispose()
-        {
-            texture.Dispose();
         }
 
         public SurfaceDescription GetLevelDescription(int level)

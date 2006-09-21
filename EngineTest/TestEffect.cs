@@ -49,6 +49,8 @@ namespace EngineTest
 
             texture = D3DDriver.TextureFactory.CreateFromFile("../../Data/wings.bmp");
             sprite = D3DDriver.Factory.CreateSprite(Device);
+
+
         }
 
         public override void StartTimeUpdated()

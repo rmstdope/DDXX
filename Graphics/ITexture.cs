@@ -8,7 +8,7 @@ using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.Graphics
 {
-    public interface ITexture
+    public interface ITexture : IBaseTexture
     {
         // Summary:
         //     Gets a value that indicates whether the object is disposed.
@@ -24,11 +24,6 @@ namespace Dope.DDXX.Graphics
         //   rect:
         //     A System.Drawing.Rectangle structure that specifies the dirty region to add.
         void AddDirtyRectangle(Rectangle rect);
-        //
-        // Summary:
-        //     Immediately releases the unmanaged resources used by the Microsoft.DirectX.Direct3D.Texture
-        //     object.
-        void Dispose();
         //
         // Summary:
         //     Retrieves a level description of a texture resource.

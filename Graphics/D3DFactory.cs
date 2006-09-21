@@ -24,17 +24,17 @@ namespace Dope.DDXX.Graphics
 
         public ITexture CreateTexture(IDevice device, Bitmap image, Usage usage, Pool pool)
         {
-            return new TextureAdapter(((DeviceAdapter)device).DXDevice, image, usage, pool);
+            return new TextureAdapter(new Texture(((DeviceAdapter)device).DXDevice, image, usage, pool));
         }
 
         public ITexture CreateTexture(IDevice device, Stream data, Usage usage, Pool pool)
         {
-            return new TextureAdapter(((DeviceAdapter)device).DXDevice, data, usage, pool);
+            return new TextureAdapter(new Texture(((DeviceAdapter)device).DXDevice, data, usage, pool));
         }
 
         public ITexture CreateTexture(IDevice device, int width, int height, int numLevels, Usage usage, Format format, Pool pool)
         {
-            return new TextureAdapter(((DeviceAdapter)device).DXDevice, width, height, numLevels, usage, format, pool);
+            return new TextureAdapter(new Texture(((DeviceAdapter)device).DXDevice, width, height, numLevels, usage, format, pool));
         }
 
         public IMesh MeshFromFile(IDevice device, string fileName, out EffectInstance[] effectInstance)

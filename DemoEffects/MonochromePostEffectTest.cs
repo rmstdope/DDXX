@@ -4,6 +4,8 @@ using System.Text;
 using NUnit.Framework;
 using NMock2;
 using Dope.DDXX.DemoFramework;
+using Microsoft.DirectX.Direct3D;
+using System.Drawing;
 
 namespace Dope.DDXX.DemoEffects
 {
@@ -36,6 +38,9 @@ namespace Dope.DDXX.DemoEffects
                 GetProperty("OutputTextureID").
                 Will(Return.Value(TextureID.INPUT_TEXTURE));
             Expect.Once.On(postProcessor).
+                Method("SetBlendParameters").
+                With(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
+            Expect.Once.On(postProcessor).
                 Method("Process").
                 With("Monochrome", TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1);
             effect.Render();
@@ -47,6 +52,9 @@ namespace Dope.DDXX.DemoEffects
             Stub.On(postProcessor).
                 GetProperty("OutputTextureID").
                 Will(Return.Value(TextureID.FULLSIZE_TEXTURE_1));
+            Expect.Once.On(postProcessor).
+                Method("SetBlendParameters").
+                With(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
             Expect.Once.On(postProcessor).
                 Method("Process").
                 With("Monochrome", TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_2);

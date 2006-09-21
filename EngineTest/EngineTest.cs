@@ -84,6 +84,8 @@ namespace EngineTest
                     executer.Register(0, demoEffect);
                 }
             }
+            MonochromePostEffect monochrome = new MonochromePostEffect(0.0f, 10.0f);
+            executer.Register(0, monochrome);
             GlowPostEffect postEffect = new GlowPostEffect(0.0f, 10.0f);
             postEffect.Luminance = 0.06f;
             postEffect.Exposure = 0.3f;

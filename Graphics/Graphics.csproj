@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseTextureAdapter.cs" />
+    <Compile Include="CubeTextureAdapter.cs" />
     <Compile Include="D3DDriver.cs" />
     <Compile Include="D3DDriverTest.cs">
       <SubType>Code</SubType>
@@ -51,6 +53,8 @@
     <Compile Include="EffectAdapter.cs" />
     <Compile Include="EffectFactory.cs" />
     <Compile Include="EffectFactoryTest.cs" />
+    <Compile Include="IBaseTexture.cs" />
+    <Compile Include="ICubeTexture.cs" />
     <Compile Include="IDevice.cs" />
     <Compile Include="IEffect.cs" />
     <Compile Include="IGraphicsFactory.cs" />

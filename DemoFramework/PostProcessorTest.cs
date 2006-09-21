@@ -51,7 +51,7 @@ namespace Dope.DDXX.DemoFramework
             effect = mockery.NewMock<IEffect>();
             Expect.Once.On(factory).
                 Method("EffectFromFile").
-                With(Is.EqualTo(device), Is.EqualTo("../../../Effects/PostEffects.fxo"), Is.Null, Is.EqualTo(""), Is.EqualTo(ShaderFlags.None), Is.Anything).
+                With(Is.EqualTo(device), Is.EqualTo("../../../Effects/PostEffects.fxo"), Is.Null, Is.EqualTo(""), Is.Anything, Is.Anything).
                 Will(Return.Value(effect));
             Expect.Once.On(effect).
                 Method("GetParameter").
