@@ -47,7 +47,7 @@ namespace Dope.DDXX.Graphics
                 return result.effect;
             }
             ShaderFlags flags = ShaderFlags.None;
-#if __DEBUG__
+#if DEBUG
             flags |= (ShaderFlags.Debug | ShaderFlags.SkipOptimization);
 #endif
             IEffect effect = factory.EffectFromFile(device, file, null, "", flags, pool);
