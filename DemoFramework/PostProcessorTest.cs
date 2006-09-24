@@ -51,7 +51,7 @@ namespace Dope.DDXX.DemoFramework
             effect = mockery.NewMock<IEffect>();
             Expect.Once.On(factory).
                 Method("EffectFromFile").
-                With(Is.EqualTo(device), Is.EqualTo("../../../Effects/PostEffects.fxo"), Is.Null, Is.EqualTo(""), Is.Anything, Is.Anything).
+                With(Is.EqualTo(device), Is.EqualTo("PostEffects.fxo"), Is.Null, Is.EqualTo(""), Is.Anything, Is.Anything).
                 Will(Return.Value(effect));
             Expect.Once.On(effect).
                 Method("GetParameter").
@@ -182,7 +182,7 @@ namespace Dope.DDXX.DemoFramework
 
             TestInitializeOK();
             postProcessor.StartFrame(startTexture);
-            SetupPostEffect(startTexture, "Monochrome", vertices, 1.0f);
+            SetupPostEffect(startTexture, "Monochrome", vertices, 1.0f, false);
             SetupBlend(BlendOperation.Max, Blend.SourceAlpha, Blend.SourceAlphaSat, Color.Fuchsia);
             postProcessor.Process("Monochrome", TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1);
             Assert.AreSame(fullsizeTexture1, postProcessor.OutputTexture);
@@ -200,7 +200,7 @@ namespace Dope.DDXX.DemoFramework
 
             TestInitializeOK();
             postProcessor.StartFrame(startTexture);
-            SetupPostEffect(startTexture, "DownSample4x", vertices, 0.5f);
+            SetupPostEffect(startTexture, "DownSample4x", vertices, 0.5f, true);
             SetupBlend(BlendOperation.RevSubtract, Blend.DestinationColor, Blend.BothInvSourceAlpha, Color.DodgerBlue);
             postProcessor.Process("DownSample4x", TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1);
             Assert.AreSame(fullsizeTexture1, postProcessor.OutputTexture);
@@ -210,7 +210,7 @@ namespace Dope.DDXX.DemoFramework
             vertices[1] = new CustomVertex.TransformedTextured(new Vector4(100 - 0.5f, -0.5f, 1.0f, 1.0f), 0.5f, 0);
             vertices[2] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, 50 - 0.5f, 1.0f, 1.0f), 0, 0.5f);
             vertices[3] = new CustomVertex.TransformedTextured(new Vector4(100 - 0.5f, 50 - 0.5f, 1.0f, 1.0f), 0.5f, 0.5f);
-            SetupPostEffect(fullsizeTexture1, "DownSample4x", vertices, 0.5f);
+            SetupPostEffect(fullsizeTexture1, "DownSample4x", vertices, 0.5f, true);
             SetupBlend(BlendOperation.Add, Blend.One, Blend.Zero, Color.DodgerBlue);
             postProcessor.Process("DownSample4x", TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_2);
 
@@ -219,7 +219,7 @@ namespace Dope.DDXX.DemoFramework
             vertices[2] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, 100 - 0.5f, 1.0f, 1.0f), 0, 1);
             vertices[3] = new CustomVertex.TransformedTextured(new Vector4(200 - 0.5f, 100 - 0.5f, 1.0f, 1.0f), 1, 1);
             postProcessor.StartFrame(startTexture);
-            SetupPostEffect(startTexture, "DownSample4x", vertices, 0.5f);
+            SetupPostEffect(startTexture, "DownSample4x", vertices, 0.5f, false);
             SetupBlend(BlendOperation.Subtract, Blend.DestinationColor, Blend.BothInvSourceAlpha, Color.DimGray);
             postProcessor.Process("DownSample4x", TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1);
         }
@@ -235,7 +235,7 @@ namespace Dope.DDXX.DemoFramework
             vertices[1] = new CustomVertex.TransformedTextured(new Vector4(400 - 0.5f, -0.5f, 1.0f, 1.0f), 0.5f, 0);
             vertices[2] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, 200 - 0.5f, 1.0f, 1.0f), 0, 0.5f);
             vertices[3] = new CustomVertex.TransformedTextured(new Vector4(400 - 0.5f, 200 - 0.5f, 1.0f, 1.0f), 0.5f, 0.5f);
-            SetupPostEffect(fullsizeTexture1, "UpSample4x", vertices, 2.0f);
+            SetupPostEffect(fullsizeTexture1, "UpSample4x", vertices, 2.0f, false);
             SetupBlend(BlendOperation.Subtract, Blend.DestinationColor, Blend.BothInvSourceAlpha, Color.DimGray);
             postProcessor.Process("UpSample4x", TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_2);
             Assert.AreEqual(TextureID.FULLSIZE_TEXTURE_2, postProcessor.OutputTextureID);
@@ -244,7 +244,7 @@ namespace Dope.DDXX.DemoFramework
             vertices[1] = new CustomVertex.TransformedTextured(new Vector4(400 - 0.5f, -0.5f, 1.0f, 1.0f), 1, 0);
             vertices[2] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, 200 - 0.5f, 1.0f, 1.0f), 0, 1);
             vertices[3] = new CustomVertex.TransformedTextured(new Vector4(400 - 0.5f, 200 - 0.5f, 1.0f, 1.0f), 1, 1);
-            SetupPostEffect(fullsizeTexture1, "Monochrome", vertices, 1.0f);
+            SetupPostEffect(fullsizeTexture1, "Monochrome", vertices, 1.0f, false);
             SetupBlend(BlendOperation.RevSubtract, Blend.DestinationColor, Blend.BothInvSourceAlpha, Color.DimGray);
             postProcessor.Process("Monochrome", TextureID.FULLSIZE_TEXTURE_2, TextureID.FULLSIZE_TEXTURE_1);
             Assert.AreEqual(TextureID.FULLSIZE_TEXTURE_1, postProcessor.OutputTextureID);
@@ -258,7 +258,7 @@ namespace Dope.DDXX.DemoFramework
 
             TestInitializeOK();
             postProcessor.StartFrame(startTexture);
-            SetupPostEffect(startTexture, "UpSample4x", vertices, 2.0f);
+            SetupPostEffect(startTexture, "UpSample4x", vertices, 2.0f, false);
             SetupBlend(BlendOperation.RevSubtract, Blend.DestinationColor, Blend.BothInvSourceAlpha, Color.DimGray);
             postProcessor.Process("UpSample4x", TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1);
         }
@@ -294,14 +294,14 @@ namespace Dope.DDXX.DemoFramework
             postProcessor.SetBlendParameters(operation, source, destination, factor);
         }
 
-        private void SetupPostEffect(ITexture startTexture, string technique, CustomVertex.TransformedTextured[] vertices, float scale)
+        private void SetupPostEffect(ITexture startTexture, string technique, CustomVertex.TransformedTextured[] vertices, float scale, bool clear)
         {
             SetupStub(technique, scale);
 
-            SetupExpect(startTexture, technique, vertices);
+            SetupExpect(startTexture, technique, vertices, clear);
         }
 
-        private void SetupExpect(ITexture startTexture, string technique, CustomVertex.TransformedTextured[] vertices)
+        private void SetupExpect(ITexture startTexture, string technique, CustomVertex.TransformedTextured[] vertices, bool clear)
         {
             using (mockery.Ordered)
             {
@@ -325,6 +325,11 @@ namespace Dope.DDXX.DemoFramework
                     Will(Return.Value(1));
                 Expect.Once.On(effect).
                     Method("BeginPass").With(0);
+                if (clear)
+                {
+                    Expect.Once.On(device).
+                        Method("Clear");
+                }
                 Expect.Once.On(device).
                     Method("DrawUserPrimitives").
                     With(Is.EqualTo(PrimitiveType.TriangleStrip), Is.EqualTo(2), new VertexMatcher(vertices));

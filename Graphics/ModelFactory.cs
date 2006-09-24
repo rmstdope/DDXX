@@ -220,6 +220,9 @@ namespace Dope.DDXX.Graphics
             }
             switch (elements[elements.Length - 2].DeclarationType)
             {
+                case DeclarationType.Float1:
+                    offset += 4;
+                    break;
                 case DeclarationType.Float2:
                     offset += 8;
                     break;
@@ -227,10 +230,13 @@ namespace Dope.DDXX.Graphics
                     offset += 12;
                     break;
                 case DeclarationType.Float4:
-                    offset += 12;
+                    offset += 16;
+                    break;
+                case DeclarationType.Color:
+                    offset += 4;
                     break;
                 default:
-                    throw new DDXXException("DeclarationType not implemented.");
+                    throw new DDXXException("DeclarationType not implemented: " + elements[elements.Length - 2].DeclarationType.ToString());
             }
             newElements[elements.Length - 1] = element;
             newElements[elements.Length - 1].Offset = offset;

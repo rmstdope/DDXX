@@ -77,6 +77,8 @@ namespace Dope.DDXX.DemoEffects
             PostProcessor.Process("Brighten", temp[1], temp[0]);
             PostProcessor.Process("HorizontalBloom", temp[0], temp[1]);
             PostProcessor.Process("VerticalBloom", temp[1], temp[0]);
+            PostProcessor.Process("HorizontalBloom", temp[0], temp[1]);
+            PostProcessor.Process("VerticalBloom", temp[1], temp[0]);
             PostProcessor.Process("UpSample4x", temp[0], temp[1]);
             PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.One, Color.Black);
             PostProcessor.Process("UpSample4x", temp[1], startTexture);

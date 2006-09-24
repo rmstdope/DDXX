@@ -17,6 +17,11 @@ namespace Dope.DDXX.Graphics
             this.texture = texture;
         }
 
+        public CubeTexture CubeTextureDX
+        {
+            get { return texture; }
+        }
+
         #region ICubeTexture Members
 
         public void AddDirtyRectangle(CubeMapFace faceType)

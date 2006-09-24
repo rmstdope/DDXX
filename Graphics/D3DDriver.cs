@@ -41,7 +41,7 @@ namespace Dope.DDXX.Graphics
                 throw new DDXXException("The DX factory needs to be set before the D3DDriver can be created.");
             }
 
-            manager = factory.CreateManager();
+            manager = factory.Manager;
             GetDisplayMode();
         }
 

@@ -10,9 +10,9 @@ using Dope.DDXX.Physics;
 using Dope.DDXX.SceneGraph;
 using Dope.DDXX.Utility;
 
-namespace EngineTest
+namespace ShortPuzzle
 {
-    public class TestEffect : BaseDemoEffect
+    class MainEffect : BaseDemoEffect
     {
         private Cube[] cubes;
         private LightNode[] lights;
@@ -179,7 +179,7 @@ namespace EngineTest
             }
         }
 
-        public TestEffect(float startTime, float endTime) 
+        public MainEffect(float startTime, float endTime) 
             : base(startTime, endTime)
         {
         }

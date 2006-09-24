@@ -87,12 +87,15 @@ namespace Dope.DDXX.DemoEffects
                 Expect.Once.On(postProcessor).
                     Method("Process").
                     With("Brighten", tempTexture2, tempTexture1);
-                Expect.Once.On(postProcessor).
-                    Method("Process").
-                    With("HorizontalBloom", tempTexture1, tempTexture2);
-                Expect.Once.On(postProcessor).
-                    Method("Process").
-                    With("VerticalBloom", tempTexture2, tempTexture1);
+                for (int i = 0; i < 2; i++)
+                {
+                    Expect.Once.On(postProcessor).
+                        Method("Process").
+                        With("HorizontalBloom", tempTexture1, tempTexture2);
+                    Expect.Once.On(postProcessor).
+                        Method("Process").
+                        With("VerticalBloom", tempTexture2, tempTexture1);
+                }
                 Expect.Once.On(postProcessor).
                     Method("Process").
                     With("UpSample4x", tempTexture1, tempTexture2);

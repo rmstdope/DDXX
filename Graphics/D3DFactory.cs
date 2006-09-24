@@ -10,6 +10,9 @@ namespace Dope.DDXX.Graphics
 {
     public class D3DFactory : IGraphicsFactory
     {
+        private DeviceManager manager = null;
+        private SphericalHarmonicsAdapter sphericalHarmonics = null;
+
         #region IFactory Members
 
         public IDevice CreateDevice(int adapter, DeviceType deviceType, Control renderWindow, CreateFlags behaviorFlags, PresentParameters presentationParameters)
@@ -17,9 +20,24 @@ namespace Dope.DDXX.Graphics
             return new DeviceAdapter(adapter, deviceType, renderWindow, behaviorFlags, presentationParameters);
         }
 
-        public IManager CreateManager()
+        public IManager Manager
         {
-            return new DeviceManager();
+            get
+            {
+                if (manager == null)
+                    manager = new DeviceManager();
+                return manager;
+            }
+        }
+
+        public ISphericalHarmonics SphericalHarmonics
+        {
+            get
+            {
+                if (sphericalHarmonics == null)
+                    sphericalHarmonics = new SphericalHarmonicsAdapter();
+                return sphericalHarmonics;
+            }
         }
 
         public ITexture CreateTexture(IDevice device, Bitmap image, Usage usage, Pool pool)
@@ -35,6 +53,11 @@ namespace Dope.DDXX.Graphics
         public ITexture CreateTexture(IDevice device, int width, int height, int numLevels, Usage usage, Format format, Pool pool)
         {
             return new TextureAdapter(new Texture(((DeviceAdapter)device).DXDevice, width, height, numLevels, usage, format, pool));
+        }
+
+        public ICubeTexture CreateCubeTexture(IDevice device, int edgeLength, int levels, Usage usage, Format format, Pool pool)
+        {
+            return new CubeTextureAdapter(new CubeTexture(((DeviceAdapter)device).DXDevice, edgeLength, levels, usage, format, pool));
         }
 
         public IMesh MeshFromFile(IDevice device, string fileName, out EffectInstance[] effectInstance)
@@ -60,6 +83,16 @@ namespace Dope.DDXX.Graphics
         public ITexture TextureFromFile(IDevice device, string srcFile, int width, int height, int mipLevels, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey)
         {
             return TextureAdapter.FromFile(((DeviceAdapter)device).DXDevice, srcFile, width, height, mipLevels, usage, format, pool, filter, mipFilter, colorKey);
+        }
+
+        public ICubeTexture CubeTextureFromFile(IDevice device, string fileName)
+        {
+            return new CubeTextureAdapter(TextureLoader.FromCubeFile(((DeviceAdapter)device).DXDevice, fileName));
+        }
+
+        public ICubeTexture CubeTextureFromFile(IDevice device, string fileName, int size, int mipLevels, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey)
+        {
+            return new CubeTextureAdapter(TextureLoader.FromCubeFile(((DeviceAdapter)device).DXDevice, fileName, size, mipLevels, usage, format, pool, filter, mipFilter, colorKey));
         }
 
         public ISprite CreateSprite(IDevice device)

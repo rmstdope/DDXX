@@ -83,7 +83,7 @@ namespace Dope.DDXX.Graphics
             manager = mockery.NewMock<IManager>();
 
             Stub.On(factory).
-                Method("CreateManager").
+                GetProperty("Manager").
                 Will(Return.Value(manager));
 
             Expect.Once.On(manager).

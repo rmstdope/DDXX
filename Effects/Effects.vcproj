@@ -163,6 +163,10 @@
 				RelativePath=".\PostEffects.fx"
 				>
 			</File>
+			<File
+				RelativePath=".\Test.fx"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="HLSL Files"

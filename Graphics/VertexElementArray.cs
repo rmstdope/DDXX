@@ -137,6 +137,9 @@ namespace Dope.DDXX.Graphics
                     case DeclarationType.Float4:
                         offset += 16;
                         break;
+                    case DeclarationType.Color:
+                        offset += 4;
+                        break;
                     default:
                         throw new DDXXException("DeclarationType not supported! Add it!");
                 }

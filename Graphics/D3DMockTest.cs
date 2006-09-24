@@ -40,7 +40,7 @@ namespace Dope.DDXX.Graphics
             renderStateManager = mockery.NewMock<IRenderStateManager>();
 
             Stub.On(factory).
-                Method("CreateManager").
+                GetProperty("Manager").
                 Will(Return.Value(manager));
             Stub.On(factory).
                 Method("CreateDevice").

@@ -26,6 +26,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Effects", "Effects\Effects.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoEffects", "DemoEffects\DemoEffects.csproj", "{971A8760-50EE-4932-99F3-D226081FBD53}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShortPuzzle", "ShortPuzzle\ShortPuzzle.csproj", "{0F201E16-E78E-46E3-AA14-8A3B62E5FD1D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -166,6 +168,16 @@ Global
 		{971A8760-50EE-4932-99F3-D226081FBD53}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{971A8760-50EE-4932-99F3-D226081FBD53}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{971A8760-50EE-4932-99F3-D226081FBD53}.Release|Win32.ActiveCfg = Release|Any CPU
+		{0F201E16-E78E-46E3-AA14-8A3B62E5FD1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F201E16-E78E-46E3-AA14-8A3B62E5FD1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F201E16-E78E-46E3-AA14-8A3B62E5FD1D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{0F201E16-E78E-46E3-AA14-8A3B62E5FD1D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{0F201E16-E78E-46E3-AA14-8A3B62E5FD1D}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{0F201E16-E78E-46E3-AA14-8A3B62E5FD1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F201E16-E78E-46E3-AA14-8A3B62E5FD1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F201E16-E78E-46E3-AA14-8A3B62E5FD1D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{0F201E16-E78E-46E3-AA14-8A3B62E5FD1D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{0F201E16-E78E-46E3-AA14-8A3B62E5FD1D}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

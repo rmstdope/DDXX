@@ -13,11 +13,10 @@ using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
 using Dope.DDXX.DemoEffects;
 
-namespace EngineTest
+namespace ShortPuzzle
 {
-    public class Runner
+    class ShortPuzzle
     {
-
         static void Main()
         {
             DemoWindow window;
@@ -101,6 +100,5 @@ namespace EngineTest
             window = new DemoWindow();
             executer = new DemoExecuter();
         }
-
     }
 }

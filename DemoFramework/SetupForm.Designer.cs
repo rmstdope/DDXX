@@ -36,19 +36,19 @@ namespace Dope.DDXX.DemoFramework
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.radio_16_10 = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.bit16fp = new System.Windows.Forms.RadioButton();
             this.bit16 = new System.Windows.Forms.RadioButton();
             this.bit32 = new System.Windows.Forms.RadioButton();
             this.bit32fp = new System.Windows.Forms.RadioButton();
             this.ok = new System.Windows.Forms.Button();
             this.cancel = new System.Windows.Forms.Button();
-            this.bit16fp = new System.Windows.Forms.RadioButton();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.effectBar = new System.Windows.Forms.TrackBar();
-            this.effect1 = new System.Windows.Forms.Label();
-            this.effect2 = new System.Windows.Forms.Label();
-            this.effect3 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.effect3 = new System.Windows.Forms.Label();
+            this.effect2 = new System.Windows.Forms.Label();
+            this.effect1 = new System.Windows.Forms.Label();
+            this.effectBar = new System.Windows.Forms.TrackBar();
             this.windowed = new System.Windows.Forms.CheckBox();
             this.refDriver = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
@@ -136,6 +136,17 @@ namespace Dope.DDXX.DemoFramework
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "and let the color depth be...";
             // 
+            // bit16fp
+            // 
+            this.bit16fp.AutoSize = true;
+            this.bit16fp.Location = new System.Drawing.Point(131, 16);
+            this.bit16fp.Name = "bit16fp";
+            this.bit16fp.Size = new System.Drawing.Size(53, 17);
+            this.bit16fp.TabIndex = 3;
+            this.bit16fp.TabStop = true;
+            this.bit16fp.Text = "16 FP";
+            this.bit16fp.UseVisualStyleBackColor = true;
+            // 
             // bit16
             // 
             this.bit16.AutoSize = true;
@@ -190,17 +201,6 @@ namespace Dope.DDXX.DemoFramework
             this.cancel.UseVisualStyleBackColor = true;
             this.cancel.Click += new System.EventHandler(this.cancel_Click);
             // 
-            // bit16fp
-            // 
-            this.bit16fp.AutoSize = true;
-            this.bit16fp.Location = new System.Drawing.Point(131, 16);
-            this.bit16fp.Name = "bit16fp";
-            this.bit16fp.Size = new System.Drawing.Size(53, 17);
-            this.bit16fp.TabIndex = 3;
-            this.bit16fp.TabStop = true;
-            this.bit16fp.Text = "16 FP";
-            this.bit16fp.UseVisualStyleBackColor = true;
-            // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.label6);
@@ -216,41 +216,15 @@ namespace Dope.DDXX.DemoFramework
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "and give me the following level of postEffect...";
             // 
-            // effectBar
+            // label6
             // 
-            this.effectBar.LargeChange = 1;
-            this.effectBar.Location = new System.Drawing.Point(7, 23);
-            this.effectBar.Maximum = 2;
-            this.effectBar.Name = "effectBar";
-            this.effectBar.Size = new System.Drawing.Size(246, 42);
-            this.effectBar.TabIndex = 0;
-            // 
-            // effect1
-            // 
-            this.effect1.AutoSize = true;
-            this.effect1.Location = new System.Drawing.Point(4, 54);
-            this.effect1.Name = "effect1";
-            this.effect1.Size = new System.Drawing.Size(55, 13);
-            this.effect1.TabIndex = 1;
-            this.effect1.Text = "Spare me!";
-            // 
-            // effect2
-            // 
-            this.effect2.AutoSize = true;
-            this.effect2.Location = new System.Drawing.Point(110, 53);
-            this.effect2.Name = "effect2";
-            this.effect2.Size = new System.Drawing.Size(47, 13);
-            this.effect2.TabIndex = 2;
-            this.effect2.Text = "Average";
-            // 
-            // effect3
-            // 
-            this.effect3.AutoSize = true;
-            this.effect3.Location = new System.Drawing.Point(163, 54);
-            this.effect3.Name = "effect3";
-            this.effect3.Size = new System.Drawing.Size(90, 13);
-            this.effect3.TabIndex = 3;
-            this.effect3.Text = "Hit me hard baby!";
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(172, 69);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(81, 9);
+            this.label6.TabIndex = 5;
+            this.label6.Text = "(Fast Shader Model 3)";
             // 
             // label5
             // 
@@ -262,27 +236,52 @@ namespace Dope.DDXX.DemoFramework
             this.label5.TabIndex = 4;
             this.label5.Text = "(Slow Shader Model 2)";
             // 
-            // label6
+            // effect3
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(172, 69);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(81, 9);
-            this.label6.TabIndex = 5;
-            this.label6.Text = "(Fast Shader Model 3)";
+            this.effect3.AutoSize = true;
+            this.effect3.Location = new System.Drawing.Point(163, 54);
+            this.effect3.Name = "effect3";
+            this.effect3.Size = new System.Drawing.Size(90, 13);
+            this.effect3.TabIndex = 3;
+            this.effect3.Text = "Hit me hard baby!";
+            // 
+            // effect2
+            // 
+            this.effect2.AutoSize = true;
+            this.effect2.Location = new System.Drawing.Point(110, 53);
+            this.effect2.Name = "effect2";
+            this.effect2.Size = new System.Drawing.Size(47, 13);
+            this.effect2.TabIndex = 2;
+            this.effect2.Text = "Average";
+            // 
+            // effect1
+            // 
+            this.effect1.AutoSize = true;
+            this.effect1.Location = new System.Drawing.Point(4, 54);
+            this.effect1.Name = "effect1";
+            this.effect1.Size = new System.Drawing.Size(55, 13);
+            this.effect1.TabIndex = 1;
+            this.effect1.Text = "Spare me!";
+            // 
+            // effectBar
+            // 
+            this.effectBar.LargeChange = 1;
+            this.effectBar.Location = new System.Drawing.Point(7, 23);
+            this.effectBar.Maximum = 2;
+            this.effectBar.Name = "effectBar";
+            this.effectBar.Size = new System.Drawing.Size(246, 42);
+            this.effectBar.TabIndex = 0;
             // 
             // windowed
             // 
             this.windowed.AutoSize = true;
-            this.windowed.Checked = true;
-            this.windowed.CheckState = System.Windows.Forms.CheckState.Checked;
             this.windowed.Location = new System.Drawing.Point(52, 285);
             this.windowed.Name = "windowed";
             this.windowed.Size = new System.Drawing.Size(194, 17);
             this.windowed.TabIndex = 6;
             this.windowed.Text = "I am too afraid to run in full screen...";
             this.windowed.UseVisualStyleBackColor = true;
+            this.windowed.CheckedChanged += new System.EventHandler(this.windowed_CheckedChanged);
             // 
             // refDriver
             // 

@@ -36,6 +36,7 @@ namespace Dope.DDXX.DemoFramework
         private Blend sourceBlend = Blend.One;
         private Blend destinatonBlend = Blend.Zero;
         private Color blendFactor = Color.Black;
+        private bool shouldClear;
 
         public PostProcessor()
         {
@@ -44,7 +45,7 @@ namespace Dope.DDXX.DemoFramework
         public void Initialize(IDevice device)
         {
             this.device = device;
-            effect = D3DDriver.EffectFactory.CreateFromFile("../../../Effects/PostEffects.fxo");
+            effect = D3DDriver.EffectFactory.CreateFromFile(/*"../../../Effects/"*/"PostEffects.fxo");
 
             sourceTextureParameter = effect.GetParameter(null, "SourceTexture");
 
@@ -147,6 +148,8 @@ namespace Dope.DDXX.DemoFramework
             {
                 CustomVertex.TransformedTextured[] vertices = CreateVertexStruct(technique, source, destination, pass);
                 effect.BeginPass(pass);
+		        if (shouldClear)
+			        device.Clear(ClearFlags.Target, Color.Black, 0, 0);
                 device.DrawUserPrimitives(PrimitiveType.TriangleStrip, 2, vertices);
                 effect.EndPass();
             }
@@ -185,6 +188,10 @@ namespace Dope.DDXX.DemoFramework
             vertices[1] = new CustomVertex.TransformedTextured(new Vector4(width * toScale - 0.5f, -0.5f, 1.0f, 1.0f), fromScale, 0);
             vertices[2] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, height * toScale - 0.5f, 1.0f, 1.0f), 0, fromScale);
             vertices[3] = new CustomVertex.TransformedTextured(new Vector4(width * toScale - 0.5f, height * toScale - 0.5f, 1.0f, 1.0f), fromScale, fromScale);
+            if (GetScale(destination) > toScale)
+                shouldClear = true;
+            else
+                shouldClear = false;
             SetScale(destination, toScale);
             return vertices;
         }

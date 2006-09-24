@@ -272,5 +272,10 @@ namespace Dope.DDXX.DemoFramework
 
         }
 
+        private void windowed_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }
