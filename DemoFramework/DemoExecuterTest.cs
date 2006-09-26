@@ -10,6 +10,10 @@ using Dope.DDXX.Sound;
 using Dope.DDXX.Utility;
 using NUnit.Framework;
 using NMock2;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.CodeDom.Compiler;
+using Microsoft.CSharp;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -404,5 +408,31 @@ namespace Dope.DDXX.DemoFramework
             executer.Render();
         }
 
+        [Test]
+        public void TestInitializeFromFile()
+        {
+                    string twoEffectContents =
+@"<Effects>
+<Effect name=""fooeffect"" track=""1"">
+<Parameter name=""fooparam"" int=""3"" />
+<Parameter name=""barparam"" float=""4.3"" />
+<Parameter name=""strparam"" string=""foostr"" />
+</Effect>
+<Effect name=""bareffect"">
+<Parameter name=""goo"" string=""string value"" />
+<Parameter name=""vecparam"" Vector3=""5.4, 4.3, 3.2"" />
+</Effect>
+<PostEffect name=""fooglow"" track=""2"">
+<Parameter name=""glowparam"" float=""5.4"" />
+</PostEffect>
+<Transition name=""footrans"" destinationTrack=""1"">
+<Parameter name=""transparam"" string=""tranny"" />
+</Transition>
+</Effects>
+";
+            DemoXMLReaderTest.TempFiles tempFiles = new DemoXMLReaderTest.TempFiles();
+            executer.InitializeFromFile(tempFiles.New(twoEffectContents));
+            Assert.AreEqual(3, executer.NumTracks);
+        }
     }
 }

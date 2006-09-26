@@ -11,10 +11,12 @@ using FMOD;
 using Dope.DDXX.Input;
 using Dope.DDXX.Sound;
 using Dope.DDXX.Utility;
+using System.Reflection;
+using System.IO;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public class DemoExecuter
+    public class DemoExecuter : IDemoEffectBuilder
     {
         private SoundDriver soundDriver;
         private FMOD.Sound sound;
@@ -66,14 +68,22 @@ namespace Dope.DDXX.DemoFramework
                 return tracks.Count;
             }
         }
-
         public DemoExecuter()
         {
             postProcessor = new PostProcessor();
         }
 
+        private DemoEffectTypes effectTypes = new DemoEffectTypes();
+
         public void Initialize(string song)
         {
+            this.Initialize(song, Assembly.GetCallingAssembly());
+        }
+
+        public void Initialize(string song, Assembly assembly)
+        {
+            effectTypes.Initialize(assembly);
+
             InitializeGraphics();
 
             InitializeSound(song);
@@ -173,7 +183,7 @@ namespace Dope.DDXX.DemoFramework
             device.StretchRectangle(source, new Rectangle(0, 0, source.Description.Width, source.Description.Height),
                                     destination, new Rectangle(0, 0, destination.Description.Width, destination.Description.Height),
                                     TextureFilter.None);
-            
+
             device.Present();
         }
 
@@ -206,5 +216,64 @@ namespace Dope.DDXX.DemoFramework
 
             device.SetRenderTarget(0, originalTarget);
         }
+
+
+        public void InitializeFromFile(string xmlFile)
+        {
+            DemoXMLReader xmlReader = new DemoXMLReader(this);
+            xmlReader.Read(xmlFile);
+        }
+
+        #region IDemoEffectBuilder Members
+        private IRegisterable lastAddedEffect;
+
+        public void AddEffect(string effectName, int effectTrack, float startTime, float endTime)
+        {
+            IDemoEffect effect = (IDemoEffect)effectTypes.CreateInstance(effectName, startTime, endTime);
+            this.Register(effectTrack, effect);
+            lastAddedEffect = effect;
+        }
+
+        public void AddPostEffect(string effectName, int effectTrack, float startTime, float endTime)
+        {
+            IDemoPostEffect effect = (IDemoPostEffect)effectTypes.CreateInstance(effectName, startTime, endTime);
+            this.Register(effectTrack, effect);
+            lastAddedEffect = effect;
+        }
+
+        public void AddTransition(string effectName, int destinationTrack)
+        {
+            // TODO Add transition support
+        }
+
+        public void AddFloatParameter(string name, float value)
+        {
+            AddParameter(name, value);
+        }
+
+        public void AddIntParameter(string name, int value)
+        {
+            AddParameter(name, value);
+        }
+
+        private void AddParameter(string name, object value)
+        {
+            if (lastAddedEffect != null)
+            {
+                effectTypes.SetProperty(lastAddedEffect, name, value);
+            }
+        }
+
+        public void AddStringParameter(string name, string value)
+        {
+            AddParameter(name, value);
+        }
+
+        public void AddVector3Parameter(string name, Vector3 value)
+        {
+            AddParameter(name, value);
+        }
+
+        #endregion
     }
 }

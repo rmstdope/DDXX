@@ -46,6 +46,8 @@
     <Compile Include="BaseDemoEffectTest.cs" />
     <Compile Include="BaseDemoPostEffect.cs" />
     <Compile Include="BaseDemoPostEffectTest.cs" />
+    <Compile Include="DemoEffectTypes.cs" />
+    <Compile Include="DemoEffectTypesTest.cs" />
     <Compile Include="DemoExecuter.cs" />
     <Compile Include="DemoExecuterTest.cs" />
     <Compile Include="DemoWindow.cs">
@@ -53,6 +55,7 @@
     </Compile>
     <Compile Include="DemoWindowTest.cs" />
     <Compile Include="IDemoEffect.cs" />
+    <Compile Include="IDemoEffectBuilder.cs" />
     <Compile Include="IDemoPostEffect.cs" />
     <Compile Include="IPostProcessor.cs" />
     <Compile Include="IRegisterable.cs" />
@@ -72,6 +75,8 @@
     </Compile>
     <Compile Include="Track.cs" />
     <Compile Include="TrackTest.cs" />
+    <Compile Include="DemoXMLReader.cs" />
+    <Compile Include="DemoXMLReaderTest.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>
