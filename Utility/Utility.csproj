@@ -41,6 +41,8 @@
     <Compile Include="AspectRatio.cs" />
     <Compile Include="AspectRatioTest.cs" />
     <Compile Include="DDXXException.cs" />
+    <Compile Include="FileUtility.cs" />
+    <Compile Include="FileUtilityTest.cs" />
     <Compile Include="IDemoEffectBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
