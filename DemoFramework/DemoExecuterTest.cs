@@ -142,6 +142,7 @@ namespace Dope.DDXX.DemoFramework
         [ExpectedException(typeof(DDXXException))]
         public void TestInitializeFail2()
         {
+            FileUtility.SetLoadPaths(new string[] { "./" });
             Expect.Once.On(system).
                  Method("GetVersion").
                  Will(Return.Value(FMOD.RESULT.OK));
@@ -151,7 +152,8 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(system).
                 Method("CreateSound").
                 Will(Return.Value(FMOD.RESULT.ERR_VERSION));
-            executer.Initialize("test.mp3");
+
+            executer.Initialize("Dope.DDXX.DemoFramework.dll");
         }
 
         [Test]
@@ -185,6 +187,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestInitializeOKSong()
         {
+            FileUtility.SetLoadPaths(new string[] { "./" });
             Expect.Once.On(system).
                  Method("GetVersion").
                  Will(Return.Value(FMOD.RESULT.OK));
@@ -196,7 +199,7 @@ namespace Dope.DDXX.DemoFramework
                 Will(Return.Value(FMOD.RESULT.OK));
             ExpectPostProcessorInitialize();
 
-            executer.Initialize("test.mp3");
+            executer.Initialize("Dope.DDXX.DemoFramework.dll");
         }
 
         [Test]

@@ -94,6 +94,7 @@ namespace Dope.DDXX.Sound
         [Test]
         public void TestCreateSound()
         {
+            FileUtility.SetLoadPaths(new string[] { "./" });
             FMOD.Sound sound;
 
             TestInitOK();
@@ -101,17 +102,17 @@ namespace Dope.DDXX.Sound
             try
             {
                 Expect.Once.On(system).
-                    Method("CreateSound").With(Is.EqualTo("test.mp3"), Is.EqualTo(FMOD.MODE._2D | FMOD.MODE.HARDWARE | FMOD.MODE.CREATESTREAM), Is.Anything).
+                    Method("CreateSound").With(Is.EqualTo("./Dope.DDXX.Sound.dll"), Is.EqualTo(FMOD.MODE._2D | FMOD.MODE.HARDWARE | FMOD.MODE.CREATESTREAM), Is.Anything).
                     Will(Return.Value(RESULT.ERR_SUBSOUNDS));
-                sound = driver.CreateSound("test.mp3");
+                sound = driver.CreateSound("Dope.DDXX.Sound.dll");
                 Assert.Fail();
             }
             catch (DDXXException) { }
 
             Expect.Once.On(system).
-                Method("CreateSound").With(Is.EqualTo("test.mp3"), Is.EqualTo(FMOD.MODE._2D | FMOD.MODE.HARDWARE | FMOD.MODE.CREATESTREAM), Is.Anything).
+                Method("CreateSound").With(Is.EqualTo("./Dope.DDXX.Sound.dll"), Is.EqualTo(FMOD.MODE._2D | FMOD.MODE.HARDWARE | FMOD.MODE.CREATESTREAM), Is.Anything).
                 Will(Return.Value(RESULT.OK));
-            sound = driver.CreateSound("test.mp3");
+            sound = driver.CreateSound("Dope.DDXX.Sound.dll");
             Assert.IsNotNull(sound);
         }
 

@@ -11,7 +11,7 @@ namespace Dope.DDXX.Graphics
     {
         private Effect effect;
 
-        private EffectAdapter(Effect effect)
+        public EffectAdapter(Effect effect)
         {
             this.effect = effect;
         }

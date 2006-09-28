@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.DirectX.Direct3D;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.Graphics
 {
@@ -62,12 +63,18 @@ namespace Dope.DDXX.Graphics
 
         public IMesh MeshFromFile(IDevice device, string fileName, out EffectInstance[] effectInstance)
         {
-            return MeshAdapter.FromFile(fileName, MeshFlags.Managed, ((DeviceAdapter)device).DXDevice, out effectInstance); 
+            FileStream stream = FileUtility.OpenStream(fileName);
+            IMesh mesh = new MeshAdapter(Mesh.FromStream(stream, MeshFlags.Managed, ((DeviceAdapter)device).DXDevice, out effectInstance));
+            stream.Close();
+            return mesh;
         }
 
         public IMesh MeshFromFile(IDevice device, string fileName, out ExtendedMaterial[] materials)
         {
-            return MeshAdapter.FromFile(fileName, MeshFlags.Managed, ((DeviceAdapter)device).DXDevice, out materials);
+            FileStream stream = FileUtility.OpenStream(fileName);
+            IMesh mesh = new MeshAdapter(Mesh.FromStream(stream, MeshFlags.Managed, ((DeviceAdapter)device).DXDevice, out materials));
+            stream.Close();
+            return mesh;
         }
 
         public IMesh CreateBoxMesh(IDevice device, float width, float height, float depth)
@@ -77,22 +84,34 @@ namespace Dope.DDXX.Graphics
 
         public IEffect EffectFromFile(IDevice device, string sourceDataFile, Include includeFile, string skipConstants, ShaderFlags flags, EffectPool pool)
         {
-            return EffectAdapter.FromFile(((DeviceAdapter)device).DXDevice, sourceDataFile, includeFile, skipConstants, flags, pool);
+            FileStream stream = FileUtility.OpenStream(sourceDataFile);
+            IEffect effect = new EffectAdapter(Effect.FromStream(((DeviceAdapter)device).DXDevice, stream, includeFile, skipConstants, flags, pool));
+            stream.Close();
+            return effect;
         }
 
         public ITexture TextureFromFile(IDevice device, string srcFile, int width, int height, int mipLevels, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey)
         {
-            return TextureAdapter.FromFile(((DeviceAdapter)device).DXDevice, srcFile, width, height, mipLevels, usage, format, pool, filter, mipFilter, colorKey);
+            FileStream stream = FileUtility.OpenStream(srcFile);
+            ITexture texture = new TextureAdapter(TextureLoader.FromStream(((DeviceAdapter)device).DXDevice, stream, width, height, mipLevels, usage, format, pool, filter, mipFilter, colorKey));
+            stream.Close();
+            return texture;
         }
 
         public ICubeTexture CubeTextureFromFile(IDevice device, string fileName)
         {
-            return new CubeTextureAdapter(TextureLoader.FromCubeFile(((DeviceAdapter)device).DXDevice, fileName));
+            FileStream stream = FileUtility.OpenStream(fileName);
+            ICubeTexture texture = new CubeTextureAdapter(TextureLoader.FromCubeStream(((DeviceAdapter)device).DXDevice, stream));
+            stream.Close();
+            return texture;
         }
 
         public ICubeTexture CubeTextureFromFile(IDevice device, string fileName, int size, int mipLevels, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey)
         {
-            return new CubeTextureAdapter(TextureLoader.FromCubeFile(((DeviceAdapter)device).DXDevice, fileName, size, mipLevels, usage, format, pool, filter, mipFilter, colorKey));
+            FileStream stream = FileUtility.OpenStream(fileName);
+            ICubeTexture texture = new CubeTextureAdapter(TextureLoader.FromCubeStream(((DeviceAdapter)device).DXDevice, stream, size, mipLevels, usage, format, pool, filter, mipFilter, colorKey));
+            stream.Close();
+            return texture;
         }
 
         public ISprite CreateSprite(IDevice device)
