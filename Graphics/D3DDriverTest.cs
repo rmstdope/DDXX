@@ -291,7 +291,16 @@ namespace Dope.DDXX.Graphics
             desc.deviceType = DeviceType.Reference;
             desc.useDepth = true;
 
-            Expect.Exactly(3).On(manager).
+            // Let one format not be supported for creation and two not supported for usage
+            Expect.Exactly(1).On(manager).
+                Method("CheckDeviceFormat").
+                WithAnyArguments().
+                Will(Return.Value(false));
+            Expect.Exactly(2).On(manager).
+                Method("CheckDeviceFormat").
+                WithAnyArguments().
+                Will(Return.Value(true));
+            Expect.Exactly(2).On(manager).
                 Method("CheckDepthStencilMatch").
                 With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(displayMode.Format), Is.EqualTo(displayMode.Format), Is.Anything).
                 Will(Return.Value(false));
@@ -313,7 +322,16 @@ namespace Dope.DDXX.Graphics
             desc.useDepth = true;
             desc.useStencil = true;
 
-            Expect.Exactly(3).On(manager).
+            // Let one format not be supported for creation and two not supported for usage
+            Expect.Exactly(1).On(manager).
+                Method("CheckDeviceFormat").
+                WithAnyArguments().
+                Will(Return.Value(false));
+            Expect.Exactly(2).On(manager).
+                Method("CheckDeviceFormat").
+                WithAnyArguments().
+                Will(Return.Value(true));
+            Expect.Exactly(2).On(manager).
                 Method("CheckDepthStencilMatch").
                 With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(displayMode.Format), Is.EqualTo(displayMode.Format), Is.Anything).
                 Will(Return.Value(false));
@@ -342,6 +360,10 @@ namespace Dope.DDXX.Graphics
             param.BackBufferCount = 1;
 
             // Create device with depth only
+            Expect.Exactly(3).On(manager).
+                Method("CheckDeviceFormat").
+                WithAnyArguments().
+                Will(Return.Value(true));
             Expect.Exactly(2).On(manager).
                 Method("CheckDepthStencilMatch").
                 With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(displayMode.Format), Is.EqualTo(displayMode.Format), Is.Anything).
@@ -378,6 +400,10 @@ namespace Dope.DDXX.Graphics
             param.BackBufferCount = 1;
 
             // Create device with depth and stencil
+            Expect.Exactly(2).On(manager).
+                Method("CheckDeviceFormat").
+                WithAnyArguments().
+                Will(Return.Value(true));
             Expect.Exactly(1).On(manager).
                 Method("CheckDepthStencilMatch").
                 With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(displayMode.Format), Is.EqualTo(displayMode.Format), Is.Anything).

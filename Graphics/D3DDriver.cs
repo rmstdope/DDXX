@@ -163,7 +163,8 @@ namespace Dope.DDXX.Graphics
 
                 foreach (DepthFormat format in formats)
                 {
-                    if (manager.CheckDepthStencilMatch(0, desc.deviceType,
+                    if (manager.CheckDeviceFormat(0, desc.deviceType, desc.colorFormat, Usage.DepthStencil, ResourceType.Surface, format) &&
+                        manager.CheckDepthStencilMatch(0, desc.deviceType,
                         displayMode.Format, displayMode.Format, format))
                     {
                         present.AutoDepthStencilFormat = format;
