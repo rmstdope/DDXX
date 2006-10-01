@@ -59,6 +59,7 @@ namespace Dope.DDXX.Graphics
         private IGraphicsFactory factory;
         private IDevice device;
         private IManager manager;
+        private IPrerequisits prerequisits;
 
         private DisplayMode displayMode = new DisplayMode();
         private DisplayMode[] supportedDisplayModes = { new DisplayMode(), new DisplayMode() };
@@ -81,6 +82,7 @@ namespace Dope.DDXX.Graphics
             factory = mockery.NewMock<IGraphicsFactory>();
             device = mockery.NewMock<IDevice>();
             manager = mockery.NewMock<IManager>();
+            prerequisits = mockery.NewMock<IPrerequisits>();
 
             Stub.On(factory).
                 GetProperty("Manager").
@@ -179,7 +181,7 @@ namespace Dope.DDXX.Graphics
                 desc.windowed = true;
                 param.Windowed = true;
                 param.SwapEffect = SwapEffect.Discard;
-                driver.Initialize(null, desc);
+                driver.Initialize(null, desc, prerequisits);
                 Assert.Fail();
             }
             catch (DDXXException)
@@ -206,7 +208,8 @@ namespace Dope.DDXX.Graphics
                     Method("CreateDevice").
                     With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(null), Is.EqualTo(CreateFlags.SoftwareVertexProcessing), new IsEqualPP(param)).
                     Will(Throw.Exception(new DirectXException()));
-                driver.Initialize(null, desc);
+                Expect.Once.On(prerequisits).Method("CheckPrerequisits").WithAnyArguments();
+                driver.Initialize(null, desc, prerequisits);
                 Assert.Fail();
             }
             catch (DirectXException)
@@ -234,7 +237,8 @@ namespace Dope.DDXX.Graphics
                 Method("CreateDevice").
                 With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(null), Is.EqualTo(CreateFlags.SoftwareVertexProcessing), new IsEqualPP(param)).
                 Will(Return.Value(device));
-            driver.Initialize(null, desc);
+            Expect.Once.On(prerequisits).Method("CheckPrerequisits").WithAnyArguments();
+            driver.Initialize(null, desc, prerequisits);
             Assert.AreEqual(device, driver.GetDevice());
 
             Expect.Once.On(device).
@@ -258,7 +262,8 @@ namespace Dope.DDXX.Graphics
                 Method("CreateDevice").
                 With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(null), Is.EqualTo(CreateFlags.HardwareVertexProcessing), new IsEqualPP(param)).
                 Will(Return.Value(device));
-            driver.Initialize(null, desc);
+            Expect.Once.On(prerequisits).Method("CheckPrerequisits").WithAnyArguments();
+            driver.Initialize(null, desc, prerequisits);
             Assert.AreEqual(device, driver.GetDevice());
 
             Expect.Once.On(device).
@@ -277,7 +282,7 @@ namespace Dope.DDXX.Graphics
             // Can not use only stencil
             try
             {
-                driver.Initialize(null, desc);
+                driver.Initialize(null, desc, prerequisits);
                 Assert.Fail();
             }
             catch (DDXXException) { }
@@ -307,7 +312,7 @@ namespace Dope.DDXX.Graphics
             // No depth buffer available
             try
             {
-                driver.Initialize(null, desc);
+                driver.Initialize(null, desc, prerequisits);
                 Assert.Fail();
             }
             catch (DDXXException) { }
@@ -339,7 +344,7 @@ namespace Dope.DDXX.Graphics
             // No depth/stencil buffer available
             try
             {
-                driver.Initialize(null, desc);
+                driver.Initialize(null, desc, prerequisits);
                 Assert.Fail();
             }
             catch (DDXXException) { }
@@ -376,7 +381,8 @@ namespace Dope.DDXX.Graphics
                 Method("CreateDevice").
                 With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(null), Is.EqualTo(CreateFlags.SoftwareVertexProcessing), new IsEqualPP(param)).
                 Will(Return.Value(device));
-            driver.Initialize(null, desc);
+            Expect.Once.On(prerequisits).Method("CheckPrerequisits").WithAnyArguments();
+            driver.Initialize(null, desc, prerequisits);
             Assert.AreEqual(device, driver.GetDevice());
 
             Expect.Once.On(device).
@@ -416,7 +422,8 @@ namespace Dope.DDXX.Graphics
                 Method("CreateDevice").
                 With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(null), Is.EqualTo(CreateFlags.SoftwareVertexProcessing), new IsEqualPP(param)).
                 Will(Return.Value(device));
-            driver.Initialize(null, desc);
+            Expect.Once.On(prerequisits).Method("CheckPrerequisits").WithAnyArguments();
+            driver.Initialize(null, desc, prerequisits);
             Assert.AreEqual(device, driver.GetDevice());
 
             Expect.Once.On(device).

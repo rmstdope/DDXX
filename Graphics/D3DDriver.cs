@@ -78,13 +78,15 @@ namespace Dope.DDXX.Graphics
             return instance;
         }
 
-        public void Initialize(Control control, DeviceDescription desc)
+        public void Initialize(Control control, DeviceDescription desc, IPrerequisits prerequisits)
         {
             if (device != null)
                 Reset();
 
             PresentParameters present = GetPresentParameters(desc);
             CreateFlags createFlags = GetCreateFlags(desc);
+
+            prerequisits.CheckPrerequisits(0, desc.deviceType);
 
             device = factory.CreateDevice(0, desc.deviceType, control, createFlags, present);
 

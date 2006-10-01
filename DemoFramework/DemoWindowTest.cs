@@ -51,7 +51,8 @@ namespace Dope.DDXX.DemoFramework
             desc.width = 800;
             desc.height = 600;
 
-            window.Initialize(WindowText, desc);
+            Expect.Once.On(prerequisits).Method("CheckPrerequisits").WithAnyArguments();
+            window.Initialize(WindowText, desc, prerequisits);
             Assert.AreEqual(window.Text, WindowText);
             Assert.AreEqual(window.ClientSize.Height, 600);
             Assert.AreEqual(window.ClientSize.Width, 800);
@@ -71,7 +72,8 @@ namespace Dope.DDXX.DemoFramework
             desc.width = 800;
             desc.height = 450;
 
-            window.Initialize(WindowText, desc);
+            Expect.Once.On(prerequisits).Method("CheckPrerequisits").WithAnyArguments();
+            window.Initialize(WindowText, desc, prerequisits);
             Assert.AreEqual(window.Text, WindowText);
             Assert.AreEqual(window.ClientSize.Height, 450);
             Assert.AreEqual(window.ClientSize.Width, 800);
@@ -90,7 +92,7 @@ namespace Dope.DDXX.DemoFramework
             desc.deviceType = Microsoft.DirectX.Direct3D.DeviceType.Hardware;
             desc.height = 601;
 
-            window.Initialize("nisse", desc);
+            window.Initialize("nisse", desc, prerequisits);
         }
 
         [Test]

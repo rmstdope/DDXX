@@ -17,6 +17,7 @@ namespace Dope.DDXX.Graphics
         protected ISurface surface;
         protected IManager manager;
         protected IRenderStateManager renderStateManager;
+        protected IPrerequisits prerequisits;
         protected DisplayMode displayMode = new DisplayMode();
         protected PresentParameters presentParameters;
 
@@ -38,6 +39,7 @@ namespace Dope.DDXX.Graphics
             texture = mockery.NewMock<ITexture>();
             surface = mockery.NewMock<ISurface>();
             renderStateManager = mockery.NewMock<IRenderStateManager>();
+            prerequisits = mockery.NewMock<IPrerequisits>();
 
             Stub.On(factory).
                 GetProperty("Manager").

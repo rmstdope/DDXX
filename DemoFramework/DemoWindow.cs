@@ -24,7 +24,7 @@ namespace Dope.DDXX.DemoFramework
         {
         }
 
-        public void Initialize(string name, DeviceDescription desc)
+        public void Initialize(string name, DeviceDescription desc, IPrerequisits prerequisits)
         {
             ClientSize = new Size(desc.width, desc.height);
             if (AspectRatio.Ratios.RATIO_INVALID == new AspectRatio(ClientSize.Width, ClientSize.Height).Ratio)
@@ -38,7 +38,7 @@ namespace Dope.DDXX.DemoFramework
             Cursor.Dispose();
 
             D3DDriver gDriver = D3DDriver.GetInstance();
-            gDriver.Initialize(this, desc);
+            gDriver.Initialize(this, desc, prerequisits);
 
             InputDriver iDriver = InputDriver.GetInstance();
             iDriver.Initialize(this);

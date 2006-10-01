@@ -67,7 +67,8 @@ namespace Dope.DDXX.DemoFramework
             desc.width = displayMode.Width;
             desc.height = displayMode.Height;
             desc.colorFormat = displayMode.Format;
-            D3DDriver.GetInstance().Initialize(null, desc);
+            Expect.Once.On(prerequisits).Method("CheckPrerequisits").WithAnyArguments();
+            D3DDriver.GetInstance().Initialize(null, desc, prerequisits);
 
             executer = new DemoExecuter();
         }

@@ -43,7 +43,8 @@ namespace Dope.DDXX.SceneGraph
 
             DeviceDescription desc = new DeviceDescription();
             desc.deviceType = DeviceType.Hardware;
-            D3DDriver.GetInstance().Initialize(null, desc);
+            Expect.Once.On(prerequisits).Method("CheckPrerequisits").WithAnyArguments();
+            D3DDriver.GetInstance().Initialize(null, desc, prerequisits);
         }
 
         [TearDown]

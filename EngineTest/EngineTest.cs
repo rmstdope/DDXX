@@ -39,7 +39,9 @@ namespace EngineTest
 
                     RegisterEffects(executer);
 
-                    window.Initialize("Short Puzzle", desc);
+                    DevicePrerequisits prerequisits = new DevicePrerequisits();
+
+                    window.Initialize("Short Puzzle", desc, prerequisits);
                     executer.Initialize("scanner_of_dope-woo-192.mp3");//test.mp3");
                     executer.Run();
                     window.CleanUp();

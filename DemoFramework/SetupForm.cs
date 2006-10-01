@@ -76,6 +76,7 @@ namespace Dope.DDXX.DemoFramework
                                 case Format.X8B8G8R8:
                                 case Format.X8R8G8B8:
                                 case Format.A8R8G8B8:
+                                case Format.A2R10G10B10:
                                     if (bit32.Checked)
                                         return true;
                                     break;
@@ -247,6 +248,7 @@ namespace Dope.DDXX.DemoFramework
                     case Format.X8B8G8R8:
                     case Format.X8R8G8B8:
                     case Format.A8R8G8B8:
+                    case Format.A2R10G10B10:
                         bit32.Enabled = true;
                         break;
                     case Format.A16B16G16R16F:
@@ -256,7 +258,7 @@ namespace Dope.DDXX.DemoFramework
                         bit32fp.Enabled = true;
                         break;
                     default:
-                        MessageBox.Show("Unknown format : " + m.Format.ToString());
+                        //MessageBox.Show("Unknown format : " + m.Format.ToString());
                         break;
                 }
             }
