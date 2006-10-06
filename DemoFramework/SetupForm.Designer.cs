@@ -275,6 +275,8 @@ namespace Dope.DDXX.DemoFramework
             // windowed
             // 
             this.windowed.AutoSize = true;
+            this.windowed.Checked = true;
+            this.windowed.CheckState = System.Windows.Forms.CheckState.Checked;
             this.windowed.Location = new System.Drawing.Point(52, 285);
             this.windowed.Name = "windowed";
             this.windowed.Size = new System.Drawing.Size(194, 17);

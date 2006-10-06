@@ -25,5 +25,6 @@ namespace Dope.DDXX.Graphics
         ICubeTexture CubeTextureFromFile(IDevice device, string fileName);
         ICubeTexture CubeTextureFromFile(IDevice device, string fileName, int size, int mipLevels, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey);
         ISprite CreateSprite(IDevice device);
+        ILine CreateLine(IDevice device);
     }
 }

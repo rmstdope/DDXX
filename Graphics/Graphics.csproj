@@ -60,6 +60,7 @@
     <Compile Include="IDevice.cs" />
     <Compile Include="IEffect.cs" />
     <Compile Include="IGraphicsFactory.cs" />
+    <Compile Include="ILine.cs" />
     <Compile Include="IManager.cs" />
     <Compile Include="IMesh.cs" />
     <Compile Include="IPrerequisits.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="ISprite.cs" />
     <Compile Include="ISurface.cs" />
     <Compile Include="ITexture.cs" />
+    <Compile Include="LineAdapter.cs" />
     <Compile Include="ManagerAdapter.cs" />
     <Compile Include="MeshAdapter.cs" />
     <Compile Include="ModelFactory.cs" />

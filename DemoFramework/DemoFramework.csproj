@@ -50,6 +50,8 @@
     <Compile Include="DemoEffectTypesTest.cs" />
     <Compile Include="DemoExecuter.cs" />
     <Compile Include="DemoExecuterTest.cs" />
+    <Compile Include="DemoTweaker.cs" />
+    <Compile Include="DemoTweakerTest.cs" />
     <Compile Include="DemoWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,6 +79,8 @@
     <Compile Include="TrackTest.cs" />
     <Compile Include="DemoXMLReader.cs" />
     <Compile Include="DemoXMLReaderTest.cs" />
+    <Compile Include="UserInterface.cs" />
+    <Compile Include="UserInterfaceTest.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>

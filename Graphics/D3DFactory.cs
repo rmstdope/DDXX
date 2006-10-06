@@ -119,6 +119,11 @@ namespace Dope.DDXX.Graphics
             return new SpriteAdapter(((DeviceAdapter)device).DXDevice);
         }
 
+        public ILine CreateLine(IDevice device)
+        {
+            return new LineAdapter(new Line(((DeviceAdapter)device).DXDevice));
+        }
+
         #endregion
     }
 }

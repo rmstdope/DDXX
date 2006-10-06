@@ -38,11 +38,12 @@ namespace EngineTest
                     SetupFramework(setup, out window, out executer, out desc);
 
                     RegisterEffects(executer);
+                    FileUtility.SetLoadPaths("../../../../Short Puzzle Data/");
 
                     DevicePrerequisits prerequisits = new DevicePrerequisits();
 
                     window.Initialize("Short Puzzle", desc, prerequisits);
-                    executer.Initialize("scanner_of_dope-woo-192.mp3");//test.mp3");
+                    executer.Initialize("");
                     executer.Run();
                     window.CleanUp();
                 }
