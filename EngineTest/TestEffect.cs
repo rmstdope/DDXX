@@ -56,6 +56,7 @@ namespace EngineTest
         public override void Render()
         {
             Scene.Render();
+            Device.ColorFill(Device.GetRenderTarget(0), new Rectangle(0, 0, Device.GetRenderTarget(0).Description.Width, Device.GetRenderTarget(0).Description.Height), Color.Blue);
         }
 
     }

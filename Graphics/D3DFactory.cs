@@ -139,6 +139,21 @@ namespace Dope.DDXX.Graphics
             return new VertexDeclaration(((DeviceAdapter)device).DXDevice, elements);
         }
 
+        public IFont CreateFont(IDevice device, FontDescription description)
+        {
+            return new FontAdapter(new Microsoft.DirectX.Direct3D.Font(((DeviceAdapter)device).DXDevice, description));
+        }
+
+        public IFont CreateFont(IDevice device, System.Drawing.Font font)
+        {
+            return new FontAdapter(new Microsoft.DirectX.Direct3D.Font(((DeviceAdapter)device).DXDevice, font));
+        }
+
+        public IFont CreateFont(IDevice device, int height, int width, FontWeight weight, int miplevels, bool italic, CharacterSet charset, Precision outputPrecision, FontQuality quality, PitchAndFamily pitchFamily, string faceName)
+        {
+            return new FontAdapter(new Microsoft.DirectX.Direct3D.Font(((DeviceAdapter)device).DXDevice, height, width, weight, miplevels, italic, charset, outputPrecision, quality, pitchFamily, faceName));
+        }
+
         #endregion
     }
 }

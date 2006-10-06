@@ -16,6 +16,11 @@ namespace Dope.DDXX.Graphics
             this.sprite = new Sprite(device);
         }
 
+        public Sprite DXSprite
+        {
+            get { return sprite; }
+        }
+
         #region ISprite Members
 
         public Device Device

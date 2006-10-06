@@ -29,5 +29,8 @@ namespace Dope.DDXX.Graphics
         IVertexBuffer CreateVertexBuffer(Type typeVertexType, int numVerts, IDevice device, Usage usage, VertexFormats vertexFormat, Pool pool);
         ILine CreateLine(IDevice device);
         VertexDeclaration CreateVertexDeclaration(IDevice device, VertexElement[] elements);
+        IFont CreateFont(IDevice device, FontDescription description);
+        IFont CreateFont(IDevice device, System.Drawing.Font font);
+        IFont CreateFont(IDevice device, int height, int width, FontWeight weight, int miplevels, bool italic, CharacterSet charset, Precision outputPrecision, FontQuality quality, PitchAndFamily pitchFamily, string faceName);
     }
 }
