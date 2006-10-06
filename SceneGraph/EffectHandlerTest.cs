@@ -26,6 +26,8 @@ namespace Dope.DDXX.SceneGraph
         private EffectHandle defaultTechnique;
         private EffectHandle worldT;
         private EffectHandle worldViewProjectionT;
+        private EffectHandle projectionT;
+        private EffectHandle worldViewT;
         private EffectHandle ambientColor;
         private EffectHandle baseTexture;
         private EffectHandle materialDiffuseColor;
@@ -56,6 +58,8 @@ namespace Dope.DDXX.SceneGraph
             defaultTechnique = EffectHandle.FromString("Technique");
             worldT = EffectHandle.FromString("WorldT");
             worldViewProjectionT = EffectHandle.FromString("WorldViewProjectionT");
+            projectionT = EffectHandle.FromString("ProjectionT");
+            worldViewT = EffectHandle.FromString("WorldViewT");
             ambientColor = EffectHandle.FromString("AmbientColor");
             baseTexture = EffectHandle.FromString("BaseTexture");
             materialDiffuseColor = EffectHandle.FromString("MaterialDiffuseColor");
@@ -101,12 +105,7 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void ConstructorTest()
         {
-            Stub.On(effect).Method("GetParameter").
-                With(null, "WorldT").
-                Will(Return.Value(worldT));
-            Stub.On(effect).Method("GetParameter").
-                With(null, "WorldViewProjectionT").
-                Will(Return.Value(worldViewProjectionT));
+            ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT);
             Expect.Once.On(effect).
                 Method("GetParameter").
                 With(null, "AmbientColor").
@@ -129,115 +128,69 @@ namespace Dope.DDXX.SceneGraph
         }
 
         [Test]
-        [ExpectedException(typeof(DDXXException))]
-        public void ConstructorTestFail1()
+        public void SetMeshConstantsTest1()
         {
-            Stub.On(effect).Method("GetParameter").
-                With(null, "WorldT").
-                Will(Return.Value(worldT));
-            Stub.On(effect).Method("GetParameter").
-                With(null, "WorldViewProjectionT").
-                Will(Return.Value(null));
-            Expect.Once.On(effect).
-                Method("GetParameter").
-                With(null, "AmbientColor").
-                Will(Return.Value(null));
-            Expect.Once.On(effect).
-                Method("GetParameter").
-                With(null, "BaseTexture").
-                Will(Return.Value(null));
-            Expect.Once.On(effect).
-                Method("GetParameter").
-                With(null, "MaterialDiffuseColor").
-                Will(Return.Value(null));
-            Expect.Once.On(effect).
-                Method("GetParameter").
-                With(null, "MaterialSpecularColor").
-                Will(Return.Value(null));
+            ExpectTechnique();
+            ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT);
+            ExpectMeshParametersSet(worldT, worldViewProjectionT, projectionT, worldViewT);
+            ExpectMaterialParameters(null, null, null, null);
             EffectHandler effectHandler = new EffectHandler(effect);
+
+            effectHandler.SetNodeConstants(scene, mesh);
         }
 
         [Test]
-        [ExpectedException(typeof(DDXXException))]
-        public void ConstructorTestFail2()
+        public void SetMeshConstantsTest2()
         {
-            Stub.On(effect).Method("GetParameter").
-                With(null, "WorldT").
-                Will(Return.Value(null));
-            Stub.On(effect).Method("GetParameter").
-                With(null, "WorldViewProjectionT").
-                Will(Return.Value(worldViewProjectionT));
-            Expect.Once.On(effect).
-                Method("GetParameter").
-                With(null, "AmbientColor").
-                Will(Return.Value(null));
-            Expect.Once.On(effect).
-                Method("GetParameter").
-                With(null, "BaseTexture").
-                Will(Return.Value(null));
-            Expect.Once.On(effect).
-                Method("GetParameter").
-                With(null, "MaterialDiffuseColor").
-                Will(Return.Value(null));
-            Expect.Once.On(effect).
-                Method("GetParameter").
-                With(null, "MaterialSpecularColor").
-                Will(Return.Value(null));
+            ExpectTechnique();
+            ExpectMeshParameters(null, worldViewProjectionT, projectionT, worldViewT);
+            ExpectMeshParametersSet(null, worldViewProjectionT, projectionT, worldViewT);
+            ExpectMaterialParameters(null, null, null, null);
             EffectHandler effectHandler = new EffectHandler(effect);
+
+            effectHandler.SetNodeConstants(scene, mesh);
         }
 
         [Test]
-        public void SetMeshConstantsTest()
+        public void SetMeshConstantsTest3()
         {
-            Expect.Once.On(effect).
-                SetProperty("Technique").
-                To(defaultTechnique);
-            Expect.Once.On(effect).
-                Method("GetParameter").
-                With(null, "WorldT").
-                Will(Return.Value(worldT));
-            Expect.Once.On(effect).
-                Method("GetParameter").
-                With(null, "WorldViewProjectionT").
-                Will(Return.Value(worldViewProjectionT));
-            Expect.Once.On(effect).
-                Method("GetParameter").
-                With(null, "AmbientColor").
-                Will(Return.Value(null));
-            Expect.Once.On(effect).
-                Method("GetParameter").
-                With(null, "BaseTexture").
-                Will(Return.Value(null));
-            Expect.Once.On(effect).
-                Method("GetParameter").
-                With(null, "MaterialDiffuseColor").
-                Will(Return.Value(null));
-            Expect.Once.On(effect).
-                Method("GetParameter").
-                With(null, "MaterialSpecularColor").
-                Will(Return.Value(null));
+            ExpectTechnique();
+            ExpectMeshParameters(worldT, null, projectionT, worldViewT);
+            ExpectMeshParametersSet(worldT, null, projectionT, worldViewT);
+            ExpectMaterialParameters(null, null, null, null);
             EffectHandler effectHandler = new EffectHandler(effect);
 
-            Expect.Once.On(effect).
-                Method("SetValueTranspose").
-                With(worldT, worldMatrix);
-            Expect.Once.On(effect).
-                Method("SetValueTranspose").
-                With(worldViewProjectionT, worldMatrix * viewMatrix * projMatrix);
-            effectHandler.SetMeshConstants(scene, mesh);
+            effectHandler.SetNodeConstants(scene, mesh);
+        }
+
+        [Test]
+        public void SetMeshConstantsTest4()
+        {
+            ExpectTechnique();
+            ExpectMeshParameters(worldT, worldViewProjectionT, null, worldViewT);
+            ExpectMeshParametersSet(worldT, worldViewProjectionT, null, worldViewT);
+            ExpectMaterialParameters(null, null, null, null);
+            EffectHandler effectHandler = new EffectHandler(effect);
+
+            effectHandler.SetNodeConstants(scene, mesh);
+        }
+
+        [Test]
+        public void SetMeshConstantsTest5()
+        {
+            ExpectTechnique();
+            ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, null);
+            ExpectMeshParametersSet(worldT, worldViewProjectionT, projectionT, null);
+            ExpectMaterialParameters(null, null, null, null);
+            EffectHandler effectHandler = new EffectHandler(effect);
+
+            effectHandler.SetNodeConstants(scene, mesh);
         }
 
         [Test]
         public void SetMaterialConstantsTest()
         {
-            Expect.Once.On(effect).
-                Method("GetParameter").
-                With(null, "WorldT").
-                Will(Return.Value(worldT));
-            Expect.Once.On(effect).
-                Method("GetParameter").
-                With(null, "WorldViewProjectionT").
-                Will(Return.Value(worldViewProjectionT));
+            ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT);
             Expect.Once.On(effect).
                 Method("GetParameter").
                 With(null, "AmbientColor").
@@ -270,5 +223,73 @@ namespace Dope.DDXX.SceneGraph
                 With(materialSpecularColor, materialSpecular);
             effectHandler.SetMaterialConstants(scene, modelMaterial);
         }
+
+        private void ExpectTechnique()
+        {
+            Expect.Once.On(effect).
+                SetProperty("Technique").
+                To(defaultTechnique);
+        }
+
+        private void ExpectMeshParameters(Object world, Object worldViewProj, Object proj, Object worldView)
+        {
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "WorldT").
+                Will(Return.Value(world));
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "WorldViewProjectionT").
+                Will(Return.Value(worldViewProj));
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "ProjectionT").
+                Will(Return.Value(proj));
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "WorldViewT").
+                Will(Return.Value(worldView));
+        }
+
+        private void ExpectMeshParametersSet(Object world, Object worldViewProj, Object proj, Object worldView)
+        {
+            if (world != null)
+                Expect.Once.On(effect).
+                    Method("SetValueTranspose").
+                    With(worldT, worldMatrix);
+            if (worldViewProj != null)
+                Expect.Once.On(effect).
+                    Method("SetValueTranspose").
+                    With(worldViewProjectionT, worldMatrix * viewMatrix * projMatrix);
+            if (proj != null)
+                Expect.Once.On(effect).
+                    Method("SetValueTranspose").
+                    With(projectionT, projMatrix);
+            if (worldView != null)
+                Expect.Once.On(effect).
+                    Method("SetValueTranspose").
+                    With(worldViewT, worldMatrix * viewMatrix);
+        }
+
+        private void ExpectMaterialParameters(Object ambient, Object texture, Object diffuse, Object specular)
+        {
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "AmbientColor").
+                Will(Return.Value(ambient));
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "BaseTexture").
+                Will(Return.Value(texture));
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "MaterialDiffuseColor").
+                Will(Return.Value(diffuse));
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "MaterialSpecularColor").
+                Will(Return.Value(specular));
+        }
+
     }
 }

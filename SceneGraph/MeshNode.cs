@@ -32,7 +32,7 @@ namespace Dope.DDXX.SceneGraph
 
         protected override void RenderNode(IRenderableScene scene)
         {
-            effectHandler.SetMeshConstants(scene, this);
+            effectHandler.SetNodeConstants(scene, this);
 
             for (int j = 0; j < model.Materials.Length; j++)
             {

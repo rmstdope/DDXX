@@ -59,6 +59,8 @@
     <Compile Include="MeshNodeTest.cs" />
     <Compile Include="NodeBase.cs" />
     <Compile Include="NodeBaseTest.cs" />
+    <Compile Include="ParticleSystemNode.cs" />
+    <Compile Include="ParticleSystemNodeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="SceneTest.cs" />

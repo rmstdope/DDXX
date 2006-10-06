@@ -958,7 +958,7 @@ namespace Dope.DDXX.Graphics
         // Returns:
         //     A Microsoft.DirectX.Direct3D.VertexBuffer class that represents the returned
         //     vertex buffer bound to the specified data stream.
-        VertexBuffer GetStreamSource(int streamNumber, out int offsetInBytes, out int stride);
+        IVertexBuffer GetStreamSource(int streamNumber, out int offsetInBytes, out int stride);
         //
         // Summary:
         //     Retrieves the stream source frequency divider value.
@@ -1640,7 +1640,7 @@ namespace Dope.DDXX.Graphics
         //   offsetInBytes:
         //     Offset from the beginning of the stream to the beginning of the vertex data,
         //     in bytes. To determine whether the device supports stream offsets, see Microsoft.DirectX.Direct3D.DeviceCaps.SupportsStreamOffset.
-        void SetStreamSource(int streamNumber, VertexBuffer streamData, int offsetInBytes);
+        void SetStreamSource(int streamNumber, IVertexBuffer streamData, int offsetInBytes);
         //
         // Summary:
         //     Binds a vertex buffer to a device data stream.
@@ -1659,7 +1659,7 @@ namespace Dope.DDXX.Graphics
         //
         //   stride:
         //     Stride of the component, in bytes. See Remarks.
-        void SetStreamSource(int streamNumber, VertexBuffer streamData, int offsetInBytes, int stride);
+        void SetStreamSource(int streamNumber, IVertexBuffer streamData, int offsetInBytes, int stride);
         //
         // Summary:
         //     Sets the stream source frequency divider value.

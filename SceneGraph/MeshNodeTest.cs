@@ -82,10 +82,10 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void RenderTestOK()
         {
-            //using (mockery.Ordered)
+            using (mockery.Ordered)
             {
                 //Subset 1
-                Expect.Once.On(effectHandler).Method("SetMeshConstants").With(scene, node);
+                Expect.Once.On(effectHandler).Method("SetNodeConstants").With(scene, node);
                 Expect.Once.On(effectHandler).Method("SetMaterialConstants").With(Is.Same(scene), new MaterialMatcher(materials[0]));
                 Expect.Once.On(effect).Method("Begin").With(FX.None).Will(Return.Value(1));
                 Expect.Once.On(effect).Method("BeginPass").With(0);

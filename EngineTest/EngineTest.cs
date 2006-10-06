@@ -40,6 +40,7 @@ namespace EngineTest
                     RegisterEffects(executer);
                     FileUtility.SetLoadPaths("../../../../Short Puzzle Data/");
 
+                    FileUtility.SetLoadPaths("../../Data/", "../../../Effects/");
                     DevicePrerequisits prerequisits = new DevicePrerequisits();
 
                     window.Initialize("Short Puzzle", desc, prerequisits);
@@ -50,11 +51,14 @@ namespace EngineTest
             }
             catch (DDXXException exception)
             {
-                MessageBox.Show(exception.ToString());
+                if (DialogResult.Yes == MessageBox.Show(exception.ToString(), "It seems you are having problems...", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2))
+                {
+                    MessageBox.Show(exception.Callstack(), "Callstack"); 
+                }
             }
             catch (Exception exception)
             {
-                MessageBox.Show(exception.ToString());
+                MessageBox.Show(exception.ToString(), "Demo Error");
             }
 
         }

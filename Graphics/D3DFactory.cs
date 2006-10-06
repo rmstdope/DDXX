@@ -61,6 +61,11 @@ namespace Dope.DDXX.Graphics
             return new CubeTextureAdapter(new CubeTexture(((DeviceAdapter)device).DXDevice, edgeLength, levels, usage, format, pool));
         }
 
+        public IMesh CreateMesh(int numFaces, int numVertices, MeshFlags options, VertexElement[] declaration, IDevice device)
+        {
+            return new MeshAdapter(new Mesh(numFaces, numVertices, options, declaration, ((DeviceAdapter)device).DXDevice));
+        }
+
         public IMesh MeshFromFile(IDevice device, string fileName, out EffectInstance[] effectInstance)
         {
             FileStream stream = FileUtility.OpenStream(fileName);
@@ -119,9 +124,19 @@ namespace Dope.DDXX.Graphics
             return new SpriteAdapter(((DeviceAdapter)device).DXDevice);
         }
 
+        public IVertexBuffer CreateVertexBuffer(Type typeVertexType, int numVerts, IDevice device, Usage usage, VertexFormats vertexFormat, Pool pool)
+        {
+            return new VertexBufferAdapter(new VertexBuffer(typeVertexType, numVerts, ((DeviceAdapter)device).DXDevice, usage, vertexFormat, pool));
+        }
+
         public ILine CreateLine(IDevice device)
         {
             return new LineAdapter(new Line(((DeviceAdapter)device).DXDevice));
+        }
+
+        public VertexDeclaration CreateVertexDeclaration(IDevice device, VertexElement[] elements)
+        {
+            return new VertexDeclaration(((DeviceAdapter)device).DXDevice, elements);
         }
 
         #endregion

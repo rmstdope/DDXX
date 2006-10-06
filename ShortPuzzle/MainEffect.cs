@@ -193,7 +193,7 @@ namespace ShortPuzzle
             Model model1 = ModelFactory.CreateBox(10, 10, 10);
             model1.IMesh = model1.IMesh.Clone(MeshFlags.Managed, VertexFormats.Position | VertexFormats.Texture1 | VertexFormats.Normal, Device);
             model1.IMesh.ComputeNormals();
-            GraphicsStream stream = model1.IMesh.LockVertexBuffer(LockFlags.None);
+            IGraphicsStream stream = model1.IMesh.LockVertexBuffer(LockFlags.None);
             CustomVertex.PositionNormalTextured[] vertices = new CustomVertex.PositionNormalTextured[model1.IMesh.NumberVertices];
             for (int i = 0; i < model1.IMesh.NumberVertices; i++)
             {

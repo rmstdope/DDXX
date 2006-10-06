@@ -486,9 +486,9 @@ namespace Dope.DDXX.Graphics
             return device.GetSamplerStageStateSingle(stage, state);
         }
 
-        public VertexBuffer GetStreamSource(int streamNumber, out int offsetInBytes, out int stride)
+        public IVertexBuffer GetStreamSource(int streamNumber, out int offsetInBytes, out int stride)
         {
-            return device.GetStreamSource(streamNumber, out offsetInBytes, out stride);
+            return new VertexBufferAdapter(device.GetStreamSource(streamNumber, out offsetInBytes, out stride));
         }
 
         public int GetStreamSourceFrequency(int streamNumber)
@@ -721,14 +721,14 @@ namespace Dope.DDXX.Graphics
             device.SetSamplerState(stage, state, value);
         }
 
-        public void SetStreamSource(int streamNumber, VertexBuffer streamData, int offsetInBytes)
+        public void SetStreamSource(int streamNumber, IVertexBuffer streamData, int offsetInBytes)
         {
-            device.SetStreamSource(streamNumber, streamData, offsetInBytes);
+            device.SetStreamSource(streamNumber, ((VertexBufferAdapter)streamData).DXVertexBuffer, offsetInBytes);
         }
 
-        public void SetStreamSource(int streamNumber, VertexBuffer streamData, int offsetInBytes, int stride)
+        public void SetStreamSource(int streamNumber, IVertexBuffer streamData, int offsetInBytes, int stride)
         {
-            device.SetStreamSource(streamNumber, streamData, offsetInBytes, stride);
+            device.SetStreamSource(streamNumber, ((VertexBufferAdapter)streamData).DXVertexBuffer, offsetInBytes, stride);
         }
 
         public void SetStreamSourceFrequency(int streamNumber, int divider)

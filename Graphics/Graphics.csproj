@@ -57,10 +57,12 @@
     <Compile Include="EffectFactoryTest.cs" />
     <Compile Include="IBaseTexture.cs" />
     <Compile Include="ICubeTexture.cs" />
+    <Compile Include="GraphicsStreamAdapter.cs" />
     <Compile Include="IDevice.cs" />
     <Compile Include="IEffect.cs" />
     <Compile Include="IGraphicsFactory.cs" />
     <Compile Include="ILine.cs" />
+    <Compile Include="IGraphicsStream.cs" />
     <Compile Include="IManager.cs" />
     <Compile Include="IMesh.cs" />
     <Compile Include="IPrerequisits.cs" />
@@ -72,6 +74,7 @@
     <Compile Include="ISurface.cs" />
     <Compile Include="ITexture.cs" />
     <Compile Include="LineAdapter.cs" />
+    <Compile Include="IVertexBuffer.cs" />
     <Compile Include="ManagerAdapter.cs" />
     <Compile Include="MeshAdapter.cs" />
     <Compile Include="ModelFactory.cs" />
@@ -88,6 +91,7 @@
     <Compile Include="TextureAdapter.cs" />
     <Compile Include="TextureFactory.cs" />
     <Compile Include="TextureFactoryTest.cs" />
+    <Compile Include="VertexBufferAdapter.cs" />
     <Compile Include="VertexElementArray.cs" />
     <Compile Include="VertexElementArrayTest.cs" />
   </ItemGroup>

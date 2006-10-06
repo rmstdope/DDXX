@@ -158,6 +158,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ParticleSystem.fx"
+				>
+			</File>
+			<File
 				RelativePath=".\PoolEffect.fx"
 				>
 			</File>

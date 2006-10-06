@@ -81,7 +81,7 @@ namespace Dope.DDXX.Graphics
         //     A Microsoft.DirectX.Direct3D.Mesh object that represents the returned cleaned
         //     mesh. If no cleaning is necessary, the returned mesh is the same as the one
         //     that was passed in.
-        IMesh Clean(CleanType cleanType, GraphicsStream adjacency, GraphicsStream adjacencyOut);
+        IMesh Clean(CleanType cleanType, IGraphicsStream adjacency, IGraphicsStream adjacencyOut);
         //
         // Summary:
         //     Cleans a mesh, preparing it for simplification.
@@ -131,7 +131,7 @@ namespace Dope.DDXX.Graphics
         //     A Microsoft.DirectX.Direct3D.Mesh object that represents the returned cleaned
         //     mesh. If no cleaning is necessary, the returned mesh is the same as the one
         //     that was passed in.
-        IMesh Clean(CleanType cleanType, GraphicsStream adjacency, GraphicsStream adjacencyOut, out string errorsAndWarnings);
+        IMesh Clean(CleanType cleanType, IGraphicsStream adjacency, IGraphicsStream adjacencyOut, out string errorsAndWarnings);
         //
         // Summary:
         //     Cleans a mesh, preparing it for simplification.
@@ -176,7 +176,7 @@ namespace Dope.DDXX.Graphics
         //
         // Returns:
         //     Cloned mesh.
-        IMesh Clone(MeshFlags options, GraphicsStream declaration, IDevice device);
+        IMesh Clone(MeshFlags options, IGraphicsStream declaration, IDevice device);
         //
         // Summary:
         //     Clones, or copies, a mesh object.
@@ -229,7 +229,7 @@ namespace Dope.DDXX.Graphics
         //   adjacency:
         //     A Microsoft.DirectX.GraphicsStream that contains three System.Int32 values
         //     per face, which specify the three neighbors for each face in the mesh.
-        void ComputeNormals(GraphicsStream adjacency);
+        void ComputeNormals(IGraphicsStream adjacency);
         //
         // Summary:
         //     Computes normals for each vertex in a mesh.
@@ -251,7 +251,7 @@ namespace Dope.DDXX.Graphics
         // Returns:
         //     Array that contains one System.Int32 per vertex of the mesh that is filled
         //     with point representative data.
-        int[] ConvertAdjacencyToPointReps(GraphicsStream adjacency);
+        int[] ConvertAdjacencyToPointReps(IGraphicsStream adjacency);
         //
         // Summary:
         //     Converts mesh adjacency information to an array of point representatives.
@@ -279,7 +279,7 @@ namespace Dope.DDXX.Graphics
         // Returns:
         //     Array of three System.Int32 values per face, which specify the three neighbors
         //     for each face in the mesh.
-        int[] ConvertPointRepsToAdjacency(GraphicsStream pointReps);
+        int[] ConvertPointRepsToAdjacency(IGraphicsStream pointReps);
         //
         // Summary:
         //     Converts point representative data to mesh adjacency information.
@@ -340,7 +340,7 @@ namespace Dope.DDXX.Graphics
         // Returns:
         //     A Microsoft.DirectX.GraphicsStream object that represents the locked index
         //     buffer.
-        GraphicsStream LockIndexBuffer(LockFlags flags);
+        IGraphicsStream LockIndexBuffer(LockFlags flags);
         //
         // Summary:
         //     Locks an index buffer and obtains the index buffer data.
@@ -379,7 +379,7 @@ namespace Dope.DDXX.Graphics
         // Returns:
         //     A Microsoft.DirectX.GraphicsStream object that represents the locked vertex
         //     buffer.
-        GraphicsStream LockVertexBuffer(LockFlags flags);
+        IGraphicsStream LockVertexBuffer(LockFlags flags);
         //
         // Summary:
         //     Locks a vertex buffer and obtains a pointer to the vertex buffer memory.
@@ -455,7 +455,7 @@ namespace Dope.DDXX.Graphics
         //   declaration:
         //     A Microsoft.DirectX.GraphicsStream containing Microsoft.DirectX.Direct3D.VertexElement
         //     structures that describe the vertex format of the mesh vertices.
-        void UpdateSemantics(GraphicsStream declaration);
+        void UpdateSemantics(IGraphicsStream declaration);
         //
         // Summary:
         //     Allows the user to change the mesh declaration without changing the data
@@ -515,7 +515,7 @@ namespace Dope.DDXX.Graphics
         //   adjacency:
         //     A Microsoft.DirectX.GraphicsStream object filled with an array of three System.Int32
         //     values per face to be filled with adjacent face indices.
-        void ComputeTangent(int texStage, int tangentIndex, int binormIndex, int wrap, GraphicsStream adjacency);
+        void ComputeTangent(int texStage, int tangentIndex, int binormIndex, int wrap, IGraphicsStream adjacency);
         //
         // Summary:
         //     Computes the tangent vectors for the texture coordinates given in a texture
@@ -747,7 +747,7 @@ namespace Dope.DDXX.Graphics
         //     Microsoft.DirectX.Direct3D.LockFlags.NoDirtyUpdate, Microsoft.DirectX.Direct3D.LockFlags.NoSystemLock,
         //     and Microsoft.DirectX.Direct3D.LockFlags.ReadOnly. For a description of the
         //     flags, see Microsoft.DirectX.Direct3D.LockFlags.
-        GraphicsStream LockAttributeBuffer(LockFlags flags);
+        IGraphicsStream LockAttributeBuffer(LockFlags flags);
         //
         // Summary:
         //     Locks an attribute buffer and obtains its memory.
@@ -781,7 +781,7 @@ namespace Dope.DDXX.Graphics
         //
         // Returns:
         //     A Microsoft.DirectX.Direct3D.Mesh object that represents the optimized mesh.
-        Mesh Optimize(MeshFlags flags, GraphicsStream adjacencyIn);
+        IMesh Optimize(MeshFlags flags, IGraphicsStream adjacencyIn);
         //
         // Summary:
         //     Controls the reordering of mesh faces and vertices to optimize performance
@@ -800,7 +800,7 @@ namespace Dope.DDXX.Graphics
         //
         // Returns:
         //     A Microsoft.DirectX.Direct3D.Mesh object that represents the optimized mesh.
-        Mesh Optimize(MeshFlags flags, int[] adjacencyIn);
+        IMesh Optimize(MeshFlags flags, int[] adjacencyIn);
         //
         // Summary:
         //     Controls the reordering of mesh faces and vertices to optimize performance
@@ -831,7 +831,7 @@ namespace Dope.DDXX.Graphics
         //
         // Returns:
         //     A Microsoft.DirectX.Direct3D.Mesh object that represents the optimized mesh.
-        Mesh Optimize(MeshFlags flags, GraphicsStream adjacencyIn, out int[] adjacencyOut, out int[] faceRemap, out GraphicsStream vertexRemap);
+        IMesh Optimize(MeshFlags flags, IGraphicsStream adjacencyIn, out int[] adjacencyOut, out int[] faceRemap, out IGraphicsStream vertexRemap);
         //
         // Summary:
         //     Controls the reordering of mesh faces and vertices to optimize performance
@@ -862,7 +862,7 @@ namespace Dope.DDXX.Graphics
         //
         // Returns:
         //     A Microsoft.DirectX.Direct3D.Mesh object that represents the optimized mesh.
-        Mesh Optimize(MeshFlags flags, int[] adjacencyIn, out int[] adjacencyOut, out int[] faceRemap, out GraphicsStream vertexRemap);
+        IMesh Optimize(MeshFlags flags, int[] adjacencyIn, out int[] adjacencyOut, out int[] faceRemap, out IGraphicsStream vertexRemap);
         //
         // Summary:
         //     Controls the reordering of mesh faces and vertices to optimize performance.
@@ -876,7 +876,7 @@ namespace Dope.DDXX.Graphics
         //     A Microsoft.DirectX.GraphicsStream of three System.Int32 values per face
         //     that specify the three neighbors for each face in the source mesh. If the
         //     edge has no adjacent faces, the value is 0.
-        void OptimizeInPlace(MeshFlags flags, GraphicsStream adjacencyIn);
+        void OptimizeInPlace(MeshFlags flags, IGraphicsStream adjacencyIn);
         //
         // Summary:
         //     Controls the reordering of mesh faces and vertices to optimize performance.
@@ -916,7 +916,7 @@ namespace Dope.DDXX.Graphics
         //
         //   vertexRemap:
         //     A Microsoft.DirectX.GraphicsStream that contains the new index for each vertex.
-        void OptimizeInPlace(MeshFlags flags, GraphicsStream adjacencyIn, out int[] adjacencyOut, out int[] faceRemap, out GraphicsStream vertexRemap);
+        void OptimizeInPlace(MeshFlags flags, IGraphicsStream adjacencyIn, out int[] adjacencyOut, out int[] faceRemap, out IGraphicsStream vertexRemap);
         //
         // Summary:
         //     Controls the reordering of mesh faces and vertices to optimize performance.
@@ -942,7 +942,7 @@ namespace Dope.DDXX.Graphics
         //
         //   vertexRemap:
         //     A Microsoft.DirectX.GraphicsStream that contains the new index for each vertex.
-        void OptimizeInPlace(MeshFlags flags, int[] adjacencyIn, out int[] adjacencyOut, out int[] faceRemap, out GraphicsStream vertexRemap);
+        void OptimizeInPlace(MeshFlags flags, int[] adjacencyIn, out int[] adjacencyOut, out int[] faceRemap, out IGraphicsStream vertexRemap);
         //
         // Summary:
         //     Saves the mesh to the specified stream object.
@@ -962,7 +962,7 @@ namespace Dope.DDXX.Graphics
         //   format:
         //     An Microsoft.DirectX.Direct3D.XFileFormat that indicates the format to use
         //     when saving the .x file. See Remarks.
-        void Save(Stream stream, GraphicsStream adjacency, ExtendedMaterial[] materials, XFileFormat format);
+        void Save(Stream stream, IGraphicsStream adjacency, ExtendedMaterial[] materials, XFileFormat format);
         //
         // Summary:
         //     Saves the mesh to the specified stream object.
@@ -1002,7 +1002,7 @@ namespace Dope.DDXX.Graphics
         //   format:
         //     An Microsoft.DirectX.Direct3D.XFileFormat that indicates the format to use
         //     when saving the .x file. See Remarks.
-        void Save(string filename, GraphicsStream adjacency, ExtendedMaterial[] materials, XFileFormat format);
+        void Save(string filename, IGraphicsStream adjacency, ExtendedMaterial[] materials, XFileFormat format);
         //
         // Summary:
         //     Saves the mesh to the specified stream object.
@@ -1047,7 +1047,7 @@ namespace Dope.DDXX.Graphics
         //   format:
         //     An Microsoft.DirectX.Direct3D.XFileFormat that indicates the format to use
         //     when saving the .x file. See Remarks.
-        void Save(Stream stream, GraphicsStream adjacency, ExtendedMaterial[] materials, EffectInstance[] effects, XFileFormat format);
+        void Save(Stream stream, IGraphicsStream adjacency, ExtendedMaterial[] materials, EffectInstance[] effects, XFileFormat format);
         //
         // Summary:
         //     Saves the mesh to the specified stream object.
@@ -1097,7 +1097,7 @@ namespace Dope.DDXX.Graphics
         //   format:
         //     An Microsoft.DirectX.Direct3D.XFileFormat that indicates the format to use
         //     when saving the .x file. See Remarks.
-        void Save(string filename, GraphicsStream adjacency, ExtendedMaterial[] materials, EffectInstance[] effects, XFileFormat format);
+        void Save(string filename, IGraphicsStream adjacency, ExtendedMaterial[] materials, EffectInstance[] effects, XFileFormat format);
         //
         // Summary:
         //     Saves the mesh to the specified stream object.
@@ -1153,7 +1153,7 @@ namespace Dope.DDXX.Graphics
         //   adjacency:
         //     A Microsoft.DirectX.GraphicsStream containing three System.Int32 values per
         //     face that specify the three neighbors for each face in the mesh to be tested.
-        void Validate(GraphicsStream adjacency);
+        void Validate(IGraphicsStream adjacency);
         //
         // Summary:
         //     Validates a mesh.
@@ -1175,7 +1175,7 @@ namespace Dope.DDXX.Graphics
         //   errorsAndWarnings:
         //     Returns a buffer that contains a string of errors and warnings, which explain
         //     the problems found in the mesh.
-        void Validate(GraphicsStream adjacency, out string errorsAndWarnings);
+        void Validate(IGraphicsStream adjacency, out string errorsAndWarnings);
         //
         // Summary:
         //     Validates a mesh.
@@ -1231,7 +1231,7 @@ namespace Dope.DDXX.Graphics
         //     array of the optimized mesh. The face adjacency is stored as an array of
         //     arrays. The innermost array is three indices of adjacent triangles, and the
         //     outer array is one set of face adjacencies per triangle in the mesh.
-        void WeldVertices(WeldEpsilonsFlags flags, WeldEpsilons epsilons, GraphicsStream adjacencyIn, GraphicsStream adjacencyOut);
+        void WeldVertices(WeldEpsilonsFlags flags, WeldEpsilons epsilons, IGraphicsStream adjacencyIn, IGraphicsStream adjacencyOut);
         //
         // Summary:
         //     Welds together replicated vertices that have equal attributes.
@@ -1253,7 +1253,7 @@ namespace Dope.DDXX.Graphics
         //   vertexRemap:
         //     A Microsoft.DirectX.GraphicsStream object that contains the new index for
         //     each vertex.
-        void WeldVertices(WeldEpsilonsFlags flags, WeldEpsilons epsilons, int[] adjacencyIn, out GraphicsStream vertexRemap);
+        void WeldVertices(WeldEpsilonsFlags flags, WeldEpsilons epsilons, int[] adjacencyIn, out IGraphicsStream vertexRemap);
         //
         // Summary:
         //     Welds together replicated vertices that have equal attributes.
@@ -1285,7 +1285,7 @@ namespace Dope.DDXX.Graphics
         //   vertexRemap:
         //     A Microsoft.DirectX.GraphicsStream object that contains the new index for
         //     each vertex.
-        void WeldVertices(WeldEpsilonsFlags flags, WeldEpsilons epsilons, GraphicsStream adjacencyIn, GraphicsStream adjacencyOut, out int[] faceRemap, out GraphicsStream vertexRemap);
+        void WeldVertices(WeldEpsilonsFlags flags, WeldEpsilons epsilons, IGraphicsStream adjacencyIn, IGraphicsStream adjacencyOut, out int[] faceRemap, out IGraphicsStream vertexRemap);
         //
         // Summary:
         //     Welds together replicated vertices that have equal attributes.
@@ -1316,6 +1316,6 @@ namespace Dope.DDXX.Graphics
         //   vertexRemap:
         //     A Microsoft.DirectX.GraphicsStream object that contains the new index for
         //     each vertex.
-        void WeldVertices(WeldEpsilonsFlags flags, WeldEpsilons epsilons, int[] adjacencyIn, out int[] adjacencyOut, out int[] faceRemap, out GraphicsStream vertexRemap);
+        void WeldVertices(WeldEpsilonsFlags flags, WeldEpsilons epsilons, int[] adjacencyIn, out int[] adjacencyOut, out int[] faceRemap, out IGraphicsStream vertexRemap);
     }
 }

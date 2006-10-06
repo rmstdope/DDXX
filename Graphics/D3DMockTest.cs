@@ -80,5 +80,30 @@ namespace Dope.DDXX.Graphics
             D3DDriver.DestroyInstance();
             mockery.VerifyAllExpectationsHaveBeenMet();
         }
+
+        private DeviceDescription CreateDescription()
+        {
+            DeviceDescription desc = new DeviceDescription();
+            desc.width = 800;
+            desc.height = 600;
+            desc.colorFormat = Format.X8R8G8B8;
+            return desc;
+        }
+
+        public void SetupD3DDriver()
+        {
+            DeviceDescription desc = CreateDescription();
+            PresentParameters param = new PresentParameters();
+            desc.deviceType = DeviceType.Reference;
+            desc.windowed = false;
+            param.Windowed = false;
+            param.SwapEffect = SwapEffect.Flip;
+            param.BackBufferCount = 2;
+            param.BackBufferWidth = desc.width;
+            param.BackBufferHeight = desc.height;
+            param.BackBufferFormat = desc.colorFormat;
+            Expect.Once.On(prerequisits).Method("CheckPrerequisits").With(0, desc.deviceType);
+            D3DDriver.GetInstance().Initialize(null, desc, prerequisits);
+        }
     }
 }
