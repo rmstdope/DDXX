@@ -7,6 +7,7 @@ using Dope.DDXX.Graphics;
 using System.Drawing;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX;
+using System.IO;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -70,8 +71,86 @@ namespace Dope.DDXX.DemoFramework
             ui.Initialize();
         }
 
+        class SizeFMatcher : Matcher
+        {
+            private SizeF size;
+            public SizeFMatcher(SizeF size)
+            {
+                this.size = size;
+            }
+            public override void DescribeTo(TextWriter writer)
+            {
+                writer.WriteLine("Matching");
+            }
+            public override bool Matches(object o)
+            {
+                float epsilon = 1e-4f;
+                if (!(o is SizeF))
+                    return false;
+                SizeF newSize = (SizeF)o;
+                Assert.AreEqual(size.Height, newSize.Height, epsilon);
+                Assert.AreEqual(size.Width, newSize.Width, epsilon);
+                return true;
+            }
+        }
+
+        class Vector2ArrayMatcher : Matcher
+        {
+            private Vector2[] vector;
+            public Vector2ArrayMatcher(Vector2[] vector)
+            {
+                this.vector = vector;
+            }
+            public override void DescribeTo(TextWriter writer)
+            {
+                writer.WriteLine("Matching");
+            }
+            public override bool Matches(object o)
+            {
+                float epsilon = 1e-4f;
+                if (!(o is Vector2[]))
+                    return false;
+                Vector2[] newVec = (Vector2[])o;
+                Assert.AreEqual(vector.Length, newVec.Length);
+                for (int i = 0; i < vector.Length; i++)
+                {
+                    Assert.AreEqual(vector[i].X, newVec[i].X, epsilon);
+                    Assert.AreEqual(vector[i].Y, newVec[i].Y, epsilon);
+                }
+                return true;
+            }
+        }
+
         [Test]
         public void TestDrawBoxControl()
+        {
+            float x1 = 0.1f;
+            float x2 = 0.4f;
+            float y1 = 0.2f;
+            float y2 = 0.8f;
+            float width = presentParameters.BackBufferWidth;
+            float height = presentParameters.BackBufferHeight;
+            float x11 = x1 * width;
+            float x21 = x2 * width;
+            float y11 = y1 * height;
+            float y21 = y2 * height;
+            float x12 = x11 + x1 * (x21 - x11);
+            float x22 = x11 + x2 * (x21 - x11);
+            float y12 = y11 + y1 * (y21 - y11);
+            float y22 = y11 + y2 * (y21 - y11);
+            TestInitialize();
+
+            BoxControl box1 = new BoxControl(new RectangleF(x1, y1, x2 - x1, y2 - y1), 0.75f, Color.Turquoise, null);
+            BoxControl box2 = new BoxControl(new RectangleF(x1, y1, x2 - x1, y2 - y1), 0.75f, Color.Turquoise, box1);
+
+            ExpectBox(x11, x21, y11, y21);
+            ExpectBox(x12, x22, y12, y22);
+
+            ui.DrawControl(box1);
+        }
+
+        [Test]
+        public void TestTextBoxControl()
         {
             float x1 = 0.1f;
             float x2 = 0.3f;
@@ -81,6 +160,21 @@ namespace Dope.DDXX.DemoFramework
             float height = presentParameters.BackBufferHeight;
             TestInitialize();
 
+            ExpectText(x1, x2, y1, y2, width, height);
+
+            ui.DrawControl(new TextControl("Text", new RectangleF(x1, y1, x2, y2), DrawTextFormat.Center, 0.75f, Color.Turquoise, null));
+        }
+
+        private void ExpectText(float x1, float x2, float y1, float y2, float width, float height)
+        {
+            Expect.Once.On(font).
+                Method("DrawText").
+                With(null, "Text", new Rectangle((int)(x1 * width), (int)(y1 * height), (int)(x2 * width), (int)(y2 * height)), DrawTextFormat.Center, Color.FromArgb((int)(255 * 0.75f), Color.Turquoise)).
+                Will(Return.Value(0));
+        }
+
+        private void ExpectBox(float x1, float x2, float y1, float y2)
+        {
             using (mockery.Ordered)
             {
                 Expect.Once.On(sprite).
@@ -88,9 +182,9 @@ namespace Dope.DDXX.DemoFramework
                     With(SpriteFlags.AlphaBlend);
                 Expect.Once.On(sprite).
                     Method("Draw2D").
-                    With(Is.EqualTo(texture), Is.EqualTo(Rectangle.Empty), 
-                         Is.EqualTo(new SizeF(width * (x2 - x1), height * (y2 - y1))), 
-                         Is.EqualTo(new PointF(width * x1, height * y1)),
+                    With(Is.EqualTo(texture), Is.EqualTo(Rectangle.Empty),
+                         new SizeFMatcher(new SizeF((x2 - x1), (y2 - y1))),
+                         Is.EqualTo(new PointF(x1, y1)),
                          Is.EqualTo(Color.FromArgb((int)(255 * 0.75f), Color.Turquoise)));
                 Expect.Once.On(sprite).
                     Method("End");
@@ -99,28 +193,11 @@ namespace Dope.DDXX.DemoFramework
                     Method("Begin");
                 Expect.Once.On(line).
                     Method("Draw").
-                    With(new Vector2[] { new Vector2(width * x1, height * y1), new Vector2(width * x2, height * y1), new Vector2(width * x2, height * y2), new Vector2(width * x1, height * y2), new Vector2(width * x1, height * y1) }, Color.White);
+                    With(new Vector2ArrayMatcher(new Vector2[] { new Vector2(x1, y1), new Vector2(x2, y1), new Vector2(x2, y2), new Vector2(x1, y2), new Vector2(x1, y1) }), Is.EqualTo(Color.White));
                 Expect.Once.On(line).
                     Method("End");
             }
-            ui.DrawControl(new BoxControl(x1, y1, x2, y2, 0.75f, Color.Turquoise));
         }
 
-        [Test]
-        public void TestTextBoxControl()
-        {
-            float x1 = 0.1f;
-            float y1 = 0.2f;
-            float width = presentParameters.BackBufferWidth;
-            float height = presentParameters.BackBufferHeight;
-            TestInitialize();
-
-            Expect.Once.On(font).
-                Method("DrawText").
-                With(null, "Text", (int)(width * x1), (int)(height * y1), Color.FromArgb((int)(255 * 0.75f), Color.Turquoise)).
-                Will(Return.Value(0));
-
-            ui.DrawControl(new TextControl("Text", x1, y1, 0.75f, Color.Turquoise));
-        }
     }
 }

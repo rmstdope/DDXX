@@ -11,7 +11,7 @@ namespace Dope.DDXX.DemoFramework
     {
         private ISprite sprite;
         private bool enabled;
-        private ITexture texture;
+        //private ITexture texture;
 
         public bool Enabled
         {

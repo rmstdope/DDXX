@@ -8,39 +8,138 @@ using Microsoft.DirectX;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public struct BoxControl
+    public abstract class BaseControl
     {
-        public float X1;
-        public float Y1;
-        public float X2;
-        public float Y2;
-        public float Alpha;
-        public Color Color;
-        public BoxControl(float x1, float y1, float x2, float y2, float alpha, Color color)
+        protected RectangleF rectangle;
+        private BaseControl parent;
+        public List<BaseControl> Children = new List<BaseControl>();
+        public BaseControl(RectangleF rectangle, BaseControl parent)
         {
-            X1 = x1;
-            Y1 = y1;
-            X2 = x2;
-            Y2 = y2;
-            Alpha = alpha;
-            Color = color;
+            this.rectangle = rectangle;
+            this.parent = parent;
+            if (parent != null)
+                parent.Children.Add(this);
+        }
+
+        internal void DrawControl(ISprite sprite, ILine line, IFont font, ITexture whiteTexture)
+        {
+            Draw(sprite, line, font, whiteTexture);
+            foreach (BaseControl child in Children)
+                child.DrawControl(sprite, line, font, whiteTexture);
+        }
+
+        internal abstract void Draw(ISprite sprite, ILine line, IFont font, ITexture whiteTexture);
+
+        protected float GetParentHeight()
+        {
+            if (parent == null)
+                return D3DDriver.GetInstance().GetDevice().PresentationParameters.BackBufferHeight;
+            else
+                return parent.GetHeight();
+        }
+
+        protected float GetParentWidth()
+        {
+            if (parent == null)
+                return D3DDriver.GetInstance().GetDevice().PresentationParameters.BackBufferWidth;
+            else
+                return parent.GetWidth();
+        }
+
+        protected float GetParentX1()
+        {
+            if (parent == null)
+                return 0;
+            else
+                return parent.GetX1();
+        }
+
+        protected float GetParentY1()
+        {
+            if (parent == null)
+                return 0;
+            else
+                return parent.GetY1();
+        }
+
+        protected float GetHeight()
+        {
+            return GetParentHeight() * rectangle.Height;
+        }
+
+        protected float GetWidth()
+        {
+            return GetParentWidth() * rectangle.Width;
+        }
+
+        protected float GetX1()
+        {
+            return GetParentX1() + GetParentWidth() * rectangle.X;
+        }
+
+        protected float GetY1()
+        {
+            return GetParentY1() + GetParentHeight() * rectangle.Y;
+        }
+
+        protected float GetX2()
+        {
+            return GetParentX1() + GetParentWidth() * (rectangle.X + rectangle.Width);
+        }
+
+        protected float GetY2()
+        {
+            return GetParentY1() + GetParentHeight() * (rectangle.Y + rectangle.Height);
         }
     }
 
-    public struct TextControl
+    public class BoxControl : BaseControl
     {
-        public string Text;
-        public float X1;
-        public float Y1;
         public float Alpha;
         public Color Color;
-        public TextControl(string text, float x1, float y1, float alpha, Color color)
+        public BoxControl(RectangleF rectangle, float alpha, Color color, BaseControl parent)
+            : base(rectangle, parent)
         {
-            Text = text;
-            X1 = x1;
-            Y1 = y1;
             Alpha = alpha;
             Color = color;
+        }
+        internal override void Draw(ISprite sprite, ILine line, IFont font, ITexture whiteTexture)
+        {
+            sprite.Begin(SpriteFlags.AlphaBlend);
+            sprite.Draw2D(whiteTexture, Rectangle.Empty, new SizeF(GetWidth(), GetHeight()), 
+                          new PointF(GetX1(), GetY1()), Color.FromArgb((int)(255 * Alpha), Color));
+            sprite.End();
+
+            line.Begin();
+            line.Draw(new Vector2[] { new Vector2(GetX1(), GetY1()), 
+                                      new Vector2(GetX2(), GetY1()), 
+                                      new Vector2(GetX2(), GetY2()), 
+                                      new Vector2(GetX1(), GetY2()), 
+                                      new Vector2(GetX1(), GetY1()) },
+                                      Color.White);
+            line.End();
+        }
+
+    }
+
+    public class TextControl : BaseControl
+    {
+        public string Text;
+        public DrawTextFormat Format;
+        public float Alpha;
+        public Color Color;
+        public TextControl(string text, RectangleF rectangle, DrawTextFormat format, float alpha, Color color, BaseControl parent)
+            : base(rectangle, parent)
+        {
+            Text = text;
+            Format = format;
+            Alpha = alpha;
+            Color = color;
+        }
+        internal override void Draw(ISprite sprite, ILine line, IFont font, ITexture whiteTexture)
+        {
+            Rectangle rect = new Rectangle((int)(GetX1()), (int)(GetY1()), (int)(GetWidth()), (int)(GetHeight()));
+            font.DrawText(null, Text, rect, Format, Color.FromArgb((int)(255 * Alpha), Color));
         }
     }
 
@@ -71,26 +170,10 @@ namespace Dope.DDXX.DemoFramework
             device.ColorFill(whiteTexture.GetSurfaceLevel(0), new Rectangle(0, 0, 1, 1), Color.White);
         }
 
-        internal void DrawControl(BoxControl box)
+        internal void DrawControl(BaseControl control)
         {
-            float width = D3DDriver.GetInstance().GetDevice().PresentationParameters.BackBufferWidth;
-            float height = D3DDriver.GetInstance().GetDevice().PresentationParameters.BackBufferHeight;
-
-            sprite.Begin(SpriteFlags.AlphaBlend);
-            sprite.Draw2D(whiteTexture, Rectangle.Empty, new SizeF(width * (box.X2 - box.X1), height * (box.Y2 - box.Y1)), new PointF(width * box.X1, height * box.Y1), Color.FromArgb((int)(255 * box.Alpha), box.Color));
-            sprite.End();
-
-            line.Begin();
-            line.Draw(new Vector2[] { new Vector2(width * box.X1, height * box.Y1), new Vector2(width * box.X2, height * box.Y1), new Vector2(width * box.X2, height * box.Y2), new Vector2(width * box.X1, height * box.Y2), new Vector2(width * box.X1, height * box.Y1) }, Color.White);
-            line.End();
+            control.DrawControl(sprite, line, font, whiteTexture);
         }
 
-        internal void DrawControl(TextControl text)
-        {
-            float width = D3DDriver.GetInstance().GetDevice().PresentationParameters.BackBufferWidth;
-            float height = D3DDriver.GetInstance().GetDevice().PresentationParameters.BackBufferHeight;
-
-            font.DrawText(null, text.Text, (int)(width * text.X1), (int)(height * text.Y1), Color.FromArgb((int)(255 * text.Alpha), text.Color));
-        }
     }
 }
