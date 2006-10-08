@@ -42,10 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseControl.cs" />
     <Compile Include="BaseDemoEffect.cs" />
     <Compile Include="BaseDemoEffectTest.cs" />
     <Compile Include="BaseDemoPostEffect.cs" />
     <Compile Include="BaseDemoPostEffectTest.cs" />
+    <Compile Include="BoxControl.cs" />
     <Compile Include="DemoEffectTypes.cs" />
     <Compile Include="DemoEffectTypesTest.cs" />
     <Compile Include="DemoExecuter.cs" />
@@ -59,8 +61,10 @@
     <Compile Include="IDemoEffect.cs" />
     <Compile Include="IDemoEffectBuilder.cs" />
     <Compile Include="IDemoPostEffect.cs" />
+    <Compile Include="IDemoTweaker.cs" />
     <Compile Include="IPostProcessor.cs" />
     <Compile Include="IRegisterable.cs" />
+    <Compile Include="IUserInterface.cs" />
     <Compile Include="PostProcessor.cs" />
     <Compile Include="PostProcessorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -75,6 +79,7 @@
     <Compile Include="SetupForm.Designer.cs">
       <DependentUpon>SetupForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="TextControl.cs" />
     <Compile Include="Track.cs" />
     <Compile Include="TrackTest.cs" />
     <Compile Include="DemoXMLReader.cs" />

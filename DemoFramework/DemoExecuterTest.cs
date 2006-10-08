@@ -25,6 +25,7 @@ namespace Dope.DDXX.DemoFramework
         private Dope.DDXX.Input.IInputFactory iFactory;
         private Dope.DDXX.Sound.ISoundFactory sFactory;
         private ISoundSystem system;
+        private IDemoTweaker tweaker;
 
         private void ExpectPostProcessorInitialize()
         {
@@ -71,6 +72,8 @@ namespace Dope.DDXX.DemoFramework
             D3DDriver.GetInstance().Initialize(null, desc, prerequisits);
 
             executer = new DemoExecuter();
+            tweaker = mockery.NewMock<IDemoTweaker>();
+            executer.Tweaker = tweaker;
         }
 
         [TearDown]
@@ -167,6 +170,8 @@ namespace Dope.DDXX.DemoFramework
                 Method("Init").
                 Will(Return.Value(FMOD.RESULT.OK));
             ExpectPostProcessorInitialize();
+            Expect.Once.On(tweaker).
+                Method("Initialize");
 
             executer.Initialize("");
         }
@@ -181,6 +186,8 @@ namespace Dope.DDXX.DemoFramework
                 Method("Init").
                 Will(Return.Value(FMOD.RESULT.OK));
             ExpectPostProcessorInitialize();
+            Expect.Once.On(tweaker).
+                Method("Initialize");
 
             executer.Initialize(null);
         }
@@ -199,6 +206,8 @@ namespace Dope.DDXX.DemoFramework
                 Method("CreateSound").
                 Will(Return.Value(FMOD.RESULT.OK));
             ExpectPostProcessorInitialize();
+            Expect.Once.On(tweaker).
+                Method("Initialize");
 
             executer.Initialize("Dope.DDXX.DemoFramework.dll");
         }
@@ -222,6 +231,8 @@ namespace Dope.DDXX.DemoFramework
                 Will(Return.Value(FMOD.RESULT.OK));
 
             ExpectPostProcessorInitialize();
+            Expect.Once.On(tweaker).
+                Method("Initialize");
 
             // Effects
             Expect.Once.On(effect1).
@@ -300,6 +311,9 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(device).
                 Method("Present");
             Time.CurrentTime = 2.0f;
+
+            Expect.Once.On(tweaker).
+                Method("Draw");
             executer.Run();
             Assert.Greater(Time.StepTime, 2.0f);
         }
@@ -340,6 +354,8 @@ namespace Dope.DDXX.DemoFramework
                 Method("Step");
             Expect.Once.On(effect).
                 Method("Render");
+            Expect.Once.On(tweaker).
+                Method("Draw");
             executer.Register(0, effect);
             executer.Run();
         }
@@ -372,6 +388,8 @@ namespace Dope.DDXX.DemoFramework
             IDemoEffect effect = CreateMockEffect(0, 10.0f);
             Expect.Once.On(effect).
                 Method("Render");
+            Expect.Once.On(tweaker).
+                Method("Draw");
             executer.Register(0, effect);
             executer.Render();
         }
@@ -407,6 +425,8 @@ namespace Dope.DDXX.DemoFramework
                 Method("Render");
             Expect.Once.On(postEffect).
                 Method("Render");
+            Expect.Once.On(tweaker).
+                Method("Draw");
             executer.Register(0, effect);
             executer.Register(0, postEffect);
             executer.Render();

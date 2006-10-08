@@ -51,7 +51,7 @@ namespace Dope.DDXX.DemoFramework
                 To(1.0f);
             Expect.Once.On(line).
                 SetProperty("Antialias").
-                To(true);
+                To(false);
             Expect.Once.On(factory).
                 Method("CreateSprite").
                 WithAnyArguments().
@@ -150,6 +150,33 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
+        public void TestDrawBlackBoxControl()
+        {
+            float x1 = 0.1f;
+            float x2 = 0.4f;
+            float y1 = 0.2f;
+            float y2 = 0.8f;
+            float width = presentParameters.BackBufferWidth;
+            float height = presentParameters.BackBufferHeight;
+            float x11 = x1 * width;
+            float x21 = x2 * width;
+            float y11 = y1 * height;
+            float y21 = y2 * height;
+            float x12 = x11 + x1 * (x21 - x11);
+            float x22 = x11 + x2 * (x21 - x11);
+            float y12 = y11 + y1 * (y21 - y11);
+            float y22 = y11 + y2 * (y21 - y11);
+            TestInitialize();
+
+            BoxControl box1 = new BoxControl(new RectangleF(x1, y1, x2 - x1, y2 - y1), 0.0f, Color.Turquoise, null);
+            BoxControl box2 = new BoxControl(new RectangleF(x1, y1, x2 - x1, y2 - y1), 0.75f, Color.Turquoise, box1);
+
+            ExpectBox(x12, x22, y12, y22);
+
+            ui.DrawControl(box1);
+        }
+
+        [Test]
         public void TestTextBoxControl()
         {
             float x1 = 0.1f;
@@ -167,6 +194,10 @@ namespace Dope.DDXX.DemoFramework
 
         private void ExpectText(float x1, float x2, float y1, float y2, float width, float height)
         {
+            Expect.Once.On(font).
+                Method("DrawText").
+                With(null, "Text", new Rectangle((int)(x1 * width) + 1, (int)(y1 * height) + 1, (int)(x2 * width), (int)(y2 * height)), DrawTextFormat.Center, Color.FromArgb((int)(255 * 0.75f), Color.Black)).
+                Will(Return.Value(0));
             Expect.Once.On(font).
                 Method("DrawText").
                 With(null, "Text", new Rectangle((int)(x1 * width), (int)(y1 * height), (int)(x2 * width), (int)(y2 * height)), DrawTextFormat.Center, Color.FromArgb((int)(255 * 0.75f), Color.Turquoise)).
@@ -193,7 +224,10 @@ namespace Dope.DDXX.DemoFramework
                     Method("Begin");
                 Expect.Once.On(line).
                     Method("Draw").
-                    With(new Vector2ArrayMatcher(new Vector2[] { new Vector2(x1, y1), new Vector2(x2, y1), new Vector2(x2, y2), new Vector2(x1, y2), new Vector2(x1, y1) }), Is.EqualTo(Color.White));
+                    With(new Vector2ArrayMatcher(new Vector2[] { new Vector2(x1 + 1, y1 + 1), new Vector2(x2 + 1, y1 + 1), new Vector2(x2 + 1, y2 + 1), new Vector2(x1 + 1, y2 + 1), new Vector2(x1 + 1, y1 + 1) }), Is.EqualTo(Color.FromArgb((int)(255 * 0.75f), Color.Black)));
+                Expect.Once.On(line).
+                    Method("Draw").
+                    With(new Vector2ArrayMatcher(new Vector2[] { new Vector2(x1, y1), new Vector2(x2, y1), new Vector2(x2, y2), new Vector2(x1, y2), new Vector2(x1, y1) }), Is.EqualTo(Color.FromArgb((int)(255 * 0.75f), Color.White)));
                 Expect.Once.On(line).
                     Method("End");
             }

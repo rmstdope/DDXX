@@ -12,16 +12,19 @@ namespace Dope.DDXX.DemoFramework
     public class DemoTweakerTest : D3DMockTest
     {
         private DemoTweaker tweaker;
-        private ISprite sprite;
+        private IUserInterface userInterface;
 
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
 
-            sprite = mockery.NewMock<ISprite>();
+            userInterface = mockery.NewMock<IUserInterface>();
 
             tweaker = new DemoTweaker();
+            tweaker.UserInterface = userInterface;
+
+            SetupD3DDriver();
         }
 
         [TearDown]
@@ -33,11 +36,8 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestInitialize()
         {
-            Expect.Once.On(factory).
-                Method("CreateSprite").
-                WithAnyArguments().
-                Will(Return.Value(sprite));
-            
+            Expect.Once.On(userInterface).
+                Method("Initialize");
             tweaker.Initialize();
         }
 
@@ -50,12 +50,12 @@ namespace Dope.DDXX.DemoFramework
             tweaker.Draw();
 
             tweaker.Enabled = true;
-            Assert.IsTrue(tweaker.Enabled);
-            Expect.Once.On(sprite).
-                Method("Begin").
-                With(SpriteFlags.AlphaBlend);
-            Expect.Once.On(sprite).
-                Method("End");
+            Expect.Once.On(device).
+                Method("BeginScene");
+            Expect.Once.On(userInterface).
+                Method("DrawControl");
+            Expect.Once.On(device).
+                Method("EndScene");
             tweaker.Draw();
 
             tweaker.Enabled = false;

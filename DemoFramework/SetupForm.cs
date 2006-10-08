@@ -146,7 +146,7 @@ namespace Dope.DDXX.DemoFramework
                 i = 0;
                 foreach (string s in uniqueValues)
                 {
-                    if (s.Length < 9)
+                    if (s.Length < 8)
                         resolution.SelectedIndex = i;
                     i++;
                 }

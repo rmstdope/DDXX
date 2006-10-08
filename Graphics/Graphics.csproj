@@ -59,6 +59,7 @@
     <Compile Include="IBaseTexture.cs" />
     <Compile Include="ICubeTexture.cs" />
     <Compile Include="GraphicsStreamAdapter.cs" />
+    <Compile Include="IDemoTweaker.cs" />
     <Compile Include="IDevice.cs" />
     <Compile Include="IEffect.cs" />
     <Compile Include="IFont.cs" />

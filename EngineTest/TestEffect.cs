@@ -17,6 +17,8 @@ namespace EngineTest
     {
         private FloaterSystem ps;
         private CameraNode camera;
+        private ISprite sprite;
+        private ITexture texture;
 
         public TestEffect(float startTime, float endTime) 
             : base(startTime, endTime)
@@ -27,6 +29,8 @@ namespace EngineTest
         {
             base.Initialize();
 
+            sprite = D3DDriver.Factory.CreateSprite(Device);
+            texture = D3DDriver.TextureFactory.CreateFromFile("BlurBackground.jpg");
             Scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f);
 
             camera = new CameraNode("Camera");
@@ -55,8 +59,16 @@ namespace EngineTest
 
         public override void Render()
         {
+            IDevice device = D3DDriver.GetInstance().GetDevice();
             Scene.Render();
-            Device.ColorFill(Device.GetRenderTarget(0), new Rectangle(0, 0, Device.GetRenderTarget(0).Description.Width, Device.GetRenderTarget(0).Description.Height), Color.Blue);
+            int sWidth = device.PresentationParameters.BackBufferWidth;
+            int sHeight = device.PresentationParameters.BackBufferHeight;
+            int tWidth = texture.GetSurfaceLevel(0).Description.Width;
+            int tHeight = texture.GetSurfaceLevel(0).Description.Height;
+            sprite.Begin(SpriteFlags.AlphaBlend);
+            sprite.Draw2D(texture, Rectangle.Empty, new SizeF(sWidth * 1.9f, sHeight * 1.9f), new PointF(tWidth / 2, tHeight / 2), Time.StepTime * 0.22f, new PointF(sWidth / 2, sHeight / 2), Color.FromArgb(30, 255, 150, 150));
+            sprite.Draw2D(texture, Rectangle.Empty, new SizeF(sWidth * 1.9f, sHeight * 1.9f), new PointF(tWidth / 2, tHeight / 2), -Time.StepTime * 0.15f, new PointF(sWidth / 2, sHeight / 2), Color.FromArgb(30, 150, 255, 150));
+            sprite.End();
         }
 
     }

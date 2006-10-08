@@ -25,7 +25,7 @@ namespace Dope.DDXX.DemoFramework
         private IDevice device;
         private ITexture backBuffer;
         private PostProcessor postProcessor;
-        //private UserInterface tweaker;
+        private IDemoTweaker tweaker;
 
         private InputDriver inputDriver;
 
@@ -69,11 +69,17 @@ namespace Dope.DDXX.DemoFramework
                 return tracks.Count;
             }
         }
+
+        public IDemoTweaker Tweaker
+        {
+            set { tweaker = value; }
+        }
+
         public DemoExecuter()
         {
             postProcessor = new PostProcessor();
-            //tweaker = new UserInterface();
-            //tweaker.Enabled = true;
+            tweaker = new DemoTweaker();
+            tweaker.Enabled = true;
         }
 
         private DemoEffectTypes effectTypes = new DemoEffectTypes();
@@ -107,7 +113,7 @@ namespace Dope.DDXX.DemoFramework
                 }
             }
 
-            //tweaker.Initialize();
+            tweaker.Initialize();
         }
 
         private void InitializeInput()
@@ -219,10 +225,7 @@ namespace Dope.DDXX.DemoFramework
                 }
             }
 
-            //device.BeginScene();
-            //tweaker.DrawControl(new BoxControl(0.1f, 0.1f, 0.9f, 0.9f, 0.5f, Color.Violet));
-            //tweaker.DrawControl(new TextControl("Test it!", 0.3f, 0.3f, 0.5f, Color.FloralWhite));
-            //device.EndScene();
+            tweaker.Draw();
 
             device.SetRenderTarget(0, originalTarget);
         }

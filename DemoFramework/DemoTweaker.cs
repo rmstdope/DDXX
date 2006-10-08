@@ -7,11 +7,24 @@ using System.Drawing;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public class DemoTweaker
+    public class DemoTweaker : IDemoTweaker
     {
-        private ISprite sprite;
         private bool enabled;
-        //private ITexture texture;
+        private IUserInterface userInterface;
+
+        private BoxControl mainWindow;
+        private BoxControl titleWindow;
+        private TextControl titleText;
+        private BoxControl timeWindow;
+
+        private float alpha = 0.4f;
+        private Color titleColor = Color.Aquamarine;
+        private Color timeColor = Color.BurlyWood;
+
+        public IUserInterface UserInterface
+        {
+            set { userInterface = value; }
+        }
 
         public bool Enabled
         {
@@ -22,26 +35,27 @@ namespace Dope.DDXX.DemoFramework
         public DemoTweaker()
         {
             enabled = false;
+            userInterface = new UserInterface();
         }
 
-        internal void Initialize()
+        public void Initialize()
         {
-            IDevice device = D3DDriver.GetInstance().GetDevice();
-            sprite = D3DDriver.Factory.CreateSprite(device);
+            userInterface.Initialize();
 
-            //texture = D3DDriver.Factory.CreateTexture(device, 1, 1, 1, Usage.RenderTarget, Format.X8R8G8B8, Pool.Default);
-            //device.ColorFill(texture.GetSurfaceLevel(0), new Rectangle(0, 0, 1, 1), Color.Aqua);
-
+            mainWindow = new BoxControl(new RectangleF(0.05f, 0.05f, 0.90f, 0.90f), 0.0f, Color.Black, null);
+            titleWindow = new BoxControl(new RectangleF(0.0f, 0.0f, 1.0f, 0.05f), alpha, titleColor, mainWindow);
+            titleText = new TextControl("DDXX Tweaker", new RectangleF(0.0f, 0.0f, 1.0f, 1.0f), DrawTextFormat.Center | DrawTextFormat.VerticalCenter, alpha, Color.White, titleWindow);
+            timeWindow = new BoxControl(new RectangleF(0.0f, 0.05f, 1.0f, 0.95f), alpha, timeColor, mainWindow);
         }
 
-        internal void Draw()
+        public void Draw()
         {
             if (!Enabled)
                 return;
 
-            sprite.Begin(SpriteFlags.AlphaBlend);
-            //sprite.Draw2D(texture, Rectangle.Empty, new SizeF(400.0f, 400.0f), new PointF(0, 0), Color.FromArgb(80, Color.White));
-            sprite.End();
+            D3DDriver.GetInstance().GetDevice().BeginScene();
+            userInterface.DrawControl(mainWindow);
+            D3DDriver.GetInstance().GetDevice().EndScene();
         }
     }
 }

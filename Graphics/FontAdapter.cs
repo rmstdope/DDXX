@@ -42,12 +42,18 @@ namespace Dope.DDXX.Graphics
 
         public int DrawText(ISprite sprite, string text, int x, int y, int color)
         {
-            return font.DrawText(((SpriteAdapter)sprite).DXSprite, text, x, y, color);
+            if (sprite == null)
+                return font.DrawText(null, text, x, y, color);
+            else
+                return font.DrawText(((SpriteAdapter)sprite).DXSprite, text, x, y, color);
         }
 
         public int DrawText(ISprite sprite, string text, Rectangle rect, DrawTextFormat format, Color color)
         {
-            return font.DrawText(((SpriteAdapter)sprite).DXSprite, text, rect, format, color);
+            if (sprite == null)
+                return font.DrawText(null, text, rect, format, color);
+            else
+                return font.DrawText(((SpriteAdapter)sprite).DXSprite, text, rect, format, color);
         }
 
         public int DrawText(ISprite sprite, string text, Rectangle rect, DrawTextFormat format, int color)
