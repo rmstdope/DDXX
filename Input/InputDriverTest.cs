@@ -74,7 +74,7 @@ namespace Dope.DDXX.Input
         }
 
         [Test]
-        public void TestKeys()
+        public void TestKeys1()
         {
             TestInitOK();
 
@@ -89,6 +89,48 @@ namespace Dope.DDXX.Input
                 With(keyboard, Key.Escape).
                 Will(Return.Value(true));
             Assert.IsTrue(driver.KeyPressed(Key.Escape));
+
+            Expect.Once.On(factory).
+                Method("KeyPressed").
+                With(keyboard, Key.Escape).
+                Will(Return.Value(true));
+            Assert.IsTrue(driver.KeyPressed(Key.Escape));
+        }
+
+        [Test]
+        public void TestKeys2()
+        {
+            TestInitOK();
+
+            Expect.Once.On(factory).
+                Method("KeyPressed").
+                With(keyboard, Key.Escape).
+                Will(Return.Value(false));
+            Assert.IsFalse(driver.KeyPressedNoRepeat(Key.Escape));
+
+            Expect.Once.On(factory).
+                Method("KeyPressed").
+                With(keyboard, Key.Escape).
+                Will(Return.Value(true));
+            Assert.IsTrue(driver.KeyPressedNoRepeat(Key.Escape));
+
+            Expect.Once.On(factory).
+                Method("KeyPressed").
+                With(keyboard, Key.Escape).
+                Will(Return.Value(true));
+            Assert.IsFalse(driver.KeyPressedNoRepeat(Key.Escape));
+
+            Expect.Once.On(factory).
+                Method("KeyPressed").
+                With(keyboard, Key.Escape).
+                Will(Return.Value(false));
+            Assert.IsFalse(driver.KeyPressedNoRepeat(Key.Escape));
+
+            Expect.Once.On(factory).
+                Method("KeyPressed").
+                With(keyboard, Key.Escape).
+                Will(Return.Value(true));
+            Assert.IsTrue(driver.KeyPressedNoRepeat(Key.Escape));
         }
     }
 }

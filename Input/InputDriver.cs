@@ -14,8 +14,11 @@ namespace Dope.DDXX.Input
 
         private Device keyboard;
 
+        private List<Key> noRepeatList;
+
         private InputDriver()
         {
+            noRepeatList = new List<Key>();
         }
 
         public static IInputFactory Factory
@@ -49,6 +52,25 @@ namespace Dope.DDXX.Input
         public bool KeyPressed(Key key)
         {
             return factory.KeyPressed(keyboard, key);
+        }
+
+        internal bool KeyPressedNoRepeat(Key key)
+        {
+            bool pressed = factory.KeyPressed(keyboard, key);
+            if (noRepeatList.Contains(key))
+            {
+                if (!pressed)
+                    noRepeatList.Remove(key);
+            }
+            else
+            {
+                if (pressed)
+                {
+                    noRepeatList.Add(key);
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
