@@ -6,6 +6,7 @@ using NMock2;
 using Dope.DDXX.Graphics;
 using Microsoft.DirectX.Direct3D;
 using System.IO;
+using System.Drawing;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -45,36 +46,26 @@ namespace Dope.DDXX.DemoFramework
             tweaker.Initialize(registrator);
         }
 
-        class ControlMatcher : Matcher
+        [Test]
+        public void TestTrack()
         {
-            private string test;
-            public ControlMatcher(string test)
-            {
-                this.test = test;
-            }
-
-            public override void DescribeTo(TextWriter writer)
-            {
-                writer.WriteLine("Matcher");
-            }
-
-            public override bool Matches(object o)
-            {
-                if (!(o is BoxControl))
-                    Assert.Fail();
-                BoxControl mainBox = (BoxControl)o;
-                switch (test)
-                {
-                    case "TestDraw":
-                        break;
-                    case "TestDrawEffects":
-                        break;
-                    default:
-                        Assert.Fail();
-                        break;
-                }
-                return true;
-            }
+            List<Track> tracks = new List<Track>();
+            for (int i = 0; i < 5; i++)
+                tracks.Add(new Track());
+            TestInitialize();
+            tweaker.Enabled = true;
+            Stub.On(registrator).
+                GetProperty("Tracks").
+                Will(Return.Value(tracks));
+            Assert.AreEqual(0, tweaker.CurrentTrack);
+            tweaker.IncreaseTrack();
+            Assert.AreEqual(1, tweaker.CurrentTrack);
+            tweaker.IncreaseTrack();
+            tweaker.IncreaseTrack();
+            tweaker.IncreaseTrack();
+            Assert.AreEqual(4, tweaker.CurrentTrack);
+            tweaker.IncreaseTrack();
+            Assert.AreEqual(4, tweaker.CurrentTrack);
         }
 
         [Test]
@@ -98,15 +89,87 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
-        public void TestDrawEffects()
+        public void TestDraw5Effects()
         {
+            List<Track> tracks = new List<Track>();
+            for (int i = 0; i < 5; i++)
+                tracks.Add(new Track());
             TestInitialize();
             tweaker.Enabled = true;
             Stub.On(registrator).
                 GetProperty("Tracks").
-                Will(Return.Value(new List<Track>()));
-            ExpectDraw("TestDrawEffects");
+                Will(Return.Value(tracks));
+
+            ExpectDraw("TestDraw5Effects1");
             tweaker.Draw();
+
+            tweaker.IncreaseTrack();
+            ExpectDraw("TestDraw5Effects2");
+            tweaker.Draw();
+
+            tweaker.IncreaseTrack();
+            tweaker.IncreaseTrack();
+            tweaker.IncreaseTrack();
+            ExpectDraw("TestDraw5Effects3");
+            tweaker.Draw();
+        }
+
+        class ControlMatcher : Matcher
+        {
+            private string test;
+            public ControlMatcher(string test)
+            {
+                this.test = test;
+            }
+
+            public override void DescribeTo(TextWriter writer)
+            {
+                writer.WriteLine("Matcher");
+            }
+
+            public override bool Matches(object o)
+            {
+                if (!(o is BoxControl))
+                    Assert.Fail();
+                BoxControl mainBox = (BoxControl)o;
+                switch (test)
+                {
+                    case "TestDraw":
+                        Assert.AreEqual(0, mainBox.Children[1].Children.Count);
+                        break;
+                    case "TestDraw5Effects1":
+                        Assert.AreEqual(3, mainBox.Children[1].Children.Count);
+                        Assert.AreEqual("Track 0", ((TextControl)mainBox.Children[1].Children[0].Children[0]).Text);
+                        Assert.AreEqual(Color.Crimson, ((BoxControl)mainBox.Children[1].Children[0]).Color);
+                        Assert.AreEqual("Track 1", ((TextControl)mainBox.Children[1].Children[1].Children[0]).Text);
+                        Assert.AreEqual(Color.DarkBlue, ((BoxControl)mainBox.Children[1].Children[1]).Color);
+                        Assert.AreEqual("Track 2", ((TextControl)mainBox.Children[1].Children[2].Children[0]).Text);
+                        Assert.AreEqual(Color.DarkBlue, ((BoxControl)mainBox.Children[1].Children[2]).Color);
+                        break;
+                    case "TestDraw5Effects2":
+                        Assert.AreEqual(3, mainBox.Children[1].Children.Count);
+                        Assert.AreEqual("Track 0", ((TextControl)mainBox.Children[1].Children[0].Children[0]).Text);
+                        Assert.AreEqual(Color.DarkBlue, ((BoxControl)mainBox.Children[1].Children[0]).Color);
+                        Assert.AreEqual("Track 1", ((TextControl)mainBox.Children[1].Children[1].Children[0]).Text);
+                        Assert.AreEqual(Color.Crimson, ((BoxControl)mainBox.Children[1].Children[1]).Color);
+                        Assert.AreEqual("Track 2", ((TextControl)mainBox.Children[1].Children[2].Children[0]).Text);
+                        Assert.AreEqual(Color.DarkBlue, ((BoxControl)mainBox.Children[1].Children[2]).Color);
+                        break;
+                    case "TestDraw5Effects3":
+                        Assert.AreEqual(3, mainBox.Children[1].Children.Count);
+                        Assert.AreEqual("Track 2", ((TextControl)mainBox.Children[1].Children[0].Children[0]).Text);
+                        Assert.AreEqual(Color.DarkBlue, ((BoxControl)mainBox.Children[1].Children[0]).Color);
+                        Assert.AreEqual("Track 3", ((TextControl)mainBox.Children[1].Children[1].Children[0]).Text);
+                        Assert.AreEqual(Color.DarkBlue, ((BoxControl)mainBox.Children[1].Children[1]).Color);
+                        Assert.AreEqual("Track 4", ((TextControl)mainBox.Children[1].Children[2].Children[0]).Text);
+                        Assert.AreEqual(Color.Crimson, ((BoxControl)mainBox.Children[1].Children[2]).Color);
+                        break;
+                    default:
+                        Assert.Fail();
+                        break;
+                }
+                return true;
+            }
         }
 
         private void ExpectDraw(string name)

@@ -4,6 +4,8 @@ using System.Text;
 using Dope.DDXX.Graphics;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using Dope.DDXX.Input;
+using Microsoft.DirectX.DirectInput;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -29,6 +31,11 @@ namespace Dope.DDXX.DemoFramework
         private float startTime;
         private float timeScale;
 
+        public int CurrentTrack
+        {
+            get { return currentTrack; }
+        }
+
         public IUserInterface UserInterface
         {
             set { userInterface = value; }
@@ -47,6 +54,20 @@ namespace Dope.DDXX.DemoFramework
             currentTrack = 0;
             startTime = 0;
             timeScale = 10.0f;
+        }
+
+        public void DecreaseTrack()
+        {
+            currentTrack--;
+            if (currentTrack == -1)
+                currentTrack++;
+        }
+
+        public void IncreaseTrack()
+        {
+            currentTrack++;
+            if (currentTrack == registrator.Tracks.Count)
+                currentTrack--;
         }
 
         public void Initialize(IDemoRegistrator registrator)
@@ -69,18 +90,30 @@ namespace Dope.DDXX.DemoFramework
             timeWindow = new BoxControl(new RectangleF(0.0f, 0.05f, 1.0f, 0.95f), alpha, timeColor, mainWindow);
         }
 
+        public void HandleInput(InputDriver inputDriver)
+        {
+            if (inputDriver.KeyPressedNoRepeat(Key.UpArrow))
+                DecreaseTrack();
+            if (inputDriver.KeyPressedNoRepeat(Key.DownArrow))
+                IncreaseTrack();
+        }
+
         public void Draw()
         {
             if (!Enabled)
                 return;
 
-
-
+            timeWindow.Children.Clear();
             Color color;
             float y = 0.05f;
-            for (int i = currentTrack - 1; i < currentTrack + 2; i++)
+            int startTrack = currentTrack - 1;
+            if (currentTrack == registrator.Tracks.Count - 1)
+                startTrack--;
+            if (startTrack < 0)
+                startTrack = 0;
+            for (int i = startTrack; i < startTrack + 3; i++)
             {
-                if (i < 0 || i >= registrator.Tracks.Count)
+                if (i >= registrator.Tracks.Count)
                     continue;
                 if (i == currentTrack)
                     color = selectedTrackColor;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Dope.DDXX.Input;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -13,5 +14,6 @@ namespace Dope.DDXX.DemoFramework
         }
         void Initialize(IDemoRegistrator registrator);
         void Draw();
+        void HandleInput(InputDriver inputDriver);
     }
 }

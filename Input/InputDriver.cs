@@ -54,7 +54,7 @@ namespace Dope.DDXX.Input
             return factory.KeyPressed(keyboard, key);
         }
 
-        internal bool KeyPressedNoRepeat(Key key)
+        public bool KeyPressedNoRepeat(Key key)
         {
             bool pressed = factory.KeyPressed(keyboard, key);
             if (noRepeatList.Contains(key))

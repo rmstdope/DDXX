@@ -15,6 +15,11 @@ namespace Dope.DDXX.DemoFramework
         private Color color;
         private int shadowOffset = 1;
 
+        public string Text
+        {
+            get { return text; }
+            set { text = value; }
+        }
         public int ShadowOffset
         {
             get { return shadowOffset; }

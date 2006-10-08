@@ -67,8 +67,8 @@ namespace EngineTest
         {
             TestEffect effect = new TestEffect(0.0f, 10.0f);
             executer.Register(0, effect);
-            //executer.Register(1, effect);
-            //executer.Register(2, effect);
+            executer.Register(1, effect);
+            executer.Register(2, effect);
             float length = 65000.0f;
             //Assembly assembly = Assembly.GetExecutingAssembly();
             //foreach (Type t in assembly.GetTypes())

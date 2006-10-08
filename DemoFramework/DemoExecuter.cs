@@ -178,6 +178,8 @@ namespace Dope.DDXX.DemoFramework
                     effect.Step();
                 }
             }
+
+            tweaker.HandleInput(inputDriver);
         }
 
         public void Run()
