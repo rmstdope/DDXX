@@ -5,6 +5,7 @@ using NUnit.Framework;
 using Microsoft.CSharp;
 using System.CodeDom.Compiler;
 using System.Reflection;
+using Microsoft.Win32;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -13,6 +14,7 @@ namespace Dope.DDXX.DemoFramework
     {
         string source = @"
 using Dope.DDXX.DemoFramework;
+using Microsoft.DirectX;
 public class FooEffect : IDemoEffect 
 {
   protected float start; protected float end;
@@ -23,6 +25,7 @@ public class FooEffect : IDemoEffect
 public class BarEffect : FooEffect {
   private int intParam;
   private float floatParam;
+  private Vector3 vector3Param;
   public BarEffect() : base() {}
   public BarEffect(float start, float end) { 
     this.start = start;
@@ -35,6 +38,10 @@ public class BarEffect : FooEffect {
   public float FloatParam { 
    get { return floatParam; }
    set { floatParam = value*2+0.1F; }
+  }
+  public Vector3 Vector3Param {
+   get { return vector3Param; }
+   set { vector3Param = value; }
   }
 }
 public class Dummy {}
@@ -79,7 +86,7 @@ public class Dummy {}
             Assert.IsInstanceOfType(assembly.GetType("FooEffect"), ei);
             Assert.AreEqual(3, ei.StartTime);
             Assert.AreEqual(7, ei.EndTime);
-        
+
             ei = effectTypes.CreateInstance("BarEffect", 3, 7);
             Assert.IsNotNull(ei);
             Assert.IsInstanceOfType(assembly.GetType("BarEffect"), ei);
@@ -110,8 +117,15 @@ public class Dummy {}
         private void SetupAssembly(string source)
         {
             CSharpCodeProvider provider = new CSharpCodeProvider();
-            CompilerParameters cp = new CompilerParameters(new string[] { "Dope.DDXX.DemoFramework.dll" });
-             results = provider.CompileAssemblyFromSource(cp, source);
+            //string windir = (string)Registry.GetValue("HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Windows", "Directory", "");
+            string[] sysdir = Environment.SystemDirectory.Split('\\');
+            string assemblyDir = string.Join("\\", sysdir, 0, sysdir.Length - 1) + "\\assembly\\";
+            AssemblyName[] referenced = Assembly.GetExecutingAssembly().GetReferencedAssemblies();
+            string d3dAssembly = Assembly.GetAssembly(typeof(Microsoft.DirectX.Vector3)).CodeBase;
+            d3dAssembly = d3dAssembly.Remove(0, 8);
+            //string d3dAssembly = assemblyDir + "Microsoft.DirectX.Direct3D.dll";
+            CompilerParameters cp = new CompilerParameters(new string[] { "Dope.DDXX.DemoFramework.dll", d3dAssembly });
+            results = provider.CompileAssemblyFromSource(cp, source);
             if (results.Errors.HasErrors)
             {
                 foreach (CompilerError e in results.Errors)

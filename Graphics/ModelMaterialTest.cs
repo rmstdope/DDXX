@@ -12,6 +12,7 @@ namespace Dope.DDXX.Graphics
     {
         private Mockery mockery;
         private ITexture texture;
+        private ITexture normalTexture;
         private Material material;
 
         [SetUp]
@@ -19,6 +20,7 @@ namespace Dope.DDXX.Graphics
         {
             mockery = new Mockery();
             texture = mockery.NewMock<ITexture>();
+            normalTexture = mockery.NewMock<ITexture>();
             material = new Material();
         }
 
@@ -43,12 +45,19 @@ namespace Dope.DDXX.Graphics
         public void TestConstructor()
         {
             ModelMaterial modelMaterial = new ModelMaterial(material);
-            CompareMaterial(material, modelMaterial.Material);
+            Assert.IsTrue(CompareMaterial(material, modelMaterial.Material));
             Assert.IsNull(modelMaterial.DiffuseTexture);
+            Assert.IsNull(modelMaterial.NormalTexture);
 
             modelMaterial = new ModelMaterial(material, texture);
-            CompareMaterial(material, modelMaterial.Material);
+            Assert.IsTrue(CompareMaterial(material, modelMaterial.Material));
             Assert.AreEqual(texture, modelMaterial.DiffuseTexture);
+            Assert.IsNull(modelMaterial.NormalTexture);
+
+            modelMaterial = new ModelMaterial(material, texture, normalTexture);
+            Assert.IsTrue(CompareMaterial(material, modelMaterial.Material));
+            Assert.AreEqual(texture, modelMaterial.DiffuseTexture);
+            Assert.AreEqual(normalTexture, modelMaterial.NormalTexture);
         }
     }
 }

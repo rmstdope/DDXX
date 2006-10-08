@@ -9,6 +9,7 @@ namespace Dope.DDXX.Graphics
     {
         private Material material;
         private ITexture diffuseTexture;
+        private ITexture normalTexture;
 
         public Material Material
         {
@@ -22,16 +23,31 @@ namespace Dope.DDXX.Graphics
             set { diffuseTexture = value; }
         }
 
+        public ITexture NormalTexture
+        {
+            get { return normalTexture; }
+            set { normalTexture = value; }
+        }
+
         public ModelMaterial(Material material)
         {
             this.material = material;
             this.diffuseTexture = null;
+            this.normalTexture = null;
         }
 
         public ModelMaterial(Material material, ITexture diffuseTexture)
         {
             this.material = material;
             this.diffuseTexture = diffuseTexture;
+            this.normalTexture = null;
+        }
+
+        public ModelMaterial(Material material, ITexture diffuseTexture, ITexture normalTexture)
+        {
+            this.material = material;
+            this.diffuseTexture = diffuseTexture;
+            this.normalTexture = normalTexture;
         }
     }
 }
