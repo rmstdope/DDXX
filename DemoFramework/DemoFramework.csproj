@@ -61,10 +61,12 @@
     <Compile Include="IDemoEffect.cs" />
     <Compile Include="IDemoEffectBuilder.cs" />
     <Compile Include="IDemoPostEffect.cs" />
+    <Compile Include="IDemoRegistrator.cs" />
     <Compile Include="IDemoTweaker.cs" />
     <Compile Include="IPostProcessor.cs" />
     <Compile Include="IRegisterable.cs" />
     <Compile Include="IUserInterface.cs" />
+    <Compile Include="LineControl.cs" />
     <Compile Include="PostProcessor.cs" />
     <Compile Include="PostProcessorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

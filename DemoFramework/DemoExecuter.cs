@@ -16,7 +16,7 @@ using System.IO;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public class DemoExecuter : IDemoEffectBuilder
+    public class DemoExecuter : IDemoEffectBuilder, IDemoRegistrator
     {
         private SoundDriver soundDriver;
         private FMOD.Sound sound;
@@ -28,7 +28,6 @@ namespace Dope.DDXX.DemoFramework
         private IDemoTweaker tweaker;
 
         private InputDriver inputDriver;
-
         private List<Track> tracks = new List<Track>();
         private int activeTrack = 0;
 
@@ -68,6 +67,21 @@ namespace Dope.DDXX.DemoFramework
             {
                 return tracks.Count;
             }
+        }
+
+        public List<Track> Tracks
+        {
+            get { return tracks; }
+        }
+
+        public IDemoEffect[] Effects(int track)
+        {
+            return tracks[track].Effects;
+        }
+
+        public IDemoPostEffect[] PostEffects(int track)
+        {
+            return tracks[track].PostEffects;
         }
 
         public IDemoTweaker Tweaker
@@ -113,7 +127,7 @@ namespace Dope.DDXX.DemoFramework
                 }
             }
 
-            tweaker.Initialize();
+            tweaker.Initialize(this);
         }
 
         private void InitializeInput()

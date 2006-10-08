@@ -5,6 +5,7 @@ using NUnit.Framework;
 using NMock2;
 using Dope.DDXX.Graphics;
 using Microsoft.DirectX.Direct3D;
+using System.IO;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -13,6 +14,7 @@ namespace Dope.DDXX.DemoFramework
     {
         private DemoTweaker tweaker;
         private IUserInterface userInterface;
+        private IDemoRegistrator registrator;
 
         [SetUp]
         public override void SetUp()
@@ -20,6 +22,8 @@ namespace Dope.DDXX.DemoFramework
             base.SetUp();
 
             userInterface = mockery.NewMock<IUserInterface>();
+            registrator = mockery.NewMock<IDemoRegistrator>();
+            Stub.On(registrator).GetProperty("StartTime").Will(Return.Value(0.5f));
 
             tweaker = new DemoTweaker();
             tweaker.UserInterface = userInterface;
@@ -38,7 +42,39 @@ namespace Dope.DDXX.DemoFramework
         {
             Expect.Once.On(userInterface).
                 Method("Initialize");
-            tweaker.Initialize();
+            tweaker.Initialize(registrator);
+        }
+
+        class ControlMatcher : Matcher
+        {
+            private string test;
+            public ControlMatcher(string test)
+            {
+                this.test = test;
+            }
+
+            public override void DescribeTo(TextWriter writer)
+            {
+                writer.WriteLine("Matcher");
+            }
+
+            public override bool Matches(object o)
+            {
+                if (!(o is BoxControl))
+                    Assert.Fail();
+                BoxControl mainBox = (BoxControl)o;
+                switch (test)
+                {
+                    case "TestDraw":
+                        break;
+                    case "TestDrawEffects":
+                        break;
+                    default:
+                        Assert.Fail();
+                        break;
+                }
+                return true;
+            }
         }
 
         [Test]
@@ -50,17 +86,39 @@ namespace Dope.DDXX.DemoFramework
             tweaker.Draw();
 
             tweaker.Enabled = true;
-            Expect.Once.On(device).
-                Method("BeginScene");
-            Expect.Once.On(userInterface).
-                Method("DrawControl");
-            Expect.Once.On(device).
-                Method("EndScene");
+            Stub.On(registrator).
+                GetProperty("Tracks").
+                Will(Return.Value(new List<Track>()));
+            ExpectDraw("TestDraw");
             tweaker.Draw();
 
             tweaker.Enabled = false;
             Assert.IsFalse(tweaker.Enabled);
             tweaker.Draw();
         }
+
+        [Test]
+        public void TestDrawEffects()
+        {
+            TestInitialize();
+            tweaker.Enabled = true;
+            Stub.On(registrator).
+                GetProperty("Tracks").
+                Will(Return.Value(new List<Track>()));
+            ExpectDraw("TestDrawEffects");
+            tweaker.Draw();
+        }
+
+        private void ExpectDraw(string name)
+        {
+            Expect.Once.On(device).
+                Method("BeginScene");
+            Expect.Once.On(userInterface).
+                Method("DrawControl").
+                With(new ControlMatcher(name));
+            Expect.Once.On(device).
+                Method("EndScene");
+        }
+
     }
 }

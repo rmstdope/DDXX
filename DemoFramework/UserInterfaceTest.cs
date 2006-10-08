@@ -177,7 +177,7 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
-        public void TestTextBoxControl()
+        public void TestTextControl()
         {
             float x1 = 0.1f;
             float x2 = 0.3f;
@@ -192,6 +192,22 @@ namespace Dope.DDXX.DemoFramework
             ui.DrawControl(new TextControl("Text", new RectangleF(x1, y1, x2, y2), DrawTextFormat.Center, 0.75f, Color.Turquoise, null));
         }
 
+        [Test]
+        public void TestLineControl()
+        {
+            float x1 = 0.1f;
+            float x2 = 0.3f;
+            float y1 = 0.2f;
+            float y2 = 0.5f;
+            float width = presentParameters.BackBufferWidth;
+            float height = presentParameters.BackBufferHeight;
+            TestInitialize();
+
+            ExpectLine(x1 * width, (x2 + x1) * width, y1 * height, (y2 + y1) * height);
+
+            ui.DrawControl(new LineControl(new RectangleF(x1, y1, x2, y2), 0.75f, Color.Turquoise, null));
+        }
+
         private void ExpectText(float x1, float x2, float y1, float y2, float width, float height)
         {
             Expect.Once.On(font).
@@ -202,6 +218,23 @@ namespace Dope.DDXX.DemoFramework
                 Method("DrawText").
                 With(null, "Text", new Rectangle((int)(x1 * width), (int)(y1 * height), (int)(x2 * width), (int)(y2 * height)), DrawTextFormat.Center, Color.FromArgb((int)(255 * 0.75f), Color.Turquoise)).
                 Will(Return.Value(0));
+        }
+
+        private void ExpectLine(float x1, float x2, float y1, float y2)
+        {
+            using (mockery.Ordered)
+            {
+                Expect.Once.On(line).
+                    Method("Begin");
+                Expect.Once.On(line).
+                    Method("Draw").
+                    With(new Vector2ArrayMatcher(new Vector2[] { new Vector2(x1 + 1, y1 + 1), new Vector2(x2 + 1, y2 + 1) }), Is.EqualTo(Color.FromArgb((int)(255 * 0.75f), Color.Black)));
+                Expect.Once.On(line).
+                    Method("Draw").
+                    With(new Vector2ArrayMatcher(new Vector2[] { new Vector2(x1, y1), new Vector2(x2, y2) }), Is.EqualTo(Color.FromArgb((int)(255 * 0.75f), Color.White)));
+                Expect.Once.On(line).
+                    Method("End");
+            }
         }
 
         private void ExpectBox(float x1, float x2, float y1, float y2)

@@ -11,7 +11,7 @@ namespace Dope.DDXX.DemoFramework
             get;
             set;
         }
-        void Initialize();
+        void Initialize(IDemoRegistrator registrator);
         void Draw();
     }
 }
