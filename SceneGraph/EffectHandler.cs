@@ -52,6 +52,7 @@ namespace Dope.DDXX.SceneGraph
         public EffectHandle Technique
         {
             get { return technique; }
+            set { technique = value; }
         }
 
         public void SetNodeConstants(IRenderableScene scene, INode node)

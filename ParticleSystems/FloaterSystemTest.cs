@@ -44,42 +44,26 @@ namespace Dope.DDXX.ParticleSystems
         }
 
         [Test]
-        public void TestInitialize()
+        public void TestInitialize1()
         {
-            // Effect creation
+            ExpectEffect();
+            ExpectVertexBuffer();
+            floaterSystem.Initialize(100, 50.0f, null);
+            floaterSystem.EffectHandler = effectHandler;
+            Assert.AreEqual(50.0f, floaterSystem.BoundaryRadius);
+            Assert.AreEqual(100, floaterSystem.NumParticles);
+        }
+
+        [Test]
+        public void TestInitialize2()
+        {
+            ExpectEffect();
+            ExpectVertexBuffer();
             Expect.Once.On(factory).
-                Method("EffectFromFile").
+                Method("TextureFromFile").
                 WithAnyArguments().
-                Will(Return.Value(effect));
-            // EffectHandler
-            Expect.Once.On(effect).
-                Method("FindNextValidTechnique").
-                WithAnyArguments().
-                Will(Return.Value(technique));
-            Stub.On(effect).
-                Method("GetParameter").
-                WithAnyArguments().
-                Will(Return.Value(EffectHandle.FromString("1")));
-            // Create
-            Expect.Once.On(factory).
-                Method("CreateVertexBuffer").
-                With(Is.Anything, Is.EqualTo(100), Is.Anything, Is.EqualTo(Usage.WriteOnly | Usage.Dynamic), Is.EqualTo(VertexFormats.None), Is.EqualTo(Pool.Default)).
-                Will(Return.Value(vertexBuffer));
-            //Expect.Once.On(vertexBuffer).
-            //    Method("Lock").
-            //    With(0, 0, LockFlags.Discard).
-            //    Will(Return.Value(graphicsStream));
-            //Expect.Exactly(100).On(graphicsStream).
-            //    Method("Write").
-            //    With(new CheckVertex(50.0f, 1.0f));
-            //Expect.Once.On(vertexBuffer).
-            //    Method("Unlock");
-            // Create declaration
-            Expect.Once.On(factory).
-                Method("CreateVertexDeclaration").
-                WithAnyArguments().
-                Will(Return.Value(null));
-            floaterSystem.Initialize(100, 50.0f);
+                Will(Return.Value(texture));
+            floaterSystem.Initialize(100, 50.0f, "Texture");
             floaterSystem.EffectHandler = effectHandler;
             Assert.AreEqual(50.0f, floaterSystem.BoundaryRadius);
             Assert.AreEqual(100, floaterSystem.NumParticles);
@@ -88,7 +72,7 @@ namespace Dope.DDXX.ParticleSystems
         [Test]
         public void TestStep()
         {
-            TestInitialize();
+            TestInitialize1();
 
             Expect.Once.On(vertexBuffer).
                 Method("Lock").
@@ -105,17 +89,22 @@ namespace Dope.DDXX.ParticleSystems
         [Test]
         public void TestRender()
         {
-            TestInitialize();
+            TestInitialize1();
 
             Stub.On(effectHandler).GetProperty("Effect").Will(Return.Value(effect));
 
             using (mockery.Ordered)
             {
                 Expect.Once.On(effectHandler).Method("SetNodeConstants").With(null, floaterSystem);
+                Expect.Once.On(effectHandler).Method("SetMaterialConstants").WithAnyArguments();
                 
                 Expect.Once.On(effect).Method("Begin").With(FX.None).Will(Return.Value(1));
                 Expect.Once.On(effect).Method("BeginPass").With(0);
 
+                Expect.Once.On(renderStateManager).SetProperty("AlphaBlendEnable").To(true);
+                Expect.Once.On(renderStateManager).SetProperty("BlendOperation").To(BlendOperation.Add);
+                Expect.Once.On(renderStateManager).SetProperty("SourceBlend").To(Blend.One);
+                Expect.Once.On(renderStateManager).SetProperty("DestinationBlend").To(Blend.One);
                 Expect.Once.On(device).Method("SetStreamSource").With(0, vertexBuffer, 0);
                 Expect.Once.On(device).SetProperty("VertexDeclaration").To(Is.Null);
                 Expect.Once.On(device).Method("DrawPrimitives").With(PrimitiveType.PointList, 0, 100);
@@ -125,6 +114,34 @@ namespace Dope.DDXX.ParticleSystems
             }
 
             floaterSystem.Render(null);
+        }
+
+        private void ExpectVertexBuffer()
+        {
+            Expect.Once.On(factory).
+                Method("CreateVertexBuffer").
+                With(Is.Anything, Is.EqualTo(100), Is.Anything, Is.EqualTo(Usage.WriteOnly | Usage.Dynamic), Is.EqualTo(VertexFormats.None), Is.EqualTo(Pool.Default)).
+                Will(Return.Value(vertexBuffer));
+            Expect.Once.On(factory).
+                Method("CreateVertexDeclaration").
+                WithAnyArguments().
+                Will(Return.Value(null));
+        }
+
+        private void ExpectEffect()
+        {
+            Expect.Once.On(factory).
+                Method("EffectFromFile").
+                WithAnyArguments().
+                Will(Return.Value(effect));
+            Expect.Once.On(effect).
+                Method("FindNextValidTechnique").
+                WithAnyArguments().
+                Will(Return.Value(technique));
+            Stub.On(effect).
+                Method("GetParameter").
+                WithAnyArguments().
+                Will(Return.Value(EffectHandle.FromString("1")));
         }
 
         private class CheckVertex : Matcher

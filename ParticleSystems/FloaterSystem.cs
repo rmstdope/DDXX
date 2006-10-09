@@ -65,7 +65,7 @@ namespace Dope.DDXX.ParticleSystems
         {
         }
 
-        public void Initialize(int numParticles, float boundaryRadius)
+        public void Initialize(int numParticles, float boundaryRadius, string texture)
         {
             InitializeBase(numParticles);
             this.boundaryRadius = boundaryRadius;
@@ -78,11 +78,19 @@ namespace Dope.DDXX.ParticleSystems
             {
                 SpawnParticle();
             }
+
+            if (texture == null)
+                effectHandler.Technique = EffectHandle.FromString("PointSpriteNoTexture");
+            else
+            {
+                material.DiffuseTexture = D3DDriver.TextureFactory.CreateFromFile(texture);
+                effectHandler.Technique = EffectHandle.FromString("PointSprite");
+            }
         }
 
         private void SpawnParticle()
         {
-            FloaterParticle particle = new FloaterParticle(DistributeEvenlyInSphere(boundaryRadius), Color.White, 10.0f);
+            FloaterParticle particle = new FloaterParticle(DistributeEvenlyInSphere(boundaryRadius), Color.Gray, 10.0f);
             particles.Add(particle);
         }
 

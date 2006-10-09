@@ -4,6 +4,7 @@ using System.Text;
 using Dope.DDXX.Graphics;
 using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Physics;
+using System.Drawing;
 
 namespace Dope.DDXX.SceneGraph
 {
@@ -11,8 +12,12 @@ namespace Dope.DDXX.SceneGraph
     {
         private int numParticles;
         private IDevice device;
-        private IEffectHandler effectHandler;
+        protected IEffectHandler effectHandler;
         protected List<Particle> particles;
+        protected ModelMaterial material;
+        protected BlendOperation blendOperation;
+        protected Blend sourceBlend;
+        protected Blend destinationBlend;
 
         public IDevice Device
         {
@@ -40,6 +45,12 @@ namespace Dope.DDXX.SceneGraph
         public ParticleSystemNode(string name)
             : base(name)
         {
+            Material dxMaterial = new Material();
+            dxMaterial.Ambient = Color.White;
+            material = new ModelMaterial(dxMaterial);
+            blendOperation = BlendOperation.Add;
+            sourceBlend = Blend.One;
+            destinationBlend = Blend.One;
         }
 
         protected void InitializeBase(int numParticles)
@@ -55,6 +66,7 @@ namespace Dope.DDXX.SceneGraph
         protected override void RenderNode(IRenderableScene scene)
         {
             effectHandler.SetNodeConstants(scene, this);
+            effectHandler.SetMaterialConstants(scene, material);
 
             int passes = effectHandler.Effect.Begin(FX.None);
 
@@ -62,6 +74,10 @@ namespace Dope.DDXX.SceneGraph
             {
                 effectHandler.Effect.BeginPass(i);
 
+                device.RenderState.AlphaBlendEnable = true;
+                device.RenderState.BlendOperation = blendOperation;
+                device.RenderState.SourceBlend = sourceBlend;
+                device.RenderState.DestinationBlend = destinationBlend;
                 device.SetStreamSource(0, VertexBuffer, 0);
                 device.VertexDeclaration = VertexDeclaration;
                 device.DrawPrimitives(PrimitiveType.PointList, 0, ActiveParticles);
