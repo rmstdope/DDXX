@@ -151,7 +151,8 @@ float4
 PixelShader(const PixelInputStream input) : COLOR0
 { 
 	// Lookup texture
-	return input.Color * tex2D(TextureSampler, input.TextureUV);
+	return input.Color;
+	//return input.Color * tex2D(TextureSampler, input.TextureUV);
 }
 
 technique PointSprite

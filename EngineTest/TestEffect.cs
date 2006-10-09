@@ -40,7 +40,7 @@ namespace EngineTest
             Scene.ActiveCamera = camera;
 
             ps = new FloaterSystem("System");
-            ps.Initialize(10, 200.0f);
+            ps.Initialize(50, 200.0f);
             Scene.AddNode(ps);
         }
 

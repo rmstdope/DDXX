@@ -26,6 +26,7 @@ namespace Dope.DDXX.ParticleSystems
             base.SetUp();
 
             SetupD3DDriver();
+            SetupTime();
             
             floaterSystem = new FloaterSystem("FS");
             
@@ -59,20 +60,20 @@ namespace Dope.DDXX.ParticleSystems
                 Method("GetParameter").
                 WithAnyArguments().
                 Will(Return.Value(EffectHandle.FromString("1")));
-            // Create and fill the buffer
+            // Create
             Expect.Once.On(factory).
                 Method("CreateVertexBuffer").
                 With(Is.Anything, Is.EqualTo(100), Is.Anything, Is.EqualTo(Usage.WriteOnly | Usage.Dynamic), Is.EqualTo(VertexFormats.None), Is.EqualTo(Pool.Default)).
                 Will(Return.Value(vertexBuffer));
-            Expect.Once.On(vertexBuffer).
-                Method("Lock").
-                With(0, 0, LockFlags.Discard).
-                Will(Return.Value(graphicsStream));
-            Expect.Exactly(100).On(graphicsStream).
-                Method("Write").
-                With(new CheckVertex(50.0f, 1.0f));
-            Expect.Once.On(vertexBuffer).
-                Method("Unlock");
+            //Expect.Once.On(vertexBuffer).
+            //    Method("Lock").
+            //    With(0, 0, LockFlags.Discard).
+            //    Will(Return.Value(graphicsStream));
+            //Expect.Exactly(100).On(graphicsStream).
+            //    Method("Write").
+            //    With(new CheckVertex(50.0f, 1.0f));
+            //Expect.Once.On(vertexBuffer).
+            //    Method("Unlock");
             // Create declaration
             Expect.Once.On(factory).
                 Method("CreateVertexDeclaration").
@@ -82,6 +83,23 @@ namespace Dope.DDXX.ParticleSystems
             floaterSystem.EffectHandler = effectHandler;
             Assert.AreEqual(50.0f, floaterSystem.BoundaryRadius);
             Assert.AreEqual(100, floaterSystem.NumParticles);
+        }
+
+        [Test]
+        public void TestStep()
+        {
+            TestInitialize();
+
+            Expect.Once.On(vertexBuffer).
+                Method("Lock").
+                With(0, 0, LockFlags.Discard).
+                Will(Return.Value(graphicsStream));
+            Expect.Exactly(100).On(graphicsStream).
+                Method("Write").
+                With(new CheckVertex(500.0f, 10.0f));
+            Expect.Once.On(vertexBuffer).
+                Method("Unlock");
+            floaterSystem.Step();
         }
 
         [Test]

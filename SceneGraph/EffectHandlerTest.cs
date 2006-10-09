@@ -80,7 +80,7 @@ namespace Dope.DDXX.SceneGraph
             material.AmbientColor = materialAmbient;
             material.DiffuseColor = materialDiffuse;
             material.SpecularColor = materialSpecular;
-            modelMaterial = new ModelMaterial(material, texture);
+            modelMaterial = new ModelMaterial(material, texture, normalTexture);
 
             Stub.On(effect).
                 Method("FindNextValidTechnique").
@@ -178,27 +178,68 @@ namespace Dope.DDXX.SceneGraph
         }
 
         [Test]
-        public void SetMaterialConstantsTest()
+        public void SetMaterialConstantsTest1()
         {
-            ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT);
-            //ExpectMaterialParameters(ambientColor, baseTexture, normalTextureHandle, materialDiffuseColor, materialSpecularColor);
+            ExpectMeshParameters(null, null, null, null);
+            ExpectMaterialParameters(ambientColor, baseTexture, normalTextureHandle, materialDiffuseColor, materialSpecularColor);
+            ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, normalTexture, true, materialDiffuse, true, materialSpecular);
             EffectHandler effectHandler = new EffectHandler(effect);
 
-            Expect.Once.On(effect).
-                Method("SetValue").
-                With(ambientColor, ColorOperator.Modulate(sceneAmbient, materialAmbient));
-            Expect.Once.On(effect).
-                Method("SetValue").
-                With(baseTexture, texture);
-            Expect.Once.On(effect).
-                Method("SetValue").
-                With(normalTextureHandle, normalTexture);
-            Expect.Once.On(effect).
-                Method("SetValue").
-                With(materialDiffuseColor, materialDiffuse);
-            Expect.Once.On(effect).
-                Method("SetValue").
-                With(materialSpecularColor, materialSpecular);
+            effectHandler.SetMaterialConstants(scene, modelMaterial);
+        }
+
+        [Test]
+        public void SetMaterialConstantsTest2()
+        {
+            ExpectMeshParameters(null, null, null, null);
+            ExpectMaterialParameters(null, baseTexture, normalTextureHandle, materialDiffuseColor, materialSpecularColor);
+            ExpectMaterialParametersSet(false, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, normalTexture, true, materialDiffuse, true, materialSpecular);
+            EffectHandler effectHandler = new EffectHandler(effect);
+
+            effectHandler.SetMaterialConstants(scene, modelMaterial);
+        }
+
+        [Test]
+        public void SetMaterialConstantsTest3()
+        {
+            ExpectMeshParameters(null, null, null, null);
+            ExpectMaterialParameters(ambientColor, null, normalTextureHandle, materialDiffuseColor, materialSpecularColor);
+            ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), null, normalTexture, true, materialDiffuse, true, materialSpecular);
+            EffectHandler effectHandler = new EffectHandler(effect);
+
+            effectHandler.SetMaterialConstants(scene, modelMaterial);
+        }
+
+        [Test]
+        public void SetMaterialConstantsTest4()
+        {
+            ExpectMeshParameters(null, null, null, null);
+            ExpectMaterialParameters(ambientColor, baseTexture, null, materialDiffuseColor, materialSpecularColor);
+            ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, null, true, materialDiffuse, true, materialSpecular);
+            EffectHandler effectHandler = new EffectHandler(effect);
+
+            effectHandler.SetMaterialConstants(scene, modelMaterial);
+        }
+
+        [Test]
+        public void SetMaterialConstantsTest5()
+        {
+            ExpectMeshParameters(null, null, null, null);
+            ExpectMaterialParameters(ambientColor, baseTexture, normalTextureHandle, null, materialSpecularColor);
+            ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, normalTexture, false, materialDiffuse, true, materialSpecular);
+            EffectHandler effectHandler = new EffectHandler(effect);
+
+            effectHandler.SetMaterialConstants(scene, modelMaterial);
+        }
+
+        [Test]
+        public void SetMaterialConstantsTest6()
+        {
+            ExpectMeshParameters(null, null, null, null);
+            ExpectMaterialParameters(ambientColor, baseTexture, normalTextureHandle, materialDiffuseColor, null);
+            ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, normalTexture, true, materialDiffuse, false, materialSpecular);
+            EffectHandler effectHandler = new EffectHandler(effect);
+
             effectHandler.SetMaterialConstants(scene, modelMaterial);
         }
 
@@ -272,6 +313,30 @@ namespace Dope.DDXX.SceneGraph
                 Method("GetParameter").
                 With(null, "MaterialSpecularColor").
                 Will(Return.Value(specular));
+        }
+
+        private void ExpectMaterialParametersSet(bool useAmbient, ColorValue ambientParam, ITexture diffuseTexParam, ITexture normalTexParam, bool useDiffuse, ColorValue diffuseParam, bool useSpecular, ColorValue specularParam)
+        {
+            if (useAmbient)
+                Expect.Once.On(effect).
+                    Method("SetValue").
+                    With(ambientColor, ambientParam);
+            if (diffuseTexParam != null)
+                Expect.Once.On(effect).
+                    Method("SetValue").
+                    With(baseTexture, diffuseTexParam);
+            if (normalTexParam != null)
+                Expect.Once.On(effect).
+                    Method("SetValue").
+                    With(normalTextureHandle, normalTexParam);
+            if (useDiffuse)
+                Expect.Once.On(effect).
+                    Method("SetValue").
+                    With(materialDiffuseColor, diffuseParam);
+            if (useSpecular)
+                Expect.Once.On(effect).
+                    Method("SetValue").
+                    With(materialSpecularColor, specularParam);
         }
 
     }

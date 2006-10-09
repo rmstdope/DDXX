@@ -6,6 +6,8 @@ using Dope.DDXX.Graphics;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using Dope.DDXX.Physics;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.ParticleSystems
 {
@@ -24,9 +26,24 @@ namespace Dope.DDXX.ParticleSystems
             }
         }
 
+        public class FloaterParticle : Particle
+        {
+            public Vector3 Phase;
+            public Vector3 Period;
+            public Vector3 Amplitude;
+            public FloaterParticle(Vector3 position, Color color, float size)
+                : base(position, color, size)
+            {
+                Phase = 2.0f * (float)Math.PI * new Vector3((float)rand.NextDouble(), (float)rand.NextDouble(), (float)rand.NextDouble());
+                Period = new Vector3(2, 2, 2) + 4.0f * (float)Math.PI * new Vector3((float)rand.NextDouble(), (float)rand.NextDouble(), (float)rand.NextDouble());
+                Amplitude = new Vector3(20, 20, 20) + 60.0f * new Vector3((float)rand.NextDouble(), (float)rand.NextDouble(), (float)rand.NextDouble());
+            }
+        }
+
         private float boundaryRadius;
         private IVertexBuffer vertexBuffer;
         private VertexDeclaration vertexDeclaration;
+        static private Random rand = new Random();
 
         protected override IVertexBuffer VertexBuffer
         {
@@ -56,6 +73,17 @@ namespace Dope.DDXX.ParticleSystems
             CreateVertexBuffer();
 
             CreateVertexDeclaration();
+
+            while (ActiveParticles < NumParticles)
+            {
+                SpawnParticle();
+            }
+        }
+
+        private void SpawnParticle()
+        {
+            FloaterParticle particle = new FloaterParticle(DistributeEvenlyInSphere(boundaryRadius), Color.White, 10.0f);
+            particles.Add(particle);
         }
 
         private void CreateVertexDeclaration()
@@ -75,17 +103,10 @@ namespace Dope.DDXX.ParticleSystems
         private void CreateVertexBuffer()
         {
             vertexBuffer = D3DDriver.Factory.CreateVertexBuffer(typeof(FloaterVertex), NumParticles, Device, Usage.WriteOnly | Usage.Dynamic, VertexFormats.None, Pool.Default);
-            IGraphicsStream stream = vertexBuffer.Lock(0, 0, LockFlags.Discard);
-            for (int i = 0; i < NumParticles; i++)
-            {
-                stream.Write(new FloaterVertex(DistributeEvenlyInSphere(this.boundaryRadius), 1.0f, Color.White.ToArgb()));
-            }
-            vertexBuffer.Unlock();
         }
 
-        private static Vector3 DistributeEvenlyInSphere(float radius)
+        private Vector3 DistributeEvenlyInSphere(float radius)
         {
-            Random rand = new Random();
             Vector3 pos;
             do
             {
@@ -95,5 +116,22 @@ namespace Dope.DDXX.ParticleSystems
             } while (pos.Length() > radius);
             return pos;
         }
+
+        protected override void StepNode()
+        {
+            FloaterVertex vertex = new FloaterVertex();
+            IGraphicsStream stream = vertexBuffer.Lock(0, 0, LockFlags.Discard);
+            foreach (FloaterParticle particle in particles)
+            {
+                vertex.Position = particle.Position + new Vector3(particle.Amplitude.X * (float)Math.Sin(Time.StepTime / particle.Period.X + particle.Phase.X),
+                                                                  particle.Amplitude.Y * (float)Math.Sin(Time.StepTime / particle.Period.Y + particle.Phase.Y),
+                                                                  particle.Amplitude.Z * (float)Math.Sin(Time.StepTime / particle.Period.Z + particle.Phase.Z));
+                vertex.Size = particle.Size;
+                vertex.Color = particle.Color.ToArgb();
+                stream.Write(vertex);
+            }
+            vertexBuffer.Unlock();
+        }
+
     }
 }

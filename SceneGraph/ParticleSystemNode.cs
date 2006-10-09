@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
 using Microsoft.DirectX.Direct3D;
+using Dope.DDXX.Physics;
 
 namespace Dope.DDXX.SceneGraph
 {
@@ -11,6 +12,7 @@ namespace Dope.DDXX.SceneGraph
         private int numParticles;
         private IDevice device;
         private IEffectHandler effectHandler;
+        protected List<Particle> particles;
 
         public IDevice Device
         {
@@ -20,6 +22,11 @@ namespace Dope.DDXX.SceneGraph
         public int NumParticles
         {
             get { return numParticles; }
+        }
+
+        public int ActiveParticles
+        {
+            get { return particles.Count; }
         }
 
         public IEffectHandler EffectHandler
@@ -39,13 +46,10 @@ namespace Dope.DDXX.SceneGraph
         {
             this.numParticles = numParticles;
             this.device = D3DDriver.GetInstance().GetDevice();
+            particles = new List<Particle>();
 
             IEffect effect = D3DDriver.EffectFactory.CreateFromFile("ParticleSystem.fxo");
             this.effectHandler = new EffectHandler(effect);
-        }
-
-        protected override void StepNode()
-        {
         }
 
         protected override void RenderNode(IRenderableScene scene)
@@ -60,7 +64,7 @@ namespace Dope.DDXX.SceneGraph
 
                 device.SetStreamSource(0, VertexBuffer, 0);
                 device.VertexDeclaration = VertexDeclaration;
-                device.DrawPrimitives(PrimitiveType.PointList, 0, NumParticles);
+                device.DrawPrimitives(PrimitiveType.PointList, 0, ActiveParticles);
 
                 effectHandler.Effect.EndPass();
             }

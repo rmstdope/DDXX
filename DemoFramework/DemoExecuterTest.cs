@@ -116,6 +116,8 @@ namespace Dope.DDXX.DemoFramework
                 Method("Step");
             Expect.Once.On(t1e1).
                 Method("Step");
+            Expect.Once.On(tweaker).
+                Method("HandleInput");
             Time.CurrentTime = 5;
             executer.Step();
 
@@ -123,10 +125,14 @@ namespace Dope.DDXX.DemoFramework
                 Method("Step");
             Expect.Once.On(t1e2).
                 Method("Step");
+            Expect.Once.On(tweaker).
+                Method("HandleInput");
             Time.CurrentTime = 1;
             executer.Step();
 
             Time.CurrentTime = 20;
+            Expect.Once.On(tweaker).
+                Method("HandleInput");
             executer.Step();
 
             Time.Resume();
@@ -289,6 +295,8 @@ namespace Dope.DDXX.DemoFramework
         {
             TestInitializeOKSong();
 
+            Expect.Once.On(tweaker).
+                Method("HandleInput");
             Stub.On(iFactory).
                 Method("KeyPressed").
                 WithAnyArguments().
@@ -323,6 +331,8 @@ namespace Dope.DDXX.DemoFramework
         {
             TestInitializeOKNoSong1();
 
+            Expect.Once.On(tweaker).
+                Method("HandleInput");
             Expect.Once.On(iFactory).
                 Method("KeyPressed").
                 WithAnyArguments().

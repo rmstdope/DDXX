@@ -5,6 +5,7 @@ using Dope.DDXX.Graphics;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using NMock2;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.Graphics
 {
@@ -88,6 +89,11 @@ namespace Dope.DDXX.Graphics
             desc.height = 600;
             desc.colorFormat = Format.X8R8G8B8;
             return desc;
+        }
+
+        public void SetupTime()
+        {
+            Time.Initialize();
         }
 
         public void SetupD3DDriver()
