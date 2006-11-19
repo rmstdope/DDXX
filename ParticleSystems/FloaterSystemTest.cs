@@ -16,7 +16,7 @@ namespace Dope.DDXX.ParticleSystems
         private FloaterSystem floaterSystem;
         private IVertexBuffer vertexBuffer;
         private IGraphicsStream graphicsStream;
-        private IEffect effect;
+        //private IEffect effect;
         private EffectHandle technique;
         private IEffectHandler effectHandler;
 

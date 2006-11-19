@@ -67,8 +67,12 @@ namespace EngineTest
         {
             TestEffect effect = new TestEffect(0.0f, 10.0f);
             executer.Register(0, effect);
-            executer.Register(1, effect);
-            executer.Register(2, effect);
+            SpinningBackgroundEffect effect2 = new SpinningBackgroundEffect(0.0f, 10.0f);
+            effect2.AddTextureLayer(new SpinningBackgroundEffect.TextureLayer("BlurBackground.jpg", 35.0f, Color.Beige, 0.2f));
+            effect2.AddTextureLayer(new SpinningBackgroundEffect.TextureLayer("BlurBackground.jpg", -44.0f, Color.Coral, 0.2f));
+            executer.Register(0, effect2);
+            //executer.Register(1, effect);
+            //executer.Register(2, effect);
             float length = 65000.0f;
             //Assembly assembly = Assembly.GetExecutingAssembly();
             //foreach (Type t in assembly.GetTypes())

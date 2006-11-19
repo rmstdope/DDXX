@@ -59,9 +59,13 @@ namespace Dope.DDXX.DemoFramework
 
         public abstract void Render();
 
-        public abstract void StartTimeUpdated();
+        public virtual void StartTimeUpdated()
+        {
+        }
 
-        public abstract void EndTimeUpdated();
+        public virtual void EndTimeUpdated()
+        {
+        }
 
         public virtual void Initialize()
         {

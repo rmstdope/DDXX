@@ -61,14 +61,14 @@ namespace EngineTest
         {
             IDevice device = D3DDriver.GetInstance().GetDevice();
             Scene.Render();
-            int sWidth = device.PresentationParameters.BackBufferWidth;
-            int sHeight = device.PresentationParameters.BackBufferHeight;
-            int tWidth = texture.GetSurfaceLevel(0).Description.Width;
-            int tHeight = texture.GetSurfaceLevel(0).Description.Height;
-            sprite.Begin(SpriteFlags.AlphaBlend);
-            sprite.Draw2D(texture, Rectangle.Empty, new SizeF(sWidth * 1.9f, sHeight * 1.9f), new PointF(tWidth / 2, tHeight / 2), Time.StepTime * 0.22f, new PointF(sWidth / 2, sHeight / 2), Color.FromArgb(30, 255, 150, 150));
-            sprite.Draw2D(texture, Rectangle.Empty, new SizeF(sWidth * 1.9f, sHeight * 1.9f), new PointF(tWidth / 2, tHeight / 2), -Time.StepTime * 0.15f, new PointF(sWidth / 2, sHeight / 2), Color.FromArgb(30, 150, 255, 150));
-            sprite.End();
+            //int sWidth = device.PresentationParameters.BackBufferWidth;
+            //int sHeight = device.PresentationParameters.BackBufferHeight;
+            //int tWidth = texture.GetSurfaceLevel(0).Description.Width;
+            //int tHeight = texture.GetSurfaceLevel(0).Description.Height;
+            //sprite.Begin(SpriteFlags.AlphaBlend);
+            //sprite.Draw2D(texture, Rectangle.Empty, new SizeF(sWidth * 1.9f, sHeight * 1.9f), new PointF(tWidth / 2, tHeight / 2), Time.StepTime * 0.22f, new PointF(sWidth / 2, sHeight / 2), Color.FromArgb(30, 255, 150, 150));
+            //sprite.Draw2D(texture, Rectangle.Empty, new SizeF(sWidth * 1.9f, sHeight * 1.9f), new PointF(tWidth / 2, tHeight / 2), -Time.StepTime * 0.15f, new PointF(sWidth / 2, sHeight / 2), Color.FromArgb(30, 150, 255, 150));
+            //sprite.End();
         }
 
     }

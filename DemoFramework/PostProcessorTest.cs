@@ -18,7 +18,6 @@ namespace Dope.DDXX.DemoFramework
         private ITexture startTexture;
         private ITexture fullsizeTexture1;
 
-        private IEffect effect;
         private EffectHandle sourceTextureParameter;
         private EffectHandle passHandle;
         private EffectHandle scaleHandle;

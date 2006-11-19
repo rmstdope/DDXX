@@ -21,6 +21,9 @@ namespace Dope.DDXX.Graphics
         protected IPrerequisits prerequisits;
         protected DisplayMode displayMode = new DisplayMode();
         protected PresentParameters presentParameters;
+        protected EffectFactory effectFactory;
+        protected TextureFactory textureFactory;
+        protected IEffect effect;
 
         public virtual void SetUp()
         {
@@ -110,6 +113,69 @@ namespace Dope.DDXX.Graphics
             param.BackBufferFormat = desc.colorFormat;
             Expect.Once.On(prerequisits).Method("CheckPrerequisits").With(0, desc.deviceType);
             D3DDriver.GetInstance().Initialize(null, desc, prerequisits);
+        }
+
+        public void ExpectBaseDemoEffect()
+        {
+            effectFactory = new EffectFactory(device, factory);
+            textureFactory = new TextureFactory(device, factory, presentParameters);
+            D3DDriver.EffectFactory = effectFactory;
+            D3DDriver.TextureFactory = textureFactory;
+            effect = mockery.NewMock<IEffect>();
+
+            Expect.Once.On(factory).
+                Method("EffectFromFile").
+                Will(Return.Value(effect));
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "LightDiffuseColor").
+                Will(Return.Value(EffectHandle.FromString("1")));
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "LightSpecularColor").
+                Will(Return.Value(EffectHandle.FromString("1")));
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "LightPosition").
+                Will(Return.Value(EffectHandle.FromString("1")));
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "EyePosition").
+                Will(Return.Value(EffectHandle.FromString("1")));
+        }
+    }
+
+    public class FloatMatcher : Matcher
+    {
+        public float value;
+        public float epsilon;
+
+        public FloatMatcher(float value, float epsilon)
+        {
+            this.value = value;
+            this.epsilon = epsilon;
+        }
+
+        public FloatMatcher(float value)
+        {
+            this.value = value;
+            this.epsilon = 0.00001f;
+        }
+
+        public override void DescribeTo(System.IO.TextWriter writer)
+        {
+            writer.WriteLine("Matching to " + value + " with epsilon " + epsilon);
+        }
+
+        public override bool Matches(object o)
+        {
+            if (!(o is float))
+                return false;
+            float f = (float)o;
+
+            if (f > value + epsilon || f < value - epsilon)
+                return false;
+            return true;
         }
     }
 }

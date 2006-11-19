@@ -19,7 +19,6 @@ namespace Dope.DDXX.SceneGraph
         private INode node2;
         private LightNode light1;
         private LightNode light2;
-        private IEffect effect;
         private EffectHandle lightDiffuse;
         private EffectHandle lightSpecular;
         private EffectHandle lightPosition;
