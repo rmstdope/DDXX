@@ -52,10 +52,10 @@ namespace Dope.DDXX.Graphics
                 Method("CreateDevice").
                 WithAnyArguments().
                 Will(Return.Value(device));
-            Stub.On(factory).
-                Method("CreateTexture").
-                With(device, displayMode.Width, displayMode.Height, 1, Usage.RenderTarget, displayMode.Format, Pool.Default).
-                Will(Return.Value(texture));
+            //Stub.On(factory).
+            //    Method("CreateTexture").
+            //    With(device, presentParameters.BackBufferWidth, presentParameters.BackBufferHeight, 1, Usage.RenderTarget, presentParameters.BackBufferFormat, Pool.Default).
+            //    Will(Return.Value(texture));
             Stub.On(manager).
                 Method("CurrentDisplayMode").
                 With(0).
@@ -88,9 +88,9 @@ namespace Dope.DDXX.Graphics
         private DeviceDescription CreateDescription()
         {
             DeviceDescription desc = new DeviceDescription();
-            desc.width = 800;
-            desc.height = 600;
-            desc.colorFormat = Format.X8R8G8B8;
+            desc.width = 400;
+            desc.height = 200;
+            desc.colorFormat = Format.R32F;
             return desc;
         }
 
@@ -115,7 +115,7 @@ namespace Dope.DDXX.Graphics
             D3DDriver.GetInstance().Initialize(null, desc, prerequisits);
         }
 
-        public void ExpectBaseDemoEffect()
+        public void ExpectBaseDemoEffects(int num)
         {
             effectFactory = new EffectFactory(device, factory);
             textureFactory = new TextureFactory(device, factory, presentParameters);
@@ -126,22 +126,25 @@ namespace Dope.DDXX.Graphics
             Expect.Once.On(factory).
                 Method("EffectFromFile").
                 Will(Return.Value(effect));
-            Expect.Once.On(effect).
-                Method("GetParameter").
-                With(null, "LightDiffuseColor").
-                Will(Return.Value(EffectHandle.FromString("1")));
-            Expect.Once.On(effect).
-                Method("GetParameter").
-                With(null, "LightSpecularColor").
-                Will(Return.Value(EffectHandle.FromString("1")));
-            Expect.Once.On(effect).
-                Method("GetParameter").
-                With(null, "LightPosition").
-                Will(Return.Value(EffectHandle.FromString("1")));
-            Expect.Once.On(effect).
-                Method("GetParameter").
-                With(null, "EyePosition").
-                Will(Return.Value(EffectHandle.FromString("1")));
+            for (int i = 0; i < num; i++)
+            {
+                Expect.Once.On(effect).
+                    Method("GetParameter").
+                    With(null, "LightDiffuseColor").
+                    Will(Return.Value(EffectHandle.FromString("1")));
+                Expect.Once.On(effect).
+                    Method("GetParameter").
+                    With(null, "LightSpecularColor").
+                    Will(Return.Value(EffectHandle.FromString("1")));
+                Expect.Once.On(effect).
+                    Method("GetParameter").
+                    With(null, "LightPosition").
+                    Will(Return.Value(EffectHandle.FromString("1")));
+                Expect.Once.On(effect).
+                    Method("GetParameter").
+                    With(null, "EyePosition").
+                    Will(Return.Value(EffectHandle.FromString("1")));
+            }
         }
     }
 

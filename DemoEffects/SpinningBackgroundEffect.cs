@@ -47,7 +47,12 @@ namespace Dope.DDXX.DemoEffects
                 layer.Texture = D3DDriver.TextureFactory.CreateFromFile(layer.TextureName);
             }
         }
-    
+
+        public void AddTextureLayer(string texture, float period, Color colorModulation, float alpha)
+        {
+            AddTextureLayer(new TextureLayer(texture, period, colorModulation, alpha));
+        }
+
         public void AddTextureLayer(TextureLayer textureLayer)
         {
             textureLayers.Add(textureLayer);

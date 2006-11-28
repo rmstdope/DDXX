@@ -52,8 +52,12 @@
     <Compile Include="DemoEffectTypesTest.cs" />
     <Compile Include="DemoExecuter.cs" />
     <Compile Include="DemoExecuterTest.cs" />
-    <Compile Include="DemoTweaker.cs" />
-    <Compile Include="DemoTweakerTest.cs" />
+    <Compile Include="DemoTweakerDemo.cs" />
+    <Compile Include="DemoTweakerDemoTest.cs" />
+    <Compile Include="DemoTweakerMain.cs" />
+    <Compile Include="DemoTweakerMainTest.cs" />
+    <Compile Include="DemoTweakerTrack.cs" />
+    <Compile Include="DemoTweakerTrackTest.cs" />
     <Compile Include="DemoWindow.cs">
       <SubType>Form</SubType>
     </Compile>

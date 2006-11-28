@@ -36,7 +36,7 @@ namespace Dope.DDXX.DemoEffects
         [Test]
         public void TestInitialize()
         {
-            ExpectBaseDemoEffect();
+            ExpectBaseDemoEffects(1);
             ExpectSprite();
             spin.Initialize();
         }
@@ -44,7 +44,7 @@ namespace Dope.DDXX.DemoEffects
         [Test]
         public void TestOneTextureLayer()
         {
-            ExpectBaseDemoEffect();
+            ExpectBaseDemoEffects(1);
 
             Expect.Once.On(factory).
                 Method("TextureFromFile").
@@ -59,7 +59,7 @@ namespace Dope.DDXX.DemoEffects
         [Test]
         public void TestThreeTextureLayer()
         {
-            ExpectBaseDemoEffect();
+            ExpectBaseDemoEffects(1);
 
             Expect.Once.On(factory).
                 Method("TextureFromFile").
@@ -79,7 +79,7 @@ namespace Dope.DDXX.DemoEffects
         [Test]
         public void TestRender1()
         {
-            ExpectBaseDemoEffect();
+            ExpectBaseDemoEffects(1);
             ExpectSprite();
             spin.Initialize();
             Expect.Once.On(sprite).

@@ -27,7 +27,7 @@ namespace Dope.DDXX.DemoFramework
                                       Color.FromArgb((int)(255 * Alpha), Color.Black));
             line.Draw(new Vector2[] { new Vector2(GetX1(), GetY1()), 
                                       new Vector2(GetX2(), GetY2()) },
-                                      Color.FromArgb((int)(255 * Alpha), Color.White));
+                                      Color.FromArgb((int)(255 * Alpha), Color));
             line.End();
         }
     }

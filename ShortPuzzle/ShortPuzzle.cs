@@ -102,7 +102,7 @@ namespace ShortPuzzle
         {
             desc = setup.DeviceDescription;
             window = new DemoWindow();
-            executer = new DemoExecuter();
+            executer = new DemoExecuter(new PostProcessor());
         }
     }
 }

@@ -38,6 +38,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DirectInputFactory.cs" />
+    <Compile Include="IInputDriver.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="IInputFactory.cs" />
     <Compile Include="InputDriver.cs" />
     <Compile Include="InputDriverTest.cs" />

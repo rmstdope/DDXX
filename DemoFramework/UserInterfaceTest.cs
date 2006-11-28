@@ -203,7 +203,7 @@ namespace Dope.DDXX.DemoFramework
             float height = presentParameters.BackBufferHeight;
             TestInitialize();
 
-            ExpectLine(x1 * width, (x2 + x1) * width, y1 * height, (y2 + y1) * height);
+            ExpectLine(x1 * width, (x2 + x1) * width, y1 * height, (y2 + y1) * height, Color.Turquoise);
 
             ui.DrawControl(new LineControl(new RectangleF(x1, y1, x2, y2), 0.75f, Color.Turquoise, null));
         }
@@ -220,7 +220,7 @@ namespace Dope.DDXX.DemoFramework
                 Will(Return.Value(0));
         }
 
-        private void ExpectLine(float x1, float x2, float y1, float y2)
+        private void ExpectLine(float x1, float x2, float y1, float y2, Color color)
         {
             using (mockery.Ordered)
             {
@@ -231,7 +231,7 @@ namespace Dope.DDXX.DemoFramework
                     With(new Vector2ArrayMatcher(new Vector2[] { new Vector2(x1 + 1, y1 + 1), new Vector2(x2 + 1, y2 + 1) }), Is.EqualTo(Color.FromArgb((int)(255 * 0.75f), Color.Black)));
                 Expect.Once.On(line).
                     Method("Draw").
-                    With(new Vector2ArrayMatcher(new Vector2[] { new Vector2(x1, y1), new Vector2(x2, y2) }), Is.EqualTo(Color.FromArgb((int)(255 * 0.75f), Color.White)));
+                    With(new Vector2ArrayMatcher(new Vector2[] { new Vector2(x1, y1), new Vector2(x2, y2) }), Is.EqualTo(Color.FromArgb((int)(255 * 0.75f), color)));
                 Expect.Once.On(line).
                     Method("End");
             }

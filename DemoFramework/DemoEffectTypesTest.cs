@@ -6,6 +6,7 @@ using Microsoft.CSharp;
 using System.CodeDom.Compiler;
 using System.Reflection;
 using Microsoft.Win32;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -18,6 +19,7 @@ using Microsoft.DirectX;
 public class FooEffect : IDemoEffect 
 {
   protected float start; protected float end;
+  public FooEffect(float f1, float f2) { start = f1; end = f2;}
   public void Step() {} public void Render() {} public void Initialize() {} 
   public float StartTime { get { return start;} set { start = value;} }
   public float EndTime { get { return end;} set { end = value;} }
@@ -26,8 +28,7 @@ public class BarEffect : FooEffect {
   private int intParam;
   private float floatParam;
   private Vector3 vector3Param;
-  public BarEffect() : base() {}
-  public BarEffect(float start, float end) { 
+  public BarEffect(float start, float end) : base(start, end) { 
     this.start = start;
     this.end = end; 
   }
@@ -53,9 +54,8 @@ public class Dummy {}
         [SetUp]
         public void SetUp()
         {
-            SetupAssembly(source);
+            assembly = SetupAssembly(source);
             effectTypes = new DemoEffectTypes();
-            effectTypes.Initialize(assembly);
         }
 
         [TearDown]
@@ -65,8 +65,9 @@ public class Dummy {}
         }
 
         [Test]
-        public void TestFindEffectsInAssembly()
+        public void TestFindEffectsInAssembly1()
         {
+            effectTypes.Initialize(new Assembly[] { assembly, null });
             Assert.AreEqual(2, effectTypes.Types.Count);
             Type t;
             Assert.IsTrue(effectTypes.Types.TryGetValue("FooEffect", out t));
@@ -76,18 +77,42 @@ public class Dummy {}
         }
 
         [Test]
-        public void TestCreateInstance()
+        public void TestFindEffectsInAssembly2()
         {
+            effectTypes.Initialize(new Assembly[] { assembly });
+            Assert.AreEqual(2, effectTypes.Types.Count);
+            Type t;
+            Assert.IsTrue(effectTypes.Types.TryGetValue("FooEffect", out t));
+            Assert.AreEqual(assembly.GetType("FooEffect"), t);
+            Assert.IsTrue(effectTypes.Types.TryGetValue("BarEffect", out t));
+            Assert.AreEqual(assembly.GetType("BarEffect"), t);
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestCreateInstanceFail()
+        {
+            effectTypes.Initialize(new Assembly[] { assembly });
             IRegisterable ei = effectTypes.CreateInstance("fooeffect", 0, 1);
             Assert.IsNull(ei);
+        }
 
-            ei = effectTypes.CreateInstance("FooEffect", 3, 7);
+        [Test]
+        public void TestCreateInstanceOK1()
+        {
+            effectTypes.Initialize(new Assembly[] { assembly });
+            IRegisterable ei = effectTypes.CreateInstance("FooEffect", 3, 7);
             Assert.IsNotNull(ei);
             Assert.IsInstanceOfType(assembly.GetType("FooEffect"), ei);
             Assert.AreEqual(3, ei.StartTime);
             Assert.AreEqual(7, ei.EndTime);
+        }
 
-            ei = effectTypes.CreateInstance("BarEffect", 3, 7);
+        [Test]
+        public void TestCreateInstanceOK2()
+        {
+            effectTypes.Initialize(new Assembly[] { assembly });
+            IRegisterable ei = effectTypes.CreateInstance("BarEffect", 3, 7);
             Assert.IsNotNull(ei);
             Assert.IsInstanceOfType(assembly.GetType("BarEffect"), ei);
             Assert.AreEqual(3, ei.StartTime);
@@ -97,6 +122,7 @@ public class Dummy {}
         [Test]
         public void TestSetIntParameter()
         {
+            effectTypes.Initialize(new Assembly[] { assembly });
             IRegisterable ei = effectTypes.CreateInstance("BarEffect", 0, 1);
             Assert.IsNotNull(ei);
             effectTypes.SetProperty(ei, "IntParam", 5);
@@ -107,6 +133,7 @@ public class Dummy {}
         [Test]
         public void TestSetFloatParameter()
         {
+            effectTypes.Initialize(new Assembly[] { assembly });
             IRegisterable ei = effectTypes.CreateInstance("BarEffect", 0, 1);
             Assert.IsNotNull(ei);
             effectTypes.SetProperty(ei, "FloatParam", 5.5F);
@@ -114,7 +141,7 @@ public class Dummy {}
             Assert.AreEqual(11.1F, v);
         }
 
-        private void SetupAssembly(string source)
+        private Assembly SetupAssembly(string source)
         {
             CSharpCodeProvider provider = new CSharpCodeProvider();
             //string windir = (string)Registry.GetValue("HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Windows", "Directory", "");
@@ -133,7 +160,7 @@ public class Dummy {}
                 Assert.Fail("Internal error in test code");
             }
             Assert.IsEmpty(results.Errors);
-            assembly = results.CompiledAssembly;
+            return results.CompiledAssembly;
         }
     }
 }

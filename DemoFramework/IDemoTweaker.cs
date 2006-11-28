@@ -7,13 +7,9 @@ namespace Dope.DDXX.DemoFramework
 {
     public interface IDemoTweaker
     {
-        bool Enabled
-        {
-            get;
-            set;
-        }
+        bool Quit { get; }
         void Initialize(IDemoRegistrator registrator);
         void Draw();
-        void HandleInput(InputDriver inputDriver);
+        void HandleInput(IInputDriver inputDriver);
     }
 }

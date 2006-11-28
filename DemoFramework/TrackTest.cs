@@ -63,6 +63,12 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual(new IDemoEffect[] { e1 }, track.GetEffects(5.0f));
             Assert.AreEqual(new IDemoEffect[] { e1 }, track.GetEffects(10.0f));
             Assert.AreEqual(new IDemoEffect[] { }, track.GetEffects(15.0f));
+
+            Assert.AreEqual(new IDemoEffect[] { }, track.GetEffects(-5.0f, -0.1f));
+            Assert.AreEqual(new IDemoEffect[] { e1 }, track.GetEffects(-5.0f, 0.0f));
+            Assert.AreEqual(new IDemoEffect[] { e1 }, track.GetEffects(0.0f, 5.0f));
+            Assert.AreEqual(new IDemoEffect[] { e1 }, track.GetEffects(10.0f, 15.0f));
+            Assert.AreEqual(new IDemoEffect[] { }, track.GetEffects(11.0f, 15.0f));
         }
 
         [Test]
@@ -79,6 +85,12 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual(new IDemoPostEffect[] { e1 }, track.GetPostEffects(5.0f));
             Assert.AreEqual(new IDemoPostEffect[] { e1 }, track.GetPostEffects(10.0f));
             Assert.AreEqual(new IDemoPostEffect[] { }, track.GetPostEffects(15.0f));
+
+            Assert.AreEqual(new IDemoPostEffect[] { }, track.GetPostEffects(-5.0f, -0.1f));
+            Assert.AreEqual(new IDemoPostEffect[] { e1 }, track.GetPostEffects(-5.0f, 0.0f));
+            Assert.AreEqual(new IDemoPostEffect[] { e1 }, track.GetPostEffects(0.0f, 5.0f));
+            Assert.AreEqual(new IDemoPostEffect[] { e1 }, track.GetPostEffects(10.0f, 15.0f));
+            Assert.AreEqual(new IDemoPostEffect[] { }, track.GetPostEffects(11.0f, 15.0f));
         }
 
         [Test]
@@ -98,6 +110,12 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual(new IDemoEffect[] { e1, e2 }, track.GetEffects(10.0f));
             Assert.AreEqual(new IDemoEffect[] { e2 }, track.GetEffects(15.0f));
             Assert.AreEqual(new IDemoEffect[] { }, track.GetEffects(20.0f));
+
+            Assert.AreEqual(new IDemoEffect[] { }, track.GetEffects(-5.0f, -1.0f));
+            Assert.AreEqual(new IDemoEffect[] { e1 }, track.GetEffects(-1.0f, 3.0f));
+            Assert.AreEqual(new IDemoEffect[] { e1, e2 }, track.GetEffects(3.0f, 6.0f));
+            Assert.AreEqual(new IDemoEffect[] { e2 }, track.GetEffects(11.0f, 16.0f));
+            Assert.AreEqual(new IDemoEffect[] { }, track.GetEffects(16.0f, 17.0f));
         }
         [Test]
         public void TestMultiplePostEffectRegistrations()
@@ -116,6 +134,12 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual(new IDemoPostEffect[] { e1, e2 }, track.GetPostEffects(10.0f));
             Assert.AreEqual(new IDemoPostEffect[] { e2 }, track.GetPostEffects(15.0f));
             Assert.AreEqual(new IDemoPostEffect[] { }, track.GetPostEffects(20.0f));
+
+            Assert.AreEqual(new IDemoPostEffect[] { }, track.GetPostEffects(-5.0f, -1.0f));
+            Assert.AreEqual(new IDemoPostEffect[] { e1 }, track.GetPostEffects(-1.0f, 3.0f));
+            Assert.AreEqual(new IDemoPostEffect[] { e1, e2 }, track.GetPostEffects(3.0f, 6.0f));
+            Assert.AreEqual(new IDemoPostEffect[] { e2 }, track.GetPostEffects(11.0f, 16.0f));
+            Assert.AreEqual(new IDemoPostEffect[] { }, track.GetPostEffects(16.0f, 17.0f));
         }
 
         [Test]

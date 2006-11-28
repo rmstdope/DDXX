@@ -7,7 +7,7 @@ using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.Input
 {
-    public class InputDriver
+    public class InputDriver : IInputDriver
     {
         private static InputDriver instance;
         private static IInputFactory factory = new DirectInputFactory();

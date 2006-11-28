@@ -57,6 +57,19 @@ namespace Dope.DDXX.DemoFramework
             List<IDemoEffect> valid = effects.FindAll(IsWithinTime);
             return valid.ToArray();
         }
+
+        internal IDemoEffect[] GetEffects(float startTime, float endTime)
+        {
+            List<IDemoEffect> valid = effects.FindAll(
+                delegate(IDemoEffect effect) 
+                {
+                    if (effect.StartTime <= endTime && effect.EndTime >= startTime)
+                        return true;
+                    return false;
+                });
+            return valid.ToArray();
+        }
+
         internal IDemoPostEffect[] GetPostEffects(float time)
         {
             searchTime = time;
@@ -64,9 +77,22 @@ namespace Dope.DDXX.DemoFramework
             return valid.ToArray();
         }
 
+        internal IDemoPostEffect[] GetPostEffects(float startTime, float endTime)
+        {
+            List<IDemoPostEffect> valid = postEffects.FindAll(
+                delegate(IDemoPostEffect effect)
+                {
+                    if (effect.StartTime <= endTime && effect.EndTime >= startTime)
+                        return true;
+                    return false;
+                });
+            return valid.ToArray();
+        }
+
         internal bool IsActive(float p)
         {
             throw new Exception("The method or operation is not implemented.");
         }
+
     }
 }

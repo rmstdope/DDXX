@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EmptyEffect.cs" />
     <Compile Include="EngineTest.cs">
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -92,6 +93,9 @@
       <Project>{31D76405-2DD3-436A-BE65-963DE822511E}</Project>
       <Name>Utility</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="EngineTest.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

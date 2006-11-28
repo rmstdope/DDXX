@@ -4,12 +4,13 @@ using System.Text;
 using System.Xml;
 using System.IO;
 using Microsoft.DirectX;
+using System.Drawing;
 
 namespace Dope.DDXX.Utility
 {
     public enum ParameterType
     {
-        Unknown = 0, Integer, Float, String, Vector3
+        Unknown = 0, Integer, Float, String, Vector3, Color
     }
 
     public struct Parameter
@@ -65,7 +66,7 @@ namespace Dope.DDXX.Utility
 
         public void Read(string filename)
         {
-            Stream inputStream = new FileStream(filename, FileMode.Open);
+            Stream inputStream = new FileStream(FileUtility.FilePath(filename), FileMode.Open);
             Read(inputStream);
         }
         private void Read(Stream input)
@@ -202,6 +203,14 @@ namespace Dope.DDXX.Utility
                 {
                     ReadParameter();
                 }
+                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "SetupCall")
+                {
+                    ReadSetupCall();
+                }
+                else
+                {
+                    throw new DDXXException("Unknown tag in XML file.");
+                }
             }
         }
 
@@ -240,6 +249,56 @@ namespace Dope.DDXX.Utility
             }
         }
 
+        private void ReadSetupCall()
+        {
+            bool keepOn = reader.MoveToFirstAttribute();
+            if (!keepOn || reader.Name != "name")
+                throw new DDXXException("Could not parse setup call.");
+            string name = reader.Value;
+            List<Object> parameters = new List<Object>();
+
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.EndElement &&
+                    (reader.Name == "SetupCall"))
+                {
+                    break;
+                }
+                if (reader.NodeType == XmlNodeType.Element && reader.Name == "Parameter")
+                {
+                    if (!reader.MoveToFirstAttribute())
+                        throw new DDXXException("Failed to parse parameters for setup call.");
+                    switch (GetParameterType(reader.Name))
+                    {
+                        case ParameterType.Float:
+                            parameters.Add(ParseFloat(reader.Value));
+                            break;
+                        case ParameterType.Integer:
+                            parameters.Add(int.Parse(reader.Value));
+                            break;
+                        case ParameterType.String:
+                            parameters.Add(reader.Value);
+                            break;
+                        case ParameterType.Vector3:
+                            string[] s = reader.Value.Split(new char[] { ',' }, 3);
+                            Vector3 v = new Vector3(ParseFloat(s[0]), ParseFloat(s[1]), ParseFloat(s[2]));
+                            parameters.Add(v);
+                            break;
+                        case ParameterType.Color:
+                            parameters.Add(Color.FromName(reader.Value));
+                            break;
+                        default:
+                            throw new XmlException("Unknown internal parameter type");
+                    }
+                }
+                else
+                {
+                    throw new DDXXException("Unknown tag in XML file.");
+                }
+            }
+            effectBuilder.AddSetupCall(name, parameters);
+        }
+
         private void AddParameter(string parameterName, ParameterType parameterType, string parameterValue)
         {
             switch (parameterType)
@@ -257,6 +316,9 @@ namespace Dope.DDXX.Utility
                     string[] s = parameterValue.Split(new char[] { ',' }, 3);
                     Vector3 v = new Vector3(ParseFloat(s[0]), ParseFloat(s[1]), ParseFloat(s[2]));
                     effectBuilder.AddVector3Parameter(parameterName, v);
+                    break;
+                case ParameterType.Color:
+                    effectBuilder.AddColorParameter(parameterName, Color.FromName(parameterValue));
                     break;
                 default:
                     throw new XmlException("Unknown internal parameter type");
@@ -276,6 +338,7 @@ namespace Dope.DDXX.Utility
                 case "float": return ParameterType.Float;
                 case "string": return ParameterType.String;
                 case "Vector3": return ParameterType.Vector3;
+                case "Color": return ParameterType.Color;
                 default: return ParameterType.Unknown;
             }
         }

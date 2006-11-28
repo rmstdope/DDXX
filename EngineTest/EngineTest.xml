@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Effects>
+	<Effect name="SpinningBackgroundEffect" track="0" startTime="0.0" endTime="10.0">
+		<SetupCall name="AddTextureLayer">
+			<Parameter string="BlurBackground.jpg"/>
+			<Parameter float="35.0"/>
+			<Parameter Color="Beige"/>
+			<Parameter float="0.2"/>
+		</SetupCall>
+		<SetupCall name="AddTextureLayer">
+			<Parameter string="BlurBackground.jpg"/>
+			<Parameter float="-44.0"/>
+			<Parameter Color="Coral"/>
+			<Parameter float="0.2"/>
+		</SetupCall>
+	</Effect>
+	<Effect name="TestEffect" track="0" startTime="0.0" endTime="10.0">
+	</Effect>
+	<!--name="MonochromePostEffect" track="0" startTime="0.0" endTime="10.0">
+	</PostEffect-->
+</Effects>

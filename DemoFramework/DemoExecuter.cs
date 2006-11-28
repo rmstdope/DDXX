@@ -24,7 +24,7 @@ namespace Dope.DDXX.DemoFramework
 
         private IDevice device;
         private ITexture backBuffer;
-        private PostProcessor postProcessor;
+        private IPostProcessor postProcessor;
         private IDemoTweaker tweaker;
 
         private InputDriver inputDriver;
@@ -89,23 +89,29 @@ namespace Dope.DDXX.DemoFramework
             set { tweaker = value; }
         }
 
-        public DemoExecuter()
+        public DemoExecuter(IPostProcessor postProcessor)
         {
-            postProcessor = new PostProcessor();
-            tweaker = new DemoTweaker();
-            tweaker.Enabled = true;
+            this.postProcessor = postProcessor;
+            tweaker = new DemoTweakerMain(new IDemoTweaker[] { new DemoTweakerDemo(), new DemoTweakerTrack() });
         }
 
         private DemoEffectTypes effectTypes = new DemoEffectTypes();
 
         public void Initialize(string song)
         {
-            this.Initialize(song, Assembly.GetCallingAssembly());
+            this.Initialize(song, new Assembly[] { Assembly.GetCallingAssembly() }, "");
         }
 
-        public void Initialize(string song, Assembly assembly)
+        public void Initialize(string song, string xmlFile)
         {
-            effectTypes.Initialize(assembly);
+            this.Initialize(song, new Assembly[] { Assembly.GetCallingAssembly() }, xmlFile);
+        }
+
+        public void Initialize(string song, Assembly[] assemblies, string xmlFile)
+        {
+            effectTypes.Initialize(assemblies);
+
+            InitializeFromFile(xmlFile);
 
             InitializeGraphics();
 
@@ -191,7 +197,7 @@ namespace Dope.DDXX.DemoFramework
                 channel = soundDriver.PlaySound(sound);
             }
 
-            while (Time.StepTime <= EndTime + 2.0f && !inputDriver.KeyPressed(Key.Escape))
+            while (Time.StepTime <= EndTime + 2.0f && !tweaker.Quit)
             {
                 Step();
 
@@ -247,10 +253,13 @@ namespace Dope.DDXX.DemoFramework
         }
 
 
-        public void InitializeFromFile(string xmlFile)
+        private void InitializeFromFile(string xmlFile)
         {
-            DemoXMLReader xmlReader = new DemoXMLReader(this);
-            xmlReader.Read(xmlFile);
+            if (xmlFile != "")
+            {
+                DemoXMLReader xmlReader = new DemoXMLReader(this);
+                xmlReader.Read(xmlFile);
+            }
         }
 
         #region IDemoEffectBuilder Members
@@ -301,6 +310,19 @@ namespace Dope.DDXX.DemoFramework
         public void AddVector3Parameter(string name, Vector3 value)
         {
             AddParameter(name, value);
+        }
+
+        public void AddColorParameter(string name, Color value)
+        {
+            AddParameter(name, value);
+        }
+
+        public void AddSetupCall(string name, List<object> parameters)
+        {
+            if (lastAddedEffect != null)
+            {
+                effectTypes.CallSetup(lastAddedEffect, name, parameters);
+            }
         }
 
         #endregion

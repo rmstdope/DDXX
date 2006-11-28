@@ -35,6 +35,29 @@ namespace Dope.DDXX.DemoFramework
             this.color = color;
         }
 
+        public TextControl(string text, PointF point, DrawTextFormat format, float alpha, Color color, BaseControl parent)
+            : base(new RectangleF(), parent)
+        {
+            this.text = text;
+            this.format = format;
+            this.alpha = alpha;
+            this.color = color;
+            float x = point.X;
+            float y = point.Y;
+
+            float height = 100.0f;
+            float width = 100.0f;
+            if (((int)format & (int)DrawTextFormat.Bottom) != 0)
+                y -= height;
+            if (((int)format & (int)DrawTextFormat.VerticalCenter) != 0)
+                y -= height / 2;
+            if (((int)format & (int)DrawTextFormat.Right) != 0)
+                x -= width;
+            if (((int)format & (int)DrawTextFormat.Center) != 0)
+                x -= width / 2;
+            rectangle = new RectangleF(x, y, width, height);
+        }
+
         internal override void Draw(ISprite sprite, ILine line, IFont font, ITexture whiteTexture)
         {
             Rectangle rect1 = new Rectangle((int)(GetX1()), (int)(GetY1()), (int)(GetWidth()), (int)(GetHeight()));

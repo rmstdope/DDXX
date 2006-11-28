@@ -14,6 +14,8 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.CodeDom.Compiler;
 using Microsoft.CSharp;
+using System.IO;
+using Microsoft.DirectX;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -26,25 +28,7 @@ namespace Dope.DDXX.DemoFramework
         private Dope.DDXX.Sound.ISoundFactory sFactory;
         private ISoundSystem system;
         private IDemoTweaker tweaker;
-
-        private void ExpectPostProcessorInitialize()
-        {
-            IEffect effect = mockery.NewMock<IEffect>();
-            Expect.Once.On(factory).
-                Method("EffectFromFile").
-                With(Is.EqualTo(device), Is.EqualTo("PostEffects.fxo"), Is.Null, Is.EqualTo(""), Is.Anything, Is.Anything).
-                Will(Return.Value(effect));
-            Stub.On(effect).
-                Method("GetTechnique").
-                Will(Return.Value(EffectHandle.FromString("")));
-            Expect.Once.On(effect).
-                Method("GetParameter").
-                With(null, "SourceTexture").
-                Will(Return.Value(EffectHandle.FromString("")));
-            Stub.On(effect).
-                GetProperty("Description_Parameters").
-                Will(Return.Value(0));
-        }
+        private IPostProcessor postProcessor;
 
         [SetUp]
         public override void SetUp()
@@ -65,15 +49,17 @@ namespace Dope.DDXX.DemoFramework
 
             DeviceDescription desc = new DeviceDescription();
             desc.deviceType = DeviceType.Hardware;
-            desc.width = displayMode.Width;
-            desc.height = displayMode.Height;
-            desc.colorFormat = displayMode.Format;
+            desc.width = presentParameters.BackBufferWidth;
+            desc.height = presentParameters.BackBufferHeight;
+            desc.colorFormat = presentParameters.BackBufferFormat;
             Expect.Once.On(prerequisits).Method("CheckPrerequisits").WithAnyArguments();
             D3DDriver.GetInstance().Initialize(null, desc, prerequisits);
 
-            executer = new DemoExecuter();
+            postProcessor = mockery.NewMock<IPostProcessor>();
+            executer = new DemoExecuter(postProcessor);
             tweaker = mockery.NewMock<IDemoTweaker>();
             executer.Tweaker = tweaker;
+
         }
 
         [TearDown]
@@ -145,6 +131,7 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(system).
                 Method("GetVersion").
                 Will(Return.Value(FMOD.RESULT.ERR_VERSION));
+            ExpectGraphicsInitialize();
             executer.Initialize("");
         }
 
@@ -153,15 +140,11 @@ namespace Dope.DDXX.DemoFramework
         public void TestInitializeFail2()
         {
             FileUtility.SetLoadPaths(new string[] { "./" });
-            Expect.Once.On(system).
-                 Method("GetVersion").
-                 Will(Return.Value(FMOD.RESULT.OK));
-            Expect.Once.On(system).
-                Method("Init").
-                Will(Return.Value(FMOD.RESULT.OK));
+            ExpectSoundInitialize();
             Expect.Once.On(system).
                 Method("CreateSound").
                 Will(Return.Value(FMOD.RESULT.ERR_VERSION));
+            ExpectGraphicsInitialize();
 
             executer.Initialize("Dope.DDXX.DemoFramework.dll");
         }
@@ -169,15 +152,10 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestInitializeOKNoSong1()
         {
-            Expect.Once.On(system).
-                Method("GetVersion").
-                Will(Return.Value(FMOD.RESULT.OK));
-            Expect.Once.On(system).
-                Method("Init").
-                Will(Return.Value(FMOD.RESULT.OK));
+            ExpectSoundInitialize();
             ExpectPostProcessorInitialize();
-            Expect.Once.On(tweaker).
-                Method("Initialize");
+            ExpectTweakerInitialize();
+            ExpectGraphicsInitialize();
 
             executer.Initialize("");
         }
@@ -185,15 +163,10 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestInitializeOKNoSong2()
         {
-            Expect.Once.On(system).
-                Method("GetVersion").
-                Will(Return.Value(FMOD.RESULT.OK));
-            Expect.Once.On(system).
-                Method("Init").
-                Will(Return.Value(FMOD.RESULT.OK));
+            ExpectSoundInitialize();
             ExpectPostProcessorInitialize();
-            Expect.Once.On(tweaker).
-                Method("Initialize");
+            ExpectTweakerInitialize();
+            ExpectGraphicsInitialize();
 
             executer.Initialize(null);
         }
@@ -202,18 +175,13 @@ namespace Dope.DDXX.DemoFramework
         public void TestInitializeOKSong()
         {
             FileUtility.SetLoadPaths(new string[] { "./" });
-            Expect.Once.On(system).
-                 Method("GetVersion").
-                 Will(Return.Value(FMOD.RESULT.OK));
-            Expect.Once.On(system).
-                Method("Init").
-                Will(Return.Value(FMOD.RESULT.OK));
+            ExpectSoundInitialize();
             Expect.Once.On(system).
                 Method("CreateSound").
                 Will(Return.Value(FMOD.RESULT.OK));
             ExpectPostProcessorInitialize();
-            Expect.Once.On(tweaker).
-                Method("Initialize");
+            ExpectTweakerInitialize();
+            ExpectGraphicsInitialize();
 
             executer.Initialize("Dope.DDXX.DemoFramework.dll");
         }
@@ -228,17 +196,10 @@ namespace Dope.DDXX.DemoFramework
             IDemoPostEffect postEffect = CreateMockPostEffect(1, 2);
             executer.Register(1, postEffect);
 
-            // SoundDriver
-            Expect.Once.On(system).
-                Method("GetVersion").
-                Will(Return.Value(FMOD.RESULT.OK));
-            Expect.Once.On(system).
-                Method("Init").
-                Will(Return.Value(FMOD.RESULT.OK));
-
+            ExpectSoundInitialize();
             ExpectPostProcessorInitialize();
-            Expect.Once.On(tweaker).
-                Method("Initialize");
+            ExpectTweakerInitialize();
+            ExpectGraphicsInitialize();
 
             // Effects
             Expect.Once.On(effect1).
@@ -297,10 +258,6 @@ namespace Dope.DDXX.DemoFramework
 
             Expect.Once.On(tweaker).
                 Method("HandleInput");
-            Stub.On(iFactory).
-                Method("KeyPressed").
-                WithAnyArguments().
-                Will(Return.Value(false));
             Expect.Once.On(system).
                 Method("PlaySound").
                 Will(Return.Value(FMOD.RESULT.OK));
@@ -314,6 +271,12 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(device).
                 Method("Clear").
                 With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Black, 1.0f, 0);
+            Expect.Once.On(postProcessor).
+                Method("StartFrame").
+                With(texture);
+            Expect.Once.On(postProcessor).
+                GetProperty("OutputTexture").
+                Will(Return.Value(texture));
             Expect.Once.On(device).
                 Method("StretchRectangle");
             Expect.Once.On(device).
@@ -322,6 +285,9 @@ namespace Dope.DDXX.DemoFramework
 
             Expect.Once.On(tweaker).
                 Method("Draw");
+            Stub.On(tweaker).
+                GetProperty("Quit").
+                Will(Return.Value(false));
             executer.Run();
             Assert.Greater(Time.StepTime, 2.0f);
         }
@@ -331,19 +297,12 @@ namespace Dope.DDXX.DemoFramework
         {
             TestInitializeOKNoSong1();
 
-            Expect.Once.On(tweaker).
-                Method("HandleInput");
-            Expect.Once.On(iFactory).
-                Method("KeyPressed").
-                WithAnyArguments().
-                Will(Return.Value(false));
-            Expect.Once.On(iFactory).
-                Method("KeyPressed").
-                WithAnyArguments().
-                Will(Return.Value(true));
             Expect.Once.On(device).
                 Method("Clear").
                 With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Black, 1.0f, 0);
+            Expect.Once.On(postProcessor).
+                Method("StartFrame").
+                With(texture);
             Expect.Once.On(device).
                 Method("BeginScene");
             Expect.Exactly(2).On(device).
@@ -355,6 +314,9 @@ namespace Dope.DDXX.DemoFramework
                 With(0, surface);
             Expect.Once.On(device).
                 Method("EndScene");
+            Expect.Once.On(postProcessor).
+                GetProperty("OutputTexture").
+                Will(Return.Value(texture));
             Expect.Once.On(device).
                 Method("StretchRectangle");
             Expect.Once.On(device).
@@ -362,10 +324,15 @@ namespace Dope.DDXX.DemoFramework
             IDemoEffect effect = CreateMockEffect(0, 10.0f);
             Expect.Once.On(effect).
                 Method("Step");
+            Expect.Once.On(tweaker).
+                Method("HandleInput");
             Expect.Once.On(effect).
                 Method("Render");
             Expect.Once.On(tweaker).
                 Method("Draw");
+
+            LimitRunLoop(1);
+
             executer.Register(0, effect);
             executer.Run();
         }
@@ -378,6 +345,9 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(device).
                 Method("Clear").
                 With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Black, 1.0f, 0);
+            Expect.Once.On(postProcessor).
+                Method("StartFrame").
+                With(texture);
             Expect.Once.On(device).
                 Method("BeginScene");
             Expect.Exactly(2).On(device).
@@ -389,6 +359,9 @@ namespace Dope.DDXX.DemoFramework
                 With(0, surface);
             Expect.Once.On(device).
                 Method("EndScene");
+            Expect.Once.On(postProcessor).
+                GetProperty("OutputTexture").
+                Will(Return.Value(texture));
             Expect.Once.On(device).
                 Method("StretchRectangle");
             Expect.Once.On(device).
@@ -412,6 +385,9 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(device).
                 Method("Clear").
                 With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Black, 1.0f, 0);
+            Expect.Once.On(postProcessor).
+                Method("StartFrame").
+                With(texture);
             Expect.Once.On(device).
                 Method("BeginScene");
             Expect.Exactly(2).On(device).
@@ -423,6 +399,9 @@ namespace Dope.DDXX.DemoFramework
                 With(0, surface);
             Expect.Once.On(device).
                 Method("EndScene");
+            Expect.Once.On(postProcessor).
+                GetProperty("OutputTexture").
+                Will(Return.Value(texture));
             Expect.Once.On(device).
                 Method("StretchRectangle");
             Expect.Once.On(device).
@@ -445,28 +424,156 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestInitializeFromFile()
         {
-                    string twoEffectContents =
+            ExpectSoundInitialize();
+            ExpectPostProcessorInitialize();
+            ExpectTweakerInitialize();
+            ExpectGraphicsInitialize();
+            ExpectBaseDemoEffects(2);
+            string twoEffectContents =
 @"<Effects>
-<Effect name=""fooeffect"" track=""1"">
-<Parameter name=""fooparam"" int=""3"" />
-<Parameter name=""barparam"" float=""4.3"" />
-<Parameter name=""strparam"" string=""foostr"" />
+<Effect name=""FooEffect"" track=""1"">
+<Parameter name=""FooParam"" int=""3"" />
+<Parameter name=""BarParam"" float=""4.3"" />
+<Parameter name=""StrParam"" string=""foostr"" />
 </Effect>
-<Effect name=""bareffect"">
-<Parameter name=""goo"" string=""string value"" />
-<Parameter name=""vecparam"" Vector3=""5.4, 4.3, 3.2"" />
+<Effect name=""BarEffect"">
+<Parameter name=""Goo"" string=""string value"" />
+<Parameter name=""VecParam"" Vector3=""5.4, 4.3, 3.2"" />
+<SetupCall name=""Setup"">
+<Parameter string=""MethodCalled"" />
+</SetupCall>
 </Effect>
-<PostEffect name=""fooglow"" track=""2"">
-<Parameter name=""glowparam"" float=""5.4"" />
+<PostEffect name=""FooGlow"" track=""2"">
+<Parameter name=""GlowParam"" float=""5.4"" />
 </PostEffect>
-<Transition name=""footrans"" destinationTrack=""1"">
-<Parameter name=""transparam"" string=""tranny"" />
-</Transition>
 </Effects>
 ";
+//<Transition name=""footrans"" destinationTrack=""1"">
+//<Parameter name=""transparam"" string=""tranny"" />
+//</Transition>
             DemoXMLReaderTest.TempFiles tempFiles = new DemoXMLReaderTest.TempFiles();
-            executer.InitializeFromFile(tempFiles.New(twoEffectContents));
+            FileUtility.SetLoadPaths(new string[] { "" });
+            executer.Initialize("", tempFiles.New(twoEffectContents));
             Assert.AreEqual(3, executer.NumTracks);
+            Assert.AreEqual(1, executer.Tracks[0].Effects.Length);
+            Assert.AreEqual(0, executer.Tracks[0].PostEffects.Length);
+            Assert.AreEqual(1, executer.Tracks[1].Effects.Length);
+            Assert.AreEqual(0, executer.Tracks[1].PostEffects.Length);
+            Assert.AreEqual(0, executer.Tracks[2].Effects.Length);
+            Assert.AreEqual(1, executer.Tracks[2].PostEffects.Length);
+
+            Assert.AreEqual(typeof(BarEffect), executer.Tracks[0].Effects[0].GetType());
+            Assert.AreEqual(typeof(FooEffect), executer.Tracks[1].Effects[0].GetType());
+            Assert.AreEqual(typeof(FooGlow), executer.Tracks[2].PostEffects[0].GetType());
+
+            Assert.AreEqual("string value", ((BarEffect)executer.Tracks[0].Effects[0]).Goo);
+            Assert.AreEqual(new Vector3(5.4f, 4.3f, 3.2f), ((BarEffect)executer.Tracks[0].Effects[0]).VecParam);
+            Assert.AreEqual("MethodCalled", ((BarEffect)executer.Tracks[0].Effects[0]).SetupParam);
+
+            Assert.AreEqual(3, ((FooEffect)executer.Tracks[1].Effects[0]).FooParam);
+            Assert.AreEqual(4.3f, ((FooEffect)executer.Tracks[1].Effects[0]).BarParam);
+            Assert.AreEqual("foostr", ((FooEffect)executer.Tracks[1].Effects[0]).StrParam);
+
+            Assert.AreEqual(5.4f, ((FooGlow)executer.Tracks[2].PostEffects[0]).GlowParam);
         }
+
+        private void LimitRunLoop(int numCalls)
+        {
+            if (numCalls > 0)
+                Expect.Exactly(numCalls).On(tweaker).GetProperty("Quit").Will(Return.Value(false));
+            Expect.Once.On(tweaker).GetProperty("Quit").Will(Return.Value(true));
+        }
+
+        private void ExpectSoundInitialize()
+        {
+            Expect.Once.On(system).
+                 Method("GetVersion").
+                 Will(Return.Value(FMOD.RESULT.OK));
+            Expect.Once.On(system).
+                Method("Init").
+                Will(Return.Value(FMOD.RESULT.OK));
+        }
+
+        private void ExpectPostProcessorInitialize()
+        {
+            Expect.Once.On(postProcessor).
+                Method("Initialize").
+                With(device);
+        }
+
+        private void ExpectTweakerInitialize()
+        {
+            Expect.Once.On(tweaker).
+                Method("Initialize");
+        }
+
+        private void ExpectGraphicsInitialize()
+        {
+            Expect.Once.On(factory).
+                Method("CreateTexture").
+                With(device, presentParameters.BackBufferWidth, presentParameters.BackBufferHeight, 1, Usage.RenderTarget, presentParameters.BackBufferFormat, Pool.Default).
+                Will(Return.Value(texture));
+        }
+
+    }
+
+    public class FooEffect : BaseDemoEffect
+    {
+        public FooEffect(float start, float end) : base(start, end) { }
+        private int fooParam;
+        private float barParam;
+        private string strParam;
+        public string StrParam
+        {
+            get { return strParam; }
+            set { strParam = value; }
+        }
+        public float BarParam
+        {
+            get { return barParam; }
+            set { barParam = value; }
+        }
+        public int FooParam
+        {
+            get { return fooParam; }
+            set { fooParam = value; }
+        }
+        public override void Step() { }
+        public override void Render() { }
+    }
+    public class BarEffect : BaseDemoEffect
+    {
+        public BarEffect(float start, float end) : base(start, end) { setupParam = "NotCalled"; }
+        private string goo;
+        private Vector3 vecParam;
+        private string setupParam;
+        public string SetupParam
+        {
+            get { return setupParam; }
+        }
+        public string Goo
+        {
+            get { return goo; }
+            set { goo = value; }
+        }
+        public Vector3 VecParam
+        {
+            get { return vecParam; }
+            set { vecParam = value; }
+        }
+        public void Setup(string param) { setupParam = param; }
+        public override void Step() { }
+        public override void Render() { }
+    }
+    public class FooGlow : BaseDemoPostEffect
+    {
+        public FooGlow(float start, float end) : base(start, end) { }
+        private float glowParam;
+        public float GlowParam
+        {
+            get { return glowParam; }
+            set { glowParam = value; }
+        }
+        public override void Render() { }
     }
 }

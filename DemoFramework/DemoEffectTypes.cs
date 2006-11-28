@@ -6,6 +6,7 @@ using System.Reflection;
 namespace Dope.DDXX.DemoFramework
 {
     using TypeDict = Dictionary<string, Type>;
+    using Dope.DDXX.Utility;
     public class DemoEffectTypes
     {
         private TypeDict types = new TypeDict();
@@ -18,30 +19,35 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        public void Initialize(Assembly assembly)
+        public void Initialize(Assembly[] assemblies)
         {
             types.Clear();
-            try
+            foreach (Assembly assembly in assemblies)
             {
-                foreach (Type t in assembly.GetTypes())
+                if (assembly == null)
+                    continue;
+                try
                 {
-                    TypeFilter filter = new TypeFilter(delegate(Type ty, object comp)
+                    foreach (Type t in assembly.GetTypes())
                     {
-                        if (ty.FullName == (string)comp)
-                            return true;
-                        else
-                            return false;
-                    });
-                    Type[] interfaces = t.FindInterfaces(filter, "Dope.DDXX.DemoFramework.IRegisterable");
-                    if (interfaces.Length > 0)
-                    {
-                        types.Add(t.Name, t);
+                        TypeFilter filter = new TypeFilter(delegate(Type ty, object comp)
+                        {
+                            if (ty.FullName == (string)comp)
+                                return true;
+                            else
+                                return false;
+                        });
+                        Type[] interfaces = t.FindInterfaces(filter, "Dope.DDXX.DemoFramework.IRegisterable");
+                        if (interfaces.Length > 0)
+                        {
+                            types.Add(t.Name, t);
+                        }
                     }
                 }
-            }
-            catch (ReflectionTypeLoadException e)
-            {
-                throw new Exception(e.ToString() + "LoaderExceptions:" + e.LoaderExceptions.ToString());
+                catch (ReflectionTypeLoadException e)
+                {
+                    throw new DDXXException(e.ToString() + "LoaderExceptions:" + e.LoaderExceptions.ToString());
+                }
             }
         }
 
@@ -49,13 +55,11 @@ namespace Dope.DDXX.DemoFramework
         {
             Type effect;
             if (!types.TryGetValue(effectName, out effect))
-                return null;
-            ConstructorInfo constrInfo = effect.GetConstructor(Type.EmptyTypes);
+                throw new DDXXException("Could not find effect " + effectName + " among valid effects.");
+            ConstructorInfo constrInfo = effect.GetConstructor(new Type[] {typeof(float), typeof(float)});
             if (constrInfo == null)
-                return null;
-            IRegisterable demoEffect = (IRegisterable)constrInfo.Invoke(null);
-            demoEffect.StartTime = startTime;
-            demoEffect.EndTime = endTime;
+                throw new DDXXException("Public constructor(float, float) not found in Effect " + effectName);
+            IRegisterable demoEffect = (IRegisterable)constrInfo.Invoke(new object[] { startTime, endTime });
             return demoEffect;
         }
 
@@ -67,6 +71,13 @@ namespace Dope.DDXX.DemoFramework
         public object GetProperty(IRegisterable ei, string name)
         {
             return ei.GetType().InvokeMember(name, BindingFlags.GetProperty, null, ei, null, null, null, null);
+        }
+
+        public void CallSetup(IRegisterable ei, string method, List<object> parameters)
+        {
+            object[] arr = new object[parameters.Count];
+            parameters.CopyTo(arr);
+            ei.GetType().InvokeMember(method, BindingFlags.InvokeMethod, null, ei, arr);
         }
     }
 }

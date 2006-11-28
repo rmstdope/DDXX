@@ -8,6 +8,7 @@ using NMock2;
 using System.Xml;
 using Microsoft.DirectX;
 using System.Reflection;
+using System.Drawing;
 
 namespace Dope.DDXX.Utility {
     [TestFixture]
@@ -20,6 +21,7 @@ namespace Dope.DDXX.Utility {
                 public float startTime;
                 public float endTime;
                 public Dictionary<string, Parameter> parameters;
+                public Dictionary<string, List<object>> setups;
                 public Effect(string name, int track)
                     : this(name, track, 0, 0)
                 {
@@ -30,6 +32,7 @@ namespace Dope.DDXX.Utility {
                     this.startTime = startTime;
                     this.endTime = endTime;
                     parameters = new Dictionary<string, Parameter>();
+                    setups = new Dictionary<string, List<object>>();
                 }
             }
             private Queue<Effect> effects = new Queue<Effect>();
@@ -77,6 +80,16 @@ namespace Dope.DDXX.Utility {
             }
             public void AddVector3Parameter(string name, Vector3 value) {
                 AddParameter(name, new Parameter(name, ParameterType.Vector3, value));
+            }
+            public void AddColorParameter(string name, Color value) {
+                AddParameter(name, new Parameter(name, ParameterType.Color, value));
+            }
+            public void AddSetupCall(string name, List<object> parameters) {
+                if (lastEffect != null) {
+                    lastEffect.setups.Add(name, parameters);
+                } else {
+                    throw new InvalidOperationException("Adding parameters before any effects");
+                }
             }
             #endregion
 
@@ -206,6 +219,13 @@ namespace Dope.DDXX.Utility {
                 else
                     throw new InvalidOperationException("No current transition");
             }
+
+            public Dictionary<string, List<object>> GetSetups() {
+                if (currentEffect != null)
+                    return currentEffect.setups;
+                else
+                    throw new InvalidOperationException("No current effect");
+            }
         }
         #endregion
 
@@ -252,6 +272,12 @@ namespace Dope.DDXX.Utility {
 <Parameter name=""fooparam"" int=""3"" />
 <Parameter name=""barparam"" float=""4.3"" />
 <Parameter name=""strparam"" string=""foostr"" />
+<SetupCall name=""AddTextureLayer"">
+<Parameter string=""BlurBackground.jpg""/>
+<Parameter float=""35.0""/>
+<Parameter Color=""Beige""/>
+<Parameter int=""2""/>
+</SetupCall>
 </Effect>
 <Effect name=""bareffect"" endTime=""8.5"">
 <Parameter name=""goo"" string=""string value"" />
@@ -267,6 +293,7 @@ namespace Dope.DDXX.Utility {
 ";
         [SetUp]
         public void SetUp() {
+            FileUtility.SetLoadPaths("");
             effectBuilder = new BuilderStub();
         }
 
@@ -381,6 +408,23 @@ namespace Dope.DDXX.Utility {
             Assert.IsTrue(parameters.TryGetValue("vecparam", out parameter));
             Assert.AreEqual(ParameterType.Vector3, parameter.Type);
             Assert.AreEqual(new Vector3(5.4f, 4.3f, 3.2f), parameter.Vector3Value);
+        }
+
+        [Test]
+        public void TestSetupCall()
+        {
+            ReadXML(twoEffectContents);
+            effectBuilder.NextEffect();
+            Assert.AreEqual("fooeffect", effectBuilder.EffectName);
+            Dictionary<string, List<object>> setups = effectBuilder.GetSetups();
+            Assert.AreEqual(1, setups.Count);
+            List<object> list;
+            Assert.IsTrue(setups.TryGetValue("AddTextureLayer", out list));
+            Assert.AreEqual(4, list.Count);
+            Assert.AreEqual("BlurBackground.jpg", list[0]);
+            Assert.AreEqual(35.0f, list[1]);
+            Assert.AreEqual(Color.Beige, list[2]);
+            Assert.AreEqual(2, list[3]);
         }
 
         [Test]
