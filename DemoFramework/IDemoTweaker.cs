@@ -11,5 +11,7 @@ namespace Dope.DDXX.DemoFramework
         void Initialize(IDemoRegistrator registrator);
         void Draw();
         void HandleInput(IInputDriver inputDriver);
+        object IdentifierToChild();
+        void IdentifierFromParent(object id);
     }
 }

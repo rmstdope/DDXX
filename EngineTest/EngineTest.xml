@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Effects>
-	<Effect name="SpinningBackgroundEffect" track="0" startTime="0.0" endTime="10.0">
+	<Effect name="SpinningBackgroundEffect" track="0" startTime="0.0" endTime="20.0">
 		<SetupCall name="AddTextureLayer">
 			<Parameter string="BlurBackground.jpg"/>
 			<Parameter float="35.0"/>
@@ -14,8 +14,36 @@
 			<Parameter float="0.2"/>
 		</SetupCall>
 	</Effect>
-	<Effect name="TestEffect" track="0" startTime="0.0" endTime="10.0">
+	<Effect name="TestEffect" track="0" startTime="25.0" endTime="30.0">
 	</Effect>
-	<!--name="MonochromePostEffect" track="0" startTime="0.0" endTime="10.0">
-	</PostEffect-->
+	<PostEffect name="MonochromePostEffect" track="0" startTime="0.0" endTime="2.0">
+	</PostEffect>
+	<PostEffect name="MonochromePostEffect" track="0" startTime="0.1" endTime="40.0">
+	</PostEffect>
+	<PostEffect name="MonochromePostEffect" track="0" startTime="0.2" endTime="40.0">
+	</PostEffect>
+	<PostEffect name="MonochromePostEffect" track="0" startTime="0.3" endTime="40.0">
+	</PostEffect>
+	<PostEffect name="MonochromePostEffect" track="0" startTime="0.4" endTime="40.0">
+	</PostEffect>
+	<PostEffect name="MonochromePostEffect" track="0" startTime="0.5" endTime="40.0">
+	</PostEffect>
+	<PostEffect name="MonochromePostEffect" track="0" startTime="0.6" endTime="40.0">
+	</PostEffect>
+	<PostEffect name="MonochromePostEffect" track="0" startTime="0.7" endTime="40.0">
+	</PostEffect>
+	<PostEffect name="MonochromePostEffect" track="0" startTime="0.8" endTime="40.0">
+	</PostEffect>
+	<PostEffect name="MonochromePostEffect" track="0" startTime="0.9" endTime="40.0">
+	</PostEffect>
+	<PostEffect name="MonochromePostEffect" track="0" startTime="1.0" endTime="40.0">
+	</PostEffect>
+	<PostEffect name="MonochromePostEffect" track="0" startTime="1.1" endTime="40.0">
+	</PostEffect>
+	<PostEffect name="MonochromePostEffect" track="0" startTime="1.2" endTime="40.0">
+	</PostEffect>
+	<PostEffect name="MonochromePostEffect" track="0" startTime="1.3" endTime="40.0">
+	</PostEffect>
+	<PostEffect name="MonochromePostEffect" track="2" startTime="1.4" endTime="40.0">
+	</PostEffect>
 </Effects>

@@ -6,11 +6,12 @@ using Dope.DDXX.SceneGraph;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public abstract class BaseDemoPostEffect : IDemoPostEffect
+    public abstract class BaseDemoPostEffect : TweakableContainer, IDemoPostEffect
     {
         private float startTime;
         private float endTime;
         private IPostProcessor postProcessor;
+        List<ITweakable> tweakables;
 
         protected IPostProcessor PostProcessor
         {
@@ -21,6 +22,7 @@ namespace Dope.DDXX.DemoFramework
         {
             StartTime = startTime;
             EndTime = endTime;
+            tweakables = new List<ITweakable>();
         }
 
         #region IDemoPostEffect Members
@@ -50,6 +52,20 @@ namespace Dope.DDXX.DemoFramework
         public virtual void Initialize(IPostProcessor postProcessor)
         {
             this.postProcessor = postProcessor;
+        }
+
+        #endregion
+
+        #region ITweakableContainer Members
+
+        public List<ITweakable> Tweakables
+        {
+            get { return tweakables; }
+        }
+
+        public void Add(ITweakable tweakable)
+        {
+            tweakables.Add(tweakable);
         }
 
         #endregion

@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace Dope.DDXX.Utility
 {
-    public enum ParameterType
+    public enum TweakableType
     {
         Unknown = 0, Integer, Float, String, Vector3, Color
     }
@@ -17,7 +17,7 @@ namespace Dope.DDXX.Utility
     {
         public string name;
         public object value;
-        public ParameterType Type;
+        public TweakableType Type;
 
         #region Value access
         public int IntValue
@@ -43,7 +43,7 @@ namespace Dope.DDXX.Utility
         #endregion
 
         #region ctors
-        public Parameter(string name, ParameterType type, object value)
+        public Parameter(string name, TweakableType type, object value)
         {
             this.name = name;
             this.Type = type;
@@ -217,7 +217,7 @@ namespace Dope.DDXX.Utility
         private void ReadParameter()
         {
             bool keepOn = reader.MoveToFirstAttribute();
-            ParameterType parameterType = ParameterType.Unknown;
+            TweakableType parameterType = TweakableType.Unknown;
             string parameterName = null;
             string parameterValue = "";
             while (keepOn)
@@ -231,7 +231,7 @@ namespace Dope.DDXX.Utility
                         break;
                     default:
                         parameterType = GetParameterType(name);
-                        if (parameterType != ParameterType.Unknown)
+                        if (parameterType != TweakableType.Unknown)
                         {
                             parameterValue = value;
                         }
@@ -239,7 +239,7 @@ namespace Dope.DDXX.Utility
                 }
                 keepOn = reader.MoveToNextAttribute();
             }
-            if (parameterName != null && parameterType != ParameterType.Unknown)
+            if (parameterName != null && parameterType != TweakableType.Unknown)
             {
                 AddParameter(parameterName, parameterType, parameterValue);
             }
@@ -270,21 +270,21 @@ namespace Dope.DDXX.Utility
                         throw new DDXXException("Failed to parse parameters for setup call.");
                     switch (GetParameterType(reader.Name))
                     {
-                        case ParameterType.Float:
+                        case TweakableType.Float:
                             parameters.Add(ParseFloat(reader.Value));
                             break;
-                        case ParameterType.Integer:
+                        case TweakableType.Integer:
                             parameters.Add(int.Parse(reader.Value));
                             break;
-                        case ParameterType.String:
+                        case TweakableType.String:
                             parameters.Add(reader.Value);
                             break;
-                        case ParameterType.Vector3:
+                        case TweakableType.Vector3:
                             string[] s = reader.Value.Split(new char[] { ',' }, 3);
                             Vector3 v = new Vector3(ParseFloat(s[0]), ParseFloat(s[1]), ParseFloat(s[2]));
                             parameters.Add(v);
                             break;
-                        case ParameterType.Color:
+                        case TweakableType.Color:
                             parameters.Add(Color.FromName(reader.Value));
                             break;
                         default:
@@ -299,25 +299,25 @@ namespace Dope.DDXX.Utility
             effectBuilder.AddSetupCall(name, parameters);
         }
 
-        private void AddParameter(string parameterName, ParameterType parameterType, string parameterValue)
+        private void AddParameter(string parameterName, TweakableType parameterType, string parameterValue)
         {
             switch (parameterType)
             {
-                case ParameterType.Float:
+                case TweakableType.Float:
                     effectBuilder.AddFloatParameter(parameterName, ParseFloat(parameterValue));
                     break;
-                case ParameterType.Integer:
+                case TweakableType.Integer:
                     effectBuilder.AddIntParameter(parameterName, int.Parse(parameterValue));
                     break;
-                case ParameterType.String:
+                case TweakableType.String:
                     effectBuilder.AddStringParameter(parameterName, parameterValue);
                     break;
-                case ParameterType.Vector3:
+                case TweakableType.Vector3:
                     string[] s = parameterValue.Split(new char[] { ',' }, 3);
                     Vector3 v = new Vector3(ParseFloat(s[0]), ParseFloat(s[1]), ParseFloat(s[2]));
                     effectBuilder.AddVector3Parameter(parameterName, v);
                     break;
-                case ParameterType.Color:
+                case TweakableType.Color:
                     effectBuilder.AddColorParameter(parameterName, Color.FromName(parameterValue));
                     break;
                 default:
@@ -330,16 +330,16 @@ namespace Dope.DDXX.Utility
             return float.Parse(s, System.Globalization.NumberFormatInfo.InvariantInfo);
         }
 
-        private ParameterType GetParameterType(string name)
+        private TweakableType GetParameterType(string name)
         {
             switch (name)
             {
-                case "int": return ParameterType.Integer;
-                case "float": return ParameterType.Float;
-                case "string": return ParameterType.String;
-                case "Vector3": return ParameterType.Vector3;
-                case "Color": return ParameterType.Color;
-                default: return ParameterType.Unknown;
+                case "int": return TweakableType.Integer;
+                case "float": return TweakableType.Float;
+                case "string": return TweakableType.String;
+                case "Vector3": return TweakableType.Vector3;
+                case "Color": return TweakableType.Color;
+                default: return TweakableType.Unknown;
             }
         }
 

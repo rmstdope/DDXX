@@ -166,7 +166,7 @@ namespace Dope.DDXX.DemoFramework
                     case "TestDraw":
                         // mainWindow
                         // 0 titleWindow
-                        // 1 timeWindow
+                        // 1 tweakableWindow
                         //   0 timelineWindow
                         //     0..11 multiple controls (12)
                         Assert.AreEqual(1, mainBox.Children[1].Children.Count);
@@ -175,7 +175,7 @@ namespace Dope.DDXX.DemoFramework
                     case "TestDraw5Tracks1":
                         // mainWindow
                         // 0 titleWindow
-                        // 1 timeWindow
+                        // 1 tweakableWindow
                         //   0 timelineWindow
                         //     0..11 multiple controls (12)
                         //     12 track 0 (selected)
@@ -196,7 +196,7 @@ namespace Dope.DDXX.DemoFramework
                     case "TestDraw5Tracks2":
                         // mainWindow
                         // 0 titleWindow
-                        // 1 timeWindow
+                        // 1 tweakableWindow
                         //   0 timelineWindow
                         //     0..11 multiple controls (12)
                         //     12 track 0
@@ -217,7 +217,7 @@ namespace Dope.DDXX.DemoFramework
                     case "TestDraw5Tracks3":
                         // mainWindow
                         // 0 titleWindow
-                        // 1 timeWindow
+                        // 1 tweakableWindow
                         //   0 timelineWindow
                         //     0..11 multiple controls (12)
                         //     12 track 2
@@ -238,7 +238,7 @@ namespace Dope.DDXX.DemoFramework
                     case "TestDrawEffects":
                         // mainWindow
                         // 0 titleWindow
-                        // 1 timeWindow
+                        // 1 tweakableWindow
                         //   0 timelineWindow
                         //     0..11 multiple controls (12)
                         //     12 track 0

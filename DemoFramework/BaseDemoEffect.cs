@@ -6,7 +6,7 @@ using Dope.DDXX.SceneGraph;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public abstract class BaseDemoEffect : IDemoEffect
+    public abstract class BaseDemoEffect : TweakableContainer, IDemoEffect
     {
         private float startTime;
         private float endTime;
@@ -14,11 +14,13 @@ namespace Dope.DDXX.DemoFramework
         private EffectFactory effectFactory;
         private ModelFactory meshFactory;
         private Scene scene;
+        List<ITweakable> tweakables;
 
         protected BaseDemoEffect(float startTime, float endTime)
         {
             StartTime = startTime;
             EndTime = endTime;
+            tweakables = new List<ITweakable>();
         }
 
         protected IDevice Device
@@ -41,7 +43,7 @@ namespace Dope.DDXX.DemoFramework
             get { return scene; }
         }
 
-        #region IEffect Members
+        #region IDemoEffect Members
 
         public float StartTime
         {
@@ -73,6 +75,20 @@ namespace Dope.DDXX.DemoFramework
             effectFactory = D3DDriver.EffectFactory;
             meshFactory = D3DDriver.ModelFactory;
             scene = new Scene();
+        }
+
+        #endregion
+
+        #region ITweakableContainer Members
+
+        public List<ITweakable> Tweakables
+        {
+            get { return tweakables; }
+        }
+
+        public void Add(ITweakable tweakable)
+        {
+            tweakables.Add(tweakable);
         }
 
         #endregion

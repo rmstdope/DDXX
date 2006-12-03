@@ -92,7 +92,7 @@ namespace Dope.DDXX.DemoFramework
         public DemoExecuter(IPostProcessor postProcessor)
         {
             this.postProcessor = postProcessor;
-            tweaker = new DemoTweakerMain(new IDemoTweaker[] { new DemoTweakerDemo(), new DemoTweakerTrack() });
+            tweaker = new DemoTweakerMain(new IDemoTweaker[] { new DemoTweakerDemo(), new DemoTweakerTrack() , new DemoTweakerEffect() });
         }
 
         private DemoEffectTypes effectTypes = new DemoEffectTypes();

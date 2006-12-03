@@ -16,7 +16,7 @@ namespace Dope.DDXX.DemoFramework
         string source = @"
 using Dope.DDXX.DemoFramework;
 using Microsoft.DirectX;
-public class FooEffect : IDemoEffect 
+public class FooEffect : TweakableContainer, IDemoEffect 
 {
   protected float start; protected float end;
   public FooEffect(float f1, float f2) { start = f1; end = f2;}
@@ -144,7 +144,7 @@ public class Dummy {}
         private Assembly SetupAssembly(string source)
         {
             CSharpCodeProvider provider = new CSharpCodeProvider();
-            //string windir = (string)Registry.GetValue("HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Windows", "Directory", "");
+            //string windir = (string)Registry.GetIntValue("HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Windows", "Directory", "");
             string[] sysdir = Environment.SystemDirectory.Split('\\');
             string assemblyDir = string.Join("\\", sysdir, 0, sysdir.Length - 1) + "\\assembly\\";
             AssemblyName[] referenced = Assembly.GetExecutingAssembly().GetReferencedAssemblies();

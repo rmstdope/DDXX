@@ -15,6 +15,9 @@ namespace Dope.DDXX.DemoFramework
         private int currentTweaker;
         private IDemoTweaker[] tweakers;
 
+        public object IdentifierToChild() { return 0; }
+        public void IdentifierFromParent(object id) { }
+
         public bool Enabled
         {
             get { return currentTweaker > -1; }
@@ -42,7 +45,11 @@ namespace Dope.DDXX.DemoFramework
             if (inputDriver.KeyPressedNoRepeat(Key.Return))
             {
                 if (currentTweaker < tweakers.Length - 1)
+                {
+                    if (currentTweaker != -1)
+                        tweakers[currentTweaker + 1].IdentifierFromParent(tweakers[currentTweaker].IdentifierToChild());
                     currentTweaker++;
+                }
                 return;
             }
 

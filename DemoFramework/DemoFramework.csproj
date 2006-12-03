@@ -54,6 +54,8 @@
     <Compile Include="DemoExecuterTest.cs" />
     <Compile Include="DemoTweakerDemo.cs" />
     <Compile Include="DemoTweakerDemoTest.cs" />
+    <Compile Include="DemoTweakerEffect.cs" />
+    <Compile Include="DemoTweakerEffectTest.cs" />
     <Compile Include="DemoTweakerMain.cs" />
     <Compile Include="DemoTweakerMainTest.cs" />
     <Compile Include="DemoTweakerTrack.cs" />
@@ -69,6 +71,8 @@
     <Compile Include="IDemoTweaker.cs" />
     <Compile Include="IPostProcessor.cs" />
     <Compile Include="IRegisterable.cs" />
+    <Compile Include="ITweakable.cs" />
+    <Compile Include="ITweakableContainer.cs" />
     <Compile Include="IUserInterface.cs" />
     <Compile Include="LineControl.cs" />
     <Compile Include="PostProcessor.cs" />
@@ -90,6 +94,8 @@
     <Compile Include="TrackTest.cs" />
     <Compile Include="DemoXMLReader.cs" />
     <Compile Include="DemoXMLReaderTest.cs" />
+    <Compile Include="TweakableContainer.cs" />
+    <Compile Include="TweakableContainerTest.cs" />
     <Compile Include="UserInterface.cs" />
     <Compile Include="UserInterfaceTest.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

@@ -4,44 +4,58 @@ using System.Text;
 using NUnit.Framework;
 using NMock2;
 using Dope.DDXX.Graphics;
-using Microsoft.DirectX.Direct3D;
+using Dope.DDXX.Utility;
 using System.IO;
 using System.Drawing;
-using Dope.DDXX.Utility;
+using Microsoft.DirectX;
 
 namespace Dope.DDXX.DemoFramework
 {
     [TestFixture]
-    public class DemoTweakerTrackTest : D3DMockTest
+    public class DemoTweakerEffectTest : D3DMockTest
     {
-        private DemoTweakerTrack tweaker;
+        private class TestClass : TweakableContainer
+        {
+            int intType;
+            public int IntType
+            {
+                get { return intType; }
+                set { intType = value; }
+            }
+
+            float floatType;
+            public float FloatType
+            {
+                get { return floatType; }
+                set { floatType = value; }
+            }
+
+            Vector3 vector3Type;
+            public Vector3 Vector3Type
+            {
+                get { return vector3Type; }
+                set { vector3Type = value; }
+            }
+
+            string stringType;
+            public string StringType
+            {
+                get { return stringType; }
+                set { stringType = value; }
+            }
+
+            Color colorType;
+            public Color ColorType
+            {
+                get { return colorType; }
+                set { colorType = value; }
+            }
+        }
+
+        private DemoTweakerEffect tweaker;
         private IUserInterface userInterface;
         private IDemoRegistrator registrator;
-        private Track track;
-
-        protected IDemoEffect CreateMockEffect(float start, float end)
-        {
-            IDemoEffect e = mockery.NewMock<IDemoEffect>();
-            Stub.On(e).
-                GetProperty("StartTime").
-                Will(Return.Value(start));
-            Stub.On(e).
-                GetProperty("EndTime").
-                Will(Return.Value(end));
-            return e;
-        }
-
-        protected IDemoPostEffect CreateMockPostEffect(float start, float end)
-        {
-            IDemoPostEffect e = mockery.NewMock<IDemoPostEffect>();
-            Stub.On(e).
-                GetProperty("StartTime").
-                Will(Return.Value(start));
-            Stub.On(e).
-                GetProperty("EndTime").
-                Will(Return.Value(end));
-            return e;
-        }
+        private TestClass tester;
 
         [SetUp]
         public override void SetUp()
@@ -52,15 +66,14 @@ namespace Dope.DDXX.DemoFramework
             registrator = mockery.NewMock<IDemoRegistrator>();
             Stub.On(registrator).GetProperty("StartTime").Will(Return.Value(0.5f));
 
-            tweaker = new DemoTweakerTrack();
+            tester = new TestClass();
+            tweaker = new DemoTweakerEffect();
+            tweaker.IdentifierFromParent(tester);
             tweaker.UserInterface = userInterface;
 
             Time.Initialize();
 
             SetupD3DDriver();
-
-            track = new Track();
-            tweaker.IdentifierFromParent(track);
         }
 
         [TearDown]
@@ -77,92 +90,72 @@ namespace Dope.DDXX.DemoFramework
             tweaker.Initialize(registrator);
         }
 
-        private void InitializeEffects(int numEffects, int numPostEffects)
-        {
-            for (int i = 0; i < numEffects; i++)
-                track.Register(CreateMockEffect(0.0f, 10.0f));
-            for (int i = 0; i < numPostEffects; i++)
-                track.Register(CreateMockPostEffect(0.0f, 10.0f));
-            Expect.Once.On(userInterface).
-                Method("Initialize");
-            tweaker.Initialize(registrator);
-        }
-
-        [Test]
-        public void TestLeaveForChild()
-        {
-            InitializeEffects(2, 2);
-            Assert.AreSame(track.Effects[0], tweaker.IdentifierToChild());
-            tweaker.KeyDown();
-            Assert.AreSame(track.Effects[1], tweaker.IdentifierToChild());
-            tweaker.KeyDown();
-            Assert.AreSame(track.PostEffects[0], tweaker.IdentifierToChild());
-            tweaker.KeyDown();
-            Assert.AreSame(track.PostEffects[1], tweaker.IdentifierToChild());
-        }
-
         [Test]
         public void TestKeyDown()
         {
-            InitializeEffects(2, 1);
-            Assert.AreEqual(0, tweaker.CurrentEffect);
+            Assert.AreEqual(0, tweaker.CurrentVariable);
             tweaker.KeyDown();
-            Assert.AreEqual(1, tweaker.CurrentEffect);
+            Assert.AreEqual(1, tweaker.CurrentVariable);
             tweaker.KeyDown();
-            Assert.AreEqual(2, tweaker.CurrentEffect);
+            Assert.AreEqual(2, tweaker.CurrentVariable);
             tweaker.KeyDown();
-            Assert.AreEqual(2, tweaker.CurrentEffect);
+            Assert.AreEqual(3, tweaker.CurrentVariable);
+            tweaker.KeyDown();
+            Assert.AreEqual(4, tweaker.CurrentVariable);
+            tweaker.KeyDown();
+            Assert.AreEqual(4, tweaker.CurrentVariable);
         }
 
         [Test]
         public void TestKeyUp()
         {
             TestKeyDown();
-            Assert.AreEqual(2, tweaker.CurrentEffect);
+            Assert.AreEqual(4, tweaker.CurrentVariable);
             tweaker.KeyUp();
-            Assert.AreEqual(1, tweaker.CurrentEffect);
+            Assert.AreEqual(3, tweaker.CurrentVariable);
             tweaker.KeyUp();
-            Assert.AreEqual(0, tweaker.CurrentEffect);
+            Assert.AreEqual(2, tweaker.CurrentVariable);
             tweaker.KeyUp();
-            Assert.AreEqual(0, tweaker.CurrentEffect);
+            Assert.AreEqual(1, tweaker.CurrentVariable);
+            tweaker.KeyUp();
+            Assert.AreEqual(0, tweaker.CurrentVariable);
+            tweaker.KeyUp();
+            Assert.AreEqual(0, tweaker.CurrentVariable);
         }
 
         [Test]
-        public void TestTrackChange()
+        public void TestContainerChange()
         {
-            // If we change track, effect number should be reset
-            InitializeEffects(1, 1);
+            // If we change container, effect number should be reset
             tweaker.KeyDown();
-            Assert.AreEqual(1, tweaker.CurrentEffect);
-            tweaker.CurrentTrack = track;
-            Assert.AreEqual(1, tweaker.CurrentEffect);
-            tweaker.CurrentTrack = new Track();
-            Assert.AreEqual(0, tweaker.CurrentEffect);
+            Assert.AreEqual(1, tweaker.CurrentVariable);
+            tweaker.CurrentContainer = tester;
+            Assert.AreEqual(1, tweaker.CurrentVariable);
+            tweaker.CurrentContainer = new TestClass();
+            Assert.AreEqual(0, tweaker.CurrentVariable);
         }
 
         [Test]
         public void TestDraw()
         {
             TestInitialize();
+            tweaker.CurrentContainer = new TweakableContainer();
 
             ExpectDraw("TestDraw");
             tweaker.Draw();
         }
 
         [Test]
-        public void TestDraw13Effects()
+        public void TestDraw5Variables()
         {
-            track.Register(CreateMockEffect(-10.0f, -5.0f));
-            track.Register(CreateMockPostEffect(100.0f, 110.0f));
-            InitializeEffects(5, 6);
-
-            ExpectDraw("TestDraw13Effects1");
+            TestInitialize();
+            ExpectDraw("TestDraw5Variables1");
             tweaker.Draw();
 
-            for (int i = 0; i < 12; i++)
-                tweaker.KeyDown();
-            ExpectDraw("TestDraw13Effects2");
-            tweaker.Draw();
+            //for (int i = 0; i < 12; i++)
+            //    tweaker.KeyDown();
+            //ExpectDraw("TestDraw13Effects2");
+            //tweaker.Draw();
         }
 
         class ControlMatcher : Matcher
@@ -189,12 +182,9 @@ namespace Dope.DDXX.DemoFramework
                         // mainWindow
                         // 0 titleWindow
                         // 1 tweakableWindow
-                        //   0 timelineWindow
-                        //     0..11 multiple controls (12)
-                        Assert.AreEqual(1, mainBox.Children[1].Children.Count);
-                        Assert.AreEqual(12, mainBox.Children[1].Children[0].Children.Count);
+                        Assert.AreEqual(0, mainBox.Children[1].Children.Count);
                         break;
-                    case "TestDraw13Effects1":
+                    case "TestDraw5Variables1":
                         // mainWindow
                         // 0 titleWindow
                         // 1 tweakableWindow
@@ -205,17 +195,17 @@ namespace Dope.DDXX.DemoFramework
                         //     ...
                         //     24 effect 12
                         //       0 "MockObject-->"
-                        Assert.AreEqual(1, mainBox.Children[1].Children.Count);
-                        Assert.AreEqual(12 + 13, mainBox.Children[1].Children[0].Children.Count);
-                        Assert.AreEqual("<--MockObject", ((TextControl)mainBox.Children[1].Children[0].Children[12].Children[0]).Text);
-                        Assert.AreEqual(Color.Crimson, ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Color);
-                        for (int i = 0; i < 11; i++)
-                        {
-                            Assert.AreEqual("MockObject", ((TextControl)mainBox.Children[1].Children[0].Children[13 + i].Children[0]).Text);
-                            Assert.AreEqual(Color.DarkBlue, ((BoxControl)mainBox.Children[1].Children[0].Children[13 + i]).Color);
-                        }
-                        Assert.AreEqual("MockObject-->", ((TextControl)mainBox.Children[1].Children[0].Children[24].Children[0]).Text);
-                        Assert.AreEqual(Color.DarkBlue, ((BoxControl)mainBox.Children[1].Children[0].Children[24]).Color);
+                        Assert.AreEqual(0, mainBox.Children[1].Children.Count);
+                        //Assert.AreEqual(12 + 13, mainBox.Children[1].Children[0].Children.Count);
+                        //Assert.AreEqual("<--MockObject", ((TextControl)mainBox.Children[1].Children[0].Children[12].Children[0]).Text);
+                        //Assert.AreEqual(Color.Crimson, ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Color);
+                        //for (int i = 0; i < 11; i++)
+                        //{
+                        //    Assert.AreEqual("MockObject", ((TextControl)mainBox.Children[1].Children[0].Children[13 + i].Children[0]).Text);
+                        //    Assert.AreEqual(Color.DarkBlue, ((BoxControl)mainBox.Children[1].Children[0].Children[13 + i]).Color);
+                        //}
+                        //Assert.AreEqual("MockObject-->", ((TextControl)mainBox.Children[1].Children[0].Children[24].Children[0]).Text);
+                        //Assert.AreEqual(Color.DarkBlue, ((BoxControl)mainBox.Children[1].Children[0].Children[24]).Color);
                         break;
                     case "TestDraw13Effects2":
                         // mainWindow
@@ -258,6 +248,5 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(device).
                 Method("EndScene");
         }
-
     }
 }

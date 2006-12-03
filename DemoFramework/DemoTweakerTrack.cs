@@ -28,18 +28,44 @@ namespace Dope.DDXX.DemoFramework
         private Color trackColor = Color.DarkBlue;
 
         private int currentEffect;
-        private int currentTrack;
+        private Track currentTrack;
         private float startTime;
         private float timeScale;
+
+        private const int NumVisableEffects = 13;
+
+        public object IdentifierToChild() 
+        { 
+            if (currentEffect >= currentTrack.Effects.Length)
+                return currentTrack.PostEffects[currentEffect - currentTrack.Effects.Length];
+            else
+                return currentTrack.Effects[currentEffect];
+        }
+        public void IdentifierFromParent(object id) 
+        { 
+            if (id.GetType() != typeof(Track))
+                throw new DDXXException("Incorrect tweaker type received from parent.");
+            CurrentTrack = (Track)id; 
+        }
 
         public bool Quit
         {
             get { return false; }
         }
 
-        public int CurrentTrack
+        public Track CurrentTrack
         {
-            set { currentTrack = value; }
+            set 
+            {
+                if (value != currentTrack)
+                    currentEffect = 0;
+                currentTrack = value; 
+            }
+        }
+
+        public int CurrentEffect
+        {
+            get { return currentEffect; }
         }
 
         public IUserInterface UserInterface
@@ -65,8 +91,7 @@ namespace Dope.DDXX.DemoFramework
         public void KeyDown()
         {
             currentEffect++;
-            if (currentEffect == registrator.Tracks[currentTrack].Effects.Length + 
-                registrator.Tracks[currentTrack].PostEffects.Length)
+            if (currentEffect == currentTrack.Effects.Length + currentTrack.PostEffects.Length)
                 currentEffect--;
         }
 
@@ -121,59 +146,88 @@ namespace Dope.DDXX.DemoFramework
         private void DrawEffects(BoxControl timelineWindow)
         {
             IRegisterable[] allEffects = GetEffectsAndPostEffects(currentTrack);
-            Color color;
+            Color boxColor;
+            Color textColor;
             float y = 0.05f;
-            int startEffect = 0;// GetStartTrack();
-            for (int i = startEffect; i < startEffect + 3; i++)
+            int startEffect = GetStartEffect(allEffects.Length);
+            for (int i = startEffect; i < startEffect + NumVisableEffects; i++)
             {
-                if (i >= registrator.Tracks.Count)
+                if (i >= allEffects.Length)
                     continue;
-                if (i == currentEffect)
-                    color = selectedTrackColor;
-                else
-                    color = trackColor;
-                BoxControl trackWindow = new BoxControl(new RectangleF(0.0f, y, 1.0f, 0.25f), alpha, color, timelineWindow);
-                new TextControl(allEffects[i].GetType().Name, new RectangleF(0.0f, 0.0f, 1.0f, 1.0f), DrawTextFormat.Top | DrawTextFormat.Left, textAlpha, Color.White, trackWindow);
-                y += 0.35f;
-                //DrawEffectsInTrack(i, trackWindow);
-
-            }
-        }
-
-        //private int GetStartTrack()
-        //{
-        //    int startTrack = currentTrack - 1;
-        //    if (currentTrack == registrator.Tracks.Count - 1)
-        //        startTrack--;
-        //    if (startTrack < 0)
-        //        startTrack = 0;
-        //    return startTrack;
-        //}
-
-        private void DrawEffectsInTrack(int track, BoxControl trackWindow)
-        {
-            IRegisterable[] allEffects = GetEffectsAndPostEffects(track);
-            float ey = 0.24f;
-            foreach (IRegisterable effect in allEffects)
-            {
-                float ex1 = (effect.StartTime - startTime) / timeScale;
+                GetColors(i, out boxColor, out textColor);
+                float ex1 = (allEffects[i].StartTime - startTime) / timeScale;
                 if (ex1 < 0.0f)
                     ex1 = 0.0f;
-                float ex2 = (effect.EndTime - startTime) / timeScale;
+                float ex2 = (allEffects[i].EndTime - startTime) / timeScale;
                 if (ex2 > 1.0f)
                     ex2 = 1.0f;
-                new TextControl(effect.GetType().Name, new PointF(ex1, ey), DrawTextFormat.Bottom | DrawTextFormat.Left, alpha, Color.SkyBlue, trackWindow);
-                new LineControl(new RectangleF(ex1, ey, ex2 - ex1, 0.0f), alpha, Color.SkyBlue, trackWindow);
-                ey += 0.14f;
-                if (ey > 1.0f)
-                    ey = 0.2f;
+                if (ex1 < 1.0f && ex2 > 0.0f)
+                {
+                    BoxControl trackWindow = new BoxControl(new RectangleF(ex1, y, ex2 - ex1, 0.05f), alpha, boxColor, timelineWindow);
+                    new TextControl(allEffects[i].GetType().Name, new RectangleF(0.0f, 0.0f, 1.0f, 1.0f), DrawTextFormat.Center | DrawTextFormat.VerticalCenter, textAlpha, textColor, trackWindow);
+                }
+                else if (ex1 >= 1.0f)
+                {
+                    BoxControl trackWindow = new BoxControl(new RectangleF(0.0f, y, 1.0f, 0.05f), 0.0f, boxColor, timelineWindow);
+                    new TextControl(allEffects[i].GetType().Name + "-->", new RectangleF(0.0f, 0.0f, 1.0f, 1.0f), DrawTextFormat.Right | DrawTextFormat.VerticalCenter, textAlpha, textColor, trackWindow);
+                }
+                else
+                {
+                    BoxControl trackWindow = new BoxControl(new RectangleF(0.0f, y, 1.0f, 0.05f), 0.0f, boxColor, timelineWindow);
+                    new TextControl("<--" + allEffects[i].GetType().Name, new RectangleF(0.0f, 0.0f, 1.0f, 1.0f), DrawTextFormat.Left | DrawTextFormat.VerticalCenter, textAlpha, textColor, trackWindow);
+                }
+                y += 0.075f;
             }
         }
 
-        private IRegisterable[] GetEffectsAndPostEffects(int track)
+        private void GetColors(int i, out Color boxColor, out Color textColor)
         {
-            IRegisterable[] effects = registrator.Tracks[track].GetEffects(startTime, startTime + timeScale);
-            IRegisterable[] postEffects = registrator.Tracks[track].GetPostEffects(startTime, startTime + timeScale);
+            if (i == currentEffect)
+            {
+                boxColor = selectedTrackColor;
+                textColor = Color.White;
+            }
+            else
+            {
+                boxColor = trackColor;
+                textColor = Color.Gray;
+            }
+        }
+
+        private int GetStartEffect(int numEffects)
+        {
+            int startEffect = currentEffect - (NumVisableEffects / 2);
+            while (startEffect > 0 && startEffect + NumVisableEffects > numEffects)
+                startEffect--;
+            if (startEffect < 0)
+                startEffect = 0;
+            return startEffect;
+        }
+
+        //private void DrawEffectsInTrack(int track, BoxControl trackWindow)
+        //{
+        //    IRegisterable[] allEffects = GetEffectsAndPostEffects(track);
+        //    float ey = 0.24f;
+        //    foreach (IRegisterable effect in allEffects)
+        //    {
+        //        float ex1 = (effect.StartTime - startTime) / timeScale;
+        //        if (ex1 < 0.0f)
+        //            ex1 = 0.0f;
+        //        float ex2 = (effect.EndTime - startTime) / timeScale;
+        //        if (ex2 > 1.0f)
+        //            ex2 = 1.0f;
+        //        new TextControl(effect.GetTweakableType().Name, new PointF(ex1, ey), DrawTextFormat.Bottom | DrawTextFormat.Left, alpha, Color.SkyBlue, trackWindow);
+        //        new LineControl(new RectangleF(ex1, ey, ex2 - ex1, 0.0f), alpha, Color.SkyBlue, trackWindow);
+        //        ey += 0.14f;
+        //        if (ey > 1.0f)
+        //            ey = 0.2f;
+        //    }
+        //}
+
+        private IRegisterable[] GetEffectsAndPostEffects(Track track)
+        {
+            IRegisterable[] effects = track.Effects; //GetEffects(startTime, startTime + timeScale);
+            IRegisterable[] postEffects = track.PostEffects; //.GetPostEffects(startTime, startTime + timeScale);
             IRegisterable[] allEffects = new IRegisterable[effects.Length + postEffects.Length];
             Array.Copy(effects, allEffects, effects.Length);
             Array.Copy(postEffects, 0, allEffects, effects.Length, postEffects.Length);

@@ -134,7 +134,7 @@ namespace Dope.DDXX.DemoFramework
             this.groupBox2.Size = new System.Drawing.Size(264, 42);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "and let the color depth be...";
+            this.groupBox2.Text = "and let the boxColor depth be...";
             // 
             // bit16fp
             // 

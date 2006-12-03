@@ -70,19 +70,19 @@ namespace Dope.DDXX.Utility {
             }
 
             public void AddIntParameter(string name, int value) {
-                AddParameter(name, new Parameter(name, ParameterType.Integer, value));
+                AddParameter(name, new Parameter(name, TweakableType.Integer, value));
             }
             public void AddFloatParameter(string name, float value) {
-                AddParameter(name, new Parameter(name, ParameterType.Float, value));
+                AddParameter(name, new Parameter(name, TweakableType.Float, value));
             }
             public void AddStringParameter(string name, string value) {
-                AddParameter(name, new Parameter(name, ParameterType.String, value));
+                AddParameter(name, new Parameter(name, TweakableType.String, value));
             }
             public void AddVector3Parameter(string name, Vector3 value) {
-                AddParameter(name, new Parameter(name, ParameterType.Vector3, value));
+                AddParameter(name, new Parameter(name, TweakableType.Vector3, value));
             }
             public void AddColorParameter(string name, Color value) {
-                AddParameter(name, new Parameter(name, ParameterType.Color, value));
+                AddParameter(name, new Parameter(name, TweakableType.Color, value));
             }
             public void AddSetupCall(string name, List<object> parameters) {
                 if (lastEffect != null) {
@@ -331,7 +331,7 @@ namespace Dope.DDXX.Utility {
             Assert.AreEqual(1, parameters.Count);
             Parameter parameter;
             Assert.IsTrue(parameters.TryGetValue("glowparam", out parameter));
-            Assert.AreEqual(ParameterType.Float, parameter.Type);
+            Assert.AreEqual(TweakableType.Float, parameter.Type);
             Assert.AreEqual(5.4, parameter.FloatValue);
             Assert.IsFalse(effectBuilder.NextPostEffect());
         }
@@ -346,7 +346,7 @@ namespace Dope.DDXX.Utility {
             Assert.AreEqual(1, parameters.Count);
             Parameter parameter;
             Assert.IsTrue(parameters.TryGetValue("transparam", out parameter));
-            Assert.AreEqual(ParameterType.String, parameter.Type);
+            Assert.AreEqual(TweakableType.String, parameter.Type);
             Assert.AreEqual("tranny", parameter.StringValue);
             Assert.IsFalse(effectBuilder.NextTransition());
         }
@@ -386,13 +386,13 @@ namespace Dope.DDXX.Utility {
             Assert.AreEqual(3, parameters.Count);
             Parameter parameter;
             Assert.IsTrue(parameters.TryGetValue("fooparam", out parameter));
-            Assert.AreEqual(ParameterType.Integer, parameter.Type);
+            Assert.AreEqual(TweakableType.Integer, parameter.Type);
             Assert.AreEqual(3, parameter.IntValue);
             Assert.IsTrue(parameters.TryGetValue("barparam", out parameter));
-            Assert.AreEqual(ParameterType.Float, parameter.Type);
+            Assert.AreEqual(TweakableType.Float, parameter.Type);
             Assert.AreEqual(4.3f, parameter.FloatValue);
             Assert.IsTrue(parameters.TryGetValue("strparam", out parameter));
-            Assert.AreEqual(ParameterType.String, parameter.Type);
+            Assert.AreEqual(TweakableType.String, parameter.Type);
             Assert.AreEqual("foostr", parameter.StringValue);
         }
 
@@ -406,7 +406,7 @@ namespace Dope.DDXX.Utility {
             Assert.AreEqual(2, parameters.Count);
             Parameter parameter;
             Assert.IsTrue(parameters.TryGetValue("vecparam", out parameter));
-            Assert.AreEqual(ParameterType.Vector3, parameter.Type);
+            Assert.AreEqual(TweakableType.Vector3, parameter.Type);
             Assert.AreEqual(new Vector3(5.4f, 4.3f, 3.2f), parameter.Vector3Value);
         }
 

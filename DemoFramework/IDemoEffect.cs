@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public interface IDemoEffect : IRegisterable
+    public interface IDemoEffect : IRegisterable, ITweakableContainer
     {
         void Step();
 

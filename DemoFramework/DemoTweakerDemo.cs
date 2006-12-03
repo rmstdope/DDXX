@@ -31,6 +31,9 @@ namespace Dope.DDXX.DemoFramework
         private float startTime;
         private float timeScale;
 
+        public object IdentifierToChild() { return registrator.Tracks[currentTrack]; }
+        public void IdentifierFromParent(object id) { }
+
         public bool Quit
         {
             get { return false; }

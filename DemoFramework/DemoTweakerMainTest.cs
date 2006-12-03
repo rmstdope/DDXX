@@ -81,6 +81,7 @@ namespace Dope.DDXX.DemoFramework
             // First call once with Return pressed
             // Then call and see that context was changed
             ExpectKeypresses(1, -1);
+            ExpectTweakerTransition(-1, 0);
             tweaker.HandleInput(input);
             ExpectKeypresses(0, 0);
             ExpectSelectedTweaker(0);
@@ -89,6 +90,7 @@ namespace Dope.DDXX.DemoFramework
 
             // Now go to level 2
             ExpectKeypresses(1, -1);
+            ExpectTweakerTransition(0, 1);
             tweaker.HandleInput(input);
             ExpectKeypresses(0, 0);
             ExpectSelectedTweaker(1);
@@ -97,6 +99,7 @@ namespace Dope.DDXX.DemoFramework
 
             // Go back to 1
             ExpectKeypresses(0, 1);
+            ExpectTweakerTransition(1, 0);
             tweaker.HandleInput(input);
             ExpectKeypresses(0, 0);
             ExpectSelectedTweaker(0);
@@ -105,10 +108,24 @@ namespace Dope.DDXX.DemoFramework
 
             // And finally back to no selection
             ExpectKeypresses(0, 1);
+            ExpectTweakerTransition(0, -1);
             tweaker.HandleInput(input);
             ExpectKeypresses(0, 0);
             tweaker.HandleInput(input);
             tweaker.Draw();
+        }
+
+        private void ExpectTweakerTransition(int from, int to)
+        {
+            if (from != -1 && from < to)
+            {
+                Expect.Once.On(tweakers[from]).
+                    Method("IdentifierToChild").
+                    Will(Return.Value(to));
+                Expect.Once.On(tweakers[to]).
+                    Method("IdentifierFromParent").
+                    With(to);
+            }
         }
 
         private void ExpectSelectedTweaker(int index)
