@@ -71,7 +71,6 @@
     <Compile Include="IDemoTweaker.cs" />
     <Compile Include="IPostProcessor.cs" />
     <Compile Include="IRegisterable.cs" />
-    <Compile Include="ITweakable.cs" />
     <Compile Include="ITweakableContainer.cs" />
     <Compile Include="IUserInterface.cs" />
     <Compile Include="LineControl.cs" />

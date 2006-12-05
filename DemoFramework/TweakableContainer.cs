@@ -18,7 +18,7 @@ namespace Dope.DDXX.DemoFramework
             properties = GetProperties();
             steps = new List<float>();
             for (int i = 0; i < properties.Count; i++)
-                steps.Add(0.1f);
+                steps.Add(1.0f);
         }
 
         #region ITweakableContainer Members
@@ -58,7 +58,7 @@ namespace Dope.DDXX.DemoFramework
             return properties.Count;
         }
 
-        public float GetIntValue(int num)
+        public int GetIntValue(int num)
         {
             return (int)properties[num].GetGetMethod().Invoke(this, null);
         }

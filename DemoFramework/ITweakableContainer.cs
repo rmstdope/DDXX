@@ -12,7 +12,7 @@ namespace Dope.DDXX.DemoFramework
         TweakableType GetTweakableType(int num);
         int GetTweakableNumber(string name);
         int GetNumTweakables();
-        float GetIntValue(int num);
+        int GetIntValue(int num);
         float GetFloatValue(int num);
         Vector3 GetVector3Value(int num);
         string GetStringValue(int num);

@@ -19,6 +19,27 @@ namespace EngineTest
         private CameraNode camera;
         private ISprite sprite;
         private ITexture texture;
+        private Color colorValue = Color.FromArgb(100, 20, 30, 40);
+        private int intValue = 1;
+        private Vector3 vector3Value = new Vector3(1, 1, 1);
+
+        public Vector3 Vector3Value
+        {
+            get { return vector3Value; }
+            set { vector3Value = value; }
+        }
+
+        public int IntValue
+        {
+            get { return intValue; }
+            set { intValue = value; }
+        }
+
+        public Color ColorValue
+        {
+            get { return colorValue; }
+            set { colorValue = value; }
+        }
 
         public TestEffect(float startTime, float endTime) 
             : base(startTime, endTime)

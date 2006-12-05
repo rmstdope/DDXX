@@ -160,11 +160,11 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestStepSize()
         {
-            Assert.AreEqual(0.1f, container.GetStepSize((int)Types.INT_TYPE));
-            Assert.AreEqual(0.1f, container.GetStepSize((int)Types.FLOAT_TYPE));
-            Assert.AreEqual(0.1f, container.GetStepSize((int)Types.VECTOR3_TYPE));
-            Assert.AreEqual(0.1f, container.GetStepSize((int)Types.STRING_TYPE));
-            Assert.AreEqual(0.1f, container.GetStepSize((int)Types.COLOR_TYPE));
+            Assert.AreEqual(1.0f, container.GetStepSize((int)Types.INT_TYPE));
+            Assert.AreEqual(1.0f, container.GetStepSize((int)Types.FLOAT_TYPE));
+            Assert.AreEqual(1.0f, container.GetStepSize((int)Types.VECTOR3_TYPE));
+            Assert.AreEqual(1.0f, container.GetStepSize((int)Types.STRING_TYPE));
+            Assert.AreEqual(1.0f, container.GetStepSize((int)Types.COLOR_TYPE));
             container.SetStepSize((int)Types.FLOAT_TYPE, -0.1f);
             container.SetStepSize((int)Types.INT_TYPE, -0.2f);
             container.SetStepSize((int)Types.VECTOR3_TYPE, -0.3f);

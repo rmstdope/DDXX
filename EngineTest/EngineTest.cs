@@ -53,14 +53,20 @@ namespace EngineTest
             }
             catch (DDXXException exception)
             {
-                if (DialogResult.Yes == MessageBox.Show(exception.ToString(), "It seems you are having problems...", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2))
+                for (int i = 0; i < 4; i++)
                 {
-                    MessageBox.Show(exception.Callstack(), "Callstack"); 
+                    if (DialogResult.Yes == MessageBox.Show(exception.ToString(), "It seems you are having problems...", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2))
+                    {
+                        MessageBox.Show(exception.Callstack(), "Callstack");
+                    }
                 }
             }
             catch (Exception exception)
             {
-                MessageBox.Show(exception.ToString(), "Demo Error");
+                for (int i = 0; i < 4; i++)
+                {
+                    MessageBox.Show(exception.ToString(), "Demo Error");
+                }
             }
 
         }

@@ -37,12 +37,12 @@ namespace Dope.DDXX.DemoFramework
                 set { vector3Type = value; }
             }
 
-            string stringType;
-            public string StringType
-            {
-                get { return stringType; }
-                set { stringType = value; }
-            }
+            //string stringType;
+            //public string StringType
+            //{
+            //    get { return stringType; }
+            //    set { stringType = value; }
+            //}
 
             Color colorType;
             public Color ColorType
@@ -101,17 +101,13 @@ namespace Dope.DDXX.DemoFramework
             tweaker.KeyDown();
             Assert.AreEqual(3, tweaker.CurrentVariable);
             tweaker.KeyDown();
-            Assert.AreEqual(4, tweaker.CurrentVariable);
-            tweaker.KeyDown();
-            Assert.AreEqual(4, tweaker.CurrentVariable);
+            Assert.AreEqual(3, tweaker.CurrentVariable);
         }
 
         [Test]
         public void TestKeyUp()
         {
             TestKeyDown();
-            Assert.AreEqual(4, tweaker.CurrentVariable);
-            tweaker.KeyUp();
             Assert.AreEqual(3, tweaker.CurrentVariable);
             tweaker.KeyUp();
             Assert.AreEqual(2, tweaker.CurrentVariable);
@@ -152,10 +148,6 @@ namespace Dope.DDXX.DemoFramework
             ExpectDraw("TestDraw5Variables1");
             tweaker.Draw();
 
-            //for (int i = 0; i < 12; i++)
-            //    tweaker.KeyDown();
-            //ExpectDraw("TestDraw13Effects2");
-            //tweaker.Draw();
         }
 
         class ControlMatcher : Matcher
@@ -188,14 +180,23 @@ namespace Dope.DDXX.DemoFramework
                         // mainWindow
                         // 0 titleWindow
                         // 1 tweakableWindow
-                        //   0 timelineWindow
-                        //     0..11 multiple controls (12)
-                        //     12 effect 0 (selected)
-                        //       0 "<--MockObject"
-                        //     ...
-                        //     24 effect 12
-                        //       0 "MockObject-->"
-                        Assert.AreEqual(0, mainBox.Children[1].Children.Count);
+                        //   0 Selection box
+                        //   1 Float name
+                        //   2 Float value
+                        //   3 Integer name
+                        //   4 Integer value
+                        //   5 Vector3 name
+                        //   6 Vector3 value 1
+                        //   7 Vector3 value 2
+                        //   8 Vector3 value 3
+                        //   9 Color name
+                        //  10 Color value 1
+                        //  11 Color value 2
+                        //  12 Color value 3
+                        //  13 Color value 4
+                        //  14 Color value 5
+                        //  15 Color value 6
+                        Assert.AreEqual(16, mainBox.Children[1].Children.Count);
                         //Assert.AreEqual(12 + 13, mainBox.Children[1].Children[0].Children.Count);
                         //Assert.AreEqual("<--MockObject", ((TextControl)mainBox.Children[1].Children[0].Children[12].Children[0]).Text);
                         //Assert.AreEqual(Color.Crimson, ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Color);
