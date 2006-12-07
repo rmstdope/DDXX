@@ -10,7 +10,7 @@ namespace Dope.DDXX.DemoFramework
         private float startTime;
         private float endTime;
         private IDevice device;
-        private EffectFactory effectFactory;
+        private IEffectFactory effectFactory;
         private ModelFactory meshFactory;
 
         protected BaseDemoEffect(float startTime, float endTime)
@@ -24,7 +24,7 @@ namespace Dope.DDXX.DemoFramework
             get { return device; }
         }
 
-        protected EffectFactory EffectFactory
+        protected IEffectFactory EffectFactory
         {
             get { return effectFactory; }
         }

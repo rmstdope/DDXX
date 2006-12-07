@@ -72,8 +72,6 @@ namespace Dope.DDXX.DemoFramework
             tweaker.UserInterface = userInterface;
 
             Time.Initialize();
-
-            SetupD3DDriver();
         }
 
         [TearDown]

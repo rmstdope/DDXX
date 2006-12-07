@@ -25,7 +25,6 @@ namespace Dope.DDXX.ParticleSystems
         {
             base.SetUp();
 
-            SetupD3DDriver();
             SetupTime();
             
             floaterSystem = new FloaterSystem("FS");
@@ -59,8 +58,8 @@ namespace Dope.DDXX.ParticleSystems
         {
             ExpectEffect();
             ExpectVertexBuffer();
-            Expect.Once.On(factory).
-                Method("TextureFromFile").
+            Expect.Once.On(textureFactory).
+                Method("CreateFromFile").
                 WithAnyArguments().
                 Will(Return.Value(texture));
             floaterSystem.Initialize(100, 50.0f, "Texture");
@@ -130,8 +129,8 @@ namespace Dope.DDXX.ParticleSystems
 
         private void ExpectEffect()
         {
-            Expect.Once.On(factory).
-                Method("EffectFromFile").
+            Expect.Once.On(effectFactory).
+                Method("CreateFromFile").
                 WithAnyArguments().
                 Will(Return.Value(effect));
             Expect.Once.On(effect).

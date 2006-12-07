@@ -57,8 +57,6 @@ namespace Dope.DDXX.DemoFramework
 
             Time.Initialize();
 
-            SetupD3DDriver();
-
             track = new Track();
             tweaker.IdentifierFromParent(track);
         }

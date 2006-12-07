@@ -29,8 +29,6 @@ namespace Dope.DDXX.DemoFramework
             font = mockery.NewMock<IFont>();
 
             ui = new UserInterface();
-
-            SetupD3DDriver();
         }
 
         [TearDown]

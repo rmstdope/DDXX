@@ -6,7 +6,7 @@ using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.Graphics
 {
-    public class EffectFactory
+    public class EffectFactory : IEffectFactory
     {
         private class FileEntry
         {

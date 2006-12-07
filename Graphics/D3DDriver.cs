@@ -25,7 +25,7 @@ namespace Dope.DDXX.Graphics
     {
         private static D3DDriver instance;
         private static IGraphicsFactory factory = new D3DFactory();
-        private static EffectFactory effectFactory;
+        private static IEffectFactory effectFactory;
         private static ModelFactory meshFactory;
         private static ITextureFactory textureFactory;
 
@@ -51,7 +51,7 @@ namespace Dope.DDXX.Graphics
             set { factory = value; }
         }
 
-        public static EffectFactory EffectFactory
+        public static IEffectFactory EffectFactory
         {
             get { return effectFactory; }
             set { effectFactory = value; }

@@ -30,8 +30,6 @@ namespace Dope.DDXX.DemoFramework
             input = mockery.NewMock<IInputDriver>();
 
             Time.Initialize();
-
-            SetupD3DDriver();
         }
 
         [TearDown]

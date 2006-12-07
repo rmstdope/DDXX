@@ -57,8 +57,6 @@ namespace Dope.DDXX.DemoFramework
 
             Time.Initialize();
 
-            SetupD3DDriver();
-
             tracks = new List<Track>();
             Stub.On(registrator).
                 GetProperty("Tracks").

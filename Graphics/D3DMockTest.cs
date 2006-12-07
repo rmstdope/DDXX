@@ -21,7 +21,7 @@ namespace Dope.DDXX.Graphics
         protected IPrerequisits prerequisits;
         protected DisplayMode displayMode = new DisplayMode();
         protected PresentParameters presentParameters;
-        protected EffectFactory effectFactory;
+        protected IEffectFactory effectFactory;
         protected ITextureFactory textureFactory;
         protected IEffect effect;
 
@@ -39,6 +39,7 @@ namespace Dope.DDXX.Graphics
             mockery = new Mockery();
             factory = mockery.NewMock<IGraphicsFactory>();
             textureFactory = mockery.NewMock<ITextureFactory>();
+            effectFactory = mockery.NewMock<IEffectFactory>();
             device = mockery.NewMock<IDevice>();
             manager = mockery.NewMock<IManager>();
             texture = mockery.NewMock<ITexture>();
@@ -79,6 +80,7 @@ namespace Dope.DDXX.Graphics
 
             D3DDriver.Factory = factory;
             D3DDriver.TextureFactory = textureFactory;
+            D3DDriver.EffectFactory = effectFactory;
             D3DDriver.GetInstance().Device = device;
         }
 
