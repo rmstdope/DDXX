@@ -22,6 +22,7 @@ namespace EngineTest
         private Color colorValue = Color.FromArgb(100, 20, 30, 40);
         private int intValue = 1;
         private Vector3 vector3Value = new Vector3(1, 1, 1);
+        private Scene scene;
 
         public Vector3 Vector3Value
         {
@@ -44,6 +45,7 @@ namespace EngineTest
         public TestEffect(float startTime, float endTime) 
             : base(startTime, endTime)
         {
+            scene = new Scene();
         }
 
         public override void Initialize()
@@ -52,17 +54,17 @@ namespace EngineTest
 
             sprite = D3DDriver.Factory.CreateSprite(Device);
             texture = D3DDriver.TextureFactory.CreateFromFile("BlurBackground.jpg");
-            Scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f);
+            scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f);
 
             camera = new CameraNode("Camera");
             camera.WorldState.MoveForward(-400.0f);
             camera.WorldState.MoveRight(50.0f);
-            Scene.AddNode(camera);
-            Scene.ActiveCamera = camera;
+            scene.AddNode(camera);
+            scene.ActiveCamera = camera;
 
             ps = new FloaterSystem("System");
             ps.Initialize(50, 200.0f, null);//"BlurBackground.jpg");
-            Scene.AddNode(ps);
+            scene.AddNode(ps);
         }
 
         public override void StartTimeUpdated()
@@ -75,13 +77,13 @@ namespace EngineTest
 
         public override void Step()
         {
-            Scene.Step();
+            scene.Step();
         }
 
         public override void Render()
         {
-            IDevice device = D3DDriver.GetInstance().GetDevice();
-            Scene.Render();
+            IDevice device = D3DDriver.GetInstance().Device;
+            scene.Render();
             //int sWidth = device.PresentationParameters.BackBufferWidth;
             //int sHeight = device.PresentationParameters.BackBufferHeight;
             //int tWidth = texture.GetSurfaceLevel(0).Description.Width;

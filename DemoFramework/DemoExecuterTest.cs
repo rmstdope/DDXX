@@ -428,7 +428,6 @@ namespace Dope.DDXX.DemoFramework
             ExpectPostProcessorInitialize();
             ExpectTweakerInitialize();
             ExpectGraphicsInitialize();
-            ExpectBaseDemoEffects(2);
             string twoEffectContents =
 @"<Effects>
 <Effect name=""FooEffect"" track=""1"">

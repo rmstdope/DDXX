@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
-using Dope.DDXX.SceneGraph;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -13,7 +12,6 @@ namespace Dope.DDXX.DemoFramework
         private IDevice device;
         private EffectFactory effectFactory;
         private ModelFactory meshFactory;
-        private Scene scene;
 
         protected BaseDemoEffect(float startTime, float endTime)
         {
@@ -34,11 +32,6 @@ namespace Dope.DDXX.DemoFramework
         protected ModelFactory ModelFactory
         {
             get { return meshFactory; }
-        }
-
-        protected Scene Scene
-        {
-            get { return scene; }
         }
 
         #region IDemoEffect Members
@@ -69,10 +62,9 @@ namespace Dope.DDXX.DemoFramework
 
         public virtual void Initialize()
         {
-            device = D3DDriver.GetInstance().GetDevice();
+            device = D3DDriver.GetInstance().Device;
             effectFactory = D3DDriver.EffectFactory;
             meshFactory = D3DDriver.ModelFactory;
-            scene = new Scene();
         }
 
         #endregion

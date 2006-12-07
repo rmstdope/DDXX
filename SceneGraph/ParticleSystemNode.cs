@@ -56,7 +56,7 @@ namespace Dope.DDXX.SceneGraph
         protected void InitializeBase(int numParticles)
         {
             this.numParticles = numParticles;
-            this.device = D3DDriver.GetInstance().GetDevice();
+            this.device = D3DDriver.GetInstance().Device;
             particles = new List<Particle>();
 
             IEffect effect = D3DDriver.EffectFactory.CreateFromFile("ParticleSystem.fxo");

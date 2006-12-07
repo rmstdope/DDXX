@@ -26,6 +26,7 @@ namespace ShortPuzzle
         private CameraNode camera;
         private const string PREFIX = "";//"../../Data/";
         private const string EPREFIX = "";//"../../../Effects/";
+        private Scene scene;
 
         private class Cube
         {
@@ -182,13 +183,14 @@ namespace ShortPuzzle
         public MainEffect(float startTime, float endTime) 
             : base(startTime, endTime)
         {
+            scene = new Scene();
         }
 
         public override void Initialize()
         {
             base.Initialize();
 
-            Scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f);
+            scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f);
 
             Model model1 = ModelFactory.CreateBox(10, 10, 10);
             model1.IMesh = model1.IMesh.Clone(MeshFlags.Managed, VertexFormats.Position | VertexFormats.Texture1 | VertexFormats.Normal, Device);
@@ -266,7 +268,7 @@ namespace ShortPuzzle
                                         new MeshNode("Mesh", new Model(model2.IMesh, model2.Materials), handler), 
                                         start,
                                         new Vector3((x - CubesInRow / 2) * distance, (y - CubesInRow / 2) * distance, 0));
-                    cubes[c].AddToScene(Scene);
+                    cubes[c].AddToScene(scene);
                     c++;
                 }
             }
@@ -278,14 +280,14 @@ namespace ShortPuzzle
                 dxLight.DiffuseColor = new ColorValue(0.8f, 0.3f, 0.9f, 1.0f);
                 dxLight.Type = LightType.Point;
                 lights[i] = new LightNode("Point Light", dxLight);
-                Scene.AddNode(lights[i]);
+                scene.AddNode(lights[i]);
             }
 
             camera = new CameraNode("Camera");
             camera.WorldState.MoveForward(-400.0f);
             camera.WorldState.MoveRight(50.0f);
-            Scene.AddNode(camera);
-            Scene.ActiveCamera = camera;
+            scene.AddNode(camera);
+            scene.ActiveCamera = camera;
 
             texture = D3DDriver.TextureFactory.CreateFromFile(PREFIX + "BlurBackground.jpg");
             dopeTexture = D3DDriver.TextureFactory.CreateFromFile(PREFIX + "DopeLogo.dds");
@@ -338,7 +340,7 @@ namespace ShortPuzzle
 
             SetPos(Cube.times[25] - 1.5f, p4, p1);
 
-            Scene.Step();
+            scene.Step();
             foreach (Cube cube in cubes)
             {
                 cube.Step();
@@ -377,8 +379,8 @@ namespace ShortPuzzle
             logoAlpha = GetAlpha(Cube.times[16] - 1.5f, logoAlpha, 0.8f, 0.0f);
             logoAlpha = GetAlpha(Cube.times[25] - 1.5f, logoAlpha, 0.0f, 0.8f);
 
-            IDevice device = D3DDriver.GetInstance().GetDevice();
-            Scene.Render();
+            IDevice device = D3DDriver.GetInstance().Device;
+            scene.Render();
             int sWidth = device.PresentationParameters.BackBufferWidth;
             int sHeight = device.PresentationParameters.BackBufferHeight;
             int tWidth = texture.GetSurfaceLevel(0).Description.Width;

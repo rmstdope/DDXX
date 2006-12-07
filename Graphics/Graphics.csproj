@@ -76,6 +76,7 @@
     <Compile Include="ISprite.cs" />
     <Compile Include="ISurface.cs" />
     <Compile Include="ITexture.cs" />
+    <Compile Include="ITextureFactory.cs" />
     <Compile Include="LineAdapter.cs" />
     <Compile Include="IVertexBuffer.cs" />
     <Compile Include="ManagerAdapter.cs" />

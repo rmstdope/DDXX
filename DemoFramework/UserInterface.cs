@@ -21,7 +21,7 @@ namespace Dope.DDXX.DemoFramework
 
         public void Initialize()
         {
-            IDevice device = D3DDriver.GetInstance().GetDevice();
+            IDevice device = D3DDriver.GetInstance().Device;
 
             line = D3DDriver.Factory.CreateLine(device);
             line.Width = 1.0f;

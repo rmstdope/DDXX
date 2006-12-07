@@ -190,9 +190,9 @@ namespace Dope.DDXX.DemoFramework
         {
             DrawWindow();
 
-            D3DDriver.GetInstance().GetDevice().BeginScene();
+            D3DDriver.GetInstance().Device.BeginScene();
             userInterface.DrawControl(mainWindow);
-            D3DDriver.GetInstance().GetDevice().EndScene();
+            D3DDriver.GetInstance().Device.EndScene();
         }
 
         private void DrawWindow()

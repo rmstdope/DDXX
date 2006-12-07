@@ -49,12 +49,12 @@ namespace Dope.DDXX.Graphics
 
         private IGraphicsFactory factory;
         private IDevice device;
-        private TextureFactory textureFactory;
+        private ITextureFactory textureFactory;
 
         private List<BoxEntry> boxes = new List<BoxEntry>();
         private List<FileEntry> files = new List<FileEntry>();
 
-        public ModelFactory(IDevice device, IGraphicsFactory factory, TextureFactory textureFactory)
+        public ModelFactory(IDevice device, IGraphicsFactory factory, ITextureFactory textureFactory)
         {
             this.device = device;
             this.factory = factory;

@@ -22,7 +22,7 @@ namespace Dope.DDXX.Graphics
         protected DisplayMode displayMode = new DisplayMode();
         protected PresentParameters presentParameters;
         protected EffectFactory effectFactory;
-        protected TextureFactory textureFactory;
+        protected ITextureFactory textureFactory;
         protected IEffect effect;
 
         public virtual void SetUp()
@@ -38,6 +38,7 @@ namespace Dope.DDXX.Graphics
 
             mockery = new Mockery();
             factory = mockery.NewMock<IGraphicsFactory>();
+            textureFactory = mockery.NewMock<ITextureFactory>();
             device = mockery.NewMock<IDevice>();
             manager = mockery.NewMock<IManager>();
             texture = mockery.NewMock<ITexture>();
@@ -77,6 +78,8 @@ namespace Dope.DDXX.Graphics
                 Will(Return.Value(renderStateManager));
 
             D3DDriver.Factory = factory;
+            D3DDriver.TextureFactory = textureFactory;
+            D3DDriver.GetInstance().Device = device;
         }
 
         public virtual void TearDown()
@@ -115,37 +118,37 @@ namespace Dope.DDXX.Graphics
             D3DDriver.GetInstance().Initialize(null, desc, prerequisits);
         }
 
-        public void ExpectBaseDemoEffects(int num)
-        {
-            effectFactory = new EffectFactory(device, factory);
-            textureFactory = new TextureFactory(device, factory, presentParameters);
-            D3DDriver.EffectFactory = effectFactory;
-            D3DDriver.TextureFactory = textureFactory;
-            effect = mockery.NewMock<IEffect>();
+    //    public void ExpectBaseDemoEffects(int num)
+    //    {
+    //        effectFactory = new EffectFactory(device, factory);
+    //        textureFactory = new TextureFactory(device, factory, presentParameters);
+    //        D3DDriver.EffectFactory = effectFactory;
+    //        D3DDriver.TextureFactory = textureFactory;
+    //        effect = mockery.NewMock<IEffect>();
 
-            Expect.Once.On(factory).
-                Method("EffectFromFile").
-                Will(Return.Value(effect));
-            for (int i = 0; i < num; i++)
-            {
-                Expect.Once.On(effect).
-                    Method("GetParameter").
-                    With(null, "LightDiffuseColor").
-                    Will(Return.Value(EffectHandle.FromString("1")));
-                Expect.Once.On(effect).
-                    Method("GetParameter").
-                    With(null, "LightSpecularColor").
-                    Will(Return.Value(EffectHandle.FromString("1")));
-                Expect.Once.On(effect).
-                    Method("GetParameter").
-                    With(null, "LightPosition").
-                    Will(Return.Value(EffectHandle.FromString("1")));
-                Expect.Once.On(effect).
-                    Method("GetParameter").
-                    With(null, "EyePosition").
-                    Will(Return.Value(EffectHandle.FromString("1")));
-            }
-        }
+    //        Expect.Once.On(factory).
+    //            Method("EffectFromFile").
+    //            Will(Return.Value(effect));
+    //        for (int i = 0; i < num; i++)
+    //        {
+    //            Expect.Once.On(effect).
+    //                Method("GetParameter").
+    //                With(null, "LightDiffuseColor").
+    //                Will(Return.Value(EffectHandle.FromString("1")));
+    //            Expect.Once.On(effect).
+    //                Method("GetParameter").
+    //                With(null, "LightSpecularColor").
+    //                Will(Return.Value(EffectHandle.FromString("1")));
+    //            Expect.Once.On(effect).
+    //                Method("GetParameter").
+    //                With(null, "LightPosition").
+    //                Will(Return.Value(EffectHandle.FromString("1")));
+    //            Expect.Once.On(effect).
+    //                Method("GetParameter").
+    //                With(null, "EyePosition").
+    //                Will(Return.Value(EffectHandle.FromString("1")));
+    //        }
+    //    }
     }
 
     public class FloatMatcher : Matcher

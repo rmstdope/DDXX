@@ -47,7 +47,6 @@ namespace Dope.DDXX.DemoFramework
     public class BaseDemoEffectTest : D3DMockTest
     {
         private IEffect poolEffect;
-        private EffectHandle handle;
 
         [SetUp]
         public override void SetUp()
@@ -70,17 +69,9 @@ namespace Dope.DDXX.DemoFramework
             TestEffect effect = new TestEffect(0.0f, 10.0f);
             Assert.IsTrue(effect.IsDeviceEqual(null));
 
-            Expect.Once.On(factory).
-                Method("EffectFromFile").
-                WithAnyArguments().
-                Will(Return.Value(poolEffect));
-            handle = EffectHandle.FromString("Handle");
-            Stub.On(poolEffect).Method("GetParameter").
-                WithAnyArguments().
-                Will(Return.Value(handle));
             effect.Initialize();
 
-            Assert.IsTrue(effect.IsDeviceEqual(D3DDriver.GetInstance().GetDevice()));
+            Assert.IsTrue(effect.IsDeviceEqual(D3DDriver.GetInstance().Device));
         }
 
         [Test]

@@ -186,7 +186,7 @@ namespace Dope.DDXX.Graphics
             }
             catch (DDXXException)
             {
-                Assert.AreEqual(null, driver.GetDevice());
+                Assert.AreEqual(null, driver.Device);
             }
         }
 
@@ -214,7 +214,7 @@ namespace Dope.DDXX.Graphics
             }
             catch (DirectXException)
             {
-                Assert.AreEqual(null, driver.GetDevice());
+                Assert.AreEqual(null, driver.Device);
             }
         }
 
@@ -239,7 +239,7 @@ namespace Dope.DDXX.Graphics
                 Will(Return.Value(device));
             Expect.Once.On(prerequisits).Method("CheckPrerequisits").WithAnyArguments();
             driver.Initialize(null, desc, prerequisits);
-            Assert.AreEqual(device, driver.GetDevice());
+            Assert.AreEqual(device, driver.Device);
 
             Expect.Once.On(device).
                 Method("Dispose");
@@ -264,7 +264,7 @@ namespace Dope.DDXX.Graphics
                 Will(Return.Value(device));
             Expect.Once.On(prerequisits).Method("CheckPrerequisits").WithAnyArguments();
             driver.Initialize(null, desc, prerequisits);
-            Assert.AreEqual(device, driver.GetDevice());
+            Assert.AreEqual(device, driver.Device);
 
             Expect.Once.On(device).
                 Method("Dispose");
@@ -383,7 +383,7 @@ namespace Dope.DDXX.Graphics
                 Will(Return.Value(device));
             Expect.Once.On(prerequisits).Method("CheckPrerequisits").WithAnyArguments();
             driver.Initialize(null, desc, prerequisits);
-            Assert.AreEqual(device, driver.GetDevice());
+            Assert.AreEqual(device, driver.Device);
 
             Expect.Once.On(device).
                 Method("Dispose");
@@ -424,7 +424,7 @@ namespace Dope.DDXX.Graphics
                 Will(Return.Value(device));
             Expect.Once.On(prerequisits).Method("CheckPrerequisits").WithAnyArguments();
             driver.Initialize(null, desc, prerequisits);
-            Assert.AreEqual(device, driver.GetDevice());
+            Assert.AreEqual(device, driver.Device);
 
             Expect.Once.On(device).
                 Method("Dispose");

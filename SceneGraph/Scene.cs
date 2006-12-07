@@ -25,7 +25,7 @@ namespace Dope.DDXX.SceneGraph
         public Scene()
         {
             rootNode = new DummyNode("Scene Root Node");
-            device = D3DDriver.GetInstance().GetDevice();
+            device = D3DDriver.GetInstance().Device;
             ambientColor = new ColorValue(0.5f, 0.5f, 0.5f, 0.5f);
             EffectFactory effectFactory = D3DDriver.EffectFactory;
             effect = effectFactory.CreateFromFile("PoolEffect.fxo");

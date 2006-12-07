@@ -32,7 +32,7 @@ namespace Dope.DDXX.DemoFramework
         protected float GetParentHeight()
         {
             if (parent == null)
-                return D3DDriver.GetInstance().GetDevice().PresentationParameters.BackBufferHeight;
+                return D3DDriver.GetInstance().Device.PresentationParameters.BackBufferHeight;
             else
                 return parent.GetHeight();
         }
@@ -40,7 +40,7 @@ namespace Dope.DDXX.DemoFramework
         protected float GetParentWidth()
         {
             if (parent == null)
-                return D3DDriver.GetInstance().GetDevice().PresentationParameters.BackBufferWidth;
+                return D3DDriver.GetInstance().Device.PresentationParameters.BackBufferWidth;
             else
                 return parent.GetWidth();
         }

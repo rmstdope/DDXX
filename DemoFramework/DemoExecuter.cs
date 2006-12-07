@@ -143,7 +143,7 @@ namespace Dope.DDXX.DemoFramework
 
         private void InitializeGraphics()
         {
-            device = D3DDriver.GetInstance().GetDevice();
+            device = D3DDriver.GetInstance().Device;
             backBuffer = D3DDriver.TextureFactory.CreateFullsizeRenderTarget();
         }
 

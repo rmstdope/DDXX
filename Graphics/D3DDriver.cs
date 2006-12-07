@@ -27,7 +27,7 @@ namespace Dope.DDXX.Graphics
         private static IGraphicsFactory factory = new D3DFactory();
         private static EffectFactory effectFactory;
         private static ModelFactory meshFactory;
-        private static TextureFactory textureFactory;
+        private static ITextureFactory textureFactory;
 
         private IManager manager;
         private IDevice device;
@@ -63,7 +63,7 @@ namespace Dope.DDXX.Graphics
             set { meshFactory = value; }
         }
 
-        public static TextureFactory TextureFactory
+        public static ITextureFactory TextureFactory
         {
             get { return textureFactory; }
             set { textureFactory = value; }
@@ -188,9 +188,10 @@ namespace Dope.DDXX.Graphics
         }
 
 
-        public IDevice GetDevice()
+        public IDevice Device
         {
-            return device;
+            get { return device; }
+            set { device = value; }
         }
 
         public int NumAdapters
@@ -233,5 +234,6 @@ namespace Dope.DDXX.Graphics
             }
             instance = null;
         }
+
     }
 }

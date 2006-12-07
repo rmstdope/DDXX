@@ -43,7 +43,7 @@ namespace Dope.DDXX.DemoFramework
             InputDriver iDriver = InputDriver.GetInstance();
             iDriver.Initialize(this);
 
-            Debug.WriteLine(gDriver.GetDevice().PresentationParameters.ToString());
+            Debug.WriteLine(gDriver.Device.PresentationParameters.ToString());
             
             Show();
         }
@@ -51,7 +51,7 @@ namespace Dope.DDXX.DemoFramework
         public void CleanUp()
         {
             D3DDriver gDriver = D3DDriver.GetInstance();
-            gDriver.GetDevice().Dispose();
+            gDriver.Device.Dispose();
         }
     }
 }

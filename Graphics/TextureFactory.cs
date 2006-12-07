@@ -5,7 +5,7 @@ using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.Graphics
 {
-    public class TextureFactory
+    public class TextureFactory : ITextureFactory
     {
         private class FileEntry
         {
