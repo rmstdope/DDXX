@@ -125,7 +125,7 @@ namespace Dope.DDXX.Graphics
                     extendedMaterials[i].TextureFilename == "")
                     modelMaterials[i] = new ModelMaterial(extendedMaterials[i].Material3D);
                 else
-                    modelMaterials[i] = new ModelMaterial(extendedMaterials[i].Material3D, textureFactory.CreateFromFile("../../Data/" + extendedMaterials[i].TextureFilename));
+                    modelMaterials[i] = new ModelMaterial(extendedMaterials[i].Material3D, textureFactory.CreateFromFile(extendedMaterials[i].TextureFilename));
                 Material material = modelMaterials[i].Material;
                 material.AmbientColor = material.DiffuseColor;
                 modelMaterials[i].Material = material;

@@ -358,15 +358,15 @@ namespace Dope.DDXX.Graphics
         EffectHandle GetTechnique(string name);
         //
         // Summary:
-        //     Retrieves a technique description.
+        //     Retrieves a technique name.
         //
         // Parameters:
         //   technique:
         //     Technique Microsoft.DirectX.Direct3D.EffectHandle.
         //
         // Returns:
-        //     A Microsoft.DirectX.Direct3D.TechniqueDescription of the specified technique.
-        TechniqueDescription GetTechniqueDescription(EffectHandle technique);
+        //     The name of the specified technique.
+        string GetTechniqueName(EffectHandle technique);
         //
         // Summary:
         //     Retrieves the value of an arbitrary parameter or annotation, including simple

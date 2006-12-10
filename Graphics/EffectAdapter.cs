@@ -289,9 +289,11 @@ namespace Dope.DDXX.Graphics
             return effect.GetTechnique(name);
         }
 
-        public TechniqueDescription GetTechniqueDescription(EffectHandle technique)
+        public string GetTechniqueName(EffectHandle technique)
         {
-            return effect.GetTechniqueDescription(technique);
+            TechniqueDescription desc;
+            desc = effect.GetTechniqueDescription(technique);
+            return desc.Name;
         }
 
         public GraphicsStream GetValue(EffectHandle parameter, int numberBytes)

@@ -23,6 +23,8 @@ namespace EngineTest
         private int intValue = 1;
         private Vector3 vector3Value = new Vector3(1, 1, 1);
         private Scene scene;
+        private IFont font;
+        private MeshNode mesh;
 
         public Vector3 Vector3Value
         {
@@ -65,6 +67,21 @@ namespace EngineTest
             ps = new FloaterSystem("System");
             ps.Initialize(50, 200.0f, null);//"BlurBackground.jpg");
             scene.AddNode(ps);
+
+            // Render font
+            FontDescription description = new FontDescription();
+            description.FaceName = "Arial";
+            description.Height = 12;
+            font = D3DDriver.Factory.CreateFont(Device, description);
+            font.DrawText(null, "Hejsan", new Point(100, 100), Color.FloralWhite);
+
+            // Create mesh
+            IEffect effect = D3DDriver.EffectFactory.CreateFromFile("Test.fxo");
+            EffectHandler effectHandler = new EffectHandler(effect, "TransparentText");
+            Model model = D3DDriver.ModelFactory.FromFile("Wanting More.x", ModelFactory.Options.None);
+            mesh = new MeshNode("Text1", model, effectHandler);
+            scene.AddNode(mesh);
+            mesh.WorldState.Tilt(-(float)Math.PI / 2.0f);
         }
 
         public override void StartTimeUpdated()
@@ -77,6 +94,9 @@ namespace EngineTest
 
         public override void Step()
         {
+            mesh.WorldState.Roll(Time.DeltaTime);
+            //mesh.WorldState.Turn(Time.StepTime * 1.432f);
+            //mesh.WorldState.Tilt(Time.StepTime * 1.285f);
             scene.Step();
         }
 
@@ -84,6 +104,7 @@ namespace EngineTest
         {
             IDevice device = D3DDriver.GetInstance().Device;
             scene.Render();
+
             //int sWidth = device.PresentationParameters.BackBufferWidth;
             //int sHeight = device.PresentationParameters.BackBufferHeight;
             //int tWidth = texture.GetSurfaceLevel(0).Description.Width;

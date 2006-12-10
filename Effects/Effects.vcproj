@@ -167,6 +167,11 @@
 			</File>
 			<File
 				RelativePath=".\PostEffects.fx"
+				SubType="Code"
+				>
+			</File>
+			<File
+				RelativePath=".\Short Puzzle.fx"
 				>
 			</File>
 			<File

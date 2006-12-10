@@ -24,7 +24,9 @@ namespace Dope.DDXX.SceneGraph
         private ITexture texture;
         private ITexture normalTexture;
 
-        private EffectHandle defaultTechnique;
+        private EffectHandle validTechnique;
+        private EffectHandle invalidTechnique;
+
         private EffectHandle worldT;
         private EffectHandle worldViewProjectionT;
         private EffectHandle projectionT;
@@ -58,7 +60,9 @@ namespace Dope.DDXX.SceneGraph
                 GetProperty("ActiveCamera").
                 Will(Return.Value(camera));
 
-            defaultTechnique = EffectHandle.FromString("Technique");
+            validTechnique = EffectHandle.FromString("ValidTechnique");
+            invalidTechnique = EffectHandle.FromString("InvalidTechnique");
+
             worldT = EffectHandle.FromString("WorldT");
             worldViewProjectionT = EffectHandle.FromString("WorldViewProjectionT");
             projectionT = EffectHandle.FromString("ProjectionT");
@@ -82,10 +86,6 @@ namespace Dope.DDXX.SceneGraph
             material.SpecularColor = materialSpecular;
             modelMaterial = new ModelMaterial(material, texture, normalTexture);
 
-            Stub.On(effect).
-                Method("FindNextValidTechnique").
-                WithAnyArguments().
-                Will(Return.Value(defaultTechnique));
             Stub.On(mesh).
                 GetProperty("WorldMatrix").
                 Will(Return.Value(worldMatrix));
@@ -109,18 +109,42 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void ConstructorTest()
         {
+            ExpectFindTechniques(1, false);
             ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT);
             ExpectMaterialParameters(null, null, null, null, null);
 
             EffectHandler effectHandler = new EffectHandler(effect);
             Assert.AreSame(effect, effectHandler.Effect);
-            Assert.AreSame(defaultTechnique, effectHandler.Technique);
+            Assert.AreSame(validTechnique, effectHandler.Technique);
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TechniqueTestFail()
+        {
+            Expect.Once.On(effect).Method("FindNextValidTechnique").
+                With(Is.Null).Will(Return.Value(null));
+            EffectHandler effectHandler = new EffectHandler(effect, "Valid");
+        }
+
+        [Test]
+        public void TechniqueTestOK()
+        {
+            ExpectFindTechniques(5, true);
+            ExpectSetTechnique();
+            ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT);
+            ExpectMeshParametersSet(worldT, worldViewProjectionT, projectionT, worldViewT);
+            ExpectMaterialParameters(null, null, null, null, null);
+            EffectHandler effectHandler = new EffectHandler(effect, "Valid");
+
+            effectHandler.SetNodeConstants(scene, mesh);
         }
 
         [Test]
         public void SetMeshConstantsTest1()
         {
-            ExpectTechnique();
+            ExpectFindTechniques(1, false);
+            ExpectSetTechnique();
             ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT);
             ExpectMeshParametersSet(worldT, worldViewProjectionT, projectionT, worldViewT);
             ExpectMaterialParameters(null, null, null, null, null);
@@ -132,7 +156,8 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void SetMeshConstantsTest2()
         {
-            ExpectTechnique();
+            ExpectFindTechniques(1, false);
+            ExpectSetTechnique();
             ExpectMeshParameters(null, worldViewProjectionT, projectionT, worldViewT);
             ExpectMeshParametersSet(null, worldViewProjectionT, projectionT, worldViewT);
             ExpectMaterialParameters(null, null, null, null, null);
@@ -144,7 +169,8 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void SetMeshConstantsTest3()
         {
-            ExpectTechnique();
+            ExpectFindTechniques(1, false);
+            ExpectSetTechnique();
             ExpectMeshParameters(worldT, null, projectionT, worldViewT);
             ExpectMeshParametersSet(worldT, null, projectionT, worldViewT);
             ExpectMaterialParameters(null, null, null, null, null);
@@ -156,7 +182,8 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void SetMeshConstantsTest4()
         {
-            ExpectTechnique();
+            ExpectFindTechniques(1, false);
+            ExpectSetTechnique();
             ExpectMeshParameters(worldT, worldViewProjectionT, null, worldViewT);
             ExpectMeshParametersSet(worldT, worldViewProjectionT, null, worldViewT);
             ExpectMaterialParameters(null, null, null, null, null);
@@ -168,7 +195,8 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void SetMeshConstantsTest5()
         {
-            ExpectTechnique();
+            ExpectFindTechniques(1, false);
+            ExpectSetTechnique();
             ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, null);
             ExpectMeshParametersSet(worldT, worldViewProjectionT, projectionT, null);
             ExpectMaterialParameters(null, null, null, null, null);
@@ -180,6 +208,7 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void SetMaterialConstantsTest1()
         {
+            ExpectFindTechniques(1, false);
             ExpectMeshParameters(null, null, null, null);
             ExpectMaterialParameters(ambientColor, baseTexture, normalTextureHandle, materialDiffuseColor, materialSpecularColor);
             ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, normalTexture, true, materialDiffuse, true, materialSpecular);
@@ -191,6 +220,7 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void SetMaterialConstantsTest2()
         {
+            ExpectFindTechniques(1, false);
             ExpectMeshParameters(null, null, null, null);
             ExpectMaterialParameters(null, baseTexture, normalTextureHandle, materialDiffuseColor, materialSpecularColor);
             ExpectMaterialParametersSet(false, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, normalTexture, true, materialDiffuse, true, materialSpecular);
@@ -202,6 +232,7 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void SetMaterialConstantsTest3()
         {
+            ExpectFindTechniques(1, false);
             ExpectMeshParameters(null, null, null, null);
             ExpectMaterialParameters(ambientColor, null, normalTextureHandle, materialDiffuseColor, materialSpecularColor);
             ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), null, normalTexture, true, materialDiffuse, true, materialSpecular);
@@ -213,6 +244,7 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void SetMaterialConstantsTest4()
         {
+            ExpectFindTechniques(1, false);
             ExpectMeshParameters(null, null, null, null);
             ExpectMaterialParameters(ambientColor, baseTexture, null, materialDiffuseColor, materialSpecularColor);
             ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, null, true, materialDiffuse, true, materialSpecular);
@@ -224,6 +256,7 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void SetMaterialConstantsTest5()
         {
+            ExpectFindTechniques(1, false);
             ExpectMeshParameters(null, null, null, null);
             ExpectMaterialParameters(ambientColor, baseTexture, normalTextureHandle, null, materialSpecularColor);
             ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, normalTexture, false, materialDiffuse, true, materialSpecular);
@@ -235,6 +268,7 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void SetMaterialConstantsTest6()
         {
+            ExpectFindTechniques(1, false);
             ExpectMeshParameters(null, null, null, null);
             ExpectMaterialParameters(ambientColor, baseTexture, normalTextureHandle, materialDiffuseColor, null);
             ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, normalTexture, true, materialDiffuse, false, materialSpecular);
@@ -243,11 +277,11 @@ namespace Dope.DDXX.SceneGraph
             effectHandler.SetMaterialConstants(scene, modelMaterial);
         }
 
-        private void ExpectTechnique()
+        private void ExpectSetTechnique()
         {
             Expect.Once.On(effect).
                 SetProperty("Technique").
-                To(defaultTechnique);
+                To(validTechnique);
         }
 
         private void ExpectMeshParameters(Object world, Object worldViewProj, Object proj, Object worldView)
@@ -337,6 +371,43 @@ namespace Dope.DDXX.SceneGraph
                 Expect.Once.On(effect).
                     Method("SetValue").
                     With(materialSpecularColor, specularParam);
+        }
+
+        private void ExpectFindTechniques(int num, bool nameSearch)
+        {
+            // First argument is null
+            if (num == 1)
+            {
+                Expect.Once.On(effect).Method("FindNextValidTechnique").
+                    With(Is.Null).Will(Return.Value(validTechnique));
+                if (nameSearch)
+                    Expect.Once.On(effect).Method("GetTechniqueName").
+                        With(invalidTechnique).Will(Return.Value("ValidTechnique"));
+                return;
+            }
+            else
+            {
+                Expect.Once.On(effect).Method("FindNextValidTechnique").
+                    With(Is.Null).Will(Return.Value(invalidTechnique));
+                if (nameSearch)
+                    Expect.Once.On(effect).Method("GetTechniqueName").
+                        With(invalidTechnique).Will(Return.Value("InvalidTechnique"));
+            }
+
+            // Rest of the arguments are last effect
+            if (num > 2)
+            {
+                Expect.Exactly(num - 2).On(effect).Method("FindNextValidTechnique").
+                    With(invalidTechnique).Will(Return.Value(invalidTechnique));
+                if (nameSearch)
+                    Expect.Exactly(num - 2).On(effect).Method("GetTechniqueName").
+                        With(invalidTechnique).Will(Return.Value("InvalidTechnique"));
+            }
+            Expect.Once.On(effect).Method("FindNextValidTechnique").
+                With(invalidTechnique).Will(Return.Value(validTechnique));
+            if (nameSearch)
+                Expect.Once.On(effect).Method("GetTechniqueName").
+                    With(validTechnique).Will(Return.Value("ValidTechnique"));
         }
 
     }

@@ -26,9 +26,25 @@ namespace Dope.DDXX.SceneGraph
 
         public EffectHandler(IEffect effect)
         {
-            this.effect = effect;
             technique = effect.FindNextValidTechnique(null);
-            
+            CommonInitialize(effect);
+        }
+
+        public EffectHandler(IEffect effect, string prefix)
+        {
+            technique = null;
+            while (technique == null || !effect.GetTechniqueName(technique).StartsWith(prefix))
+            {
+                technique = effect.FindNextValidTechnique(technique);
+                if (technique == null)
+                    throw new DDXXException("Technique with prefix " + prefix + " not found int effect.");
+            }
+            CommonInitialize(effect);
+        }
+
+        private void CommonInitialize(IEffect effect)
+        {
+            this.effect = effect;
             worldT = effect.GetParameter(null, "WorldT");
             worldViewProjT = effect.GetParameter(null, "WorldViewProjectionT");
             projT = effect.GetParameter(null, "ProjectionT");
@@ -39,7 +55,6 @@ namespace Dope.DDXX.SceneGraph
             normalTexture = effect.GetParameter(null, "NormalTexture");
             materialDiffuseColor = effect.GetParameter(null, "MaterialDiffuseColor");
             materialSpecularColor = effect.GetParameter(null, "MaterialSpecularColor");
-
         }
 
         #region IEffectHandler Members
