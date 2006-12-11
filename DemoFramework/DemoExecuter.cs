@@ -16,7 +16,7 @@ using System.IO;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public class DemoExecuter : IDemoEffectBuilder, IDemoRegistrator
+    public class DemoExecuter : IDemoEffectBuilder, IDemoRegistrator, IDemoTweakerContext
     {
         private ISoundDriver soundDriver;
         private FMOD.Sound sound;
@@ -94,7 +94,7 @@ namespace Dope.DDXX.DemoFramework
             this.soundDriver = soundDriver;
             this.inputDriver = inputDriver;
             this.postProcessor = postProcessor;
-            tweaker = new DemoTweakerMain(new IDemoTweaker[] { new DemoTweakerDemo(), new DemoTweakerTrack() , new DemoTweakerEffect() });
+            tweaker = new DemoTweakerMain(this, new IDemoTweaker[] { new DemoTweakerDemo(), new DemoTweakerTrack() , new DemoTweakerEffect() });
         }
 
         private DemoEffectTypes effectTypes = new DemoEffectTypes();
@@ -179,20 +179,6 @@ namespace Dope.DDXX.DemoFramework
                 }
             }
 
-            if (inputDriver.KeyPressedNoRepeat(Key.Space))
-            {
-                if (Time.IsPaused())
-                {
-                    Time.Resume();
-                    soundDriver.SetPosition(channel, Time.CurrentTime);
-                    soundDriver.ResumeChannel(channel);
-                }
-                else
-                {
-                    Time.Pause();
-                    soundDriver.PauseChannel(channel);
-                }
-            }
             tweaker.HandleInput(inputDriver);
         }
 
@@ -331,6 +317,25 @@ namespace Dope.DDXX.DemoFramework
             if (lastAddedEffect != null)
             {
                 effectTypes.CallSetup(lastAddedEffect, name, parameters);
+            }
+        }
+
+        #endregion
+
+        #region IDemoTweakerContext Members
+
+        public void TogglePause()
+        {
+            if (Time.IsPaused())
+            {
+                Time.Resume();
+                soundDriver.SetPosition(channel, Time.CurrentTime);
+                soundDriver.ResumeChannel(channel);
+            }
+            else
+            {
+                Time.Pause();
+                soundDriver.PauseChannel(channel);
             }
         }
 

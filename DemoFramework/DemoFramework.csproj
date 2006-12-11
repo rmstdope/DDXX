@@ -69,6 +69,7 @@
     <Compile Include="IDemoPostEffect.cs" />
     <Compile Include="IDemoRegistrator.cs" />
     <Compile Include="IDemoTweaker.cs" />
+    <Compile Include="IDemoTweakerContext.cs" />
     <Compile Include="IPostProcessor.cs" />
     <Compile Include="IRegisterable.cs" />
     <Compile Include="ITweakableContainer.cs" />

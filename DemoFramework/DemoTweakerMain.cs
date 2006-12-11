@@ -14,6 +14,7 @@ namespace Dope.DDXX.DemoFramework
     {
         private int currentTweaker;
         private IDemoTweaker[] tweakers;
+        private IDemoTweakerContext context;
 
         public object IdentifierToChild() { return 0; }
         public void IdentifierFromParent(object id) { }
@@ -28,10 +29,11 @@ namespace Dope.DDXX.DemoFramework
             get { return currentTweaker < -1; } 
         }
 
-        public DemoTweakerMain(IDemoTweaker[] tweakers)
+        public DemoTweakerMain(IDemoTweakerContext context, IDemoTweaker[] tweakers)
         {
             currentTweaker = -1;
             this.tweakers = tweakers;
+            this.context = context;
         }
 
         public void Initialize(IDemoRegistrator registrator)
@@ -42,6 +44,11 @@ namespace Dope.DDXX.DemoFramework
 
         public void HandleInput(IInputDriver inputDriver)
         {
+            if (inputDriver.KeyPressedNoRepeat(Key.Space))
+            {
+                context.TogglePause();
+            }
+
             if (inputDriver.KeyPressedNoRepeat(Key.Return))
             {
                 if (currentTweaker < tweakers.Length - 1)
