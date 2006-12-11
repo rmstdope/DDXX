@@ -44,6 +44,16 @@ namespace Dope.DDXX.DemoFramework
 
         public void HandleInput(IInputDriver inputDriver)
         {
+            if (inputDriver.KeyPressedNoRepeat(Key.RightArrow))
+            {
+                context.JumpInTime(5.0f);
+            }
+
+            if (inputDriver.KeyPressedNoRepeat(Key.LeftArrow))
+            {
+                context.JumpInTime(-5.0f);
+            }
+
             if (inputDriver.KeyPressedNoRepeat(Key.Space))
             {
                 context.TogglePause();

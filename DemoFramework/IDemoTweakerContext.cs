@@ -7,5 +7,7 @@ namespace Dope.DDXX.DemoFramework
     public interface IDemoTweakerContext
     {
         void TogglePause();
+
+        void JumpInTime(float time);
     }
 }

@@ -443,6 +443,112 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual(5.4f, ((FooGlow)executer.Tracks[2].PostEffects[0]).GlowParam);
         }
 
+        [Test]
+        public void TestResumeSong()
+        {
+            TestInitializeOKSong();
+
+            Expect.Once.On(soundDriver).Method("SetPosition");
+            Expect.Once.On(soundDriver).Method("ResumeChannel");
+            Time.Pause();
+            executer.TogglePause();
+            Assert.IsFalse(Time.IsPaused());
+        }
+
+        [Test]
+        public void TestResumeNoSong()
+        {
+            TestInitializeOKNoSong1();
+
+            Time.Pause();
+            executer.TogglePause();
+            Assert.IsFalse(Time.IsPaused());
+        }
+
+        [Test]
+        public void TestPauseSong()
+        {
+            TestInitializeOKSong();
+
+            Expect.Once.On(soundDriver).Method("PauseChannel");
+            Time.Resume();
+            executer.TogglePause();
+            Assert.IsTrue(Time.IsPaused());
+        }
+
+        [Test]
+        public void TestPauseNoSong()
+        {
+            TestInitializeOKNoSong1();
+
+            Time.Resume();
+            executer.TogglePause();
+            Assert.IsTrue(Time.IsPaused());
+        }
+
+        [Test]
+        public void TestJumpSong()
+        {
+            IDemoEffect effect = CreateMockEffect(0, 10);
+            Expect.Once.On(effect).Method("Initialize");
+            executer.Register(0, effect);
+            TestInitializeOKSong();
+
+            Time.CurrentTime = 1.0f;
+            Time.Pause();
+            float t = Time.CurrentTime;
+            Expect.Once.On(soundDriver).Method("SetPosition");
+            executer.JumpInTime(5.0f);
+            Assert.AreEqual(6.0f, Time.CurrentTime, 0.00001f);
+        }
+
+        [Test]
+        public void TestJumpNoSong()
+        {
+            IDemoEffect effect = CreateMockEffect(0, 10);
+            Expect.Once.On(effect).Method("Initialize");
+            executer.Register(0, effect);
+            TestInitializeOKNoSong1();
+
+            Time.CurrentTime = 1.0f;
+            Time.Pause();
+            float t = Time.CurrentTime;
+            executer.JumpInTime(5.0f);
+            Assert.AreEqual(6.0f, Time.CurrentTime, 0.00001f);
+        }
+
+        [Test]
+        public void TestJumpBeforeStart()
+        {
+            IDemoEffect effect = CreateMockEffect(0, 10);
+            Expect.Once.On(effect).Method("Initialize");
+            executer.Register(0, effect);
+            TestInitializeOKSong();
+
+            Time.CurrentTime = 5.0f;
+            Time.Pause();
+            float t = Time.CurrentTime;
+            Expect.Once.On(soundDriver).Method("SetPosition");
+            executer.JumpInTime(-10.0f);
+            Assert.AreEqual(0.0f, Time.CurrentTime, 0.00001f);
+        }
+
+        [Test]
+        public void TestJumpPastEnd()
+        {
+            IDemoEffect effect = CreateMockEffect(0, 10);
+            Expect.Once.On(effect).Method("Initialize");
+            executer.Register(0, effect);
+            TestInitializeOKSong();
+
+            Time.CurrentTime = 5.0f;
+            Time.Pause();
+            float t = Time.CurrentTime;
+            Expect.Once.On(soundDriver).Method("SetPosition");
+            executer.JumpInTime(10.0f);
+            Assert.AreEqual(10.0f, Time.CurrentTime, 0.00001f);
+        }
+
         private void LimitRunLoop(int numCalls)
         {
             if (numCalls > 0)

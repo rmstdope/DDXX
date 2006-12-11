@@ -19,7 +19,7 @@ namespace Dope.DDXX.DemoFramework
     public class DemoExecuter : IDemoEffectBuilder, IDemoRegistrator, IDemoTweakerContext
     {
         private ISoundDriver soundDriver;
-        private FMOD.Sound sound;
+        private FMOD.Sound sound = null;
         private FMOD.Channel channel;
 
         private IDevice device;
@@ -189,7 +189,7 @@ namespace Dope.DDXX.DemoFramework
             if (sound != null)
             {
                 channel = soundDriver.PlaySound(sound);
-                soundDriver.SetPosition(channel, Time.CurrentTime);
+                SynchronizeSong();
             }
 
             while (Time.StepTime <= EndTime + 2.0f && !tweaker.Quit)
@@ -198,6 +198,12 @@ namespace Dope.DDXX.DemoFramework
 
                 Render();
             }
+        }
+
+        private void SynchronizeSong()
+        {
+            if (sound != null)
+                soundDriver.SetPosition(channel, Time.CurrentTime);
         }
 
         internal void Render()
@@ -329,14 +335,30 @@ namespace Dope.DDXX.DemoFramework
             if (Time.IsPaused())
             {
                 Time.Resume();
-                soundDriver.SetPosition(channel, Time.CurrentTime);
-                soundDriver.ResumeChannel(channel);
+                if (sound != null)
+                {
+                    soundDriver.SetPosition(channel, Time.CurrentTime);
+                    soundDriver.ResumeChannel(channel);
+                }
             }
             else
             {
                 Time.Pause();
-                soundDriver.PauseChannel(channel);
+                if (sound != null)
+                {
+                    soundDriver.PauseChannel(channel);
+                }
             }
+        }
+
+        public void JumpInTime(float time)
+        {
+            Time.CurrentTime += time;
+            if (Time.CurrentTime < StartTime)
+                Time.CurrentTime = StartTime;
+            if (Time.CurrentTime > EndTime)
+                Time.CurrentTime = EndTime;
+            SynchronizeSong();
         }
 
         #endregion
