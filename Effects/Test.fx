@@ -67,7 +67,12 @@ technique TransparentText
 	{
 		VertexShader			= compile vs_2_0 VertexShader();
 		PixelShader				= compile ps_2_0 PixelShader();
-		AlphaBlendEnable	= false;//true;
+		AlphaBlendEnable	= true;
+		BlendOp						= Add;
+		SrcBlend					= BlendFactor;
+		DestBlend					= One;
+		BlendFactor				= 0x80808080;
+		CullMode					= None;
 		FillMode					= Solid;//<FillMode>;
 		ZEnable						=	true;
 		ZFunc							= Less;

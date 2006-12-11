@@ -12,6 +12,8 @@ using System.Text;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
 using Dope.DDXX.DemoEffects;
+using Dope.DDXX.Sound;
+using Dope.DDXX.Input;
 
 namespace ShortPuzzle
 {
@@ -102,7 +104,7 @@ namespace ShortPuzzle
         {
             desc = setup.DeviceDescription;
             window = new DemoWindow();
-            executer = new DemoExecuter(new PostProcessor());
+            executer = new DemoExecuter(SoundDriver.GetInstance(), InputDriver.GetInstance(), new PostProcessor());
         }
     }
 }

@@ -6,7 +6,7 @@ using FMOD;
 
 namespace Dope.DDXX.Sound
 {
-    public class SoundDriver
+    public class SoundDriver : Dope.DDXX.Sound.ISoundDriver
     {
         private static SoundDriver instance;
         private ISoundSystem system;
@@ -18,7 +18,6 @@ namespace Dope.DDXX.Sound
 
         public static ISoundFactory Factory
         {
-            get { return factory; }
             set { factory = value; }
         }
 

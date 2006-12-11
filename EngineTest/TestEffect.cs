@@ -81,7 +81,7 @@ namespace EngineTest
             Model model = D3DDriver.ModelFactory.FromFile("Wanting More.x", ModelFactory.Options.None);
             mesh = new MeshNode("Text1", model, effectHandler);
             scene.AddNode(mesh);
-            mesh.WorldState.Tilt(-(float)Math.PI / 2.0f);
+            //mesh.WorldState.Tilt(-(float)Math.PI / 2.0f);
         }
 
         public override void StartTimeUpdated()
@@ -94,9 +94,14 @@ namespace EngineTest
 
         public override void Step()
         {
-            mesh.WorldState.Roll(Time.DeltaTime);
-            //mesh.WorldState.Turn(Time.StepTime * 1.432f);
-            //mesh.WorldState.Tilt(Time.StepTime * 1.285f);
+            float scale = (Time.StepTime % 5.0f) / 5.0f;
+            scale *= 2.0f;
+            mesh.WorldState.Scaling = new Vector3(scale, scale, scale);
+            mesh.WorldState.Position = new Vector3(0, scale * 200.0f, 0);
+
+            mesh.WorldState.Roll(scale / 100.0f);
+            mesh.WorldState.Turn(Time.DeltaTime);
+            //mesh.WorldState.Tilt(Time.DeltaTime);
             scene.Step();
         }
 

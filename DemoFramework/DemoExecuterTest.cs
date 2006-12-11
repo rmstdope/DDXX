@@ -16,6 +16,7 @@ using System.CodeDom.Compiler;
 using Microsoft.CSharp;
 using System.IO;
 using Microsoft.DirectX;
+using Microsoft.DirectX.DirectInput;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -24,11 +25,15 @@ namespace Dope.DDXX.DemoFramework
     public class DemoExecuterTest : TrackTest
     {
         DemoExecuter executer;
-        private Dope.DDXX.Input.IInputFactory iFactory;
-        private Dope.DDXX.Sound.ISoundFactory sFactory;
-        private ISoundSystem system;
+        //private IInputFactory iFactory;
+        //private ISoundFactory sFactory;
+        //private ISoundSystem system;
         private IDemoTweaker tweaker;
+        private ISoundDriver soundDriver;
+        private IInputDriver inputDriver;
         private IPostProcessor postProcessor;
+        private FMOD.Sound sound;
+        private FMOD.Channel channel;
 
         [SetUp]
         public override void SetUp()
@@ -37,29 +42,25 @@ namespace Dope.DDXX.DemoFramework
 
             Time.Initialize();
 
-            iFactory = mockery.NewMock<Dope.DDXX.Input.IInputFactory>();
-            InputDriver.Factory = iFactory;
-
-            sFactory = mockery.NewMock<Dope.DDXX.Sound.ISoundFactory>();
-            system = mockery.NewMock<ISoundSystem>();
-            Stub.On(sFactory).
-                Method("CreateSystem").
-                Will(Return.Value(system));
-            SoundDriver.Factory = sFactory;
+            sound = new FMOD.Sound();
+            channel = new FMOD.Channel();
 
             DeviceDescription desc = new DeviceDescription();
-            desc.deviceType = DeviceType.Hardware;
+            desc.deviceType = Microsoft.DirectX.Direct3D.DeviceType.Hardware;
             desc.width = presentParameters.BackBufferWidth;
             desc.height = presentParameters.BackBufferHeight;
             desc.colorFormat = presentParameters.BackBufferFormat;
             Expect.Once.On(prerequisits).Method("CheckPrerequisits").WithAnyArguments();
             D3DDriver.GetInstance().Initialize(null, desc, prerequisits);
 
+            soundDriver = mockery.NewMock<ISoundDriver>();
             postProcessor = mockery.NewMock<IPostProcessor>();
-            executer = new DemoExecuter(postProcessor);
+            inputDriver = mockery.NewMock<IInputDriver>();
+            executer = new DemoExecuter(soundDriver, inputDriver, postProcessor);
             tweaker = mockery.NewMock<IDemoTweaker>();
             executer.Tweaker = tweaker;
 
+            Stub.On(inputDriver).Method("KeyPressedNoRepeat").With(Key.Space).Will(Return.Value(false));
         }
 
         [TearDown]
@@ -125,31 +126,6 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
-        [ExpectedException(typeof(DDXXException))]
-        public void TestInitializeFail1()
-        {
-            Expect.Once.On(system).
-                Method("GetVersion").
-                Will(Return.Value(FMOD.RESULT.ERR_VERSION));
-            ExpectGraphicsInitialize();
-            executer.Initialize("");
-        }
-
-        [Test]
-        [ExpectedException(typeof(DDXXException))]
-        public void TestInitializeFail2()
-        {
-            FileUtility.SetLoadPaths(new string[] { "./" });
-            ExpectSoundInitialize();
-            Expect.Once.On(system).
-                Method("CreateSound").
-                Will(Return.Value(FMOD.RESULT.ERR_VERSION));
-            ExpectGraphicsInitialize();
-
-            executer.Initialize("Dope.DDXX.DemoFramework.dll");
-        }
-
-        [Test]
         public void TestInitializeOKNoSong1()
         {
             ExpectSoundInitialize();
@@ -176,9 +152,10 @@ namespace Dope.DDXX.DemoFramework
         {
             FileUtility.SetLoadPaths(new string[] { "./" });
             ExpectSoundInitialize();
-            Expect.Once.On(system).
+            Expect.Once.On(soundDriver).
                 Method("CreateSound").
-                Will(Return.Value(FMOD.RESULT.OK));
+                With("Dope.DDXX.DemoFramework.dll").
+                Will(Return.Value(sound));
             ExpectPostProcessorInitialize();
             ExpectTweakerInitialize();
             ExpectGraphicsInitialize();
@@ -239,28 +216,18 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
-        [ExpectedException(typeof(DDXXException))]
-        public void TestRunSongFail()
-        {
-            TestInitializeOKSong();
-
-            Expect.Once.On(system).
-                Method("PlaySound").
-                Will(Return.Value(FMOD.RESULT.ERR_VERSION));
-
-            executer.Run();
-        }
-
-        [Test]
         public void TestRunNoEffect()
         {
             TestInitializeOKSong();
 
             Expect.Once.On(tweaker).
                 Method("HandleInput");
-            Expect.Once.On(system).
+            Expect.Once.On(soundDriver).
                 Method("PlaySound").
-                Will(Return.Value(FMOD.RESULT.OK));
+                Will(Return.Value(channel));
+            Expect.Once.On(soundDriver).
+                Method("SetPosition").
+                With(Is.EqualTo(channel), Is.Anything);
             Expect.Exactly(2).On(device).
                 Method("GetRenderTarget").
                 With(0).
@@ -485,12 +452,8 @@ namespace Dope.DDXX.DemoFramework
 
         private void ExpectSoundInitialize()
         {
-            Expect.Once.On(system).
-                 Method("GetVersion").
-                 Will(Return.Value(FMOD.RESULT.OK));
-            Expect.Once.On(system).
-                Method("Init").
-                Will(Return.Value(FMOD.RESULT.OK));
+            Expect.Once.On(soundDriver).
+                 Method("Initialize");
         }
 
         private void ExpectPostProcessorInitialize()

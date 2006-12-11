@@ -18,7 +18,7 @@ namespace Dope.DDXX.DemoFramework
 {
     public class DemoExecuter : IDemoEffectBuilder, IDemoRegistrator
     {
-        private SoundDriver soundDriver;
+        private ISoundDriver soundDriver;
         private FMOD.Sound sound;
         private FMOD.Channel channel;
 
@@ -27,7 +27,7 @@ namespace Dope.DDXX.DemoFramework
         private IPostProcessor postProcessor;
         private IDemoTweaker tweaker;
 
-        private InputDriver inputDriver;
+        private IInputDriver inputDriver;
         private List<Track> tracks = new List<Track>();
         private int activeTrack = 0;
 
@@ -89,8 +89,10 @@ namespace Dope.DDXX.DemoFramework
             set { tweaker = value; }
         }
 
-        public DemoExecuter(IPostProcessor postProcessor)
+        public DemoExecuter(ISoundDriver soundDriver, IInputDriver inputDriver, IPostProcessor postProcessor)
         {
+            this.soundDriver = soundDriver;
+            this.inputDriver = inputDriver;
             this.postProcessor = postProcessor;
             tweaker = new DemoTweakerMain(new IDemoTweaker[] { new DemoTweakerDemo(), new DemoTweakerTrack() , new DemoTweakerEffect() });
         }
@@ -117,8 +119,6 @@ namespace Dope.DDXX.DemoFramework
 
             InitializeSound(song);
 
-            InitializeInput();
-
             postProcessor.Initialize(device);
 
             foreach (Track track in tracks)
@@ -136,11 +136,6 @@ namespace Dope.DDXX.DemoFramework
             tweaker.Initialize(this);
         }
 
-        private void InitializeInput()
-        {
-            inputDriver = InputDriver.GetInstance();
-        }
-
         private void InitializeGraphics()
         {
             device = D3DDriver.GetInstance().Device;
@@ -149,7 +144,6 @@ namespace Dope.DDXX.DemoFramework
 
         private void InitializeSound(string song)
         {
-            soundDriver = SoundDriver.GetInstance();
             soundDriver.Initialize();
             if (song != null && song != "")
                 sound = soundDriver.CreateSound(song);
@@ -185,6 +179,20 @@ namespace Dope.DDXX.DemoFramework
                 }
             }
 
+            if (inputDriver.KeyPressedNoRepeat(Key.Space))
+            {
+                if (Time.IsPaused())
+                {
+                    Time.Resume();
+                    soundDriver.SetPosition(channel, Time.CurrentTime);
+                    soundDriver.ResumeChannel(channel);
+                }
+                else
+                {
+                    Time.Pause();
+                    soundDriver.PauseChannel(channel);
+                }
+            }
             tweaker.HandleInput(inputDriver);
         }
 
@@ -195,6 +203,7 @@ namespace Dope.DDXX.DemoFramework
             if (sound != null)
             {
                 channel = soundDriver.PlaySound(sound);
+                soundDriver.SetPosition(channel, Time.CurrentTime);
             }
 
             while (Time.StepTime <= EndTime + 2.0f && !tweaker.Quit)

@@ -109,6 +109,12 @@ namespace Dope.DDXX.Utility
             }
         }
 
+
+        public static bool IsPaused()
+        {
+            return Time.paused;
+        }
+
         public static void Pause()
         {
             paused = true;

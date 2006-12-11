@@ -37,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FMODFactory.cs" />
+    <Compile Include="ISoundDriver.cs" />
     <Compile Include="ISoundFactory.cs" />
     <Compile Include="FMODSystem.cs" />
     <Compile Include="ISoundSystem.cs" />
