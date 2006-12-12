@@ -8,6 +8,9 @@ namespace Dope.DDXX.Utility
     {
         private float value;
 
+        public InterpolatedFloat()
+        {
+        }
         public InterpolatedFloat(float value)
         {
             this.value = value;

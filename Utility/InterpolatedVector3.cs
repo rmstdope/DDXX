@@ -9,6 +9,9 @@ namespace Dope.DDXX.Utility
     {
         private Vector3 value;
 
+        public InterpolatedVector3()
+        {
+        }
         public InterpolatedVector3(Vector3 value)
         {
             this.value = value;

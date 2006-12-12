@@ -50,6 +50,10 @@
     <Compile Include="KeyFrame.cs" />
     <Compile Include="LinearSpline.cs" />
     <Compile Include="LinearSplineTest.cs" />
+    <Compile Include="NaturalCubicSpline.cs" />
+    <Compile Include="NaturalCubicSplineTest.cs" />
+    <Compile Include="SplineBase.cs" />
+    <Compile Include="SplineBaseTest.cs" />
     <Compile Include="Time.cs" />
     <Compile Include="TimeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
