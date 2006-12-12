@@ -16,7 +16,7 @@
 	</Effect>
 	<Effect name="TestEffect" track="0" startTime="0.0" endTime="30.0">
 	</Effect>
-	<PostEffect name="MonochromePostEffect" track="0" startTime="0.0" endTime="2.0">
+	<!--PostEffect name="MonochromePostEffect" track="0" startTime="0.0" endTime="2.0">
 	</PostEffect>
 	<PostEffect name="MonochromePostEffect" track="0" startTime="0.1" endTime="40.0">
 	</PostEffect>
@@ -45,5 +45,5 @@
 	<PostEffect name="MonochromePostEffect" track="0" startTime="1.3" endTime="40.0">
 	</PostEffect>
 	<PostEffect name="MonochromePostEffect" track="2" startTime="1.4" endTime="40.0">
-	</PostEffect>
+	</PostEffect-->
 </Effects>

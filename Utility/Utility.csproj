@@ -43,6 +43,13 @@
     <Compile Include="DDXXException.cs" />
     <Compile Include="FileUtility.cs" />
     <Compile Include="FileUtilityTest.cs" />
+    <Compile Include="IArithmetic.cs" />
+    <Compile Include="InterpolatedFloat.cs" />
+    <Compile Include="InterpolatedTest.cs" />
+    <Compile Include="InterpolatedVector3.cs" />
+    <Compile Include="KeyFrame.cs" />
+    <Compile Include="LinearSpline.cs" />
+    <Compile Include="LinearSplineTest.cs" />
     <Compile Include="Time.cs" />
     <Compile Include="TimeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
