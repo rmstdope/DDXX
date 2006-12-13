@@ -47,6 +47,9 @@
     <Compile Include="InterpolatedFloat.cs" />
     <Compile Include="InterpolatedTest.cs" />
     <Compile Include="InterpolatedVector3.cs" />
+    <Compile Include="Interpolator.cs" />
+    <Compile Include="InterpolatorTest.cs" />
+    <Compile Include="ISpline.cs" />
     <Compile Include="KeyFrame.cs" />
     <Compile Include="LinearSpline.cs" />
     <Compile Include="LinearSplineTest.cs" />
