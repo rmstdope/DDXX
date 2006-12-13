@@ -40,6 +40,9 @@
   <ItemGroup>
     <Compile Include="AspectRatio.cs" />
     <Compile Include="AspectRatioTest.cs" />
+    <Compile Include="ClampedCubicSpline.cs" />
+    <Compile Include="ClampedCubicSplineTest.cs" />
+    <Compile Include="CubicSplineBase.cs" />
     <Compile Include="DDXXException.cs" />
     <Compile Include="FileUtility.cs" />
     <Compile Include="FileUtilityTest.cs" />

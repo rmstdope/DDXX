@@ -25,9 +25,6 @@ namespace Dope.DDXX.DemoFramework
     public class DemoExecuterTest : TrackTest
     {
         DemoExecuter executer;
-        //private IInputFactory iFactory;
-        //private ISoundFactory sFactory;
-        //private ISoundSystem system;
         private IDemoTweaker tweaker;
         private ISoundDriver soundDriver;
         private IInputDriver inputDriver;

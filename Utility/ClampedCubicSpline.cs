@@ -4,9 +4,19 @@ using System.Text;
 
 namespace Dope.DDXX.Utility
 {
-    public class NaturalCubicSpline<Type> : CubicSplineBase<Type>
+    public class ClampedCubicSpline<Type> : CubicSplineBase<Type>
         where Type : IArithmetic
     {
+        Type dX0;
+        Type dXn;
+
+        public ClampedCubicSpline(Type dX0, Type dXn)
+            : base()
+        {
+            this.dX0 = dX0;
+            this.dXn = dXn;
+        }
+        
         protected override void DoCalculate()
         {
             CubicCommonCalculate();
@@ -14,39 +24,36 @@ namespace Dope.DDXX.Utility
             float[] l = new float[keyFrames.Count];
             float[] u = new float[keyFrames.Count];
             Type[] z = new Type[keyFrames.Count];
-            Type[] y = new Type[keyFrames.Count];
+            Type[] e = new Type[keyFrames.Count];
 
             // Calculate h vector
             float[] h = InitializeH();
 
             // Calculate y vector
-            for (int i = 1; i < y.Length - 1; i++)
+            e[0] = (Type)(keyFrames[1].Value.Sub(keyFrames[0].Value).Mul(3 / h[0]).Sub(dX0.Mul(3)));
+            e[e.Length - 1] = (Type)(dXn.Mul(3).Sub(keyFrames[e.Length - 1].Value.Sub(keyFrames[e.Length - 2].Value).Mul(3 / h[e.Length - 2])));
+            for (int i = 1; i < e.Length - 1; i++)
             {
-                //y[i] = (3 / h[i]) * (keyFrames[i + 1].Value.Sub(keyFrames[i].Value)) - (3 / h[i - 1]) * (keyFrames[i].Value.Sub(keyFrames[i - 1].Value));
-                IArithmetic diff1 = keyFrames[i + 1].Value.Sub(keyFrames[i].Value);
-                diff1 = diff1.Mul(3 / h[i]);
-                IArithmetic diff2 = keyFrames[i].Value.Sub(keyFrames[i - 1].Value);
-                diff2 = diff2.Mul(3 / h[i - 1]);
-                y[i] = (Type)(diff1.Sub(diff2));
+                e[i] = (Type)(keyFrames[i + 1].Value.Sub(keyFrames[i].Value).Mul(3 / h[i]).Sub(keyFrames[i].Value.Sub(keyFrames[i - 1].Value).Mul(3 / h[i - 1])));
             }
 
             // Create additional vectors l, z, and c
-            l[0] = 1.0f;
-            u[0] = 0.0f;
-            z[0] = (Type)(keyFrames[0].Value.Zero());
+            l[0] = 2.0f * h[0];
+            u[0] = 0.5f;
+            z[0] = (Type)(e[0].Mul(1 / l[0]));
             for (int i = 1; i < l.Length - 1; i++)
             {
                 l[i] = 2 * (keyFrames[i + 1].Time - keyFrames[i - 1].Time) - h[i - 1] * u[i - 1];
                 u[i] = h[i] / l[i];
                 //z[i] = (y[i] - h[i - 1] * z[i - 1]) / l[i];
                 IArithmetic value = z[i - 1].Mul(h[i - 1]);
-                z[i] = (Type)(y[i].Sub(value).Mul(1 / l[i]));
+                z[i] = (Type)(e[i].Sub(value).Mul(1 / l[i]));
             }
-            l[l.Length - 1] = 1.0f;
-            z[z.Length - 1] = (Type)(keyFrames[0].Value.Zero()); ;
-            c[c.Length - 1] = (Type)(keyFrames[0].Value.Zero()); ;
+            l[l.Length - 1] = h[h.Length - 2] * (2 - u[u.Length - 2]);
+            z[z.Length - 1] = (Type)(e[e.Length - 1].Sub(z[z.Length - 2].Mul(h[h.Length - 2] / l[l.Length - 1])));
+            c[c.Length - 1] = z[z.Length - 1];
 
-            for (int i = c.Length - 2; i >= 0; i--) 
+            for (int i = c.Length - 2; i >= 0; i--)
             {
                 //mC[i] = z[i] - u[i] * mC[i + 1];
                 c[i] = (Type)(z[i].Sub(c[i + 1].Mul(u[i])));
