@@ -4,20 +4,21 @@ using System.Collections.Generic;
 
 namespace Dope.DDXX.Utility
 {
-    public class Interpolator
+    public class Interpolator<Type>
+        where Type : IArithmetic
     {
-        List<ISpline> splines = new List<ISpline>();
+        List<ISpline<Type>> splines = new List<ISpline<Type>>();
 
-        public void AddSpline(ISpline spline)
+        public void AddSpline(ISpline<Type> spline)
         {
-            foreach (ISpline cmpSpline in splines)
+            foreach (ISpline<Type> cmpSpline in splines)
             {
                 if (spline.StartTime < cmpSpline.EndTime &&
                     spline.EndTime > cmpSpline.StartTime)
                     throw new DDXXException("Overlapping splines can not exist in the same interpolator.");
             }
             splines.Add(spline);
-            splines.Sort(delegate(ISpline spline1, ISpline spline2)
+            splines.Sort(delegate(ISpline<Type> spline1, ISpline<Type> spline2)
             {
                 if (spline1.StartTime < spline2.StartTime)
                     return -1;
@@ -36,5 +37,14 @@ namespace Dope.DDXX.Utility
             get { return splines[splines.Count - 1].EndTime; }
         }
 
+
+        public Type GetValue(float time)
+        {
+            int i = 0;
+            while (i < splines.Count - 1 &&
+                splines[i].EndTime < time)
+                i++;
+            return splines[i].GetValue(time);
+        }
     }
 }

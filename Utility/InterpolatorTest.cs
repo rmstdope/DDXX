@@ -9,14 +9,14 @@ namespace Dope.DDXX.Utility
     [TestFixture]
     public class InterpolatorTest
     {
-        private Interpolator interpolator;
+        private Interpolator<InterpolatedFloat> interpolator;
         private Mockery mockery;
 
         [SetUp]
         public void SetUp()
         {
             mockery = new Mockery();
-            interpolator = new Interpolator();
+            interpolator = new Interpolator<InterpolatedFloat>();
         }
 
         [Test]
@@ -71,22 +71,38 @@ namespace Dope.DDXX.Utility
             interpolator.AddSpline(CreateMockedSpline(0.0f, 200.0f));
         }
 
-        //[Test]
-        //public void TestGetValue()
-        //{
-        //    ISpline spline1 = CreateMockedSpline(1.0f, 2.0f);
-        //    ISpline spline2 = CreateMockedSpline(2.0f, 3.0f);
-        //    ISpline spline3 = CreateMockedSpline(100.0f, 101.0f);
-        //    interpolator.AddSpline(spline1);
-        //    interpolator.AddSpline(spline2);
-        //    interpolator.AddSpline(spline3);
-
-        //    Expect.Once.On(spline1).Method("GetValue").With(1.0f).Will(Return.Value(new InterpolatedFloat()));
-        //}
-
-        private ISpline CreateMockedSpline(float start, float end)
+        [Test]
+        public void TestGetValue()
         {
-            ISpline spline = mockery.NewMock<ISpline>();
+            ISpline<InterpolatedFloat> spline1 = CreateMockedSpline(1.0f, 2.0f);
+            ISpline<InterpolatedFloat> spline2 = CreateMockedSpline(2.0f, 3.0f);
+            ISpline<InterpolatedFloat> spline3 = CreateMockedSpline(100.0f, 101.0f);
+            interpolator.AddSpline(spline1);
+            interpolator.AddSpline(spline2);
+            interpolator.AddSpline(spline3);
+
+            Expect.Once.On(spline1).Method("GetValue").With(1.0f).Will(Return.Value(new InterpolatedFloat(10.0f)));
+            Assert.AreEqual(10.0f, (float)interpolator.GetValue(1.0f));
+
+            Expect.Once.On(spline1).Method("GetValue").With(2.0f).Will(Return.Value(new InterpolatedFloat(20.0f)));
+            Assert.AreEqual(20.0f, (float)interpolator.GetValue(2.0f));
+
+            Expect.Once.On(spline2).Method("GetValue").With(2.5f).Will(Return.Value(new InterpolatedFloat(25.0f)));
+            Assert.AreEqual(25.0f, (float)interpolator.GetValue(2.5f));
+
+            Expect.Once.On(spline2).Method("GetValue").With(3.0f).Will(Return.Value(new InterpolatedFloat(30.0f)));
+            Assert.AreEqual(30.0f, (float)interpolator.GetValue(3.0f));
+
+            Expect.Once.On(spline3).Method("GetValue").With(101.0f).Will(Return.Value(new InterpolatedFloat(1010.0f)));
+            Assert.AreEqual(1010.0f, (float)interpolator.GetValue(101.0f));
+
+            Expect.Once.On(spline3).Method("GetValue").With(500.0f).Will(Return.Value(new InterpolatedFloat(5000.0f)));
+            Assert.AreEqual(5000.0f, (float)interpolator.GetValue(500.0f));
+        }
+
+        private ISpline<InterpolatedFloat> CreateMockedSpline(float start, float end)
+        {
+            ISpline<InterpolatedFloat> spline = mockery.NewMock<ISpline<InterpolatedFloat>>();
             Stub.On(spline).
                 GetProperty("StartTime").
                 Will(Return.Value(start));

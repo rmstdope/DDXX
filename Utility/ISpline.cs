@@ -4,9 +4,14 @@ using System.Text;
 
 namespace Dope.DDXX.Utility
 {
-    public interface ISpline
+    public interface ISpline<Type>
+        where Type : IArithmetic
     {
         float StartTime { get; }
         float EndTime { get; }
+        void AddKeyFrame(KeyFrame<Type> keyFrame);
+        void Calculate();
+        Type GetValue(float time);
+        Type GetDerivative(float time);
     }
 }
