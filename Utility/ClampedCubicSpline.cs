@@ -19,7 +19,7 @@ namespace Dope.DDXX.Utility
         
         protected override void DoCalculate()
         {
-            CubicCommonCalculate();
+            CreateArrays();
 
             float[] l = new float[keyFrames.Count];
             float[] u = new float[keyFrames.Count];
@@ -45,12 +45,12 @@ namespace Dope.DDXX.Utility
             {
                 l[i] = 2 * (keyFrames[i + 1].Time - keyFrames[i - 1].Time) - h[i - 1] * u[i - 1];
                 u[i] = h[i] / l[i];
-                //z[i] = (y[i] - h[i - 1] * z[i - 1]) / l[i];
+                //z[i] = (e[i] - h[i - 1] * z[i - 1]) / l[i];
                 IArithmetic value = z[i - 1].Mul(h[i - 1]);
-                z[i] = (Type)(e[i].Sub(value).Mul(1 / l[i]));
+                z[i] = (Type)(e[i].Sub((z[i - 1].Mul(h[i - 1]))).Mul(1 / l[i]));//         e[i].Sub(value).Mul(1 / l[i]));
             }
             l[l.Length - 1] = h[h.Length - 2] * (2 - u[u.Length - 2]);
-            z[z.Length - 1] = (Type)(e[e.Length - 1].Sub(z[z.Length - 2].Mul(h[h.Length - 2] / l[l.Length - 1])));
+            z[z.Length - 1] = (Type)(e[e.Length - 1].Sub((z[z.Length - 2].Mul(h[h.Length - 2]))).Mul(1.0f / l[l.Length - 1]));
             c[c.Length - 1] = z[z.Length - 1];
 
             for (int i = c.Length - 2; i >= 0; i--)
@@ -62,19 +62,6 @@ namespace Dope.DDXX.Utility
                 //mD[i] = (mC[i + 1] - mC[i]) / (3 * h[i]);
                 d[i] = (Type)(c[i + 1].Sub(c[i]).Mul(1 / (3 * h[i])));
             }
-        }
-
-        protected override Type DoGetValue(float time)
-        {
-            int segment = GetStartKey(time);
-            float u = time - keyFrames[segment].Time;
-
-            return (Type)(keyFrames[segment].Value.Add(b[segment].Mul(u)).Add(c[segment].Mul(u * u)).Add(d[segment].Mul(u * u * u)));
-        }
-
-        protected override Type DoGetDerivative(float time)
-        {
-            throw new Exception("The method or operation is not implemented.");
         }
     }
 }

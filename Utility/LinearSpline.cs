@@ -30,8 +30,6 @@ namespace Dope.DDXX.Utility
             if (time < StartTime || time > EndTime)
                 return (Type)(keyFrames[0].Value).Zero();
             int startKey = GetStartKey(time);
-            if (time == EndTime)
-                startKey--;
             IArithmetic valueDiff = keyFrames[startKey + 1].Value.Sub(keyFrames[startKey].Value);
             return (Type)(valueDiff.Mul(1.0f / (keyFrames[startKey + 1].Time - keyFrames[startKey].Time)));
         }

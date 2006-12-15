@@ -53,7 +53,7 @@ namespace Dope.DDXX.Utility
         protected int GetStartKey(float time)
         {
             int startKey = 0;
-            while (startKey < (keyFrames.Count - 1) &&
+            while (startKey < (keyFrames.Count - 2) &&
                    keyFrames[startKey + 1].Time <= time)
                 startKey++;
             return startKey;

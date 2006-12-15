@@ -20,7 +20,7 @@ namespace Dope.DDXX.Utility
         /// </summary>
         protected Type[] d;
 
-        protected void CubicCommonCalculate()
+        protected void CreateArrays()
         {
             b = new Type[keyFrames.Count];
             c = new Type[keyFrames.Count];
@@ -35,6 +35,22 @@ namespace Dope.DDXX.Utility
                 h[i] = keyFrames[i + 1].Time - keyFrames[i].Time;
             }
             return h;
+        }
+
+        protected override Type DoGetValue(float time)
+        {
+            int segment = GetStartKey(time);
+            float u = time - keyFrames[segment].Time;
+
+            return (Type)(keyFrames[segment].Value.Add(b[segment].Mul(u)).Add(c[segment].Mul(u * u)).Add(d[segment].Mul(u * u * u)));
+        }
+
+        protected override Type DoGetDerivative(float time)
+        {
+            int segment = GetStartKey(time);
+            float u = time - keyFrames[segment].Time;
+
+            return (Type)(b[segment].Add(c[segment].Mul(2 * u)).Add(d[segment].Mul(3 * u * u)));
         }
 
     }
