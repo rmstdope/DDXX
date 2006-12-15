@@ -54,10 +54,6 @@ namespace Dope.DDXX.Graphics
                 Method("CreateDevice").
                 WithAnyArguments().
                 Will(Return.Value(device));
-            //Stub.On(factory).
-            //    Method("CreateTexture").
-            //    With(device, presentParameters.BackBufferWidth, presentParameters.BackBufferHeight, 1, Usage.RenderTarget, presentParameters.BackBufferFormat, Pool.Default).
-            //    Will(Return.Value(texture));
             Stub.On(manager).
                 Method("CurrentDisplayMode").
                 With(0).
@@ -104,21 +100,21 @@ namespace Dope.DDXX.Graphics
             Time.Initialize();
         }
 
-        public void SetupD3DDriver()
-        {
-            DeviceDescription desc = CreateDescription();
-            PresentParameters param = new PresentParameters();
-            desc.deviceType = DeviceType.Reference;
-            desc.windowed = false;
-            param.Windowed = false;
-            param.SwapEffect = SwapEffect.Flip;
-            param.BackBufferCount = 2;
-            param.BackBufferWidth = desc.width;
-            param.BackBufferHeight = desc.height;
-            param.BackBufferFormat = desc.colorFormat;
-            Expect.Once.On(prerequisits).Method("CheckPrerequisits").With(0, desc.deviceType);
-            D3DDriver.GetInstance().Initialize(null, desc, prerequisits);
-        }
+        //public void SetupD3DDriver()
+        //{
+        //    DeviceDescription desc = CreateDescription();
+        //    PresentParameters param = new PresentParameters();
+        //    desc.deviceType = DeviceType.Reference;
+        //    desc.windowed = false;
+        //    param.Windowed = false;
+        //    param.SwapEffect = SwapEffect.Flip;
+        //    param.BackBufferCount = 2;
+        //    param.BackBufferWidth = desc.width;
+        //    param.BackBufferHeight = desc.height;
+        //    param.BackBufferFormat = desc.colorFormat;
+        //    Expect.Once.On(prerequisits).Method("CheckPrerequisits").With(0, desc.deviceType);
+        //    D3DDriver.GetInstance().Initialize(null, desc, prerequisits);
+        //}
 
     //    public void ExpectBaseDemoEffects(int num)
     //    {

@@ -27,24 +27,45 @@ namespace Dope.DDXX.Utility
             });
         }
 
+        private ISpline<Type> FirstSpline
+        { 
+            get { return splines[0]; } 
+        }
+
+        private ISpline<Type> LastSpline
+        {
+            get { return splines[splines.Count - 1]; }
+        }
+
         public float StartTime
         {
-            get { return splines[0].StartTime; }
+            get { return FirstSpline.StartTime; }
         }
 
         public float EndTime
         {
-            get { return splines[splines.Count - 1].EndTime; }
+            get { return LastSpline.EndTime; }
         }
 
 
         public Type GetValue(float time)
         {
+            return splines[GetSpline(time)].GetValue(time);
+        }
+
+        public Type GetDerivative(float time)
+        {
+            return splines[GetSpline(time)].GetDerivative(time);
+        }
+
+        private int GetSpline(float time)
+        {
             int i = 0;
             while (i < splines.Count - 1 &&
                 splines[i].EndTime < time)
                 i++;
-            return splines[i].GetValue(time);
+            return i;
         }
+
     }
 }
