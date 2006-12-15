@@ -14,6 +14,7 @@ namespace FMOD
         {
             switch (errcode)
             {
+                case FMOD.RESULT.OK:                         return "No errors.";
                 case FMOD.RESULT.ERR_ALREADYLOCKED:          return "Tried to call lock a second time before unlock was called. ";
                 case FMOD.RESULT.ERR_BADCOMMAND:             return "Tried to call a function on a data type that does not allow this type of functionality (ie calling Sound::lock on a streaming sound). ";
                 case FMOD.RESULT.ERR_CDDA_DRIVERS:           return "Neither NTSCSI nor ASPI could be initialised. ";
@@ -46,13 +47,17 @@ namespace FMOD
                 case FMOD.RESULT.ERR_INITIALIZATION:         return "FMOD was not initialized correctly to support this function. ";
                 case FMOD.RESULT.ERR_INITIALIZED:            return "Cannot call this command after System::init. ";
                 case FMOD.RESULT.ERR_INTERNAL:               return "An error occured that wasnt supposed to.  Contact support. ";
+                case FMOD.RESULT.ERR_INVALID_ADDRESS:        return "On Xbox 360, this memory address passed to FMOD must be physical, (ie allocated with XPhysicalAlloc.)";
+                case FMOD.RESULT.ERR_INVALID_FLOAT:          return "Value passed in was a NaN, Inf or denormalized float.";
                 case FMOD.RESULT.ERR_INVALID_HANDLE:         return "An invalid object handle was used. ";
                 case FMOD.RESULT.ERR_INVALID_PARAM:          return "An invalid parameter was passed to this function. ";
                 case FMOD.RESULT.ERR_INVALID_SPEAKER:        return "An invalid speaker was passed to this function based on the current speaker mode. ";
+                case FMOD.RESULT.ERR_INVALID_VECTOR:         return "The vectors passed in are not unit length, or perpendicular.";
                 case FMOD.RESULT.ERR_IRX:                    return "PS2 only.  fmodex.irx failed to initialize.  This is most likely because you forgot to load it. ";
                 case FMOD.RESULT.ERR_MEMORY:                 return "Not enough memory or resources. ";
                 case FMOD.RESULT.ERR_MEMORY_IOP:             return "PS2 only.  Not enough memory or resources on PlayStation 2 IOP ram. ";
                 case FMOD.RESULT.ERR_MEMORY_SRAM:            return "Not enough memory or resources on console sound ram. ";
+                case FMOD.RESULT.ERR_MEMORY_CANTPOINT:       return "Can't use FMOD_OPENMEMORY_POINT on non PCM source data, or non mp3/xma/adpcm data if FMOD_CREATECOMPRESSEDSAMPLE was used.";
                 case FMOD.RESULT.ERR_NEEDS2D:                return "Tried to call a command on a 3d sound when the command was meant for 2d sound. ";
                 case FMOD.RESULT.ERR_NEEDS3D:                return "Tried to call a command on a 2d sound when the command was meant for 3d sound. ";
                 case FMOD.RESULT.ERR_NEEDSHARDWARE:          return "Tried to use a feature that requires hardware support.  (ie trying to play a VAG compressed sound in software on PS2). ";
@@ -77,14 +82,18 @@ namespace FMOD
                 case FMOD.RESULT.ERR_SUBSOUNDS:              return " The error occured because the sound referenced contains subsounds.  (ie you cannot play the parent sound as a static sample, only its subsounds.)";
                 case FMOD.RESULT.ERR_SUBSOUND_ALLOCATED:     return "This subsound is already being used by another sound, you cannot have more than one parent to a sound.  Null out the other parent's entry first. ";
                 case FMOD.RESULT.ERR_TAGNOTFOUND:            return "The specified tag could not be found or there are no tags. ";
-                case FMOD.RESULT.ERR_TOOMANYCHANNELS:        return "The sound created exceeds the allowable input channel count.  This can be increased with System::setMaxInputChannels. ";
+                case FMOD.RESULT.ERR_TOOMANYCHANNELS:        return "The sound created exceeds the allowable input channel count.  This can be increased using the maxinputchannels parameter in System::setSoftwareFormat.";
                 case FMOD.RESULT.ERR_UNIMPLEMENTED:          return "Something in FMOD hasn't been implemented when it should be! contact support! ";
                 case FMOD.RESULT.ERR_UNINITIALIZED:          return "This command failed because System::init or System::setDriver was not called. ";
                 case FMOD.RESULT.ERR_UNSUPPORTED:            return "A command issued was not supported by this object.  Possibly a plugin without certain callbacks specified. ";
                 case FMOD.RESULT.ERR_UPDATE:                 return "On PS2, System::update was called twice in a row when System::updateFinished must be called first. ";
                 case FMOD.RESULT.ERR_VERSION:                return "The version number of this file format is not supported. ";
-                case FMOD.RESULT.OK:                         return "No errors.";
-                default :                             return "Unknown error.";
+
+                case FMOD.RESULT.ERR_EVENT_FAILED:           return "An Event failed to be retrieved, most likely due to 'just fail' being specified as the max playbacks behaviour.";
+                case FMOD.RESULT.ERR_EVENT_INTERNAL:         return "An error occured that wasn't supposed to.  See debug log for reason.";
+                case FMOD.RESULT.ERR_EVENT_NAMECONFLICT:     return "A category with the same name already exists.";
+                case FMOD.RESULT.ERR_EVENT_NOTFOUND:         return "The requested event, event group, event category or event property could not be found.";
+                default :                                    return "Unknown error.";
             };
         }
     }

@@ -36,7 +36,7 @@ namespace FMOD
         To get them to be active, first create the unit, then add it somewhere into the DSP network, either at the front of the network near the soundcard unit to affect the global output (by using System::getDSPHead), or on a single channel (using Channel::getDSPHead).
 
         [PLATFORMS]
-        Win32, Win64, Linux, Macintosh, XBox, PlayStation 2, GameCube
+        Win32, Win64, Linux, Linux64, Macintosh, Xbox, Xbox360, PlayStation 2, GameCube, PlayStation Portable, PlayStation 3, Wii
 
         [SEE_ALSO]
         System::createDSPByType
@@ -47,8 +47,8 @@ namespace FMOD
         UNKNOWN,            /* This unit was created via a non FMOD plugin so has an unknown purpose */
         MIXER,              /* This unit does nothing but take inputs and mix them together then feed the result to the soundcard unit. */
         OSCILLATOR,         /* This unit generates sine/square/saw/triangle or noise tones. */
-        LOWPASS,            /* This unit filters data using a resonant lowpass filter algorithm. */
-        ITLOWPASS,          /* This unit filters sound using a resonant lowpass filter algorithm that is used in Impulse Tracker. */
+        LOWPASS,            /* This unit filters sound using a high quality, resonant lowpass filter algorithm but consumes more CPU time. */
+        ITLOWPASS,          /* This unit filters sound using a resonant lowpass filter algorithm that is used in Impulse Tracker, but with limited cutoff range (0 to 8060hz). */
         HIGHPASS,           /* This unit filters sound using a resonant highpass filter algorithm. */
         ECHO,               /* This unit produces an echo on the sound and fades out at the desired rate. */
         FLANGE,             /* This unit produces a flange effect on the sound. */
@@ -62,7 +62,8 @@ namespace FMOD
         WINAMPPLUGIN,       /* This unit allows the use of Nullsoft Winamp plugins */
         ITECHO,             /* This unit produces an echo on the sound and fades out at the desired rate as is used in Impulse Tracker. */
         COMPRESSOR,         /* This unit implements dynamic compression (linked multichannel, wideband) */
-        SFXREVERB           /* This unit implements SFX reverb */
+        SFXREVERB,          /* This unit implements SFX reverb */
+        LOWPASS_SIMPLE      /* This unit filters sound using a simple lowpass with no resonance, but has flexible cutoff and is fast. */
     }
 
 
@@ -83,7 +84,7 @@ namespace FMOD
         A step value of 0.0 would mean the full floating point range is accessable.<br>
 
         [PLATFORMS]
-        Win32, Win64, Linux, Macintosh, XBox, PlayStation 2, GameCube
+        Win32, Win64, Linux, Linux64, Macintosh, Xbox, Xbox360, PlayStation 2, GameCube, PlayStation Portable, PlayStation 3, Wii
 
         [SEE_ALSO]    
         System::createDSP
@@ -116,7 +117,7 @@ namespace FMOD
         The other is to use DSP::showConfigDialog.  This is platform specific and requires a GUI, and will display a dialog box to configure the plugin.<br>
         
         [PLATFORMS]
-        Win32, Win64, Linux, Macintosh, XBox, PlayStation 2, GameCube
+        Win32, Win64, Linux, Linux64, Macintosh, Xbox, Xbox360, PlayStation 2, GameCube, PlayStation Portable, PlayStation 3, Wii
 
         [SEE_ALSO]
         System::createDSP
@@ -188,7 +189,7 @@ namespace FMOD
         [REMARKS]
 
         [PLATFORMS]
-        Win32, Win64, Linux, Macintosh, XBox, PlayStation 2, GameCube
+        Win32, Win64, Linux, Linux64, Macintosh, Xbox, Xbox360, PlayStation 2, GameCube, PlayStation Portable, PlayStation 3, Wii
 
         [SEE_ALSO]
         DSP::setParameter
@@ -212,7 +213,7 @@ namespace FMOD
         [REMARKS]
 
         [PLATFORMS]
-        Win32, Win64, Linux, Macintosh, XBox, PlayStation 2, GameCube
+        Win32, Win64, Linux, Linux64, Macintosh, Xbox, Xbox360, PlayStation 2, GameCube, PlayStation Portable, PlayStation 3, Wii
 
         [SEE_ALSO]      
         DSP::setParameter
@@ -232,11 +233,18 @@ namespace FMOD
     [  
         [DESCRIPTION]   
         Parameter types for the FMOD_DSP_TYPE_ITLOWPASS filter.
+        This is different to the default FMOD_DSP_TYPE_ITLOWPASS filter in that it uses a different quality algorithm and is 
+        the filter used to produce the correct sounding playback in .IT files.<br> 
+        FMOD Ex's .IT playback uses this filter.<br>
 
         [REMARKS]
+        Note! This filter actually has a limited cutoff frequency below the specified maximum, due to its limited design, 
+        so for a more  open range filter use FMOD_DSP_LOWPASS or if you don't mind not having resonance, 
+        FMOD_DSP_LOWPASS_SIMPLE.<br>
+        The effective maximum cutoff is about 8060hz.
 
         [PLATFORMS]
-        Win32, Win64, Linux, Macintosh, XBox, PlayStation 2, GameCube
+        Win32, Win64, Linux, Linux64, Macintosh, Xbox, Xbox360, PlayStation 2, GameCube, PlayStation Portable, PlayStation 3, Wii
 
         [SEE_ALSO]      
         DSP::setParameter
@@ -260,7 +268,7 @@ namespace FMOD
         [REMARKS]
 
         [PLATFORMS]
-        Win32, Win64, Linux, Macintosh, XBox, PlayStation 2, GameCube
+        Win32, Win64, Linux, Linux64, Macintosh, Xbox, Xbox360, PlayStation 2, GameCube, PlayStation Portable, PlayStation 3, Wii
 
         [SEE_ALSO]      
         DSP::setParameter
@@ -291,7 +299,7 @@ namespace FMOD
         If a channel echo is set to a lower number than the sound's channel count that is coming in, it will not echo the sound.<br>
 
         [PLATFORMS]
-        Win32, Win64, Linux, Macintosh, XBox, PlayStation 2, GameCube
+        Win32, Win64, Linux, Linux64, Macintosh, Xbox, Xbox360, PlayStation 2, GameCube, PlayStation Portable, PlayStation 3, Wii
 
         [SEE_ALSO]      
         DSP::setParameter
@@ -322,7 +330,7 @@ namespace FMOD
         Flange depth is a percentage of a 10ms shift from the original signal.  Anything above 10ms is not considered flange because to the ear it begins to 'echo' so 10ms is the highest value possible.<br>
 
         [PLATFORMS]
-        Win32, Win64, Linux, Macintosh, XBox, PlayStation 2, GameCube
+        Win32, Win64, Linux, Linux64, Macintosh, Xbox, Xbox360, PlayStation 2, GameCube, PlayStation Portable, PlayStation 3, Wii
 
         [SEE_ALSO]      
         DSP::setParameter
@@ -348,7 +356,7 @@ namespace FMOD
         [REMARKS]
 
         [PLATFORMS]
-        Win32, Win64, Linux, Macintosh, XBox, PlayStation 2, GameCube
+        Win32, Win64, Linux, Linux64, Macintosh, Xbox, Xbox360, PlayStation 2, GameCube, PlayStation Portable, PlayStation 3, Wii
 
         [SEE_ALSO]      
         DSP::setParameter
@@ -377,7 +385,7 @@ namespace FMOD
         To avoid very sudden changes in volume level based on small samples of new data, fmod fades towards the desired amplification which makes for smooth gain control.  The fadetime parameter can control this.<br>
 
         [PLATFORMS]
-        Win32, Win64, Linux, Macintosh, XBox, PlayStation 2, GameCube
+        Win32, Win64, Linux, Linux64, Macintosh, Xbox, Xbox360, PlayStation 2, GameCube, PlayStation Portable, PlayStation 3, Wii
 
         [SEE_ALSO]      
         DSP::setParameter
@@ -407,7 +415,7 @@ namespace FMOD
         When a frequency has its gain set to 1.0, the sound will be unaffected and represents the original signal exactly.<br>
 
         [PLATFORMS]
-        Win32, Win64, Linux, Macintosh, XBox, PlayStation 2, GameCube
+        Win32, Win64, Linux, Linux64, Macintosh, Xbox, Xbox360, PlayStation 2, GameCube, PlayStation Portable, PlayStation 3, Wii
 
         [SEE_ALSO]      
         DSP::setParameter
@@ -447,7 +455,7 @@ namespace FMOD
         If a channel pitch shift is set to a lower number than the sound's channel count that is coming in, it will not pitch shift the sound.<br>
 
         [PLATFORMS]
-        Win32, Win64, Linux, Macintosh, XBox, PlayStation 2, GameCube
+        Win32, Win64, Linux, Linux64, Macintosh, Xbox, Xbox360, PlayStation 2, GameCube, PlayStation Portable, PlayStation 3, Wii
 
         [SEE_ALSO]      
         DSP::setParameter
@@ -477,7 +485,7 @@ namespace FMOD
         This unit also could be used to do a simple echo, or a flange effect. 
 
         [PLATFORMS]
-        Win32, Win64, Linux, Macintosh, XBox, PlayStation 2, GameCube
+        Win32, Win64, Linux, Linux64, Macintosh, Xbox, Xbox360, PlayStation 2, GameCube, PlayStation Portable, PlayStation 3, Wii
 
         [SEE_ALSO]      
         DSP::setParameter

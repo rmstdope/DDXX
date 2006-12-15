@@ -16,7 +16,7 @@ namespace FMOD
     */
     public class VERSION
     {
-        public const int    number = 0x00040426;
+        public const int    number = 0x00040600;
         public const string dll    = "fmodex.dll";
     }
 
@@ -109,13 +109,17 @@ namespace FMOD
         ERR_INITIALIZATION,        /* FMOD was not initialized correctly to support this function. */
         ERR_INITIALIZED,           /* Cannot call this command after System::init. */
         ERR_INTERNAL,              /* An error occured that wasnt supposed to.  Contact support. */
+        ERR_INVALID_ADDRESS,       /* On Xbox 360, this memory address passed to FMOD must be physical, (ie allocated with XPhysicalAlloc.) */
+        ERR_INVALID_FLOAT,         /* Value passed in was a NaN, Inf or denormalized float. */
         ERR_INVALID_HANDLE,        /* An invalid object handle was used. */
         ERR_INVALID_PARAM,         /* An invalid parameter was passed to this function. */
         ERR_INVALID_SPEAKER,       /* An invalid speaker was passed to this function based on the current speaker mode. */
+        ERR_INVALID_VECTOR,        /* The vectors passed in are not unit length, or perpendicular. */
         ERR_IRX,                   /* PS2 only.  fmodex.irx failed to initialize.  This is most likely because you forgot to load it. */
         ERR_MEMORY,                /* Not enough memory or resources. */
         ERR_MEMORY_IOP,            /* PS2 only.  Not enough memory or resources on PlayStation 2 IOP ram. */
         ERR_MEMORY_SRAM,           /* Not enough memory or resources on console sound ram. */
+        ERR_MEMORY_CANTPOINT,      /* Can't use FMOD_OPENMEMORY_POINT on non PCM source data, or non mp3/xma/adpcm data if FMOD_CREATECOMPRESSEDSAMPLE was used. */
         ERR_NEEDS2D,               /* Tried to call a command on a 3d sound when the command was meant for 2d sound. */
         ERR_NEEDS3D,               /* Tried to call a command on a 2d sound when the command was meant for 3d sound. */
         ERR_NEEDSHARDWARE,         /* Tried to use a feature that requires hardware support.  (ie trying to play a VAG compressed sound in software on PS2). */
@@ -140,12 +144,17 @@ namespace FMOD
         ERR_SUBSOUNDS,             /* The error occured because the sound referenced contains subsounds.  (ie you cannot play the parent sound as a static sample, only its subsounds.) */
         ERR_SUBSOUND_ALLOCATED,    /* This subsound is already being used by another sound, you cannot have more than one parent to a sound.  Null out the other parent's entry first. */
         ERR_TAGNOTFOUND,           /* The specified tag could not be found or there are no tags. */
-        ERR_TOOMANYCHANNELS,       /* The sound created exceeds the allowable input channel count.  This can be increased with System::setMaxInputChannels. */
+        ERR_TOOMANYCHANNELS,       /* The sound created exceeds the allowable input channel count.  This can be increased using the maxinputchannels parameter in System::setSoftwareFormat. */
         ERR_UNIMPLEMENTED,         /* Something in FMOD hasn't been implemented when it should be! contact support! */
         ERR_UNINITIALIZED,         /* This command failed because System::init or System::setDriver was not called. */
         ERR_UNSUPPORTED,           /* A command issued was not supported by this object.  Possibly a plugin without certain callbacks specified. */
-        ERR_UPDATE,                /* On PS2, System::update was called twice in a row when System::updateFinished must be called first. */
+        ERR_UPDATE,                /* An error caused by System::update occured. */
         ERR_VERSION,               /* The version number of this file format is not supported. */
+        
+        ERR_EVENT_FAILED,          /* An Event failed to be retrieved, most likely due to 'just fail' being specified as the max playbacks behaviour. */
+        ERR_EVENT_INTERNAL,        /* An error occured that wasn't supposed to.  See debug log for reason. */
+        ERR_EVENT_NAMECONFLICT,    /* A category with the same name already exists. */
+        ERR_EVENT_NOTFOUND,        /* The requested event, event group, event category or event property could not be found. */
     }
 
 
@@ -235,6 +244,75 @@ namespace FMOD
         REVERB_EAX4            = 0x00000400,    /* Device supports EAX4 reverb  */
         REVERB_I3DL2           = 0x00000800,    /* Device supports I3DL2 reverb. */
         REVERB_LIMITED         = 0x00001000     /* Device supports some form of limited hardware reverb, maybe parameterless and only selectable by environment. */
+    }
+
+    /*
+    [DEFINE] 
+    [
+        [NAME]
+        FMOD_DEBUGLEVEL
+
+        [DESCRIPTION]   
+        Bit fields to use with FMOD::Debug_SetLevel / FMOD::Debug_GetLevel to control the level of tty debug output with logging versions of FMOD (fmodL).
+
+        [REMARKS]
+
+        [PLATFORMS]
+        Win32, Win64, Linux, Linux64, Macintosh, Xbox, Xbox360, PlayStation 2, GameCube, PlayStation Portable, PlayStation 3, Wii
+
+        [SEE_ALSO]
+        Debug_SetLevel 
+        Debug_GetLevel
+    ]
+    */
+    public enum DEBUGLEVEL : uint
+    {
+        LEVEL_NONE           = 0x00000000,
+        LEVEL_LOG            = 0x00000001,
+        LEVEL_ERROR          = 0x00000002,
+        LEVEL_WARNING        = 0x00000004,
+        LEVEL_HINT           = 0x00000008,
+        LEVEL_ALL            = 0x000000FF,   
+        TYPE_MEMORY          = 0x00000100,
+        TYPE_THREAD          = 0x00000200,
+        TYPE_FILE            = 0x00000400,
+        TYPE_NET             = 0x00000800,
+        TYPE_EVENT           = 0x00001000,
+        TYPE_ALL             = 0x0000FFFF,                     
+        DISPLAY_TIMESTAMPS   = 0x01000000,
+        DISPLAY_LINENUMBERS  = 0x02000000,
+        DISPLAY_COMPRESS     = 0x04000000,
+        DISPLAY_ALL          = 0x0F000000,   
+        ALL                  = (uint)0xFFFFFFFF
+    }
+
+
+    /*
+    [DEFINE] 
+    [
+        [NAME]
+        FMOD_MEMORY_TYPE
+
+        [DESCRIPTION]   
+        Bit fields for memory allocation type being passed into FMOD memory callbacks.
+
+        [REMARKS]
+
+        [PLATFORMS]
+        Win32, Win64, Linux, Linux64, Macintosh, Xbox, Xbox360, PlayStation 2, GameCube, PlayStation Portable, PlayStation 3, Wii
+
+        [SEE_ALSO]
+        FMOD_MEMORY_ALLOCCALLBACK
+        FMOD_MEMORY_REALLOCCALLBACK
+        FMOD_MEMORY_FREECALLBACK
+        Memory_Initialize
+    
+    ]
+    */
+    public enum MEMORY_TYPE
+    {
+        NORMAL           = 0x00000000,       /* Standard memory. */
+        XBOX360_PHYSICAL = 0x00100000        /* Requires XPhysicalAlloc / XPhysicalFree. */
     }
 
 
@@ -467,27 +545,30 @@ namespace FMOD
     */
     public enum SOUND_TYPE
     {
-        UNKNOWN,    /* 3rd party / unknown plugin format. */
-        AIFF,       /* AIFF */
-        ASF,        /* Microsoft Advanced Systems Format (ie WMA/ASF/WMV) */
-        AAC,        /* AAC */
-        CDDA,       /* Digital CD audio */
-        DLS,        /* Sound font / downloadable sound bank. */
-        FLAC,       /* FLAC lossless codec. */
-        FSB,        /* FMOD Sample Bank */
-        GCADPCM,    /* GameCube ADPCM */
-        IT,         /* Impulse Tracker. */
-        MIDI,       /* MIDI */
-        MOD,        /* Protracker / Fasttracker MOD. */
-        MPEG,       /* MP2/MP3 MPEG. */
-        OGGVORBIS,  /* Ogg vorbis. */
-        PLAYLIST,   /* Information only from ASX/PLS/M3U/WAX playlists */
-        S3M,        /* ScreamTracker 3. */
-        SF2,        /* Sound font 2 format. */
-        RAW,        /* Raw PCM data. */
-        USER,       /* User created sound */
-        WAV,        /* Microsoft WAV. */
-        XM          /* FastTracker 2 XM. */
+        UNKNOWN,         /* 3rd party / unknown plugin format. */
+        AAC,             /* AAC.  Currently unsupported. */
+        AIFF,            /* AIFF. */
+        ASF,             /* Microsoft Advanced Systems Format (ie WMA/ASF/WMV). */
+        AT3,             /* Sony ATRAC 3 format */
+        CDDA,            /* Digital CD audio. */
+        DLS,             /* Sound font / downloadable sound bank. */
+        FLAC,            /* FLAC lossless codec. */
+        FSB,             /* FMOD Sample Bank. */
+        GCADPCM,         /* GameCube ADPCM */
+        IT,              /* Impulse Tracker. */
+        MIDI,            /* MIDI. */
+        MOD,             /* Protracker / Fasttracker MOD. */
+        MPEG,            /* MP2/MP3 MPEG. */
+        OGGVORBIS,       /* Ogg vorbis. */
+        PLAYLIST,        /* Information only from ASX/PLS/M3U/WAX playlists */
+        RAW,             /* Raw PCM data. */
+        S3M,             /* ScreamTracker 3. */
+        SF2,             /* Sound font 2 format. */
+        USER,            /* User created sound. */
+        WAV,             /* Microsoft WAV. */
+        XM,              /* FastTracker 2 XM. */
+        XMA,             /* Xbox360 XMA */
+        VAG              /* PlayStation 2 / PlayStation Portable adpcm VAG format. */
     }
 
 
@@ -882,6 +963,10 @@ namespace FMOD
     public delegate RESULT SOUND_PCMREADCALLBACK  (IntPtr soundraw, IntPtr data, uint datalen);
     public delegate RESULT SOUND_PCMSETPOSCALLBACK(IntPtr soundraw, int subsound, uint position, TIMEUNIT postype);
 
+    public delegate RESULT FMOD_FILE_OPENCALLBACK  (StringBuilder name, int unicode, ref uint filesize, ref IntPtr handle, ref IntPtr userdata);
+    public delegate RESULT FMOD_FILE_CLOSECALLBACK (IntPtr handle, IntPtr userdata);
+    public delegate RESULT FMOD_FILE_READCALLBACK  (IntPtr handle, IntPtr buffer, uint sizebytes, ref uint bytesread, IntPtr userdata);
+    public delegate RESULT FMOD_FILE_SEEKCALLBACK  (IntPtr handle, uint pos, IntPtr userdata);
 
     /*
     [STRUCTURE] 
@@ -974,6 +1059,10 @@ namespace FMOD
         public int                         maxpolyphony;           /* [in] Optional. Specify 0 to ingore. For sequenced formats with dynamic channel allocation such as .MID and .IT, this specifies the maximum voice count allowed while playing.  .IT defaults to 64.  .MID defaults to 32. */
         public IntPtr                      userdata;               /* [in] Optional. Specify 0 to ignore. This is user data to be attached to the sound during creation.  Access via Sound::getUserData. */
         public SOUND_TYPE                  suggestedsoundtype;     /* [in] Optional. Specify 0 or FMOD_SOUND_TYPE_UNKNOWN to ignore.  Instead of scanning all codec types, use this to speed up loading by making it jump straight to this codec. */
+        public FMOD_FILE_OPENCALLBACK      useropen;               /* [in] Optional. Specify 0 to ignore. Callback for opening this file. */
+        public FMOD_FILE_CLOSECALLBACK     userclose;              /* [in] Optional. Specify 0 to ignore. Callback for closing this file. */
+        public FMOD_FILE_READCALLBACK      userread;               /* [in] Optional. Specify 0 to ignore. Callback for reading from this file. */
+        public FMOD_FILE_SEEKCALLBACK      userseek;               /* [in] Optional. Specify 0 to ignore. Callback for seeking within this file. */
     }
 
 
@@ -1058,6 +1147,9 @@ namespace FMOD
                           float modulationDepth, float airAbsorptionHF, float hfReference, float lfReference, float roomRolloffFactor,
                           float diffusion, float density, uint flags)
         {
+            ReflectionsPan      = new float[3];
+            ReverbPan           = new float[3];
+
             Instance            = instance;
             Environment         = environment;
             EnvSize             = envSize;
@@ -3063,7 +3155,22 @@ namespace FMOD
         {
             return FMOD_Channel_Get3DSpread(channelraw, ref angle);
         }
-
+        public RESULT set3DPanLevel           (float level)
+        {
+            return FMOD_Channel_Set3DPanLevel(channelraw, level);
+        }
+        public RESULT get3DPanLevel           (ref float level)
+        {
+            return FMOD_Channel_Get3DPanLevel(channelraw, ref level);
+        }
+        public RESULT set3DDopplerLevel(float level)
+        {
+            return FMOD_Channel_Set3DDopplerLevel(channelraw, level);
+        }
+        public RESULT get3DDopplerLevel(ref float level)
+        {
+            return FMOD_Channel_Get3DDopplerLevel(channelraw, ref level);
+        }
 
         public RESULT isPlaying             (ref bool isplaying)
         {
@@ -3259,7 +3366,15 @@ namespace FMOD
         private static extern RESULT FMOD_Channel_Set3DSpread           (IntPtr channel, float angle);
         [DllImport (VERSION.dll)]    
         private static extern RESULT FMOD_Channel_Get3DSpread           (IntPtr channel, ref float angle);
-        [DllImport (VERSION.dll)]                         
+        [DllImport (VERSION.dll)]
+        private static extern RESULT FMOD_Channel_Set3DPanLevel         (IntPtr channel, float level);
+        [DllImport (VERSION.dll)]
+        private static extern RESULT FMOD_Channel_Get3DPanLevel         (IntPtr channel, ref float level);
+        [DllImport (VERSION.dll)]
+        private static extern RESULT FMOD_Channel_Set3DDopplerLevel     (IntPtr channel, float level);
+        [DllImport (VERSION.dll)]
+        private static extern RESULT FMOD_Channel_Get3DDopplerLevel     (IntPtr channel, ref float level);
+        [DllImport (VERSION.dll)]
         private static extern RESULT FMOD_Channel_SetReverbProperties   (IntPtr channel, ref REVERB_CHANNELPROPERTIES prop);
         [DllImport (VERSION.dll)]
         private static extern RESULT FMOD_Channel_GetReverbProperties   (IntPtr channel, ref REVERB_CHANNELPROPERTIES prop);
@@ -3796,6 +3911,22 @@ namespace FMOD
         {
             return FMOD_DSP_GetInputLevels(dspraw, index, speaker, levels, numlevels);
         }
+        public RESULT setOutputMix              (int index, float volume)
+        {
+            return FMOD_DSP_SetOutputMix(dspraw, index, volume);
+        }
+        public RESULT getOutputMix              (int index, ref float volume)
+        {
+            return FMOD_DSP_GetOutputMix(dspraw, index, ref volume);
+        }
+        public RESULT setOutputLevels           (int index, SPEAKER speaker, float[] levels, int numlevels)
+        {
+            return FMOD_DSP_SetOutputLevels(dspraw, index, speaker, levels, numlevels);
+        }
+        public RESULT getOutputLevels           (int index, SPEAKER speaker, float[] levels, int numlevels)
+        {
+            return FMOD_DSP_GetOutputLevels(dspraw, index, speaker, levels, numlevels);
+        }
         public RESULT setActive                 (bool active)
         {
             return FMOD_DSP_SetActive(dspraw, active);
@@ -3890,6 +4021,10 @@ namespace FMOD
         [DllImport (VERSION.dll)]
         private static extern RESULT FMOD_DSP_GetInputMix               (IntPtr dsp, int index, ref float volume);
         [DllImport (VERSION.dll)]
+        private static extern RESULT FMOD_DSP_SetOutputMix              (IntPtr dsp, int index, float volume);
+        [DllImport (VERSION.dll)]
+        private static extern RESULT FMOD_DSP_GetOutputMix              (IntPtr dsp, int index, ref float volume);
+        [DllImport (VERSION.dll)]
         private static extern RESULT FMOD_DSP_SetActive                 (IntPtr dsp, bool active);
         [DllImport (VERSION.dll)]
         private static extern RESULT FMOD_DSP_GetActive                 (IntPtr dsp, ref bool active);
@@ -3897,6 +4032,10 @@ namespace FMOD
         private static extern RESULT FMOD_DSP_SetInputLevels            (IntPtr dsp, int index, SPEAKER speaker, float[] levels, int numlevels);
         [DllImport (VERSION.dll)]
         private static extern RESULT FMOD_DSP_GetInputLevels            (IntPtr dsp, int index, SPEAKER speaker, float[] levels, int numlevels);        
+        [DllImport (VERSION.dll)]
+        private static extern RESULT FMOD_DSP_SetOutputLevels           (IntPtr dsp, int index, SPEAKER speaker, float[] levels, int numlevels);
+        [DllImport (VERSION.dll)]
+        private static extern RESULT FMOD_DSP_GetOutputLevels           (IntPtr dsp, int index, SPEAKER speaker, float[] levels, int numlevels);        
         [DllImport (VERSION.dll)]
         private static extern RESULT FMOD_DSP_SetBypass                 (IntPtr dsp, bool bypass);
         [DllImport (VERSION.dll)]
