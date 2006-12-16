@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.DirectX;
 using System.Drawing;
 
-namespace Dope.DDXX.Utility
+namespace Dope.DDXX.DemoFramework
 {
     public interface IDemoEffectBuilder
     {

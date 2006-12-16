@@ -5,8 +5,10 @@ using System.Xml;
 using System.IO;
 using Microsoft.DirectX;
 using System.Drawing;
+using System.Collections;
+using Dope.DDXX.Utility;
 
-namespace Dope.DDXX.Utility
+namespace Dope.DDXX.DemoFramework
 {
     public enum TweakableType
     {
@@ -52,12 +54,10 @@ namespace Dope.DDXX.Utility
         #endregion
     }
 
-    public class DemoXMLReader
+    public class DemoXMLReader : IEffectChangeListener
     {
-        private Stream inputStream;
-        private XmlReader reader;
         private IDemoEffectBuilder effectBuilder;
-
+        private XmlDocument doc;
 
         public DemoXMLReader(IDemoEffectBuilder builder)
         {
@@ -66,146 +66,133 @@ namespace Dope.DDXX.Utility
 
         public void Read(string filename)
         {
-            Stream inputStream = new FileStream(FileUtility.FilePath(filename), FileMode.Open);
-            Read(inputStream);
-        }
-        private void Read(Stream input)
-        {
-            this.inputStream = input;
-            XmlReaderSettings settings = new XmlReaderSettings();
-            settings.ConformanceLevel = ConformanceLevel.Document;
-            settings.IgnoreWhitespace = true;
-            settings.IgnoreComments = true;
-            reader = XmlReader.Create(inputStream, settings);
-            //reader.MoveToContent();
-            try
+            doc = new XmlDocument();
+            doc.PreserveWhitespace = true;
+            using (Stream inputStream = new FileStream(FileUtility.FilePath(filename), FileMode.Open))
             {
-                while (reader.Read())
-                {
-                    // PrintElement(reader);
-                    if (reader.NodeType != XmlNodeType.Element)
-                        continue;
-                    if (reader.Name == "Effects")
-                    {
-                        ReadEffects();
-                    }
-                    else
-                    {
-                        throw new XmlException("Expected <Effects>, found <" + reader.Name + ">");
-                    }
-                }
-            }
-            finally
-            {
-                Close();
+                doc.Load(inputStream);
+                Parse(doc);
             }
         }
 
-        public void Close()
+        public void ReadString(string xmlString)
         {
-            reader.Close();
-            inputStream.Close();
+            doc = new XmlDocument();
+            doc.PreserveWhitespace = true;
+            doc.LoadXml(xmlString);
+            Parse(doc);
         }
 
-        public void ReadEffects()
+        private void Parse(XmlDocument doc)
         {
-            while (reader.Read())
+            XmlNode root = doc.DocumentElement;
+            XmlNode effectsNode = root;
+            while (effectsNode != null && effectsNode.Name != "Effects")
             {
-                if (reader.NodeType == XmlNodeType.Element && reader.Name == "Effect")
+                effectsNode = effectsNode.NextSibling;
+            }
+            if (effectsNode == null)
+                throw new DDXXException("No effects found");
+            foreach (XmlNode node in effectsNode.ChildNodes)
+            {
+                if (node.NodeType == XmlNodeType.Element && node.Name == "Effect")
                 {
-                    ReadEffect();
+                    ReadEffect(node);
                 }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "PostEffect")
+                else if (node.NodeType == XmlNodeType.Element && node.Name == "PostEffect")
                 {
-                    ReadPostEffect();
+                    ReadPostEffect(node);
                 }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "Transition")
+                else if (node.NodeType == XmlNodeType.Element && node.Name == "Transition")
                 {
-                    ReadTransition();
+                    ReadTransition(node);
                 }
             }
         }
 
-        private void ReadEffect()
+        private void ReadEffect(XmlNode node)
         {
             string effectName;
             int effectTrack;
             float startTime;
             float endTime;
-            ReadNameTrack(out effectName, out effectTrack, out startTime, out endTime);
+            ReadNameTrack(node, out effectName, out effectTrack, out startTime, out endTime);
             effectBuilder.AddEffect(effectName, effectTrack, startTime, endTime);
-            ReadParameters();
+            ReadParameters(node);
         }
 
-        private void ReadPostEffect()
+        private void ReadPostEffect(XmlNode node)
         {
             string effectName;
             int effectTrack;
             float startTime;
             float endTime;
-            ReadNameTrack(out effectName, out effectTrack, out startTime, out endTime);
+            ReadNameTrack(node, out effectName, out effectTrack, out startTime, out endTime);
             effectBuilder.AddPostEffect(effectName, effectTrack, startTime, endTime);
-            ReadParameters();
+            ReadParameters(node);
         }
 
-        private void ReadTransition()
+        private void ReadTransition(XmlNode node)
         {
-            string effectName = reader.GetAttribute("name");
-            string track = reader.GetAttribute("destinationTrack");
+            XmlAttribute effectName = (XmlAttribute)node.Attributes.GetNamedItem("name");
+            XmlAttribute track = (XmlAttribute)node.Attributes.GetNamedItem("destinationTrack");
             int destinationTrack;
             if (track != null)
             {
-                destinationTrack = int.Parse(track);
+                destinationTrack = int.Parse(track.Value);
             }
             else
             {
                 destinationTrack = 0;
             }
-            effectBuilder.AddTransition(effectName, destinationTrack);
-            ReadParameters();
+            effectBuilder.AddTransition(effectName.Value, destinationTrack);
+            ReadParameters(node);
         }
 
-        private void ReadNameTrack(out string effectName, out int effectTrack, out float startTime, out float endTime)
+        private void ReadNameTrack(XmlNode node,
+            out string effectName,
+            out int effectTrack, out 
+            float startTime,
+            out float endTime)
         {
-            effectName = reader.GetAttribute("name");
-            string track = reader.GetAttribute("track");
-            string start = reader.GetAttribute("startTime");
-            string end = reader.GetAttribute("endTime");
+            XmlAttributeCollection attrs = node.Attributes;
+            XmlAttribute attr = (XmlAttribute)attrs.GetNamedItem("name");
+            if (attr == null)
+                throw new DDXXException("name attr not found");
+            effectName = attr.Value;
+            XmlAttribute track = (XmlAttribute)attrs.GetNamedItem("track");
+            XmlAttribute start = (XmlAttribute)attrs.GetNamedItem("startTime");
+            XmlAttribute end = (XmlAttribute)attrs.GetNamedItem("endTime");
             effectTrack = 0;
             startTime = 0.0F;
             endTime = 0.0F;
             if (track != null)
             {
-                effectTrack = int.Parse(track);
+                effectTrack = int.Parse(track.Value);
             }
             if (start != null)
             {
-                startTime = ParseFloat(start);
+                startTime = ParseFloat(start.Value);
             }
             if (end != null)
             {
-                endTime = ParseFloat(end);
+                endTime = ParseFloat(end.Value);
             }
         }
 
-        public void ReadParameters()
+        public void ReadParameters(XmlNode effectNode)
         {
-            while (reader.Read())
+            foreach (XmlNode node in effectNode.ChildNodes)
             {
-                if (reader.NodeType == XmlNodeType.EndElement &&
-                    (reader.Name == "Effect" ||
-                    reader.Name == "PostEffect" ||
-                    reader.Name == "Transition"))
+                if (CommentOrWhitespace(node))
+                    continue;
+                if (node.NodeType == XmlNodeType.Element && node.Name == "Parameter")
                 {
-                    break;
+                    ReadParameter(node);
                 }
-                if (reader.NodeType == XmlNodeType.Element && reader.Name == "Parameter")
+                else if (node.NodeType == XmlNodeType.Element && node.Name == "SetupCall")
                 {
-                    ReadParameter();
-                }
-                else if (reader.NodeType == XmlNodeType.Element && reader.Name == "SetupCall")
-                {
-                    ReadSetupCall();
+                    ReadSetupCall(node);
                 }
                 else
                 {
@@ -214,16 +201,20 @@ namespace Dope.DDXX.Utility
             }
         }
 
-        private void ReadParameter()
+        private static bool CommentOrWhitespace(XmlNode node)
         {
-            bool keepOn = reader.MoveToFirstAttribute();
+            return node.NodeType == XmlNodeType.Whitespace || node.NodeType == XmlNodeType.Comment;
+        }
+
+        private void ReadParameter(XmlNode node)
+        {
             TweakableType parameterType = TweakableType.Unknown;
             string parameterName = null;
             string parameterValue = "";
-            while (keepOn)
+            foreach (XmlAttribute attr in node.Attributes)
             {
-                string name = reader.Name;
-                string value = reader.Value;
+                string name = attr.Name;
+                string value = attr.Value;
                 switch (name)
                 {
                     case "name":
@@ -237,7 +228,6 @@ namespace Dope.DDXX.Utility
                         }
                         break;
                 }
-                keepOn = reader.MoveToNextAttribute();
             }
             if (parameterName != null && parameterType != TweakableType.Unknown)
             {
@@ -245,50 +235,49 @@ namespace Dope.DDXX.Utility
             }
             else
             {
-                throw new XmlException("Failed to parse parameter");
+                throw new DDXXException("Failed to parse parameter");
             }
         }
 
-        private void ReadSetupCall()
+        private void ReadSetupCall(XmlNode setupNode)
         {
-            bool keepOn = reader.MoveToFirstAttribute();
-            if (!keepOn || reader.Name != "name")
+            XmlAttribute nameAttr = (XmlAttribute)setupNode.Attributes.GetNamedItem("name");
+            if (nameAttr == null)
                 throw new DDXXException("Could not parse setup call.");
-            string name = reader.Value;
+            string name = nameAttr.Value;
             List<Object> parameters = new List<Object>();
 
-            while (reader.Read())
+            foreach (XmlNode node in setupNode.ChildNodes)
             {
-                if (reader.NodeType == XmlNodeType.EndElement &&
-                    (reader.Name == "SetupCall"))
+                if (CommentOrWhitespace(node))
+                    continue;
+                if (node.NodeType == XmlNodeType.Element && node.Name == "Parameter")
                 {
-                    break;
-                }
-                if (reader.NodeType == XmlNodeType.Element && reader.Name == "Parameter")
-                {
-                    if (!reader.MoveToFirstAttribute())
+                    IEnumerator e = node.Attributes.GetEnumerator();
+                    if (!e.MoveNext())
                         throw new DDXXException("Failed to parse parameters for setup call.");
-                    switch (GetParameterType(reader.Name))
+                    XmlAttribute attr = (XmlAttribute)e.Current;
+                    switch (GetParameterType(attr.Name))
                     {
                         case TweakableType.Float:
-                            parameters.Add(ParseFloat(reader.Value));
+                            parameters.Add(ParseFloat(attr.Value));
                             break;
                         case TweakableType.Integer:
-                            parameters.Add(int.Parse(reader.Value));
+                            parameters.Add(int.Parse(attr.Value));
                             break;
                         case TweakableType.String:
-                            parameters.Add(reader.Value);
+                            parameters.Add(attr.Value);
                             break;
                         case TweakableType.Vector3:
-                            string[] s = reader.Value.Split(new char[] { ',' }, 3);
+                            string[] s = attr.Value.Split(new char[] { ',' }, 3);
                             Vector3 v = new Vector3(ParseFloat(s[0]), ParseFloat(s[1]), ParseFloat(s[2]));
                             parameters.Add(v);
                             break;
                         case TweakableType.Color:
-                            parameters.Add(Color.FromName(reader.Value));
+                            parameters.Add(Color.FromName(attr.Value));
                             break;
                         default:
-                            throw new XmlException("Unknown internal parameter type");
+                            throw new DDXXException("Unknown internal parameter type");
                     }
                 }
                 else
@@ -321,7 +310,7 @@ namespace Dope.DDXX.Utility
                     effectBuilder.AddColorParameter(parameterName, Color.FromName(parameterValue));
                     break;
                 default:
-                    throw new XmlException("Unknown internal parameter type");
+                    throw new DDXXException("Unknown internal parameter type");
             }
         }
 
@@ -343,19 +332,165 @@ namespace Dope.DDXX.Utility
             }
         }
 
+        private string GetParameterTypeString(TweakableType ty)
+        {
+            switch (ty)
+            {
+                case TweakableType.Integer: return "int";
+                case TweakableType.Float: return "float";
+                case TweakableType.String: return "string";
+                case TweakableType.Vector3: return "Vector3";
+                case TweakableType.Color: return "Color";
+                default: return null;
+            }
+        }
+
+        public void Write(string filename)
+        {
+            //doc.CreateXmlDeclaration("1.0", null, null);
+            doc.Save(filename);
+        }
+
+        public void Write(TextWriter writer)
+        {
+            doc.Save(writer);
+        }
+
+        private XmlAttribute GetAttribute(XmlNode node, string attrName)
+        {
+            return (XmlAttribute)node.Attributes.GetNamedItem(attrName);
+        }
+
+        private string GetAttributeValue(XmlNode node, string attrName)
+        {
+            XmlAttribute attr = GetAttribute(node, attrName);
+            if (attr != null)
+                return attr.Value;
+            else
+                throw new DDXXException("Attribute " + attrName + " not found in node: " + node.ToString());
+        }
+
+        private XmlNode FindParameterContainer(string effectName)
+        {
+            XmlNode root = doc.DocumentElement;
+            while (root != null && root.Name != "Effects")
+                root = root.NextSibling;
+            if (root != null)
+            {
+                foreach (XmlNode node in root.ChildNodes)
+                {
+                    if (IsParameterContainer(node) && GetAttributeValue(node, "name") == effectName)
+                    {
+                        return node;
+                    }
+                }
+            }
+            return null;
+        }
+
+        private static bool IsParameterContainer(XmlNode node)
+        {
+            return node.NodeType == XmlNodeType.Element && 
+                (node.Name == "Effect" || node.Name == "PostEffect" || 
+                node.Name == "Transition" || node.Name == "SetupCall");
+        }
+
+        private XmlNode FindParamNode(string effect, string paramName)
+        {
+            XmlNode effectNode = FindParameterContainer(effect);
+            if (effectNode == null)
+                throw new DDXXException("Named node " + effect + " not found");
+            foreach (XmlNode node in effectNode.ChildNodes)
+            {
+                if (IsParamNode(node) && GetAttributeValue(node, "name") == paramName)
+                {
+                    return node;
+                }
+            }
+            return null;
+        }
+
+        private static bool IsParamNode(XmlNode node)
+        {
+            return node.NodeType == XmlNodeType.Element && node.Name == "Parameter";
+        }
+
+        private XmlAttribute GetParamValueAttr(string effect, string param, TweakableType ty)
+        {
+            XmlNode paramNode = FindParamNode(effect, param);
+            XmlAttribute attr = GetAttribute(paramNode, GetParameterTypeString(ty));
+            if (attr == null)
+                throw new DDXXException("XmlNode " + param + " in effect " + effect +
+                    " is not a float parameter: " + paramNode.ToString());
+            return attr;
+        }
+
+        public void FloatParamChanged(string effect, string param, string value)
+        {
+            XmlAttribute attr = GetParamValueAttr(effect, param, TweakableType.Float);
+            attr.Value = value;
+        }
+
+        public void IntParamChanged(string effect, string param, string value)
+        {
+            XmlAttribute attr = GetParamValueAttr(effect, param, TweakableType.Integer);
+            attr.Value = value;
+        }
+
+        public void StringParamChanged(string effect, string param, string value)
+        {
+            XmlAttribute attr = GetParamValueAttr(effect, param, TweakableType.String);
+            attr.Value = value;
+        }
+
+        public void Vector3ParamChanged(string effect, string param, string value)
+        {
+            XmlAttribute attr = GetParamValueAttr(effect, param, TweakableType.Vector3);
+            attr.Value = value;
+        }
+
+        public void ColorParamChanged(string effect, string param, string value)
+        {
+            XmlAttribute attr = GetParamValueAttr(effect, param, TweakableType.Color);
+            attr.Value = value;
+        }
+
+        private void ChangeOrCreateAttribute(string effectName, string attrName, string value)
+        {
+            XmlNode effectNode = FindParameterContainer(effectName);
+            XmlAttribute startAttr = GetAttribute(effectNode, attrName);
+            if (startAttr == null)
+            {
+                XmlElement element = (XmlElement)effectNode;
+                element.SetAttribute(attrName, value);
+            }
+            else
+            {
+                startAttr.Value = value;
+            }
+        }
+
+        public void StartTimeChanged(string effectName, float value)
+        {
+            ChangeOrCreateAttribute(effectName, "startTime", value.ToString());
+        }
+
+        public void EndTimeChanged(string effectName, float value)
+        {
+            ChangeOrCreateAttribute(effectName, "endTime", value.ToString());
+        }
+
+
         #region debugging
-        private void PrintElement()
+        private void PrintElement(XmlNode node)
         {
             Console.WriteLine("{0}: {1} = {2}",
-                reader.NodeType.ToString(), reader.Name, reader.Value);
-            for (int i = 0, c = reader.AttributeCount; i < c; i++)
+                node.NodeType.ToString(), node.Name, node.Value);
+            foreach (XmlAttribute attr in node.Attributes)
             {
-                reader.MoveToAttribute(i);
-                Console.WriteLine("  {0} = {1} ", reader.Name, reader.Value);
+                Console.WriteLine("  {0} = {1} ", attr.Name, attr.Value);
             }
-            reader.MoveToElement();
         }
         #endregion
-
     }
 }
