@@ -52,7 +52,7 @@ namespace ShortPuzzle
             }
             catch (DDXXException exception)
             {
-                MessageBox.Show(exception.ToString());
+                exception.PresentInMessageBox();
             }
             catch (Exception exception)
             {
@@ -63,8 +63,6 @@ namespace ShortPuzzle
 
         private static void RegisterEffects(DemoExecuter executer)
         {
-            //TestEffect postEffect = new TestEffect(0.0f, 10.0f);
-            //executer.Register(0, postEffect);
             float length = 65000.0f;
             Assembly assembly = Assembly.GetExecutingAssembly();
             foreach (Type t in assembly.GetTypes())

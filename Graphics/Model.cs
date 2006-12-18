@@ -7,27 +7,37 @@ using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.Graphics
 {
-    public class Model// : MeshContainer
+    public class Model : ModelBase
     {
         private IMesh mesh;
-        ModelMaterial[] materials;
 
-        public ModelMaterial[] Materials
-        {
-            get { return materials; }
-            set { materials = value; }
-        }
-
-        public IMesh IMesh
+        public IMesh Mesh
         {
             get { return mesh; }
             set { mesh = value; }
         }
 
+        public Model(IMesh mesh)
+        {
+            this.mesh = mesh;
+            Materials = new ModelMaterial[] { new ModelMaterial(new Material()) };
+        }
+
         public Model(IMesh mesh, ModelMaterial[] materials)
         {
-            IMesh = mesh;
+            this.mesh = mesh;
             Materials = materials;
+        }
+
+        public Model(IMesh mesh, ITextureFactory textureFactory, ExtendedMaterial[] extendedMaterials)
+        {
+            this.mesh = mesh;
+            Materials = CreateModelMaterials(textureFactory, extendedMaterials);
+        }
+
+        public void DrawSubset(int subset)
+        {
+            mesh.DrawSubset(subset);
         }
     }
 }

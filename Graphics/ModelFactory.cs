@@ -81,9 +81,7 @@ namespace Dope.DDXX.Graphics
             {
                 return result.model;
             }
-            ModelMaterial[] materials = new ModelMaterial[1];
-            materials[0] = new ModelMaterial(new Material());
-            Model model = new Model(factory.CreateBoxMesh(device, width, height, depth), materials);
+            Model model = new Model(factory.CreateBoxMesh(device, width, height, depth));
             needle.model = model;
             boxes.Add(needle);
             return model;
@@ -118,20 +116,8 @@ namespace Dope.DDXX.Graphics
         {
             ExtendedMaterial[] extendedMaterials;
             IMesh mesh = factory.MeshFromFile(device, file, out extendedMaterials);
-            ModelMaterial[] modelMaterials = new ModelMaterial[extendedMaterials.Length];
-            for (int i = 0; i < extendedMaterials.Length; i++)
-            {
-                if (extendedMaterials[i].TextureFilename == null ||
-                    extendedMaterials[i].TextureFilename == "")
-                    modelMaterials[i] = new ModelMaterial(extendedMaterials[i].Material3D);
-                else
-                    modelMaterials[i] = new ModelMaterial(extendedMaterials[i].Material3D, textureFactory.CreateFromFile(extendedMaterials[i].TextureFilename));
-                Material material = modelMaterials[i].Material;
-                material.AmbientColor = material.DiffuseColor;
-                modelMaterials[i].Material = material;
-            }
             HandleOptions(ref mesh, options);
-            Model model = new Model(mesh, modelMaterials);
+            Model model = new Model(mesh, textureFactory, extendedMaterials);//modelMaterials);
             return model;
         }
 

@@ -66,7 +66,9 @@ namespace Dope.DDXX.SceneGraph
                 if (!(o is ModelMaterial)) return false;
                 ModelMaterial m = (ModelMaterial)o;
 
-                if (m.Material == material.Material &&
+                if (m.Ambient == material.Ambient &&
+                    m.Diffuse == material.Diffuse &&
+                    m.NormalTexture == material.NormalTexture &&
                     m.DiffuseTexture == m.DiffuseTexture)
                     return true;
 

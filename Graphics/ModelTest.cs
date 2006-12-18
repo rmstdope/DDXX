@@ -5,6 +5,7 @@ using NUnit.Framework;
 using NMock2;
 using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Utility;
+using System.Drawing;
 
 namespace Dope.DDXX.Graphics
 {
@@ -13,16 +14,28 @@ namespace Dope.DDXX.Graphics
     {
         Mockery mockery;
         IMesh mesh;
-        ModelMaterial[] materials;
+        ITextureFactory textureFactory;
+        ITexture texture;
+        ExtendedMaterial[] materials;
+        Model model;
 
         [SetUp]
         public void SetUp()
         {
             mockery = new Mockery();
             mesh = mockery.NewMock<IMesh>();
-            materials = new ModelMaterial[2];
-            materials[0] = new ModelMaterial(new Material());
-            materials[1] = new ModelMaterial(new Material(), mockery.NewMock<ITexture>());
+            textureFactory = mockery.NewMock<ITextureFactory>();
+            texture = mockery.NewMock<ITexture>();
+
+            Material material;
+            materials = new ExtendedMaterial[2];
+            materials[0] = new ExtendedMaterial();
+            material = new Material();
+            material.Ambient = Color.AliceBlue;
+            material.Diffuse = Color.Aquamarine;
+            materials[0].Material3D = material;
+            materials[1] = new ExtendedMaterial();
+            materials[1].TextureFilename = "TextureFileName";
         }
 
         [TearDown]
@@ -34,13 +47,27 @@ namespace Dope.DDXX.Graphics
         [Test]
         public void ConstructorTest()
         {
-            Model model = new Model(mesh, materials);
-            Assert.AreSame(mesh, model.IMesh);
+            Expect.Once.On(textureFactory).Method("CreateFromFile").With("TextureFileName").Will(Return.Value(texture));
+            model = new Model(mesh, textureFactory, materials);
             Assert.AreEqual(materials.Length, model.Materials.Length);
-            Assert.AreEqual(materials[0].Material.ToString(), model.Materials[0].Material.ToString());
-            Assert.AreEqual(materials[1].Material.ToString(), model.Materials[1].Material.ToString());
-            Assert.AreEqual(materials[0].DiffuseTexture, model.Materials[0].DiffuseTexture);
-            Assert.AreEqual(materials[1].DiffuseTexture, model.Materials[1].DiffuseTexture);
+            // Check that ambient is set to diffuse
+            Material material = materials[0].Material3D;
+            material.Ambient = material.Diffuse;
+            Assert.AreEqual(materials[0].Material3D.Diffuse, model.Materials[0].Ambient);
+            Assert.AreEqual(materials[0].Material3D.Diffuse, model.Materials[0].Diffuse);
+            Assert.AreEqual(materials[1].Material3D.Diffuse, model.Materials[1].Ambient);
+            Assert.AreEqual(materials[1].Material3D.Diffuse, model.Materials[1].Diffuse);
+            Assert.AreEqual(null, model.Materials[0].DiffuseTexture);
+            Assert.AreEqual(texture, model.Materials[1].DiffuseTexture);
+        }
+
+        [Test]
+        public void TestDraw()
+        {
+            ConstructorTest();
+
+            Expect.Once.On(mesh).Method("DrawSubset").With(17);
+            model.DrawSubset(17);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Dope.DDXX.DemoFramework
         bool Quit { get; }
         void Initialize(IDemoRegistrator registrator);
         void Draw();
-        void HandleInput(IInputDriver inputDriver);
+        bool HandleInput(IInputDriver inputDriver);
         object IdentifierToChild();
         void IdentifierFromParent(object id);
     }

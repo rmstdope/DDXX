@@ -19,13 +19,8 @@ namespace ShortPuzzle
         private ISprite sprite;
         private ITexture texture;
         private ITexture dopeTexture;
-        //private ICubeTexture cubeTexture;
-        //private ICubeTexture lightProbe;
         private const int CubesInRow = 16;
-        //private float angle = 0;
         private CameraNode camera;
-        private const string PREFIX = "";//"../../Data/";
-        private const string EPREFIX = "";//"../../../Effects/";
         private Scene scene;
 
         private class Cube
@@ -102,9 +97,9 @@ namespace ShortPuzzle
                     material.AmbientColor = new ColorValue(0.8f, 0.8f, 0.8f);
                     meshes[1].Model.Materials = new ModelMaterial[1];
                     if (letters[CubesInRow - y - 1][x] >= 'a' && letters[CubesInRow - y - 1][x] <= 'z')
-                        meshes[1].Model.Materials[0] = new ModelMaterial(material, D3DDriver.TextureFactory.CreateFromFile(PREFIX + letters[CubesInRow - y - 1][x] + ".JPG"));
+                        meshes[1].Model.Materials[0] = new ModelMaterial(material, D3DDriver.TextureFactory.CreateFromFile(letters[CubesInRow - y - 1][x] + ".JPG"));
                     else
-                       meshes[1].Model.Materials[0] = new ModelMaterial(material, D3DDriver.TextureFactory.CreateFromFile(PREFIX + letters[CubesInRow - y - 1][x] + ".PNG"));
+                       meshes[1].Model.Materials[0] = new ModelMaterial(material, D3DDriver.TextureFactory.CreateFromFile(letters[CubesInRow - y - 1][x] + ".PNG"));
                 }
                 endPosition = endPos;
                 startPosition = startPos;
@@ -183,25 +178,25 @@ namespace ShortPuzzle
         public MainEffect(float startTime, float endTime) 
             : base(startTime, endTime)
         {
-            scene = new Scene();
         }
 
         public override void Initialize()
         {
             base.Initialize();
 
+            scene = new Scene();
             scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f);
 
             Model model1 = ModelFactory.CreateBox(10, 10, 10);
-            model1.IMesh = model1.IMesh.Clone(MeshFlags.Managed, VertexFormats.Position | VertexFormats.Texture1 | VertexFormats.Normal, Device);
-            model1.IMesh.ComputeNormals();
-            IGraphicsStream stream = model1.IMesh.LockVertexBuffer(LockFlags.None);
-            CustomVertex.PositionNormalTextured[] vertices = new CustomVertex.PositionNormalTextured[model1.IMesh.NumberVertices];
-            for (int i = 0; i < model1.IMesh.NumberVertices; i++)
+            model1.Mesh = model1.Mesh.Clone(MeshFlags.Managed, VertexFormats.Position | VertexFormats.Texture1 | VertexFormats.Normal, Device);
+            model1.Mesh.ComputeNormals();
+            IGraphicsStream stream = model1.Mesh.LockVertexBuffer(LockFlags.None);
+            CustomVertex.PositionNormalTextured[] vertices = new CustomVertex.PositionNormalTextured[model1.Mesh.NumberVertices];
+            for (int i = 0; i < model1.Mesh.NumberVertices; i++)
             {
                 vertices[i] = (CustomVertex.PositionNormalTextured)stream.Read(typeof(CustomVertex.PositionNormalTextured));
             }
-            for (int i = 0; i < model1.IMesh.NumberVertices / 4; i++)
+            for (int i = 0; i < model1.Mesh.NumberVertices / 4; i++)
             {
                 vertices[i * 4 + 0].Tu = 0;
                 vertices[i * 4 + 0].Tv = 0;
@@ -214,15 +209,15 @@ namespace ShortPuzzle
             }
             stream.Seek(0, System.IO.SeekOrigin.Begin);
             stream.Write(vertices);
-            model1.IMesh.UnlockVertexBuffer();
-            int[] adj = new int[model1.IMesh.NumberFaces * 3];
-            model1.IMesh.GenerateAdjacency(1e-6f, adj);
-            model1.IMesh.OptimizeInPlace(MeshFlags.OptimizeAttributeSort, adj);
-            Model model2 = new Model(model1.IMesh.Clone(MeshFlags.Managed, model1.IMesh.Declaration, Device), new ModelMaterial[1]);
+            model1.Mesh.UnlockVertexBuffer();
+            int[] adj = new int[model1.Mesh.NumberFaces * 3];
+            model1.Mesh.GenerateAdjacency(1e-6f, adj);
+            model1.Mesh.OptimizeInPlace(MeshFlags.OptimizeAttributeSort, adj);
+            Model model2 = new Model(model1.Mesh.Clone(MeshFlags.Managed, model1.Mesh.Declaration, Device), D3DDriver.TextureFactory, new ExtendedMaterial[1]);
 
             Material material = new Material();
             material.AmbientColor = new ColorValue(0.3f, 0.3f, 0.3f);
-            model2.Materials[0] = new ModelMaterial(material, D3DDriver.TextureFactory.CreateFromFile(PREFIX + "whitesortof.jpg"));
+            model2.Materials[0] = new ModelMaterial(material, D3DDriver.TextureFactory.CreateFromFile("whitesortof.jpg"));
 
             AttributeRange[] attributes = new AttributeRange[1];
             attributes[0] = new AttributeRange();
@@ -231,10 +226,10 @@ namespace ShortPuzzle
             attributes[0].FaceStart = 0;
             attributes[0].VertexCount = 24;
             attributes[0].VertexStart = 0;
-            model1.IMesh.SetAttributeTable(attributes);
+            model1.Mesh.SetAttributeTable(attributes);
             material = new Material();
             material.AmbientColor = new ColorValue(0.3f, 0.3f, 0.3f);
-            model1.Materials[0] = new ModelMaterial(material, D3DDriver.TextureFactory.CreateFromFile(PREFIX + "whitesortof.jpg"));
+            model1.Materials[0] = new ModelMaterial(material, D3DDriver.TextureFactory.CreateFromFile("whitesortof.jpg"));
 
             attributes[0] = new AttributeRange();
             attributes[0].AttributeId = 0;
@@ -242,9 +237,9 @@ namespace ShortPuzzle
             attributes[0].FaceStart = 10;
             attributes[0].VertexCount = 24;
             attributes[0].VertexStart = 0;
-            model2.IMesh.SetAttributeTable(attributes);
+            model2.Mesh.SetAttributeTable(attributes);
 
-            IEffect effect = EffectFactory.CreateFromFile(EPREFIX + "Test.fxo");
+            IEffect effect = EffectFactory.CreateFromFile("Short Puzzle.fxo");
             EffectHandler handler = new EffectHandler(effect);
 
             const float distance = 14.0f;
@@ -264,8 +259,8 @@ namespace ShortPuzzle
                     else
                         start.Y = 200;
                     cubes[c] = new Cube(x, y,
-                                        new MeshNode("Mesh", new Model(model1.IMesh, model1.Materials), handler),
-                                        new MeshNode("Mesh", new Model(model2.IMesh, model2.Materials), handler), 
+                                        new MeshNode("Mesh", new Model(model1.Mesh, model1.Materials), handler),
+                                        new MeshNode("Mesh", new Model(model2.Mesh, model2.Materials), handler), 
                                         start,
                                         new Vector3((x - CubesInRow / 2) * distance, (y - CubesInRow / 2) * distance, 0));
                     cubes[c].AddToScene(scene);
@@ -289,8 +284,8 @@ namespace ShortPuzzle
             scene.AddNode(camera);
             scene.ActiveCamera = camera;
 
-            texture = D3DDriver.TextureFactory.CreateFromFile(PREFIX + "BlurBackground.jpg");
-            dopeTexture = D3DDriver.TextureFactory.CreateFromFile(PREFIX + "DopeLogo.dds");
+            texture = D3DDriver.TextureFactory.CreateFromFile("BlurBackground.jpg");
+            dopeTexture = D3DDriver.TextureFactory.CreateFromFile("DopeLogo.dds");
             sprite = D3DDriver.Factory.CreateSprite(Device);
 
             //lightProbe = D3DDriver.Factory.CubeTextureFromFile("../../Data/stpeters_cross.dds");

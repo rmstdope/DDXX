@@ -173,8 +173,8 @@ namespace Dope.DDXX.Graphics
                 Will(Return.Value(texture));
             Model model1 = modelFactory.FromFile("MeshFile1", ModelFactory.Options.EnsureTangents | ModelFactory.Options.NoOptimization);
             Assert.AreEqual(2, model1.Materials.Length);
-            Assert.AreEqual(model1.Materials[0].Material.AmbientColor, model1.Materials[0].Material.DiffuseColor);
-            Assert.AreEqual(model1.Materials[1].Material.AmbientColor, model1.Materials[1].Material.DiffuseColor);
+            Assert.AreEqual(model1.Materials[0].Ambient, model1.Materials[0].Diffuse);
+            Assert.AreEqual(model1.Materials[1].Ambient, model1.Materials[1].Diffuse);
             Assert.AreEqual(texture, model1.Materials[0].DiffuseTexture);
             Assert.AreEqual(null, model1.Materials[1].DiffuseTexture);
             Assert.IsNotNull(model1);

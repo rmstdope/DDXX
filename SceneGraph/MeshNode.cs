@@ -44,7 +44,7 @@ namespace Dope.DDXX.SceneGraph
                 {
                     effectHandler.Effect.BeginPass(i);
 
-                    model.IMesh.DrawSubset(j);
+                    model.DrawSubset(j);
 
                     effectHandler.Effect.EndPass();
                 }

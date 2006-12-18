@@ -115,12 +115,20 @@ namespace Dope.DDXX.DemoFramework
             timeWindow = new BoxControl(new RectangleF(0.0f, 0.05f, 1.0f, 0.95f), alpha, timeColor, mainWindow);
         }
 
-        public void HandleInput(IInputDriver inputDriver)
+        public bool HandleInput(IInputDriver inputDriver)
         {
+            bool handled = false;
             if (inputDriver.KeyPressedNoRepeat(Key.UpArrow))
+            {
                 KeyUp();
+                handled = true;
+            }
             if (inputDriver.KeyPressedNoRepeat(Key.DownArrow))
+            {
                 KeyDown();
+                handled = true;
+            }
+            return handled;
         }
 
         public void Draw()

@@ -30,6 +30,8 @@ namespace Dope.DDXX.DemoFramework
         private int currentVariable;
         private int currentSelection;
 
+        private string inputString = "";
+
         public ITweakableContainer CurrentContainer
         {
             get { return currentContainer; }
@@ -76,12 +78,12 @@ namespace Dope.DDXX.DemoFramework
                 currentSelection = 0;
         }
 
-        private void KeyRight()
+        private void KeyPlus()
         {
             ChangeValue(currentContainer.GetStepSize(CurrentVariable));
         }
 
-        private void KeyLeft()
+        private void KeyPageDown()
         {
             ChangeValue(-currentContainer.GetStepSize(CurrentVariable));
         }
@@ -146,14 +148,65 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        public void KeyUp()
+        private void SetValue(float value)
+        {
+            switch (currentContainer.GetTweakableType(CurrentVariable))
+            {
+                case TweakableType.Float:
+                    currentContainer.SetValue(CurrentVariable, value);
+                    break;
+                case TweakableType.Integer:
+                    currentContainer.SetValue(CurrentVariable, (int)value);
+                    break;
+                case TweakableType.Vector3:
+                    Vector3 vector = currentContainer.GetVector3Value(currentVariable);
+                    switch (currentSelection)
+                    {
+                        case 0:
+                            vector.X = value;
+                            break;
+                        case 1:
+                            vector.Y = value;
+                            break;
+                        case 2:
+                            vector.Z = value;
+                            break;
+                    }
+                    currentContainer.SetValue(CurrentVariable, vector);
+                    break;
+                case TweakableType.Color:
+                    byte r = currentContainer.GetColorValue(CurrentVariable).R;
+                    byte g = currentContainer.GetColorValue(CurrentVariable).G;
+                    byte b = currentContainer.GetColorValue(CurrentVariable).B;
+                    byte a = currentContainer.GetColorValue(CurrentVariable).A;
+                    switch (currentSelection)
+                    {
+                        case 0:
+                            r = (byte)Math.Max(0, Math.Min((int)value, 255));
+                            break;
+                        case 1:
+                            g = (byte)Math.Max(0, Math.Min((int)value, 255));
+                            break;
+                        case 2:
+                            b = (byte)Math.Max(0, Math.Min((int)value, 255));
+                            break;
+                        case 3:
+                            a = (byte)Math.Max(0, Math.Min((int)value, 255));
+                            break;
+                    }
+                    currentContainer.SetValue(CurrentVariable, Color.FromArgb(a, r, g, b));
+                    break;
+            }
+        }
+
+        private void KeyUp()
         {
             CurrentVariable--;
             if (CurrentVariable == -1)
                 CurrentVariable++;
         }
 
-        public void KeyDown()
+        private void KeyDown()
         {
             CurrentVariable++;
             if (CurrentVariable == currentContainer.GetNumTweakables())
@@ -269,18 +322,73 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        public void HandleInput(IInputDriver inputDriver)
+        public bool HandleInput(IInputDriver inputDriver)
         {
+            bool handled = false;
             if (inputDriver.KeyPressedNoRepeat(Key.UpArrow))
+            {
                 KeyUp();
+                handled = true;
+            }
             if (inputDriver.KeyPressedNoRepeat(Key.DownArrow))
+            {
                 KeyDown();
+                handled = true;
+            }
             if (inputDriver.KeyPressedNoRepeat(Key.Tab))
+            {
                 KeyTab();
-            if (inputDriver.KeyPressedNoRepeat(Key.RightArrow))
-                KeyRight();
-            if (inputDriver.KeyPressedNoRepeat(Key.LeftArrow))
-                KeyLeft();
+                handled = true;
+            }
+            if (inputDriver.KeyPressedNoRepeat(Key.PageUp))
+            {   
+                KeyPlus();
+                handled = true;
+            }
+            if (inputDriver.KeyPressedNoRepeat(Key.PageDown))
+            {
+                KeyPageDown();
+                handled = true;
+            }
+            handled = CheckForInput(inputDriver) || handled;
+
+            return handled;
+        }
+
+        private bool CheckForInput(IInputDriver inputDriver)
+        {
+            Key[] numberKeys = new Key[] { Key.NumPad0, Key.NumPad1, Key.NumPad2, Key.NumPad3, Key.NumPad4, Key.NumPad5, Key.NumPad6, Key.NumPad7, Key.NumPad8, Key.NumPad9 };
+
+            for (int i = 0; i < numberKeys.Length; i++)
+            {
+                if (inputDriver.KeyPressedNoRepeat(numberKeys[i]))
+                {
+                    inputString += i;
+                    return true;
+                }
+            }
+            if (inputDriver.KeyPressedNoRepeat(Key.NumPadPeriod))
+            {
+                inputString += ".";
+                return true;
+            }
+            if (inputDriver.KeyPressedNoRepeat(Key.NumPadMinus))
+            {
+                inputString = "-";
+                return true;
+            }
+            if (inputDriver.KeyPressedNoRepeat(Key.NumPadEnter))
+            {
+                try
+                {
+                    SetValue(float.Parse(inputString, System.Globalization.NumberFormatInfo.InvariantInfo));
+                }
+                catch (FormatException) { }
+                inputString = "";
+                return true;
+            }
+
+            return false;
         }
 
         public object IdentifierToChild()

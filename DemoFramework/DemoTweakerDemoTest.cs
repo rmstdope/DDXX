@@ -8,6 +8,8 @@ using Microsoft.DirectX.Direct3D;
 using System.IO;
 using System.Drawing;
 using Dope.DDXX.Utility;
+using Microsoft.DirectX.DirectInput;
+using Dope.DDXX.Input;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -18,6 +20,7 @@ namespace Dope.DDXX.DemoFramework
         private IUserInterface userInterface;
         private IDemoRegistrator registrator;
         private List<Track> tracks;
+        private IInputDriver inputDriver;
 
         protected IDemoEffect CreateMockEffect(float start, float end)
         {
@@ -50,6 +53,7 @@ namespace Dope.DDXX.DemoFramework
 
             userInterface = mockery.NewMock<IUserInterface>();
             registrator = mockery.NewMock<IDemoRegistrator>();
+            inputDriver = mockery.NewMock<IInputDriver>();
             Stub.On(registrator).GetProperty("StartTime").Will(Return.Value(0.5f));
 
             tweaker = new DemoTweakerDemo();
@@ -84,13 +88,18 @@ namespace Dope.DDXX.DemoFramework
                 tracks.Add(new Track());
             TestInitialize();
             Assert.AreEqual(0, tweaker.CurrentTrack);
-            tweaker.KeyDown();
+            ExpectKey(Key.DownArrow);
+            tweaker.HandleInput(inputDriver);
             Assert.AreEqual(1, tweaker.CurrentTrack);
-            tweaker.KeyDown();
-            tweaker.KeyDown();
-            tweaker.KeyDown();
+            ExpectKey(Key.DownArrow);
+            tweaker.HandleInput(inputDriver);
+            ExpectKey(Key.DownArrow);
+            tweaker.HandleInput(inputDriver);
+            ExpectKey(Key.DownArrow);
+            tweaker.HandleInput(inputDriver);
             Assert.AreEqual(4, tweaker.CurrentTrack);
-            tweaker.KeyDown();
+            ExpectKey(Key.DownArrow);
+            tweaker.HandleInput(inputDriver);
             Assert.AreEqual(4, tweaker.CurrentTrack);
         }
 
@@ -114,13 +123,17 @@ namespace Dope.DDXX.DemoFramework
             ExpectDraw("TestDraw5Tracks1");
             tweaker.Draw();
 
-            tweaker.KeyDown();
+            ExpectKey(Key.DownArrow);
+            tweaker.HandleInput(inputDriver);
             ExpectDraw("TestDraw5Tracks2");
             tweaker.Draw();
 
-            tweaker.KeyDown();
-            tweaker.KeyDown();
-            tweaker.KeyDown();
+            ExpectKey(Key.DownArrow);
+            tweaker.HandleInput(inputDriver);
+            ExpectKey(Key.DownArrow);
+            tweaker.HandleInput(inputDriver);
+            ExpectKey(Key.DownArrow);
+            tweaker.HandleInput(inputDriver);
             ExpectDraw("TestDraw5Tracks3");
             tweaker.Draw();
         }
@@ -139,6 +152,37 @@ namespace Dope.DDXX.DemoFramework
 
             ExpectDraw("TestDrawEffects");
             tweaker.Draw();
+        }
+
+        [Test]
+        public void TestInputReturn()
+        {
+            tracks.Add(new Track());
+            TestInitialize();
+
+            ExpectKey(Key.Unlabeled);
+            Assert.IsFalse(tweaker.HandleInput(inputDriver));
+            ExpectKey(Key.UpArrow);
+            Assert.IsTrue(tweaker.HandleInput(inputDriver));
+            ExpectKey(Key.DownArrow);
+            Assert.IsTrue(tweaker.HandleInput(inputDriver));
+        }
+
+        private void ExpectKey(Key key)
+        {
+            Key[] keys = { Key.UpArrow, Key.DownArrow };
+            foreach (Key currentKey in keys)
+            {
+                bool pressed = false;
+                if (key == currentKey)
+                {
+                    pressed = true;
+                }
+                Expect.Once.On(inputDriver).
+                    Method("KeyPressedNoRepeat").
+                    With(currentKey).
+                    Will(Return.Value(pressed));
+            }
         }
 
         class ControlMatcher : Matcher

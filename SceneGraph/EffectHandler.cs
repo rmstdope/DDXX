@@ -86,15 +86,15 @@ namespace Dope.DDXX.SceneGraph
         public void SetMaterialConstants(IRenderableScene scene, ModelMaterial material)
         {
             if (ambientColor != null)
-                effect.SetValue(ambientColor, ColorOperator.Modulate(scene.AmbientColor, material.Material.AmbientColor));
+                effect.SetValue(ambientColor, ColorOperator.Modulate(scene.AmbientColor, material.AmbientColor));
             if (baseTexture != null)
                 effect.SetValue(baseTexture, material.DiffuseTexture);
             if (normalTexture != null)
                 effect.SetValue(normalTexture, material.NormalTexture);
             if (materialDiffuseColor != null)
-                effect.SetValue(materialDiffuseColor, material.Material.DiffuseColor);
+                effect.SetValue(materialDiffuseColor, material.DiffuseColor);
             if (materialSpecularColor != null)
-                effect.SetValue(materialSpecularColor, material.Material.SpecularColor);
+                effect.SetValue(materialSpecularColor, material.SpecularColor);
         }
 
         #endregion

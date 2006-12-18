@@ -15,6 +15,7 @@ namespace Dope.DDXX.DemoFramework
         private int currentTweaker;
         private IDemoTweaker[] tweakers;
         private IDemoTweakerContext context;
+        private bool visable;
 
         public object IdentifierToChild() { return 0; }
         public void IdentifierFromParent(object id) { }
@@ -34,6 +35,7 @@ namespace Dope.DDXX.DemoFramework
             currentTweaker = -1;
             this.tweakers = tweakers;
             this.context = context;
+            visable = true;
         }
 
         public void Initialize(IDemoRegistrator registrator)
@@ -42,8 +44,14 @@ namespace Dope.DDXX.DemoFramework
                 tweaker.Initialize(registrator);
         }
 
-        public void HandleInput(IInputDriver inputDriver)
+        public bool HandleInput(IInputDriver inputDriver)
         {
+            if (Enabled)
+            {
+                if (tweakers[currentTweaker].HandleInput(inputDriver))
+                    return true;
+            }
+
             if (inputDriver.KeyPressedNoRepeat(Key.RightArrow))
             {
                 context.JumpInTime(5.0f);
@@ -67,19 +75,19 @@ namespace Dope.DDXX.DemoFramework
                         tweakers[currentTweaker + 1].IdentifierFromParent(tweakers[currentTweaker].IdentifierToChild());
                     currentTweaker++;
                 }
-                return;
+                return true;
             }
 
             if (inputDriver.KeyPressedNoRepeat(Key.Escape))
             {
                 currentTweaker--;
-                return;
+                return true;
             }
 
-            if (!Enabled)
-                return;
+            if (inputDriver.KeyPressedNoRepeat(Key.F1))
+                visable = !visable;
 
-            tweakers[currentTweaker].HandleInput(inputDriver);
+            return true;
         }
 
         public void Draw()
@@ -87,7 +95,8 @@ namespace Dope.DDXX.DemoFramework
             if (!Enabled)
                 return;
 
-            tweakers[currentTweaker].Draw();
+            if (visable)
+                tweakers[currentTweaker].Draw();
         }
 
     }

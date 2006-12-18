@@ -82,6 +82,7 @@
     <Compile Include="IVertexBuffer.cs" />
     <Compile Include="ManagerAdapter.cs" />
     <Compile Include="MeshAdapter.cs" />
+    <Compile Include="ModelBase.cs" />
     <Compile Include="ModelFactory.cs" />
     <Compile Include="ModelFactoryTest.cs" />
     <Compile Include="ModelMaterial.cs" />
