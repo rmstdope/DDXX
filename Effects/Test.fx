@@ -3,15 +3,17 @@
 struct InputVS
 {
 	float4	Position			: POSITION;			// Vertex Position
-	//float3	Normal				: NORMAL;				// Vertex Normal
-	//float3	Tangent				: TANGENT;			// Vertex Tangent
+	float3	Normal				: NORMAL;				// Vertex Normal
+	float3	Tangent				: TANGENT;			// Vertex Tangent
 	float2	TextureCoord	: TEXCOORD0;		// Vertex Texture Coordinate
 };
 
 struct InputPS
 {
-	float4 Position			:	POSITION;			// Vertex position 
-	float2 TextureCoord	:	TEXCOORD0;		// Vertex texture coords 
+	float4 Position				:	POSITION;			// Vertex position 
+	float2 TextureCoord		:	TEXCOORD0;		// Vertex texture coords 
+	float3 LightVector		:	TEXCOORD1;		// Light vector in tangent space
+
 	//float3 LightVector	:	TEXCOORD1;		// Light vector in tangent space
 	//float3 EyeVector		:	TEXCOORD2;		// Eye vector in tangent space
 	//float2 AttCoord1		:	TEXCOORD3;		// X and Y coordinates for attenuaton texture
@@ -26,8 +28,15 @@ VertexShader(InputVS input)
 
 	// Transform the position from object space to homogeneous projection space
 	output.Position = mul(input.Position, WorldViewProjectionT);
-	
+
+	// Generate tangent space base vectors
+	float3x3 toTangent = GetTangentSpaceBase(input.Normal, input.Tangent, WorldT);
+
+	float3 light = float3(0, 0, -1);
+	output.LightVector = mul(light, toTangent);
+
 	output.TextureCoord = input.TextureCoord;
+	
 	//float3 N = normalize(mul(input.Normal, (float3x3)WorldT));
 
 	//float3 L1 = normalize(LightPosition[0] - mul(input.Position, WorldT));
@@ -42,7 +51,10 @@ VertexShader(InputVS input)
 float4
 PixelShader(InputPS input) : COLOR0
 {
-	return AmbientColor * tex2D(BaseTextureSampler, input.TextureCoord.xy);
+	float3 normal = tex2D(NormalTextureSampler, input.TextureCoord.xy).rgb * 2.0 - 1.0;
+	float diffuse = dot(normal, input.LightVector);
+	//return max(0, diffuse);
+	return /*AmbientColor*/ diffuse * tex2D(BaseTextureSampler, input.TextureCoord.xy);
 }
 
 technique Test

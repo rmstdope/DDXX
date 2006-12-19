@@ -12,7 +12,7 @@ using Dope.DDXX.Utility;
 namespace Dope.DDXX.SceneGraph
 {
     [TestFixture]
-    public class MeshNodeTest
+    public class ModelNodeTest
     {
         private Mockery mockery;
         private IMesh mesh;
@@ -22,7 +22,7 @@ namespace Dope.DDXX.SceneGraph
         private CameraNode camera;
         private ModelMaterial[] materials;
 
-        private MeshNode node;
+        private ModelNode node;
 
         [SetUp]
         public void SetUp()
@@ -43,7 +43,7 @@ namespace Dope.DDXX.SceneGraph
                 GetProperty("Effect").
                 Will(Return.Value(effect));
 
-            node = new MeshNode("Name", new Dope.DDXX.Graphics.Model(mesh, materials), effectHandler);
+            node = new ModelNode("Name", new Dope.DDXX.Graphics.Model(mesh, materials), effectHandler);
         }
 
         [TearDown]

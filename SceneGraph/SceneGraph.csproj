@@ -55,8 +55,8 @@
     <Compile Include="LightNodeTest.cs" />
     <Compile Include="LightState.cs" />
     <Compile Include="LightStateTest.cs" />
-    <Compile Include="MeshNode.cs" />
-    <Compile Include="MeshNodeTest.cs" />
+    <Compile Include="ModelNode.cs" />
+    <Compile Include="ModelNodeTest.cs" />
     <Compile Include="NodeBase.cs" />
     <Compile Include="NodeBaseTest.cs" />
     <Compile Include="ParticleSystemNode.cs" />

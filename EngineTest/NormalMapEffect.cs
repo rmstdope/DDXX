@@ -8,12 +8,12 @@ using Dope.DDXX.Utility;
 
 namespace EngineTest
 {
-    public class ModelEffect : BaseDemoEffect
+    public class NormalMapEffect : BaseDemoEffect
     {
         private Scene scene;
         private ModelNode node;
 
-        public ModelEffect(float start, float end)
+        public NormalMapEffect(float start, float end)
             : base(start, end)
         {
         }
@@ -36,7 +36,14 @@ namespace EngineTest
             camera.WorldState.MoveForward(-10);
             scene.AddNode(camera);
             scene.ActiveCamera = camera;
-        }
+
+            // Add normal map
+            for (int i = 0; i < model.Materials.Length; i++)
+            {
+                model.Materials[i].NormalTexture = TextureFactory.CreateFromFile("NormalMap.dds");
+            }
+        }
+
 
         public override void Step()
         {

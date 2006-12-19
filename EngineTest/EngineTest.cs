@@ -45,7 +45,7 @@ namespace EngineTest
                     DevicePrerequisits prerequisits = new DevicePrerequisits();
 
                     window.Initialize("Engine Test", desc, prerequisits);
-                    executer.Initialize("dope-wanting_more-dhw2006-v2-320.mp3", new Assembly[] { Assembly.GetExecutingAssembly(), Assembly.GetAssembly(typeof(GlowPostEffect)) }, "EngineTest.xml");
+                    executer.Initialize(""/*dope-wanting_more-dhw2006-v2-320.mp3"*/, new Assembly[] { Assembly.GetExecutingAssembly(), Assembly.GetAssembly(typeof(GlowPostEffect)) }, "EngineTest.xml");
 
                     executer.Run();
                     window.CleanUp();

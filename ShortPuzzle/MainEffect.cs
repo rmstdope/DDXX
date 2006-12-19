@@ -25,7 +25,7 @@ namespace ShortPuzzle
 
         private class Cube
         {
-            public MeshNode[] meshes = new MeshNode[2];
+            public ModelNode[] meshes = new ModelNode[2];
             public Vector3 startPosition;
             public Vector3 endPosition;
             public float moveTime;
@@ -87,7 +87,7 @@ namespace ShortPuzzle
                 55 // text
             };
 
-            public Cube(int x, int y, MeshNode mesh1, MeshNode mesh2, Vector3 startPos, Vector3 endPos)
+            public Cube(int x, int y, ModelNode mesh1, ModelNode mesh2, Vector3 startPos, Vector3 endPos)
             {
                 meshes[0] = mesh1;
                 meshes[1] = mesh2;
@@ -259,8 +259,8 @@ namespace ShortPuzzle
                     else
                         start.Y = 200;
                     cubes[c] = new Cube(x, y,
-                                        new MeshNode("Mesh", new Model(model1.Mesh, model1.Materials), handler),
-                                        new MeshNode("Mesh", new Model(model2.Mesh, model2.Materials), handler), 
+                                        new ModelNode("Mesh", new Model(model1.Mesh, model1.Materials), handler),
+                                        new ModelNode("Mesh", new Model(model2.Mesh, model2.Materials), handler), 
                                         start,
                                         new Vector3((x - CubesInRow / 2) * distance, (y - CubesInRow / 2) * distance, 0));
                     cubes[c].AddToScene(scene);

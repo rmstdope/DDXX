@@ -8,7 +8,7 @@ using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.SceneGraph
 {
-    public class MeshNode : NodeBase, IRenderableMesh
+    public class ModelNode : NodeBase, IRenderableMesh
     {
         private IModel model;
         private IEffectHandler effectHandler;
@@ -19,7 +19,7 @@ namespace Dope.DDXX.SceneGraph
             set { model = value; }
         }
 
-        public MeshNode(string name, IModel model, IEffectHandler effectHandler) 
+        public ModelNode(string name, IModel model, IEffectHandler effectHandler) 
             : base(name)
         {
             this.model = model;

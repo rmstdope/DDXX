@@ -24,7 +24,7 @@ namespace EngineTest
         private Vector3 vector3Value = new Vector3(1, 1, 1);
         private Scene scene;
         private IFont font;
-        private MeshNode mesh;
+        private ModelNode mesh;
 
         public Vector3 Vector3Value
         {
@@ -79,7 +79,7 @@ namespace EngineTest
             IEffect effect = D3DDriver.EffectFactory.CreateFromFile("Test.fxo");
             EffectHandler effectHandler = new EffectHandler(effect, "TransparentText");
             IModel model = D3DDriver.ModelFactory.FromFile("Wanting More.x", ModelFactory.Options.None);
-            mesh = new MeshNode("Text1", model, effectHandler);
+            mesh = new ModelNode("Text1", model, effectHandler);
             scene.AddNode(mesh);
             //mesh.WorldState.Tilt(-(float)Math.PI / 2.0f);
         }

@@ -141,6 +141,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestDrawEffects()
         {
+            Time.CurrentTime = 0.0f;
             tracks.Add(new Track());
             TestInitialize();
 

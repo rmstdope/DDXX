@@ -12,6 +12,7 @@ namespace Dope.DDXX.DemoFramework
         private IDevice device;
         private IEffectFactory effectFactory;
         private ModelFactory meshFactory;
+        private ITextureFactory textureFactory;
 
         protected BaseDemoEffect(float startTime, float endTime)
         {
@@ -32,6 +33,11 @@ namespace Dope.DDXX.DemoFramework
         protected ModelFactory ModelFactory
         {
             get { return meshFactory; }
+        }
+
+        protected ITextureFactory TextureFactory
+        {
+            get { return textureFactory; }
         }
 
         #region IDemoEffect Members
@@ -65,6 +71,7 @@ namespace Dope.DDXX.DemoFramework
             device = D3DDriver.GetInstance().Device;
             effectFactory = D3DDriver.EffectFactory;
             meshFactory = D3DDriver.ModelFactory;
+            textureFactory = D3DDriver.TextureFactory;
         }
 
         #endregion
