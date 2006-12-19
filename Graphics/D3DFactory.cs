@@ -87,6 +87,14 @@ namespace Dope.DDXX.Graphics
             return MeshAdapter.Box(((DeviceAdapter)device).DXDevice, width, height, depth);
         }
 
+        public IAnimationRootFrame SkinnedMeshFromFile(IDevice device, string fileName, AllocateHierarchy allocHierarchy)
+        {
+            FileStream stream = FileUtility.OpenStream(fileName);
+            IAnimationRootFrame rootFrame = new AnimationRootFrameAdapter(Mesh.LoadHierarchy(stream, MeshFlags.Managed, ((DeviceAdapter)device).DXDevice, allocHierarchy, null));
+            stream.Close();
+            return rootFrame;
+        }
+
         public IEffect EffectFromFile(IDevice device, string sourceDataFile, Include includeFile, string skipConstants, ShaderFlags flags, EffectPool pool)
         {
             FileStream stream = FileUtility.OpenStream(sourceDataFile);
@@ -155,5 +163,6 @@ namespace Dope.DDXX.Graphics
         }
 
         #endregion
+
     }
 }

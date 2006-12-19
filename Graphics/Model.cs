@@ -11,7 +11,7 @@ namespace Dope.DDXX.Graphics
     {
         private IMesh mesh;
 
-        public IMesh Mesh
+        public override IMesh Mesh
         {
             get { return mesh; }
             set { mesh = value; }
@@ -35,7 +35,7 @@ namespace Dope.DDXX.Graphics
             Materials = CreateModelMaterials(textureFactory, extendedMaterials);
         }
 
-        public void DrawSubset(int subset)
+        public override void DrawSubset(int subset)
         {
             mesh.DrawSubset(subset);
         }

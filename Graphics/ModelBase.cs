@@ -5,15 +5,9 @@ using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.Graphics
 {
-    public class ModelBase
+    public abstract class ModelBase : IModel
     {
         private ModelMaterial[] materials;
-
-        public ModelMaterial[] Materials
-        {
-            get { return materials; }
-            set { materials = value; }
-        }
 
         protected ModelMaterial[] CreateModelMaterials(ITextureFactory textureFactory, ExtendedMaterial[] extendedMaterials)
         {
@@ -29,5 +23,20 @@ namespace Dope.DDXX.Graphics
             }
             return modelMaterials;
         }
+
+        #region IModel Members
+
+        public abstract IMesh Mesh
+        { get; set; }
+
+        public ModelMaterial[] Materials
+        {
+            get { return materials; }
+            set { materials = value; }
+        }
+
+        public abstract void DrawSubset(int subset);
+
+        #endregion
     }
 }

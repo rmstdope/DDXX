@@ -10,16 +10,16 @@ namespace Dope.DDXX.SceneGraph
 {
     public class MeshNode : NodeBase, IRenderableMesh
     {
-        private Model model;
+        private IModel model;
         private IEffectHandler effectHandler;
 
-        public Model Model
+        public IModel Model
         {
             get { return model; }
             set { model = value; }
         }
 
-        public MeshNode(string name, Model model, IEffectHandler effectHandler) 
+        public MeshNode(string name, IModel model, IEffectHandler effectHandler) 
             : base(name)
         {
             this.model = model;

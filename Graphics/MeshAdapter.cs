@@ -246,7 +246,7 @@ namespace Dope.DDXX.Graphics
             return adapter;
         }
 
-        #region IMesh Members
+        #region Mesh Members
 
         public void ComputeTangent(int texStage, int tangentIndex, int binormIndex, int wrap)
         {

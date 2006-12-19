@@ -4,11 +4,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{6F7E70F2-FC19-4399-84BD-F60AC491E970}</ProjectGuid>
+    <ProjectGuid>{D2B99AD3-43EB-4AEF-B300-F195F185AB70}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Dope.DDXX.Physics</RootNamespace>
-    <AssemblyName>Dope.DDXX.Physics</AssemblyName>
+    <RootNamespace>Dope.DDXX.Skinning</RootNamespace>
+    <AssemblyName>Dope.DDXX.Skinning</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -18,7 +18,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,17 +29,24 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2911.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Particle.cs" />
-    <Compile Include="WorldState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WorldStateTest.cs" />
+    <Compile Include="SkinFrame.cs" />
+    <Compile Include="SkinFrameTest.cs" />
+    <Compile Include="SkinMeshContainer.cs" />
+    <Compile Include="SkinMeshContainerTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Graphics\Graphics.csproj">
+      <Project>{B64087ED-595E-4597-84D8-D273FF00B2DA}</Project>
+      <Name>Graphics</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

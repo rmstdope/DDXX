@@ -78,7 +78,7 @@ namespace EngineTest
             // Create mesh
             IEffect effect = D3DDriver.EffectFactory.CreateFromFile("Test.fxo");
             EffectHandler effectHandler = new EffectHandler(effect, "TransparentText");
-            Model model = D3DDriver.ModelFactory.FromFile("Wanting More.x", ModelFactory.Options.None);
+            IModel model = D3DDriver.ModelFactory.FromFile("Wanting More.x", ModelFactory.Options.None);
             mesh = new MeshNode("Text1", model, effectHandler);
             scene.AddNode(mesh);
             //mesh.WorldState.Tilt(-(float)Math.PI / 2.0f);
