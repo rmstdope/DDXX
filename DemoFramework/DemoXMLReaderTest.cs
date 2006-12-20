@@ -322,6 +322,8 @@ namespace Dope.DDXX.DemoFramework
 <Parameter name=""fooparam"" int=""3"" />
 <Parameter name=""barparam"" float=""4.3"" />
 <Parameter name=""strparam"" string=""foostr"" />
+<Parameter name=""colparamnamed"" Color=""SlateBlue"" />
+<Parameter name=""colparam"" Color=""SlateBlue"" />
 <SetupCall name=""AddTextureLayer"">
 <Parameter string=""BlurBackground.jpg"" />
 <Parameter float=""35.0"" />
@@ -444,7 +446,7 @@ namespace Dope.DDXX.DemoFramework
             effectBuilder.NextEffect();
             Assert.AreEqual("fooeffect", effectBuilder.EffectName);
             Dictionary<string, Parameter> parameters = effectBuilder.GetParameters();
-            Assert.AreEqual(3, parameters.Count);
+            Assert.AreEqual(5, parameters.Count);
             Parameter parameter;
             Assert.IsTrue(parameters.TryGetValue("fooparam", out parameter));
             Assert.AreEqual(TweakableType.Integer, parameter.Type);
@@ -511,13 +513,15 @@ namespace Dope.DDXX.DemoFramework
         public void TestParamChanged()
         {
             DemoXMLReader reader = ReadXMLString(twoEffectContents);
-            reader.FloatParamChanged("fooeffect", "barparam", "8.6");
-            reader.IntParamChanged("fooeffect", "fooparam", "7");
-            reader.StringParamChanged("bareffect", "goo", "goovalue");
-            reader.Vector3ParamChanged("fooglow", "glowdir", "1.2, 2.3, 3.4");
-            reader.StartTimeChanged("fooeffect", 15);
-            reader.StartTimeChanged("bareffect", 4);
-            reader.EndTimeChanged("bareffect", 19);
+            reader.SetColorParam("fooeffect", "colparamnamed", Color.SpringGreen);
+            reader.SetColorParam("fooeffect", "colparam", Color.FromArgb(255, 100, 101, 102));
+            reader.SetFloatParam("fooeffect", "barparam", 8.6f);
+            reader.SetIntParam("fooeffect", "fooparam", 7);
+            reader.SetStringParam("bareffect", "goo", "goovalue");
+            reader.SetVector3Param("fooglow", "glowdir", new Vector3(1.2f, 2.3f, 3.4f));
+            reader.SetStartTime("fooeffect", 15);
+            reader.SetStartTime("bareffect", 4);
+            reader.SetEndTime("bareffect", 19);
             string filename = tempFiles.New();
             reader.Write(filename);
 
@@ -529,6 +533,12 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual(15, effectBuilder.StartTime);
             Dictionary<string, Parameter> parameters = effectBuilder.GetParameters();
             Parameter parameter;
+            Assert.IsTrue(parameters.TryGetValue("colparamnamed", out parameter));
+            Assert.AreEqual(TweakableType.Color, parameter.Type);
+            Assert.AreEqual(Color.SpringGreen, parameter.ColorValue);
+            Assert.IsTrue(parameters.TryGetValue("colparam", out parameter));
+            Assert.AreEqual(TweakableType.Color, parameter.Type);
+            Assert.AreEqual((object)Color.FromArgb(255, 100, 101, 102), (object)parameter.ColorValue);
             Assert.IsTrue(parameters.TryGetValue("barparam", out parameter));
             Assert.AreEqual(TweakableType.Float, parameter.Type);
             Assert.AreEqual(8.6, parameter.FloatValue);
@@ -551,20 +561,13 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual(new Vector3(1.2f, 2.3f, 3.4f), parameter.Vector3Value);
         }
 
-        [Test]
-        [ExpectedException(typeof(DDXXException))]
-        public void TestSetWrongParamType()
-        {
-            DemoXMLReader reader = ReadXMLString(twoEffectContents);
-            reader.IntParamChanged("fooeffect", "barparam", "8.6");
-        }
 
         [Test]
         [ExpectedException(typeof(DDXXException))]
         public void TestSetMissingEffectParam()
         {
             DemoXMLReader reader = ReadXMLString(twoEffectContents);
-            reader.IntParamChanged("gazonkeffect", "barparam", "8.6");
+            reader.SetIntParam("gazonkeffect", "barparam", 8);
         }
 
         [Test]

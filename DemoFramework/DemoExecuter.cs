@@ -31,6 +31,9 @@ namespace Dope.DDXX.DemoFramework
         private List<Track> tracks = new List<Track>();
         private int activeTrack = 0;
 
+        private DemoEffectTypes effectTypes = new DemoEffectTypes();
+
+
         public float StartTime
         {
             get
@@ -94,10 +97,8 @@ namespace Dope.DDXX.DemoFramework
             this.soundDriver = soundDriver;
             this.inputDriver = inputDriver;
             this.postProcessor = postProcessor;
-            tweaker = new DemoTweakerMain(this, new IDemoTweaker[] { new DemoTweakerDemo(), new DemoTweakerTrack() , new DemoTweakerEffect() });
+            tweaker = new DemoTweakerMain(this, new IDemoTweaker[] { new DemoTweakerDemo(), new DemoTweakerTrack(), new DemoTweakerEffect() });
         }
-
-        private DemoEffectTypes effectTypes = new DemoEffectTypes();
 
         public void Initialize(string song)
         {
@@ -362,5 +363,64 @@ namespace Dope.DDXX.DemoFramework
         }
 
         #endregion
+
+        public void Update(IEffectChangeListener effectChangeListener)
+        {
+            foreach (Track track in tracks)
+            {
+                ITweakableContainer[] effects = track.Effects;
+                ITweakableContainer[] postEffects = track.PostEffects;
+                ITweakableContainer[] allEffects = new ITweakableContainer[effects.Length+postEffects.Length];
+                Array.Copy(effects, allEffects, effects.Length);
+                Array.Copy(postEffects, 0, allEffects, effects.Length, postEffects.Length);
+                foreach (ITweakableContainer effect in allEffects)
+                {
+                    for (int i = 0; i < effect.GetNumTweakables(); i++)
+                    {
+                        string effectName = effect.GetType().Name;
+                        string paramName = effect.GetTweakableName(i);
+                        if (paramName == "StartTime")
+                        {
+                            effectChangeListener.SetStartTime(effectName, effect.GetFloatValue(i));
+                        }
+                        else if (paramName == "EndTime")
+                        {
+                            effectChangeListener.SetEndTime(effectName, effect.GetFloatValue(i));
+                        }
+                        else
+                        {
+                            switch (effect.GetTweakableType(i))
+                            {
+                                case TweakableType.Integer:
+                                    effectChangeListener.SetIntParam(effectName,
+                                        paramName,
+                                        effect.GetIntValue(i));
+                                    break;
+                                case TweakableType.Float:
+                                    effectChangeListener.SetFloatParam(effectName,
+                                        paramName,
+                                        effect.GetFloatValue(i));
+                                    break;
+                                case TweakableType.String:
+                                    effectChangeListener.SetStringParam(effectName,
+                                        paramName,
+                                        effect.GetStringValue(i));
+                                    break;
+                                case TweakableType.Vector3:
+                                    effectChangeListener.SetVector3Param(effectName,
+                                        paramName,
+                                        effect.GetVector3Value(i));
+                                    break;
+                                case TweakableType.Color:
+                                    effectChangeListener.SetColorParam(effectName,
+                                        paramName,
+                                        effect.GetColorValue(i));
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

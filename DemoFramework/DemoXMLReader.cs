@@ -42,6 +42,11 @@ namespace Dope.DDXX.DemoFramework
             get { return (Vector3)value; }
         }
 
+        public Color ColorValue
+        {
+            get { return (Color)value; }
+        }
+
         #endregion
 
         #region ctors
@@ -269,12 +274,10 @@ namespace Dope.DDXX.DemoFramework
                             parameters.Add(attr.Value);
                             break;
                         case TweakableType.Vector3:
-                            string[] s = attr.Value.Split(new char[] { ',' }, 3);
-                            Vector3 v = new Vector3(ParseFloat(s[0]), ParseFloat(s[1]), ParseFloat(s[2]));
-                            parameters.Add(v);
+                            parameters.Add(ParseVector3(attr.Value));
                             break;
                         case TweakableType.Color:
-                            parameters.Add(Color.FromName(attr.Value));
+                            parameters.Add(ParseColor(attr.Value));
                             break;
                         default:
                             throw new DDXXException("Unknown internal parameter type");
@@ -286,6 +289,30 @@ namespace Dope.DDXX.DemoFramework
                 }
             }
             effectBuilder.AddSetupCall(name, parameters);
+        }
+
+        private static Vector3 ParseVector3(string strval)
+        {
+            string[] s = strval.Split(new char[] { ',' }, 3);
+            Vector3 v = new Vector3(ParseFloat(s[0]), ParseFloat(s[1]), ParseFloat(s[2]));
+            return v;
+        }
+
+        private static Color ParseColor(string strval)
+        {
+            Color color = Color.FromName(strval);
+            if (color.A == 0 && color.R == 0 && color.G == 0 && color.B == 0)
+            {
+                string[] s = strval.Split(new char[] { ',' });
+                int a = 255;
+                int i = 0;
+                if (s.Length == 4)
+                {
+                    a = int.Parse(s[i++]);
+                }
+                color = Color.FromArgb(a, int.Parse(s[i++]), int.Parse(s[i++]), int.Parse(s[i++]));
+            }
+            return color;
         }
 
         private void AddParameter(string parameterName, TweakableType parameterType, string parameterValue)
@@ -302,19 +329,17 @@ namespace Dope.DDXX.DemoFramework
                     effectBuilder.AddStringParameter(parameterName, parameterValue);
                     break;
                 case TweakableType.Vector3:
-                    string[] s = parameterValue.Split(new char[] { ',' }, 3);
-                    Vector3 v = new Vector3(ParseFloat(s[0]), ParseFloat(s[1]), ParseFloat(s[2]));
-                    effectBuilder.AddVector3Parameter(parameterName, v);
+                    effectBuilder.AddVector3Parameter(parameterName, ParseVector3(parameterValue));
                     break;
                 case TweakableType.Color:
-                    effectBuilder.AddColorParameter(parameterName, Color.FromName(parameterValue));
+                    effectBuilder.AddColorParameter(parameterName, ParseColor(parameterValue));
                     break;
                 default:
                     throw new DDXXException("Unknown internal parameter type");
             }
         }
 
-        private float ParseFloat(string s)
+        private static float ParseFloat(string s)
         {
             return float.Parse(s, System.Globalization.NumberFormatInfo.InvariantInfo);
         }
@@ -390,8 +415,8 @@ namespace Dope.DDXX.DemoFramework
 
         private static bool IsParameterContainer(XmlNode node)
         {
-            return node.NodeType == XmlNodeType.Element && 
-                (node.Name == "Effect" || node.Name == "PostEffect" || 
+            return node.NodeType == XmlNodeType.Element &&
+                (node.Name == "Effect" || node.Name == "PostEffect" ||
                 node.Name == "Transition" || node.Name == "SetupCall");
         }
 
@@ -425,34 +450,54 @@ namespace Dope.DDXX.DemoFramework
             return attr;
         }
 
-        public void FloatParamChanged(string effect, string param, string value)
+        private string FloatToString(float value)
+        {
+            return value.ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
+        }
+
+        public void SetFloatParam(string effect, string param, float value)
         {
             XmlAttribute attr = GetParamValueAttr(effect, param, TweakableType.Float);
-            attr.Value = value;
+            attr.Value = FloatToString(value);
         }
 
-        public void IntParamChanged(string effect, string param, string value)
+        public void SetIntParam(string effect, string param, int value)
         {
             XmlAttribute attr = GetParamValueAttr(effect, param, TweakableType.Integer);
-            attr.Value = value;
+            attr.Value = value.ToString();
         }
 
-        public void StringParamChanged(string effect, string param, string value)
+        public void SetStringParam(string effect, string param, string value)
         {
             XmlAttribute attr = GetParamValueAttr(effect, param, TweakableType.String);
             attr.Value = value;
         }
 
-        public void Vector3ParamChanged(string effect, string param, string value)
+        public void SetVector3Param(string effect, string param, Vector3 value)
         {
             XmlAttribute attr = GetParamValueAttr(effect, param, TweakableType.Vector3);
-            attr.Value = value;
+            string strval = FloatToString(value.X) + ", " +
+                FloatToString(value.Y) + ", " +
+                FloatToString(value.Z);
+            attr.Value = strval;
         }
 
-        public void ColorParamChanged(string effect, string param, string value)
+        public void SetColorParam(string effect, string param, Color value)
         {
             XmlAttribute attr = GetParamValueAttr(effect, param, TweakableType.Color);
-            attr.Value = value;
+            string strval;
+            if (value.IsNamedColor)
+            {
+                strval = value.Name;
+            }
+            else
+            {
+                strval = FloatToString(value.A) + ", " +
+                    FloatToString(value.R) + ", " +
+                    FloatToString(value.G) + ", " +
+                    FloatToString(value.B);
+            }
+            attr.Value = strval;
         }
 
         private void ChangeOrCreateAttribute(string effectName, string attrName, string value)
@@ -470,12 +515,12 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        public void StartTimeChanged(string effectName, float value)
+        public void SetStartTime(string effectName, float value)
         {
             ChangeOrCreateAttribute(effectName, "startTime", value.ToString());
         }
 
-        public void EndTimeChanged(string effectName, float value)
+        public void SetEndTime(string effectName, float value)
         {
             ChangeOrCreateAttribute(effectName, "endTime", value.ToString());
         }

@@ -17,6 +17,7 @@ using Microsoft.CSharp;
 using System.IO;
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
+using System.Drawing;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -29,8 +30,34 @@ namespace Dope.DDXX.DemoFramework
         private ISoundDriver soundDriver;
         private IInputDriver inputDriver;
         private IPostProcessor postProcessor;
+        private IEffectChangeListener effectChangeListener;
         private FMOD.Sound sound;
         private FMOD.Channel channel;
+
+        private string twoEffectContents =
+@"<Effects>
+<Effect name=""FooEffect"" track=""1"" endTime=""6.5"">
+<Parameter name=""FooParam"" int=""3"" />
+<Parameter name=""BarParam"" float=""4.3"" />
+<Parameter name=""StrParam"" string=""foostr"" />
+</Effect>
+<Effect name=""BarEffect"" startTime=""2.5"" endTime=""5.2"">
+<Parameter name=""Goo"" string=""string value"" />
+<Parameter name=""VecParam"" Vector3=""5.4, 4.3, 3.2"" />
+<Parameter name=""ColParam"" Color=""250, 101, 102, 103"" />
+<Parameter name=""ColParamNamed"" Color=""SlateBlue"" />
+<SetupCall name=""Setup"">
+<Parameter string=""MethodCalled"" />
+</SetupCall>
+</Effect>
+<PostEffect name=""FooGlow"" track=""2"" startTime=""3.4"" endTime=""4.5"">
+<Parameter name=""GlowParam"" float=""5.4"" />
+</PostEffect>
+</Effects>
+";
+        //<Transition name=""footrans"" destinationTrack=""1"">
+        //<Parameter name=""transparam"" string=""tranny"" />
+        //</Transition>
 
         [SetUp]
         public override void SetUp()
@@ -56,6 +83,8 @@ namespace Dope.DDXX.DemoFramework
             executer = new DemoExecuter(soundDriver, inputDriver, postProcessor);
             tweaker = mockery.NewMock<IDemoTweaker>();
             executer.Tweaker = tweaker;
+
+            effectChangeListener = mockery.NewMock<IEffectChangeListener>();
 
             Stub.On(inputDriver).Method("KeyPressedNoRepeat").With(Key.Space).Will(Return.Value(false));
         }
@@ -397,28 +426,7 @@ namespace Dope.DDXX.DemoFramework
             ExpectPostProcessorInitialize();
             ExpectTweakerInitialize();
             ExpectGraphicsInitialize();
-            string twoEffectContents =
-@"<Effects>
-<Effect name=""FooEffect"" track=""1"">
-<Parameter name=""FooParam"" int=""3"" />
-<Parameter name=""BarParam"" float=""4.3"" />
-<Parameter name=""StrParam"" string=""foostr"" />
-</Effect>
-<Effect name=""BarEffect"">
-<Parameter name=""Goo"" string=""string value"" />
-<Parameter name=""VecParam"" Vector3=""5.4, 4.3, 3.2"" />
-<SetupCall name=""Setup"">
-<Parameter string=""MethodCalled"" />
-</SetupCall>
-</Effect>
-<PostEffect name=""FooGlow"" track=""2"">
-<Parameter name=""GlowParam"" float=""5.4"" />
-</PostEffect>
-</Effects>
-";
-//<Transition name=""footrans"" destinationTrack=""1"">
-//<Parameter name=""transparam"" string=""tranny"" />
-//</Transition>
+
             DemoXMLReaderTest.TempFiles tempFiles = new DemoXMLReaderTest.TempFiles();
             FileUtility.SetLoadPaths(new string[] { "" });
             executer.Initialize("", tempFiles.New(twoEffectContents));
@@ -443,6 +451,76 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual("foostr", ((FooEffect)executer.Tracks[1].Effects[0]).StrParam);
 
             Assert.AreEqual(5.4f, ((FooGlow)executer.Tracks[2].PostEffects[0]).GlowParam);
+        }
+
+        [Test]
+        public void TestXMLUpdate()
+        {
+            ExpectSoundInitialize();
+            ExpectPostProcessorInitialize();
+            ExpectTweakerInitialize();
+            ExpectGraphicsInitialize();
+
+            DemoXMLReaderTest.TempFiles tempFiles = new DemoXMLReaderTest.TempFiles();
+            FileUtility.SetLoadPaths(new string[] { "" });
+            executer.Initialize("", tempFiles.New(twoEffectContents));
+
+
+            expectIntParam("FooEffect", "FooParam", 3);
+            expectFloatParam("FooEffect", "BarParam", 4.3f);
+            expectStringParam("FooEffect", "StrParam", "foostr");
+
+            expectStringParam("BarEffect", "Goo", "string value");
+            expectVector3Param("BarEffect", "VecParam", new Vector3(5.4f, 4.3f, 3.2f));
+            expectColorParam("BarEffect", "ColParam", Color.FromArgb(250, 101, 102, 103));
+            expectColorParam("BarEffect", "ColParamNamed", Color.SlateBlue);
+
+            expectFloatParam("FooGlow", "GlowParam", 5.4f);
+
+            expectStartEndTime("FooEffect", 0.0f, 6.5f);
+            expectStartEndTime("BarEffect", 2.5f, 5.2f);
+            expectStartEndTime("FooGlow", 3.4f, 4.5f);
+
+            executer.Update(effectChangeListener);
+
+        }
+
+        private void expectStartEndTime(string effectName, float start, float end)
+        {
+            Expect.Once.On(effectChangeListener).
+                Method("SetStartTime").With(effectName, start);
+            Expect.Once.On(effectChangeListener).
+                Method("SetEndTime").With(effectName, end);
+        }
+
+        private void expectStringParam(string effectName, string paramName, string value)
+        {
+            Expect.Once.On(effectChangeListener).
+                Method("SetStringParam").With(effectName, paramName, value);
+        }
+
+        private void expectIntParam(string effectName, string paramName, int value)
+        {
+            Expect.Once.On(effectChangeListener).
+                Method("SetIntParam").With(effectName, paramName, value);
+        }
+
+        private void expectVector3Param(string effectName, string paramName, Vector3 value)
+        {
+            Expect.Once.On(effectChangeListener).
+                Method("SetVector3Param").With(effectName, paramName, value);
+        }
+
+        private void expectColorParam(string effectName, string paramName, Color value)
+        {
+            Expect.Once.On(effectChangeListener).
+                Method("SetColorParam").With(effectName, paramName, value);
+        }
+
+        private void expectFloatParam(string effectName, string paramName, float value)
+        {
+            Expect.Once.On(effectChangeListener).
+                Method("SetFloatParam").With(effectName, paramName, value);
         }
 
         [Test]
@@ -617,6 +695,8 @@ namespace Dope.DDXX.DemoFramework
         private string goo;
         private Vector3 vecParam;
         private string setupParam;
+        private Color colParam;
+        private Color colParamNamed;
         public string SetupParam
         {
             get { return setupParam; }
@@ -630,6 +710,16 @@ namespace Dope.DDXX.DemoFramework
         {
             get { return vecParam; }
             set { vecParam = value; }
+        }
+        public Color ColParam
+        {
+            get { return colParam; }
+            set { colParam = value; }
+        }
+        public Color ColParamNamed
+        {
+            get { return colParamNamed; }
+            set { colParamNamed = value; }
         }
         public void Setup(string param) { setupParam = param; }
         public override void Step() { }
