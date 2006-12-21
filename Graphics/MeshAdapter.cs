@@ -17,6 +17,11 @@ namespace Dope.DDXX.Graphics
             this.mesh = mesh;
         }
 
+        public Mesh DXMesh
+        {
+            get { return mesh; }
+        }
+
         public static MeshAdapter Box(Device device, float width, float height, float depth)
         {
             return new MeshAdapter(Mesh.Box(device, width, height, depth));

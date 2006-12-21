@@ -13,7 +13,8 @@ namespace Dope.DDXX.Graphics
             None            = 0,
             NoOptimization  = 1,
             EnsureTangents  = 2,
-            // Continue with 4, 8, 16, 32, etc.
+            SkinnedModel    = 4
+            // Continue with 8, 16, 32, etc.
         }
 
         private class BoxEntry
@@ -21,9 +22,9 @@ namespace Dope.DDXX.Graphics
             public float width;
             public float height;
             public float depth;
-            public Model model;
+            public IModel model;
 
-            public BoxEntry(float width, float height, float depth, Model model)
+            public BoxEntry(float width, float height, float depth, IModel model)
             {
                 this.width = width;
                 this.height = height;
@@ -35,10 +36,10 @@ namespace Dope.DDXX.Graphics
         private class FileEntry
         {
             public string file;
-            public Model model;
+            public IModel model;
             public Options options;
 
-            public FileEntry(string file, Options options, Model model)
+            public FileEntry(string file, Options options, IModel model)
             {
                 this.file = file;
                 this.options = options;
@@ -47,9 +48,9 @@ namespace Dope.DDXX.Graphics
             }
         }
 
-        private IGraphicsFactory factory;
-        private IDevice device;
-        private ITextureFactory textureFactory;
+        protected IGraphicsFactory factory;
+        protected IDevice device;
+        protected ITextureFactory textureFactory;
 
         private List<BoxEntry> boxes = new List<BoxEntry>();
         private List<FileEntry> files = new List<FileEntry>();
@@ -65,7 +66,7 @@ namespace Dope.DDXX.Graphics
         public int CountFiles { get { return files.Count; } }
         public int Count { get { return CountBoxes + CountFiles; } }
 
-        public Model CreateBox(float width, float height, float depth)
+        public IModel CreateBox(float width, float height, float depth)
         {
             BoxEntry needle = new BoxEntry(width, height, depth, null);
             BoxEntry result = boxes.Find(delegate (BoxEntry item)
@@ -81,13 +82,13 @@ namespace Dope.DDXX.Graphics
             {
                 return result.model;
             }
-            Model model = new Model(factory.CreateBoxMesh(device, width, height, depth));
+            IModel model = new Model(factory.CreateBoxMesh(device, width, height, depth));
             needle.model = model;
             boxes.Add(needle);
             return model;
         }
 
-        public Model FromFile(string file, Options options)
+        public IModel FromFile(string file, Options options)
         {
             FileEntry needle = new FileEntry(file, options, null);
             FileEntry result = FindInFiles(needle);
@@ -112,12 +113,15 @@ namespace Dope.DDXX.Graphics
             return result;
         }
 
-        private Model CreateModelFromFile(string file, Options options)
+        protected virtual IModel CreateModelFromFile(string file, Options options)
         {
+            IModel model;
             ExtendedMaterial[] extendedMaterials;
+
             IMesh mesh = factory.MeshFromFile(device, file, out extendedMaterials);
             HandleOptions(ref mesh, options);
-            Model model = new Model(mesh, textureFactory, extendedMaterials);//modelMaterials);
+            model = new Model(mesh, textureFactory, extendedMaterials);
+
             return model;
         }
 

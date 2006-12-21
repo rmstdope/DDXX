@@ -7,6 +7,7 @@ using System.Data;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Utility;
+using Dope.DDXX.Graphics.Skinning;
 
 namespace Dope.DDXX.Graphics
 {
@@ -26,7 +27,7 @@ namespace Dope.DDXX.Graphics
         private static D3DDriver instance;
         private static IGraphicsFactory factory = new D3DFactory();
         private static IEffectFactory effectFactory;
-        private static ModelFactory meshFactory;
+        private static ModelFactory modelFactory;
         private static ITextureFactory textureFactory;
 
         private IManager manager;
@@ -59,8 +60,8 @@ namespace Dope.DDXX.Graphics
 
         public static ModelFactory ModelFactory
         {
-            get { return meshFactory; }
-            set { meshFactory = value; }
+            get { return modelFactory; }
+            set { modelFactory = value; }
         }
 
         public static ITextureFactory TextureFactory
@@ -92,7 +93,7 @@ namespace Dope.DDXX.Graphics
 
             effectFactory = new EffectFactory(device, factory);
             textureFactory = new TextureFactory(device, factory, present);
-            meshFactory = new ModelFactory(device, factory, textureFactory);
+            modelFactory = new SkinnedModelFactory(device, factory, textureFactory);
         }
 
         private void GetDisplayMode()

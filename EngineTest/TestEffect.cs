@@ -62,8 +62,8 @@ namespace EngineTest
             modelNoSkinning.WorldState.Tilt((float)Math.PI / 2);
             scene.AddNode(modelNoSkinning);
 
-            modelSkinning = new ModelNode("No Skinning",
-                ModelFactory.FromFile("tiny.x", ModelFactory.Options.None),
+            modelSkinning = new ModelNode("Skinning",
+                ModelFactory.FromFile("tiny.x", ModelFactory.Options.SkinnedModel),
                 new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "NoSkinning"));
             modelSkinning.WorldState.Scale(0.3f);
             modelSkinning.WorldState.MoveRight(50);

@@ -3,19 +3,16 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 
-namespace Dope.DDXX.Skinning
+namespace Dope.DDXX.Graphics.Skinning
 {
     [TestFixture]
-    public class SkinFrameTest
+    public class SkinnedFrameTest
     {
         [Test]
         public void TestConstructor()
         {
-            SkinFrame frame = new SkinFrame("TestName");
+            SkinnedFrame frame = new SkinnedFrame("TestName");
             Assert.AreEqual("TestName", frame.Name);
-
-            frame = new SkinFrame();
-            Assert.AreEqual("Unnamed", frame.Name);
         }
     }
 }

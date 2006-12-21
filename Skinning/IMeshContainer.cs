@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX.Direct3D;
 
-namespace Dope.DDXX.Graphics
+namespace Dope.DDXX.Skinning
 {
     public interface IMeshContainer
     {

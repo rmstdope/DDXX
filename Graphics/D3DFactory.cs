@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Utility;
+using Dope.DDXX.Graphics.Skinning;
 
 namespace Dope.DDXX.Graphics
 {

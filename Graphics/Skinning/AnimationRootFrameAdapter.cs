@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX.Direct3D;
 
-namespace Dope.DDXX.Graphics
+namespace Dope.DDXX.Graphics.Skinning
 {
     public class AnimationRootFrameAdapter : IAnimationRootFrame
     {
@@ -23,7 +23,7 @@ namespace Dope.DDXX.Graphics
 
         public IFrame FrameHierarchy
         {
-            get { return null; } // animationRootFrame.FrameHierarchy; }
+            get { return new FrameAdapter(animationRootFrame.FrameHierarchy); }
         }
 
         #endregion
