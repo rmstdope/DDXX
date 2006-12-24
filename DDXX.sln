@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParticleSystems", "Particle
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skinning", "Skinning\Skinning.csproj", "{D2B99AD3-43EB-4AEF-B300-F195F185AB70}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoseidonTest", "PoseidonTest\PoseidonTest.csproj", "{FE296A3C-B69F-4236-BECE-94B38315B94C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -182,6 +184,16 @@ Global
 		{D2B99AD3-43EB-4AEF-B300-F195F185AB70}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{D2B99AD3-43EB-4AEF-B300-F195F185AB70}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D2B99AD3-43EB-4AEF-B300-F195F185AB70}.Release|Win32.ActiveCfg = Release|Any CPU
+		{FE296A3C-B69F-4236-BECE-94B38315B94C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE296A3C-B69F-4236-BECE-94B38315B94C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE296A3C-B69F-4236-BECE-94B38315B94C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FE296A3C-B69F-4236-BECE-94B38315B94C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FE296A3C-B69F-4236-BECE-94B38315B94C}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{FE296A3C-B69F-4236-BECE-94B38315B94C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE296A3C-B69F-4236-BECE-94B38315B94C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE296A3C-B69F-4236-BECE-94B38315B94C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{FE296A3C-B69F-4236-BECE-94B38315B94C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{FE296A3C-B69F-4236-BECE-94B38315B94C}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
