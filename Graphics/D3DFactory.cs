@@ -67,6 +67,11 @@ namespace Dope.DDXX.Graphics
             return new MeshAdapter(new Mesh(numFaces, numVertices, options, declaration, ((DeviceAdapter)device).DXDevice));
         }
 
+        public IMesh CreateMesh(int numFaces, int numVertices, MeshFlags options, VertexFormats vertexFormat, IDevice device)
+        {
+            return new MeshAdapter(new Mesh(numFaces, numVertices, options, vertexFormat, ((DeviceAdapter)device).DXDevice));
+        }
+
         public IMesh MeshFromFile(IDevice device, string fileName, out EffectInstance[] effectInstance)
         {
             FileStream stream = FileUtility.OpenStream(fileName);

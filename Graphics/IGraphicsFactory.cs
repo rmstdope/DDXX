@@ -19,6 +19,7 @@ namespace Dope.DDXX.Graphics
         ITexture CreateTexture(IDevice device, int width, int height, int numLevels, Usage usage, Format format, Pool pool);
         ICubeTexture CreateCubeTexture(IDevice device, int edgeLength, int levels, Usage usage, Format format, Pool pool);
         IMesh CreateMesh(int numFaces, int numVertices, MeshFlags options, VertexElement[] declaration, IDevice device);
+        IMesh CreateMesh(int numFaces, int numVertices, MeshFlags options, VertexFormats vertexFormat, IDevice device);
         IMesh MeshFromFile(IDevice device, string fileName, out EffectInstance[] effectInstance);
         IMesh MeshFromFile(IDevice device, string fileName, out ExtendedMaterial[] materials);
         IAnimationRootFrame SkinnedMeshFromFile(IDevice device, string fileName, AllocateHierarchy allocHierarchy);
