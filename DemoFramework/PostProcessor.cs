@@ -103,7 +103,7 @@ namespace Dope.DDXX.DemoFramework
             lastUsedTexture = TextureID.INPUT_TEXTURE;
         }
 
-        private ITexture GetTexture(TextureID texture)
+        public ITexture GetTexture(TextureID texture)
         {
             if (texture == TextureID.INPUT_TEXTURE)
                 return inputTexture;
@@ -148,8 +148,8 @@ namespace Dope.DDXX.DemoFramework
             {
                 CustomVertex.TransformedTextured[] vertices = CreateVertexStruct(technique, source, destination, pass);
                 effect.BeginPass(pass);
-		        if (shouldClear)
-			        device.Clear(ClearFlags.Target, Color.Black, 0, 0);
+                if (shouldClear)
+                    device.Clear(ClearFlags.Target, Color.Black, 0, 0);
                 device.DrawUserPrimitives(PrimitiveType.TriangleStrip, 2, vertices);
                 effect.EndPass();
             }
@@ -171,8 +171,8 @@ namespace Dope.DDXX.DemoFramework
                 device.RenderState.SourceBlend = sourceBlend;
                 device.RenderState.DestinationBlend = destinatonBlend;
                 device.RenderState.BlendFactor = blendFactor;
+            }
         }
-    }
 
         private CustomVertex.TransformedTextured[] CreateVertexStruct(string technique, TextureID source, TextureID destination, int pass)
         {

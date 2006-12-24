@@ -21,6 +21,7 @@ namespace Dope.DDXX.DemoFramework
         void Initialize(IDevice device);
         ITexture OutputTexture { get; }
         TextureID OutputTextureID { get; }
+        ITexture GetTexture(TextureID textureID);
         void StartFrame(ITexture startTexture);
         void Process(string technique, TextureID textureID, TextureID textureID_2);
         void SetBlendParameters(BlendOperation blendOperation, Blend sourceBlend, Blend destinatonBlend, Color blendFactor);
