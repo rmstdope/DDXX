@@ -166,6 +166,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PosseTest.fx"
+				>
+			</File>
+			<File
 				RelativePath=".\PostEffects.fx"
 				SubType="Code"
 				>

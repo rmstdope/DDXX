@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Effects>
-  <Effect name="TestEffect" track="0" startTime="0.0" endTime="30.0">
+  <Effect name="PosseTestEffect" track="0" startTime="0.0" endTime="65000.0">
   </Effect>
+  <PostEffect name="RealRenderPostEffect" track="0" startTime="0.0" endTime="65000.0">
+  </PostEffect>
 </Effects>
