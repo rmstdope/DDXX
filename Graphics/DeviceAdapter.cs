@@ -9,9 +9,14 @@ using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.Graphics
 {
-    class DeviceAdapter : IDevice
+    public class DeviceAdapter : IDevice
     {
         Device device;
+
+        public DeviceAdapter(Device device)
+        {
+            this.device = device;
+        }
 
         public DeviceAdapter(int adapter, DeviceType deviceType, Control renderWindow, CreateFlags behaviorFlags, PresentParameters presentationParameters)
         {
