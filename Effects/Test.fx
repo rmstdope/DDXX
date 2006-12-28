@@ -23,7 +23,7 @@ struct NormalMappingInputPS
 
 
 InputPS
-VertexShader(InputVS input)
+SimpleVertexShader(InputVS input)
 {
 	InputPS output;
 
@@ -55,7 +55,7 @@ NormalMappingVertexShader(InputVS input)
 }
 
 float4
-PixelShader(InputPS input) : COLOR0
+SimplePixelShader(InputPS input) : COLOR0
 {
 	return AmbientColor * tex2D(BaseTextureSampler, input.TextureCoord.xy);
 }
@@ -88,12 +88,12 @@ technique TransparentText
 {
 	pass BasePass
 	{
-		VertexShader			= compile vs_2_0 VertexShader();
-		PixelShader				= compile ps_2_0 PixelShader();
+		VertexShader			= compile vs_2_0 SimpleVertexShader();
+		PixelShader				= compile ps_2_0 SimplePixelShader();
 		AlphaBlendEnable	= true;
-		BlendOp						= Add;
-		SrcBlend					= BlendFactor;
-		DestBlend					= One;
+		BlendOp						= ADD;
+		SrcBlend					= BLENDFACTOR;
+		DestBlend					= ONE;
 		BlendFactor				= 0x80808080;
 		CullMode					= None;
 		FillMode					= Solid;//<FillMode>;
@@ -109,8 +109,8 @@ technique NoSkinning
 {
 	pass BasePass
 	{
-		VertexShader			= compile vs_2_0 VertexShader();
-		PixelShader				= compile ps_2_0 PixelShader();
+		VertexShader			= compile vs_2_0 SimpleVertexShader();
+		PixelShader				= compile ps_2_0 SimplePixelShader();
 		AlphaBlendEnable	= false;
 		CullMode					= CCW;
 		FillMode					= Solid;//<FillMode>;

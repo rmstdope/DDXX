@@ -37,7 +37,7 @@ namespace Dope.DDXX.SceneGraph
             {
                 technique = effect.FindNextValidTechnique(technique);
                 if (technique == null)
-                    throw new DDXXException("Technique with prefix " + prefix + " not found int effect.");
+                    throw new DDXXException("Technique with prefix " + prefix + " not found in effect.");
             }
             CommonInitialize(effect);
         }

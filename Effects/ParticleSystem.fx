@@ -151,7 +151,7 @@ GenericVertexShader(float4 Position		:	POSITION,
  * @return the Output stream.
  */
 float4
-PixelShader(const PixelInputStream input, uniform bool useTexture) : COLOR0
+SimplePixelShader(const PixelInputStream input, uniform bool useTexture) : COLOR0
 { 
 	// Lookup texture
 	if (useTexture)
@@ -164,8 +164,8 @@ technique PointSpriteNoTexture
 {
 	pass BasePass
 	{
-		VertexShader			= compile vs_1_1 PointSizeVertexShader();
-		PixelShader				= compile ps_1_1 PixelShader(false);
+		VertexShader			= compile vs_2_0 PointSizeVertexShader();
+		PixelShader				= compile ps_2_0 SimplePixelShader(false);
 		CullMode					= None;
 		PointSpriteEnable = true;
 		ZFunc							= Less;
@@ -180,8 +180,8 @@ technique PointSprite
 {
 	pass BasePass
 	{
-		VertexShader			= compile vs_1_1 PointSizeVertexShader();
-		PixelShader				= compile ps_1_1 PixelShader(true);
+		VertexShader			= compile vs_2_0 PointSizeVertexShader();
+		PixelShader				= compile ps_2_0 SimplePixelShader(true);
 		CullMode					= None;
 		PointSpriteEnable = true;
 		ZFunc							= Less;
@@ -196,8 +196,8 @@ technique PreTransformed
 {
 	pass P0
 	{
-		VertexShader			= compile vs_1_1 PreTransformedVertexShader();
-		PixelShader				= compile ps_1_1 PixelShader(true);
+		VertexShader			= compile vs_2_0 PreTransformedVertexShader();
+		PixelShader				= compile ps_2_0 SimplePixelShader(true);
 		CullMode					= None;
 		ZFunc							= Less;
 		ZWriteEnable			= false;
@@ -211,8 +211,8 @@ technique Generic
 {
 	pass P0
 	{
-		VertexShader			= compile vs_1_1 GenericVertexShader();
-		PixelShader				= compile ps_1_1 PixelShader(true);
+		VertexShader			= compile vs_2_0 GenericVertexShader();
+		PixelShader				= compile ps_2_0 SimplePixelShader(true);
 		CullMode					= None;
 		ZFunc							= Less;
 		ZWriteEnable			= false;

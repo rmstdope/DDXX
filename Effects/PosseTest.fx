@@ -44,7 +44,7 @@ struct TexturedInputPS
 
 
 InputPS
-VertexShader(InputVS input)
+SimpleVertexShader(InputVS input)
 {
 	InputPS output;
 		
@@ -58,7 +58,7 @@ VertexShader(InputVS input)
 
 
 float4
-PixelShader(InputPS input) : COLOR0
+SimplePixelShader(InputPS input) : COLOR0
 {
 	//return AmbientColor;
 	return float4(input.Height, 0, 0, 1);
@@ -105,8 +105,8 @@ technique NoTexPosseTestTechnique
 {
 	pass BasePass
 	{
-		VertexShader			= compile vs_2_0 VertexShader();
-		PixelShader				= compile ps_2_0 PixelShader();
+		VertexShader			= compile vs_2_0 SimpleVertexShader();
+		PixelShader				= compile ps_2_0 SimplePixelShader();
 		AlphaBlendEnable	= false;
 		CullMode					= CCW;
 		FillMode					= Solid;//<FillMode>;

@@ -8,7 +8,7 @@
 
 namespace FMOD
 {
-    class Error
+    public class Error
     {
         public static string String(FMOD.RESULT errcode)
         {

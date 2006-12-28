@@ -16,7 +16,7 @@ namespace FMOD
     */
     public class VERSION
     {
-        public const int    number = 0x00040600;
+        public const int    number = 0x00040601;
         public const string dll    = "fmodex.dll";
     }
 
@@ -265,7 +265,7 @@ namespace FMOD
         Debug_GetLevel
     ]
     */
-    public enum DEBUGLEVEL : uint
+    public enum DEBUGLEVEL
     {
         LEVEL_NONE           = 0x00000000,
         LEVEL_LOG            = 0x00000001,
@@ -283,7 +283,7 @@ namespace FMOD
         DISPLAY_LINENUMBERS  = 0x02000000,
         DISPLAY_COMPRESS     = 0x04000000,
         DISPLAY_ALL          = 0x0F000000,   
-        ALL                  = (uint)0xFFFFFFFF
+        ALL                  = unchecked((int)0xffffffff)
     }
 
 
