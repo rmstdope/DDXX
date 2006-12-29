@@ -47,24 +47,26 @@ namespace EngineTest
 
             // Create mesh
             IEffect effect = D3DDriver.EffectFactory.CreateFromFile("Test.fxo");
-            EffectHandler effectHandler = new EffectHandler(effect, "TransparentText");
             IModel model = D3DDriver.ModelFactory.FromFile("Wanting More.x", ModelFactory.Options.None);
+            EffectHandler effectHandler = new EffectHandler(effect, "TransparentText", model);
             mesh = new ModelNode("Text1", model, effectHandler);
             scene.AddNode(mesh);
             //mesh.WorldState.Tilt(-(float)Math.PI / 2.0f);
 
+            model = ModelFactory.FromFile("tiny.x", ModelFactory.Options.None);
             modelNoSkinning = new ModelNode("No Skinning",
-                ModelFactory.FromFile("tiny.x", ModelFactory.Options.None),
-                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "NoSkinning"));
+                model,
+                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "NoSkinning", model));
             modelNoSkinning.WorldState.Scale(0.3f);
             modelNoSkinning.WorldState.MoveRight(-50);
             modelNoSkinning.WorldState.Roll((float)Math.PI);
             modelNoSkinning.WorldState.Tilt((float)Math.PI / 2);
             scene.AddNode(modelNoSkinning);
 
+            model = ModelFactory.FromFile("tiny.x", ModelFactory.Options.SkinnedModel);
             modelSkinning = new ModelNode("Skinning",
-                ModelFactory.FromFile("tiny.x", ModelFactory.Options.SkinnedModel),
-                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "NoSkinning"));
+                model,
+                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "NoSkinning", model));
             modelSkinning.WorldState.Scale(0.3f);
             modelSkinning.WorldState.MoveRight(50);
             modelSkinning.WorldState.Roll((float)Math.PI);

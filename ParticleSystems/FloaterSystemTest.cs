@@ -16,7 +16,6 @@ namespace Dope.DDXX.ParticleSystems
         private FloaterSystem floaterSystem;
         private IVertexBuffer vertexBuffer;
         private IGraphicsStream graphicsStream;
-        //private IEffect effect;
         private EffectHandle technique;
         private IEffectHandler effectHandler;
 
@@ -141,6 +140,14 @@ namespace Dope.DDXX.ParticleSystems
                 Method("GetParameter").
                 WithAnyArguments().
                 Will(Return.Value(EffectHandle.FromString("1")));
+            Stub.On(effect).
+                Method("GetTechniqueName").
+                WithAnyArguments().
+                Will(Return.Value("TechName"));
+            Stub.On(effect).
+                Method("GetAnnotation").
+                WithAnyArguments().
+                Will(Return.Value(null));
         }
 
         private class CheckVertex : Matcher

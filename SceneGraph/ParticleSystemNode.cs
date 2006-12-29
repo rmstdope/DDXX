@@ -60,13 +60,13 @@ namespace Dope.DDXX.SceneGraph
             particles = new List<Particle>();
 
             IEffect effect = D3DDriver.EffectFactory.CreateFromFile("ParticleSystem.fxo");
-            this.effectHandler = new EffectHandler(effect);
+            this.effectHandler = new EffectHandler(effect, "", null);
         }
 
         protected override void RenderNode(IRenderableScene scene)
         {
             effectHandler.SetNodeConstants(scene, this);
-            effectHandler.SetMaterialConstants(scene, material);
+            effectHandler.SetMaterialConstants(scene, material, 0);
 
             int passes = effectHandler.Effect.Begin(FX.None);
 

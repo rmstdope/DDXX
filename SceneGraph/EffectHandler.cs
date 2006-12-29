@@ -12,7 +12,7 @@ namespace Dope.DDXX.SceneGraph
     {
         private IEffect effect;
 
-        private EffectHandle technique;
+        private EffectHandle[] techniques;
         private EffectHandle worldT;
         private EffectHandle worldViewProjT;
         private EffectHandle projT;
@@ -24,27 +24,49 @@ namespace Dope.DDXX.SceneGraph
         private EffectHandle materialDiffuseColor;
         private EffectHandle materialSpecularColor;
 
-        public EffectHandler(IEffect effect)
+        public EffectHandler(IEffect effect, string prefix, IModel model)
         {
-            technique = effect.FindNextValidTechnique(null);
+            this.effect = effect;
+
+            if (model == null)
+                techniques = new EffectHandle[1];
+            else
+                techniques = new EffectHandle[model.Materials.Length];
+            for (int i = 0; i < techniques.Length; i++)
+            {
+                techniques[i] = null;
+                while (techniques[i] == null || 
+                       !effect.GetTechniqueName(techniques[i]).StartsWith(prefix) || 
+                       !ValidateTechnique(model, i))
+                {
+                    techniques[i] = effect.FindNextValidTechnique(techniques[i]);
+                    if (techniques[i] == null)
+                        throw new DDXXException("Technique with prefix " + prefix + " not found in effect.");
+                }
+            }
+
             CommonInitialize(effect);
         }
 
-        public EffectHandler(IEffect effect, string prefix)
+        private bool ValidateTechnique(IModel model, int index)
         {
-            technique = null;
-            while (technique == null || !effect.GetTechniqueName(technique).StartsWith(prefix))
+            EffectHandle handle;
+
+            handle = effect.GetAnnotation(techniques[index], "Skinning");
+            if (handle != null)
             {
-                technique = effect.FindNextValidTechnique(technique);
-                if (technique == null)
-                    throw new DDXXException("Technique with prefix " + prefix + " not found in effect.");
+                string str = effect.GetValueString(handle);
+                str = str.ToLower();
+                if (str == "false" && model.IsSkinned())
+                    return false;
+                if (str == "true" && !model.IsSkinned())
+                    return false;
             }
-            CommonInitialize(effect);
+            return true;
         }
 
         private void CommonInitialize(IEffect effect)
         {
-            this.effect = effect;
             worldT = effect.GetParameter(null, "WorldT");
             worldViewProjT = effect.GetParameter(null, "WorldViewProjectionT");
             projT = effect.GetParameter(null, "ProjectionT");
@@ -64,15 +86,14 @@ namespace Dope.DDXX.SceneGraph
             get { return effect; }
         }
 
-        public EffectHandle Technique
+        public EffectHandle[] Techniques
         {
-            get { return technique; }
-            set { technique = value; }
+            get { return techniques; }
+            set { techniques = value; }
         }
 
         public void SetNodeConstants(IRenderableScene scene, INode node)
         {
-            effect.Technique = technique;
             if (worldT != null)
                 effect.SetValueTranspose(worldT, node.WorldMatrix);
             if (worldViewProjT != null)
@@ -83,8 +104,9 @@ namespace Dope.DDXX.SceneGraph
                 effect.SetValueTranspose(worldViewT, node.WorldMatrix * scene.ActiveCamera.ViewMatrix);
         }
 
-        public void SetMaterialConstants(IRenderableScene scene, ModelMaterial material)
+        public void SetMaterialConstants(IRenderableScene scene, ModelMaterial material, int index)
         {
+            effect.Technique = techniques[index];
             if (ambientColor != null)
                 effect.SetValue(ambientColor, ColorOperator.Modulate(scene.AmbientColor, material.AmbientColor));
             if (baseTexture != null)

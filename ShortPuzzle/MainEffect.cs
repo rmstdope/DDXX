@@ -240,7 +240,7 @@ namespace ShortPuzzle
             model2.Mesh.SetAttributeTable(attributes);
 
             IEffect effect = EffectFactory.CreateFromFile("Short Puzzle.fxo");
-            EffectHandler handler = new EffectHandler(effect);
+            EffectHandler handler = new EffectHandler(effect, "", model2);
 
             const float distance = 14.0f;
             int c = 0;

@@ -27,7 +27,7 @@ namespace EngineTest
             // Create model
             IModel model = ModelFactory.FromFile("airplane 2.x", ModelFactory.Options.EnsureTangents);
             IEffect effect = EffectFactory.CreateFromFile("Test.fxo");
-            EffectHandler effectHandler = new EffectHandler(effect, "NormalMa");
+            EffectHandler effectHandler = new EffectHandler(effect, "NormalMa", model);
             node = new ModelNode("Test Model", model, effectHandler);
             scene.AddNode(node);
 

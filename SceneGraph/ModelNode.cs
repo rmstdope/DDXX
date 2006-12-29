@@ -36,7 +36,7 @@ namespace Dope.DDXX.SceneGraph
 
             for (int j = 0; j < model.Materials.Length; j++)
             {
-                effectHandler.SetMaterialConstants(scene, model.Materials[j]);
+                effectHandler.SetMaterialConstants(scene, model.Materials[j], j);
 
                 int passes = effectHandler.Effect.Begin(FX.None);
 

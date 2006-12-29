@@ -37,6 +37,11 @@ namespace Dope.DDXX.Graphics
 
         public abstract void DrawSubset(int subset);
 
+        public virtual bool IsSkinned()
+        { 
+            return false; 
+        }
+
         #endregion
     }
 }

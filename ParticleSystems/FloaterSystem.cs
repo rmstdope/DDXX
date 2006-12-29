@@ -80,11 +80,11 @@ namespace Dope.DDXX.ParticleSystems
             }
 
             if (texture == null)
-                effectHandler.Technique = EffectHandle.FromString("PointSpriteNoTexture");
+                effectHandler.Techniques = new EffectHandle[] { EffectHandle.FromString("PointSpriteNoTexture") };
             else
             {
                 material.DiffuseTexture = D3DDriver.TextureFactory.CreateFromFile(texture);
-                effectHandler.Technique = EffectHandle.FromString("PointSprite");
+                effectHandler.Techniques = new EffectHandle[] { EffectHandle.FromString("PointSprite") };
             }
         }
 

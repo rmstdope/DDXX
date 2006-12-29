@@ -9,8 +9,8 @@ namespace Dope.DDXX.SceneGraph
     public interface IEffectHandler
     {
         IEffect Effect { get; }
-        EffectHandle Technique { get; set;}
+        EffectHandle[] Techniques { get; set;}
         void SetNodeConstants(IRenderableScene scene, INode node);
-        void SetMaterialConstants(IRenderableScene scene, ModelMaterial mesh);
+        void SetMaterialConstants(IRenderableScene scene, ModelMaterial mesh, int index);
     }
 }

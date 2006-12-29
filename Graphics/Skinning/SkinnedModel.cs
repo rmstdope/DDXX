@@ -38,6 +38,11 @@ namespace Dope.DDXX.Graphics.Skinning
             Mesh.DrawSubset(subset);
         }
 
+        public override bool IsSkinned()
+        {
+            return true;
+        }
+
         #endregion
     }
 }
