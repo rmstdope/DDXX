@@ -69,6 +69,10 @@ NormalMappingPixelShader(NormalMappingInputPS input) : COLOR0
 }
 
 technique Test
+<
+	bool NormalMapping = false;
+	bool Skinning = false;
+>
 {
 	pass BasePass
 	{
@@ -85,6 +89,10 @@ technique Test
 }
 
 technique TransparentText
+<
+	bool NormalMapping = false;
+	bool Skinning = false;
+>
 {
 	pass BasePass
 	{
@@ -105,7 +113,30 @@ technique TransparentText
 	}
 }
 
-technique NoSkinning
+technique SkinningNone
+<
+	bool NormalMapping = false;
+	bool Skinning = false;
+>
+{
+	pass BasePass
+	{
+		VertexShader			= compile vs_2_0 SimpleVertexShader();
+		PixelShader				= compile ps_2_0 SimplePixelShader();
+		AlphaBlendEnable	= false;
+		CullMode					= CCW;
+		FillMode					= Solid;//<FillMode>;
+		ZEnable						=	true;
+		ZFunc							= Less;
+		StencilEnable			= false; //true;
+	}
+}
+
+technique Skinning
+<
+	bool NormalMapping = false;
+	bool Skinning = true;
+>
 {
 	pass BasePass
 	{
@@ -121,6 +152,10 @@ technique NoSkinning
 }
 
 technique NormalMapping
+<
+	bool NormalMapping = true;
+	bool Skinning = false;
+>
 {
 	pass BasePass
 	{

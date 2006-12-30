@@ -55,13 +55,23 @@ namespace Dope.DDXX.SceneGraph
             handle = effect.GetAnnotation(techniques[index], "Skinning");
             if (handle != null)
             {
-                string str = effect.GetValueString(handle);
-                str = str.ToLower();
-                if (str == "false" && model.IsSkinned())
+                bool skinning = effect.GetValueBoolean(handle);
+                if (skinning && !model.IsSkinned())
                     return false;
-                if (str == "true" && !model.IsSkinned())
+                if (!skinning && model.IsSkinned())
                     return false;
             }
+
+            handle = effect.GetAnnotation(techniques[index], "NormalMapping");
+            if (handle != null)
+            {
+                bool normalMap = effect.GetValueBoolean(handle);
+                if (normalMap && model.Materials[index].NormalTexture == null)
+                    return false;
+                if (!normalMap && model.Materials[index].NormalTexture != null)
+                    return false;
+            }
+
             return true;
         }
 

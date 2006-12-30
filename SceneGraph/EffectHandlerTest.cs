@@ -111,16 +111,16 @@ namespace Dope.DDXX.SceneGraph
         }
 
         /// <summary>
-        /// No skinning annotation
+        /// No annotations
         /// </summary>
         [Test]
         public void ConstructorTestOK()
         {
-            ExpectNumberOfMaterials(1);
+            ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
             ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT);
             ExpectMaterialParameters(null, null, null, null, null);
-            ExpectNoSkinningAnnotation();
+            ExpectNoAnnotations();
 
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
             Assert.AreSame(effect, effectHandler.Effect);
@@ -136,7 +136,7 @@ namespace Dope.DDXX.SceneGraph
             ExpectFindTechniques(1);
             ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT);
             ExpectMaterialParameters(null, null, null, null, null);
-            ExpectNoSkinningAnnotation();
+            ExpectNoAnnotations();
 
             EffectHandler effectHandler = new EffectHandler(effect, "", null);
             Assert.AreSame(effect, effectHandler.Effect);
@@ -150,12 +150,12 @@ namespace Dope.DDXX.SceneGraph
         [ExpectedException(typeof(DDXXException))]
         public void ConstructorTestSkinFail1()
         {
-            ExpectNumberOfMaterials(1);
+            ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
 
             Expect.Once.On(effect).Method("FindNextValidTechnique").With(validTechnique).Will(Return.Value(null));
             Expect.Once.On(effect).Method("GetAnnotation").With(validTechnique, "Skinning").Will(Return.Value(annotation));
-            Expect.Once.On(effect).Method("GetValueString").With(annotation).Will(Return.Value("fAlSE"));
+            Expect.Once.On(effect).Method("GetValueBoolean").With(annotation).Will(Return.Value(false));
             Expect.Once.On(model).Method("IsSkinned").Will(Return.Value(true));
 
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
@@ -168,69 +168,116 @@ namespace Dope.DDXX.SceneGraph
         [ExpectedException(typeof(DDXXException))]
         public void ConstructorTestSkinFail2()
         {
-            ExpectNumberOfMaterials(1);
+            ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
 
             Expect.Once.On(effect).Method("FindNextValidTechnique").With(validTechnique).Will(Return.Value(null));
             Expect.Once.On(effect).Method("GetAnnotation").With(validTechnique, "Skinning").Will(Return.Value(annotation));
-            Expect.Once.On(effect).Method("GetValueString").With(annotation).Will(Return.Value("tRue"));
+            Expect.Once.On(effect).Method("GetValueBoolean").With(annotation).Will(Return.Value(true));
             Expect.Once.On(model).Method("IsSkinned").Will(Return.Value(false));
 
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
         }
 
         /// <summary>
-        /// Model and valid technique are both skinned
+        /// Model is normal mapped and only valid technique is not
         /// </summary>
         [Test]
-        public void ConstructorTestSkinOK1()
+        [ExpectedException(typeof(DDXXException))]
+        public void ConstructorTestSkinFail3()
         {
-            ExpectNumberOfMaterials(1);
+            ExpectNumberOfMaterials(1, modelMaterial);
+            ExpectFindTechniques(1);
+
+            Expect.Once.On(effect).Method("FindNextValidTechnique").With(validTechnique).Will(Return.Value(null));
+            Expect.Once.On(effect).Method("GetAnnotation").With(validTechnique, "Skinning").Will(Return.Value(null));
+            Expect.Once.On(effect).Method("GetAnnotation").With(validTechnique, "NormalMapping").Will(Return.Value(annotation));
+            Expect.Once.On(effect).Method("GetValueBoolean").With(annotation).Will(Return.Value(false));
+            modelMaterial.NormalTexture = normalTexture;
+
+            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+        }
+
+        /// <summary>
+        /// Model is not normal mapped and only valid technique is 
+        /// </summary>
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void ConstructorTestSkinFail4()
+        {
+            ExpectNumberOfMaterials(1, modelMaterial);
+            ExpectFindTechniques(1);
+
+            Expect.Once.On(effect).Method("FindNextValidTechnique").With(validTechnique).Will(Return.Value(null));
+            Expect.Once.On(effect).Method("GetAnnotation").With(validTechnique, "Skinning").Will(Return.Value(null));
+            Expect.Once.On(effect).Method("GetAnnotation").With(validTechnique, "NormalMapping").Will(Return.Value(annotation));
+            Expect.Once.On(effect).Method("GetValueBoolean").With(annotation).Will(Return.Value(true));
+            modelMaterial.NormalTexture = null;
+
+            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+        }
+
+        /// <summary>
+        /// All annotations are correct (false)
+        /// </summary>
+        [Test]
+        public void ConstructorTestAnnotationOK1()
+        {
+            ExpectNumberOfMaterials(1, modelMaterial);
             ExpectFindTechniques(1);
             ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT);
             ExpectMaterialParameters(null, null, null, null, null);
 
             Expect.Once.On(effect).Method("GetAnnotation").With(validTechnique, "Skinning").Will(Return.Value(annotation));
-            Expect.Once.On(effect).Method("GetValueString").With(annotation).Will(Return.Value("tRue"));
+            Expect.Once.On(effect).Method("GetValueBoolean").With(annotation).Will(Return.Value(true));
             Expect.Once.On(model).Method("IsSkinned").Will(Return.Value(true));
+            Expect.Once.On(effect).Method("GetAnnotation").With(validTechnique, "NormalMapping").Will(Return.Value(annotation));
+            Expect.Once.On(effect).Method("GetValueBoolean").With(annotation).Will(Return.Value(true));
+            modelMaterial.NormalTexture = normalTexture;
 
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
         }
 
         /// <summary>
-        /// Model and valid technique are not skinned
+        /// All annotations are correct (true)
         /// </summary>
         [Test]
-        public void ConstructorTestSkinOK2()
+        public void ConstructorTestAnnotationOK2()
         {
-            ExpectNumberOfMaterials(1);
+            ExpectNumberOfMaterials(1, modelMaterial);
             ExpectFindTechniques(1);
             ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT);
             ExpectMaterialParameters(null, null, null, null, null);
 
             Expect.Once.On(effect).Method("GetAnnotation").With(validTechnique, "Skinning").Will(Return.Value(annotation));
-            Expect.Once.On(effect).Method("GetValueString").With(annotation).Will(Return.Value("fAlse"));
+            Expect.Once.On(effect).Method("GetValueBoolean").With(annotation).Will(Return.Value(false));
             Expect.Once.On(model).Method("IsSkinned").Will(Return.Value(false));
+            Expect.Once.On(effect).Method("GetAnnotation").With(validTechnique, "NormalMapping").Will(Return.Value(annotation));
+            Expect.Once.On(effect).Method("GetValueBoolean").With(annotation).Will(Return.Value(false));
+            modelMaterial.NormalTexture = null;
 
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
         }
 
         /// <summary>
-        /// Model and valid technique are both skinned (three materials)
+        /// All annotations are correct (three materials)
         /// </summary>
         [Test]
         public void ConstructorTestSkinOK3()
         {
-            ExpectNumberOfMaterials(3);
+            ExpectNumberOfMaterials(3, modelMaterial);
             ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT);
             ExpectMaterialParameters(null, null, null, null, null);
+            modelMaterial.NormalTexture = normalTexture;
 
             for (int i = 0; i < 3; i++)
             {
                 ExpectFindTechniques(1);
                 Expect.Once.On(effect).Method("GetAnnotation").With(validTechnique, "Skinning").Will(Return.Value(annotation));
-                Expect.Once.On(effect).Method("GetValueString").With(annotation).Will(Return.Value("tRue"));
+                Expect.Once.On(effect).Method("GetValueBoolean").With(annotation).Will(Return.Value(true));
                 Expect.Once.On(model).Method("IsSkinned").Will(Return.Value(true));
+                Expect.Once.On(effect).Method("GetAnnotation").With(validTechnique, "NormalMapping").Will(Return.Value(annotation));
+                Expect.Once.On(effect).Method("GetValueBoolean").With(annotation).Will(Return.Value(true));
             }
 
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
@@ -247,7 +294,7 @@ namespace Dope.DDXX.SceneGraph
         [ExpectedException(typeof(DDXXException))]
         public void TechniqueConstructorTestFail()
         {
-            ExpectNumberOfMaterials(1);
+            ExpectNumberOfMaterials(1, null);
             Expect.Once.On(effect).Method("FindNextValidTechnique").
                 With(Is.Null).Will(Return.Value(null));
             EffectHandler effectHandler = new EffectHandler(effect, "Valid", model);
@@ -259,12 +306,12 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void TechniqueConstructorTestOK()
         {
-            ExpectNumberOfMaterials(1);
+            ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(5);
             ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT);
             ExpectMeshParametersSet(worldT, worldViewProjectionT, projectionT, worldViewT);
             ExpectMaterialParameters(null, null, null, null, null);
-            ExpectNoSkinningAnnotation();
+            ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "Valid", model);
 
             effectHandler.SetNodeConstants(scene, mesh);
@@ -273,12 +320,12 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void SetMeshConstantsTest1()
         {
-            ExpectNumberOfMaterials(1);
+            ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
             ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT);
             ExpectMeshParametersSet(worldT, worldViewProjectionT, projectionT, worldViewT);
             ExpectMaterialParameters(null, null, null, null, null);
-            ExpectNoSkinningAnnotation();
+            ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
 
             effectHandler.SetNodeConstants(scene, mesh);
@@ -287,12 +334,12 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void SetMeshConstantsTest2()
         {
-            ExpectNumberOfMaterials(1);
+            ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
             ExpectMeshParameters(null, worldViewProjectionT, projectionT, worldViewT);
             ExpectMeshParametersSet(null, worldViewProjectionT, projectionT, worldViewT);
             ExpectMaterialParameters(null, null, null, null, null);
-            ExpectNoSkinningAnnotation();
+            ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
 
             effectHandler.SetNodeConstants(scene, mesh);
@@ -301,12 +348,12 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void SetMeshConstantsTest3()
         {
-            ExpectNumberOfMaterials(1);
+            ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
             ExpectMeshParameters(worldT, null, projectionT, worldViewT);
             ExpectMeshParametersSet(worldT, null, projectionT, worldViewT);
             ExpectMaterialParameters(null, null, null, null, null);
-            ExpectNoSkinningAnnotation();
+            ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
 
             effectHandler.SetNodeConstants(scene, mesh);
@@ -315,12 +362,12 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void SetMeshConstantsTest4()
         {
-            ExpectNumberOfMaterials(1);
+            ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
             ExpectMeshParameters(worldT, worldViewProjectionT, null, worldViewT);
             ExpectMeshParametersSet(worldT, worldViewProjectionT, null, worldViewT);
             ExpectMaterialParameters(null, null, null, null, null);
-            ExpectNoSkinningAnnotation();
+            ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
 
             effectHandler.SetNodeConstants(scene, mesh);
@@ -329,12 +376,12 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void SetMeshConstantsTest5()
         {
-            ExpectNumberOfMaterials(1);
+            ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
             ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, null);
             ExpectMeshParametersSet(worldT, worldViewProjectionT, projectionT, null);
             ExpectMaterialParameters(null, null, null, null, null);
-            ExpectNoSkinningAnnotation();
+            ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
 
             effectHandler.SetNodeConstants(scene, mesh);
@@ -343,13 +390,13 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void SetMaterialConstantsTest1()
         {
-            ExpectNumberOfMaterials(1);
+            ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
             ExpectSetTechnique();
             ExpectMeshParameters(null, null, null, null);
             ExpectMaterialParameters(ambientColor, baseTexture, normalTextureHandle, materialDiffuseColor, materialSpecularColor);
             ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, normalTexture, true, materialDiffuse, true, materialSpecular);
-            ExpectNoSkinningAnnotation();
+            ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
 
             effectHandler.SetMaterialConstants(scene, modelMaterial, 0);
@@ -358,13 +405,13 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void SetMaterialConstantsTest2()
         {
-            ExpectNumberOfMaterials(1);
+            ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
             ExpectSetTechnique();
             ExpectMeshParameters(null, null, null, null);
             ExpectMaterialParameters(null, baseTexture, normalTextureHandle, materialDiffuseColor, materialSpecularColor);
             ExpectMaterialParametersSet(false, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, normalTexture, true, materialDiffuse, true, materialSpecular);
-            ExpectNoSkinningAnnotation();
+            ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
 
             effectHandler.SetMaterialConstants(scene, modelMaterial, 0);
@@ -373,13 +420,13 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void SetMaterialConstantsTest3()
         {
-            ExpectNumberOfMaterials(1);
+            ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
             ExpectSetTechnique();
             ExpectMeshParameters(null, null, null, null);
             ExpectMaterialParameters(ambientColor, null, normalTextureHandle, materialDiffuseColor, materialSpecularColor);
             ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), null, normalTexture, true, materialDiffuse, true, materialSpecular);
-            ExpectNoSkinningAnnotation();
+            ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
 
             effectHandler.SetMaterialConstants(scene, modelMaterial, 0);
@@ -388,13 +435,13 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void SetMaterialConstantsTest4()
         {
-            ExpectNumberOfMaterials(1);
+            ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
             ExpectSetTechnique();
             ExpectMeshParameters(null, null, null, null);
             ExpectMaterialParameters(ambientColor, baseTexture, null, materialDiffuseColor, materialSpecularColor);
             ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, null, true, materialDiffuse, true, materialSpecular);
-            ExpectNoSkinningAnnotation();
+            ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
 
             effectHandler.SetMaterialConstants(scene, modelMaterial, 0);
@@ -403,13 +450,13 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void SetMaterialConstantsTest5()
         {
-            ExpectNumberOfMaterials(1);
+            ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
             ExpectSetTechnique();
             ExpectMeshParameters(null, null, null, null);
             ExpectMaterialParameters(ambientColor, baseTexture, normalTextureHandle, null, materialSpecularColor);
             ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, normalTexture, false, materialDiffuse, true, materialSpecular);
-            ExpectNoSkinningAnnotation();
+            ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
 
             effectHandler.SetMaterialConstants(scene, modelMaterial, 0);
@@ -418,13 +465,13 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void SetMaterialConstantsTest6()
         {
-            ExpectNumberOfMaterials(1);
+            ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
             ExpectSetTechnique();
             ExpectMeshParameters(null, null, null, null);
             ExpectMaterialParameters(ambientColor, baseTexture, normalTextureHandle, materialDiffuseColor, null);
             ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, normalTexture, true, materialDiffuse, false, materialSpecular);
-            ExpectNoSkinningAnnotation();
+            ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
 
             effectHandler.SetMaterialConstants(scene, modelMaterial, 0);
@@ -436,12 +483,12 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void SetMaterialConstantsTest7()
         {
-            ExpectNumberOfMaterials(1);
+            ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
             ExpectSetTechnique();
             ExpectMeshParameters(null, null, null, null);
             ExpectMaterialParameters(null, null, null, null, null);
-            ExpectNoSkinningAnnotation();
+            ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
             effectHandler.Techniques = new EffectHandle[] { null, validTechnique };
 
@@ -577,16 +624,20 @@ namespace Dope.DDXX.SceneGraph
                 With(validTechnique).Will(Return.Value("ValidTechnique"));
         }
 
-        private void ExpectNoSkinningAnnotation()
+        private void ExpectNoAnnotations()
         {
             Expect.Once.On(effect).Method("GetAnnotation").With(validTechnique, "Skinning").Will(Return.Value(null));
+            Expect.Once.On(effect).Method("GetAnnotation").With(validTechnique, "NormalMapping").Will(Return.Value(null));
         }
 
-        private void ExpectNumberOfMaterials(int num)
+        private void ExpectNumberOfMaterials(int num, ModelMaterial material)
         {
-            Expect.Once.On(model).
+            ModelMaterial[] materials = new ModelMaterial[num];
+            for (int i = 0; i < materials.Length; i++)
+                materials[i] = material;
+            Stub.On(model).
                 GetProperty("Materials").
-                Will(Return.Value(new ModelMaterial[num]));
+                Will(Return.Value(materials));
         }
 
     }

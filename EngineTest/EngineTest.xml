@@ -16,7 +16,7 @@
 	</Effect>
 	<Effect name="TestEffect" track="0" startTime="0.0" endTime="300.0">
 	</Effect>
-  <Effect name="NormalMapEffect" track="1" startTime="0.0" endTime="300.0">
+  <Effect name="NormalMapEffect" track="0" startTime="0.0" endTime="300.0">
   </Effect>
   <!--PostEffect name="MonochromePostEffect" track="0" startTime="0.0" endTime="2.0">
 	</PostEffect>

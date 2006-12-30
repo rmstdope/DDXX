@@ -26,8 +26,16 @@ namespace EngineTest
 
             // Create model
             IModel model = ModelFactory.FromFile("airplane 2.x", ModelFactory.Options.EnsureTangents);
+
+            // Add normal map
+            for (int i = 0; i < model.Materials.Length; i++)
+            {
+                model.Materials[i].NormalTexture = TextureFactory.CreateFromFile("NormalMap.dds");
+            }
+
+            // create effect and node
             IEffect effect = EffectFactory.CreateFromFile("Test.fxo");
-            EffectHandler effectHandler = new EffectHandler(effect, "NormalMa", model);
+            EffectHandler effectHandler = new EffectHandler(effect, "", model);
             node = new ModelNode("Test Model", model, effectHandler);
             scene.AddNode(node);
 
@@ -36,12 +44,6 @@ namespace EngineTest
             camera.WorldState.MoveForward(-10);
             scene.AddNode(camera);
             scene.ActiveCamera = camera;
-
-            // Add normal map
-            for (int i = 0; i < model.Materials.Length; i++)
-            {
-                model.Materials[i].NormalTexture = TextureFactory.CreateFromFile("NormalMap.dds");
-            }
         }
 
 

@@ -36,7 +36,8 @@ namespace EngineTest
             camera.WorldState.MoveForward(-10);
             scene.AddNode(camera);
             scene.ActiveCamera = camera;
-        }
+        }
+
 
         public override void Step()
         {

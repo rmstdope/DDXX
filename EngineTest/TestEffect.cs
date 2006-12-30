@@ -56,7 +56,7 @@ namespace EngineTest
             model = ModelFactory.FromFile("tiny.x", ModelFactory.Options.None);
             modelNoSkinning = new ModelNode("No Skinning",
                 model,
-                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "NoSkinning", model));
+                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Skinning", model));
             modelNoSkinning.WorldState.Scale(0.3f);
             modelNoSkinning.WorldState.MoveRight(-50);
             modelNoSkinning.WorldState.Roll((float)Math.PI);
@@ -66,7 +66,7 @@ namespace EngineTest
             model = ModelFactory.FromFile("tiny.x", ModelFactory.Options.SkinnedModel);
             modelSkinning = new ModelNode("Skinning",
                 model,
-                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "NoSkinning", model));
+                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Skinning", model));
             modelSkinning.WorldState.Scale(0.3f);
             modelSkinning.WorldState.MoveRight(50);
             modelSkinning.WorldState.Roll((float)Math.PI);
