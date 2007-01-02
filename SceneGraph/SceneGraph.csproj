@@ -44,10 +44,16 @@
     <Compile Include="CameraNode.cs" />
     <Compile Include="CameraNodeTest.cs" />
     <Compile Include="DummyNode.cs" />
-    <Compile Include="EffectHandler.cs" />
-    <Compile Include="EffectHandlerTest.cs" />
+    <Compile Include="EffectHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="EffectHandlerTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IEffectHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="IRenderableCamera.cs" />
-    <Compile Include="IEffectHandler.cs" />
     <Compile Include="INode.cs" />
     <Compile Include="IRenderableMesh.cs" />
     <Compile Include="IRenderableScene.cs" />

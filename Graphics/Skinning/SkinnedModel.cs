@@ -25,8 +25,6 @@ namespace Dope.DDXX.Graphics.Skinning
             mesh = frame.MeshContainer.MeshData.Mesh;
         }
 
-        #region IModel Members
-
         public override IMesh Mesh
         {
             get { return mesh; }
@@ -43,6 +41,9 @@ namespace Dope.DDXX.Graphics.Skinning
             return true;
         }
 
-        #endregion
+        public override void Draw()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
     }
 }

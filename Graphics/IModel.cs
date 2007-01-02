@@ -8,5 +8,6 @@ namespace Dope.DDXX.Graphics
         IMesh Mesh { get; set; }
         void DrawSubset(int subset);
         bool IsSkinned();
+        void Draw();
     }
 }

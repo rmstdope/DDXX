@@ -42,6 +42,8 @@ namespace Dope.DDXX.Graphics
             return false; 
         }
 
+        public abstract void Draw();
+
         #endregion
     }
 }

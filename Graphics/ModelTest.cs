@@ -62,12 +62,43 @@ namespace Dope.DDXX.Graphics
         }
 
         [Test]
-        public void TestDraw()
+        public void TestDrawSubset()
         {
             ConstructorTest();
 
             Expect.Once.On(mesh).Method("DrawSubset").With(17);
             model.DrawSubset(17);
+        }
+
+        [Test]
+        public void TestDraw()
+        {
+            //IEffectHandler effectHandler = mockery.NewMock<IEffectHandler>();
+            //ConstructorTest();
+
+            //using (mockery.Ordered)
+            //{
+            //    //Subset 1
+            //    Expect.Once.On(effectHandler).Method("SetNodeConstants").With(scene, node);
+            //    Expect.Once.On(effectHandler).Method("SetMaterialConstants").With(Is.Same(scene), new MaterialMatcher(materials[0]), Is.EqualTo(0));
+            //    Expect.Once.On(effectHandler).Method("Begin").With(FX.None).Will(Return.Value(1));
+            //    Expect.Once.On(effectHandler).Method("BeginPass").With(0);
+            //    Expect.Once.On(mesh).Method("DrawSubset").With(0);
+            //    Expect.Once.On(effectHandler).Method("EndPass");
+            //    Expect.Once.On(effectHandler).Method("End");
+            //    // Subset 2
+            //    Expect.Once.On(effectHandler).Method("SetMaterialConstants").With(Is.Same(scene), new MaterialMatcher(materials[1]), Is.EqualTo(1));
+            //    Expect.Once.On(effectHandler).Method("Begin").With(FX.None).Will(Return.Value(2));
+            //    Expect.Once.On(effectHandler).Method("BeginPass").With(0);
+            //    Expect.Once.On(mesh).Method("DrawSubset").With(1);
+            //    Expect.Once.On(effectHandler).Method("EndPass");
+            //    Expect.Once.On(effectHandler).Method("BeginPass").With(1);
+            //    Expect.Once.On(mesh).Method("DrawSubset").With(1);
+            //    Expect.Once.On(effectHandler).Method("EndPass");
+            //    Expect.Once.On(effectHandler).Method("End");
+            //}
+
+            //model.Draw(effectHandler, scene);
         }
     }
 }

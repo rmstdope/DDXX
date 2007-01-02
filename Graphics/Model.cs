@@ -39,5 +39,10 @@ namespace Dope.DDXX.Graphics
         {
             mesh.DrawSubset(subset);
         }
+
+        public override void Draw()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
     }
 }
