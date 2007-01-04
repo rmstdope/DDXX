@@ -1,7 +1,10 @@
 #include <CommonFunctions.hlsl>
 
-float YMAX = 10;
-float YMIN = -10;
+shared float ZMAX =50;
+shared float ZMIN =-50;
+
+int HeightMapMaxSize = 200;
+float HeightMap[200];
 
 texture PosseSourceTexture;
  
@@ -9,8 +12,8 @@ sampler2D PosseTextureSampler = sampler_state
 {
 	texture = <PosseSourceTexture>;
 	MinFilter = Point;
-	MagFilter = Linear;
-	MipFilter = Linear;
+	MagFilter = Point;
+	MipFilter = None;
 	AddressU = Clamp;
 	AddressV = Clamp;
 };
@@ -42,15 +45,24 @@ struct TexturedInputPS
 };
 
 
-
 InputPS
-SimpleVertexShader(InputVS input)
+MyVertexShader(InputVS input)
 {
 	InputPS output;
 		
 	// Transform the position from object space to homogeneous projection space
+	
 	output.Position = mul(input.Position, WorldViewProjectionT);
-	output.Height = (output.Position.y + YMIN) / (YMAX-YMIN);
+
+	float4 heightpos = output.Position; //mul(input.Position, WorldViewT);
+	
+	//if (output.Position.z < ZMIN)
+	//	ZMIN = output.Position.z;
+	//if (output.Position.z > ZMAX)
+	//	ZMAX = output.Position.z;
+	
+	output.Height = (heightpos.z + ZMIN) / (ZMAX-ZMIN);
+	
 	//output.Height = output.Position.y;
 	
 	return output;    
@@ -58,7 +70,7 @@ SimpleVertexShader(InputVS input)
 
 
 float4
-SimplePixelShader(InputPS input) : COLOR0
+MyPixelShader(InputPS input) : COLOR0
 {
 	//return AmbientColor;
 	return float4(input.Height, 0, 0, 1);
@@ -69,9 +81,15 @@ TexturedInputPS
 TexturedVertexShader(TexturedInputVS input)
 {
 	TexturedInputPS output;
-		
+	float4 pos = input.Position;	
+	
+	//int mapIndex = pos.z;
+	//pos.z = HeightMap[mapIndex];
+	//float4 z4 = tex2Dlod(PosseTextureSampler, float4(input.TextureCoord.x, input.TextureCoord.y, 0, 0));
+	//pos.z = z4.x*(ZMAX-ZMIN)-ZMIN;
+	
 	// Transform the position from object space to homogeneous projection space
-	output.Position = mul(input.Position, WorldViewProjectionT);
+	output.Position = mul(pos, WorldViewProjectionT);
 	
 	output.TextureCoord = input.TextureCoord;
 	
@@ -82,7 +100,8 @@ TexturedVertexShader(TexturedInputVS input)
 float4
 TexturedPixelShader(TexturedInputPS input) : COLOR0
 {
-	return AmbientColor * tex2D(PosseTextureSampler, input.TextureCoord.xy);
+	//return AmbientColor * tex2D(PosseTextureSampler, input.TextureCoord.xy);
+	return AmbientColor * tex2D(BaseTextureSampler, input.TextureCoord.xy);
 }
 
 
@@ -105,8 +124,8 @@ technique NoTexPosseTestTechnique
 {
 	pass BasePass
 	{
-		VertexShader			= compile vs_2_0 SimpleVertexShader();
-		PixelShader				= compile ps_2_0 SimplePixelShader();
+		VertexShader			= compile vs_2_0 MyVertexShader();
+		PixelShader				= compile ps_2_0 MyPixelShader();
 		AlphaBlendEnable	= false;
 		CullMode					= CCW;
 		FillMode					= Solid;//<FillMode>;
