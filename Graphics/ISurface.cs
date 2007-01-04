@@ -8,7 +8,7 @@ using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.Graphics
 {
-    public interface ISurface
+    public interface ISurface : IDisposable
     {
         Surface DXSurface { get; }
         // Summary:
