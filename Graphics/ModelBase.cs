@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX.Direct3D;
+using Microsoft.DirectX;
 
 namespace Dope.DDXX.Graphics
 {
@@ -42,7 +43,7 @@ namespace Dope.DDXX.Graphics
             return false; 
         }
 
-        public abstract void Draw();
+        public abstract void Draw(IEffectHandler effectHandler, ColorValue ambient, Matrix world, Matrix view, Matrix projection);
 
         #endregion
     }

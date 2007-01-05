@@ -314,7 +314,7 @@ namespace Dope.DDXX.SceneGraph
             ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "Valid", model);
 
-            effectHandler.SetNodeConstants(scene, mesh);
+            effectHandler.SetNodeConstants(worldMatrix, viewMatrix, projMatrix);
         }
 
         [Test]
@@ -328,7 +328,7 @@ namespace Dope.DDXX.SceneGraph
             ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
 
-            effectHandler.SetNodeConstants(scene, mesh);
+            effectHandler.SetNodeConstants(worldMatrix, viewMatrix, projMatrix);
         }
 
         [Test]
@@ -342,7 +342,7 @@ namespace Dope.DDXX.SceneGraph
             ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
 
-            effectHandler.SetNodeConstants(scene, mesh);
+            effectHandler.SetNodeConstants(worldMatrix, viewMatrix, projMatrix);
         }
 
         [Test]
@@ -356,7 +356,7 @@ namespace Dope.DDXX.SceneGraph
             ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
 
-            effectHandler.SetNodeConstants(scene, mesh);
+            effectHandler.SetNodeConstants(worldMatrix, viewMatrix, projMatrix);
         }
 
         [Test]
@@ -370,7 +370,7 @@ namespace Dope.DDXX.SceneGraph
             ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
 
-            effectHandler.SetNodeConstants(scene, mesh);
+            effectHandler.SetNodeConstants(worldMatrix, viewMatrix, projMatrix);
         }
 
         [Test]
@@ -384,7 +384,7 @@ namespace Dope.DDXX.SceneGraph
             ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
 
-            effectHandler.SetNodeConstants(scene, mesh);
+            effectHandler.SetNodeConstants(worldMatrix, viewMatrix, projMatrix);
         }
 
         [Test]
@@ -399,7 +399,7 @@ namespace Dope.DDXX.SceneGraph
             ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
 
-            effectHandler.SetMaterialConstants(scene, modelMaterial, 0);
+            effectHandler.SetMaterialConstants(sceneAmbient, modelMaterial, 0);
         }
 
         [Test]
@@ -414,7 +414,7 @@ namespace Dope.DDXX.SceneGraph
             ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
 
-            effectHandler.SetMaterialConstants(scene, modelMaterial, 0);
+            effectHandler.SetMaterialConstants(sceneAmbient, modelMaterial, 0);
         }
 
         [Test]
@@ -429,7 +429,7 @@ namespace Dope.DDXX.SceneGraph
             ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
 
-            effectHandler.SetMaterialConstants(scene, modelMaterial, 0);
+            effectHandler.SetMaterialConstants(sceneAmbient, modelMaterial, 0);
         }
 
         [Test]
@@ -444,7 +444,7 @@ namespace Dope.DDXX.SceneGraph
             ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
 
-            effectHandler.SetMaterialConstants(scene, modelMaterial, 0);
+            effectHandler.SetMaterialConstants(sceneAmbient, modelMaterial, 0);
         }
 
         [Test]
@@ -459,7 +459,7 @@ namespace Dope.DDXX.SceneGraph
             ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
 
-            effectHandler.SetMaterialConstants(scene, modelMaterial, 0);
+            effectHandler.SetMaterialConstants(sceneAmbient, modelMaterial, 0);
         }
 
         [Test]
@@ -474,7 +474,7 @@ namespace Dope.DDXX.SceneGraph
             ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
 
-            effectHandler.SetMaterialConstants(scene, modelMaterial, 0);
+            effectHandler.SetMaterialConstants(sceneAmbient, modelMaterial, 0);
         }
 
         /// <summary>
@@ -492,7 +492,7 @@ namespace Dope.DDXX.SceneGraph
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
             effectHandler.Techniques = new EffectHandle[] { null, validTechnique };
 
-            effectHandler.SetMaterialConstants(scene, modelMaterial, 1);
+            effectHandler.SetMaterialConstants(sceneAmbient, modelMaterial, 1);
         }
 
         private void ExpectSetTechnique()

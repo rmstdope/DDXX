@@ -40,9 +40,20 @@ namespace Dope.DDXX.Graphics
             mesh.DrawSubset(subset);
         }
 
-        public override void Draw()
+        public override void Draw(IEffectHandler effectHandler, ColorValue ambient, Matrix world, Matrix view, Matrix projection)
         {
-            throw new Exception("The method or operation is not implemented.");
+            for (int j = 0; j < Materials.Length; j++)
+            {
+                effectHandler.SetMaterialConstants(ambient, Materials[j], j);
+                int passes = effectHandler.Effect.Begin(FX.None);
+                for (int i = 0; i < passes; i++)
+                {
+                    effectHandler.Effect.BeginPass(i);
+                    Mesh.DrawSubset(j);
+                    effectHandler.Effect.EndPass();
+                }
+                effectHandler.Effect.End();
+            }
         }
     }
 }

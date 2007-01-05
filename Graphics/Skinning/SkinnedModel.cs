@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Utility;
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.Graphics.Skinning
 {
@@ -41,9 +43,20 @@ namespace Dope.DDXX.Graphics.Skinning
             return true;
         }
 
-        public override void Draw()
+        public override void Draw(IEffectHandler effectHandler, ColorValue ambient, Matrix world, Matrix view, Matrix projection)
         {
-            throw new Exception("The method or operation is not implemented.");
+            for (int j = 0; j < Materials.Length; j++)
+            {
+                effectHandler.SetMaterialConstants(ambient, Materials[j], j);
+                int passes = effectHandler.Effect.Begin(FX.None);
+                for (int i = 0; i < passes; i++)
+                {
+                    effectHandler.Effect.BeginPass(i);
+                    Mesh.DrawSubset(j);
+                    effectHandler.Effect.EndPass();
+                }
+                effectHandler.Effect.End();
+            }
         }
     }
 }

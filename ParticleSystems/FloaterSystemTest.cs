@@ -18,6 +18,12 @@ namespace Dope.DDXX.ParticleSystems
         private IGraphicsStream graphicsStream;
         private EffectHandle technique;
         private IEffectHandler effectHandler;
+        private IRenderableScene scene;
+        private IRenderableCamera camera;
+        private Matrix worldMatrix = Matrix.Identity;
+        private Matrix viewMatrix = Matrix.RotationX(4.0f);
+        private Matrix projectionMatrix = Matrix.RotationY(1.3f);
+        private ColorValue sceneAmbient = new ColorValue(0.1f, 0.2f, 0.3f);
 
         [SetUp]
         public override void SetUp()
@@ -33,6 +39,13 @@ namespace Dope.DDXX.ParticleSystems
             effect = mockery.NewMock<IEffect>();
             technique = EffectHandle.FromString("1");
             effectHandler = mockery.NewMock<IEffectHandler>();
+            scene = mockery.NewMock<IRenderableScene>();
+            camera = mockery.NewMock<IRenderableCamera>();
+
+            Stub.On(scene).GetProperty("ActiveCamera").Will(Return.Value(camera));
+            Stub.On(camera).GetProperty("ViewMatrix").Will(Return.Value(viewMatrix));
+            Stub.On(camera).GetProperty("ProjectionMatrix").Will(Return.Value(projectionMatrix));
+            Stub.On(scene).GetProperty("AmbientColor").Will(Return.Value(sceneAmbient));
         }
 
         [TearDown]
@@ -93,7 +106,7 @@ namespace Dope.DDXX.ParticleSystems
 
             using (mockery.Ordered)
             {
-                Expect.Once.On(effectHandler).Method("SetNodeConstants").With(null, floaterSystem);
+                Expect.Once.On(effectHandler).Method("SetNodeConstants").With(worldMatrix, viewMatrix, projectionMatrix);
                 Expect.Once.On(effectHandler).Method("SetMaterialConstants").WithAnyArguments();
                 
                 Expect.Once.On(effect).Method("Begin").With(FX.None).Will(Return.Value(1));
@@ -111,7 +124,7 @@ namespace Dope.DDXX.ParticleSystems
                 Expect.Once.On(effect).Method("End");
             }
 
-            floaterSystem.Render(null);
+            floaterSystem.Render(scene);
         }
 
         private void ExpectVertexBuffer()

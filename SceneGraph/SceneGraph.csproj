@@ -50,9 +50,6 @@
     <Compile Include="EffectHandlerTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IEffectHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="IRenderableCamera.cs" />
     <Compile Include="INode.cs" />
     <Compile Include="IRenderableMesh.cs" />

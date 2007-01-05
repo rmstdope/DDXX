@@ -65,8 +65,8 @@ namespace Dope.DDXX.SceneGraph
 
         protected override void RenderNode(IRenderableScene scene)
         {
-            effectHandler.SetNodeConstants(scene, this);
-            effectHandler.SetMaterialConstants(scene, material, 0);
+            effectHandler.SetNodeConstants(WorldMatrix, scene.ActiveCamera.ViewMatrix, scene.ActiveCamera.ProjectionMatrix);
+            effectHandler.SetMaterialConstants(scene.AmbientColor, material, 0);
 
             int passes = effectHandler.Effect.Begin(FX.None);
 

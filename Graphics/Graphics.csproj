@@ -63,6 +63,7 @@
     <Compile Include="IDevice.cs" />
     <Compile Include="IEffect.cs" />
     <Compile Include="IEffectFactory.cs" />
+    <Compile Include="IEffectHandler.cs" />
     <Compile Include="IFont.cs" />
     <Compile Include="IGraphicsFactory.cs" />
     <Compile Include="ILine.cs" />

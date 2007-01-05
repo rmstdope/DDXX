@@ -32,25 +32,28 @@ namespace Dope.DDXX.SceneGraph
 
         protected override void RenderNode(IRenderableScene scene)
         {
-            effectHandler.SetNodeConstants(scene, this);
+            effectHandler.SetNodeConstants(WorldMatrix, scene.ActiveCamera.ViewMatrix, scene.ActiveCamera.ProjectionMatrix);
 
-            for (int j = 0; j < model.Materials.Length; j++)
-            {
-                effectHandler.SetMaterialConstants(scene, model.Materials[j], j);
+            model.Draw(effectHandler, scene.AmbientColor, WorldMatrix,
+                scene.ActiveCamera.ViewMatrix, scene.ActiveCamera.ProjectionMatrix);
 
-                int passes = effectHandler.Effect.Begin(FX.None);
+            //for (int j = 0; j < model.Materials.Length; j++)
+            //{
+            //    effectHandler.SetMaterialConstants(scene.AmbientColor, model.Materials[j], j);
 
-                for (int i = 0; i < passes; i++)
-                {
-                    effectHandler.Effect.BeginPass(i);
+            //    int passes = effectHandler.Effect.Begin(FX.None);
 
-                    model.DrawSubset(j);
+            //    for (int i = 0; i < passes; i++)
+            //    {
+            //        effectHandler.Effect.BeginPass(i);
 
-                    effectHandler.Effect.EndPass();
-                }
+            //        model.DrawSubset(j);
 
-                effectHandler.Effect.End();
-            }
+            //        effectHandler.Effect.EndPass();
+            //    }
+
+            //    effectHandler.Effect.End();
+            //}
         }
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.DirectX.Direct3D;
 
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
+using Microsoft.DirectX;
 
 namespace Dope.DDXX.SceneGraph
 {
@@ -102,23 +103,23 @@ namespace Dope.DDXX.SceneGraph
             set { techniques = value; }
         }
 
-        public void SetNodeConstants(IRenderableScene scene, INode node)
+        public void SetNodeConstants(Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix)
         {
             if (worldT != null)
-                effect.SetValueTranspose(worldT, node.WorldMatrix);
+                effect.SetValueTranspose(worldT, worldMatrix);
             if (worldViewProjT != null)
-                effect.SetValueTranspose(worldViewProjT, node.WorldMatrix * scene.ActiveCamera.ViewMatrix * scene.ActiveCamera.ProjectionMatrix);
+                effect.SetValueTranspose(worldViewProjT, worldMatrix * viewMatrix * projectionMatrix);
             if (projT != null)
-                effect.SetValueTranspose(projT, scene.ActiveCamera.ProjectionMatrix);
+                effect.SetValueTranspose(projT, projectionMatrix);
             if (worldViewT != null)
-                effect.SetValueTranspose(worldViewT, node.WorldMatrix * scene.ActiveCamera.ViewMatrix);
+                effect.SetValueTranspose(worldViewT, worldMatrix * viewMatrix);
         }
 
-        public void SetMaterialConstants(IRenderableScene scene, ModelMaterial material, int index)
+        public void SetMaterialConstants(ColorValue ambientValue, ModelMaterial material, int index)
         {
             effect.Technique = techniques[index];
             if (ambientColor != null)
-                effect.SetValue(ambientColor, ColorOperator.Modulate(scene.AmbientColor, material.AmbientColor));
+                effect.SetValue(ambientColor, ColorOperator.Modulate(ambientValue, material.AmbientColor));
             if (baseTexture != null)
                 effect.SetValue(baseTexture, material.DiffuseTexture);
             if (normalTexture != null)

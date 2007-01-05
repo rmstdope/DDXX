@@ -19,8 +19,13 @@ namespace Dope.DDXX.SceneGraph
         private IEffect effect;
         private IEffectHandler effectHandler;
         private IRenderableScene scene;
-        private CameraNode camera;
+        private IRenderableCamera camera;
+        private IModel model;
         private ModelMaterial[] materials;
+        private Matrix worldMatrix = Matrix.Identity;
+        private Matrix viewMatrix = Matrix.RotationX(4.0f);
+        private Matrix projectionMatrix = Matrix.RotationY(1.3f);
+        private ColorValue sceneAmbient = new ColorValue(0.1f, 0.2f, 0.3f);
 
         private ModelNode node;
 
@@ -32,18 +37,23 @@ namespace Dope.DDXX.SceneGraph
             effect = mockery.NewMock<IEffect>();
             effectHandler = mockery.NewMock<IEffectHandler>();
             scene = mockery.NewMock<IRenderableScene>();
-            camera = new CameraNode("Camera");
+            camera = mockery.NewMock<IRenderableCamera>();
+            model = mockery.NewMock<IModel>();
             Material m = new Material();
             m.AmbientColor = new ColorValue(1, 1, 1);
             materials = new ModelMaterial[2];
             materials[0] = new ModelMaterial(m, null);
             materials[1] = new ModelMaterial(new Material(), null);
 
-            Stub.On(effectHandler).
-                GetProperty("Effect").
-                Will(Return.Value(effect));
+            Stub.On(effectHandler).GetProperty("Effect").Will(Return.Value(effect));
+            Stub.On(scene).GetProperty("ActiveCamera").Will(Return.Value(camera));
+            Stub.On(camera).GetProperty("ViewMatrix").Will(Return.Value(viewMatrix));
+            Stub.On(camera).GetProperty("ProjectionMatrix").Will(Return.Value(projectionMatrix));
+            Stub.On(scene).GetProperty("AmbientColor").Will(Return.Value(sceneAmbient));
+            Stub.On(model).GetProperty("Mesh").Will(Return.Value(mesh));
+            Stub.On(model).GetProperty("Materials").Will(Return.Value(materials));
 
-            node = new ModelNode("Name", new Dope.DDXX.Graphics.Model(mesh, materials), effectHandler);
+            node = new ModelNode("Name", model, effectHandler);
         }
 
         [TearDown]
@@ -84,27 +94,8 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void RenderTestOK()
         {
-            using (mockery.Ordered)
-            {
-                //Subset 1
-                Expect.Once.On(effectHandler).Method("SetNodeConstants").With(scene, node);
-                Expect.Once.On(effectHandler).Method("SetMaterialConstants").With(Is.Same(scene), new MaterialMatcher(materials[0]), Is.EqualTo(0));
-                Expect.Once.On(effect).Method("Begin").With(FX.None).Will(Return.Value(1));
-                Expect.Once.On(effect).Method("BeginPass").With(0);
-                Expect.Once.On(mesh).Method("DrawSubset").With(0);
-                Expect.Once.On(effect).Method("EndPass");
-                Expect.Once.On(effect).Method("End");
-                // Subset 2
-                Expect.Once.On(effectHandler).Method("SetMaterialConstants").With(Is.Same(scene), new MaterialMatcher(materials[1]), Is.EqualTo(1));
-                Expect.Once.On(effect).Method("Begin").With(FX.None).Will(Return.Value(2));
-                Expect.Once.On(effect).Method("BeginPass").With(0);
-                Expect.Once.On(mesh).Method("DrawSubset").With(1);
-                Expect.Once.On(effect).Method("EndPass");
-                Expect.Once.On(effect).Method("BeginPass").With(1);
-                Expect.Once.On(mesh).Method("DrawSubset").With(1);
-                Expect.Once.On(effect).Method("EndPass");
-                Expect.Once.On(effect).Method("End");
-            }
+            Expect.Once.On(effectHandler).Method("SetNodeConstants").With(worldMatrix, viewMatrix, projectionMatrix);
+            Expect.Once.On(model).Method("Draw").With(effectHandler, sceneAmbient, worldMatrix, viewMatrix, projectionMatrix);
 
             node.Render(scene);
         }

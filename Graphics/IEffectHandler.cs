@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX.Direct3D;
-using Dope.DDXX.Graphics;
+using Microsoft.DirectX;
 
-namespace Dope.DDXX.SceneGraph
+namespace Dope.DDXX.Graphics
 {
     public interface IEffectHandler
     {
         IEffect Effect { get; }
         EffectHandle[] Techniques { get; set;}
-        void SetNodeConstants(IRenderableScene scene, INode node);
-        void SetMaterialConstants(IRenderableScene scene, ModelMaterial mesh, int index);
+        void SetNodeConstants(Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix);
+        void SetMaterialConstants(ColorValue ambientColor, ModelMaterial mesh, int index);
     }
 }

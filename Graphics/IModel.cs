@@ -1,4 +1,6 @@
 ﻿using System;
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.Graphics
 {
@@ -8,6 +10,6 @@ namespace Dope.DDXX.Graphics
         IMesh Mesh { get; set; }
         void DrawSubset(int subset);
         bool IsSkinned();
-        void Draw();
+        void Draw(IEffectHandler effectHandler, ColorValue ambient, Matrix world, Matrix view, Matrix projection);
     }
 }
