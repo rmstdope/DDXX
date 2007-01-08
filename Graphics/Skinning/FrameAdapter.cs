@@ -9,6 +9,13 @@ namespace Dope.DDXX.Graphics.Skinning
     public class FrameAdapter : IFrame
     {
         private Frame frame;
+        private ModelMaterial[] modelMaterials;
+
+        public ModelMaterial[] ModelMaterials
+        {
+            get { return modelMaterials; }
+            set { modelMaterials = value; }
+        }
 
         public FrameAdapter(Frame frame)
         {

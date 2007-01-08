@@ -544,14 +544,14 @@ namespace Dope.DDXX.Graphics
         void ComputeTangent(int texStage, int tangentIndex, int binormIndex, int wrap, int[] adjacency);
         //
         // Summary:
-        //     Performs tangent frame1 computations on a mesh. Tangent, binormal, and optionally
+        //     Performs tangent firstFrame computations on a mesh. Tangent, binormal, and optionally
         //     normal vectors are generated. Singularities are handled as required by grouping
         //     edges and splitting vertices.
         //
         // Parameters:
         //   options:
         //     Combination of one or more Microsoft.DirectX.Direct3D.TangentOptions values
-        //     that specify tangent frame1 computation options. If zero, the following options
+        //     that specify tangent firstFrame computation options. If zero, the following options
         //     will be specified: & ( GenerateInPlace | ( !( WeightByArea | WeightEqual
         //     | OrthogonalizeFromU | OrthogonalizeFromV | WrapUV | DontNormalizePartials
         //     | WindClockwise | CalculateNormals ) ).

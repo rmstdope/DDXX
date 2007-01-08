@@ -18,10 +18,6 @@ namespace Dope.DDXX.Graphics
         // Summary:
         //     Gets a value that indicates whether the object is disposed.
         bool Disposed { get; }
-        // Summary:
-        //     Immediately releases the unmanaged resources used by the Direct3D.Surface
-        //     object.
-        void Dispose();
         //
         // Summary:
         //     Retrieves a device context.

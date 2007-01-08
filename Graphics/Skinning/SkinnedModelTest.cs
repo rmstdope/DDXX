@@ -14,8 +14,10 @@ namespace Dope.DDXX.Graphics.Skinning
     {
         private Mockery mockery;
         private IAnimationRootFrame rootFrame;
-        private IFrame frame1;
-        private IFrame frame2;
+        private IFrame firstFrame;
+        private IFrame childFrame;
+        private IFrame childChildFrame;
+        private IFrame childChildSiblingFrame;
         private IMeshContainer meshContainer;
         private IMeshData meshData;
         private IMesh mesh;
@@ -34,8 +36,10 @@ namespace Dope.DDXX.Graphics.Skinning
         {
             mockery = new Mockery();
             rootFrame = mockery.NewMock<IAnimationRootFrame>();
-            frame1 = mockery.NewMock<IFrame>();
-            frame2 = mockery.NewMock<IFrame>();
+            firstFrame = mockery.NewMock<IFrame>();
+            childFrame = mockery.NewMock<IFrame>();
+            childChildFrame = mockery.NewMock<IFrame>();
+            childChildSiblingFrame = mockery.NewMock<IFrame>();
             meshContainer = mockery.NewMock<IMeshContainer>();
             meshData = mockery.NewMock<IMeshData>();
             mesh = mockery.NewMock<IMesh>();
@@ -44,9 +48,33 @@ namespace Dope.DDXX.Graphics.Skinning
             effect = mockery.NewMock<IEffect>();
             effectHandler = mockery.NewMock<IEffectHandler>();
 
-            Stub.On(rootFrame).GetProperty("FrameHierarchy").Will(Return.Value(frame1));
+            // firstFrame
+            //  |-childFrame
+            //     |-childChildFrame
+            //     |-childChildSiblingFrame - MeshContainer
+            Stub.On(rootFrame).GetProperty("FrameHierarchy").Will(Return.Value(firstFrame));
+
+            Stub.On(firstFrame).GetProperty("FrameFirstChild").Will(Return.Value(childFrame));
+            Stub.On(firstFrame).GetProperty("FrameSibling").Will(Return.Value(null));
+            Stub.On(firstFrame).GetProperty("MeshContainer").Will(Return.Value(null));
+            
+            Stub.On(childFrame).GetProperty("FrameFirstChild").Will(Return.Value(childChildFrame));
+            Stub.On(childFrame).GetProperty("FrameSibling").Will(Return.Value(null));
+            Stub.On(childFrame).GetProperty("MeshContainer").Will(Return.Value(null));
+
+            Stub.On(childChildFrame).GetProperty("FrameFirstChild").Will(Return.Value(null));
+            Stub.On(childChildFrame).GetProperty("FrameSibling").Will(Return.Value(childChildSiblingFrame));
+            Stub.On(childChildFrame).GetProperty("MeshContainer").Will(Return.Value(null));
+
+            Stub.On(childChildSiblingFrame).GetProperty("FrameFirstChild").Will(Return.Value(null));
+            Stub.On(childChildSiblingFrame).GetProperty("FrameSibling").Will(Return.Value(null));
+            Stub.On(childChildSiblingFrame).GetProperty("MeshContainer").Will(Return.Value(meshContainer));
+
             Stub.On(meshContainer).GetProperty("MeshData").Will(Return.Value(meshData));
             Stub.On(effectHandler).GetProperty("Effect").Will(Return.Value(effect));
+            Stub.On(meshData).GetProperty("Mesh").Will(Return.Value(mesh));
+            Stub.On(meshContainer).Method("GetMaterials").Will(Return.Value(materials));
+
         }
 
         [Test]
@@ -55,17 +83,9 @@ namespace Dope.DDXX.Graphics.Skinning
             materials[0].TextureFilename = "0";
             materials[1].TextureFilename = "1";
 
-            // Find a real MeshContainer in second level 
-            Expect.Once.On(frame1).GetProperty("MeshContainer").Will(Return.Value(null));
-            Expect.Once.On(frame1).GetProperty("FrameFirstChild").Will(Return.Value(frame2));
-            Stub.On(frame2).GetProperty("MeshContainer").Will(Return.Value(meshContainer));
-            Expect.Once.On(meshData).GetProperty("Mesh").Will(Return.Value(mesh));
-            Expect.Once.On(meshContainer).Method("GetMaterials").Will(Return.Value(materials));
-
             Expect.Once.On(textureFactory).Method("CreateFromFile").With("0");
             Expect.Once.On(textureFactory).Method("CreateFromFile").With("1");
             model = new SkinnedModel(rootFrame, textureFactory);
-            Assert.AreSame(mesh, model.Mesh);
         }
 
         class MaterialMatcher : Matcher
@@ -98,12 +118,12 @@ namespace Dope.DDXX.Graphics.Skinning
         [Test]
         public void TestDraw()
         {
+            ModelMaterial[] modelMaterials = new ModelMaterial[] { new ModelMaterial(materials[0].Material3D), new ModelMaterial(materials[1].Material3D) };
             ConstructorTest();
 
             using (mockery.Ordered)
             {
                 //Subset 1
-                //    Expect.Once.On(effectHandler).Method("SetNodeConstants").With(scene, node);
                 Expect.Once.On(effectHandler).Method("SetMaterialConstants").With(Is.EqualTo(sceneAmbient), new MaterialMatcher(materials[0]), Is.EqualTo(0));
                 Expect.Once.On(effect).Method("Begin").With(FX.None).Will(Return.Value(1));
                 Expect.Once.On(effect).Method("BeginPass").With(0);

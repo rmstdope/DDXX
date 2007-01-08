@@ -8,24 +8,24 @@ namespace Dope.DDXX.Graphics.Skinning
     public interface IFrame
     {
         // Summary:
-        //     Retrieves the first child of the frame1.
+        //     Retrieves the first child of the firstFrame.
         IFrame FrameFirstChild { get; }
         //
         // Summary:
-        //     Retrieves the first sibling of the current frame1 in the hierarchy.
+        //     Retrieves the first sibling of the current firstFrame in the hierarchy.
         IFrame FrameSibling { get; }
         //
         // Summary:
         //     Retrieves or sets a Microsoft.DirectX.Direct3D.MeshContainer object in a
-        //     transformation frame1 hierarchy.
+        //     transformation firstFrame hierarchy.
         IMeshContainer MeshContainer { get; set; }
         //
         // Summary:
-        //     Retrieves or sets the name of a frame1.
+        //     Retrieves or sets the name of a firstFrame.
         string Name { get; set; }
         //
         // Summary:
-        //     Retrieves or sets the transformation Microsoft.DirectX.Matrix of a frame1.
+        //     Retrieves or sets the transformation Microsoft.DirectX.Matrix of a firstFrame.
         Matrix TransformationMatrix { get; set; }
     }
 }

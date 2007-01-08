@@ -39,6 +39,8 @@ namespace Dope.DDXX.Graphics.Skinning
             factory = new SkinnedModelFactory(device, graphicsFactory, textureFactory);
             Stub.On(rootFrame).GetProperty("FrameHierarchy").Will(Return.Value(frame));
             Stub.On(frame).GetProperty("MeshContainer").Will(Return.Value(meshContainer));
+            Stub.On(frame).GetProperty("FrameSibling").Will(Return.Value(null));
+            Stub.On(frame).GetProperty("FrameFirstChild").Will(Return.Value(null));
             Stub.On(meshContainer).Method("GetMaterials").Will(Return.Value(materials));
             Stub.On(meshContainer).GetProperty("MeshData").Will(Return.Value(meshData));
             Stub.On(meshData).GetProperty("Mesh").Will(Return.Value(mesh));
