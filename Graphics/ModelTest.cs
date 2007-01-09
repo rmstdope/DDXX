@@ -117,14 +117,17 @@ namespace Dope.DDXX.Graphics
 
             using (mockery.Ordered)
             {
+                // Node
+                Expect.Once.On(effectHandler).Method("SetNodeConstants").With(world, view, projection);
+
                 //Subset 1
-            //    Expect.Once.On(effectHandler).Method("SetNodeConstants").With(scene, node);
                 Expect.Once.On(effectHandler).Method("SetMaterialConstants").With(Is.EqualTo(sceneAmbient), new MaterialMatcher(materials[0]), Is.EqualTo(0));
                 Expect.Once.On(effect).Method("Begin").With(FX.None).Will(Return.Value(1));
                 Expect.Once.On(effect).Method("BeginPass").With(0);
                 Expect.Once.On(mesh).Method("DrawSubset").With(0);
                 Expect.Once.On(effect).Method("EndPass");
                 Expect.Once.On(effect).Method("End");
+
                 // Subset 2
                 Expect.Once.On(effectHandler).Method("SetMaterialConstants").With(Is.EqualTo(sceneAmbient), new MaterialMatcher(materials[1]), Is.EqualTo(1));
                 Expect.Once.On(effect).Method("Begin").With(FX.None).Will(Return.Value(2));

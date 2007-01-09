@@ -63,13 +63,23 @@ namespace Dope.DDXX.Graphics.Skinning
 
         public override void Draw(IEffectHandler effectHandler, ColorValue ambient, Matrix world, Matrix view, Matrix projection)
         {
-            DrawMeshContainer(rootFrame.FrameHierarchy, 0, effectHandler, ambient, world, view, projection);
+            DrawMeshContainer(rootFrame.FrameHierarchy, Matrix.Identity, 0, effectHandler, ambient, world, view, projection);
         }
 
-        private void DrawMeshContainer(IFrame frame, int materialIndex, IEffectHandler effectHandler, ColorValue ambient, Matrix world, Matrix view, Matrix projection)
+        private void DrawMeshContainer(IFrame frame, Matrix parentMatrix, int materialIndex, IEffectHandler effectHandler, ColorValue ambient, Matrix world, Matrix view, Matrix projection)
         {
+            if (frame.FrameSibling != null)
+            {
+                DrawMeshContainer(frame.FrameSibling, parentMatrix, materialIndex, effectHandler, ambient, world, view, projection);
+            }
+            Matrix matrix = frame.TransformationMatrix * parentMatrix;
+            if (frame.FrameFirstChild != null)
+            {
+                DrawMeshContainer(frame.FrameFirstChild, matrix, materialIndex, effectHandler, ambient, world, view, projection);
+            }
             if (frame.MeshContainer != null)
             {
+                effectHandler.SetNodeConstants(matrix * world, view, projection);
                 for (int j = 0; j < frame.MeshContainer.GetMaterials().Length; j++)
                 {
                     effectHandler.SetMaterialConstants(ambient, Materials[materialIndex], j);
@@ -83,14 +93,6 @@ namespace Dope.DDXX.Graphics.Skinning
                     effectHandler.Effect.End();
                 }
                 materialIndex += frame.MeshContainer.GetMaterials().Length;
-            }
-            if (frame.FrameSibling != null)
-            {
-                DrawMeshContainer(frame.FrameSibling, materialIndex, effectHandler, ambient, world, view, projection);
-            }
-            if (frame.FrameFirstChild != null)
-            {
-                DrawMeshContainer(frame.FrameFirstChild, materialIndex, effectHandler, ambient, world, view, projection);
             }
         }
     }

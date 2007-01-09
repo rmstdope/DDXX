@@ -42,6 +42,7 @@ namespace Dope.DDXX.Graphics
 
         public override void Draw(IEffectHandler effectHandler, ColorValue ambient, Matrix world, Matrix view, Matrix projection)
         {
+            effectHandler.SetNodeConstants(world, view, projection);
             for (int j = 0; j < Materials.Length; j++)
             {
                 effectHandler.SetMaterialConstants(ambient, Materials[j], j);
