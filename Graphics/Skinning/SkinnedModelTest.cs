@@ -6,6 +6,7 @@ using NMock2;
 using Microsoft.DirectX.Direct3D;
 using System.IO;
 using Microsoft.DirectX;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.Graphics.Skinning
 {
@@ -34,6 +35,7 @@ namespace Dope.DDXX.Graphics.Skinning
         private Matrix view = Matrix.RotationY(1);
         private Matrix projection = Matrix.RotationZ(1);
         private ColorValue sceneAmbient = new ColorValue(0.1f, 0.2f, 0.3f);
+        private IAnimationController animationController;
 
         [SetUp]
         public void SetUp()
@@ -51,6 +53,7 @@ namespace Dope.DDXX.Graphics.Skinning
             materials = new ExtendedMaterial[2];
             effect = mockery.NewMock<IEffect>();
             effectHandler = mockery.NewMock<IEffectHandler>();
+            animationController = mockery.NewMock<IAnimationController>();
 
             // firstFrame
             //  |-childFrame
@@ -79,10 +82,16 @@ namespace Dope.DDXX.Graphics.Skinning
             Stub.On(childChildSiblingFrame).GetProperty("TransformationMatrix").Will(Return.Value(childChildSiblingMatrix));
 
             Stub.On(meshContainer).GetProperty("MeshData").Will(Return.Value(meshData));
-            Stub.On(effectHandler).GetProperty("Effect").Will(Return.Value(effect));
-            Stub.On(meshData).GetProperty("Mesh").Will(Return.Value(mesh));
             Stub.On(meshContainer).Method("GetMaterials").Will(Return.Value(materials));
+            Stub.On(meshData).GetProperty("Mesh").Will(Return.Value(mesh));
+            Stub.On(effectHandler).GetProperty("Effect").Will(Return.Value(effect));
 
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            mockery.VerifyAllExpectationsHaveBeenMet();
         }
 
         [Test]
@@ -155,6 +164,33 @@ namespace Dope.DDXX.Graphics.Skinning
             }
 
             model.Draw(effectHandler, sceneAmbient, world, view, projection);
+        }
+
+        [Test]
+        public void TestStep1()
+        {
+            Time.Initialize();
+            Time.Step();
+            ConstructorTest();
+            Stub.On(rootFrame).
+                GetProperty("AnimationController").
+                Will(Return.Value(animationController));
+            Expect.Once.On(animationController).
+                Method("AdvanceTime").
+                With((double)Time.DeltaTime);
+            model.Step();
+        }
+
+        [Test]
+        public void TestStep2()
+        {
+            Time.Initialize();
+            Time.Step();
+            ConstructorTest();
+            Stub.On(rootFrame).
+                GetProperty("AnimationController").
+                Will(Return.Value(null));
+            model.Step();
         }
     }
 }

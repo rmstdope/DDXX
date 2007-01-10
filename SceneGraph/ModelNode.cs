@@ -28,6 +28,7 @@ namespace Dope.DDXX.SceneGraph
 
         protected override void StepNode()
         {
+            model.Step();
         }
 
         protected override void RenderNode(IRenderableScene scene)

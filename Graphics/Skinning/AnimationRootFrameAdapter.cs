@@ -16,9 +16,9 @@ namespace Dope.DDXX.Graphics.Skinning
 
         #region IAnimationRootFrame Members
 
-        public AnimationController AnimationController
+        public IAnimationController AnimationController
         {
-            get { return animationRootFrame.AnimationController; }
+            get { return new AnimationControllerAdapter(animationRootFrame.AnimationController); }
         }
 
         public IFrame FrameHierarchy

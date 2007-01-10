@@ -11,5 +11,6 @@ namespace Dope.DDXX.Graphics
         void DrawSubset(int subset);
         bool IsSkinned();
         void Draw(IEffectHandler effectHandler, ColorValue ambient, Matrix world, Matrix view, Matrix projection);
+        void Step();
     }
 }

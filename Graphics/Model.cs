@@ -56,5 +56,7 @@ namespace Dope.DDXX.Graphics
                 effectHandler.Effect.End();
             }
         }
+
+        public override void Step() { }
     }
 }

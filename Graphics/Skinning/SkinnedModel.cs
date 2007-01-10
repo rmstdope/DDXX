@@ -95,5 +95,11 @@ namespace Dope.DDXX.Graphics.Skinning
                 materialIndex += frame.MeshContainer.GetMaterials().Length;
             }
         }
+
+        public override void Step()
+        {
+            if (rootFrame.AnimationController != null)
+                rootFrame.AnimationController.AdvanceTime(Time.DeltaTime);
+        }
     }
 }

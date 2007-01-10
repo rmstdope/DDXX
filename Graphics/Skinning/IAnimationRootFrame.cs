@@ -9,7 +9,7 @@ namespace Dope.DDXX.Graphics.Skinning
     {
         // Summary:
         //     Retrieves the animation controller.
-        AnimationController AnimationController { get; }
+        IAnimationController AnimationController { get; }
         //
         // Summary:
         //     Retrieves the root node reference of the loaded firstFrame hierarchy.

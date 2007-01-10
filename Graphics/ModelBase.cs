@@ -45,6 +45,8 @@ namespace Dope.DDXX.Graphics
 
         public abstract void Draw(IEffectHandler effectHandler, ColorValue ambient, Matrix world, Matrix view, Matrix projection);
 
+        public abstract void Step();
+
         #endregion
     }
 }

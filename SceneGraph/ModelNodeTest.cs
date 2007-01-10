@@ -95,8 +95,14 @@ namespace Dope.DDXX.SceneGraph
         public void RenderTestOK()
         {
             Expect.Once.On(model).Method("Draw").With(effectHandler, sceneAmbient, worldMatrix, viewMatrix, projectionMatrix);
-
             node.Render(scene);
+        }
+
+        [Test]
+        public void TestStep()
+        {
+            Expect.Once.On(model).Method("Step");
+            node.Step();
         }
     }
 }
