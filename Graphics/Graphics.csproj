@@ -101,8 +101,10 @@
     <Compile Include="Skinning\IFrame.cs" />
     <Compile Include="Skinning\IMeshContainer.cs" />
     <Compile Include="Skinning\IMeshData.cs" />
+    <Compile Include="Skinning\ISkinInformation.cs" />
     <Compile Include="Skinning\MeshContainerAdapter.cs" />
     <Compile Include="Skinning\MeshDataAdapter.cs" />
+    <Compile Include="Skinning\SkinInformationAdapter.cs" />
     <Compile Include="Skinning\SkinnedAllocateHierarchy.cs" />
     <Compile Include="Skinning\SkinnedAllocateHierarchyTest.cs" />
     <Compile Include="Skinning\SkinnedFrame.cs" />

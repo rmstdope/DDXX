@@ -16,7 +16,8 @@ namespace Dope.DDXX.Graphics.Skinning
             this.rootFrame = rootFrame;
             int numMaterials = CountMaterials(rootFrame.FrameHierarchy);
             Materials = new ModelMaterial[numMaterials];
-            ScanForMeshContainers(rootFrame.FrameHierarchy, 0, textureFactory);
+            int startIndex = 0;
+            ScanForMeshContainers(rootFrame.FrameHierarchy, ref startIndex, textureFactory);
         }
 
         private int CountMaterials(IFrame frame)
@@ -31,18 +32,18 @@ namespace Dope.DDXX.Graphics.Skinning
             return numMaterials;
         }
 
-        private void ScanForMeshContainers(IFrame frame, int startIndex, ITextureFactory textureFactory)
+        private void ScanForMeshContainers(IFrame frame, ref int startIndex, ITextureFactory textureFactory)
         {
+            if (frame.FrameSibling != null)
+                ScanForMeshContainers(frame.FrameSibling, ref startIndex, textureFactory);
+            if (frame.FrameFirstChild != null)
+                ScanForMeshContainers(frame.FrameFirstChild, ref startIndex, textureFactory);
             if (frame.MeshContainer != null)
             {
                 ModelMaterial[] materials = CreateModelMaterials(textureFactory, frame.MeshContainer.GetMaterials());
                 materials.CopyTo(Materials, startIndex);
                 startIndex += materials.Length;
             }
-            if (frame.FrameSibling != null)
-                ScanForMeshContainers(frame.FrameSibling, startIndex, textureFactory);
-            if (frame.FrameFirstChild != null)
-                ScanForMeshContainers(frame.FrameFirstChild, startIndex, textureFactory);
         }
 
         public override IMesh Mesh
@@ -63,26 +64,27 @@ namespace Dope.DDXX.Graphics.Skinning
 
         public override void Draw(IEffectHandler effectHandler, ColorValue ambient, Matrix world, Matrix view, Matrix projection)
         {
-            DrawMeshContainer(rootFrame.FrameHierarchy, Matrix.Identity, 0, effectHandler, ambient, world, view, projection);
+            int materialIndex = 0;
+            DrawMeshContainer(rootFrame.FrameHierarchy, Matrix.Identity, ref materialIndex, effectHandler, ambient, world, view, projection);
         }
 
-        private void DrawMeshContainer(IFrame frame, Matrix parentMatrix, int materialIndex, IEffectHandler effectHandler, ColorValue ambient, Matrix world, Matrix view, Matrix projection)
+        private void DrawMeshContainer(IFrame frame, Matrix parentMatrix, ref int materialIndex, IEffectHandler effectHandler, ColorValue ambient, Matrix world, Matrix view, Matrix projection)
         {
             if (frame.FrameSibling != null)
             {
-                DrawMeshContainer(frame.FrameSibling, parentMatrix, materialIndex, effectHandler, ambient, world, view, projection);
+                DrawMeshContainer(frame.FrameSibling, parentMatrix, ref materialIndex, effectHandler, ambient, world, view, projection);
             }
             Matrix matrix = frame.TransformationMatrix * parentMatrix;
             if (frame.FrameFirstChild != null)
             {
-                DrawMeshContainer(frame.FrameFirstChild, matrix, materialIndex, effectHandler, ambient, world, view, projection);
+                DrawMeshContainer(frame.FrameFirstChild, matrix, ref materialIndex, effectHandler, ambient, world, view, projection);
             }
             if (frame.MeshContainer != null)
             {
                 effectHandler.SetNodeConstants(matrix * world, view, projection);
                 for (int j = 0; j < frame.MeshContainer.GetMaterials().Length; j++)
                 {
-                    effectHandler.SetMaterialConstants(ambient, Materials[materialIndex], j);
+                    effectHandler.SetMaterialConstants(ambient, Materials[materialIndex + j], j + materialIndex);
                     int passes = effectHandler.Effect.Begin(FX.None);
                     for (int i = 0; i < passes; i++)
                     {
