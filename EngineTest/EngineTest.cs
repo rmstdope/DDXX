@@ -29,7 +29,7 @@ namespace EngineTest
             {
 
                 // Run setup form
-                SetupDialog setup = new SetupDialog();
+                SetupDialog setup = new SetupDialog(new SetupLogic());
 
                 setup.ShowDialog();
 

@@ -29,7 +29,7 @@ namespace ShortPuzzle
                 FileUtility.SetLoadPaths(new string[] { "../../../Effects/", "../../../../Short Puzzle Data/" });
 
                 // Run setup form
-                SetupDialog setup = new SetupDialog();
+                SetupDialog setup = new SetupDialog(new SetupLogic());
 
                 setup.ShowDialog();
 

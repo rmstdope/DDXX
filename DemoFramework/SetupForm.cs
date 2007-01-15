@@ -13,24 +13,18 @@ using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public partial class SetupDialog : Form
+    public partial class SetupDialog : Form, Dope.DDXX.DemoFramework.ISetupDialog
     {
-        D3DDriver driver;
-        bool start;
+        private SetupLogic logic;
+        private D3DDriver driver;
+        private bool start;
 
-        public SetupDialog()
+        public SetupDialog(SetupLogic logic)
         {
-            driver = D3DDriver.GetInstance();
+            this.logic = logic;
             InitializeComponent();
-        }
 
-        enum ColorDepth
-        {
-            COLOR_DEPTH_16 = 0,
-            COLOR_DEPTH_32,
-            COLOR_DEPTH_16F,
-            COLOR_DEPTH_32F,
-            NUM_COLOR_DEPTHS
+            driver = D3DDriver.GetInstance();
         }
 
         public bool REF
@@ -48,53 +42,15 @@ namespace Dope.DDXX.DemoFramework
             get { return windowed.Checked; }
         }
 
-        public int ResolutionWidth
+        public string SelectedResolution 
         {
-            get { return Int32.Parse(((string)resolution.SelectedItem).Split('x')[0]); }
+            get { return (string)resolution.SelectedItem; }  
         }
 
-        public int ResolutionHeight
-        {
-            get { return Int32.Parse(((string)resolution.SelectedItem).Split('x')[1]); }
-        }
-
-        public Format ColorFormat
-        {
-            get
-            {
-                DisplayMode[] modes = driver.GetDisplayModes(0, 
-                    delegate(DisplayMode mode) {
-                        if (mode.Width == ResolutionWidth && mode.Height == ResolutionHeight)
-                        {
-                            switch (mode.Format)
-                            {
-                                case Format.R5G6B5:
-                                    if (bit16.Checked)
-                                        return true;
-                                    break;
-                                case Format.A8B8G8R8:
-                                case Format.X8B8G8R8:
-                                case Format.X8R8G8B8:
-                                case Format.A8R8G8B8:
-                                case Format.A2R10G10B10:
-                                    if (bit32.Checked)
-                                        return true;
-                                    break;
-                                case Format.A16B16G16R16F:
-                                    if (bit16fp.Checked)
-                                        return true;
-                                    break;
-                                case Format.A32B32G32R32F:
-                                    if (bit32fp.Checked)
-                                        return true;
-                                    break;
-                            }
-                        }
-                        return false;
-                    });
-                return modes[0].Format;
-            }
-        }
+        public bool Bit16 { get { return bit16.Checked; } }
+        public bool Bit32 { get { return bit32.Checked; } }
+        //public bool Bit16FP { get { return bit16fp.Checked; } }
+        //public bool Bit32FP { get { return bit32fp.Checked; } }
 
         public DeviceDescription DeviceDescription
         {
@@ -106,9 +62,9 @@ namespace Dope.DDXX.DemoFramework
                 else
                     desc.deviceType = DeviceType.Hardware;
                 desc.windowed = Windowed;
-                desc.colorFormat = ColorFormat;
-                desc.width = ResolutionWidth;
-                desc.height = ResolutionHeight;
+                desc.colorFormat = logic.ColorFormat;
+                desc.width = logic.ResolutionWidth;
+                desc.height = logic.ResolutionHeight;
                 desc.useDepth = true;
                 return desc;
             }
@@ -271,12 +227,10 @@ namespace Dope.DDXX.DemoFramework
 
         private void bit16_CheckedChanged(object sender, EventArgs e)
         {
-
         }
 
         private void windowed_CheckedChanged(object sender, EventArgs e)
         {
-
         }
 
     }

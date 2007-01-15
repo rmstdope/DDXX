@@ -73,6 +73,7 @@
     <Compile Include="IEffectChangeListener.cs" />
     <Compile Include="IPostProcessor.cs" />
     <Compile Include="IRegisterable.cs" />
+    <Compile Include="ISetupDialog.cs" />
     <Compile Include="ITweakableContainer.cs" />
     <Compile Include="IUserInterface.cs" />
     <Compile Include="LineControl.cs" />
@@ -90,6 +91,8 @@
     <Compile Include="SetupForm.Designer.cs">
       <DependentUpon>SetupForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SetupLogic.cs" />
+    <Compile Include="SetupLogicTest.cs" />
     <Compile Include="TextControl.cs" />
     <Compile Include="Track.cs" />
     <Compile Include="TrackTest.cs" />
