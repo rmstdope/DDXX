@@ -29,15 +29,16 @@ namespace PoseidonTest
             {
 
                 // Run setup form
-                SetupDialog setup = new SetupDialog(new SetupLogic());
+                SetupLogic setupLogic = new SetupLogic();
+                SetupDialog setupDialog = new SetupDialog(setupLogic);
 
-                setup.ShowDialog();
+                setupDialog.ShowDialog();
 
-                if (setup.OK)
+                if (setupLogic.OK)
                 {
                     DeviceDescription desc;
 
-                    SetupFramework(setup, out window, out executer, out desc);
+                    SetupFramework(setupLogic, out window, out executer, out desc);
 
                     FileUtility.SetLoadPaths("../../Data/",
                                              "../../../Effects/",
@@ -86,7 +87,7 @@ namespace PoseidonTest
             //postEffect.BloomScale = 1.5f;
         }
 
-        private static void SetupFramework(SetupDialog setup, out DemoWindow window, out DemoExecuter executer, out DeviceDescription desc)
+        private static void SetupFramework(SetupLogic setup, out DemoWindow window, out DemoExecuter executer, out DeviceDescription desc)
         {
             desc = setup.DeviceDescription;
             window = new DemoWindow();

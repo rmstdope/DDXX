@@ -6,15 +6,17 @@ namespace Dope.DDXX.DemoFramework
 {
     public interface ISetupDialog
     {
-        //Format ColorFormat { get; }
-        DeviceDescription DeviceDescription { get; }
-        bool OK { get; }
         bool REF { get; }
         bool Windowed { get; }
-        bool Bit16 { get; }
-        bool Bit32 { get; }
-        //bool Bit16FP { get; }
-        //bool Bit32FP { get; }
         string SelectedResolution { get; }
+        string[] Resolution { set; }
+        bool Enable16Bit { set; get; }
+        bool Enable32Bit { set; get; }
+        bool EnableRadio4_3 { set; }
+        bool EnableRadio16_9 { set; }
+        bool EnableRadio16_10 { set; }
+        bool Checked16Bit { set; get; }
+        bool Checked32Bit { set; get; }
+        bool CheckedRadio3_4 { set; }
     }
 }
