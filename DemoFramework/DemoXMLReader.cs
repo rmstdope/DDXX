@@ -12,7 +12,7 @@ namespace Dope.DDXX.DemoFramework
 {
     public enum TweakableType
     {
-        Unknown = 0, Integer, Float, String, Vector3, Color
+        Unknown = 0, Integer, Float, String, Vector3, Color, Bool
     }
 
     public struct Parameter
@@ -45,6 +45,11 @@ namespace Dope.DDXX.DemoFramework
         public Color ColorValue
         {
             get { return (Color)value; }
+        }
+
+        public bool BoolValue
+        {
+            get { return (bool)value; }
         }
 
         #endregion
@@ -279,6 +284,9 @@ namespace Dope.DDXX.DemoFramework
                         case TweakableType.Color:
                             parameters.Add(ParseColor(attr.Value));
                             break;
+                        case TweakableType.Bool:
+                            parameters.Add(ParseBool(attr.Value));
+                            break;
                         default:
                             throw new DDXXException("Unknown internal parameter type");
                     }
@@ -289,6 +297,13 @@ namespace Dope.DDXX.DemoFramework
                 }
             }
             effectBuilder.AddSetupCall(name, parameters);
+        }
+
+        private static bool ParseBool(string strval)
+        {
+            if (strval.ToLower() == "true")
+                return true;
+            return false;
         }
 
         private static Vector3 ParseVector3(string strval)
@@ -334,6 +349,9 @@ namespace Dope.DDXX.DemoFramework
                 case TweakableType.Color:
                     effectBuilder.AddColorParameter(parameterName, ParseColor(parameterValue));
                     break;
+                case TweakableType.Bool:
+                    effectBuilder.AddBoolParameter(parameterName, ParseBool(parameterValue));
+                    break;
                 default:
                     throw new DDXXException("Unknown internal parameter type");
             }
@@ -353,6 +371,7 @@ namespace Dope.DDXX.DemoFramework
                 case "string": return TweakableType.String;
                 case "Vector3": return TweakableType.Vector3;
                 case "Color": return TweakableType.Color;
+                case "bool": return TweakableType.Bool;
                 default: return TweakableType.Unknown;
             }
         }
@@ -366,6 +385,7 @@ namespace Dope.DDXX.DemoFramework
                 case TweakableType.String: return "string";
                 case TweakableType.Vector3: return "Vector3";
                 case TweakableType.Color: return "Color";
+                case TweakableType.Bool: return "bool";
                 default: return null;
             }
         }
@@ -498,6 +518,15 @@ namespace Dope.DDXX.DemoFramework
                     FloatToString(value.B);
             }
             attr.Value = strval;
+        }
+
+        public void SetBoolParam(string effect, string param, bool value)
+        {
+            XmlAttribute attr = GetParamValueAttr(effect, param, TweakableType.Bool);
+            if (value)
+                attr.Value = "true";
+            else
+                attr.Value = "false";
         }
 
         private void ChangeOrCreateAttribute(string effectName, string attrName, string value)

@@ -319,6 +319,11 @@ namespace Dope.DDXX.DemoFramework
             AddParameter(name, value);
         }
 
+        public void AddBoolParameter(string name, bool value)
+        {
+            AddParameter(name, value);
+        }
+
         public void AddSetupCall(string name, List<object> parameters)
         {
             if (lastAddedEffect != null)

@@ -66,6 +66,7 @@ namespace EngineTest
             {
                 for (int i = 0; i < 1; i++)
                 {
+                    Cursor.Show();
                     MessageBox.Show(exception.ToString(), "Demo Error");
                 }
             }

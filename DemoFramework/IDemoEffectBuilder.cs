@@ -18,6 +18,7 @@ namespace Dope.DDXX.DemoFramework
         void AddStringParameter(string name, string value);
         void AddVector3Parameter(string name, Vector3 value);
         void AddColorParameter(string parameterName, Color color);
+        void AddBoolParameter(string parameterName, bool color);
 
         void AddSetupCall(string name, List<object> parameters);
     }

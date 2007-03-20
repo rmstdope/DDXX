@@ -45,7 +45,7 @@ namespace Dope.DDXX.DemoFramework
         public void Initialize(IDevice device)
         {
             this.device = device;
-            effect = D3DDriver.EffectFactory.CreateFromFile(/*"../../../Effects/"*/"PostEffects.fxo");
+            effect = D3DDriver.EffectFactory.CreateFromFile("PostEffects.fxo");
 
             sourceTextureParameter = effect.GetParameter(null, "SourceTexture");
 
@@ -120,10 +120,7 @@ namespace Dope.DDXX.DemoFramework
 
         public void Process(string technique, TextureID source, TextureID destination)
         {
-            //if (destination == TextureID.INPUT_TEXTURE)
-            //    throw new DDXXException("Input texture not valid as output!");
-
-            SetupProcessParameters(technique, source, destination);
+            SetupProcessParameters(technique, GetTexture(source), destination);
 
             device.BeginScene();
             ProcessPasses(technique, source, destination);
@@ -132,10 +129,21 @@ namespace Dope.DDXX.DemoFramework
             lastUsedTexture = destination;
         }
 
-        private void SetupProcessParameters(string technique, TextureID source, TextureID destination)
+        public void Process(string technique, ITexture source, TextureID destination)
+        {
+            SetupProcessParameters(technique, source, destination);
+
+            device.BeginScene();
+            ProcessPasses(technique, TextureID.INPUT_TEXTURE, destination);
+            device.EndScene();
+
+            lastUsedTexture = destination;
+        }
+
+        private void SetupProcessParameters(string technique, ITexture source, TextureID destination)
         {
             device.SetRenderTarget(0, GetTexture(destination).GetSurfaceLevel(0));
-            effect.SetValue(sourceTextureParameter, GetTexture(source));
+            effect.SetValue(sourceTextureParameter, source);
             effect.Technique = technique;
             device.VertexFormat = CustomVertex.TransformedTextured.Format;
         }
@@ -218,6 +226,11 @@ namespace Dope.DDXX.DemoFramework
         }
 
         public void SetValue(string name, float value)
+        {
+            effect.SetValue(name, value);
+        }
+
+        public void SetValue(string name, float[] value)
         {
             effect.SetValue(name, value);
         }

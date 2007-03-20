@@ -101,6 +101,10 @@ namespace Dope.DDXX.DemoFramework
             {
                 AddParameter(name, new Parameter(name, TweakableType.Color, value));
             }
+            public void AddBoolParameter(string name, bool value)
+            {
+                AddParameter(name, new Parameter(name, TweakableType.Bool, value));
+            }
             public void AddSetupCall(string name, List<object> parameters)
             {
                 if (lastEffect != null)
@@ -324,6 +328,7 @@ namespace Dope.DDXX.DemoFramework
 <Parameter name=""strparam"" string=""foostr"" />
 <Parameter name=""colparamnamed"" Color=""SlateBlue"" />
 <Parameter name=""colparam"" Color=""SlateBlue"" />
+<Parameter name=""boolparam"" bool=""true"" />
 <SetupCall name=""AddTextureLayer"">
 <Parameter string=""BlurBackground.jpg"" />
 <Parameter float=""35.0"" />
@@ -446,7 +451,7 @@ namespace Dope.DDXX.DemoFramework
             effectBuilder.NextEffect();
             Assert.AreEqual("fooeffect", effectBuilder.EffectName);
             Dictionary<string, Parameter> parameters = effectBuilder.GetParameters();
-            Assert.AreEqual(5, parameters.Count);
+            Assert.AreEqual(6, parameters.Count);
             Parameter parameter;
             Assert.IsTrue(parameters.TryGetValue("fooparam", out parameter));
             Assert.AreEqual(TweakableType.Integer, parameter.Type);
@@ -457,6 +462,12 @@ namespace Dope.DDXX.DemoFramework
             Assert.IsTrue(parameters.TryGetValue("strparam", out parameter));
             Assert.AreEqual(TweakableType.String, parameter.Type);
             Assert.AreEqual("foostr", parameter.StringValue);
+            Assert.IsTrue(parameters.TryGetValue("colparam", out parameter));
+            Assert.AreEqual(TweakableType.Color, parameter.Type);
+            Assert.AreEqual(Color.SlateBlue, parameter.ColorValue);
+            Assert.IsTrue(parameters.TryGetValue("boolparam", out parameter));
+            Assert.AreEqual(TweakableType.Bool, parameter.Type);
+            Assert.AreEqual(true, parameter.BoolValue);
         }
 
         [Test]
@@ -516,6 +527,7 @@ namespace Dope.DDXX.DemoFramework
             reader.SetColorParam("fooeffect", "colparamnamed", Color.SpringGreen);
             reader.SetColorParam("fooeffect", "colparam", Color.FromArgb(255, 100, 101, 102));
             reader.SetFloatParam("fooeffect", "barparam", 8.6f);
+            reader.SetBoolParam("fooeffect", "boolparam", false);
             reader.SetIntParam("fooeffect", "fooparam", 7);
             reader.SetStringParam("bareffect", "goo", "goovalue");
             reader.SetVector3Param("fooglow", "glowdir", new Vector3(1.2f, 2.3f, 3.4f));
@@ -539,6 +551,9 @@ namespace Dope.DDXX.DemoFramework
             Assert.IsTrue(parameters.TryGetValue("colparam", out parameter));
             Assert.AreEqual(TweakableType.Color, parameter.Type);
             Assert.AreEqual((object)Color.FromArgb(255, 100, 101, 102), (object)parameter.ColorValue);
+            Assert.IsTrue(parameters.TryGetValue("boolparam", out parameter));
+            Assert.AreEqual(TweakableType.Bool, parameter.Type);
+            Assert.AreEqual(false, (object)parameter.BoolValue);
             Assert.IsTrue(parameters.TryGetValue("barparam", out parameter));
             Assert.AreEqual(TweakableType.Float, parameter.Type);
             Assert.AreEqual(8.6, parameter.FloatValue);

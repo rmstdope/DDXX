@@ -42,6 +42,8 @@
     <Compile Include="GlowPostEffectTest.cs" />
     <Compile Include="MonochromePostEffect.cs" />
     <Compile Include="MonochromePostEffectTest.cs" />
+    <Compile Include="OverlayPostEffect.cs" />
+    <Compile Include="OverlayPostEffectTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpinningBackgroundEffect.cs" />
     <Compile Include="SpinningBackgroundEffectTest.cs" />

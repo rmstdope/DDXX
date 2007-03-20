@@ -188,6 +188,27 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual(TextureID.FULLSIZE_TEXTURE_1, postProcessor.OutputTextureID);
         }
 
+        /// <summary>
+        /// Test to use an external texture as input.
+        /// </summary>
+        [Test]
+        public void TestProcessExternalTexture()
+        {
+            CustomVertex.TransformedTextured[] vertices = new CustomVertex.TransformedTextured[4];
+            vertices[0] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, -0.5f, 1.0f, 1.0f), 0, 0);
+            vertices[1] = new CustomVertex.TransformedTextured(new Vector4(400 - 0.5f, -0.5f, 1.0f, 1.0f), 1, 0);
+            vertices[2] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, 200 - 0.5f, 1.0f, 1.0f), 0, 1);
+            vertices[3] = new CustomVertex.TransformedTextured(new Vector4(400 - 0.5f, 200 - 0.5f, 1.0f, 1.0f), 1, 1);
+
+            TestInitializeOK();
+            postProcessor.StartFrame(startTexture);
+            SetupPostEffect(texture, "Monochrome", vertices, 1.0f, false);
+            SetupBlend(BlendOperation.Max, Blend.SourceAlpha, Blend.SourceAlphaSat, Color.Fuchsia);
+            postProcessor.Process("Monochrome", texture, TextureID.FULLSIZE_TEXTURE_1);
+            Assert.AreSame(fullsizeTexture1, postProcessor.OutputTexture);
+            Assert.AreEqual(TextureID.FULLSIZE_TEXTURE_1, postProcessor.OutputTextureID);
+        }
+
         [Test]
         public void TestDownSample()
         {

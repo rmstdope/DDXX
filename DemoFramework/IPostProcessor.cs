@@ -18,14 +18,72 @@ namespace Dope.DDXX.DemoFramework
 
     public interface IPostProcessor
     {
+        /// <summary>
+        /// Initializes the post processor by getting the needed DX objects.
+        /// </summary>
+        /// <param name="device"></param>
         void Initialize(IDevice device);
-        ITexture OutputTexture { get; }
-        TextureID OutputTextureID { get; }
-        ITexture GetTexture(TextureID textureID);
-        void StartFrame(ITexture startTexture);
-        void Process(string technique, TextureID textureID, TextureID textureID_2);
-        void SetBlendParameters(BlendOperation blendOperation, Blend sourceBlend, Blend destinatonBlend, Color blendFactor);
 
-        void SetValue(string p, float luminance);
+        /// <summary>
+        /// Get the ITexture of the texture that was last rendered.
+        /// </summary>
+        ITexture OutputTexture { get; }
+        
+        /// <summary>
+        /// Get the ID of the texture that was last rendered.
+        /// </summary>
+        TextureID OutputTextureID { get; }
+        
+        /// <summary>
+        /// Get the ITexture of a specific ID.
+        /// </summary>
+        /// <param name="textureID"></param>
+        /// <returns></returns>
+        ITexture GetTexture(TextureID textureID);
+        
+        /// <summary>
+        /// Set the texture to use as startTexture. It is assumed that this texture is of full size.
+        /// </summary>
+        /// <param name="startTexture"></param>
+        void StartFrame(ITexture startTexture);
+
+        /// <summary>
+        /// Generate an output texture.
+        /// </summary>
+        /// <param name="technique">The technique to use.</param>
+        /// <param name="sourceTextureId">The ID of the texture to use as source.</param>
+        /// <param name="destinationTextureId">The ID of the texture to use as destination. Can not be same as source.</param>
+        void Process(string technique, TextureID sourceTextureId, TextureID destinationTextureId);
+        
+        /// <summary>
+        /// Generate an output texture using an external texture as source.
+        /// </summary>
+        /// <param name="technique">The technique to use.</param>
+        /// <param name="sourceTextureId">The ITexture to use as source.</param>
+        /// <param name="destinationTextureId">The ID of the texture to use as destination. Can not be same as source.</param>
+        void Process(string technique, ITexture sourceTexture, TextureID destinationTextureId);
+        
+        /// <summary>
+        /// Set the blend parameters to use when processing.
+        /// </summary>
+        /// <param name="blendOperation">The operation to use.</param>
+        /// <param name="sourceBlend">The blend technique for the source.</param>
+        /// <param name="destinatonBlend">The blend technique for the destination.</param>
+        /// <param name="blendFactor">The blend factor. Must be specified as 0xRRGGBBAA.</param>
+        void SetBlendParameters(BlendOperation blendOperation, Blend sourceBlend, Blend destinatonBlend, Color blendFactor);
+        
+        /// <summary>
+        /// Set the value of a parameter in the effects.
+        /// </summary>
+        /// <param name="parameter">The name of the parameter.</param>
+        /// <param name="value">The value to set it to.</param>
+        void SetValue(string parameter, float value);
+
+        /// <summary>
+        /// Set the value of a parameter in the effects.
+        /// </summary>
+        /// <param name="parameter">The name of the parameter.</param>
+        /// <param name="value">The value to set it to.</param>
+        void SetValue(string parameter, float[] value);
     }
 }

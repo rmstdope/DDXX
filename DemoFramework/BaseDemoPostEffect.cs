@@ -11,10 +11,16 @@ namespace Dope.DDXX.DemoFramework
         private float startTime;
         private float endTime;
         private IPostProcessor postProcessor;
+        private ITextureFactory textureFactory;
 
         protected IPostProcessor PostProcessor
         {
             get { return postProcessor; }
+        }
+
+        protected ITextureFactory TextureFactory
+        {
+            get { return textureFactory; }
         }
 
         protected BaseDemoPostEffect(float startTime, float endTime)
@@ -50,6 +56,7 @@ namespace Dope.DDXX.DemoFramework
         public virtual void Initialize(IPostProcessor postProcessor)
         {
             this.postProcessor = postProcessor;
+            textureFactory = D3DDriver.TextureFactory;
         }
 
         #endregion
