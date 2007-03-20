@@ -38,6 +38,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BlurPostEffect.cs" />
+    <Compile Include="BlurPostEffectTest.cs" />
     <Compile Include="GlowPostEffect.cs" />
     <Compile Include="GlowPostEffectTest.cs" />
     <Compile Include="MonochromePostEffect.cs" />

@@ -18,9 +18,8 @@
 	</Effect>
   <Effect name="NormalMapEffect" track="0" startTime="0.0" endTime="300.0">
   </Effect>
-  <PostEffect name="OverlayPostEffect" track="0" startTime="0.0" endTime="300.0">
-    <Parameter name="Filename" string="Noise.jpg" />
-    <Parameter name="SubtractNoise" bool="true" />
+  <PostEffect name="BlurPostEffect" track="0" startTime="0.0" endTime="300.0">
+    <Parameter name="NumPasses" int="3" />
   </PostEffect>
   <!--PostEffect name="MonochromePostEffect" track="0" startTime="0.0" endTime="2.0">
 	</PostEffect>
