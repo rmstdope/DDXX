@@ -89,12 +89,16 @@ namespace Dope.DDXX.Graphics.Skinning
             Stub.On(childChildSiblingFrame).GetProperty("FrameSibling").Will(Return.Value(null));
             Stub.On(childChildSiblingFrame).GetProperty("MeshContainer").Will(Return.Value(meshContainer2));
             Stub.On(childChildSiblingFrame).GetProperty("TransformationMatrix").Will(Return.Value(childChildSiblingMatrix));
+            Stub.On(childChildSiblingFrame).Method("Find").With(firstFrame, "NameOfBone").Will(Return.Value(firstFrame));
 
             Stub.On(meshContainer1).GetProperty("MeshData").Will(Return.Value(meshData));
             Stub.On(meshContainer2).GetProperty("MeshData").Will(Return.Value(meshData));
             Stub.On(meshContainer1).Method("GetMaterials").Will(Return.Value(materials1));
             Stub.On(meshContainer2).Method("GetMaterials").Will(Return.Value(materials2));
             Stub.On(effectHandler).GetProperty("Effect").Will(Return.Value(effect));
+
+            Stub.On(skinInformation).Method("GetBoneOffsetMatrix").Will(Return.Value(Matrix.Identity));
+            Stub.On(skinInformation).Method("GetBoneName").Will(Return.Value("NameOfBone"));
 
         }
 
@@ -155,6 +159,9 @@ namespace Dope.DDXX.Graphics.Skinning
                 Is.EqualTo(adj), Is.EqualTo(10), Is.Out, Is.Out).
                 Will(new IAction[] { namedParam1, namedParam2, result });
             Expect.Once.On(meshContainer2).SetProperty("MeshData");
+            Expect.Once.On(meshContainer2).SetProperty("Bones").To(Is.Null);
+            Expect.Once.On(meshContainer2).SetProperty("RestMatrices");
+            Expect.Once.On(meshContainer2).SetProperty("Frames");
 
             model = new SkinnedModel(rootFrame, textureFactory);
         }
@@ -183,6 +190,9 @@ namespace Dope.DDXX.Graphics.Skinning
                 Is.EqualTo(adj), Is.EqualTo(40), Is.Out, Is.Out).
                 Will(new IAction[] { namedParam1, namedParam2, result });
             Expect.Once.On(meshContainer2).SetProperty("MeshData");
+            Expect.Once.On(meshContainer2).SetProperty("Bones").To(Is.Null);
+            Expect.Once.On(meshContainer2).SetProperty("RestMatrices");
+            Expect.Once.On(meshContainer2).SetProperty("Frames");
 
             model = new SkinnedModel(rootFrame, textureFactory);
         }
@@ -197,11 +207,26 @@ namespace Dope.DDXX.Graphics.Skinning
             Matrix[] bonesMatrices = new Matrix[10];
             for (int i = 0; i < 10; i++)
                 bonesMatrices[i] = Matrix.Identity;
+            BoneCombination[] boneCombo = new BoneCombination[2];
+            boneCombo[0] = new BoneCombination();
+            boneCombo[1] = new BoneCombination();
+            boneCombo[0].BoneId = new int[10];
+            boneCombo[1].BoneId = boneCombo[0].BoneId;
+            for (int i = 0; i < 10; i++)
+            {
+                boneCombo[0].BoneId[i] = 0;
+            }
+            IFrame[] frames = new IFrame[1];
+            frames[0] = mockery.NewMock<IFrame>();
+            Stub.On(meshContainer2).GetProperty("RestMatrices").Will(Return.Value(bonesMatrices));
+            Stub.On(frames[0]).GetProperty("CombinedTransformationMatrix").Will(Return.Value(Matrix.Identity));
+            Stub.On(meshContainer2).GetProperty("Frames").Will(Return.Value(frames));
 
             using (mockery.Ordered)
             {
                 // Mesh 1
                 Expect.Once.On(effectHandler).Method("SetNodeConstants").With((childChildSiblingMatrix * (childMatrix * firstMatrix)) * world, view, projection);
+                Expect.Once.On(meshContainer2).GetProperty("Bones").Will(Return.Value(boneCombo));
 
                 //Subset 1
                 Expect.Once.On(effectHandler).Method("SetBones").With(bonesMatrices);
@@ -226,6 +251,7 @@ namespace Dope.DDXX.Graphics.Skinning
 
                 // Mesh 2
                 Expect.Once.On(effectHandler).Method("SetNodeConstants").With((childMatrix * firstMatrix) * world, view, projection);
+                Expect.Once.On(meshContainer1).GetProperty("Bones").Will(Return.Value(null));
 
                 //Subset 1
                 Expect.Once.On(effectHandler).Method("SetMaterialConstants").With(Is.EqualTo(sceneAmbient), new MaterialMatcher(materials1[0]), Is.EqualTo(2));
@@ -252,6 +278,8 @@ namespace Dope.DDXX.Graphics.Skinning
             Expect.Once.On(animationController).
                 Method("AdvanceTime").
                 With((double)Time.DeltaTime);
+            ExpectFrameUpdate();
+
             model.Step();
         }
 
@@ -267,7 +295,25 @@ namespace Dope.DDXX.Graphics.Skinning
             Stub.On(rootFrame).
                 GetProperty("AnimationController").
                 Will(Return.Value(null));
+            ExpectFrameUpdate();
+
             model.Step();
+        }
+
+        private void ExpectFrameUpdate()
+        {
+            Expect.Once.On(firstFrame).SetProperty("CombinedTransformationMatrix").
+                To(firstMatrix);
+            Expect.Once.On(firstFrame).GetProperty("CombinedTransformationMatrix").
+                Will(Return.Value(firstMatrix));
+            Expect.Once.On(childFrame).SetProperty("CombinedTransformationMatrix").
+                To(childMatrix * firstMatrix);
+            Expect.Once.On(childFrame).GetProperty("CombinedTransformationMatrix").
+                Will(Return.Value(childMatrix * firstMatrix));
+            Expect.Once.On(childChildFrame).SetProperty("CombinedTransformationMatrix").
+                To(childChildMatrix * (childMatrix * firstMatrix));
+            Expect.Once.On(childChildSiblingFrame).SetProperty("CombinedTransformationMatrix").
+                To(childChildSiblingMatrix * (childMatrix * firstMatrix));
         }
 
         class MaterialMatcher : Matcher
