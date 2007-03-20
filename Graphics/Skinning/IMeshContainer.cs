@@ -10,7 +10,7 @@ namespace Dope.DDXX.Graphics.Skinning
         // Summary:
         //     Retrieves or sets a Microsoft.DirectX.Direct3D.MeshData object that contains
         //     the type of data in the mesh.
-        IMeshData MeshData { get; set; }
+        MeshDataAdapter MeshData { get; set; }
         //
         // Summary:
         //     Retrieves or sets the mesh name.
@@ -23,7 +23,7 @@ namespace Dope.DDXX.Graphics.Skinning
         // Summary:
         //     Retrieves or sets a Microsoft.DirectX.Direct3D.SkinInformation object that
         //     contains information about animating bones in a skin mesh.
-        SkinInformation SkinInformation { get; set; }
+        ISkinInformation SkinInformation { get; set; }
 
         // Summary:
         //     Retrieves an array that contains the mesh adjacency information.

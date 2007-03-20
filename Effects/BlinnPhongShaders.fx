@@ -373,7 +373,7 @@ BlinnPhongVertexShader_1_4(BlinnPhongInputVS inp,
  * @param UseTextures set to true for use of base texture, false otherwise
  * @returns A struct containing the RGBA color
  */
-float4
+/*float4
 BlinnPhongPixelShader_1_4(VertexOutputStream_1_4 inp,
 													uniform bool useTextures,
 													uniform bool normalMapping,
@@ -436,7 +436,7 @@ BlinnPhongPixelShader_1_4(VertexOutputStream_1_4 inp,
 	//output.rgb = halfVector;
 
 	return output;
-}
+}*/
 
 
 /**
@@ -484,7 +484,7 @@ BlinnPhongVertexShader_1_1_Pass2(BlinnPhongInputVS inp,
  * @param LightType set to DIRECTIONAL or POINT depending on light type
  * @returns A struct containing the input stream for the pixel shader
  */
-VertexOutputStream_1_1_Pass1
+/*VertexOutputStream_1_1_Pass1
 BlinnPhongVertexShader_1_1_Pass1(BlinnPhongInputVS inp,
 																 uniform int numWeights)
 {
@@ -504,7 +504,7 @@ BlinnPhongVertexShader_1_1_Pass1(BlinnPhongInputVS inp,
 	output.AttCoord2.xy = float2(attenuation.z, 0.0f);
 	
 	return output;    
-}
+}*/
 
 /**
  * The Blinn-Phong pixel shader function for 1.1 shaders (pass2)
@@ -512,7 +512,7 @@ BlinnPhongVertexShader_1_1_Pass1(BlinnPhongInputVS inp,
  * @param UseTextures set to true for use of base texture, false otherwise
  * @returns A struct containing the RGBA color
  */
-float4
+/*float4
 BlinnPhongPixelShader_1_1_Pass2(VertexOutputStream_1_1_Pass2 inp,
 																uniform bool useTextures,
 																uniform bool normalMapping,
@@ -545,7 +545,7 @@ BlinnPhongPixelShader_1_1_Pass2(VertexOutputStream_1_1_Pass2 inp,
 	output.a = 1.0;
 
 	return output;
-}
+}*/
 
 /**
  * The Blinn-Phong pixel shader function for 1.1 shaders (pass1)
@@ -553,7 +553,7 @@ BlinnPhongPixelShader_1_1_Pass2(VertexOutputStream_1_1_Pass2 inp,
  * @param UseTextures set to true for use of base texture, false otherwise
  * @returns A struct containing the RGBA color
  */
-float4
+/*float4
 BlinnPhongPixelShader_1_1_Pass1(VertexOutputStream_1_1_Pass1 inp) : COLOR0
 {
 	float att;
@@ -561,7 +561,7 @@ BlinnPhongPixelShader_1_1_Pass1(VertexOutputStream_1_1_Pass1 inp) : COLOR0
 	att *= tex2D(AttenuationTextureZSampler, inp.AttCoord2.xy).w;
 	
 	return float4(1, 1, 1, att);
-}
+}*/
 
 technique BlinnPhongPoint_2_0
 {

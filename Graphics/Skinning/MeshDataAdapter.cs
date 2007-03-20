@@ -5,31 +5,21 @@ using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.Graphics.Skinning
 {
-    public class MeshDataAdapter : IMeshData
+    public struct MeshDataAdapter
     {
-        private MeshData meshData;
-
-        public MeshDataAdapter(MeshData meshData)
-        {
-            this.meshData = meshData;
-        }
-
-        public MeshData DXMeshData
-        {
-            get { return meshData; }
-        }
-
-        #region IMeshData Members
+        private IMesh mesh;
+        private PatchMesh patchMesh;
+        private ProgressiveMesh progressiveMesh;
 
         public IMesh Mesh
         {
             get
             {
-                return new MeshAdapter(meshData.Mesh);
+                return mesh;
             }
             set
             {
-                meshData.Mesh = ((MeshAdapter)value).DXMesh;
+                mesh = value;
             }
         }
 
@@ -37,11 +27,11 @@ namespace Dope.DDXX.Graphics.Skinning
         {
             get
             {
-                return meshData.PatchMesh;
+                return patchMesh;
             }
             set
             {
-                meshData.PatchMesh = value;
+                patchMesh = value;
             }
         }
 
@@ -49,14 +39,13 @@ namespace Dope.DDXX.Graphics.Skinning
         {
             get
             {
-                return meshData.ProgressiveMesh;
+                return progressiveMesh;
             }
             set
             {
-                meshData.ProgressiveMesh = value;
+                progressiveMesh = value;
             }
         }
 
-        #endregion
     }
 }

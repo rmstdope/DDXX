@@ -12,5 +12,6 @@ namespace Dope.DDXX.Graphics
         EffectHandle[] Techniques { get; set;}
         void SetNodeConstants(Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix);
         void SetMaterialConstants(ColorValue ambientColor, ModelMaterial mesh, int index);
+        void SetBones(Matrix[] skinMatrices);
     }
 }

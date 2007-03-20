@@ -100,7 +100,6 @@
     <Compile Include="Skinning\IAnimationRootFrame.cs" />
     <Compile Include="Skinning\IFrame.cs" />
     <Compile Include="Skinning\IMeshContainer.cs" />
-    <Compile Include="Skinning\IMeshData.cs" />
     <Compile Include="Skinning\ISkinInformation.cs" />
     <Compile Include="Skinning\MeshContainerAdapter.cs" />
     <Compile Include="Skinning\MeshDataAdapter.cs" />

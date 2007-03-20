@@ -25,6 +25,8 @@ namespace Dope.DDXX.SceneGraph
         private EffectHandle materialDiffuseColor;
         private EffectHandle materialSpecularColor;
 
+        private EffectHandle animationMatrices;
+
         public EffectHandler(IEffect effect, string prefix, IModel model)
         {
             this.effect = effect;
@@ -88,6 +90,8 @@ namespace Dope.DDXX.SceneGraph
             normalTexture = effect.GetParameter(null, "NormalTexture");
             materialDiffuseColor = effect.GetParameter(null, "MaterialDiffuseColor");
             materialSpecularColor = effect.GetParameter(null, "MaterialSpecularColor");
+
+            animationMatrices = effect.GetParameter(null, "AnimationMatrices");
         }
 
         #region IEffectHandler Members
@@ -128,6 +132,13 @@ namespace Dope.DDXX.SceneGraph
                 effect.SetValue(materialDiffuseColor, material.DiffuseColor);
             if (materialSpecularColor != null)
                 effect.SetValue(materialSpecularColor, material.SpecularColor);
+        }
+
+        public void SetBones(Matrix[] matrices)
+        {
+            if (animationMatrices == null)
+                throw new DDXXException("Effect does not have AnimationMatrices parameter. SetBones can not be called.");
+            effect.SetValue(animationMatrices, matrices);
         }
 
         #endregion

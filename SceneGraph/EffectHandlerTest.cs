@@ -37,6 +37,7 @@ namespace Dope.DDXX.SceneGraph
         private EffectHandle normalTextureHandle;
         private EffectHandle materialDiffuseColor;
         private EffectHandle materialSpecularColor;
+        private EffectHandle animationMatrices;
         private EffectHandle annotation;
 
         private Matrix worldMatrix;
@@ -75,6 +76,7 @@ namespace Dope.DDXX.SceneGraph
             normalTextureHandle = EffectHandle.FromString("NormalTexture");
             materialDiffuseColor = EffectHandle.FromString("MaterialDiffuseColor");
             materialSpecularColor = EffectHandle.FromString("MaterialSpecularColor");
+            animationMatrices = EffectHandle.FromString("AnimationMatrices");
             annotation = EffectHandle.FromString("Annotation");
 
             worldMatrix = Matrix.Scaling(1, 3, 5);
@@ -118,7 +120,7 @@ namespace Dope.DDXX.SceneGraph
         {
             ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
-            ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT);
+            ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT, null);
             ExpectMaterialParameters(null, null, null, null, null);
             ExpectNoAnnotations();
 
@@ -134,7 +136,7 @@ namespace Dope.DDXX.SceneGraph
         public void ConstructorTestOK2()
         {
             ExpectFindTechniques(1);
-            ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT);
+            ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT, null);
             ExpectMaterialParameters(null, null, null, null, null);
             ExpectNoAnnotations();
 
@@ -225,7 +227,7 @@ namespace Dope.DDXX.SceneGraph
         {
             ExpectNumberOfMaterials(1, modelMaterial);
             ExpectFindTechniques(1);
-            ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT);
+            ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT, null);
             ExpectMaterialParameters(null, null, null, null, null);
 
             Expect.Once.On(effect).Method("GetAnnotation").With(validTechnique, "Skinning").Will(Return.Value(annotation));
@@ -246,7 +248,7 @@ namespace Dope.DDXX.SceneGraph
         {
             ExpectNumberOfMaterials(1, modelMaterial);
             ExpectFindTechniques(1);
-            ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT);
+            ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT, null);
             ExpectMaterialParameters(null, null, null, null, null);
 
             Expect.Once.On(effect).Method("GetAnnotation").With(validTechnique, "Skinning").Will(Return.Value(annotation));
@@ -266,7 +268,7 @@ namespace Dope.DDXX.SceneGraph
         public void ConstructorTestSkinOK3()
         {
             ExpectNumberOfMaterials(3, modelMaterial);
-            ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT);
+            ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT, null);
             ExpectMaterialParameters(null, null, null, null, null);
             modelMaterial.NormalTexture = normalTexture;
 
@@ -308,7 +310,7 @@ namespace Dope.DDXX.SceneGraph
         {
             ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(5);
-            ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT);
+            ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT, null);
             ExpectMeshParametersSet(worldT, worldViewProjectionT, projectionT, worldViewT);
             ExpectMaterialParameters(null, null, null, null, null);
             ExpectNoAnnotations();
@@ -322,7 +324,7 @@ namespace Dope.DDXX.SceneGraph
         {
             ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
-            ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT);
+            ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT, null);
             ExpectMeshParametersSet(worldT, worldViewProjectionT, projectionT, worldViewT);
             ExpectMaterialParameters(null, null, null, null, null);
             ExpectNoAnnotations();
@@ -336,7 +338,7 @@ namespace Dope.DDXX.SceneGraph
         {
             ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
-            ExpectMeshParameters(null, worldViewProjectionT, projectionT, worldViewT);
+            ExpectMeshParameters(null, worldViewProjectionT, projectionT, worldViewT, null);
             ExpectMeshParametersSet(null, worldViewProjectionT, projectionT, worldViewT);
             ExpectMaterialParameters(null, null, null, null, null);
             ExpectNoAnnotations();
@@ -350,7 +352,7 @@ namespace Dope.DDXX.SceneGraph
         {
             ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
-            ExpectMeshParameters(worldT, null, projectionT, worldViewT);
+            ExpectMeshParameters(worldT, null, projectionT, worldViewT, null);
             ExpectMeshParametersSet(worldT, null, projectionT, worldViewT);
             ExpectMaterialParameters(null, null, null, null, null);
             ExpectNoAnnotations();
@@ -364,7 +366,7 @@ namespace Dope.DDXX.SceneGraph
         {
             ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
-            ExpectMeshParameters(worldT, worldViewProjectionT, null, worldViewT);
+            ExpectMeshParameters(worldT, worldViewProjectionT, null, worldViewT, null);
             ExpectMeshParametersSet(worldT, worldViewProjectionT, null, worldViewT);
             ExpectMaterialParameters(null, null, null, null, null);
             ExpectNoAnnotations();
@@ -378,7 +380,7 @@ namespace Dope.DDXX.SceneGraph
         {
             ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
-            ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, null);
+            ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, null, null);
             ExpectMeshParametersSet(worldT, worldViewProjectionT, projectionT, null);
             ExpectMaterialParameters(null, null, null, null, null);
             ExpectNoAnnotations();
@@ -393,7 +395,7 @@ namespace Dope.DDXX.SceneGraph
             ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
             ExpectSetTechnique();
-            ExpectMeshParameters(null, null, null, null);
+            ExpectMeshParameters(null, null, null, null, null);
             ExpectMaterialParameters(ambientColor, baseTexture, normalTextureHandle, materialDiffuseColor, materialSpecularColor);
             ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, normalTexture, true, materialDiffuse, true, materialSpecular);
             ExpectNoAnnotations();
@@ -408,7 +410,7 @@ namespace Dope.DDXX.SceneGraph
             ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
             ExpectSetTechnique();
-            ExpectMeshParameters(null, null, null, null);
+            ExpectMeshParameters(null, null, null, null, null);
             ExpectMaterialParameters(null, baseTexture, normalTextureHandle, materialDiffuseColor, materialSpecularColor);
             ExpectMaterialParametersSet(false, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, normalTexture, true, materialDiffuse, true, materialSpecular);
             ExpectNoAnnotations();
@@ -423,7 +425,7 @@ namespace Dope.DDXX.SceneGraph
             ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
             ExpectSetTechnique();
-            ExpectMeshParameters(null, null, null, null);
+            ExpectMeshParameters(null, null, null, null, null);
             ExpectMaterialParameters(ambientColor, null, normalTextureHandle, materialDiffuseColor, materialSpecularColor);
             ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), null, normalTexture, true, materialDiffuse, true, materialSpecular);
             ExpectNoAnnotations();
@@ -438,7 +440,7 @@ namespace Dope.DDXX.SceneGraph
             ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
             ExpectSetTechnique();
-            ExpectMeshParameters(null, null, null, null);
+            ExpectMeshParameters(null, null, null, null, null);
             ExpectMaterialParameters(ambientColor, baseTexture, null, materialDiffuseColor, materialSpecularColor);
             ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, null, true, materialDiffuse, true, materialSpecular);
             ExpectNoAnnotations();
@@ -453,7 +455,7 @@ namespace Dope.DDXX.SceneGraph
             ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
             ExpectSetTechnique();
-            ExpectMeshParameters(null, null, null, null);
+            ExpectMeshParameters(null, null, null, null, null);
             ExpectMaterialParameters(ambientColor, baseTexture, normalTextureHandle, null, materialSpecularColor);
             ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, normalTexture, false, materialDiffuse, true, materialSpecular);
             ExpectNoAnnotations();
@@ -468,7 +470,7 @@ namespace Dope.DDXX.SceneGraph
             ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
             ExpectSetTechnique();
-            ExpectMeshParameters(null, null, null, null);
+            ExpectMeshParameters(null, null, null, null, null);
             ExpectMaterialParameters(ambientColor, baseTexture, normalTextureHandle, materialDiffuseColor, null);
             ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, normalTexture, true, materialDiffuse, false, materialSpecular);
             ExpectNoAnnotations();
@@ -486,13 +488,55 @@ namespace Dope.DDXX.SceneGraph
             ExpectNumberOfMaterials(1, null);
             ExpectFindTechniques(1);
             ExpectSetTechnique();
-            ExpectMeshParameters(null, null, null, null);
+            ExpectMeshParameters(null, null, null, null, null);
             ExpectMaterialParameters(null, null, null, null, null);
             ExpectNoAnnotations();
             EffectHandler effectHandler = new EffectHandler(effect, "", model);
             effectHandler.Techniques = new EffectHandle[] { null, validTechnique };
 
             effectHandler.SetMaterialConstants(sceneAmbient, modelMaterial, 1);
+        }
+
+        /// <summary>
+        /// Test setting of bones with effect that has none
+        /// </summary>
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void SetBonesTestFail()
+        {
+            ExpectNumberOfMaterials(1, null);
+            ExpectFindTechniques(1);
+            ExpectMeshParameters(null, null, null, null, null);
+            ExpectMaterialParameters(null, null, null, null, null);
+            ExpectNoAnnotations();
+            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+
+            Matrix[] matrices = new Matrix[2];
+            matrices[0] = Matrix.RotationX(1);
+            matrices[1] = Matrix.RotationZ(3);
+
+            effectHandler.SetBones(matrices);
+        }
+
+        /// <summary>
+        /// Test setting of bones
+        /// </summary>
+        [Test]
+        public void SetBonesTest()
+        {
+            ExpectNumberOfMaterials(1, null);
+            ExpectFindTechniques(1);
+            ExpectMeshParameters(null, null, null, null, animationMatrices);
+            ExpectMaterialParameters(null, null, null, null, null);
+            ExpectNoAnnotations();
+            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+
+            Matrix[] matrices = new Matrix[2];
+            matrices[0] = Matrix.RotationX(1);
+            matrices[1] = Matrix.RotationZ(3);
+
+            Expect.Once.On(effect).Method("SetValue").With(animationMatrices, matrices);
+            effectHandler.SetBones(matrices);
         }
 
         private void ExpectSetTechnique()
@@ -502,7 +546,7 @@ namespace Dope.DDXX.SceneGraph
                 To(validTechnique);
         }
 
-        private void ExpectMeshParameters(Object world, Object worldViewProj, Object proj, Object worldView)
+        private void ExpectMeshParameters(Object world, Object worldViewProj, Object proj, Object worldView, Object animation)
         {
             Expect.Once.On(effect).
                 Method("GetParameter").
@@ -520,6 +564,10 @@ namespace Dope.DDXX.SceneGraph
                 Method("GetParameter").
                 With(null, "WorldViewT").
                 Will(Return.Value(worldView));
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "AnimationMatrices").
+                Will(Return.Value(animation));
         }
 
         private void ExpectMeshParametersSet(Object world, Object worldViewProj, Object proj, Object worldView)

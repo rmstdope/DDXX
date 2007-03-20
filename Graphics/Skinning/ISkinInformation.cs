@@ -6,7 +6,7 @@ using Microsoft.DirectX;
 
 namespace Dope.DDXX.Graphics.Skinning
 {
-    interface ISkinInformation : IDisposable
+    public interface ISkinInformation : IDisposable
     {
         // Summary:
         //     Retrieves or sets the vertex declaration.

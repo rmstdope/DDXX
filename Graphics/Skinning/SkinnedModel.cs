@@ -10,6 +10,7 @@ namespace Dope.DDXX.Graphics.Skinning
     public class SkinnedModel : ModelBase
     {
         private IAnimationRootFrame rootFrame;
+        private const int MAX_NUM_BONES = 40;
 
         public SkinnedModel(IAnimationRootFrame rootFrame, ITextureFactory textureFactory)
         {
@@ -43,6 +44,18 @@ namespace Dope.DDXX.Graphics.Skinning
                 ModelMaterial[] materials = CreateModelMaterials(textureFactory, frame.MeshContainer.GetMaterials());
                 materials.CopyTo(Materials, startIndex);
                 startIndex += materials.Length;
+                if (frame.MeshContainer.SkinInformation != null)
+                {
+                    int numBones = Math.Min(MAX_NUM_BONES, frame.MeshContainer.SkinInformation.NumberBones);
+                    int influences = 0;
+                    BoneCombination[] bones = null;
+                    MeshDataAdapter data = new MeshDataAdapter();
+                    data.Mesh = frame.MeshContainer.SkinInformation.ConvertToIndexedBlendedMesh(
+                        frame.MeshContainer.MeshData.Mesh, MeshFlags.Managed | MeshFlags.OptimizeVertexCache,
+                        frame.MeshContainer.GetAdjacencyStream(), numBones, out influences,
+                        out bones);
+                    frame.MeshContainer.MeshData = data;
+                }
             }
         }
 
@@ -84,6 +97,13 @@ namespace Dope.DDXX.Graphics.Skinning
                 effectHandler.SetNodeConstants(matrix * world, view, projection);
                 for (int j = 0; j < frame.MeshContainer.GetMaterials().Length; j++)
                 {
+                    if (frame.MeshContainer.SkinInformation != null)
+                    {
+                        Matrix[] skinMatrices = new Matrix[frame.MeshContainer.SkinInformation.NumberBones];
+                        for (int i = 0; i < frame.MeshContainer.SkinInformation.NumberBones; i++)
+                            skinMatrices[i] = Matrix.Identity;
+                        effectHandler.SetBones(skinMatrices);
+                    }
                     effectHandler.SetMaterialConstants(ambient, Materials[materialIndex + j], j + materialIndex);
                     int passes = effectHandler.Effect.Begin(FX.None);
                     for (int i = 0; i < passes; i++)

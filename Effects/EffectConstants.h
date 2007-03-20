@@ -43,4 +43,9 @@
 #define FILLMODE_WIREFRAME 2
 #define FILLMODE_SOLID 3
 
+/**
+ * Other constants
+ */
+#define MAX_NUM_BONES 40
+
 #endif

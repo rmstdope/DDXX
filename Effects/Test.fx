@@ -3,6 +3,8 @@
 struct InputVS
 {
 	float4	Position			: POSITION;			// Vertex Position
+	float3	BlendWeights	: BLENDWEIGHT;	// Blend weight
+	int4		BlendIndices	: BLENDINDICES;	// Bland indices
 	float3	Normal				: NORMAL;				// Vertex Normal
 	float3	Tangent				: TANGENT;			// Vertex Tangent
 	float2	TextureCoord	: TEXCOORD0;		// Vertex Texture Coordinate
@@ -23,9 +25,13 @@ struct NormalMappingInputPS
 
 
 InputPS
-SimpleVertexShader(InputVS input)
+SimpleVertexShader(InputVS input,
+									 uniform int numWeights)
 {
 	InputPS output;
+
+	// Calculate new position, normal and tangent depending on animation
+	AnimatedVertex_PNT vertex = AnimateVertex(input.Position, input.Normal, input.Tangent, input.BlendIndices, input.BlendWeights, numWeights);	
 
 	// Transform the position from object space to homogeneous projection space
 	output.Position = mul(input.Position, WorldViewProjectionT);
@@ -96,7 +102,7 @@ technique TransparentText
 {
 	pass BasePass
 	{
-		VertexShader			= compile vs_2_0 SimpleVertexShader();
+		VertexShader			= compile vs_2_0 SimpleVertexShader(0);
 		PixelShader				= compile ps_2_0 SimplePixelShader();
 		AlphaBlendEnable	= true;
 		BlendOp						= ADD;
@@ -121,7 +127,7 @@ technique SkinningNone
 {
 	pass BasePass
 	{
-		VertexShader			= compile vs_2_0 SimpleVertexShader();
+		VertexShader			= compile vs_2_0 SimpleVertexShader(0);
 		PixelShader				= compile ps_2_0 SimplePixelShader();
 		AlphaBlendEnable	= false;
 		CullMode					= CCW;
@@ -140,7 +146,7 @@ technique Skinning
 {
 	pass BasePass
 	{
-		VertexShader			= compile vs_2_0 SimpleVertexShader();
+		VertexShader			= compile vs_2_0 SimpleVertexShader(3);
 		PixelShader				= compile ps_2_0 SimplePixelShader();
 		AlphaBlendEnable	= false;
 		CullMode					= CCW;

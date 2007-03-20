@@ -21,15 +21,26 @@ namespace Dope.DDXX.Graphics.Skinning
 
         #region IMeshContainer Members
 
-        public IMeshData MeshData
+        public MeshDataAdapter MeshData
         {
             get
             {
-                return new MeshDataAdapter(container.MeshData);
+                MeshDataAdapter meshDataAdapter = new MeshDataAdapter();
+                if (container.MeshData.Mesh != null)
+                    meshDataAdapter.Mesh = new MeshAdapter(container.MeshData.Mesh);
+                meshDataAdapter.PatchMesh = container.MeshData.PatchMesh;
+                meshDataAdapter.ProgressiveMesh = container.MeshData.ProgressiveMesh;
+                return meshDataAdapter;
             }
             set
             {
-                container.MeshData = ((MeshDataAdapter)value).DXMeshData;
+                MeshData data = new MeshData();
+                data.Mesh = ((MeshAdapter)value.Mesh).DXMesh;
+                if (value.PatchMesh != null)
+                    data.PatchMesh = value.PatchMesh;
+                if (value.ProgressiveMesh != null)
+                    data.ProgressiveMesh = value.ProgressiveMesh;
+                container.MeshData = data;
             }
         }
 
@@ -50,15 +61,15 @@ namespace Dope.DDXX.Graphics.Skinning
             get { return new MeshContainerAdapter(container.NextContainer); }
         }
 
-        public SkinInformation SkinInformation
+        public ISkinInformation SkinInformation
         {
             get
             {
-                return container.SkinInformation;
+                return new SkinInformationAdapter(container.SkinInformation);
             }
             set
             {
-                container.SkinInformation = value;
+                container.SkinInformation = (value as SkinInformationAdapter).DXSkinInformation;
             }
         }
 

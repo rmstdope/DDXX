@@ -4,9 +4,6 @@
 #include <DataTypes.hlsl>
 #include <SharedVariables.hlsl>
 
-// Fake normalization for pre 2.0-shaders
-#define Normalize(input) ((texCUBE(NormalizationTextureSampler,	input) - 0.5f) * 2.0)
-
 /**
  * Return the base vectors of the tangent space for this vertex
  * @param normal The normal of the vertex
@@ -52,16 +49,16 @@ AnimateVertex(float4	position,
 {
 	AnimatedVertex_PNT output;
 
-	if(numWeights) {
+	if(numWeights > 0) {
 		// Animation the vertex based on time and the vertex's object space position
 		float lastWeight = 0.0f;
 		float4x4 weightedMatrix = 0.0f;
 		for(int b = 0; b < numWeights - 1; b++) {
 			lastWeight = lastWeight + blendWeights[b];
-			weightedMatrix += AnimationMatrix[blendIndices[b]] * blendWeights[b];
+			weightedMatrix += AnimationMatrices[blendIndices[b]] * blendWeights[b];
 		}
     lastWeight = 1.0f - lastWeight; 
-		weightedMatrix += AnimationMatrix[blendIndices[numWeights - 1]] * lastWeight;
+		weightedMatrix += AnimationMatrices[blendIndices[numWeights - 1]] * lastWeight;
 		output.Position = mul(position, weightedMatrix);
 		output.Normal		= mul(normal, (float3x3)weightedMatrix);
 		output.Tangent	= mul(tangent, (float3x3)weightedMatrix);
@@ -98,10 +95,10 @@ AnimateVertex(float4	position,
 		float4x4 weightedMatrix = 0.0f;
 		for(int b = 0; b < numWeights - 1; b++) {
 			lastWeight = lastWeight + blendWeights[b];
-			weightedMatrix += AnimationMatrix[blendIndices[b]] * blendWeights[b];
+			weightedMatrix += AnimationMatrices[blendIndices[b]] * blendWeights[b];
 		}
     lastWeight = 1.0f - lastWeight; 
-		weightedMatrix += AnimationMatrix[blendIndices[numWeights - 1]] * lastWeight;
+		weightedMatrix += AnimationMatrices[blendIndices[numWeights - 1]] * lastWeight;
 		output.Position = mul(position, weightedMatrix);
 		output.Normal		= mul(normal, (float3x3)weightedMatrix);
 	} else {
@@ -134,10 +131,10 @@ AnimateVertex(float4	position,
 		float4x4 weightedMatrix = 0.0f;
 		for(int b = 0; b < numWeights - 1; b++) {
 			lastWeight = lastWeight + blendWeights[b];
-			weightedMatrix += AnimationMatrix[blendIndices[b]] * blendWeights[b];
+			weightedMatrix += AnimationMatrices[blendIndices[b]] * blendWeights[b];
 		}
     lastWeight = 1.0f - lastWeight; 
-		weightedMatrix += AnimationMatrix[blendIndices[numWeights - 1]] * lastWeight;
+		weightedMatrix += AnimationMatrices[blendIndices[numWeights - 1]] * lastWeight;
 		output = mul(position, weightedMatrix);
 	} else {
 		output = position;

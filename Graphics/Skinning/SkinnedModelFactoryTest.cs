@@ -17,7 +17,7 @@ namespace Dope.DDXX.Graphics.Skinning
         private IAnimationRootFrame rootFrame;
         private IFrame frame;
         private IMeshContainer meshContainer;
-        private IMeshData meshData;
+        private MeshDataAdapter meshData;
         private IMesh mesh;
         private ExtendedMaterial[] materials;
         private ITextureFactory textureFactory;
@@ -31,8 +31,9 @@ namespace Dope.DDXX.Graphics.Skinning
             rootFrame = mockery.NewMock<IAnimationRootFrame>();
             frame = mockery.NewMock<IFrame>();
             meshContainer = mockery.NewMock<IMeshContainer>();
-            meshData = mockery.NewMock<IMeshData>();
             mesh = mockery.NewMock<IMesh>();
+            meshData = new MeshDataAdapter();
+            meshData.Mesh = mesh;
             materials = new ExtendedMaterial[2];
             textureFactory = mockery.NewMock<ITextureFactory>();
 
@@ -43,7 +44,7 @@ namespace Dope.DDXX.Graphics.Skinning
             Stub.On(frame).GetProperty("FrameFirstChild").Will(Return.Value(null));
             Stub.On(meshContainer).Method("GetMaterials").Will(Return.Value(materials));
             Stub.On(meshContainer).GetProperty("MeshData").Will(Return.Value(meshData));
-            Stub.On(meshData).GetProperty("Mesh").Will(Return.Value(mesh));
+            Stub.On(meshContainer).GetProperty("SkinInformation").Will(Return.Value(null));
         }
 
         [Test]

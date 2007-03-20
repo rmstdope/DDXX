@@ -15,6 +15,11 @@ namespace Dope.DDXX.Graphics.Skinning
             skinInformation = skin;
         }
 
+        public SkinInformation DXSkinInformation
+        {
+            get { return skinInformation; }
+        }
+
         #region ISkinInformation Members
 
         public VertexElement[] Declaration

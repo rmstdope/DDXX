@@ -15,7 +15,7 @@ namespace PoseidonTest
 {
     public class RealRenderPostEffect : BaseDemoPostEffect
     {
-        private Scene scene;
+        //private Scene scene;
         private PosseTestEffect demoEffect;
         public RealRenderPostEffect(float startTime, float endTime)
             : base(startTime, endTime)
