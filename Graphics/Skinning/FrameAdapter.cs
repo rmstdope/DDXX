@@ -8,11 +8,19 @@ namespace Dope.DDXX.Graphics.Skinning
 {
     public class FrameAdapter : IFrame
     {
-        private Frame frame;
+        private SkinnedFrame frame;
 
-        public FrameAdapter(Frame frame)
+        public FrameAdapter(SkinnedFrame frame)
         {
             this.frame = frame;
+        }
+
+        public SkinnedFrame DxFrame
+        {
+            get
+            {
+                return frame;
+            }
         }
 
         #region IFrame Members
@@ -24,7 +32,7 @@ namespace Dope.DDXX.Graphics.Skinning
                 if (frame.FrameFirstChild == null)
                     return null;
                 else
-                    return new FrameAdapter(frame.FrameFirstChild);
+                    return new FrameAdapter(frame.FrameFirstChild as SkinnedFrame);
             }
         }
 
@@ -35,7 +43,7 @@ namespace Dope.DDXX.Graphics.Skinning
                 if (frame.FrameSibling == null)
                     return null;
                 else
-                    return new FrameAdapter(frame.FrameSibling);
+                    return new FrameAdapter(frame.FrameSibling as SkinnedFrame);
             }
         }
 
@@ -46,7 +54,7 @@ namespace Dope.DDXX.Graphics.Skinning
                 if (frame.MeshContainer == null)
                     return null;
                 else
-                    return new MeshContainerAdapter(frame.MeshContainer);
+                    return new MeshContainerAdapter(frame.MeshContainer as SkinnedMeshContainer);
             }
             set
             {
@@ -75,6 +83,23 @@ namespace Dope.DDXX.Graphics.Skinning
             set
             {
                 frame.TransformationMatrix = value;
+            }
+        }
+
+        public IFrame Find(IFrame rootFrame, string name)
+        {
+            return new FrameAdapter(Frame.Find(((FrameAdapter)rootFrame).DxFrame, name) as SkinnedFrame);
+        }
+
+        public Matrix CombinedTransformationMatrix
+        {
+            get
+            {
+                return frame.CombinedTransformationMatrix;
+            }
+            set
+            {
+                frame.CombinedTransformationMatrix = value;
             }
         }
 

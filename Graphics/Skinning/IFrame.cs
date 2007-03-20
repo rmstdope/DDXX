@@ -27,5 +27,10 @@ namespace Dope.DDXX.Graphics.Skinning
         // Summary:
         //     Retrieves or sets the transformation Microsoft.DirectX.Matrix of a firstFrame.
         Matrix TransformationMatrix { get; set; }
+
+        IFrame Find(IFrame rootFrame, string name);
+
+        // Additions for DDXX
+        Matrix CombinedTransformationMatrix { get; set; }
     }
 }

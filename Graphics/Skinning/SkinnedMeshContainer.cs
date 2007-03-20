@@ -8,6 +8,10 @@ namespace Dope.DDXX.Graphics.Skinning
 {
     public class SkinnedMeshContainer : MeshContainer
     {
+        private Matrix[] restMatrices;
+        private BoneCombination[] bones;
+        private IFrame[] frames;
+
         public SkinnedMeshContainer(string name, MeshData meshData, 
             ExtendedMaterial[] materials, EffectInstance[] effectInstances, 
             GraphicsStream adjacency, SkinInformation skinInfo) 
@@ -20,5 +24,24 @@ namespace Dope.DDXX.Graphics.Skinning
             this.SetAdjacency(adjacency);
             this.SkinInformation = skinInfo;
         }
+
+        public Matrix[] RestMatrices
+        {
+            get { return restMatrices; }
+            set { restMatrices = value; }
+        }
+
+        public BoneCombination[] Bones
+        {
+            get { return bones; }
+            set { bones = value; }
+        }
+
+        public IFrame[] Frames
+        {
+            get { return frames; }
+            set { frames = value; }
+        }
+
     }
 }

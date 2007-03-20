@@ -142,7 +142,7 @@ namespace Dope.DDXX.Graphics.Skinning
 
         public Matrix GetBoneOffsetMatrix(int bone)
         {
-            return GetBoneOffsetMatrix(bone);
+            return skinInformation.GetBoneOffsetMatrix(bone);
         }
 
         public int GetMaxFaceInfluences(IndexBuffer indexBuffer, int numFaces)

@@ -31,10 +31,10 @@ SimpleVertexShader(InputVS input,
 	InputPS output;
 
 	// Calculate new position, normal and tangent depending on animation
-	AnimatedVertex_PNT vertex = AnimateVertex(input.Position, input.Normal, input.Tangent, input.BlendIndices, input.BlendWeights, numWeights);	
+	AnimatedVertex_PNT vertex = AnimateVertex(input.Position, input.Normal, input.Tangent, input.BlendIndices, input.BlendWeights, numWeights);
 
 	// Transform the position from object space to homogeneous projection space
-	output.Position = mul(input.Position, WorldViewProjectionT);
+	output.Position = mul(vertex.Position, WorldViewProjectionT);
 
 	output.TextureCoord = input.TextureCoord;
 	
@@ -146,7 +146,7 @@ technique Skinning
 {
 	pass BasePass
 	{
-		VertexShader			= compile vs_2_0 SimpleVertexShader(3);
+		VertexShader			= compile vs_2_0 SimpleVertexShader(2);
 		PixelShader				= compile ps_2_0 SimplePixelShader();
 		AlphaBlendEnable	= false;
 		CullMode					= CCW;

@@ -23,7 +23,7 @@ namespace Dope.DDXX.Graphics.Skinning
 
         public IFrame FrameHierarchy
         {
-            get { return new FrameAdapter(animationRootFrame.FrameHierarchy); }
+            get { return new FrameAdapter(animationRootFrame.FrameHierarchy as SkinnedFrame); }
         }
 
         #endregion

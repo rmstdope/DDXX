@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX.Direct3D;
+using Microsoft.DirectX;
 
 namespace Dope.DDXX.Graphics.Skinning
 {
@@ -89,5 +90,10 @@ namespace Dope.DDXX.Graphics.Skinning
         //     Array of Microsoft.DirectX.Direct3D.ExtendedMaterial objects that contain
         //     the mesh materials to set.
         void SetMaterials(ExtendedMaterial[] mtrl);
+
+        // Special methods for DDXX
+        Matrix[] RestMatrices { get; set; }
+        BoneCombination[] Bones { get; set; }
+        IFrame[] Frames { get; set; }
     }
 }

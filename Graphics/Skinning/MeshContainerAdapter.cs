@@ -2,14 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX.Direct3D;
+using Microsoft.DirectX;
 
 namespace Dope.DDXX.Graphics.Skinning
 {
     public class MeshContainerAdapter : IMeshContainer
     {
-        private MeshContainer container;
+        private SkinnedMeshContainer container;
 
-        public MeshContainerAdapter(MeshContainer container)
+        public MeshContainerAdapter(SkinnedMeshContainer container)
         {
             this.container = container;
         }
@@ -58,7 +59,7 @@ namespace Dope.DDXX.Graphics.Skinning
 
         public IMeshContainer NextContainer
         {
-            get { return new MeshContainerAdapter(container.NextContainer); }
+            get { return new MeshContainerAdapter(container.NextContainer as SkinnedMeshContainer); }
         }
 
         public ISkinInformation SkinInformation
@@ -111,6 +112,24 @@ namespace Dope.DDXX.Graphics.Skinning
         public void SetMaterials(ExtendedMaterial[] mtrl)
         {
             container.SetMaterials(mtrl);
+        }
+
+        public Matrix[] RestMatrices 
+        {
+            get { return container.RestMatrices; }
+            set { container.RestMatrices = value; }
+        }
+
+        public BoneCombination[] Bones
+        {
+            get { return container.Bones; }
+            set { container.Bones = value; }
+        }
+
+        public IFrame[] Frames 
+        {
+            get { return container.Frames; }
+            set { container.Frames = value; } 
         }
 
         #endregion

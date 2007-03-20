@@ -55,6 +55,23 @@ namespace Dope.DDXX.Graphics.Skinning
                         frame.MeshContainer.GetAdjacencyStream(), numBones, out influences,
                         out bones);
                     frame.MeshContainer.MeshData = data;
+                    frame.MeshContainer.Bones = bones;
+
+                    Matrix[] offsetMatrices = new Matrix[numBones];
+                    for (int i = 0; i < numBones; i++)
+                        offsetMatrices[i] = frame.MeshContainer.SkinInformation.GetBoneOffsetMatrix(i);
+                    frame.MeshContainer.RestMatrices = offsetMatrices;
+
+                    IFrame[] frameMatrix = new IFrame[numBones];
+                    for (int i = 0; i < numBones; i++)
+                    {
+                        IFrame foundFrame = frame.Find(rootFrame.FrameHierarchy,
+                            frame.MeshContainer.SkinInformation.GetBoneName(i));
+                        if (foundFrame == null)
+                            throw new InvalidOperationException("Could not find valid bone.");
+                        frameMatrix[i] = foundFrame;
+                    }
+                    frame.MeshContainer.Frames = frameMatrix;
                 }
             }
         }
@@ -95,13 +112,21 @@ namespace Dope.DDXX.Graphics.Skinning
             if (frame.MeshContainer != null)
             {
                 effectHandler.SetNodeConstants(matrix * world, view, projection);
+                BoneCombination[] bones = frame.MeshContainer.Bones;
                 for (int j = 0; j < frame.MeshContainer.GetMaterials().Length; j++)
                 {
                     if (frame.MeshContainer.SkinInformation != null)
                     {
                         Matrix[] skinMatrices = new Matrix[frame.MeshContainer.SkinInformation.NumberBones];
                         for (int i = 0; i < frame.MeshContainer.SkinInformation.NumberBones; i++)
-                            skinMatrices[i] = Matrix.Identity;
+                        {
+                            int index = bones[j].BoneId[i];
+                            if (index != -1)
+                            {
+                                skinMatrices[i] = frame.MeshContainer.RestMatrices[index] * 
+                                    frame.MeshContainer.Frames[index].CombinedTransformationMatrix;
+                            }
+                        }
                         effectHandler.SetBones(skinMatrices);
                     }
                     effectHandler.SetMaterialConstants(ambient, Materials[materialIndex + j], j + materialIndex);
@@ -122,6 +147,23 @@ namespace Dope.DDXX.Graphics.Skinning
         {
             if (rootFrame.AnimationController != null)
                 rootFrame.AnimationController.AdvanceTime(Time.DeltaTime);
+
+            UpdateFrameMatrices(rootFrame.FrameHierarchy, Matrix.Identity);
+        }
+
+        private void UpdateFrameMatrices(IFrame frame, Matrix parentMatrix)
+        {
+            frame.CombinedTransformationMatrix = frame.TransformationMatrix * parentMatrix;
+
+            if (frame.FrameSibling != null)
+            {
+                UpdateFrameMatrices(frame.FrameSibling, parentMatrix);
+            }
+
+            if (frame.FrameFirstChild != null)
+            {
+                UpdateFrameMatrices(frame.FrameFirstChild, frame.CombinedTransformationMatrix);
+            }
         }
     }
 }
