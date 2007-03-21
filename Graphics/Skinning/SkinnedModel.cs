@@ -10,7 +10,7 @@ namespace Dope.DDXX.Graphics.Skinning
     public class SkinnedModel : ModelBase
     {
         private IAnimationRootFrame rootFrame;
-        private const int MAX_NUM_BONES = 40;
+        private const int MAX_NUM_BONES = 60;
 
         public SkinnedModel(IAnimationRootFrame rootFrame, ITextureFactory textureFactory)
         {

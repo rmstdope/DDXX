@@ -56,6 +56,7 @@ namespace EngineTest
             {
                 for (int i = 0; i < 1; i++)
                 {
+                    Cursor.Show();
                     if (DialogResult.Yes == MessageBox.Show(exception.ToString(), "It seems you are having problems...", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2))
                     {
                         MessageBox.Show(exception.Callstack(), "Callstack");

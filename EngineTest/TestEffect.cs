@@ -53,22 +53,23 @@ namespace EngineTest
             scene.AddNode(mesh);
             //mesh.WorldState.Tilt(-(float)Math.PI / 2.0f);
 
-            model = ModelFactory.FromFile("tiny.x", ModelFactory.Options.None);
+            model = ModelFactory.FromFile("TiVi.x", ModelFactory.Options.None);
             modelNoSkinning = new ModelNode("No Skinning",
                 model,
                 new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Skinning", model));
-            modelNoSkinning.WorldState.Scale(0.3f);
+            modelNoSkinning.WorldState.Scale(100.0f);
             modelNoSkinning.WorldState.MoveRight(-50);
             modelNoSkinning.WorldState.Roll((float)Math.PI);
             modelNoSkinning.WorldState.Tilt((float)Math.PI / 2);
             scene.AddNode(modelNoSkinning);
 
-            model = ModelFactory.FromFile("tiny.x", ModelFactory.Options.SkinnedModel);
+            model = ModelFactory.FromFile("TiVi.x", ModelFactory.Options.SkinnedModel);
             modelSkinning = new ModelNode("Skinning",
                 model,
                 new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Skinning", model));
-            modelSkinning.WorldState.Scale(0.3f);
+            modelSkinning.WorldState.Scale(100.0f);
             modelSkinning.WorldState.MoveRight(50);
+            modelSkinning.WorldState.MoveUp(-75);
             modelSkinning.WorldState.Roll((float)Math.PI);
             modelSkinning.WorldState.Tilt((float)Math.PI / 2);
             scene.AddNode(modelSkinning);
