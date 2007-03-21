@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Effects>
-	<Effect name="SpinningBackgroundEffect" track="0" startTime="0.00001" endTime="20.0">
+	<Effect name="SpinningBackgroundEffect" track="0" startTime="100.00001" endTime="200.0">
 		<SetupCall name="AddTextureLayer">
 			<Parameter string="BlurBackground.jpg"/>
 			<Parameter float="35.0"/>

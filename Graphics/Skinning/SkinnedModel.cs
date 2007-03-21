@@ -111,6 +111,7 @@ namespace Dope.DDXX.Graphics.Skinning
             }
             if (frame.MeshContainer != null)
             {
+                //System.Diagnostics.Debug.WriteLine(frame.Name);
                 effectHandler.SetNodeConstants(matrix * world, view, projection);
                 BoneCombination[] bones = frame.MeshContainer.Bones;
                 for (int j = 0; j < frame.MeshContainer.GetMaterials().Length; j++)
@@ -164,6 +165,11 @@ namespace Dope.DDXX.Graphics.Skinning
             {
                 UpdateFrameMatrices(frame.FrameFirstChild, frame.CombinedTransformationMatrix);
             }
+        }
+
+        public IFrame GetFrame(string name)
+        {
+            return rootFrame.FrameHierarchy.Find(rootFrame.FrameHierarchy, name);
         }
     }
 }

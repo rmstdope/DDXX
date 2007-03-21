@@ -66,6 +66,8 @@ namespace Dope.DDXX.Graphics.Skinning
         {
             get
             {
+                if (container.SkinInformation == null)
+                    return null;
                 return new SkinInformationAdapter(container.SkinInformation);
             }
             set

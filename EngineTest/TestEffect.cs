@@ -10,6 +10,7 @@ using Dope.DDXX.Physics;
 using Dope.DDXX.SceneGraph;
 using Dope.DDXX.Utility;
 using Dope.DDXX.ParticleSystems;
+using Dope.DDXX.Graphics.Skinning;
 
 namespace EngineTest
 {
@@ -36,8 +37,8 @@ namespace EngineTest
             scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f);
 
             camera = new CameraNode("Camera");
-            camera.WorldState.MoveForward(-400.0f);
-            //camera.WorldState.MoveRight(50.0f);
+            //camera.WorldState.Tilt(2.0f);
+            camera.WorldState.MoveForward(-300.0f);
             scene.AddNode(camera);
             scene.ActiveCamera = camera;
 
@@ -61,7 +62,7 @@ namespace EngineTest
             modelNoSkinning.WorldState.MoveRight(-50);
             modelNoSkinning.WorldState.Roll((float)Math.PI);
             modelNoSkinning.WorldState.Tilt((float)Math.PI / 2);
-            scene.AddNode(modelNoSkinning);
+            //scene.AddNode(modelNoSkinning);
 
             model = ModelFactory.FromFile("TiVi.x", ModelFactory.Options.SkinnedModel);
             modelSkinning = new ModelNode("Skinning",
@@ -73,6 +74,10 @@ namespace EngineTest
             modelSkinning.WorldState.Roll((float)Math.PI);
             modelSkinning.WorldState.Tilt((float)Math.PI / 2);
             scene.AddNode(modelSkinning);
+
+            //CameraNodeX cameraX = new CameraNodeX((SkinnedModel)model, "Camera");
+            //scene.AddNode(cameraX);
+            //scene.ActiveCamera = cameraX;
         }
 
         public override void StartTimeUpdated()
