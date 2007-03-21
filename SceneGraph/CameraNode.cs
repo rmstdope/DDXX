@@ -59,8 +59,8 @@ namespace Dope.DDXX.SceneGraph
         public Matrix ViewMatrix
         {
             get 
-            { 
-                Matrix res = WorldState.GetWorldMatrix();
+            {
+                Matrix res = WorldMatrix;// WorldState.GetWorldMatrix();
                 res.Invert();
                 return res;
             }

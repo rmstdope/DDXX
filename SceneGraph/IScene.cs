@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using Dope.DDXX.Graphics.Skinning;
 
 namespace Dope.DDXX.SceneGraph
 {
@@ -17,5 +18,6 @@ namespace Dope.DDXX.SceneGraph
         INode GetNodeByName(string name);
         void Validate();
         void DebugPrintGraph();
+        void HandleHierarchy(IAnimationRootFrame hierarchy);
     }
 }

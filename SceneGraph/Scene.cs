@@ -6,6 +6,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
+using Dope.DDXX.Graphics.Skinning;
 
 namespace Dope.DDXX.SceneGraph
 {
@@ -21,6 +22,7 @@ namespace Dope.DDXX.SceneGraph
         private IRenderableCamera activeCamera;
         private IDevice device;
         private ColorValue ambientColor;
+        private List<IAnimationRootFrame> hierarchies = new List<IAnimationRootFrame>();
 
         public Scene()
         {
@@ -53,17 +55,21 @@ namespace Dope.DDXX.SceneGraph
 
         public void Step()
         {
-            LightState state = new LightState();
-
+            foreach (IAnimationRootFrame hierarchy in hierarchies)
+            {
+                IAnimationController controller = hierarchy.AnimationController;
+                if (controller != null)
+                    controller.AdvanceTime(Time.DeltaTime);
+            }
             rootNode.Step();
 
+            LightState state = new LightState();
             rootNode.SetLightState(state);
-
             effect.SetValue(lightDiffuseHandle, state.DiffuseColor);
             effect.SetValue(lightSpecularHandle, state.SpecularColor);
             effect.SetValue(lightPositionHandle, state.Positions);
 
-            Vector3 eyePos = ActiveCamera.WorldState.Position;
+            Vector3 eyePos = ActiveCamera.Position;
             effect.SetValue(eyePositionHandle, new Vector4(eyePos.X, eyePos.Y, eyePos.Z, 1.0f));
         }
 
@@ -143,5 +149,9 @@ namespace Dope.DDXX.SceneGraph
             }
         }
 
+        public void HandleHierarchy(IAnimationRootFrame hierarchy)
+        {
+            hierarchies.Add(hierarchy);
+        }
     }
 }

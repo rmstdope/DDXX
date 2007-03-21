@@ -20,7 +20,7 @@ namespace Dope.DDXX.SceneGraph
             IModel model = new Model(frame.Mesh, textureFactory, frame.ExtendedMaterials);
             IEffectHandler effectHandler = new EffectHandler(effect, prefix, model);
             ModelNode node = new ModelNode(frame.Name, model, effectHandler);
-            SetWorldState(frame, node, false);
+            node.EnableFrameHandling(frame);
             return node;
         }
 
@@ -28,38 +28,38 @@ namespace Dope.DDXX.SceneGraph
         {
             CameraNode node = new CameraNode(frame.Name);
             node.SetFOV((float)Math.PI / 2);
-            SetWorldState(frame, node, true);
+            node.EnableFrameHandling(frame);
             return node;
         }
 
         public DummyNode CreateDummyNode(IFrame frame)
         {
             DummyNode node = new DummyNode(frame.Name);
-            SetWorldState(frame, node, false);
+            node.EnableFrameHandling(frame);
             return node;
         }
 
-        private static void SetWorldState(IFrame frame, INode node, bool camera)
-        {
-            Matrix m3;
-            if (!camera)
-            {
-                // 3DS -> DX conversion
-                Matrix m2 = Matrix.Identity;
-                m2.M11 = -1;
-                m2.M22 = 0;
-                m2.M23 = 1;
-                m2.M33 = 0;
-                m2.M32 = 1;
-                m3 = frame.TransformationMatrix * m2;
-            }
-            else
-            {
-                m3 = frame.TransformationMatrix;
-            }
-            node.WorldState.Position = new Vector3(m3.M41, m3.M42, m3.M43);
-            node.WorldState.Rotation = Quaternion.RotationMatrix(m3);
-        }
+        //private static void SetWorldState(IFrame frame, INode node, bool camera)
+        //{
+        //    Matrix m3;
+        //    if (!camera)
+        //    {
+        //        // 3DS -> DX conversion
+        //        Matrix m2 = Matrix.Identity;
+        //        m2.M11 = -1;
+        //        m2.M22 = 0;
+        //        m2.M23 = 1;
+        //        m2.M33 = 0;
+        //        m2.M32 = 1;
+        //        m3 = frame.TransformationMatrix * m2;
+        //    }
+        //    else
+        //    {
+        //        m3 = frame.TransformationMatrix;
+        //    }
+        //    node.WorldState.Position = new Vector3(m3.M41, m3.M42, m3.M43);
+        //    node.WorldState.Rotation = Quaternion.RotationMatrix(m3);
+        //}
 
     }
 }

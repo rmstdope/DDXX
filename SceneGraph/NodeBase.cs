@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.DirectX;
 using Dope.DDXX.Physics;
 using Dope.DDXX.Utility;
+using Dope.DDXX.Graphics.Skinning;
 
 namespace Dope.DDXX.SceneGraph
 {
@@ -13,6 +14,7 @@ namespace Dope.DDXX.SceneGraph
         private WorldState worldState = new WorldState();
         private String name;
         private List<INode> children = new List<INode>();
+        private IFrame frame;
 
         public NodeBase(String name) : base()
         {
@@ -47,16 +49,28 @@ namespace Dope.DDXX.SceneGraph
         {
             get
             {
-                if (parent != null)
-                    return worldState.GetWorldMatrix() * parent.WorldMatrix;
+                Matrix localMatrix;
+                if (frame != null)
+                {
+                    localMatrix = frame.TransformationMatrix;
+                }
                 else
-                    return worldState.GetWorldMatrix();
+                    localMatrix = worldState.GetWorldMatrix();
+                if (parent != null)
+                    return localMatrix * parent.WorldMatrix;
+                else
+                    return localMatrix;
             }
         }
 
         public WorldState WorldState
         {
-            get { return worldState; }
+            get 
+            {
+                if (frame != null)
+                    throw new DDXXException("NodeBase.WorldState can not be used for a node which is in frame mode.");
+                return worldState; 
+            }
         }
 
         public void AddChild(INode child)
@@ -118,7 +132,20 @@ namespace Dope.DDXX.SceneGraph
             return num;
         }
 
-        #endregion
+        public void EnableFrameHandling(IFrame frame)
+        {
+            this.frame = frame;
+        }
 
+        public Vector3 Position 
+        {
+            get
+            {
+                Matrix m = WorldMatrix;
+                return new Vector3(m.M41, m.M42, m.M43);
+            }
+        }
+
+        #endregion
     }
 }

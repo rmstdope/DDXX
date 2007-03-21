@@ -8,6 +8,7 @@ using NUnit.Framework;
 using NMock2;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
+using Dope.DDXX.Graphics.Skinning;
 
 namespace Dope.DDXX.SceneGraph
 {
@@ -242,6 +243,35 @@ namespace Dope.DDXX.SceneGraph
             Assert.IsTrue(node2.stepCalled, "Step() should have been called.");
             Assert.IsTrue(node1.lightStateCalled, "SetLightState() should have been called.");
             Assert.IsTrue(node2.lightStateCalled, "SetLightState() should have been called.");
+        }
+
+        [Test]
+        public void TestHierarchyStep()
+        {
+            IAnimationRootFrame hierarchy1 = mockery.NewMock<IAnimationRootFrame>();
+            IAnimationController controller1 = mockery.NewMock<IAnimationController>();
+            IAnimationRootFrame hierarchy2 = mockery.NewMock<IAnimationRootFrame>();
+            IAnimationController controller2 = mockery.NewMock<IAnimationController>();
+            IAnimationRootFrame hierarchy3 = mockery.NewMock<IAnimationRootFrame>();
+            CameraNode camera = new CameraNode("Camera");
+
+            TestConstructorOK();
+
+            Time.Initialize();
+            Time.Step();
+            graph.AddNode(camera);
+            graph.ActiveCamera = camera;
+            graph.HandleHierarchy(hierarchy1);
+            graph.HandleHierarchy(hierarchy2);
+            graph.HandleHierarchy(hierarchy3);
+
+            Stub.On(effect).Method("SetValue");
+            Stub.On(hierarchy1).GetProperty("AnimationController").Will(Return.Value(controller1));
+            Stub.On(hierarchy2).GetProperty("AnimationController").Will(Return.Value(controller2));
+            Stub.On(hierarchy3).GetProperty("AnimationController").Will(Return.Value(null));
+            Expect.Once.On(controller1).Method("AdvanceTime").With((double)Time.DeltaTime);
+            Expect.Once.On(controller2).Method("AdvanceTime").With((double)Time.DeltaTime);
+            graph.Step();
         }
 
         [Test]

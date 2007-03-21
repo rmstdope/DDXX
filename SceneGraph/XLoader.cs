@@ -41,6 +41,7 @@ namespace Dope.DDXX.SceneGraph
         public void AddToScene(IScene scene)
         {
             scene.AddNode(AddToScene(rootFrame.FrameHierarchy, null, scene));
+            scene.HandleHierarchy(rootFrame);
         }
 
         private INode AddToScene(IFrame frame, INode parentNode, IScene scene)

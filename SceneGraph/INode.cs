@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX;
 using Dope.DDXX.Physics;
+using Dope.DDXX.Graphics.Skinning;
 
 namespace Dope.DDXX.SceneGraph
 {
@@ -19,5 +20,7 @@ namespace Dope.DDXX.SceneGraph
         void Step();
         void Render(IScene scene);
         int CountNodes();
+        void EnableFrameHandling(IFrame frame);
+        Vector3 Position { get; }
     }
 }

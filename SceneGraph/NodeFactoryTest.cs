@@ -27,7 +27,6 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void TestMeshNode()
         {
-            transformationMatrix.Translate(-1, 3, 2);
             name = "A name";
             ModelNode node = nodeFactory.CreateModelNode(this, this, "prefix");
             Assert.AreEqual(0, node.Children.Count, "Node should have no children.");
@@ -35,32 +34,24 @@ namespace Dope.DDXX.SceneGraph
             Assert.IsNotNull(node.Model, "Model shall not be null.");
             Assert.AreEqual(node.Model.Mesh, this);
             Assert.AreEqual(node.Model.Materials.Length, materials.Length);
-            Assert.AreEqual(new Vector3(1, 2, 3), node.WorldState.Position,
-                "World position should be (1, 2, 3)");
         }
 
         [Test]
         public void TestCameraNode()
         {
-            transformationMatrix.Translate(3, 5, 7);
             name = "Another name";
             CameraNode node = nodeFactory.CreateCameraNode(this);
             Assert.AreEqual(0, node.Children.Count, "Node should have no children.");
             Assert.AreEqual("Another name", node.Name, "The name of the node should be 'A name'");
-            Assert.AreEqual(new Vector3(3, 5, 7), node.WorldState.Position,
-                "World position should be (3, 5, 7)");
         }
 
         [Test]
         public void TestDummyNode()
         {
-            transformationMatrix.Translate(-13, 17, 15);
             name = "A third name";
             DummyNode node = nodeFactory.CreateDummyNode(this);
             Assert.AreEqual(0, node.Children.Count, "Node should have no children.");
             Assert.AreEqual("A third name", node.Name, "The name of the node should be 'A name'");
-            Assert.AreEqual(new Vector3(13, 15, 17), node.WorldState.Position,
-                "World position should be (13, 15, 17)");
         }
 
         #region IFrame Members
