@@ -42,7 +42,7 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void TestCameraNode()
         {
-            transformationMatrix.Translate(-3, 7, 5);
+            transformationMatrix.Translate(3, 5, 7);
             name = "Another name";
             CameraNode node = nodeFactory.CreateCameraNode(this);
             Assert.AreEqual(0, node.Children.Count, "Node should have no children.");

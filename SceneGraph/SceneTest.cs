@@ -14,9 +14,36 @@ namespace Dope.DDXX.SceneGraph
     [TestFixture]
     public class SceneTest : D3DMockTest
     {
+        private class TestNode : NodeBase
+        {
+            public bool renderCalled = false;
+            public bool stepCalled = false;
+            public bool lightStateCalled = false;
+
+            public TestNode(string name)
+                : base(name)
+            {
+            }
+
+            protected override void StepNode()
+            {
+                stepCalled = true;
+            }
+
+            protected override void RenderNode(IScene scene)
+            {
+                renderCalled = true;
+            }
+
+            protected override void SetLightStateNode(LightState state)
+            {
+                lightStateCalled = true;
+            }
+        }
+
         private Scene graph;
-        private INode node1;
-        private INode node2;
+        private TestNode node1;
+        private TestNode node2;
         private LightNode light1;
         private LightNode light2;
         private EffectHandle lightDiffuse;
@@ -29,10 +56,10 @@ namespace Dope.DDXX.SceneGraph
         {
             base.SetUp();
 
-            node1 = mockery.NewMock<INode>();
-            node2 = mockery.NewMock<INode>();
-            light1 = new LightNode("LightNode", new Light());
-            light2 = new LightNode("LightNode", new Light());
+            node1 = new TestNode("TestNode1");
+            node2 = new TestNode("TestNode2");
+            light1 = new LightNode("LightNode1", new Light());
+            light2 = new LightNode("LightNode2", new Light());
             effect = mockery.NewMock<IEffect>();
 
             lightDiffuse = EffectHandle.FromString("LightDiffuseColor");
@@ -192,21 +219,11 @@ namespace Dope.DDXX.SceneGraph
             Assert.AreEqual(2, graph.NumNodes);
 
             graph.AddNode(node1);
-            graph.AddNode(node2);
+            node1.AddChild(node2);
             graph.AddNode(light1);
-            graph.AddNode(light2);
-            Expect.Once.On(node1).Method("CountNodes").Will(Return.Value(1));
-            Expect.Once.On(node2).Method("CountNodes").Will(Return.Value(1));
+            light1.AddChild(light2);
             Assert.AreEqual(6, graph.NumNodes);
 
-            Expect.Once.On(node1).
-                Method("Step");
-            Expect.Once.On(node2).
-                Method("Step");
-            Expect.Once.On(node1).
-                Method("SetLightState");
-            Expect.Once.On(node2).
-                Method("SetLightState");
             Expect.Once.On(effect).
                 Method("SetValue").
                 With(Is.EqualTo(lightDiffuse), Is.EqualTo(new ColorValue[] { diffuse1, diffuse2 }));
@@ -221,6 +238,10 @@ namespace Dope.DDXX.SceneGraph
                 With(eyePosition, new Vector4(1, 2, 3, 1));
 
             graph.Step();
+            Assert.IsTrue(node1.stepCalled, "Step() should have been called.");
+            Assert.IsTrue(node2.stepCalled, "Step() should have been called.");
+            Assert.IsTrue(node1.lightStateCalled, "SetLightState() should have been called.");
+            Assert.IsTrue(node2.lightStateCalled, "SetLightState() should have been called.");
         }
 
         [Test]
@@ -246,11 +267,9 @@ namespace Dope.DDXX.SceneGraph
             graph.AddNode(light1);
             graph.ActiveCamera = camera;
 
-            Expect.Once.On(node1).
-                Method("Render");
-            Expect.Once.On(node2).
-                Method("Render");
             graph.Render();
+            Assert.IsTrue(node1.renderCalled, "Render() should have been called.");
+            Assert.IsTrue(node2.renderCalled, "Render() should have been called.");
         }
 
         [Test]
@@ -273,5 +292,62 @@ namespace Dope.DDXX.SceneGraph
             graph.ActiveCamera = camera;
             Assert.AreSame(camera, graph.ActiveCamera);
         }
+
+        [Test]
+        public void TestActiveCameraAsChild()
+        {
+            TestConstructorOK();
+
+            CameraNode camera = new CameraNode("Camera");
+            node1.AddChild(camera);
+            graph.AddNode(node1);
+            graph.ActiveCamera = camera;
+            Assert.AreSame(camera, graph.ActiveCamera);
+        }
+
+        [Test]
+        public void TestGetNodeByName()
+        {
+            TestConstructorOK();
+
+            graph.AddNode(node1);
+            node1.AddChild(node2);
+            graph.AddNode(light1);
+            light1.AddChild(light2);
+            Assert.IsNull(graph.GetNodeByName("InvalidNodeName"), "GetNodeByName should return null.");
+            Assert.IsNotNull(graph.GetNodeByName("Scene Root Node"), "GetNodeByName should not return null.");
+            Assert.AreSame(light1, graph.GetNodeByName("LightNode1"), "GetNodeByName should return light1.");
+            Assert.AreSame(light2, graph.GetNodeByName("LightNode2"), "GetNodeByName should return light2.");
+            Assert.AreSame(node1, graph.GetNodeByName("TestNode1"), "GetNodeByName should return node1.");
+            Assert.AreSame(node2, graph.GetNodeByName("TestNode2"), "GetNodeByName should return node2.");
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestValidateSceneFail()
+        {
+            TestNode node3 = new TestNode("TestNode1");
+            TestConstructorOK();
+
+            graph.AddNode(node1);
+            node1.AddChild(node2);
+            node2.AddChild(node3);
+            graph.AddNode(light1);
+            light1.AddChild(light2);
+            graph.Validate();
+        }
+
+        [Test]
+        public void TestValidateSceneOk()
+        {
+            TestConstructorOK();
+
+            graph.AddNode(node1);
+            node1.AddChild(node2);
+            graph.AddNode(light1);
+            light1.AddChild(light2);
+            graph.Validate();
+        }
+
     }
 }

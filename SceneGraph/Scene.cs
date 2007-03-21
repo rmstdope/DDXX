@@ -80,7 +80,7 @@ namespace Dope.DDXX.SceneGraph
             get { return activeCamera; }
             set
             {
-                if (rootNode.HasChild(value))
+                if (GetNodeByName(value.Name) != null)
                     activeCamera = value;
                 else
                     throw new DDXXException("The active camera must be part of the scene graph.");
@@ -92,5 +92,56 @@ namespace Dope.DDXX.SceneGraph
             get { return ambientColor; }
             set { ambientColor = value; }
         }
+
+        public INode GetNodeByName(string name)
+        {
+            return FindNodeByName(rootNode, name, null);
+        }
+
+        private INode FindNodeByName(INode node, string name, INode exclude)
+        {
+            if (node != exclude && node.Name == name)
+                return node;
+            foreach (INode child in node.Children)
+            {
+                INode result = FindNodeByName(child, name, exclude);
+                if (result != null)
+                    return result;
+            }
+            return null;
+        }
+
+        public void Validate()
+        {
+            ValidateNode(rootNode);
+        }
+
+        private void ValidateNode(INode node)
+        {
+            if (FindNodeByName(rootNode, node.Name, node) != null)
+                throw new DDXXException("Two nodes with the same name (" + node.Name + 
+                    ") exist in the same Scene.");
+            foreach (INode child in node.Children)
+            {
+                ValidateNode(child);
+            }
+        }
+
+        public void DebugPrintGraph()
+        {
+            PrintNode(rootNode, 0);
+        }
+
+        private void PrintNode(INode node, int indent)
+        {
+            for (int i = 0; i < indent; i++)
+                Debug.Write('|');
+            Debug.WriteLine(node.Name);
+            foreach (INode child in node.Children)
+            {
+                PrintNode(child, indent + 1);
+            }
+        }
+
     }
 }

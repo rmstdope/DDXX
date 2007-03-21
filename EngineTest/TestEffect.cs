@@ -18,7 +18,7 @@ namespace EngineTest
     {
         private FloaterSystem ps;
         private CameraNode camera;
-        private Scene scene;
+        private IScene scene;
         private ModelNode mesh;
 
         private ModelNode modelSkinning;
@@ -36,7 +36,7 @@ namespace EngineTest
 
             scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f);
 
-            camera = new CameraNode("Camera");
+            camera = new CameraNode("MyCamera");
             //camera.WorldState.Tilt(2.0f);
             camera.WorldState.MoveForward(-300.0f);
             scene.AddNode(camera);
@@ -83,6 +83,10 @@ namespace EngineTest
                 D3DDriver.GetInstance().Device, "Flyscene.x");
             loader.Load(EffectFactory.CreateFromFile("Test.fxo"), "Skinning");
             loader.AddToScene(scene);
+            scene.ActiveCamera = scene.GetNodeByName("Camera") as CameraNode;
+
+            scene.DebugPrintGraph();
+            scene.Validate();
         }
 
         public override void StartTimeUpdated()

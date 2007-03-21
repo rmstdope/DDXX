@@ -217,6 +217,21 @@ namespace Dope.DDXX.SceneGraph
             throw new Exception("The method or operation is not implemented.");
         }
 
+        public INode GetNodeByName(string name)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Validate()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void DebugPrintGraph()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
         #endregion
     }
 }
