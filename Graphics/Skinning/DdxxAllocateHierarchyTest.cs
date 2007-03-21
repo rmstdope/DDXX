@@ -7,9 +7,9 @@ using Microsoft.DirectX.Direct3D;
 namespace Dope.DDXX.Graphics.Skinning
 {
     [TestFixture]
-    public class SkinnedAllocateHierarchyTest
+    public class DdxxAllocateHierarchyTest
     {
-        SkinnedAllocateHierarchy alloc = new SkinnedAllocateHierarchy();
+        DdxxAllocateHierarchy alloc = new DdxxAllocateHierarchy();
 
         [Test]
         public void TestFrame()

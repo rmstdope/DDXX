@@ -24,7 +24,7 @@ namespace Dope.DDXX.SceneGraph
         }
 
         protected abstract void StepNode();
-        protected abstract void RenderNode(IRenderableScene scene);
+        protected abstract void RenderNode(IScene scene);
 
         #region INode Members
 
@@ -88,7 +88,7 @@ namespace Dope.DDXX.SceneGraph
             }
         }
 
-        public void Render(IRenderableScene scene)
+        public void Render(IScene scene)
         {
             RenderNode(scene);
 
@@ -108,6 +108,17 @@ namespace Dope.DDXX.SceneGraph
             }
         }
 
+        public int CountNodes()
+        {
+            int num = 1;
+            foreach (INode node in children)
+            {
+                num += node.CountNodes();
+            }
+            return num;
+        }
+
         #endregion
+
     }
 }

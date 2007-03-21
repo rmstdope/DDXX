@@ -183,16 +183,21 @@ namespace Dope.DDXX.SceneGraph
             light2.Light.DiffuseColor = diffuse2;
             light2.Light.SpecularColor = specular2;
             light2.Light.Position = position2;
+            Assert.AreEqual(1, graph.NumNodes);
 
             CameraNode camera = new CameraNode("Camera");
             camera.WorldState.Position = new Vector3(1, 2, 3);
             graph.AddNode(camera);
             graph.ActiveCamera = camera;
+            Assert.AreEqual(2, graph.NumNodes);
 
             graph.AddNode(node1);
             graph.AddNode(node2);
             graph.AddNode(light1);
             graph.AddNode(light2);
+            Expect.Once.On(node1).Method("CountNodes").Will(Return.Value(1));
+            Expect.Once.On(node2).Method("CountNodes").Will(Return.Value(1));
+            Assert.AreEqual(6, graph.NumNodes);
 
             Expect.Once.On(node1).
                 Method("Step");

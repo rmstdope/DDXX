@@ -8,7 +8,7 @@ namespace Dope.DDXX.Graphics.Skinning
 {
     public class SkinnedModelFactory : ModelFactory
     {
-        private SkinnedAllocateHierarchy allocateHierarchy = new SkinnedAllocateHierarchy();
+        private DdxxAllocateHierarchy allocateHierarchy = new DdxxAllocateHierarchy();
 
         public SkinnedModelFactory(IDevice device, IGraphicsFactory graphicsFactory, ITextureFactory textureFactory)
             : base(device, graphicsFactory, textureFactory)

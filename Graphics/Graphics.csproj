@@ -95,6 +95,8 @@
     <Compile Include="RenderStateManagerAdapter.cs" />
     <Compile Include="Skinning\AnimationControllerAdapter.cs" />
     <Compile Include="Skinning\AnimationRootFrameAdapter.cs" />
+    <Compile Include="Skinning\DdxxLoadUserData.cs" />
+    <Compile Include="Skinning\DdxxLoadUserDataTest.cs" />
     <Compile Include="Skinning\FrameAdapter.cs" />
     <Compile Include="Skinning\IAnimationController.cs" />
     <Compile Include="Skinning\IAnimationRootFrame.cs" />
@@ -104,8 +106,8 @@
     <Compile Include="Skinning\MeshContainerAdapter.cs" />
     <Compile Include="Skinning\MeshDataAdapter.cs" />
     <Compile Include="Skinning\SkinInformationAdapter.cs" />
-    <Compile Include="Skinning\SkinnedAllocateHierarchy.cs" />
-    <Compile Include="Skinning\SkinnedAllocateHierarchyTest.cs" />
+    <Compile Include="Skinning\DdxxAllocateHierarchy.cs" />
+    <Compile Include="Skinning\DdxxAllocateHierarchyTest.cs" />
     <Compile Include="Skinning\SkinnedFrame.cs" />
     <Compile Include="Skinning\SkinnedFrameTest.cs" />
     <Compile Include="Skinning\SkinnedMeshContainer.cs" />

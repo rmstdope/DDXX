@@ -23,6 +23,7 @@ namespace Dope.DDXX.Graphics
         IMesh MeshFromFile(IDevice device, string fileName, out EffectInstance[] effectInstance);
         IMesh MeshFromFile(IDevice device, string fileName, out ExtendedMaterial[] materials);
         IAnimationRootFrame SkinnedMeshFromFile(IDevice device, string fileName, AllocateHierarchy allocHierarchy);
+        IAnimationRootFrame LoadHierarchy(string fileName, IDevice device, AllocateHierarchy allocHierarchy, LoadUserData loadUserData);
         IMesh CreateBoxMesh(IDevice device, float width, float height, float depth);
         IEffect EffectFromFile(IDevice device, string sourceDataFile, Include includeFile, string skipConstants, ShaderFlags flags, EffectPool pool);
         ITexture TextureFromFile(IDevice device, string srcFile, int width, int height, int mipLevels, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey);

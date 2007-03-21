@@ -167,16 +167,16 @@ namespace Dope.DDXX.Graphics.Skinning
         }
 
         /// <summary>
-        /// Test that the number of bones used are clamped to 40.
+        /// Test that the number of bones used are clamped to 60.
         /// </summary>
         [Test]
-        public void Constructor41BonesTest()
+        public void Constructor61BonesTest()
         {
             IMesh newMesh = mockery.NewMock<IMesh>();
             IGraphicsStream adj = mockery.NewMock<IGraphicsStream>();
             Stub.On(meshContainer1).GetProperty("SkinInformation").Will(Return.Value(null));
             Stub.On(meshContainer2).GetProperty("SkinInformation").Will(Return.Value(skinInformation));
-            Stub.On(skinInformation).GetProperty("NumberBones").Will(Return.Value(41));
+            Stub.On(skinInformation).GetProperty("NumberBones").Will(Return.Value(61));
             Stub.On(meshContainer2).Method("GetAdjacencyStream").Will(Return.Value(adj));
 
             ResultSynthesizer result = new ResultSynthesizer();
@@ -187,7 +187,7 @@ namespace Dope.DDXX.Graphics.Skinning
                 new SetNamedParameterAction("boneCombinationTable", null);
             Expect.Once.On(skinInformation).Method("ConvertToIndexedBlendedMesh").
                 With(Is.EqualTo(mesh), Is.EqualTo(MeshFlags.OptimizeVertexCache | MeshFlags.Managed),
-                Is.EqualTo(adj), Is.EqualTo(40), Is.Out, Is.Out).
+                Is.EqualTo(adj), Is.EqualTo(60), Is.Out, Is.Out).
                 Will(new IAction[] { namedParam1, namedParam2, result });
             Expect.Once.On(meshContainer2).SetProperty("MeshData");
             Expect.Once.On(meshContainer2).SetProperty("Bones").To(Is.Null);

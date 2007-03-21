@@ -15,7 +15,7 @@ namespace Dope.DDXX.SceneGraph
         {
             public NodeBaseImpl(string name) : base(name) { }
             protected override void StepNode() { }
-            protected override void RenderNode(IRenderableScene scene) { }
+            protected override void RenderNode(IScene scene) { }
         }
 
         class DerivedNode : NodeBase
@@ -23,10 +23,10 @@ namespace Dope.DDXX.SceneGraph
             public bool stepCalled;
             public bool renderCalled;
             public bool setLightStateCalled;
-            public IRenderableScene renderScene;
+            public IScene renderScene;
             public DerivedNode(string name) : base(name) { }
             protected override void StepNode() { stepCalled = true; }
-            protected override void RenderNode(IRenderableScene scene) { renderCalled = true; renderScene = scene; }
+            protected override void RenderNode(IScene scene) { renderCalled = true; renderScene = scene; }
             protected override void SetLightStateNode(LightState state) { setLightStateCalled = true; }
         }
 
@@ -52,6 +52,8 @@ namespace Dope.DDXX.SceneGraph
             Assert.AreEqual(node1.Children.Count, 1);
             Assert.AreEqual(node2.Children.Count, 0);
             Assert.AreEqual(node1.Children[0], node2);
+            Assert.AreEqual(2, node1.CountNodes());
+            Assert.AreEqual(1, node2.CountNodes());
         }
 
         [Test]

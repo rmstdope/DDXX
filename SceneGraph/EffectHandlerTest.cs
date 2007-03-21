@@ -17,7 +17,7 @@ namespace Dope.DDXX.SceneGraph
         private Mockery mockery;
         private IEffect effect;
         private IRenderableMesh mesh;
-        private IRenderableScene scene;
+        private IScene scene;
         private IRenderableCamera camera;
         private ModelMaterial modelMaterial;
         private Material material;
@@ -54,7 +54,7 @@ namespace Dope.DDXX.SceneGraph
             mockery = new Mockery();
             effect = mockery.NewMock<IEffect>();
             mesh = mockery.NewMock<IRenderableMesh>();
-            scene = mockery.NewMock<IRenderableScene>();
+            scene = mockery.NewMock<IScene>();
             camera = mockery.NewMock<IRenderableCamera>();
             texture = mockery.NewMock<ITexture>();
             normalTexture = mockery.NewMock<ITexture>();

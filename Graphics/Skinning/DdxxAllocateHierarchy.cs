@@ -6,7 +6,7 @@ using Microsoft.DirectX;
 
 namespace Dope.DDXX.Graphics.Skinning
 {
-    public class SkinnedAllocateHierarchy : AllocateHierarchy
+    public class DdxxAllocateHierarchy : AllocateHierarchy
     {
         public override Frame CreateFrame(string name)
         {

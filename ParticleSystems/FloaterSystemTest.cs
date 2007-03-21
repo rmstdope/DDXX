@@ -18,7 +18,7 @@ namespace Dope.DDXX.ParticleSystems
         private IGraphicsStream graphicsStream;
         private EffectHandle technique;
         private IEffectHandler effectHandler;
-        private IRenderableScene scene;
+        private IScene scene;
         private IRenderableCamera camera;
         private Matrix worldMatrix = Matrix.Identity;
         private Matrix viewMatrix = Matrix.RotationX(4.0f);
@@ -39,7 +39,7 @@ namespace Dope.DDXX.ParticleSystems
             effect = mockery.NewMock<IEffect>();
             technique = EffectHandle.FromString("1");
             effectHandler = mockery.NewMock<IEffectHandler>();
-            scene = mockery.NewMock<IRenderableScene>();
+            scene = mockery.NewMock<IScene>();
             camera = mockery.NewMock<IRenderableCamera>();
 
             Stub.On(scene).GetProperty("ActiveCamera").Will(Return.Value(camera));

@@ -63,7 +63,7 @@ namespace Dope.DDXX.SceneGraph
             this.effectHandler = new EffectHandler(effect, "", null);
         }
 
-        protected override void RenderNode(IRenderableScene scene)
+        protected override void RenderNode(IScene scene)
         {
             effectHandler.SetNodeConstants(WorldMatrix, scene.ActiveCamera.ViewMatrix, scene.ActiveCamera.ProjectionMatrix);
             effectHandler.SetMaterialConstants(scene.AmbientColor, material, 0);

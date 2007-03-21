@@ -31,7 +31,7 @@ namespace Dope.DDXX.SceneGraph
             model.Step();
         }
 
-        protected override void RenderNode(IRenderableScene scene)
+        protected override void RenderNode(IScene scene)
         {
 
             model.Draw(effectHandler, scene.AmbientColor, WorldMatrix,

@@ -9,7 +9,7 @@ using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.SceneGraph
 {
-    public class Scene : IRenderableScene
+    public class Scene : IScene
     {
         private IEffect effect;
         private EffectHandle lightDiffuseHandle;
@@ -38,9 +38,17 @@ namespace Dope.DDXX.SceneGraph
                 throw new DDXXException("Can't find mandatory handles in PoolEffect");
         }
 
-        public void AddNode(INode node1)
+        public int NumNodes
         {
-            rootNode.AddChild(node1);
+            get
+            {
+                return rootNode.CountNodes();
+            }
+        }
+
+        public void AddNode(INode node)
+        {
+            rootNode.AddChild(node);
         }
 
         public void Step()
@@ -67,8 +75,6 @@ namespace Dope.DDXX.SceneGraph
             rootNode.Render(this);
         }
 
-        #region IRenderableScene Members
-
         public IRenderableCamera ActiveCamera
         {
             get { return activeCamera; }
@@ -86,7 +92,5 @@ namespace Dope.DDXX.SceneGraph
             get { return ambientColor; }
             set { ambientColor = value; }
         }
-
-        #endregion
     }
 }

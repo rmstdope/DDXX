@@ -101,6 +101,14 @@ namespace Dope.DDXX.Graphics
             return rootFrame;
         }
 
+        public IAnimationRootFrame LoadHierarchy(string fileName, IDevice device, AllocateHierarchy allocHierarchy, LoadUserData loadUserData)
+        {
+            FileStream stream = FileUtility.OpenStream(fileName);
+            IAnimationRootFrame rootFrame = new AnimationRootFrameAdapter(Mesh.LoadHierarchy(stream, MeshFlags.Managed, ((DeviceAdapter)device).DXDevice, allocHierarchy, loadUserData));
+            stream.Close();
+            return rootFrame;
+        }
+
         public IEffect EffectFromFile(IDevice device, string sourceDataFile, Include includeFile, string skipConstants, ShaderFlags flags, EffectPool pool)
         {
             FileStream stream = FileUtility.OpenStream(sourceDataFile);

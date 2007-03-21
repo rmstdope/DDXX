@@ -51,10 +51,11 @@
     <Compile Include="EffectHandlerTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="IFrameNode.cs" />
     <Compile Include="IRenderableCamera.cs" />
     <Compile Include="INode.cs" />
     <Compile Include="IRenderableMesh.cs" />
-    <Compile Include="IRenderableScene.cs" />
+    <Compile Include="IScene.cs" />
     <Compile Include="LightNode.cs" />
     <Compile Include="LightNodeTest.cs" />
     <Compile Include="LightState.cs" />
@@ -68,6 +69,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="SceneTest.cs" />
+    <Compile Include="XLoader.cs" />
+    <Compile Include="XLoaderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Graphics\Graphics.csproj">
