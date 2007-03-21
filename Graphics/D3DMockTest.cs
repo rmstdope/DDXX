@@ -46,6 +46,7 @@ namespace Dope.DDXX.Graphics
             surface = mockery.NewMock<ISurface>();
             renderStateManager = mockery.NewMock<IRenderStateManager>();
             prerequisits = mockery.NewMock<IPrerequisits>();
+            effect = mockery.NewMock<IEffect>();
 
             Stub.On(factory).
                 GetProperty("Manager").

@@ -52,6 +52,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IFrameNode.cs" />
+    <Compile Include="INodeFactory.cs" />
     <Compile Include="IRenderableCamera.cs" />
     <Compile Include="INode.cs" />
     <Compile Include="IRenderableMesh.cs" />
@@ -64,6 +65,8 @@
     <Compile Include="ModelNodeTest.cs" />
     <Compile Include="NodeBase.cs" />
     <Compile Include="NodeBaseTest.cs" />
+    <Compile Include="NodeFactory.cs" />
+    <Compile Include="NodeFactoryTest.cs" />
     <Compile Include="ParticleSystemNode.cs" />
     <Compile Include="ParticleSystemNodeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

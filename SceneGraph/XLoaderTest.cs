@@ -5,6 +5,7 @@ using NUnit.Framework;
 using Dope.DDXX.Graphics;
 using NMock2;
 using Dope.DDXX.Graphics.Skinning;
+using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.SceneGraph
 {
@@ -18,9 +19,17 @@ namespace Dope.DDXX.SceneGraph
         private IFrame rootChild2;
         private IFrame rootChild2Child1;
         private IFrame rootChild2Child2;
-        private IMeshContainer meshContainer;
+        private IMesh mesh1;
+        private IMesh mesh2;
         private List<INode> nodes;
-
+        private IEffectHandler effectHandler;
+        private INodeFactory nodeFactory;
+        private DummyNode rootNode;
+        private CameraNode rootChild1Node;
+        private ModelNode rootChild2Node;
+        private ModelNode rootChild2Child1Node;
+        private CameraNode rootChild2Child2Node;
+       
         [SetUp]
         public override void SetUp()
         {
@@ -31,31 +40,49 @@ namespace Dope.DDXX.SceneGraph
             rootChild2 = mockery.NewMock<IFrame>();
             rootChild2Child1 = mockery.NewMock<IFrame>();
             rootChild2Child2 = mockery.NewMock<IFrame>();
-            meshContainer = mockery.NewMock<IMeshContainer>();
+            mesh1 = mockery.NewMock<IMesh>();
+            mesh2 = mockery.NewMock<IMesh>();
+            effectHandler = mockery.NewMock<IEffectHandler>();
+            nodeFactory = mockery.NewMock<INodeFactory>();
             nodes = new List<INode>();
+            rootNode = new DummyNode("dummyNode");
+            rootChild1Node = new CameraNode("cameraNode");
+            rootChild2Node = new ModelNode("modelNode", null, null);
+            rootChild2Child1Node = new ModelNode("modelNode", null, null);
+            rootChild2Child2Node = new CameraNode("cameraNode");
 
             Stub.On(hierarchy).GetProperty("FrameHierarchy").
                 Will(Return.Value(rootFrame));
             Stub.On(rootFrame).GetProperty("Name").
                 Will(Return.Value("RootFrame"));
-            Stub.On(rootFrame).GetProperty("MeshContainer").
+            Stub.On(rootFrame).GetProperty("Mesh").
                 Will(Return.Value(null));
             Stub.On(rootChild1).GetProperty("Name").
                 Will(Return.Value("RootChild1(Camera)"));
-            Stub.On(rootChild1).GetProperty("MeshContainer").
+            Stub.On(rootChild1).GetProperty("Mesh").
                 Will(Return.Value(null));
             Stub.On(rootChild2).GetProperty("Name").
                 Will(Return.Value("RootChild2(Mesh)"));
-            Stub.On(rootChild2).GetProperty("MeshContainer").
-                Will(Return.Value(meshContainer));
+            Stub.On(rootChild2).GetProperty("Mesh").
+                Will(Return.Value(mesh1));
             Stub.On(rootChild2Child1).GetProperty("Name").
                 Will(Return.Value("RootChild2Child1(Mesh)"));
-            Stub.On(rootChild2Child1).GetProperty("MeshContainer").
-                Will(Return.Value(meshContainer));
+            Stub.On(rootChild2Child1).GetProperty("Mesh").
+                Will(Return.Value(mesh2));
             Stub.On(rootChild2Child2).GetProperty("Name").
                 Will(Return.Value("RootChild2Sibling1(Camera)"));
-            Stub.On(rootChild2Child2).GetProperty("MeshContainer").
+            Stub.On(rootChild2Child2).GetProperty("Mesh").
                 Will(Return.Value(null));
+            Stub.On(nodeFactory).Method("CreateDummyNode").With(rootFrame).
+                Will(Return.Value(rootNode));
+            Stub.On(nodeFactory).Method("CreateCameraNode").With(rootChild1).
+                Will(Return.Value(rootChild1Node));
+            Stub.On(nodeFactory).Method("CreateModelNode").With(rootChild2, effect, "Prefix").
+                Will(Return.Value(rootChild2Node));
+            Stub.On(nodeFactory).Method("CreateModelNode").With(rootChild2Child1, effect, "Prefix").
+                Will(Return.Value(rootChild2Child1Node));
+            Stub.On(nodeFactory).Method("CreateCameraNode").With(rootChild2Child2).
+                Will(Return.Value(rootChild2Child2Node));
         }
 
         [TearDown]
@@ -73,8 +100,8 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(factory).Method("LoadHierarchy").
                 With(Is.EqualTo("file.x"), Is.EqualTo(device), Is.NotNull, Is.Null).
                 Will(Return.Value(hierarchy));
-            loader = new XLoader(factory, device, "file.x");
-            loader.Load();
+            loader = new XLoader(factory, nodeFactory, device, "file.x");
+            loader.Load(effect, "Prefix");
         }
 
         /// <summary>
@@ -100,6 +127,7 @@ namespace Dope.DDXX.SceneGraph
         public void TestTwoNodes()
         {
             TestLoad();
+            //Stub.On(effect).Method("FindNextValidTechnique").Will(Return.Value(technique));
 
             Stub.On(rootFrame).GetProperty("FrameFirstChild").Will(Return.Value(rootChild1));
             Stub.On(rootFrame).GetProperty("FrameSibling").Will(Return.Value(null));

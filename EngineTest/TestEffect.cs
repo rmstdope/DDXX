@@ -78,8 +78,10 @@ namespace EngineTest
             //CameraNodeX cameraX = new CameraNodeX((SkinnedModel)model, "Camera");
             //scene.AddNode(cameraX);
             //scene.ActiveCamera = cameraX;
-            XLoader loader = new XLoader(D3DDriver.Factory, D3DDriver.GetInstance().Device, "tiny.x");//"Flyscene.x");
-            loader.Load();
+            NodeFactory nodeFactory = new NodeFactory(D3DDriver.TextureFactory);
+            XLoader loader = new XLoader(D3DDriver.Factory, nodeFactory, 
+                D3DDriver.GetInstance().Device, "Flyscene.x");
+            loader.Load(EffectFactory.CreateFromFile("Test.fxo"), "Skinning");
             loader.AddToScene(scene);
         }
 
