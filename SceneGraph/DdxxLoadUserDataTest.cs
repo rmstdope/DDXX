@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 
-namespace Dope.DDXX.Graphics.Skinning
+namespace Dope.DDXX.SceneGraph
 {
     [TestFixture]
     public class DdxxLoadUserDataTest

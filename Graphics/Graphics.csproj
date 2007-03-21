@@ -95,8 +95,6 @@
     <Compile Include="RenderStateManagerAdapter.cs" />
     <Compile Include="Skinning\AnimationControllerAdapter.cs" />
     <Compile Include="Skinning\AnimationRootFrameAdapter.cs" />
-    <Compile Include="Skinning\DdxxLoadUserData.cs" />
-    <Compile Include="Skinning\DdxxLoadUserDataTest.cs" />
     <Compile Include="Skinning\FrameAdapter.cs" />
     <Compile Include="Skinning\IAnimationController.cs" />
     <Compile Include="Skinning\IAnimationRootFrame.cs" />

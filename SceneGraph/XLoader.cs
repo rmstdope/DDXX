@@ -28,8 +28,7 @@ namespace Dope.DDXX.SceneGraph
 
         public void Load()
         {
-            DdxxLoadUserData loadUserData = new DdxxLoadUserData();
-            rootFrame = factory.LoadHierarchy(filename, device, allocateHierarchy, loadUserData);
+            rootFrame = factory.LoadHierarchy(filename, device, allocateHierarchy, null);
         }
 
         public void AddToScene(IScene scene)
@@ -39,7 +38,13 @@ namespace Dope.DDXX.SceneGraph
 
         private INode AddToScene(IFrame frame, INode parentNode, IScene scene)
         {
-            INode node = new DummyNode(frame.Name);
+            INode node;
+            if (frame.MeshContainer != null)
+                node = new ModelNode(frame.Name, null, null);
+            else if (frame.Name.ToLower().Contains("camera"))
+                node = new CameraNode(frame.Name);
+            else
+                node = new DummyNode(frame.Name);
             if (frame.FrameFirstChild != null)
             {
                 node.AddChild(AddToScene(frame.FrameFirstChild, node, scene));

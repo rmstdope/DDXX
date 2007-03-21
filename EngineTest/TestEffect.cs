@@ -78,6 +78,9 @@ namespace EngineTest
             //CameraNodeX cameraX = new CameraNodeX((SkinnedModel)model, "Camera");
             //scene.AddNode(cameraX);
             //scene.ActiveCamera = cameraX;
+            XLoader loader = new XLoader(D3DDriver.Factory, D3DDriver.GetInstance().Device, "tiny.x");//"Flyscene.x");
+            loader.Load();
+            loader.AddToScene(scene);
         }
 
         public override void StartTimeUpdated()
