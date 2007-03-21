@@ -75,9 +75,6 @@ namespace EngineTest
             modelSkinning.WorldState.Tilt((float)Math.PI / 2);
             scene.AddNode(modelSkinning);
 
-            //CameraNodeX cameraX = new CameraNodeX((SkinnedModel)model, "Camera");
-            //scene.AddNode(cameraX);
-            //scene.ActiveCamera = cameraX;
             NodeFactory nodeFactory = new NodeFactory(D3DDriver.TextureFactory);
             XLoader loader = new XLoader(D3DDriver.Factory, nodeFactory, 
                 D3DDriver.GetInstance().Device, "Flyscene.x");
