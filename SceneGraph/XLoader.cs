@@ -7,7 +7,7 @@ using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.SceneGraph
 {
-    public class XLoader
+    public class XLoader : Dope.DDXX.SceneGraph.IXLoader
     {
         private DdxxAllocateHierarchy allocateHierarchy = new DdxxAllocateHierarchy();
         private IAnimationRootFrame rootFrame;
@@ -23,16 +23,16 @@ namespace Dope.DDXX.SceneGraph
         /// Constructor. Will not perform the actual loading.
         /// </summary>
         /// <param name="filename">The file name of the X file.</param>
-        public XLoader(IGraphicsFactory factory, INodeFactory nodeFactory, IDevice device, string filename)
+        public XLoader(IGraphicsFactory factory, INodeFactory nodeFactory, IDevice device)
         {
             this.factory = factory;
             this.nodeFactory = nodeFactory;
             this.device = device;
-            this.filename = filename;
         }
 
-        public void Load(IEffect effect, string techniquePrefix)
+        public void Load(string filename, IEffect effect, string techniquePrefix)
         {
+            this.filename = filename;
             this.effect = effect;
             this.techniquePrefix = techniquePrefix;
             rootFrame = factory.LoadHierarchy(filename, device, allocateHierarchy, null);

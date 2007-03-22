@@ -107,8 +107,8 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(factory).Method("LoadHierarchy").
                 With(Is.EqualTo("file.x"), Is.EqualTo(device), Is.NotNull, Is.Null).
                 Will(Return.Value(hierarchy));
-            loader = new XLoader(factory, nodeFactory, device, "file.x");
-            loader.Load(effect, "Prefix");
+            loader = new XLoader(factory, nodeFactory, device);
+            loader.Load("file.x", effect, "Prefix");
         }
 
         /// <summary>

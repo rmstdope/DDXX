@@ -64,22 +64,8 @@ namespace EngineTest
             modelNoSkinning.WorldState.Tilt((float)Math.PI / 2);
             //scene.AddNode(modelNoSkinning);
 
-            //model = ModelFactory.FromFile("TiVi.x", ModelFactory.Options.SkinnedModel);
-            //modelSkinning = new ModelNode("Skinning",
-            //    model,
-            //    new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Skinning", model));
-            //modelSkinning.WorldState.Scale(100.0f);
-            //modelSkinning.WorldState.MoveRight(50);
-            //modelSkinning.WorldState.MoveUp(-75);
-            //modelSkinning.WorldState.Roll((float)Math.PI);
-            //modelSkinning.WorldState.Tilt((float)Math.PI / 2);
-            //scene.AddNode(modelSkinning);
-
-            NodeFactory nodeFactory = new NodeFactory(D3DDriver.TextureFactory);
-            XLoader loader = new XLoader(D3DDriver.GraphicsFactory, nodeFactory, 
-                D3DDriver.GetInstance().Device, "Flyscene.x");
-            loader.Load(EffectFactory.CreateFromFile("Test.fxo"), "Skinning");
-            loader.AddToScene(scene);
+            XLoader.Load("Flyscene.x", EffectFactory.CreateFromFile("Test.fxo"), "Skinning");
+            XLoader.AddToScene(scene);
             scene.ActiveCamera = scene.GetNodeByName("Camera") as CameraNode;
 
             scene.DebugPrintGraph();

@@ -56,6 +56,7 @@
     <Compile Include="INode.cs" />
     <Compile Include="IRenderableMesh.cs" />
     <Compile Include="IScene.cs" />
+    <Compile Include="IXLoader.cs" />
     <Compile Include="LightNode.cs" />
     <Compile Include="LightNodeTest.cs" />
     <Compile Include="LightState.cs" />

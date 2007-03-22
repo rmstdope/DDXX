@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
+using Dope.DDXX.SceneGraph;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -13,6 +14,7 @@ namespace Dope.DDXX.DemoFramework
         private IEffectFactory effectFactory;
         private IModelFactory modelFactory;
         private ITextureFactory textureFactory;
+        private IXLoader xLoader;
 
         protected BaseDemoEffect(float startTime, float endTime)
         {
@@ -38,6 +40,11 @@ namespace Dope.DDXX.DemoFramework
         protected ITextureFactory TextureFactory
         {
             get { return textureFactory; }
+        }
+
+        protected IXLoader XLoader
+        {
+            get { return xLoader; }
         }
 
         #region IDemoEffect Members
@@ -72,6 +79,7 @@ namespace Dope.DDXX.DemoFramework
             effectFactory = D3DDriver.EffectFactory;
             modelFactory = D3DDriver.ModelFactory;
             textureFactory = D3DDriver.TextureFactory;
+            xLoader = new XLoader(D3DDriver.GraphicsFactory, new NodeFactory(textureFactory), device);
         }
 
         #endregion
