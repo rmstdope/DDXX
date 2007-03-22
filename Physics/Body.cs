@@ -25,6 +25,14 @@ namespace Dope.DDXX.Physics
         public void AddConstraint(IConstraint constraint)
         {
             constraints.Add(constraint);
+            constraints.Sort(delegate(IConstraint c1, IConstraint c2) 
+            {
+                if (c1.Priority > c2.Priority)
+                    return -1;
+                else if (c2.Priority > c1.Priority)
+                    return 1;
+                return 0;
+            });
         }
 
         public void Step()
