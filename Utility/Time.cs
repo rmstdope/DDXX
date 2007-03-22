@@ -128,5 +128,10 @@ namespace Dope.DDXX.Utility
                 CurrentTime = (float)lastTime / (float)frequency;
             }
         }
+
+        public static void SetDeltaTimeForTest(float delta)
+        {
+            deltaTime = delta;
+        }
     }
 }

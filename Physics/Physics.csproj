@@ -37,9 +37,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PhysicalParticle.cs" />
+    <Compile Include="PhysicalParticleTest.cs" />
     <Compile Include="WorldState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WorldStateTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Utility\Utility.csproj">
+      <Project>{31D76405-2DD3-436A-BE65-963DE822511E}</Project>
+      <Name>Utility</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
