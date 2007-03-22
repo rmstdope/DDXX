@@ -37,8 +37,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IConstraint.cs" />
     <Compile Include="PhysicalParticle.cs" />
     <Compile Include="PhysicalParticleTest.cs" />
+    <Compile Include="PositionConstraint.cs" />
+    <Compile Include="PositionConstraintTest.cs" />
+    <Compile Include="StickConstraint.cs" />
+    <Compile Include="StickConstraintTest.cs" />
     <Compile Include="WorldState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WorldStateTest.cs" />

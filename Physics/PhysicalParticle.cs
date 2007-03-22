@@ -10,6 +10,9 @@ namespace Dope.DDXX.Physics
     {
         private Vector3 position;
         private Vector3 oldPosition;
+        private float lastDeltaTime;
+        private Vector3 externalForces;
+        private float invMass;
 
         /// <summary>
         /// Constructor
@@ -20,31 +23,47 @@ namespace Dope.DDXX.Physics
         public PhysicalParticle(Vector3 startPosition, float invMass, float dragCoefficient)
         {
             this.position = startPosition;
+            this.oldPosition = startPosition;
+            this.invMass = invMass;
+            lastDeltaTime = 1.0f;
+            externalForces = new Vector3(0, 0, 0);
         }
 
         public Vector3 Position
         {
             get { return position; }
-            //set { position = value; }
+            set { position = value; }
         }
 
+        public float InvMass
+        {
+            get { return invMass; }
+            set { invMass = value; }
+        }
 
         public void Step(Vector3 gravity)
         {
-            float dt = Time.DeltaTime;
+            float deltaTime = Time.DeltaTime;
 
-            // Calculate velocity
-            Vector3 lastVelocity = (position - oldPosition) * (1 / dt);
+            // Calculate velocity from last update
+            Vector3 lastVelocity = (position - oldPosition) * (1 / lastDeltaTime);
 
             // Get acceleration
-            Vector3 acceleration = gravity;
+            Vector3 acceleration = gravity + externalForces * invMass;
 
             // Get velocity change
-            Vector3 velocityMod = acceleration * dt;
+            Vector3 velocityMod = acceleration * deltaTime;
 
             // Move object
             oldPosition = position;
-            position += (lastVelocity +  velocityMod * 0.5f) * dt;
+            position += (lastVelocity +  velocityMod * 0.5f) * deltaTime;
+            lastDeltaTime = deltaTime;
+            externalForces = new Vector3(0, 0, 0);
+        }
+
+        internal void ApplyForce(Vector3 force)
+        {
+            externalForces += force;
         }
     }
 }
