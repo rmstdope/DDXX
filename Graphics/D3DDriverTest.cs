@@ -93,7 +93,7 @@ namespace Dope.DDXX.Graphics
                 With(0).
                 Will(Return.Value(displayMode));
 
-            D3DDriver.Factory = factory;
+            D3DDriver.GraphicsFactory = factory;
             driver = D3DDriver.GetInstance();
 
         }
@@ -112,7 +112,7 @@ namespace Dope.DDXX.Graphics
             try
             {
                 D3DDriver.DestroyInstance();
-                D3DDriver.Factory = null;
+                D3DDriver.GraphicsFactory = null;
                 driver = D3DDriver.GetInstance();
                 Assert.Fail();
             }

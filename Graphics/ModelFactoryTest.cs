@@ -171,7 +171,7 @@ namespace Dope.DDXX.Graphics
                 Method("TextureFromFile").
                 WithAnyArguments().
                 Will(Return.Value(texture));
-            IModel model1 = modelFactory.FromFile("MeshFile1", ModelFactory.Options.EnsureTangents | ModelFactory.Options.NoOptimization);
+            IModel model1 = modelFactory.FromFile("MeshFile1", ModelOptions.EnsureTangents | ModelOptions.NoOptimization);
             Assert.AreEqual(2, model1.Materials.Length);
             Assert.AreEqual(model1.Materials[0].Ambient, model1.Materials[0].Diffuse);
             Assert.AreEqual(model1.Materials[1].Ambient, model1.Materials[1].Diffuse);
@@ -210,7 +210,7 @@ namespace Dope.DDXX.Graphics
             Expect.Once.On(mesh).
                 Method("ComputeTangent").
                 With(0, 0, 0, 0);
-            IModel mesh1 = modelFactory.FromFile("MeshFile1", ModelFactory.Options.EnsureTangents | ModelFactory.Options.NoOptimization);
+            IModel mesh1 = modelFactory.FromFile("MeshFile1", ModelOptions.EnsureTangents | ModelOptions.NoOptimization);
             Assert.IsNotNull(mesh1);
         }
 
@@ -237,7 +237,7 @@ namespace Dope.DDXX.Graphics
                 Method("Dispose");
             Expect.Once.On(mesh).
                 Method("ComputeNormals");
-            IModel mesh1 = modelFactory.FromFile("MeshFile1", ModelFactory.Options.NoOptimization);
+            IModel mesh1 = modelFactory.FromFile("MeshFile1", ModelOptions.NoOptimization);
             Assert.IsNotNull(mesh1);
         }
 
@@ -266,7 +266,7 @@ namespace Dope.DDXX.Graphics
             Expect.Once.On(mesh).
                 Method("ComputeTangentFrame").
                 With(TangentOptions.GenerateInPlace | TangentOptions.WeightEqual);
-            IModel mesh1 = modelFactory.FromFile("MeshFile1", ModelFactory.Options.EnsureTangents | ModelFactory.Options.NoOptimization);
+            IModel mesh1 = modelFactory.FromFile("MeshFile1", ModelOptions.EnsureTangents | ModelOptions.NoOptimization);
             Assert.IsNotNull(mesh1);
         }
 
@@ -292,7 +292,7 @@ namespace Dope.DDXX.Graphics
                 Method("Dispose");
             Expect.Once.On(mesh).
                 Method("ComputeNormals");
-            IModel mesh1 = modelFactory.FromFile("MeshFile1", ModelFactory.Options.NoOptimization);
+            IModel mesh1 = modelFactory.FromFile("MeshFile1", ModelOptions.NoOptimization);
             Assert.IsNotNull(mesh1);
         }
 
@@ -316,7 +316,7 @@ namespace Dope.DDXX.Graphics
             Expect.Once.On(mesh).
                 Method("OptimizeInPlace").
                 WithAnyArguments();
-            IModel mesh1 = modelFactory.FromFile("MeshFile1", ModelFactory.Options.None);
+            IModel mesh1 = modelFactory.FromFile("MeshFile1", ModelOptions.None);
             Assert.IsNotNull(mesh1);
         }
 
@@ -340,9 +340,9 @@ namespace Dope.DDXX.Graphics
             Expect.Exactly(2).On(mesh).
                 Method("OptimizeInPlace").
                 WithAnyArguments();
-            IModel mesh1 = modelFactory.FromFile("MeshFile1", ModelFactory.Options.None);
-            IModel mesh2 = modelFactory.FromFile("MeshFile1", ModelFactory.Options.None);
-            IModel mesh3 = modelFactory.FromFile("MeshFile2", ModelFactory.Options.None);
+            IModel mesh1 = modelFactory.FromFile("MeshFile1", ModelOptions.None);
+            IModel mesh2 = modelFactory.FromFile("MeshFile1", ModelOptions.None);
+            IModel mesh3 = modelFactory.FromFile("MeshFile2", ModelOptions.None);
 
             Assert.IsNotNull(mesh1);
             Assert.IsNotNull(mesh3);
@@ -374,9 +374,9 @@ namespace Dope.DDXX.Graphics
             Expect.Once.On(mesh).
                 Method("OptimizeInPlace").
                 WithAnyArguments();
-            IModel mesh1 = modelFactory.FromFile("MeshFile1", ModelFactory.Options.None);
-            IModel mesh2 = modelFactory.FromFile("MeshFile1", ModelFactory.Options.NoOptimization | ModelFactory.Options.EnsureTangents);
-            IModel mesh3 = modelFactory.FromFile("MeshFile1", ModelFactory.Options.NoOptimization | ModelFactory.Options.EnsureTangents);
+            IModel mesh1 = modelFactory.FromFile("MeshFile1", ModelOptions.None);
+            IModel mesh2 = modelFactory.FromFile("MeshFile1", ModelOptions.NoOptimization | ModelOptions.EnsureTangents);
+            IModel mesh3 = modelFactory.FromFile("MeshFile1", ModelOptions.NoOptimization | ModelOptions.EnsureTangents);
 
             Assert.IsNotNull(mesh1);
             Assert.IsNotNull(mesh2);

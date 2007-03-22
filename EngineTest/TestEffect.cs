@@ -48,13 +48,13 @@ namespace EngineTest
 
             // Create mesh
             IEffect effect = D3DDriver.EffectFactory.CreateFromFile("Test.fxo");
-            IModel model = D3DDriver.ModelFactory.FromFile("Wanting More.x", ModelFactory.Options.None);
+            IModel model = D3DDriver.ModelFactory.FromFile("Wanting More.x", ModelOptions.None);
             EffectHandler effectHandler = new EffectHandler(effect, "TransparentText", model);
             mesh = new ModelNode("Text1", model, effectHandler);
             scene.AddNode(mesh);
             //mesh.WorldState.Tilt(-(float)Math.PI / 2.0f);
 
-            model = ModelFactory.FromFile("TiVi.x", ModelFactory.Options.None);
+            model = ModelFactory.FromFile("TiVi.x", ModelOptions.None);
             modelNoSkinning = new ModelNode("No Skinning",
                 model,
                 new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Skinning", model));
@@ -76,7 +76,7 @@ namespace EngineTest
             //scene.AddNode(modelSkinning);
 
             NodeFactory nodeFactory = new NodeFactory(D3DDriver.TextureFactory);
-            XLoader loader = new XLoader(D3DDriver.Factory, nodeFactory, 
+            XLoader loader = new XLoader(D3DDriver.GraphicsFactory, nodeFactory, 
                 D3DDriver.GetInstance().Device, "Flyscene.x");
             loader.Load(EffectFactory.CreateFromFile("Test.fxo"), "Skinning");
             loader.AddToScene(scene);

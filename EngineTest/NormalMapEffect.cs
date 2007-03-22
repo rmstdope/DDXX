@@ -25,7 +25,7 @@ namespace EngineTest
             scene = new Scene();
 
             // Create model
-            IModel model = ModelFactory.FromFile("airplane 2.x", ModelFactory.Options.EnsureTangents);
+            IModel model = ModelFactory.FromFile("airplane 2.x", ModelOptions.EnsureTangents);
 
             // Add normal map
             for (int i = 0; i < model.Materials.Length; i++)

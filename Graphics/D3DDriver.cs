@@ -25,7 +25,7 @@ namespace Dope.DDXX.Graphics
     public class D3DDriver
     {
         private static D3DDriver instance;
-        private static IGraphicsFactory factory = new D3DFactory();
+        private static IGraphicsFactory graphicsFactory = new GraphicsFactory();
         private static IEffectFactory effectFactory;
         private static ModelFactory modelFactory;
         private static ITextureFactory textureFactory;
@@ -37,19 +37,19 @@ namespace Dope.DDXX.Graphics
 
         private D3DDriver()
         {
-            if (factory == null)
+            if (graphicsFactory == null)
             {
                 throw new DDXXException("The DX factory needs to be set before the D3DDriver can be created.");
             }
 
-            manager = factory.Manager;
+            manager = graphicsFactory.Manager;
             GetDisplayMode();
         }
 
-        public static IGraphicsFactory Factory
+        public static IGraphicsFactory GraphicsFactory
         {
-            get { return factory; }
-            set { factory = value; }
+            get { return graphicsFactory; }
+            set { graphicsFactory = value; }
         }
 
         public static IEffectFactory EffectFactory
@@ -89,11 +89,11 @@ namespace Dope.DDXX.Graphics
 
             prerequisits.CheckPrerequisits(0, desc.deviceType);
 
-            device = factory.CreateDevice(0, desc.deviceType, control, createFlags, present);
+            device = graphicsFactory.CreateDevice(0, desc.deviceType, control, createFlags, present);
 
-            effectFactory = new EffectFactory(device, factory);
-            textureFactory = new TextureFactory(device, factory, present);
-            modelFactory = new SkinnedModelFactory(device, factory, textureFactory);
+            effectFactory = new EffectFactory(device, graphicsFactory);
+            textureFactory = new TextureFactory(device, graphicsFactory, present);
+            modelFactory = new ModelFactory(device, graphicsFactory, textureFactory);
         }
 
         private void GetDisplayMode()

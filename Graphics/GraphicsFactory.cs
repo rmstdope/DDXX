@@ -10,7 +10,7 @@ using Dope.DDXX.Graphics.Skinning;
 
 namespace Dope.DDXX.Graphics
 {
-    public class D3DFactory : IGraphicsFactory
+    public class GraphicsFactory : IGraphicsFactory
     {
         private DeviceManager manager = null;
         private SphericalHarmonicsAdapter sphericalHarmonics = null;

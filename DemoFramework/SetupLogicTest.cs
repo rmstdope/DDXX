@@ -27,7 +27,7 @@ namespace Dope.DDXX.DemoFramework
             graphicsFactory = mockery.NewMock<IGraphicsFactory>();
 
             D3DDriver.DestroyInstance();
-            D3DDriver.Factory = graphicsFactory;
+            D3DDriver.GraphicsFactory = graphicsFactory;
 
             supportedDisplayModes = new DisplayMode[5];
             for (int i = 0; i < 5; i++)

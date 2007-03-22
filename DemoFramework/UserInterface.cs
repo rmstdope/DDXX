@@ -23,15 +23,15 @@ namespace Dope.DDXX.DemoFramework
         {
             IDevice device = D3DDriver.GetInstance().Device;
 
-            line = D3DDriver.Factory.CreateLine(device);
+            line = D3DDriver.GraphicsFactory.CreateLine(device);
             line.Width = 1.0f;
             line.Antialias = false;
             
-            sprite = D3DDriver.Factory.CreateSprite(device);
+            sprite = D3DDriver.GraphicsFactory.CreateSprite(device);
 
-            font = D3DDriver.Factory.CreateFont(device, 16,  0, FontWeight.Bold,  1, false,  CharacterSet.Default, Precision.Default, FontQuality.ClearType, PitchAndFamily.DefaultPitch | PitchAndFamily.FamilyDoNotCare, "Times New Roman");
+            font = D3DDriver.GraphicsFactory.CreateFont(device, 16,  0, FontWeight.Bold,  1, false,  CharacterSet.Default, Precision.Default, FontQuality.ClearType, PitchAndFamily.DefaultPitch | PitchAndFamily.FamilyDoNotCare, "Times New Roman");
             
-            whiteTexture = D3DDriver.Factory.CreateTexture(device, 1, 1, 1, Usage.RenderTarget, Format.X8R8G8B8, Pool.Default);
+            whiteTexture = D3DDriver.GraphicsFactory.CreateTexture(device, 1, 1, 1, Usage.RenderTarget, Format.X8R8G8B8, Pool.Default);
             device.ColorFill(whiteTexture.GetSurfaceLevel(0), new Rectangle(0, 0, 1, 1), Color.White);
         }
 

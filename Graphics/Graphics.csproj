@@ -47,7 +47,7 @@
     <Compile Include="D3DDriverTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="D3DFactory.cs" />
+    <Compile Include="GraphicsFactory.cs" />
     <Compile Include="D3DMockTest.cs" />
     <Compile Include="DeviceAdapter.cs" />
     <Compile Include="DevicePrerequisits.cs" />
@@ -71,6 +71,7 @@
     <Compile Include="IManager.cs" />
     <Compile Include="IMesh.cs" />
     <Compile Include="IModel.cs" />
+    <Compile Include="IModelFactory.cs" />
     <Compile Include="IPrerequisits.cs" />
     <Compile Include="IRenderStateManager.cs" />
     <Compile Include="ISphericalHarmonics.cs">
@@ -111,8 +112,6 @@
     <Compile Include="Skinning\SkinnedMeshContainer.cs" />
     <Compile Include="Skinning\SkinnedMeshContainerTest.cs" />
     <Compile Include="Skinning\SkinnedModel.cs" />
-    <Compile Include="Skinning\SkinnedModelFactory.cs" />
-    <Compile Include="Skinning\SkinnedModelFactoryTest.cs" />
     <Compile Include="Skinning\SkinnedModelTest.cs" />
     <Compile Include="SphericalHarmonicsAdapter.cs" />
     <Compile Include="SpriteAdapter.cs" />

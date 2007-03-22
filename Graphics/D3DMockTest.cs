@@ -75,7 +75,7 @@ namespace Dope.DDXX.Graphics
                 GetProperty("RenderState").
                 Will(Return.Value(renderStateManager));
 
-            D3DDriver.Factory = factory;
+            D3DDriver.GraphicsFactory = factory;
             D3DDriver.TextureFactory = textureFactory;
             D3DDriver.EffectFactory = effectFactory;
             D3DDriver.GetInstance().Device = device;

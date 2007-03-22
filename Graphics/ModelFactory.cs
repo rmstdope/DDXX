@@ -6,17 +6,8 @@ using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.Graphics
 {
-    public class ModelFactory
+    public class ModelFactory : Dope.DDXX.Graphics.IModelFactory
     {
-        public enum Options
-        {
-            None            = 0,
-            NoOptimization  = 1,
-            EnsureTangents  = 2,
-            SkinnedModel    = 4
-            // Continue with 8, 16, 32, etc.
-        }
-
         private class BoxEntry
         {
             public float width;
@@ -37,9 +28,9 @@ namespace Dope.DDXX.Graphics
         {
             public string file;
             public IModel model;
-            public Options options;
+            public ModelOptions options;
 
-            public FileEntry(string file, Options options, IModel model)
+            public FileEntry(string file, ModelOptions options, IModel model)
             {
                 this.file = file;
                 this.options = options;
@@ -88,7 +79,7 @@ namespace Dope.DDXX.Graphics
             return model;
         }
 
-        public IModel FromFile(string file, Options options)
+        public IModel FromFile(string file, ModelOptions options)
         {
             FileEntry needle = new FileEntry(file, options, null);
             FileEntry result = FindInFiles(needle);
@@ -113,7 +104,7 @@ namespace Dope.DDXX.Graphics
             return result;
         }
 
-        protected virtual IModel CreateModelFromFile(string file, Options options)
+        protected virtual IModel CreateModelFromFile(string file, ModelOptions options)
         {
             IModel model;
             ExtendedMaterial[] extendedMaterials;
@@ -125,10 +116,10 @@ namespace Dope.DDXX.Graphics
             return model;
         }
 
-        private void HandleOptions(ref IMesh mesh, Options options)
+        private void HandleOptions(ref IMesh mesh, ModelOptions options)
         {
             if (!DeclarationHasTangents(mesh.Declaration) &&
-                (options & Options.EnsureTangents) == Options.EnsureTangents)
+                (options & ModelOptions.EnsureTangents) == ModelOptions.EnsureTangents)
             {
                 if (!DeclarationHasNormals(mesh.Declaration))
                 {
@@ -146,9 +137,9 @@ namespace Dope.DDXX.Graphics
             Optimize(mesh, options);
         }
 
-        private static void Optimize(IMesh mesh, Options options)
+        private static void Optimize(IMesh mesh, ModelOptions options)
         {
-            if ((options & Options.NoOptimization) != Options.NoOptimization)
+            if ((options & ModelOptions.NoOptimization) != ModelOptions.NoOptimization)
             {
                 int[] adj = new int[mesh.NumberFaces * 3];
                 mesh.GenerateAdjacency(1e-6f, adj);

@@ -286,7 +286,7 @@ namespace ShortPuzzle
 
             texture = D3DDriver.TextureFactory.CreateFromFile("BlurBackground.jpg");
             dopeTexture = D3DDriver.TextureFactory.CreateFromFile("DopeLogo.dds");
-            sprite = D3DDriver.Factory.CreateSprite(Device);
+            sprite = D3DDriver.GraphicsFactory.CreateSprite(Device);
 
             //lightProbe = D3DDriver.Factory.CubeTextureFromFile("../../Data/stpeters_cross.dds");
             //cubeTexture = D3DDriver.Factory.CreateCubeTexture(Device, 256, 1, Usage.None, Format.A16B16G16R16F, Pool.Managed);

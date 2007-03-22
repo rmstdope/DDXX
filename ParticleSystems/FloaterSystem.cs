@@ -105,12 +105,12 @@ namespace Dope.DDXX.ParticleSystems
             };
 
             // Use the vertex element array to create a vertex declaration.
-            vertexDeclaration = D3DDriver.Factory.CreateVertexDeclaration(Device, elements);
+            vertexDeclaration = D3DDriver.GraphicsFactory.CreateVertexDeclaration(Device, elements);
         }
 
         private void CreateVertexBuffer()
         {
-            vertexBuffer = D3DDriver.Factory.CreateVertexBuffer(typeof(FloaterVertex), NumParticles, Device, Usage.WriteOnly | Usage.Dynamic, VertexFormats.None, Pool.Default);
+            vertexBuffer = D3DDriver.GraphicsFactory.CreateVertexBuffer(typeof(FloaterVertex), NumParticles, Device, Usage.WriteOnly | Usage.Dynamic, VertexFormats.None, Pool.Default);
         }
 
         private Vector3 DistributeEvenlyInSphere(float radius)

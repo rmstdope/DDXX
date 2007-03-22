@@ -40,7 +40,7 @@ namespace Dope.DDXX.DemoEffects
         {
             base.Initialize();
 
-            sprite = D3DDriver.Factory.CreateSprite(Device);
+            sprite = D3DDriver.GraphicsFactory.CreateSprite(Device);
 
             foreach (TextureLayer layer in textureLayers)
             {

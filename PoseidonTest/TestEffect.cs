@@ -268,7 +268,7 @@ namespace PoseidonTest
             IMesh mesh;
             short[] arrayIndices = new short[12];
             CustomVertex.PositionNormal[] arrayVertices = new CustomVertex.PositionNormal[8];
-            mesh = D3DDriver.Factory.CreateMesh(4, 8, MeshFlags.Managed, CustomVertex.PositionNormal.Format, Device);
+            mesh = D3DDriver.GraphicsFactory.CreateMesh(4, 8, MeshFlags.Managed, CustomVertex.PositionNormal.Format, Device);
 
             arrayVertices[0] = new CustomVertex.PositionNormal(-10, -10, -10, 0, 0, -1);
             arrayVertices[1] = new CustomVertex.PositionNormal(10, -10, -10, 0, 0, -1);
