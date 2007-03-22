@@ -21,6 +21,7 @@ namespace Dope.DDXX.SceneGraph
         private IFrame rootChild2Child2;
         private IMesh mesh1;
         private IMesh mesh2;
+        private ISkinInformation skin1;
         private List<INode> nodes;
         private IEffectHandler effectHandler;
         private INodeFactory nodeFactory;
@@ -43,6 +44,7 @@ namespace Dope.DDXX.SceneGraph
             rootChild2Child2 = mockery.NewMock<IFrame>();
             mesh1 = mockery.NewMock<IMesh>();
             mesh2 = mockery.NewMock<IMesh>();
+            skin1 = mockery.NewMock<ISkinInformation>();
             effectHandler = mockery.NewMock<IEffectHandler>();
             nodeFactory = mockery.NewMock<INodeFactory>();
             nodes = new List<INode>();
@@ -66,10 +68,14 @@ namespace Dope.DDXX.SceneGraph
                 Will(Return.Value("RootChild2(Mesh)"));
             Stub.On(rootChild2).GetProperty("Mesh").
                 Will(Return.Value(mesh1));
+            Stub.On(rootChild2).GetProperty("SkinInformation").
+                Will(Return.Value(skin1));
             Stub.On(rootChild2Child1).GetProperty("Name").
                 Will(Return.Value("RootChild2Child1(Mesh)"));
             Stub.On(rootChild2Child1).GetProperty("Mesh").
                 Will(Return.Value(mesh2));
+            Stub.On(rootChild2Child1).GetProperty("SkinInformation").
+                Will(Return.Value(null));
             Stub.On(rootChild2Child2).GetProperty("Name").
                 Will(Return.Value("RootChild2Sibling1(Camera)"));
             Stub.On(rootChild2Child2).GetProperty("Mesh").
@@ -78,7 +84,7 @@ namespace Dope.DDXX.SceneGraph
                 Will(Return.Value(rootNode));
             Stub.On(nodeFactory).Method("CreateCameraNode").With(rootChild1).
                 Will(Return.Value(rootChild1Node));
-            Stub.On(nodeFactory).Method("CreateModelNode").With(rootChild2, effect, "Prefix").
+            Stub.On(nodeFactory).Method("CreateSkinnedModelNode").With(hierarchy, rootChild2, effect, "Prefix").
                 Will(Return.Value(rootChild2Node));
             Stub.On(nodeFactory).Method("CreateModelNode").With(rootChild2Child1, effect, "Prefix").
                 Will(Return.Value(rootChild2Child1Node));

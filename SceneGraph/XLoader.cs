@@ -63,7 +63,10 @@ namespace Dope.DDXX.SceneGraph
             INode node;
             if (frame.Mesh != null)
             {
-                node = nodeFactory.CreateModelNode(frame, effect, techniquePrefix);
+                if (frame.SkinInformation != null)
+                    node = nodeFactory.CreateSkinnedModelNode(rootFrame, frame, effect, techniquePrefix);
+                else
+                    node = nodeFactory.CreateModelNode(frame, effect, techniquePrefix);
             }
             else if (frame.Name != null && frame.Name.ToLower().Contains("camera"))
                 node = nodeFactory.CreateCameraNode(frame);

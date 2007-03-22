@@ -34,6 +34,7 @@ namespace Dope.DDXX.Graphics.Skinning
         // Additions for DDXX
         Matrix CombinedTransformationMatrix { get; set; }
         IMesh Mesh { get; }
+        ISkinInformation SkinInformation { get; }
         ExtendedMaterial[] ExtendedMaterials { get; }
     }
 }

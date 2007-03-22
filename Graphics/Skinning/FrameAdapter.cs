@@ -113,6 +113,16 @@ namespace Dope.DDXX.Graphics.Skinning
             }
         }
 
+        public ISkinInformation SkinInformation
+        {
+            get
+            {
+                if (MeshContainer == null)
+                    return null;
+                return MeshContainer.SkinInformation;
+            }
+        }
+
         public ExtendedMaterial[] ExtendedMaterials
         {
             get

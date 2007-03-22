@@ -21,7 +21,7 @@ namespace EngineTest
         private IScene scene;
         private ModelNode mesh;
 
-        private ModelNode modelSkinning;
+        //private ModelNode modelSkinning;
         private ModelNode modelNoSkinning;
 
         public TestEffect(float startTime, float endTime) 
@@ -38,7 +38,7 @@ namespace EngineTest
 
             camera = new CameraNode("MyCamera");
             //camera.WorldState.Tilt(2.0f);
-            camera.WorldState.MoveForward(-300.0f);
+            camera.WorldState.MoveForward(-20.0f);
             scene.AddNode(camera);
             scene.ActiveCamera = camera;
 
@@ -64,16 +64,16 @@ namespace EngineTest
             modelNoSkinning.WorldState.Tilt((float)Math.PI / 2);
             //scene.AddNode(modelNoSkinning);
 
-            model = ModelFactory.FromFile("TiVi.x", ModelFactory.Options.SkinnedModel);
-            modelSkinning = new ModelNode("Skinning",
-                model,
-                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Skinning", model));
-            modelSkinning.WorldState.Scale(100.0f);
-            modelSkinning.WorldState.MoveRight(50);
-            modelSkinning.WorldState.MoveUp(-75);
-            modelSkinning.WorldState.Roll((float)Math.PI);
-            modelSkinning.WorldState.Tilt((float)Math.PI / 2);
-            scene.AddNode(modelSkinning);
+            //model = ModelFactory.FromFile("TiVi.x", ModelFactory.Options.SkinnedModel);
+            //modelSkinning = new ModelNode("Skinning",
+            //    model,
+            //    new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Skinning", model));
+            //modelSkinning.WorldState.Scale(100.0f);
+            //modelSkinning.WorldState.MoveRight(50);
+            //modelSkinning.WorldState.MoveUp(-75);
+            //modelSkinning.WorldState.Roll((float)Math.PI);
+            //modelSkinning.WorldState.Tilt((float)Math.PI / 2);
+            //scene.AddNode(modelSkinning);
 
             NodeFactory nodeFactory = new NodeFactory(D3DDriver.TextureFactory);
             XLoader loader = new XLoader(D3DDriver.Factory, nodeFactory, 

@@ -10,7 +10,7 @@ using Microsoft.DirectX;
 namespace Dope.DDXX.SceneGraph
 {
     [TestFixture]
-    public class NodeFactoryTest : IFrame, IMesh, ITextureFactory, IEffect
+    public class NodeFactoryTest : IFrame, IMesh, ITextureFactory, IEffect, IAnimationRootFrame, IMeshContainer
     {
         private NodeFactory nodeFactory;
         private string name;
@@ -25,7 +25,7 @@ namespace Dope.DDXX.SceneGraph
         }
 
         [Test]
-        public void TestMeshNode()
+        public void TestModelNode()
         {
             name = "A name";
             ModelNode node = nodeFactory.CreateModelNode(this, this, "prefix");
@@ -34,6 +34,20 @@ namespace Dope.DDXX.SceneGraph
             Assert.IsNotNull(node.Model, "Model shall not be null.");
             Assert.AreEqual(node.Model.Mesh, this);
             Assert.AreEqual(node.Model.Materials.Length, materials.Length);
+            Assert.IsFalse(node.Model.IsSkinned());
+        }
+
+        [Test]
+        public void TestSkinnedModelNode()
+        {
+            name = "A name";
+            ModelNode node = nodeFactory.CreateSkinnedModelNode(this, this, this, "prefix");
+            Assert.AreEqual(0, node.Children.Count, "Node should have no children.");
+            Assert.AreEqual("A name", node.Name, "The name of the node should be 'A name'");
+            Assert.IsNotNull(node.Model, "Model shall not be null.");
+            Assert.AreEqual(node.Model.Mesh, this);
+            Assert.AreEqual(node.Model.Materials.Length, materials.Length);
+            Assert.IsTrue(node.Model.IsSkinned());
         }
 
         [Test]
@@ -70,7 +84,7 @@ namespace Dope.DDXX.SceneGraph
         {
             get
             {
-                throw new Exception("The method or operation is not implemented.");
+                return this;
             }
             set
             {
@@ -122,6 +136,11 @@ namespace Dope.DDXX.SceneGraph
         public IMesh Mesh
         {
             get { return this; }
+        }
+
+        public ISkinInformation SkinInformation
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
         }
 
         public ExtendedMaterial[] ExtendedMaterials
@@ -963,6 +982,129 @@ namespace Dope.DDXX.SceneGraph
         public void ValidateTechnique(EffectHandle technique)
         {
             throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
+
+        #region IAnimationRootFrame Members
+
+        public IAnimationController AnimationController
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public IFrame FrameHierarchy
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        #endregion
+
+        #region IMeshContainer Members
+
+        public MeshDataAdapter MeshData
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public IMeshContainer NextContainer
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        ISkinInformation IMeshContainer.SkinInformation
+        {
+            get
+            {
+                return null;
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public int[] GetAdjacency()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public IGraphicsStream GetAdjacencyStream()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public EffectInstance[] GetEffectInstances()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public ExtendedMaterial[] GetMaterials()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetAdjacency(IGraphicsStream adj)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetAdjacency(int[] adj)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetEffectInstances(EffectInstance[] effects)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetMaterials(ExtendedMaterial[] mtrl)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Matrix[] RestMatrices
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public BoneCombination[] Bones
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public IFrame[] Frames
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
         }
 
         #endregion

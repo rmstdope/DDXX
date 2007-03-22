@@ -18,6 +18,17 @@ namespace Dope.DDXX.SceneGraph
         public ModelNode CreateModelNode(IFrame frame, IEffect effect, string prefix)
         {
             IModel model = new Model(frame.Mesh, textureFactory, frame.ExtendedMaterials);
+            return CommonCreateModelNode(frame, effect, prefix, model);
+        }
+
+        public ModelNode CreateSkinnedModelNode(IAnimationRootFrame animationRootFrame, IFrame frame, IEffect effect, string prefix)
+        {
+            IModel model = new SkinnedModel(animationRootFrame, frame, textureFactory);
+            return CommonCreateModelNode(frame, effect, prefix, model);
+        }
+
+        private static ModelNode CommonCreateModelNode(IFrame frame, IEffect effect, string prefix, IModel model)
+        {
             IEffectHandler effectHandler = new EffectHandler(effect, prefix, model);
             ModelNode node = new ModelNode(frame.Name, model, effectHandler);
             node.EnableFrameHandling(frame);

@@ -9,5 +9,6 @@ namespace Dope.DDXX.SceneGraph
         CameraNode CreateCameraNode(IFrame frame);
         DummyNode CreateDummyNode(IFrame frame);
         ModelNode CreateModelNode(IFrame frame, IEffect effect, string prefix);
+        ModelNode CreateSkinnedModelNode(IAnimationRootFrame animationRootFrame, IFrame frame, IEffect effect, string prefix);
     }
 }
