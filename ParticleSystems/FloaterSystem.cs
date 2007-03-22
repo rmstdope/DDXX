@@ -26,7 +26,7 @@ namespace Dope.DDXX.ParticleSystems
             }
         }
 
-        public class FloaterParticle : Particle
+        public class FloaterParticle : SystemParticle
         {
             public Vector3 Phase;
             public Vector3 Period;

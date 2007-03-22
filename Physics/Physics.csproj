@@ -37,7 +37,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Particle.cs" />
     <Compile Include="WorldState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WorldStateTest.cs" />

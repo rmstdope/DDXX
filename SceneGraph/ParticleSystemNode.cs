@@ -13,7 +13,7 @@ namespace Dope.DDXX.SceneGraph
         private int numParticles;
         private IDevice device;
         protected IEffectHandler effectHandler;
-        protected List<Particle> particles;
+        protected List<SystemParticle> particles;
         protected ModelMaterial material;
         protected BlendOperation blendOperation;
         protected Blend sourceBlend;
@@ -57,7 +57,7 @@ namespace Dope.DDXX.SceneGraph
         {
             this.numParticles = numParticles;
             this.device = D3DDriver.GetInstance().Device;
-            particles = new List<Particle>();
+            particles = new List<SystemParticle>();
 
             IEffect effect = D3DDriver.EffectFactory.CreateFromFile("ParticleSystem.fxo");
             this.effectHandler = new EffectHandler(effect, "", null);
