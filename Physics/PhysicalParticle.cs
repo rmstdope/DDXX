@@ -6,7 +6,7 @@ using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.Physics
 {
-    public class PhysicalParticle
+    public class PhysicalParticle : Dope.DDXX.Physics.IPhysicalParticle
     {
         private Vector3 position;
         private Vector3 oldPosition;
