@@ -18,8 +18,10 @@ namespace Dope.DDXX.MeshBuilder
         private int numVertices;
         private bool vbLocked;
         private bool ibLocked;
+        private VertexPosition vertexPosition;
         private List<Vector3> positions;
-        private int[] indices;
+        private List<Vector3> normals;
+        private short[] indices;
 
         private enum Side
         {
@@ -30,6 +32,12 @@ namespace Dope.DDXX.MeshBuilder
             LEFT,
             RIGHT
         }
+        private enum VertexPosition
+        {
+            POSITION,
+            NORMAL
+        }
+
         private const float epsilon = 0.000001f;
 
         [SetUp]
@@ -38,6 +46,8 @@ namespace Dope.DDXX.MeshBuilder
             vbLocked = false;
             ibLocked = false;
             positions = new List<Vector3>();
+            normals = new List<Vector3>();
+            vertexPosition = VertexPosition.POSITION;
         }
 
         /// <summary>
@@ -113,7 +123,10 @@ namespace Dope.DDXX.MeshBuilder
             Vertex[] vertices = new Vertex[numVertices];
             short[] indices = new short[numFaces * 3];
             for (int i = 0; i < numVertices; i++)
+            {
                 vertices[i].Position = new Vector3(i, i + 1, i + 2);
+                vertices[i].Normal = new Vector3(i + 2, i + 3, i + 4);
+            }
             for (int i = 0; i < numFaces * 3; i++)
                 indices[i] = (short)i;
             primitive = new Primitive(vertices, indices);
@@ -124,7 +137,10 @@ namespace Dope.DDXX.MeshBuilder
             Assert.AreEqual(numVertices, positions.Count, "Vertices should be "  + numVertices);
             Assert.AreEqual(numFaces * 3, this.indices.Length, "Indices should be " + numFaces * 3);
             for (int i = 0; i < numVertices; i++)
+            {
                 Assert.AreEqual(vertices[i].Position, positions[i]);
+                Assert.AreEqual(vertices[i].Normal, normals[i]);
+            }
             for (int i = 0; i < numFaces * 3; i++)
                 Assert.AreEqual(indices[i], this.indices[i]);
         }
@@ -147,6 +163,8 @@ namespace Dope.DDXX.MeshBuilder
             CheckIndices(v, v + 4, i, i + 6);
             // Check that the indices create clockwise triangles
             CheckClockwise(i, 2, normal);
+            // Check normals
+            CheckNormals(v, v + 4, normal);
         }
 
         private int GetStartVertex(Side side, int lengthSegments, int widthSegments, int heightSegments)
@@ -177,6 +195,12 @@ namespace Dope.DDXX.MeshBuilder
                 Assert.AreEqual(0.0f, plane.Dot(primitive.Vertices[i].Position), epsilon,
                     "All points should be in plane (" + startIndex + ", " + endIndex + ")");
             }
+        }
+
+        private void CheckNormals(int startIndex, int endIndex, Vector3 normal)
+        {
+            for (int i = startIndex; i < endIndex; i++)
+                Assert.AreEqual(normal, primitive.Vertices[i].Normal);
         }
 
         private void CheckClockwise(int startI, int numTriangles, Vector3 normal)
@@ -246,11 +270,13 @@ namespace Dope.DDXX.MeshBuilder
             Assert.AreEqual(this.numFaces, numFaces);
             Assert.AreEqual(this.numVertices, numVertices);
             Assert.AreEqual(MeshFlags.Managed, options);
-            Assert.AreEqual(2, declaration.Length);
-            Assert.AreEqual(new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0), 
+            Assert.AreEqual(3, declaration.Length);
+            Assert.AreEqual(new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
                 declaration[0]);
-            Assert.AreEqual(VertexElement.VertexDeclarationEnd,
+            Assert.AreEqual(new VertexElement(0, 12, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Normal, 0),
                 declaration[1]);
+            Assert.AreEqual(VertexElement.VertexDeclarationEnd,
+                declaration[2]);
             return this;
         }
 
@@ -1649,7 +1675,7 @@ namespace Dope.DDXX.MeshBuilder
         public void Write(Array value)
         {
             Assert.IsTrue(ibLocked);
-            indices = (int[])value;
+            indices = (short[])value;
         }
 
         public void Write(string value)
@@ -1660,7 +1686,19 @@ namespace Dope.DDXX.MeshBuilder
         public void Write(ValueType value)
         {
             Assert.IsTrue(vbLocked);
-            positions.Add((Vector3)value);
+            switch (vertexPosition)
+            {
+                case VertexPosition.POSITION:
+                    positions.Add((Vector3)value);
+                    vertexPosition++;
+                    break;
+                case VertexPosition.NORMAL:
+                    normals.Add((Vector3)value);
+                    vertexPosition = VertexPosition.POSITION;
+                    break;
+                default:
+                    throw new Exception("The method or operation is not implemented.");
+            }
         }
 
         public void Write(string value, bool isUnicodeString)

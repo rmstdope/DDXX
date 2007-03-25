@@ -74,17 +74,28 @@ NormalMappingPixelShader(NormalMappingInputPS input) : COLOR0
 	return diffuse * tex2D(BaseTextureSampler, input.TextureCoord.xy);
 }
 
-float4
-TestVertexShader(InputVS input) : POSITION0
+struct TestStruct
 {
+	float4	Position	:	POSITION;
+	float		Light		:	TEXCOORD0;
+};
+
+TestStruct
+TestVertexShader(InputVS input)
+{
+	TestStruct output;
+
 	// Transform the position from object space to homogeneous projection space
-	return mul(input.Position, WorldViewProjectionT);
+	output.Position = mul(input.Position, WorldViewProjectionT);
+	float3 normal = normalize(mul(input.Normal, WorldT));
+	output.Light = dot(normal, normalize(float3(1, 1, -1)));
+	return output;
 }
 
 float4
-TestPixelShader(float4 input : POSITION0) : COLOR0
+TestPixelShader(TestStruct input) : COLOR0
 {
-	return 1;
+	return input.Light;
 }
 
 
