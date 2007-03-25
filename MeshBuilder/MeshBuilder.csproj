@@ -7,8 +7,8 @@
     <ProjectGuid>{CF2AB575-856D-4160-8DCD-7A5729579892}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MeshBuilder</RootNamespace>
-    <AssemblyName>MeshBuilder</AssemblyName>
+    <RootNamespace>Dope.DDXX.MeshBuilder</RootNamespace>
+    <AssemblyName>Dope.DDXX.MeshBuilder</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

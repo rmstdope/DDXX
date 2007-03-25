@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
 using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 
-namespace MeshBuilder
+namespace Dope.DDXX.MeshBuilder
 {
     public class Primitive : IPrimitive
     {
         private Vertex[] vertices;
-        private int[] indices;
+        private short[] indices;
 
-        public Primitive(Vertex[] vertices, int[] indices)
+        public Primitive(Vertex[] vertices, short[] indices)
         {
             this.vertices = vertices;
             this.indices = indices;
@@ -30,10 +31,10 @@ namespace MeshBuilder
         public static Primitive BoxPrimitive(float length, float width, float height, 
             int lengthSegments, int widthSegments, int heightSegments)
         {
-            int v = 0;
-            int i = 0;
+            short v = 0;
+            short i = 0;
             Vertex[] vertices = new Vertex[24];
-            int[] indices = new int[36];
+            short[] indices = new short[36];
             // Front
             i = BoxAddIndicesForSide(v, i, indices);
             vertices[v++].Position = new Vector3(-width / 2, height / 2, -length / 2);
@@ -73,14 +74,14 @@ namespace MeshBuilder
             return new Primitive(vertices, indices);
         }
 
-        private static int BoxAddIndicesForSide(int v, int i, int[] indices)
+        private static short BoxAddIndicesForSide(short v, short i, short[] indices)
         {
             indices[i++] = v;
-            indices[i++] = v + 1;
-            indices[i++] = v + 2;
+            indices[i++] = (short)(v + 1);
+            indices[i++] = (short)(v + 2);
             indices[i++] = v;
-            indices[i++] = v + 2;
-            indices[i++] = v + 3;
+            indices[i++] = (short)(v + 2);
+            indices[i++] = (short)(v + 3);
             return i;
         }
 
@@ -92,7 +93,7 @@ namespace MeshBuilder
             }
         }
 
-        public int[] Indices
+        public short[] Indices
         {
             get
             {
@@ -100,9 +101,20 @@ namespace MeshBuilder
             }
         }
 
-        public IMesh CreateMesh(IGraphicsFactory factory)
+        public IMesh CreateMesh(IGraphicsFactory factory, IDevice device)
         {
-            throw new Exception("The method or operation is not implemented.");
+            VertexElementArray declaration = new VertexElementArray();
+            declaration.AddPositions();
+            IMesh mesh = factory.CreateMesh(indices.Length / 3, vertices.Length, MeshFlags.Managed, 
+                declaration.VertexElements, device);
+            IGraphicsStream stream = mesh.LockVertexBuffer(LockFlags.Discard);
+            for (int i = 0; i < vertices.Length; i++)
+                stream.Write(vertices[i].Position);
+            mesh.UnlockVertexBuffer();
+            stream = mesh.LockIndexBuffer(LockFlags.Discard);
+            stream.Write(indices);
+            mesh.UnlockIndexBuffer();
+            return mesh;
         }
 
     }

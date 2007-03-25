@@ -74,6 +74,21 @@ NormalMappingPixelShader(NormalMappingInputPS input) : COLOR0
 	return diffuse * tex2D(BaseTextureSampler, input.TextureCoord.xy);
 }
 
+float4
+TestVertexShader(InputVS input) : POSITION0
+{
+	// Transform the position from object space to homogeneous projection space
+	return mul(input.Position, WorldViewProjectionT);
+}
+
+float4
+TestPixelShader(float4 input : POSITION0) : COLOR0
+{
+	return 1;
+}
+
+
+
 technique Test
 <
 	bool NormalMapping = false;
@@ -82,8 +97,8 @@ technique Test
 {
 	pass BasePass
 	{
-		VertexShader			= null;//compile vs_2_0 VertexShader();
-		PixelShader				= null;//compile ps_2_0 PixelShader();
+		VertexShader			= compile vs_2_0 TestVertexShader();
+		PixelShader				= compile ps_2_0 TestPixelShader();
 		AlphaBlendEnable	= false;//true;
 		FillMode					= Solid;//<FillMode>;
 		ZEnable						=	true;
@@ -130,7 +145,6 @@ technique SkinningNone
 		VertexShader			= compile vs_2_0 SimpleVertexShader(0);
 		PixelShader				= compile ps_2_0 SimplePixelShader();
 		AlphaBlendEnable	= false;
-		CullMode					= CCW;
 		FillMode					= Solid;//<FillMode>;
 		ZEnable						=	true;
 		ZFunc							= Less;
@@ -149,7 +163,6 @@ technique Skinning
 		VertexShader			= compile vs_2_0 SimpleVertexShader(2);
 		PixelShader				= compile ps_2_0 SimplePixelShader();
 		AlphaBlendEnable	= false;
-		CullMode					= CCW;
 		FillMode					= Solid;//<FillMode>;
 		ZEnable						=	true;
 		ZFunc							= Less;
@@ -168,7 +181,6 @@ technique NormalMapping
 		VertexShader			= compile vs_2_0 NormalMappingVertexShader();
 		PixelShader				= compile ps_2_0 NormalMappingPixelShader();
 		AlphaBlendEnable	= false;
-		CullMode					= CCW;
 		FillMode					= Solid;//<FillMode>;
 		ZEnable						=	true;
 		ZFunc							= Less;

@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("MeshBuilder")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("The MeshBuilder parts of DDXX")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Quasar Studios")]
-[assembly: AssemblyProduct("MeshBuilder")]
-[assembly: AssemblyCopyright("Copyright © Quasar Studios 2007")]
+[assembly: AssemblyCompany("Dope Demo Productions")]
+[assembly: AssemblyProduct("DDXX")]
+[assembly: AssemblyCopyright("Copyright © Dope 2007")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

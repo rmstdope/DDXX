@@ -4,16 +4,18 @@ using System.Text;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
 
-namespace MeshBuilder
+namespace Dope.DDXX.MeshBuilder
 {
     public class MeshBuilder
     {
         private IGraphicsFactory factory;
+        private IDevice device;
         private Dictionary<string, IPrimitive> primitives = new Dictionary<string,IPrimitive>();
 
-        public MeshBuilder(IGraphicsFactory factory)
+        public MeshBuilder(IGraphicsFactory factory, IDevice device)
         {
             this.factory = factory;
+            this.device = device;
         }
 
         public void AddPrimitive(IPrimitive primitive, string name)
@@ -27,7 +29,7 @@ namespace MeshBuilder
         {
             if (!primitives.ContainsKey(name))
                 throw new DDXXException("Can not create mesh from a primitive that does not exist.");
-            return primitives[name].CreateMesh(factory);
+            return primitives[name].CreateMesh(factory, device);
         }
     }
 }

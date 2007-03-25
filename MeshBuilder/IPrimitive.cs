@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
 
-namespace MeshBuilder
+namespace Dope.DDXX.MeshBuilder
 {
     public interface IPrimitive
     {
         Vertex[] Vertices { get; }
-        int[] Indices { get; }
-        IMesh CreateMesh(IGraphicsFactory factory);
+        short[] Indices { get; }
+        IMesh CreateMesh(IGraphicsFactory factory, IDevice device);
     }
 }

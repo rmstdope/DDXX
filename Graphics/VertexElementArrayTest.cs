@@ -69,6 +69,10 @@ namespace Dope.DDXX.Graphics
             new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
             VertexElement.VertexDeclarationEnd
         };
+        private VertexElement[] elementsEmpty = new VertexElement[]
+        {
+            VertexElement.VertexDeclarationEnd
+        };
 
         [SetUp]
         public void SetUp()
@@ -78,6 +82,27 @@ namespace Dope.DDXX.Graphics
         [TearDown]
         public void TearDown()
         {
+        }
+
+        [Test]
+        public void TestEmptyArray()
+        {
+            VertexElementArray array = new VertexElementArray();
+            Assert.AreEqual(elementsEmpty.Length, array.VertexElements.Length, 
+                "Array should have only VertexDeclarationEnd element.");
+            for (int i = 0; i < elementsEmpty.Length; i++)
+                Assert.IsTrue(elementsEmpty[i].Equals(array.VertexElements[i]), "Index is " + i);
+        }
+
+        [Test]
+        public void TestAddPosition()
+        {
+            VertexElementArray array = new VertexElementArray();
+            array.AddPositions();
+            Assert.AreEqual(elementsP.Length, array.VertexElements.Length,
+                "Array should have only VertexDeclarationEnd element.");
+            for (int i = 0; i < elementsP.Length; i++)
+                Assert.IsTrue(elementsP[i].Equals(array.VertexElements[i]), "Index is " + i);
         }
 
         [Test]

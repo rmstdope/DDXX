@@ -7,17 +7,22 @@ using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.Graphics
 {
-    internal class VertexElementArray
+    public class VertexElementArray
     {
         VertexElement[] vertexElements;
 
-        internal VertexElement[] VertexElements
+        public VertexElement[] VertexElements
         {
             get { return vertexElements; }
             set { vertexElements = value; }
         }
 
-        internal VertexElementArray(VertexElement[] elements)
+        public VertexElementArray()
+        {
+            vertexElements = new VertexElement[1] { VertexElement.VertexDeclarationEnd };
+        }
+
+        public VertexElementArray(VertexElement[] elements)
         {
             vertexElements = elements;
             for (int i = 0; i < vertexElements.Length; i++)
@@ -30,19 +35,24 @@ namespace Dope.DDXX.Graphics
             }
         }
 
-        internal void AddNormals()
+        public void AddPositions()
+        {
+            AddElement(DeclarationType.Float3, DeclarationUsage.Position, 0);
+        }
+
+        public void AddNormals()
         {
             AddElement(DeclarationType.Float3, DeclarationUsage.Normal, 0);
         }
 
-        internal void AddTangents()
+        public void AddTangents()
         {
             if (!HasTexCoords(0))
                 throw new DDXXException("Tangents can not be added to vertex declaration if no texture coordinates (0) exists.");
             AddElement(DeclarationType.Float3, DeclarationUsage.Tangent, 0);
         }
 
-        internal void AddBiNormals()
+        public void AddBiNormals()
         {
             if (!HasTangents())
                 throw new DDXXException("Tangents can not be added to vertex declaration if no texture coordinates (0) exists.");
@@ -70,7 +80,7 @@ namespace Dope.DDXX.Graphics
             return false;
         }
 
-        internal void AddTexCoords(byte index, byte numFloats)
+        public void AddTexCoords(byte index, byte numFloats)
         {
             switch (numFloats)
             {
@@ -91,7 +101,7 @@ namespace Dope.DDXX.Graphics
             }
         }
 
-        internal void AddElement(DeclarationType type, DeclarationUsage usage, byte index)
+        public void AddElement(DeclarationType type, DeclarationUsage usage, byte index)
         {
             Array.Resize(ref vertexElements, vertexElements.Length + 1);
             vertexElements[vertexElements.Length - 1] = new VertexElement(0, 0, type, DeclarationMethod.Default, usage, index);
@@ -117,7 +127,7 @@ namespace Dope.DDXX.Graphics
             SetOffsets();
         }
 
-        internal void SetOffsets()
+        public void SetOffsets()
         {
             short offset = 0;
             for (int i = 0; i < vertexElements.Length - 1; i++)

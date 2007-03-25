@@ -11,6 +11,7 @@ using Dope.DDXX.SceneGraph;
 using Dope.DDXX.Utility;
 using Dope.DDXX.ParticleSystems;
 using Dope.DDXX.Graphics.Skinning;
+using Dope.DDXX.MeshBuilder;
 
 namespace EngineTest
 {
@@ -19,7 +20,8 @@ namespace EngineTest
         private FloaterSystem ps;
         private CameraNode camera;
         private IScene scene;
-        private ModelNode mesh;
+        private ModelNode modelNode;
+        private ModelNode boxModel;
 
         //private ModelNode modelSkinning;
         private ModelNode modelNoSkinning;
@@ -38,7 +40,7 @@ namespace EngineTest
 
             camera = new CameraNode("MyCamera");
             //camera.WorldState.Tilt(2.0f);
-            camera.WorldState.MoveForward(-20.0f);
+            camera.WorldState.MoveForward(-100.0f);
             scene.AddNode(camera);
             scene.ActiveCamera = camera;
 
@@ -50,8 +52,8 @@ namespace EngineTest
             IEffect effect = D3DDriver.EffectFactory.CreateFromFile("Test.fxo");
             IModel model = D3DDriver.ModelFactory.FromFile("Wanting More.x", ModelOptions.None);
             EffectHandler effectHandler = new EffectHandler(effect, "TransparentText", model);
-            mesh = new ModelNode("Text1", model, effectHandler);
-            scene.AddNode(mesh);
+            modelNode = new ModelNode("Text1", model, effectHandler);
+            scene.AddNode(modelNode);
             //mesh.WorldState.Tilt(-(float)Math.PI / 2.0f);
 
             model = ModelFactory.FromFile("TiVi.x", ModelOptions.None);
@@ -66,7 +68,15 @@ namespace EngineTest
 
             XLoader.Load("Flyscene.x", EffectFactory.CreateFromFile("Test.fxo"), "Skinning");
             XLoader.AddToScene(scene);
-            scene.ActiveCamera = scene.GetNodeByName("Camera") as CameraNode;
+            //scene.ActiveCamera = scene.GetNodeByName("Camera") as CameraNode;
+
+            MeshBuilder builder = new MeshBuilder(D3DDriver.GraphicsFactory, D3DDriver.GetInstance().Device);
+            builder.AddPrimitive(Primitive.BoxPrimitive(50, 50, 50, 1, 1, 1), "Box");
+            IMesh mesh = builder.CreateMesh("Box");
+            model = new Model(mesh);
+            boxModel = new ModelNode("Box", model,
+                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Test", model));
+            scene.AddNode(boxModel);
 
             scene.DebugPrintGraph();
             scene.Validate();
@@ -84,12 +94,12 @@ namespace EngineTest
         {
             float scale = (Time.StepTime % 5.0f) / 5.0f;
             scale *= 2.0f;
-            mesh.WorldState.Scaling = new Vector3(scale, scale, scale);
-            mesh.WorldState.Position = new Vector3(0, scale * 200.0f, 0);
+            modelNode.WorldState.Scaling = new Vector3(scale, scale, scale);
+            modelNode.WorldState.Position = new Vector3(0, scale * 200.0f, 0);
 
-            mesh.WorldState.Roll(scale / 100.0f);
-            mesh.WorldState.Turn(Time.DeltaTime);
-            //mesh.WorldState.Tilt(Time.DeltaTime);
+            modelNode.WorldState.Roll(scale / 100.0f);
+            modelNode.WorldState.Turn(Time.DeltaTime);
+            boxModel.WorldState.Tilt(Time.DeltaTime);
             scene.Step();
         }
 
