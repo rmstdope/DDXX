@@ -36,8 +36,6 @@ namespace Dope.DDXX.Graphics
             set { materials = value; }
         }
 
-        public abstract void DrawSubset(int subset);
-
         public virtual bool IsSkinned()
         { 
             return false; 

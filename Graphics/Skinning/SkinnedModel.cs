@@ -56,11 +56,6 @@ namespace Dope.DDXX.Graphics.Skinning
             set { throw new DDXXException("Depricated! This should be removed!"); }
         }
 
-        public override void DrawSubset(int subset)
-        {
-            throw new DDXXException("Depricated! This should be removed!");
-        }
-
         public override bool IsSkinned()
         {
             return true;

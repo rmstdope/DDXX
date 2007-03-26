@@ -74,15 +74,6 @@ namespace Dope.DDXX.Graphics
             Assert.AreEqual(texture, model.Materials[1].DiffuseTexture);
         }
 
-        [Test]
-        public void TestDrawSubset()
-        {
-            ConstructorTest();
-
-            Expect.Once.On(mesh).Method("DrawSubset").With(17);
-            model.DrawSubset(17);
-        }
-
         class MaterialMatcher : Matcher
         {
             private ExtendedMaterial material;

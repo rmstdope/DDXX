@@ -35,11 +35,6 @@ namespace Dope.DDXX.Graphics
             Materials = CreateModelMaterials(textureFactory, extendedMaterials);
         }
 
-        public override void DrawSubset(int subset)
-        {
-            mesh.DrawSubset(subset);
-        }
-
         public override void Draw(IEffectHandler effectHandler, ColorValue ambient, Matrix world, Matrix view, Matrix projection)
         {
             effectHandler.SetNodeConstants(world, view, projection);
