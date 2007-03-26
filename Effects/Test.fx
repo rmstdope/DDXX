@@ -88,14 +88,14 @@ TestVertexShader(InputVS input)
 	// Transform the position from object space to homogeneous projection space
 	output.Position = mul(input.Position, WorldViewProjectionT);
 	float3 normal = normalize(mul(input.Normal, WorldT));
-	output.Light = dot(normal, normalize(float3(1, 1, -1)));
+	output.Light = abs(dot(normal, normalize(float3(1, 1, -1))));
 	return output;
 }
 
 float4
 TestPixelShader(TestStruct input) : COLOR0
 {
-	return input.Light;
+	return 0.5f + 0.5f * input.Light;
 }
 
 
@@ -117,6 +117,7 @@ technique Test
 		StencilEnable			= false; //true;
 		StencilFunc				= Equal;
 		StencilPass				= Incr;
+		CullMode					= None;
 	}
 }
 
