@@ -16,7 +16,7 @@ namespace FMOD
     */
     public class VERSION
     {
-        public const int    number = 0x00040601;
+        public const int    number = 0x00040613;
         public const string dll    = "fmodex.dll";
     }
 

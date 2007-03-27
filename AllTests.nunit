@@ -5,7 +5,10 @@
     <assembly path="DemoFramework\bin\Debug\Dope.DDXX.DemoFramework.dll" />
     <assembly path="Graphics\bin\Debug\Dope.DDXX.Graphics.dll" />
     <assembly path="Input\bin\Debug\Dope.DDXX.Input.dll" />
-    <assembly path="Physics\bin\Debug\Dope.DDXX.Phsyics.dll" />
+    <assembly path="MeshBuilder\bin\Debug\Dope.DDXX.MeshBuilder.dll" />
+    <assembly path="MeshBuilder\bin\Debug\Dope.DDXX.MeshBuilder.dll" />
+    <assembly path="ParticleSystems\bin\Debug\Dope.DDXX.ParticleSystems.dll" />
+    <assembly path="Physics\bin\Debug\Dope.DDXX.Physics.dll" />
     <assembly path="SceneGraph\bin\Debug\Dope.DDXX.SceneGraph.dll" />
     <assembly path="Sound\bin\Debug\Dope.DDXX.Sound.dll" />
     <assembly path="Utility\bin\Debug\Dope.DDXX.Utility.dll" />
@@ -15,7 +18,10 @@
     <assembly path="DemoFramework\bin\Release\Dope.DDXX.DemoFramework.dll" />
     <assembly path="Graphics\bin\Release\Dope.DDXX.Graphics.dll" />
     <assembly path="Input\bin\Release\Dope.DDXX.Input.dll" />
-    <assembly path="Physics\bin\Release\Dope.DDXX.Phsyics.dll" />
+    <assembly path="MeshBuilder\bin\Release\Dope.DDXX.MeshBuilder.dll" />
+    <assembly path="MeshBuilder\bin\Release\Dope.DDXX.MeshBuilder.dll" />
+    <assembly path="ParticleSystems\bin\Release\Dope.DDXX.ParticleSystems.dll" />
+    <assembly path="Physics\bin\Release\Dope.DDXX.Physics.dll" />
     <assembly path="SceneGraph\bin\Release\Dope.DDXX.SceneGraph.dll" />
     <assembly path="Sound\bin\Release\Dope.DDXX.Sound.dll" />
     <assembly path="Utility\bin\Release\Dope.DDXX.Utility.dll" />
