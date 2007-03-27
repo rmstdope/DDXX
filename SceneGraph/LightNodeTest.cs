@@ -8,7 +8,7 @@ using Microsoft.DirectX.Direct3D;
 namespace Dope.DDXX.SceneGraph
 {
     [TestFixture]
-    class LightNodeTest
+    public class LightNodeTest
     {
         [SetUp]
         public void SetUp()
@@ -45,7 +45,7 @@ namespace Dope.DDXX.SceneGraph
             light.SetLightState(state);
 
             Assert.AreEqual(1, state.NumLights);
-            Assert.AreEqual(state.Positions, new Vector3[] { position1 });
+            Assert.AreEqual(state.Positions, new Vector4[] { new Vector4(position1.X, position1.Y, position1.Z, 1.0f) });
             Assert.AreEqual(state.DiffuseColor, new ColorValue[] { diffuse1 });
             Assert.AreEqual(state.SpecularColor, new ColorValue[] { specular1 });
         }

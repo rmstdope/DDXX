@@ -7,7 +7,7 @@ using NMock2;
 namespace Dope.DDXX.Utility
 {
     [TestFixture]
-    class AspectRatioTest
+    public class AspectRatioTest
     {
         [Test]
         public void RatioTest()
