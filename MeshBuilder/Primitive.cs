@@ -30,7 +30,6 @@ namespace Dope.DDXX.MeshBuilder
             int widthSegments, int heightSegments)
         {
             short v = 0;
-            short i = 0;
             Vertex[] vertices = new Vertex[(widthSegments + 1) * (heightSegments + 1)];
             short[] indices = new short[widthSegments * heightSegments * 6];
 

@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BoxPrimitiveTest.cs" />
+    <Compile Include="PlanePrimitiveTest.cs" />
     <Compile Include="Primitive.cs" />
     <Compile Include="PrimitiveTest.cs" />
     <Compile Include="IPrimitive.cs" />

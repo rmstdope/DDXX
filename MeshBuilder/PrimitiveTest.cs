@@ -13,7 +13,7 @@ namespace Dope.DDXX.MeshBuilder
     [TestFixture]
     public class PrimitiveTest : IGraphicsFactory, IMesh, IDevice, IGraphicsStream
     {
-        private Primitive primitive;
+        protected Primitive primitive;
         private int numFaces;
         private int numVertices;
         private bool vbLocked;
@@ -23,7 +23,7 @@ namespace Dope.DDXX.MeshBuilder
         private List<Vector3> normals;
         private short[] indices;
 
-        private enum Side
+        protected enum Side
         {
             FRONT = 0,
             BACK,
@@ -32,6 +32,7 @@ namespace Dope.DDXX.MeshBuilder
             LEFT,
             RIGHT
         }
+
         private enum VertexPosition
         {
             POSITION,
@@ -41,7 +42,7 @@ namespace Dope.DDXX.MeshBuilder
         private const float epsilon = 0.000001f;
 
         [SetUp]
-        public void SetUp()
+        public virtual void SetUp()
         {
             vbLocked = false;
             ibLocked = false;
@@ -51,164 +52,8 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
-        /// Check number of vertices for a box.
+        /// Test the CreateMesh method on a generic mesh.
         /// </summary>
-        [Test]
-        public void TestNumVerticesBoxSingleSegment()
-        {
-            Primitive box = Primitive.BoxPrimitive(10, 20, 30, 1, 1, 1);
-            Assert.AreEqual(24, box.Vertices.Length, "The box should have 24 vertices.");
-            Assert.AreEqual(36, box.Indices.Length, "The box should have 36 indices.");
-        }
-
-        /// <summary>
-        /// Check number of vertices for a box.
-        /// </summary>
-        [Test]
-        public void TestNumVerticesPlaneSingleSegment()
-        {
-            Primitive box = Primitive.PlanePrimitive(10, 30, 1, 1);
-            Assert.AreEqual(4, box.Vertices.Length, "The plane should have 4 vertices.");
-            Assert.AreEqual(6, box.Indices.Length, "The plane should have 6 indices.");
-        }
-
-        /// <summary>
-        /// Check number of vertices for a box.
-        /// </summary>
-        [Test]
-        public void TestNumVerticesPlaneMultipleSegments()
-        {
-            Primitive box = Primitive.PlanePrimitive(20, 40, 1, 4);
-            Assert.AreEqual(10, box.Vertices.Length, "The plane should have 10 vertices.");
-            Assert.AreEqual(24, box.Indices.Length, "The plane should have 24 indices.");
-        }
-
-        /// <summary>
-        /// Test a plane with only one segment.
-        /// </summary>
-        [Test]
-        public void TestPlaneSingleSegment()
-        {
-            primitive = Primitive.PlanePrimitive(10, 20, 1, 1);
-            int startVertex = 0;
-            int startIndex = 0;
-            int numVertices = 4;
-            int numTriangles = 2;
-            // Check vertices against plane (0, 0, -1, 0)
-            CheckInPlane(startVertex, numVertices, new Plane(0, 0, -1, 0));
-            // Check that indices points to the correct vertices
-            CheckIndices(startVertex, numVertices, startIndex, numTriangles * 3);
-            // Check that the indices create clockwise triangles
-            CheckClockwise(startIndex, numTriangles, new Vector3(0, 0, -1));
-            // Check normals
-            CheckNormals(startVertex, numVertices, new Vector3(0, 0, -1));
-            // Check limits
-            CheckLimits(10.0f, 20.0f, 1, 1);
-        }
-
-        /// <summary>
-        /// Test a plane with more segments.
-        /// </summary>
-        [Test]
-        public void TestPlaneMultipleSegment()
-        {
-            primitive = Primitive.PlanePrimitive(20, 40, 2, 4);
-            int startVertex = 0;
-            int startIndex = 0;
-            int numVertices = 15;
-            int numTriangles = 16;
-            // Check vertices against plane (0, 0, -1, 0)
-            CheckInPlane(startVertex, numVertices, new Plane(0, 0, -1, 0));
-            // Check that indices points to the correct vertices
-            CheckIndices(startVertex, numVertices, startIndex, numTriangles * 3);
-            // Check that the indices create clockwise triangles
-            CheckClockwise(startIndex, numTriangles, new Vector3(0, 0, -1));
-            // Check normals
-            CheckNormals(startVertex, numVertices, new Vector3(0, 0, -1));
-            // Check limits
-            CheckLimits(20.0f, 40.0f, 2, 4);
-        }
-
-        private void CheckLimits(float width, float height, int widthSegments, int heightSegments)
-        {
-            int v = 0;
-            for (int y = 0; y < heightSegments + 1; y++)
-            {
-                for (int x = 0; x < widthSegments + 1; x++)
-                {
-                    if (y == 0)
-                        Assert.AreEqual(height / 2, primitive.Vertices[v].Position.Y);
-                    else
-                        Assert.IsTrue(primitive.Vertices[v].Position.Y <
-                            primitive.Vertices[v - widthSegments - 1].Position.Y);
-                    if (y == heightSegments)
-                        Assert.AreEqual(-height / 2, primitive.Vertices[v].Position.Y);
-                    if (x == 0)
-                        Assert.AreEqual(-width / 2, primitive.Vertices[v].Position.X);
-                    else
-                        Assert.IsTrue(primitive.Vertices[v].Position.X >
-                            primitive.Vertices[v - 1].Position.X);
-                    if (x == widthSegments)
-                        Assert.AreEqual(width / 2, primitive.Vertices[v].Position.X);
-                    v++;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Test the front side of the box when it only has one segment.
-        /// </summary>
-        [Test]
-        public void TestFrontSingleSegment()
-        {
-            TestBoxSingleSegment(Side.FRONT, new Vector3(0, 0, -1));
-        }
-
-        /// <summary>
-        /// Test the back side of the box when it only has one segment.
-        /// </summary>
-        [Test]
-        public void TestBackSingleSegment()
-        {
-            TestBoxSingleSegment(Side.BACK, new Vector3(0, 0, 1));
-        }
-
-        /// <summary>
-        /// Test the top side of the box when it only has one segment.
-        /// </summary>
-        [Test]
-        public void TestTopSingleSegment()
-        {
-            TestBoxSingleSegment(Side.TOP, new Vector3(0, 1, 0));
-        }
-
-        /// <summary>
-        /// Test the bottom side of the box when it only has one segment.
-        /// </summary>
-        [Test]
-        public void TestBottomSingleSegment()
-        {
-            TestBoxSingleSegment(Side.BOTTOM, new Vector3(0, -1, 0));
-        }
-
-        /// <summary>
-        /// Test the left side of the box when it only has one segment.
-        /// </summary>
-        [Test]
-        public void TestLeftSingleSegment()
-        {
-            TestBoxSingleSegment(Side.LEFT, new Vector3(-1, 0, 0));
-        }
-
-        /// <summary>
-        /// Test the right side of the box when it only has one segment.
-        /// </summary>
-        [Test]
-        public void TestRightSingleSegment()
-        {
-            TestBoxSingleSegment(Side.RIGHT, new Vector3(1, 0, 0));
-        }
-
         [Test]
         public void TestCreateMesh()
         {
@@ -239,39 +84,17 @@ namespace Dope.DDXX.MeshBuilder
                 Assert.AreEqual(indices[i], this.indices[i]);
         }
 
-        private void TestBoxSingleSegment(Side side, Vector3 normal)
-        {
-            float sideLength;
-            if (side == Side.BACK || side == Side.FRONT)
-                sideLength = 5;
-            else if (side == Side.TOP || side == Side.BOTTOM)
-                sideLength = 15;
-            else
-                sideLength = 10;
-            primitive = Primitive.BoxPrimitive(10, 20, 30, 1, 1, 1);
-            int v = GetStartVertex(side, 1, 1, 1);
-            int i = GetStartIndex(side, 1, 1, 1);
-            // Check vertices against plane (0, 0, -1, -sideLength)
-            CheckInPlane(v, v + 4, new Plane(normal.X, normal.Y, normal.Z, -sideLength));
-            // Check that indices points to the correct vertices
-            CheckIndices(v, v + 4, i, i + 6);
-            // Check that the indices create clockwise triangles
-            CheckClockwise(i, 2, normal);
-            // Check normals
-            CheckNormals(v, v + 4, normal);
-        }
-
-        private int GetStartVertex(Side side, int lengthSegments, int widthSegments, int heightSegments)
+        protected int GetStartVertex(Side side, int lengthSegments, int widthSegments, int heightSegments)
         {
             return 4 * (int)side;
         }
 
-        private int GetStartIndex(Side side, int lengthSegments, int widthSegments, int heightSegments)
+        protected int GetStartIndex(Side side, int lengthSegments, int widthSegments, int heightSegments)
         {
             return 6 * (int)side;
         }
 
-        private void CheckInPlane(int startIndex, int endIndex, Plane plane)
+        protected void CheckInPlane(int startIndex, int endIndex, Plane plane)
         {
             for (int i = startIndex; i < endIndex; i++)
             {
@@ -280,13 +103,13 @@ namespace Dope.DDXX.MeshBuilder
             }
         }
 
-        private void CheckNormals(int startIndex, int endIndex, Vector3 normal)
+        protected void CheckNormals(int startIndex, int endIndex, Vector3 normal)
         {
             for (int i = startIndex; i < endIndex; i++)
                 Assert.AreEqual(normal, primitive.Vertices[i].Normal);
         }
 
-        private void CheckClockwise(int startI, int numTriangles, Vector3 normal)
+        protected void CheckClockwise(int startI, int numTriangles, Vector3 normal)
         {
             for (int i = 0; i < numTriangles; i++)
             {
@@ -301,7 +124,7 @@ namespace Dope.DDXX.MeshBuilder
             }
         }
 
-        private void CheckIndices(int startV, int endV, int startI, int endI)
+        protected void CheckIndices(int startV, int endV, int startI, int endI)
         {
             for (int i = startI; i < endI; i++)
             {
