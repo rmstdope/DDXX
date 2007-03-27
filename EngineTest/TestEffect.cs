@@ -40,7 +40,7 @@ namespace EngineTest
 
             camera = new CameraNode("MyCamera");
             //camera.WorldState.Tilt(2.0f);
-            camera.WorldState.MoveForward(-5.0f);
+            camera.WorldState.MoveForward(-100.0f);
             scene.AddNode(camera);
             scene.ActiveCamera = camera;
 
@@ -72,11 +72,10 @@ namespace EngineTest
 
             MeshBuilder builder = new MeshBuilder(D3DDriver.GraphicsFactory, D3DDriver.GetInstance().Device);
             builder.AddPrimitive(Primitive.PlanePrimitive(50, 50, 10, 10), "Box");
-            IMesh mesh = builder.CreateMesh("Box");
-            model = new Model(mesh);
+            model = builder.CreateModel("Box");
             boxModel = new ModelNode("Box", model,
                 new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Test", model));
-            //scene.AddNode(boxModel);
+            scene.AddNode(boxModel);
 
             scene.DebugPrintGraph();
             scene.Validate();

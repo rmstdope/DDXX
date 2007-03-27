@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Body.cs" />
     <Compile Include="BodyTest.cs" />
+    <Compile Include="IBody.cs" />
     <Compile Include="IConstraint.cs" />
     <Compile Include="IPhysicalParticle.cs" />
     <Compile Include="PhysicalParticle.cs" />

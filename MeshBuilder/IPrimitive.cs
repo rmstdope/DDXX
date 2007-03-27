@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
+using Dope.DDXX.Physics;
 
 namespace Dope.DDXX.MeshBuilder
 {
@@ -9,6 +10,7 @@ namespace Dope.DDXX.MeshBuilder
     {
         Vertex[] Vertices { get; }
         short[] Indices { get; }
-        IMesh CreateMesh(IGraphicsFactory factory, IDevice device);
+        IBody Body { get; } 
+        IModel CreateModel(IGraphicsFactory factory, IDevice device);
     }
 }

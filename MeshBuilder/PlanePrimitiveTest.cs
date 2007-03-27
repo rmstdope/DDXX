@@ -16,6 +16,12 @@ namespace Dope.DDXX.MeshBuilder
             base.SetUp();
         }
 
+        [TearDown]
+        public override void TearDown()
+        {
+            base.TearDown();
+        }
+
         /// <summary>
         /// Check number of vertices for a plane with one segment.
         /// </summary>

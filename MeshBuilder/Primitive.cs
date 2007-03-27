@@ -4,6 +4,7 @@ using System.Text;
 using Dope.DDXX.Graphics;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using Dope.DDXX.Physics;
 
 namespace Dope.DDXX.MeshBuilder
 {
@@ -11,6 +12,7 @@ namespace Dope.DDXX.MeshBuilder
     {
         private Vertex[] vertices;
         private short[] indices;
+        private IBody body;
 
         public Primitive(Vertex[] vertices, short[] indices)
         {
@@ -26,10 +28,13 @@ namespace Dope.DDXX.MeshBuilder
         /// <param name="widthSegments">The number of segments the cloth has in x.</param>
         /// <param name="heightSegments">The number of segments the cloth has in y.</param>
         /// <returns></returns>
-        public static Primitive ClothPrimitive(float width, float height,
+        public static Primitive ClothPrimitive(IBody body, float width, float height,
             int widthSegments, int heightSegments)
         {
             Primitive cloth = PlanePrimitive(width, height, widthSegments, heightSegments);
+            for (int i = 0; i < cloth.vertices.Length; i++)
+                body.AddParticle(new PhysicalParticle(1, 1));
+            //cloth.body = body;
             return cloth;
         }
 
@@ -177,12 +182,35 @@ namespace Dope.DDXX.MeshBuilder
             }
         }
 
-        public IMesh CreateMesh(IGraphicsFactory factory, IDevice device)
+        public IBody Body
+        {
+            get
+            {
+                return body;
+            }
+            set
+            {
+                body = value;
+            }
+        }
+
+        public IModel CreateModel(IGraphicsFactory factory, IDevice device)
+        {
+            IModel model;
+            IMesh mesh = CreateMesh(factory, device);
+            if (body == null)
+                model = new Model(mesh);
+            else
+                model = new PhysicalModel(mesh, body);
+            return model;
+        }
+
+        private IMesh CreateMesh(IGraphicsFactory factory, IDevice device)
         {
             VertexElementArray declaration = new VertexElementArray();
             declaration.AddPositions();
             declaration.AddNormals();
-            IMesh mesh = factory.CreateMesh(indices.Length / 3, vertices.Length, MeshFlags.Managed, 
+            IMesh mesh = factory.CreateMesh(indices.Length / 3, vertices.Length, MeshFlags.Managed,
                 declaration.VertexElements, device);
             IGraphicsStream stream = mesh.LockVertexBuffer(LockFlags.None);
             for (int i = 0; i < vertices.Length; i++)

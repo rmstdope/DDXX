@@ -7,12 +7,17 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using System.Windows.Forms;
+using NMock2;
+using Dope.DDXX.Physics;
 
 namespace Dope.DDXX.MeshBuilder
 {
     [TestFixture]
     public class PrimitiveTest : IGraphicsFactory, IMesh, IDevice, IGraphicsStream
     {
+        protected Mockery mockery;
+        protected IBody body;
+
         protected Primitive primitive;
         private int numFaces;
         private int numVertices;
@@ -44,6 +49,9 @@ namespace Dope.DDXX.MeshBuilder
         [SetUp]
         public virtual void SetUp()
         {
+            mockery = new Mockery();
+            body = mockery.NewMock<IBody>();
+
             vbLocked = false;
             ibLocked = false;
             positions = new List<Vector3>();
@@ -51,29 +59,47 @@ namespace Dope.DDXX.MeshBuilder
             vertexPosition = VertexPosition.POSITION;
         }
 
+        [TearDown]
+        public virtual void TearDown()
+        {
+            mockery.VerifyAllExpectationsHaveBeenMet();
+        }
+
         /// <summary>
-        /// Test the CreateMesh method on a generic mesh.
+        /// Test the CreateModel method on a generic mesh.
         /// </summary>
         [Test]
-        public void TestCreateMesh()
+        public void TestCreateModel()
         {
-            numFaces = 1;
-            numVertices = 2;
-            Vertex[] vertices = new Vertex[numVertices];
-            short[] indices = new short[numFaces * 3];
-            for (int i = 0; i < numVertices; i++)
-            {
-                vertices[i].Position = new Vector3(i, i + 1, i + 2);
-                vertices[i].Normal = new Vector3(i + 2, i + 3, i + 4);
-            }
-            for (int i = 0; i < numFaces * 3; i++)
-                indices[i] = (short)i;
-            primitive = new Primitive(vertices, indices);
-            IMesh mesh = primitive.CreateMesh(this, this);
-            Assert.AreSame(this, mesh, "This should have been returned as IMesh.");
+            Vertex[] vertices;
+            short[] indices;
+            CreateModel(out vertices, out indices);
+            IModel model = primitive.CreateModel(this, this);
+            CheckModel(vertices, indices, model);
+            Assert.IsNotInstanceOfType(typeof(PhysicalModel), model, "Model shall not be PhysicalModel");
+        }
+
+        /// <summary>
+        /// Test that the created model is a physical model.
+        /// </summary>
+        [Test]
+        public void TestCreatePhysicalModel()
+        {
+            Vertex[] vertices;
+            short[] indices;
+            CreateModel(out vertices, out indices);
+            primitive.Body = body;
+            IModel model = primitive.CreateModel(this, this);
+            CheckModel(vertices, indices, model);
+            Assert.IsInstanceOfType(typeof(PhysicalModel), model, "Model shall be PhysicalModel");
+        }
+
+        private void CheckModel(Vertex[] vertices, short[] indices, IModel model)
+        {
+            Assert.AreSame(this, model.Mesh, "This should have been returned as Mesh.");
             Assert.IsFalse(vbLocked, "Vertex buffer should not be locked.");
             Assert.IsFalse(ibLocked, "Vertex buffer should not be locked.");
-            Assert.AreEqual(numVertices, positions.Count, "Vertices should be "  + numVertices);
+            Assert.AreEqual(numVertices, positions.Count, "Vertices should be " + numVertices);
             Assert.AreEqual(numFaces * 3, this.indices.Length, "Indices should be " + numFaces * 3);
             for (int i = 0; i < numVertices; i++)
             {
@@ -82,6 +108,22 @@ namespace Dope.DDXX.MeshBuilder
             }
             for (int i = 0; i < numFaces * 3; i++)
                 Assert.AreEqual(indices[i], this.indices[i]);
+        }
+
+        private void CreateModel(out Vertex[] vertices, out short[] indices)
+        {
+            numFaces = 1;
+            numVertices = 2;
+            vertices = new Vertex[numVertices];
+            indices = new short[numFaces * 3];
+            for (int i = 0; i < numVertices; i++)
+            {
+                vertices[i].Position = new Vector3(i, i + 1, i + 2);
+                vertices[i].Normal = new Vector3(i + 2, i + 3, i + 4);
+            }
+            for (int i = 0; i < numFaces * 3; i++)
+                indices[i] = (short)i;
+            primitive = new Primitive(vertices, indices);
         }
 
         protected int GetStartVertex(Side side, int lengthSegments, int widthSegments, int heightSegments)

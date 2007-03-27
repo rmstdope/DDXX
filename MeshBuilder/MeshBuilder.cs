@@ -25,11 +25,11 @@ namespace Dope.DDXX.MeshBuilder
             primitives[name] = primitive;
         }
 
-        public IMesh CreateMesh(string name)
+        public IModel CreateModel(string name)
         {
             if (!primitives.ContainsKey(name))
                 throw new DDXXException("Can not create mesh from a primitive that does not exist.");
-            return primitives[name].CreateMesh(factory, device);
+            return primitives[name].CreateModel(factory, device);
         }
     }
 }

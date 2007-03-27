@@ -8,11 +8,12 @@ using Microsoft.DirectX.Direct3D;
 using System.Windows.Forms;
 using Dope.DDXX.Utility;
 using System.Drawing;
+using Dope.DDXX.Physics;
 
 namespace Dope.DDXX.MeshBuilder
 {
     [TestFixture]
-    public class MeshBuilderTest : IGraphicsFactory, IMesh, IPrimitive, IDevice
+    public class MeshBuilderTest : IGraphicsFactory, IModel, IPrimitive, IDevice
     {
         private MeshBuilder builder;
 
@@ -23,14 +24,14 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
-        /// Test creating a mesh from a primitive
+        /// Test creating a Model from a primitive
         /// </summary>
         [Test]
         public void TestCreateMesh()
         {
             builder.AddPrimitive(this, "Name1");
-            IMesh mesh = builder.CreateMesh("Name1");
-            Assert.AreSame(this, mesh, "This instance should be returned as IMesh.");
+            IModel model = builder.CreateModel("Name1");
+            Assert.AreSame(this, model, "This instance should be returned as IModel.");
         }
 
         /// <summary>
@@ -51,418 +52,8 @@ namespace Dope.DDXX.MeshBuilder
         [ExpectedException(typeof(DDXXException))]
         public void TestCreateWithoutAdd()
         {
-            IMesh mesh = builder.CreateMesh("Name1");
+            IModel model = builder.CreateModel("Name1");
         }
-
-
-        #region IMesh Members
-
-        public VertexElement[] Declaration
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public Device Device
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public bool Disposed
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public void Dispose()
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IndexBuffer IndexBuffer
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public int NumberAttributes
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public int NumberBytesPerVertex
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public int NumberFaces
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public int NumberVertices
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public MeshOptions Options
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public VertexBuffer VertexBuffer
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public VertexFormats VertexFormat
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public IMesh Clean(CleanType cleanType, IGraphicsStream adjacency, IGraphicsStream adjacencyOut)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IMesh Clean(CleanType cleanType, int[] adjacency, out int[] adjacencyOut)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IMesh Clean(CleanType cleanType, IGraphicsStream adjacency, IGraphicsStream adjacencyOut, out string errorsAndWarnings)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IMesh Clean(CleanType cleanType, int[] adjacency, out int[] adjacencyOut, out string errorsAndWarnings)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IMesh Clone(MeshFlags options, IGraphicsStream declaration, IDevice device)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IMesh Clone(MeshFlags options, VertexElement[] declaration, IDevice device)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IMesh Clone(MeshFlags options, VertexFormats vertexFormat, IDevice device)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void ComputeNormals()
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void ComputeNormals(IGraphicsStream adjacency)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void ComputeNormals(int[] adjacency)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public int[] ConvertAdjacencyToPointReps(IGraphicsStream adjacency)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public int[] ConvertAdjacencyToPointReps(int[] adjaceny)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public int[] ConvertPointRepsToAdjacency(IGraphicsStream pointReps)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public int[] ConvertPointRepsToAdjacency(int[] pointReps)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void DrawSubset(int attributeID)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void GenerateAdjacency(float epsilon, int[] adjacency)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public AttributeRange[] GetAttributeTable()
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IGraphicsStream LockIndexBuffer(LockFlags flags)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public Array LockIndexBuffer(Type typeIndex, LockFlags flags, params int[] ranks)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IGraphicsStream LockVertexBuffer(LockFlags flags)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public Array LockVertexBuffer(Type typeVertex, LockFlags flags, params int[] ranks)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void SetIndexBufferData(object data, LockFlags flags)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void SetVertexBufferData(object data, LockFlags flags)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void UnlockIndexBuffer()
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void UnlockVertexBuffer()
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void UpdateSemantics(IGraphicsStream declaration)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void UpdateSemantics(VertexElement[] declaration)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void ComputeTangent(int texStage, int tangentIndex, int binormIndex, int wrap)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void ComputeTangent(int texStage, int tangentIndex, int binormIndex, int wrap, IGraphicsStream adjacency)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void ComputeTangent(int texStage, int tangentIndex, int binormIndex, int wrap, int[] adjacency)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void ComputeTangentFrame(TangentOptions options)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public bool Intersect(Vector3 rayPos, Vector3 rayDir)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public bool Intersect(Vector3 rayPos, Vector3 rayDir, out IntersectInformation closestHit)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public bool Intersect(Vector3 rayPos, Vector3 rayDir, out IntersectInformation[] allHits)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public bool Intersect(Vector3 rayPos, Vector3 rayDir, out IntersectInformation closestHit, out IntersectInformation[] allHits)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public bool IntersectSubset(int attributeId, Vector3 rayPos, Vector3 rayDir)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public bool IntersectSubset(int attributeId, Vector3 rayPos, Vector3 rayDir, out IntersectInformation closestHit)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public bool IntersectSubset(int attributeId, Vector3 rayPos, Vector3 rayDir, out IntersectInformation[] allHits)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public bool IntersectSubset(int attributeId, Vector3 rayPos, Vector3 rayDir, out IntersectInformation closestHit, out IntersectInformation[] allHits)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IGraphicsStream LockAttributeBuffer(LockFlags flags)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public int[] LockAttributeBufferArray(LockFlags flags)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IMesh Optimize(MeshFlags flags, IGraphicsStream adjacencyIn)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IMesh Optimize(MeshFlags flags, int[] adjacencyIn)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IMesh Optimize(MeshFlags flags, IGraphicsStream adjacencyIn, out int[] adjacencyOut, out int[] faceRemap, out IGraphicsStream vertexRemap)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IMesh Optimize(MeshFlags flags, int[] adjacencyIn, out int[] adjacencyOut, out int[] faceRemap, out IGraphicsStream vertexRemap)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void OptimizeInPlace(MeshFlags flags, IGraphicsStream adjacencyIn)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void OptimizeInPlace(MeshFlags flags, int[] adjacencyIn)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void OptimizeInPlace(MeshFlags flags, IGraphicsStream adjacencyIn, out int[] adjacencyOut, out int[] faceRemap, out IGraphicsStream vertexRemap)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void OptimizeInPlace(MeshFlags flags, int[] adjacencyIn, out int[] adjacencyOut, out int[] faceRemap, out IGraphicsStream vertexRemap)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void Save(System.IO.Stream stream, IGraphicsStream adjacency, ExtendedMaterial[] materials, XFileFormat format)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void Save(System.IO.Stream stream, int[] adjacency, ExtendedMaterial[] materials, XFileFormat format)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void Save(string filename, IGraphicsStream adjacency, ExtendedMaterial[] materials, XFileFormat format)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void Save(string filename, int[] adjacency, ExtendedMaterial[] materials, XFileFormat format)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void Save(System.IO.Stream stream, IGraphicsStream adjacency, ExtendedMaterial[] materials, EffectInstance[] effects, XFileFormat format)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void Save(System.IO.Stream stream, int[] adjacency, ExtendedMaterial[] materials, EffectInstance[] effects, XFileFormat format)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void Save(string filename, IGraphicsStream adjacency, ExtendedMaterial[] materials, EffectInstance[] effects, XFileFormat format)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void Save(string filename, int[] adjacency, ExtendedMaterial[] materials, EffectInstance[] effects, XFileFormat format)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void SetAttributeTable(AttributeRange[] table)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void UnlockAttributeBuffer()
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void UnlockAttributeBuffer(int[] dataAttribute)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void Validate(IGraphicsStream adjacency)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void Validate(int[] adjacency)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void Validate(IGraphicsStream adjacency, out string errorsAndWarnings)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void Validate(int[] adjacency, out string errorsAndWarnings)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void WeldVertices(WeldEpsilonsFlags flags, WeldEpsilons epsilons, int[] adjacencyIn)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void WeldVertices(WeldEpsilonsFlags flags, WeldEpsilons epsilons, IGraphicsStream adjacencyIn, IGraphicsStream adjacencyOut)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void WeldVertices(WeldEpsilonsFlags flags, WeldEpsilons epsilons, int[] adjacencyIn, out IGraphicsStream vertexRemap)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void WeldVertices(WeldEpsilonsFlags flags, WeldEpsilons epsilons, IGraphicsStream adjacencyIn, IGraphicsStream adjacencyOut, out int[] faceRemap, out IGraphicsStream vertexRemap)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void WeldVertices(WeldEpsilonsFlags flags, WeldEpsilons epsilons, int[] adjacencyIn, out int[] adjacencyOut, out int[] faceRemap, out IGraphicsStream vertexRemap)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        #endregion
 
         #region IGraphicsFactory Members
 
@@ -605,7 +196,12 @@ namespace Dope.DDXX.MeshBuilder
             get { throw new Exception("The method or operation is not implemented."); }
         }
 
-        public IMesh CreateMesh(IGraphicsFactory factory, IDevice device)
+        public IBody Body
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public IModel CreateModel(IGraphicsFactory factory, IDevice device)
         {
             Assert.AreSame(this, factory, "Factory should be same as this.");
             return this;
@@ -1436,6 +1032,60 @@ namespace Dope.DDXX.MeshBuilder
             throw new Exception("The method or operation is not implemented.");
         }
 
+        public bool Disposed
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public void Dispose()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
         #endregion
+
+        #region IModel Members
+
+        public ModelMaterial[] Materials
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public IMesh Mesh
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public bool IsSkinned()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Draw(IEffectHandler effectHandler, ColorValue ambient, Matrix world, Matrix view, Matrix projection)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Step()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
+
     }
 }

@@ -18,9 +18,9 @@
 	</Effect>
   <!--Effect name="NormalMapEffect" track="0" startTime="0.0" endTime="300.0">
   </Effect-->
-  <PostEffect name="BlurPostEffect" track="0" startTime="0.0" endTime="300.0">
+  <!--PostEffect name="BlurPostEffect" track="0" startTime="0.0" endTime="300.0">
     <Parameter name="NumPasses" int="3" />
-  </PostEffect>
+  </PostEffect-->
   <!--PostEffect name="MonochromePostEffect" track="0" startTime="0.0" endTime="2.0">
 	</PostEffect>
 	<PostEffect name="MonochromePostEffect" track="0" startTime="0.1" endTime="40.0">

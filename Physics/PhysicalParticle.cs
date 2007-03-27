@@ -17,6 +17,18 @@ namespace Dope.DDXX.Physics
         /// <summary>
         /// Constructor
         /// </summary>
+        /// <param name="invMass">1/m (mass of the particle)</param>
+        /// <param name="dragCoefficient">Drag coefficient of the particle.</param>
+        public PhysicalParticle(float invMass, float dragCoefficient)
+        {
+            this.invMass = invMass;
+            lastDeltaTime = 1.0f;
+            externalForces = new Vector3(0, 0, 0);
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
         /// <param name="startPosition">The starting position of the particle.</param>
         /// <param name="invMass">1/m (mass of the particle)</param>
         /// <param name="dragCoefficient">Drag coefficient of the particle.</param>
