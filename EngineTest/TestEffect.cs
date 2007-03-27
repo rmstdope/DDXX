@@ -40,7 +40,7 @@ namespace EngineTest
 
             camera = new CameraNode("MyCamera");
             //camera.WorldState.Tilt(2.0f);
-            camera.WorldState.MoveForward(-100.0f);
+            camera.WorldState.MoveForward(-5.0f);
             scene.AddNode(camera);
             scene.ActiveCamera = camera;
 
@@ -76,7 +76,7 @@ namespace EngineTest
             model = new Model(mesh);
             boxModel = new ModelNode("Box", model,
                 new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Test", model));
-            scene.AddNode(boxModel);
+            //scene.AddNode(boxModel);
 
             scene.DebugPrintGraph();
             scene.Validate();

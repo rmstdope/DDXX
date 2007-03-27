@@ -22,9 +22,9 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestNumVerticesPlaneSingleSegment()
         {
-            Primitive box = Primitive.PlanePrimitive(10, 30, 1, 1);
-            Assert.AreEqual(4, box.Vertices.Length, "The plane should have 4 vertices.");
-            Assert.AreEqual(6, box.Indices.Length, "The plane should have 6 indices.");
+            Primitive plane = Primitive.PlanePrimitive(10, 30, 1, 1);
+            Assert.AreEqual(4, plane.Vertices.Length, "The plane should have 4 vertices.");
+            Assert.AreEqual(6, plane.Indices.Length, "The plane should have 6 indices.");
         }
 
         /// <summary>
@@ -33,9 +33,9 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestNumVerticesPlaneMultipleSegments()
         {
-            Primitive box = Primitive.PlanePrimitive(20, 40, 1, 4);
-            Assert.AreEqual(10, box.Vertices.Length, "The plane should have 10 vertices.");
-            Assert.AreEqual(24, box.Indices.Length, "The plane should have 24 indices.");
+            Primitive plane = Primitive.PlanePrimitive(20, 40, 1, 4);
+            Assert.AreEqual(10, plane.Vertices.Length, "The plane should have 10 vertices.");
+            Assert.AreEqual(24, plane.Indices.Length, "The plane should have 24 indices.");
         }
 
         /// <summary>

@@ -18,18 +18,18 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
-        /// Check number of vertices for a box.
+        /// Check number of vertices for a plane.
         /// </summary>
         [Test]
         public void TestNumVerticesSingleSegment()
         {
             Primitive box = Primitive.BoxPrimitive(10, 20, 30, 1, 1, 1);
-            Assert.AreEqual(24, box.Vertices.Length, "The box should have 24 vertices.");
-            Assert.AreEqual(36, box.Indices.Length, "The box should have 36 indices.");
+            Assert.AreEqual(24, box.Vertices.Length, "The plane should have 24 vertices.");
+            Assert.AreEqual(36, box.Indices.Length, "The plane should have 36 indices.");
         }
 
         /// <summary>
-        /// Test the front side of the box when it only has one segment.
+        /// Test the front side of the plane when it only has one segment.
         /// </summary>
         [Test]
         public void TestFrontSingleSegment()
@@ -38,7 +38,7 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
-        /// Test the back side of the box when it only has one segment.
+        /// Test the back side of the plane when it only has one segment.
         /// </summary>
         [Test]
         public void TestBackSingleSegment()
@@ -47,7 +47,7 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
-        /// Test the top side of the box when it only has one segment.
+        /// Test the top side of the plane when it only has one segment.
         /// </summary>
         [Test]
         public void TestTopSingleSegment()
@@ -56,7 +56,7 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
-        /// Test the bottom side of the box when it only has one segment.
+        /// Test the bottom side of the plane when it only has one segment.
         /// </summary>
         [Test]
         public void TestBottomSingleSegment()
@@ -65,7 +65,7 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
-        /// Test the left side of the box when it only has one segment.
+        /// Test the left side of the plane when it only has one segment.
         /// </summary>
         [Test]
         public void TestLeftSingleSegment()
@@ -74,7 +74,7 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
-        /// Test the right side of the box when it only has one segment.
+        /// Test the right side of the plane when it only has one segment.
         /// </summary>
         [Test]
         public void TestRightSingleSegment()

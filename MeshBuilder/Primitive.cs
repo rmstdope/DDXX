@@ -19,12 +19,27 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
+        /// Create a physical primitive that consists of a cloth.
+        /// </summary>
+        /// <param name="width">The width of the cloth.</param>
+        /// <param name="height">The height of the cloth.</param>
+        /// <param name="widthSegments">The number of segments the cloth has in x.</param>
+        /// <param name="heightSegments">The number of segments the cloth has in y.</param>
+        /// <returns></returns>
+        public static Primitive ClothPrimitive(float width, float height,
+            int widthSegments, int heightSegments)
+        {
+            Primitive cloth = PlanePrimitive(width, height, widthSegments, heightSegments);
+            return cloth;
+        }
+
+        /// <summary>
         /// Create a primitive that consists of a plane.
         /// </summary>
         /// <param name="width">The width of the plane.</param>
         /// <param name="height">The height of the plane.</param>
-        /// <param name="widthSegments">The number of segments the box has in x.</param>
-        /// <param name="heightSegments">The number of segments the box has in y.</param>
+        /// <param name="widthSegments">The number of segments the plane has in x.</param>
+        /// <param name="heightSegments">The number of segments the plane has in y.</param>
         /// <returns></returns>
         public static Primitive PlanePrimitive(float width, float height,
             int widthSegments, int heightSegments)
@@ -48,14 +63,14 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
-        /// Create a primitive that consist of a box.
+        /// Create a primitive that consist of a plane.
         /// </summary>
-        /// <param name="length">The length of the box (z)</param>
-        /// <param name="width">The width of the box (x)</param>
-        /// <param name="height">The height of the box (y)</param>
-        /// <param name="lengthSegments">The number of segments the box has in z.</param>
-        /// <param name="widthSegments">The number of segments the box has in x.</param>
-        /// <param name="heightSegments">The number of segments the box has in y.</param>
+        /// <param name="length">The length of the plane (z)</param>
+        /// <param name="width">The width of the plane (x)</param>
+        /// <param name="height">The height of the plane (y)</param>
+        /// <param name="lengthSegments">The number of segments the plane has in z.</param>
+        /// <param name="widthSegments">The number of segments the plane has in x.</param>
+        /// <param name="heightSegments">The number of segments the plane has in y.</param>
         /// <returns></returns>
         public static Primitive BoxPrimitive(float length, float width, float height, 
             int lengthSegments, int widthSegments, int heightSegments)
@@ -181,6 +196,7 @@ namespace Dope.DDXX.MeshBuilder
             mesh.UnlockIndexBuffer();
             return mesh;
         }
+
 
     }
 }

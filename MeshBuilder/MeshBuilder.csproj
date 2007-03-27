@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoxPrimitiveTest.cs" />
+    <Compile Include="ClothPrimitiveTest.cs" />
     <Compile Include="PlanePrimitiveTest.cs" />
     <Compile Include="Primitive.cs" />
     <Compile Include="PrimitiveTest.cs" />
