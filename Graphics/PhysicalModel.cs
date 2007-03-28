@@ -7,14 +7,18 @@ namespace Dope.DDXX.Graphics
 {
     public class PhysicalModel : Model 
     {
+        private IBody body;
+
         public PhysicalModel(IMesh mesh, IBody body)
             : base(mesh)
         {
+            this.body = body;
         }
 
-        //public static PhysicalModel CreateCloth(float width, float height)
-        //{
-        //    throw new Exception("The method or operation is not implemented.");
-        //}
+        public override void Step()
+        {
+            //base.Step();
+            body.Step();
+        }
     }
 }
