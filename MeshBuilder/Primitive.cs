@@ -74,6 +74,7 @@ namespace Dope.DDXX.MeshBuilder
                 AddConstraint(body, p1, p2);
             }
             cloth.body = body;
+            body.SetGravity(new Vector3(0, -1, 0));
             return cloth;
         }
 

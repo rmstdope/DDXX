@@ -71,7 +71,7 @@ namespace EngineTest
             //scene.ActiveCamera = scene.GetNodeByName("Camera") as CameraNode;
 
             MeshBuilder builder = new MeshBuilder(D3DDriver.GraphicsFactory, D3DDriver.GetInstance().Device);
-            builder.AddPrimitive(Primitive.PlanePrimitive(50, 50, 10, 10), "Box");
+            builder.AddPrimitive(Primitive.ClothPrimitive(new Body(), 50, 50, 10, 10), "Box");
             model = builder.CreateModel("Box");
             clothModel = new ModelNode("Box", model,
                 new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Test", model));

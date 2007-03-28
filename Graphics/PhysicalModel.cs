@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Physics;
+using Dope.DDXX.Utility;
+using Microsoft.DirectX.Direct3D;
+using Microsoft.DirectX;
 
 namespace Dope.DDXX.Graphics
 {
@@ -13,12 +16,21 @@ namespace Dope.DDXX.Graphics
             : base(mesh)
         {
             this.body = body;
+            if (body.Particles.Count != mesh.NumberVertices)
+                throw new DDXXException("Mesh and Body must have equal number of vertices/particles.");
         }
 
         public override void Step()
         {
-            //base.Step();
             body.Step();
+
+            IGraphicsStream stream = Mesh.LockVertexBuffer(LockFlags.None);
+            for (int i = 0; i < body.Particles.Count; i++)
+            {
+                stream.Write(body.Particles[i].Position);
+                stream.Write(new Vector3(0, 0, -1));
+            }
+            Mesh.UnlockVertexBuffer();
         }
     }
 }

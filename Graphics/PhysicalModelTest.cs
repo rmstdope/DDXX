@@ -3,26 +3,87 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using Dope.DDXX.Physics;
+using Dope.DDXX.Utility;
+using Microsoft.DirectX;
 
 namespace Dope.DDXX.Graphics
 {
     [TestFixture]
-    public class PhysicalModelTest : IMesh, IBody
+    public class PhysicalModelTest : IMesh, IBody, IGraphicsStream
     {
+        List<IPhysicalParticle> particles;
+        int numVertices;
         private bool bodyStep;
+        private bool vbLocked;
+        private List<Vector3> positions;
+        private List<Vector3> normals;
+        private VertexPosition vertexPosition;
+
+        private enum VertexPosition
+        {
+            POSITION,
+            NORMAL
+        }
 
         [SetUp]
         public void SetUp()
         {
             bodyStep = false;
+            particles = new List<IPhysicalParticle>();
+            positions = new List<Vector3>();
+            normals = new List<Vector3>();
+            numVertices = -1;
+            vbLocked = false;
+            vertexPosition = VertexPosition.POSITION;
         }
 
+        /// <summary>
+        /// Test creation of a model which does not have the same number of vertices 
+        /// and particles in the IBody.
+        /// </summary>
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestInvalidConstructor()
+        {
+            for (int i = 0; i < 3; i++)
+                particles.Add(new PhysicalParticle(1, 1));
+            numVertices = 4;
+            PhysicalModel model = new PhysicalModel(this, this);
+        }
+
+        /// <summary>
+        /// Test creation of a model which does have the same number of vertices 
+        /// and particles in the IBody.
+        /// </summary>
+        [Test]
+        public void TestConstructor()
+        {
+            for (int i = 0; i < 4; i++)
+                particles.Add(new PhysicalParticle(1, 1));
+            numVertices = 4;
+            PhysicalModel model = new PhysicalModel(this, this);
+        }
+
+        /// <summary>
+        /// Test that calling Step() updates the models vertices.
+        /// </summary>
         [Test]
         public void TestStep()
         {
+            for (int i = 0; i < 4; i++)
+                particles.Add(new PhysicalParticle(new Vector3(i, i, i), 1, 1));
+            numVertices = 4;
             PhysicalModel model = new PhysicalModel(this, this);
             model.Step();
             Assert.IsTrue(bodyStep, "Body.Step() should have been called.");
+            Assert.IsFalse(vbLocked, "Vertex buffer should not be locked.");
+            Assert.AreEqual(numVertices, positions.Count, 
+                "Number of written positions should equal numVertices.");
+            for (int i = 0; i < numVertices; i++)
+            {
+                Assert.AreEqual(particles[i].Position, positions[i]);
+                Assert.AreEqual(new Vector3(0, 0, -1), normals[i]);
+            }
         }
 
         #region IMesh Members
@@ -69,7 +130,7 @@ namespace Dope.DDXX.Graphics
 
         public int NumberVertices
         {
-            get { throw new Exception("The method or operation is not implemented."); }
+            get { return numVertices; }
         }
 
         public Microsoft.DirectX.Direct3D.MeshOptions Options
@@ -184,7 +245,8 @@ namespace Dope.DDXX.Graphics
 
         public IGraphicsStream LockVertexBuffer(Microsoft.DirectX.Direct3D.LockFlags flags)
         {
-            throw new Exception("The method or operation is not implemented.");
+            vbLocked = true;
+            return this;
         }
 
         public Array LockVertexBuffer(Type typeVertex, Microsoft.DirectX.Direct3D.LockFlags flags, params int[] ranks)
@@ -209,7 +271,7 @@ namespace Dope.DDXX.Graphics
 
         public void UnlockVertexBuffer()
         {
-            throw new Exception("The method or operation is not implemented.");
+            vbLocked = false;
         }
 
         public void UpdateSemantics(IGraphicsStream declaration)
@@ -458,7 +520,116 @@ namespace Dope.DDXX.Graphics
 
         public List<IPhysicalParticle> Particles
         {
+            get { return particles; }
+        }
+
+        #endregion
+
+        #region IGraphicsStream Members
+
+        public bool CanRead
+        {
             get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public bool CanSeek
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public bool CanWrite
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public long Length
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public long Position
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public void Close()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public string Read(bool unicode)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public ValueType Read(Type returnType)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Array Read(Type returnType, params int[] ranks)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public int Read(byte[] buffer, int offset, int count)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public long Seek(long newposition, System.IO.SeekOrigin origin)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetLength(long newLength)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Write(Array value)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Write(string value)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Write(ValueType value)
+        {
+            Assert.IsTrue(vbLocked);
+            switch (vertexPosition)
+            {
+                case VertexPosition.POSITION:
+                    positions.Add((Vector3)value);
+                    vertexPosition++;
+                    break;
+                case VertexPosition.NORMAL:
+                    normals.Add((Vector3)value);
+                    vertexPosition = VertexPosition.POSITION;
+                    break;
+                default:
+                    throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public void Write(string value, bool isUnicodeString)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Write(byte[] buffer, int offset, int count)
+        {
+            throw new Exception("The method or operation is not implemented.");
         }
 
         #endregion

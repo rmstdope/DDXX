@@ -33,27 +33,8 @@ namespace Dope.DDXX.SceneGraph
 
         protected override void RenderNode(IScene scene)
         {
-
             model.Draw(effectHandler, scene.AmbientColor, WorldMatrix,
                 scene.ActiveCamera.ViewMatrix, scene.ActiveCamera.ProjectionMatrix);
-
-            //for (int j = 0; j < model.Materials.Length; j++)
-            //{
-            //    effectHandler.SetMaterialConstants(scene.AmbientColor, model.Materials[j], j);
-
-            //    int passes = effectHandler.Effect.Begin(FX.None);
-
-            //    for (int i = 0; i < passes; i++)
-            //    {
-            //        effectHandler.Effect.BeginPass(i);
-
-            //        model.DrawSubset(j);
-
-            //        effectHandler.Effect.EndPass();
-            //    }
-
-            //    effectHandler.Effect.End();
-            //}
         }
     }
 }

@@ -346,7 +346,7 @@ namespace Dope.DDXX.MeshBuilder
 
         public int NumberVertices
         {
-            get { throw new Exception("The method or operation is not implemented."); }
+            get { return 0; }
         }
 
         public MeshOptions Options
@@ -1672,7 +1672,7 @@ namespace Dope.DDXX.MeshBuilder
 
         public List<IPhysicalParticle> Particles
         {
-            get { throw new Exception("The method or operation is not implemented."); }
+            get { return new List<IPhysicalParticle>(); }
         }
 
         #endregion
