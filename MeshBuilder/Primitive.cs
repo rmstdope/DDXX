@@ -31,11 +31,55 @@ namespace Dope.DDXX.MeshBuilder
         public static Primitive ClothPrimitive(IBody body, float width, float height,
             int widthSegments, int heightSegments)
         {
+            IPhysicalParticle p1;
+            IPhysicalParticle p2;
+            IPhysicalParticle p3;
+            IPhysicalParticle p4;
+            int x;
+            int y;
+
             Primitive cloth = PlanePrimitive(width, height, widthSegments, heightSegments);
             for (int i = 0; i < cloth.vertices.Length; i++)
-                body.AddParticle(new PhysicalParticle(1, 1));
-            //cloth.body = body;
+                body.AddParticle(new PhysicalParticle(cloth.vertices[i].Position, 1, 1));
+            for (y = 0; y < heightSegments; y++)
+            {
+                for (x = 0; x < widthSegments; x++)
+                {
+                    // p1--p2
+                    // | \/     
+                    // | /\      
+                    // p3  p4
+                    p1 = body.Particles[(y + 0) * (widthSegments + 1) + x + 0];
+                    p2 = body.Particles[(y + 0) * (widthSegments + 1) + x + 1];
+                    p3 = body.Particles[(y + 1) * (widthSegments + 1) + x + 0];
+                    p4 = body.Particles[(y + 1) * (widthSegments + 1) + x + 1];
+                    AddConstraint(body, p1, p2);
+                    AddConstraint(body, p1, p3);
+                    AddConstraint(body, p1, p4);
+                    AddConstraint(body, p2, p3);
+                }
+                // p1
+                // |
+                // |
+                // p3
+                p1 = body.Particles[(y + 0) * (widthSegments + 1) + x + 0];
+                p3 = body.Particles[(y + 1) * (widthSegments + 1) + x + 0];
+                AddConstraint(body, p1, p3);
+            }
+            for (x = 0; x < widthSegments; x++)
+            {
+                // p1--p2
+                p1 = body.Particles[(y + 0) * (widthSegments + 1) + x + 0];
+                p2 = body.Particles[(y + 0) * (widthSegments + 1) + x + 1];
+                AddConstraint(body, p1, p2);
+            }
+            cloth.body = body;
             return cloth;
+        }
+
+        private static void AddConstraint(IBody body, IPhysicalParticle p1, IPhysicalParticle p2)
+        {
+            body.AddConstraint(new StickConstraint(p1, p2, (p1.Position - p2.Position).Length()));
         }
 
         /// <summary>

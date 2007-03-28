@@ -12,6 +12,11 @@ namespace Dope.DDXX.Physics
         private List<IPhysicalParticle> particles = new List<IPhysicalParticle>();
         private List<IConstraint> constraints = new List<IConstraint>();
 
+        public List<IPhysicalParticle> Particles
+        {
+            get { return particles; }
+        }
+
         public void SetGravity(Vector3 gravity)
         {
             this.gravity = gravity;

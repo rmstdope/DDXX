@@ -7,11 +7,11 @@ namespace Dope.DDXX.Physics
 {
     public class StickConstraint : IConstraint
     {
-        private PhysicalParticle particle1;
-        private PhysicalParticle particle2;
+        private IPhysicalParticle particle1;
+        private IPhysicalParticle particle2;
         private float distance;
 
-        public StickConstraint(PhysicalParticle particle1, PhysicalParticle particle2, float distance)
+        public StickConstraint(IPhysicalParticle particle1, IPhysicalParticle particle2, float distance)
         {
             this.particle1 = particle1;
             this.particle2 = particle2;

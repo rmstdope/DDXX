@@ -21,7 +21,7 @@ namespace EngineTest
         private CameraNode camera;
         private IScene scene;
         private ModelNode modelNode;
-        private ModelNode boxModel;
+        private ModelNode clothModel;
 
         //private ModelNode modelSkinning;
         private ModelNode modelNoSkinning;
@@ -73,9 +73,9 @@ namespace EngineTest
             MeshBuilder builder = new MeshBuilder(D3DDriver.GraphicsFactory, D3DDriver.GetInstance().Device);
             builder.AddPrimitive(Primitive.PlanePrimitive(50, 50, 10, 10), "Box");
             model = builder.CreateModel("Box");
-            boxModel = new ModelNode("Box", model,
+            clothModel = new ModelNode("Box", model,
                 new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Test", model));
-            scene.AddNode(boxModel);
+            scene.AddNode(clothModel);
 
             scene.DebugPrintGraph();
             scene.Validate();
@@ -98,7 +98,7 @@ namespace EngineTest
 
             modelNode.WorldState.Roll(scale / 100.0f);
             modelNode.WorldState.Turn(Time.DeltaTime);
-            boxModel.WorldState.Tilt(Time.DeltaTime);
+            //clothModel.WorldState.Tilt(Time.DeltaTime);
             scene.Step();
         }
 

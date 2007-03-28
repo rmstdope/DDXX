@@ -7,17 +7,13 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using System.Windows.Forms;
-using NMock2;
 using Dope.DDXX.Physics;
 
 namespace Dope.DDXX.MeshBuilder
 {
     [TestFixture]
-    public class PrimitiveTest : IGraphicsFactory, IMesh, IDevice, IGraphicsStream
+    public class PrimitiveTest : IGraphicsFactory, IMesh, IDevice, IGraphicsStream, IBody
     {
-        protected Mockery mockery;
-        protected IBody body;
-
         protected Primitive primitive;
         private int numFaces;
         private int numVertices;
@@ -49,20 +45,11 @@ namespace Dope.DDXX.MeshBuilder
         [SetUp]
         public virtual void SetUp()
         {
-            mockery = new Mockery();
-            body = mockery.NewMock<IBody>();
-
             vbLocked = false;
             ibLocked = false;
             positions = new List<Vector3>();
             normals = new List<Vector3>();
             vertexPosition = VertexPosition.POSITION;
-        }
-
-        [TearDown]
-        public virtual void TearDown()
-        {
-            mockery.VerifyAllExpectationsHaveBeenMet();
         }
 
         /// <summary>
@@ -88,7 +75,7 @@ namespace Dope.DDXX.MeshBuilder
             Vertex[] vertices;
             short[] indices;
             CreateModel(out vertices, out indices);
-            primitive.Body = body;
+            primitive.Body = this;
             IModel model = primitive.CreateModel(this, this);
             CheckModel(vertices, indices, model);
             Assert.IsInstanceOfType(typeof(PhysicalModel), model, "Model shall be PhysicalModel");
@@ -1657,6 +1644,35 @@ namespace Dope.DDXX.MeshBuilder
         public void Write(byte[] buffer, int offset, int count)
         {
             throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
+
+        #region IBody Members
+
+        public void AddConstraint(Dope.DDXX.Physics.IConstraint constraint)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void AddParticle(IPhysicalParticle particle)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetGravity(Vector3 gravity)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Step()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public List<IPhysicalParticle> Particles
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
         }
 
         #endregion
