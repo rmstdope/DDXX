@@ -20,10 +20,9 @@ namespace Dope.DDXX.Physics
         /// <param name="invMass">1/m (mass of the particle)</param>
         /// <param name="dragCoefficient">Drag coefficient of the particle.</param>
         public PhysicalParticle(float invMass, float dragCoefficient)
+            : this(new Vector3(0, 0, 0), invMass, dragCoefficient)
         {
-            this.invMass = invMass;
-            lastDeltaTime = 1.0f;
-            externalForces = new Vector3(0, 0, 0);
+            // Only contains call to other constructor
         }
 
         /// <summary>
@@ -55,25 +54,38 @@ namespace Dope.DDXX.Physics
 
         public void Step(Vector3 gravity)
         {
-            float deltaTime = Time.DeltaTime;
-
-            // Calculate velocity from last update
-            Vector3 lastVelocity = (position - oldPosition) * (1 / lastDeltaTime);
-
-            // Get acceleration
-            Vector3 acceleration = gravity + externalForces * invMass;
-
-            // Get velocity change
-            Vector3 velocityMod = acceleration * deltaTime;
-
-            // Move object
-            oldPosition = position;
-            position += (lastVelocity +  velocityMod * 0.5f) * deltaTime;
-            lastDeltaTime = deltaTime;
+            UpdatePosition(GetLastVelocity(), GetVelocityChange(gravity));
+            UpdateLastDelta();
             externalForces = new Vector3(0, 0, 0);
         }
 
-        internal void ApplyForce(Vector3 force)
+        private void UpdateLastDelta()
+        {
+            lastDeltaTime = Time.DeltaTime;
+        }
+
+        private void UpdatePosition(Vector3 lastVelocity, Vector3 velocityMod)
+        {
+            oldPosition = position;
+            position += (lastVelocity + velocityMod * 0.5f) * Time.DeltaTime;
+        }
+
+        private Vector3 GetVelocityChange(Vector3 gravity)
+        {
+            return GetAcceleration(gravity) * Time.DeltaTime;
+        }
+
+        private Vector3 GetAcceleration(Vector3 gravity)
+        {
+            return gravity + externalForces * invMass;
+        }
+
+        private Vector3 GetLastVelocity()
+        {
+            return (position - oldPosition) * (1 / lastDeltaTime);
+        }
+
+        public void ApplyForce(Vector3 force)
         {
             externalForces += force;
         }

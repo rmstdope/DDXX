@@ -40,7 +40,7 @@ namespace EngineTest
 
             camera = new CameraNode("MyCamera");
             //camera.WorldState.Tilt(2.0f);
-            camera.WorldState.MoveForward(-100.0f);
+            camera.WorldState.MoveForward(-30.0f);
             scene.AddNode(camera);
             scene.ActiveCamera = camera;
 
@@ -71,7 +71,11 @@ namespace EngineTest
             //scene.ActiveCamera = scene.GetNodeByName("Camera") as CameraNode;
 
             MeshBuilder builder = new MeshBuilder(D3DDriver.GraphicsFactory, D3DDriver.GetInstance().Device);
-            builder.AddPrimitive(Primitive.ClothPrimitive(new Body(), 50, 50, 10, 10), "Box");
+            const int numSides = 20;
+            Body body = new Body();
+            body.Gravity = new Vector3(0, -3, 0);
+            builder.AddPrimitive(Primitive.ClothPrimitive(body, 20, 20, numSides, numSides, 
+                new int[] { 0, /*(numSides + 1) */ numSides }), "Box");
             model = builder.CreateModel("Box");
             clothModel = new ModelNode("Box", model,
                 new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Test", model));
@@ -91,6 +95,14 @@ namespace EngineTest
 
         public override void Step()
         {
+            // Long period
+            Vector3 direction = new Vector3(
+                (float)Math.Sin(Time.CurrentTime / 5), 
+                0, 
+                (float)Math.Cos(Time.CurrentTime / 5));
+            Vector3 force = new Vector3(0, 0, -(float)Math.Abs(Math.Cos(Time.CurrentTime)) * 3);
+            ((PhysicalModel)clothModel.Model).Body.ApplyForce(force);
+
             float scale = (Time.StepTime % 5.0f) / 5.0f;
             scale *= 2.0f;
             modelNode.WorldState.Scaling = new Vector3(scale, scale, scale);

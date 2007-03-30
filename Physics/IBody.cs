@@ -8,8 +8,9 @@ namespace Dope.DDXX.Physics
     {
         void AddConstraint(IConstraint constraint);
         void AddParticle(IPhysicalParticle particle);
-        void SetGravity(Vector3 gravity);
+        Vector3 Gravity { get; set; }
         void Step();
         List<IPhysicalParticle> Particles { get; }
+        void ApplyForce(Vector3 vector3);
     }
 }

@@ -1660,9 +1660,16 @@ namespace Dope.DDXX.MeshBuilder
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public void SetGravity(Vector3 gravity)
+        public Vector3 Gravity
         {
-            throw new Exception("The method or operation is not implemented.");
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
         }
 
         public void Step()
@@ -1673,6 +1680,11 @@ namespace Dope.DDXX.MeshBuilder
         public List<IPhysicalParticle> Particles
         {
             get { return new List<IPhysicalParticle>(); }
+        }
+
+        public void ApplyForce(Vector3 vector3)
+        {
+            throw new Exception("The method or operation is not implemented.");
         }
 
         #endregion

@@ -27,6 +27,28 @@ namespace Dope.DDXX.MeshBuilder
         /// <param name="height">The height of the cloth.</param>
         /// <param name="widthSegments">The number of segments the cloth has in x.</param>
         /// <param name="heightSegments">The number of segments the cloth has in y.</param>
+        /// <param name="pinnedParticles">An array containing the indices of all particles that
+        /// shall be pinned.</param>
+        /// <returns></returns>
+        public static Primitive ClothPrimitive(IBody body, float width, float height,
+            int widthSegments, int heightSegments, int[] pinnedParticles)
+        {
+            Primitive cloth = ClothPrimitive(body, width, height, widthSegments, heightSegments);
+            foreach (int index in pinnedParticles)
+            {
+                body.AddConstraint(new PositionConstraint(body.Particles[index],
+                    body.Particles[index].Position));
+            }
+            return cloth;
+        }
+
+        /// <summary>
+        /// Create a physical primitive that consists of a cloth.
+        /// </summary>
+        /// <param name="width">The width of the cloth.</param>
+        /// <param name="height">The height of the cloth.</param>
+        /// <param name="widthSegments">The number of segments the cloth has in x.</param>
+        /// <param name="heightSegments">The number of segments the cloth has in y.</param>
         /// <returns></returns>
         public static Primitive ClothPrimitive(IBody body, float width, float height,
             int widthSegments, int heightSegments)
@@ -55,8 +77,8 @@ namespace Dope.DDXX.MeshBuilder
                     p4 = body.Particles[(y + 1) * (widthSegments + 1) + x + 1];
                     AddConstraint(body, p1, p2);
                     AddConstraint(body, p1, p3);
-                    AddConstraint(body, p1, p4);
-                    AddConstraint(body, p2, p3);
+                    //AddConstraint(body, p1, p4);
+                    //AddConstraint(body, p1, p4);
                 }
                 // p1
                 // |
@@ -74,7 +96,6 @@ namespace Dope.DDXX.MeshBuilder
                 AddConstraint(body, p1, p2);
             }
             cloth.body = body;
-            body.SetGravity(new Vector3(0, -1, 0));
             return cloth;
         }
 

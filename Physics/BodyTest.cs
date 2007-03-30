@@ -12,6 +12,7 @@ namespace Dope.DDXX.Physics
     {
         private Body body;
         private Mockery mockery;
+        private const int NUM_ITERATIONS = 4;
 
         [SetUp]
         public void SetUp()
@@ -26,23 +27,42 @@ namespace Dope.DDXX.Physics
             mockery.VerifyAllExpectationsHaveBeenMet();
         }
 
+        /// <summary>
+        /// Test that the gravity is sett correctly.
+        /// </summary>
         [Test]
-        public void TestOneParticlesOneConstraint()
+        public void TestGravity()
+        {
+            Assert.AreEqual(new Vector3(0, -9.82f, 0), body.Gravity,
+                "Standard gravity should be (0, -9.82, 0).");
+            body.Gravity = new Vector3(1, 2, 3);
+            Assert.AreEqual(new Vector3(1, 2, 3), body.Gravity,
+                "Standard gravity should be (0, -9.82, 0).");
+        }
+
+        /// <summary>
+        /// Test stepping with one particle and one constraint.
+        /// </summary>
+        [Test]
+        public void TestOneParticleOneConstraint()
         {
             IPhysicalParticle particle1 = mockery.NewMock<IPhysicalParticle>();
             IConstraint constraint = mockery.NewMock<IConstraint>();
             Stub.On(constraint).GetProperty("Priority").Will(Return.Value(ConstraintPriority.PositionPriority));
 
-            body.SetGravity(new Vector3(1, 2, 3));
+            body.Gravity = new Vector3(1, 2, 3);
             body.AddParticle(particle1);
             body.AddConstraint(constraint);
 
             Expect.Once.On(particle1).Method("Step").With(new Vector3(1, 2, 3));
-            Expect.Exactly(4).On(constraint).Method("Satisfy");
+            Expect.Exactly(NUM_ITERATIONS).On(constraint).Method("Satisfy");
             body.Step();
 
         }
 
+        /// <summary>
+        /// Test stepping with more particles and constraints.
+        /// </summary>
         [Test]
         public void TestMoreParticlesMoreConstraint()
         {
@@ -50,7 +70,7 @@ namespace Dope.DDXX.Physics
             const int CONSTRAINTS = 10;
             IPhysicalParticle[] particles = new IPhysicalParticle[PARTICLES];
             IConstraint[] constraints = new IConstraint[CONSTRAINTS];
-            body.SetGravity(new Vector3(5, 6, 7));
+            body.Gravity = new Vector3(5, 6, 7);
             for (int i = 0; i < PARTICLES; i++)
             {
                 particles[i] = mockery.NewMock<IPhysicalParticle>();
@@ -70,9 +90,31 @@ namespace Dope.DDXX.Physics
                 }
             }
             for (int j = 0; j < CONSTRAINTS; j++)
-                Expect.Exactly(4).On(constraints[j]).Method("Satisfy");
+                Expect.Exactly(NUM_ITERATIONS).On(constraints[j]).Method("Satisfy");
             body.Step();
         }
+
+        /// <summary>
+        /// Test applying a constant force to a body.
+        /// </summary>
+        [Test]
+        public void TestApplyForce()
+        {
+            IPhysicalParticle particle1 = mockery.NewMock<IPhysicalParticle>();
+            IPhysicalParticle particle2 = mockery.NewMock<IPhysicalParticle>();
+
+            body.AddParticle(particle1);
+            body.AddParticle(particle2);
+
+            Expect.Once.On(particle1).Method("ApplyForce").With(new Vector3(1, 2, 3));
+            Expect.Once.On(particle2).Method("ApplyForce").With(new Vector3(1, 2, 3));
+            body.ApplyForce(new Vector3(1, 2, 3));
+
+            Expect.Once.On(particle1).Method("ApplyForce").With(new Vector3(5, 6, 7));
+            Expect.Once.On(particle2).Method("ApplyForce").With(new Vector3(5, 6, 7));
+            body.ApplyForce(new Vector3(5, 6, 7));
+        }
+
 
         /// <summary>
         /// Test three different priorities. 
@@ -93,7 +135,7 @@ namespace Dope.DDXX.Physics
             body.AddConstraint(constraint3);
             using (mockery.Ordered)
             {
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < NUM_ITERATIONS; i++)
                 {
                     Expect.Once.On(constraint3).Method("Satisfy");
                     Expect.Once.On(constraint2).Method("Satisfy");

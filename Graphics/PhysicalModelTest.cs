@@ -508,11 +508,6 @@ namespace Dope.DDXX.Graphics
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public void SetGravity(Microsoft.DirectX.Vector3 gravity)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
         public void Step()
         {
             bodyStep = true;
@@ -521,6 +516,23 @@ namespace Dope.DDXX.Graphics
         public List<IPhysicalParticle> Particles
         {
             get { return particles; }
+        }
+
+        public Vector3 Gravity
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public void ApplyForce(Vector3 vector3)
+        {
+            throw new Exception("The method or operation is not implemented.");
         }
 
         #endregion
@@ -633,5 +645,6 @@ namespace Dope.DDXX.Graphics
         }
 
         #endregion
+
     }
 }

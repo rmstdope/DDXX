@@ -17,9 +17,15 @@ namespace Dope.DDXX.Physics
             get { return particles; }
         }
 
-        public void SetGravity(Vector3 gravity)
+        public Vector3 Gravity
         {
-            this.gravity = gravity;
+            get { return gravity; }
+            set { gravity = value; }
+        }
+
+        public Body()
+        {
+            Gravity = new Vector3(0, -9.82f, 0);
         }
 
         public void AddParticle(IPhysicalParticle particle)
@@ -30,7 +36,12 @@ namespace Dope.DDXX.Physics
         public void AddConstraint(IConstraint constraint)
         {
             constraints.Add(constraint);
-            constraints.Sort(delegate(IConstraint c1, IConstraint c2) 
+            SortConstraintsByPriority();
+        }
+
+        private void SortConstraintsByPriority()
+        {
+            constraints.Sort(delegate(IConstraint c1, IConstraint c2)
             {
                 if (c1.Priority > c2.Priority)
                     return -1;
@@ -42,11 +53,28 @@ namespace Dope.DDXX.Physics
 
         public void Step()
         {
-            foreach (IPhysicalParticle particle in particles)
-                particle.Step(gravity);
+            StepParticles();
+            StepConstraints();
+        }
+
+        private void StepConstraints()
+        {
             for (int i = 0; i < NUM_ITERATIONS; i++)
                 foreach (IConstraint constraint in constraints)
                     constraint.Satisfy();
+
+        }
+
+        private void StepParticles()
+        {
+            foreach (IPhysicalParticle particle in particles)
+                particle.Step(gravity);
+        }
+
+        public void ApplyForce(Vector3 force)
+        {
+            foreach (IPhysicalParticle particle in particles)
+                particle.ApplyForce(force);
         }
     }
 }

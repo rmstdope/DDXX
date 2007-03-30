@@ -20,11 +20,17 @@ namespace Dope.DDXX.Physics
 
         public void Satisfy()
         {
-            Vector3 deltaVector = particle1.Position - particle2.Position;
+            Vector3 deltaVector = GetVectorBetweenParticles();
             float originalDistance = deltaVector.Length();
-            float delta = (distance - originalDistance) / (originalDistance * (particle1.InvMass + particle2.InvMass));
+            float deltaDistance = (distance - originalDistance);
+            float delta = deltaDistance / (originalDistance * (particle1.InvMass + particle2.InvMass));
             particle1.Position += delta * particle1.InvMass * deltaVector;
             particle2.Position -= delta * particle2.InvMass * deltaVector;
+        }
+
+        private Vector3 GetVectorBetweenParticles()
+        {
+            return particle1.Position - particle2.Position;
         }
 
         public ConstraintPriority Priority

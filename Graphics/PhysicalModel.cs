@@ -12,12 +12,24 @@ namespace Dope.DDXX.Graphics
     {
         private IBody body;
 
+        public IBody Body
+        {
+            get 
+            { 
+                return body; 
+            }
+            set
+            {
+                if (value.Particles.Count != Mesh.NumberVertices)
+                    throw new DDXXException("Mesh and Body must have equal number of vertices/particles.");
+                body = value;
+            }
+        }
+
         public PhysicalModel(IMesh mesh, IBody body)
             : base(mesh)
         {
-            this.body = body;
-            if (body.Particles.Count != mesh.NumberVertices)
-                throw new DDXXException("Mesh and Body must have equal number of vertices/particles.");
+            Body = body;
         }
 
         public override void Step()

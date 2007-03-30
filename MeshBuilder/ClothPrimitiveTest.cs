@@ -4,6 +4,7 @@ using System.Text;
 using NUnit.Framework;
 using NMock2;
 using Dope.DDXX.Physics;
+using Microsoft.DirectX;
 
 namespace Dope.DDXX.MeshBuilder
 {
@@ -57,7 +58,7 @@ namespace Dope.DDXX.MeshBuilder
         public void TestNumConstraintsInBody1()
         {
             Primitive cloth = Primitive.ClothPrimitive(this, 10, 30, 1, 1);
-            Assert.AreEqual(6, constraints.Count, "We should have six constraints.");
+            Assert.AreEqual(4, constraints.Count, "We should have four constraints.");
         }
 
         /// <summary>
@@ -67,7 +68,39 @@ namespace Dope.DDXX.MeshBuilder
         public void TestNumConstraintsInBody2()
         {
             Primitive cloth = Primitive.ClothPrimitive(this, 20, 40, 4, 2);
-            Assert.AreEqual(38, constraints.Count, "We should have six constraints.");
+            Assert.AreEqual(22, constraints.Count, "We should have 22 constraints.");
+        }
+
+        /// <summary>
+        /// Test that we have the correct number of constraints in a pinned cloth.
+        /// </summary>
+        [Test]
+        public void TestNumConstraintsInPinnedCloth1()
+        {
+            Primitive cloth = Primitive.ClothPrimitive(this, 10, 30, 1, 1, new int[] { });
+            Assert.AreEqual(4, constraints.Count, "We should have four constraints.");
+        }
+
+        /// <summary>
+        /// Test that we have the correct number of constraints in a pinned cloth.
+        /// </summary>
+        [Test]
+        public void TestNumConstraintsInPinnedCloth2()
+        {
+            Primitive cloth = Primitive.ClothPrimitive(this, 10, 30, 1, 1, new int[] { 0, 1 });
+            Assert.AreEqual(6, constraints.Count, "We should have six constraints.");
+            // Now if we move particles 0 and 1 and then satisfy contraints 6 and 7, the two particles
+            // shall be moved back.
+            Vector3 original0 = particles[0].Position;
+            Vector3 original1 = particles[1].Position;
+            particles[0].Position = new Vector3(-100, -100, -100);
+            particles[1].Position = new Vector3(-100, -100, -100);
+            constraints[4].Satisfy();
+            constraints[5].Satisfy();
+            Assert.AreEqual(original0, particles[0].Position, 
+                "Particle[0] should have been moved back.");
+            Assert.AreEqual(original1, particles[1].Position,
+                "Particle[0] should have been moved back.");
         }
 
         /// <summary>
@@ -100,9 +133,16 @@ namespace Dope.DDXX.MeshBuilder
             particles.Add(particle);
         }
 
-        public void SetGravity(Microsoft.DirectX.Vector3 gravity)
+        public Vector3 Gravity
         {
-            throw new Exception("The method or operation is not implemented.");
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
         }
 
         public void Step()
@@ -113,6 +153,11 @@ namespace Dope.DDXX.MeshBuilder
         public List<IPhysicalParticle> Particles
         {
             get { return particles; }
+        }
+
+        public void ApplyForce(Vector3 vector3)
+        {
+            throw new Exception("The method or operation is not implemented.");
         }
 
         #endregion
