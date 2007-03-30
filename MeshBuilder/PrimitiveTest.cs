@@ -22,6 +22,8 @@ namespace Dope.DDXX.MeshBuilder
         private VertexPosition vertexPosition;
         private List<Vector3> positions;
         private List<Vector3> normals;
+        private List<float> textureCoordinates;
+        bool useTextureCoordinates;
         private short[] indices;
 
         protected enum Side
@@ -37,7 +39,9 @@ namespace Dope.DDXX.MeshBuilder
         private enum VertexPosition
         {
             POSITION,
-            NORMAL
+            NORMAL,
+            TEX_U,
+            TEX_V,
         }
 
         private const float epsilon = 0.000001f;
@@ -49,7 +53,9 @@ namespace Dope.DDXX.MeshBuilder
             ibLocked = false;
             positions = new List<Vector3>();
             normals = new List<Vector3>();
+            textureCoordinates = new List<float>();
             vertexPosition = VertexPosition.POSITION;
+            useTextureCoordinates = false;
         }
 
         /// <summary>
@@ -58,6 +64,21 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestCreateModel()
         {
+            Vertex[] vertices;
+            short[] indices;
+            CreateModel(out vertices, out indices);
+            IModel model = primitive.CreateModel(this, this);
+            CheckModel(vertices, indices, model);
+            Assert.IsNotInstanceOfType(typeof(PhysicalModel), model, "Model shall not be PhysicalModel");
+        }
+
+        /// <summary>
+        /// Test the CreateModel method on a generic mesh with texture coordinates.
+        /// </summary>
+        [Test]
+        public void TestCreateModelWithTexCoords()
+        {
+            useTextureCoordinates = true;
             Vertex[] vertices;
             short[] indices;
             CreateModel(out vertices, out indices);
@@ -92,6 +113,11 @@ namespace Dope.DDXX.MeshBuilder
             {
                 Assert.AreEqual(vertices[i].Position, positions[i]);
                 Assert.AreEqual(vertices[i].Normal, normals[i]);
+                if (useTextureCoordinates)
+                {
+                    Assert.AreEqual(vertices[i].U, textureCoordinates[i * 2 + 0]);
+                    Assert.AreEqual(vertices[i].V, textureCoordinates[i * 2 + 1]);
+                }
             }
             for (int i = 0; i < numFaces * 3; i++)
                 Assert.AreEqual(indices[i], this.indices[i]);
@@ -107,6 +133,11 @@ namespace Dope.DDXX.MeshBuilder
             {
                 vertices[i].Position = new Vector3(i, i + 1, i + 2);
                 vertices[i].Normal = new Vector3(i + 2, i + 3, i + 4);
+                if (useTextureCoordinates)
+                {
+                    vertices[i].U = i * 2;
+                    vertices[i].V = i * 1;
+                }
             }
             for (int i = 0; i < numFaces * 3; i++)
                 indices[i] = (short)i;
@@ -202,16 +233,25 @@ namespace Dope.DDXX.MeshBuilder
 
         public IMesh CreateMesh(int numFaces, int numVertices, MeshFlags options, VertexElement[] declaration, IDevice device)
         {
+            int index = 0;
             Assert.AreEqual(this.numFaces, numFaces);
             Assert.AreEqual(this.numVertices, numVertices);
             Assert.AreEqual(MeshFlags.Managed, options);
-            Assert.AreEqual(3, declaration.Length);
+            if (useTextureCoordinates)
+                Assert.AreEqual(4, declaration.Length);
+            else
+                Assert.AreEqual(3, declaration.Length);
             Assert.AreEqual(new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
-                declaration[0]);
+                declaration[index++]);
             Assert.AreEqual(new VertexElement(0, 12, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Normal, 0),
-                declaration[1]);
+                declaration[index++]);
+            if (useTextureCoordinates)
+            {
+                Assert.AreEqual(new VertexElement(0, 24, DeclarationType.Float2, DeclarationMethod.Default, DeclarationUsage.TextureCoordinate, 0),
+                    declaration[index++]);
+            }
             Assert.AreEqual(VertexElement.VertexDeclarationEnd,
-                declaration[2]);
+                declaration[index++]);
             return this;
         }
 
@@ -1629,6 +1669,17 @@ namespace Dope.DDXX.MeshBuilder
                     break;
                 case VertexPosition.NORMAL:
                     normals.Add((Vector3)value);
+                    if (useTextureCoordinates)
+                        vertexPosition++;
+                    else
+                        vertexPosition = VertexPosition.POSITION;
+                    break;
+                case VertexPosition.TEX_U:
+                    textureCoordinates.Add((float)value);
+                    vertexPosition++;
+                    break;
+                case VertexPosition.TEX_V:
+                    textureCoordinates.Add((float)value);
                     vertexPosition = VertexPosition.POSITION;
                     break;
                 default:

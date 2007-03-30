@@ -31,9 +31,9 @@ namespace Dope.DDXX.MeshBuilder
         /// shall be pinned.</param>
         /// <returns></returns>
         public static Primitive ClothPrimitive(IBody body, float width, float height,
-            int widthSegments, int heightSegments, int[] pinnedParticles)
+            int widthSegments, int heightSegments, int[] pinnedParticles, bool textured)
         {
-            Primitive cloth = ClothPrimitive(body, width, height, widthSegments, heightSegments);
+            Primitive cloth = ClothPrimitive(body, width, height, widthSegments, heightSegments, textured);
             foreach (int index in pinnedParticles)
             {
                 body.AddConstraint(new PositionConstraint(body.Particles[index],
@@ -51,7 +51,7 @@ namespace Dope.DDXX.MeshBuilder
         /// <param name="heightSegments">The number of segments the cloth has in y.</param>
         /// <returns></returns>
         public static Primitive ClothPrimitive(IBody body, float width, float height,
-            int widthSegments, int heightSegments)
+            int widthSegments, int heightSegments, bool textured)
         {
             IPhysicalParticle p1;
             IPhysicalParticle p2;
@@ -60,7 +60,7 @@ namespace Dope.DDXX.MeshBuilder
             int x;
             int y;
 
-            Primitive cloth = PlanePrimitive(width, height, widthSegments, heightSegments);
+            Primitive cloth = PlanePrimitive(width, height, widthSegments, heightSegments, textured);
             for (int i = 0; i < cloth.vertices.Length; i++)
                 body.AddParticle(new PhysicalParticle(cloth.vertices[i].Position, 1, 1));
             for (y = 0; y < heightSegments; y++)
@@ -113,7 +113,7 @@ namespace Dope.DDXX.MeshBuilder
         /// <param name="heightSegments">The number of segments the plane has in y.</param>
         /// <returns></returns>
         public static Primitive PlanePrimitive(float width, float height,
-            int widthSegments, int heightSegments)
+            int widthSegments, int heightSegments, bool textured)
         {
             short v = 0;
             Vertex[] vertices = new Vertex[(widthSegments + 1) * (heightSegments + 1)];
@@ -127,7 +127,13 @@ namespace Dope.DDXX.MeshBuilder
                 {
                     float xPos = width * (-0.5f + x / (float)widthSegments);
                     vertices[v].Normal = new Vector3(0, 0, -1);
-                    vertices[v++].Position = new Vector3(xPos, yPos, 0);
+                    vertices[v].Position = new Vector3(xPos, yPos, 0);
+                    if (textured)
+                    {
+                        vertices[v].U = x / (float)widthSegments;
+                        vertices[v].V = y / (float)heightSegments;
+                    }
+                    v++;
                 }
             }
             return new Primitive(vertices, indices);
@@ -273,9 +279,17 @@ namespace Dope.DDXX.MeshBuilder
 
         private IMesh CreateMesh(IGraphicsFactory factory, IDevice device)
         {
+            bool useTexCoords = false;
+            foreach (Vertex vertex in vertices)
+            {
+                if (vertex.TextureCoordinatesUsed)
+                    useTexCoords = true;
+            }
             VertexElementArray declaration = new VertexElementArray();
             declaration.AddPositions();
             declaration.AddNormals();
+            if (useTexCoords)
+                declaration.AddTexCoords(0, 2);
             IMesh mesh = factory.CreateMesh(indices.Length / 3, vertices.Length, MeshFlags.Managed,
                 declaration.VertexElements, device);
             IGraphicsStream stream = mesh.LockVertexBuffer(LockFlags.None);
@@ -283,6 +297,11 @@ namespace Dope.DDXX.MeshBuilder
             {
                 stream.Write(vertices[i].Position);
                 stream.Write(vertices[i].Normal);
+                if (useTexCoords)
+                {
+                    stream.Write(vertices[i].U);
+                    stream.Write(vertices[i].V);
+                }
             }
             mesh.UnlockVertexBuffer();
             stream = mesh.LockIndexBuffer(LockFlags.None);

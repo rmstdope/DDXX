@@ -69,7 +69,7 @@ namespace Dope.DDXX.Graphics
             return false;
         }
 
-        private bool HasTexCoords(int index)
+        public bool HasTexCoords(int index)
         {
             for (int i = 0; i < vertexElements.Length; i++)
             {

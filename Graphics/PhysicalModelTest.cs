@@ -5,6 +5,8 @@ using NUnit.Framework;
 using Dope.DDXX.Physics;
 using Dope.DDXX.Utility;
 using Microsoft.DirectX;
+using System.IO;
+using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.Graphics
 {
@@ -17,12 +19,16 @@ namespace Dope.DDXX.Graphics
         private bool vbLocked;
         private List<Vector3> positions;
         private List<Vector3> normals;
+        private List<float> textureCoordinates;
+        bool useTextureCoordinates;
         private VertexPosition vertexPosition;
 
         private enum VertexPosition
         {
             POSITION,
-            NORMAL
+            NORMAL,
+            TEX_U,
+            TEX_V,
         }
 
         [SetUp]
@@ -32,6 +38,8 @@ namespace Dope.DDXX.Graphics
             particles = new List<IPhysicalParticle>();
             positions = new List<Vector3>();
             normals = new List<Vector3>();
+            textureCoordinates = new List<float>();
+            useTextureCoordinates = false;
             numVertices = -1;
             vbLocked = false;
             vertexPosition = VertexPosition.POSITION;
@@ -86,11 +94,51 @@ namespace Dope.DDXX.Graphics
             }
         }
 
+        /// <summary>
+        /// Test that calling Step() updates the models vertices even with tex coords.
+        /// </summary>
+        [Test]
+        public void TestStepWithTexture()
+        {
+            useTextureCoordinates = true;
+            for (int i = 0; i < 4; i++)
+                particles.Add(new PhysicalParticle(new Vector3(i, i, i), 1, 1));
+            numVertices = 4;
+            PhysicalModel model = new PhysicalModel(this, this);
+            model.Step();
+            Assert.IsTrue(bodyStep, "Body.Step() should have been called.");
+            Assert.IsFalse(vbLocked, "Vertex buffer should not be locked.");
+            Assert.AreEqual(numVertices, positions.Count,
+                "Number of written positions should equal numVertices.");
+            for (int i = 0; i < numVertices; i++)
+            {
+                Assert.AreEqual(particles[i].Position, positions[i]);
+                Assert.AreEqual(new Vector3(0, 0, -1), normals[i]);
+            }
+        }
+
         #region IMesh Members
 
         public Microsoft.DirectX.Direct3D.VertexElement[] Declaration
         {
-            get { throw new Exception("The method or operation is not implemented."); }
+            get 
+            {
+                if (useTextureCoordinates)
+                    return new VertexElement[]
+                        {
+                            new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
+                            new VertexElement(0, 12, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Normal, 0),
+                            new VertexElement(0, 24, DeclarationType.Float2, DeclarationMethod.Default, DeclarationUsage.TextureCoordinate, 0),
+                            VertexElement.VertexDeclarationEnd
+                        };
+                else
+                    return new VertexElement[]
+                        {
+                            new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
+                            new VertexElement(0, 12, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Normal, 0),
+                            VertexElement.VertexDeclarationEnd
+                        };
+            }
         }
 
         public Microsoft.DirectX.Direct3D.Device Device
@@ -596,9 +644,13 @@ namespace Dope.DDXX.Graphics
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public long Seek(long newposition, System.IO.SeekOrigin origin)
+        public long Seek(long newposition, SeekOrigin origin)
         {
-            throw new Exception("The method or operation is not implemented.");
+            Assert.AreEqual(VertexPosition.TEX_U, vertexPosition);
+            Assert.AreEqual(4 * 2, newposition);
+            Assert.AreEqual(SeekOrigin.Current, origin);
+            vertexPosition = VertexPosition.POSITION;
+            return 0;
         }
 
         public void SetLength(long newLength)
@@ -627,7 +679,10 @@ namespace Dope.DDXX.Graphics
                     break;
                 case VertexPosition.NORMAL:
                     normals.Add((Vector3)value);
-                    vertexPosition = VertexPosition.POSITION;
+                    if (useTextureCoordinates)
+                        vertexPosition++;
+                    else
+                        vertexPosition = VertexPosition.POSITION;
                     break;
                 default:
                     throw new Exception("The method or operation is not implemented.");

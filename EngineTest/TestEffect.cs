@@ -75,7 +75,7 @@ namespace EngineTest
             Body body = new Body();
             body.Gravity = new Vector3(0, -3, 0);
             builder.AddPrimitive(Primitive.ClothPrimitive(body, 20, 20, numSides, numSides, 
-                new int[] { 0, /*(numSides + 1) */ numSides }), "Box");
+                new int[] { 0, /*(numSides + 1) */ numSides }, true), "Box");
             model = builder.CreateModel("Box");
             clothModel = new ModelNode("Box", model,
                 new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Test", model));

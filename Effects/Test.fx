@@ -76,8 +76,9 @@ NormalMappingPixelShader(NormalMappingInputPS input) : COLOR0
 
 struct TestStruct
 {
-	float4	Position	:	POSITION;
-	float		Light		:	TEXCOORD0;
+	float4	Position			:	POSITION;
+	float2	TextureCoord	:	TEXCOORD0;
+	float		Light					:	TEXCOORD1;
 };
 
 TestStruct
@@ -89,13 +90,15 @@ TestVertexShader(InputVS input)
 	output.Position = mul(input.Position, WorldViewProjectionT);
 	float3 normal = normalize(mul(input.Normal, WorldT));
 	output.Light = abs(dot(normal, normalize(float3(1, 1, -1))));
+	output.TextureCoord = input.TextureCoord;
 	return output;
 }
 
 float4
 TestPixelShader(TestStruct input) : COLOR0
 {
-	return 0.5f + 0.5f * input.Light;
+	float diffuse = 0.5f + 0.5f * input.Light;
+	return diffuse * tex2D(BaseTextureSampler, input.TextureCoord.xy);
 }
 
 

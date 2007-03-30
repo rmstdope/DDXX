@@ -27,7 +27,7 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestBody()
         {
-            Primitive cloth = Primitive.ClothPrimitive(this, 10, 30, 1, 1);
+            Primitive cloth = Primitive.ClothPrimitive(this, 10, 30, 1, 1, false);
             Assert.AreSame(this, cloth.Body, "Body should have been set to this.");
         }
 
@@ -37,7 +37,7 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestNumParticlesInBody1()
         {
-            Primitive cloth = Primitive.ClothPrimitive(this, 10, 30, 1, 1);
+            Primitive cloth = Primitive.ClothPrimitive(this, 10, 30, 1, 1, false);
             Assert.AreEqual(4, particles.Count, "We should have four particles.");
         }
 
@@ -47,7 +47,7 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestNumParticlesInBody2()
         {
-            Primitive cloth = Primitive.ClothPrimitive(this, 20, 40, 4, 2);
+            Primitive cloth = Primitive.ClothPrimitive(this, 20, 40, 4, 2, false);
             Assert.AreEqual(15, particles.Count, "We should have 15 particles.");
         }
 
@@ -57,7 +57,7 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestNumConstraintsInBody1()
         {
-            Primitive cloth = Primitive.ClothPrimitive(this, 10, 30, 1, 1);
+            Primitive cloth = Primitive.ClothPrimitive(this, 10, 30, 1, 1, false);
             Assert.AreEqual(4, constraints.Count, "We should have four constraints.");
         }
 
@@ -67,7 +67,7 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestNumConstraintsInBody2()
         {
-            Primitive cloth = Primitive.ClothPrimitive(this, 20, 40, 4, 2);
+            Primitive cloth = Primitive.ClothPrimitive(this, 20, 40, 4, 2, false);
             Assert.AreEqual(22, constraints.Count, "We should have 22 constraints.");
         }
 
@@ -77,7 +77,7 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestNumConstraintsInPinnedCloth1()
         {
-            Primitive cloth = Primitive.ClothPrimitive(this, 10, 30, 1, 1, new int[] { });
+            Primitive cloth = Primitive.ClothPrimitive(this, 10, 30, 1, 1, new int[] { }, false);
             Assert.AreEqual(4, constraints.Count, "We should have four constraints.");
         }
 
@@ -87,7 +87,7 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestNumConstraintsInPinnedCloth2()
         {
-            Primitive cloth = Primitive.ClothPrimitive(this, 10, 30, 1, 1, new int[] { 0, 1 });
+            Primitive cloth = Primitive.ClothPrimitive(this, 10, 30, 1, 1, new int[] { 0, 1 }, false);
             Assert.AreEqual(6, constraints.Count, "We should have six constraints.");
             // Now if we move particles 0 and 1 and then satisfy contraints 6 and 7, the two particles
             // shall be moved back.
@@ -109,8 +109,8 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestParticlePosition()
         {
-            Primitive cloth = Primitive.ClothPrimitive(this, 56, 87, 7, 9);
-            Primitive plane = Primitive.PlanePrimitive(56, 87, 7, 9);
+            Primitive cloth = Primitive.ClothPrimitive(this, 56, 87, 7, 9, false);
+            Primitive plane = Primitive.PlanePrimitive(56, 87, 7, 9, false);
             for (int i = 0; i < plane.Vertices.Length; i++)
             {
                 Assert.IsInstanceOfType(typeof(PhysicalParticle), particles[i],

@@ -36,11 +36,16 @@ namespace Dope.DDXX.Graphics
         {
             body.Step();
 
+            VertexElementArray array = new VertexElementArray(Mesh.Declaration);
+            bool texCoords = array.HasTexCoords(0);
+
             IGraphicsStream stream = Mesh.LockVertexBuffer(LockFlags.None);
             for (int i = 0; i < body.Particles.Count; i++)
             {
                 stream.Write(body.Particles[i].Position);
                 stream.Write(new Vector3(0, 0, -1));
+                if (texCoords)
+                    stream.Seek(sizeof(float) * 2, System.IO.SeekOrigin.Current);
             }
             Mesh.UnlockVertexBuffer();
         }

@@ -9,6 +9,26 @@ namespace Dope.DDXX.MeshBuilder
     {
         private Vector3 position;
         private Vector3 normal;
+        private float u;
+        private float v;
+        private bool textureCoordinatesUsed;
+
+        public bool TextureCoordinatesUsed
+        {
+            get { return textureCoordinatesUsed; }
+        }
+
+        public float U
+        {
+            get { return u; }
+            set { u = value; textureCoordinatesUsed = true; }
+        }
+
+        public float V
+        {
+            get { return v; }
+            set { v = value; textureCoordinatesUsed = true; }
+        }
 
         public Vector3 Position
         {
