@@ -9,12 +9,14 @@ namespace Dope.DDXX.MeshBuilder
     public class MeshBuilder
     {
         private IGraphicsFactory factory;
+        private ITextureFactory textureFactory;
         private IDevice device;
         private Dictionary<string, IPrimitive> primitives = new Dictionary<string,IPrimitive>();
 
-        public MeshBuilder(IGraphicsFactory factory, IDevice device)
+        public MeshBuilder(IGraphicsFactory factory, ITextureFactory textureFactory, IDevice device)
         {
             this.factory = factory;
+            this.textureFactory = textureFactory;
             this.device = device;
         }
 
@@ -29,7 +31,7 @@ namespace Dope.DDXX.MeshBuilder
         {
             if (!primitives.ContainsKey(name))
                 throw new DDXXException("Can not create mesh from a primitive that does not exist.");
-            return primitives[name].CreateModel(factory, device);
+            return primitives[name].CreateModel(factory, textureFactory, device);
         }
     }
 }

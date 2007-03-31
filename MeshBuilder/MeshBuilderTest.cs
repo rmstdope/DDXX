@@ -13,14 +13,14 @@ using Dope.DDXX.Physics;
 namespace Dope.DDXX.MeshBuilder
 {
     [TestFixture]
-    public class MeshBuilderTest : IGraphicsFactory, IModel, IPrimitive, IDevice
+    public class MeshBuilderTest : IGraphicsFactory, IModel, IPrimitive, IDevice, ITextureFactory
     {
         private MeshBuilder builder;
 
         [SetUp]
         public void SetUp()
         {
-            builder = new MeshBuilder(this, this);
+            builder = new MeshBuilder(this, this, this);
         }
 
         /// <summary>
@@ -201,9 +201,11 @@ namespace Dope.DDXX.MeshBuilder
             get { throw new Exception("The method or operation is not implemented."); }
         }
 
-        public IModel CreateModel(IGraphicsFactory factory, IDevice device)
+        public IModel CreateModel(IGraphicsFactory factory, 
+            ITextureFactory textureFactory, IDevice device)
         {
             Assert.AreSame(this, factory, "Factory should be same as this.");
+            Assert.AreSame(this, textureFactory, "TextureFactory should be same as this.");
             return this;
         }
 
@@ -1087,5 +1089,24 @@ namespace Dope.DDXX.MeshBuilder
 
         #endregion
 
+
+        #region ITextureFactory Members
+
+        public ITexture CreateFromFile(string file)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public ITexture CreateFullsizeRenderTarget(Format format)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public ITexture CreateFullsizeRenderTarget()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
     }
 }

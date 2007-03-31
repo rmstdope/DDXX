@@ -69,11 +69,27 @@ namespace Dope.DDXX.Graphics
             this.normalTexture = null;
         }
 
+        public ModelMaterial(Material material, string diffuseTextureName, ITextureFactory factory)
+        {
+            this.material = material;
+            this.diffuseTexture = factory.CreateFromFile(diffuseTextureName);
+            this.normalTexture = null;
+        }
+
         public ModelMaterial(Material material, ITexture diffuseTexture, ITexture normalTexture)
         {
             this.material = material;
             this.diffuseTexture = diffuseTexture;
             this.normalTexture = normalTexture;
         }
+
+        public ModelMaterial(Material material, string diffuseTextureName, 
+            string normalTextureName, ITextureFactory factory)
+        {
+            this.material = material;
+            this.diffuseTexture = factory.CreateFromFile(diffuseTextureName);
+            this.normalTexture = factory.CreateFromFile(normalTextureName);
+        }
+
     }
 }

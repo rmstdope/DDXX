@@ -13,6 +13,7 @@ namespace Dope.DDXX.MeshBuilder
         private Vertex[] vertices;
         private short[] indices;
         private IBody body;
+        private ExtendedMaterial material;
 
         public Primitive(Vertex[] vertices, short[] indices)
         {
@@ -266,14 +267,28 @@ namespace Dope.DDXX.MeshBuilder
             }
         }
 
-        public IModel CreateModel(IGraphicsFactory factory, IDevice device)
+        public ExtendedMaterial Material
         {
+            get { return material; }
+            set { material = value; }
+        }
+
+        public IModel CreateModel(IGraphicsFactory factory, 
+            ITextureFactory textureFactory, IDevice device)
+        {
+            ModelMaterial modelMaterial; 
+            if (material.TextureFilename == null ||
+                material.TextureFilename == "")
+                modelMaterial = new ModelMaterial(material.Material3D);
+            else
+                modelMaterial = new ModelMaterial(material.Material3D, 
+                    material.TextureFilename, textureFactory);
             IModel model;
             IMesh mesh = CreateMesh(factory, device);
             if (body == null)
-                model = new Model(mesh);
+                model = new Model(mesh, new ModelMaterial[] { modelMaterial });
             else
-                model = new PhysicalModel(mesh, body);
+                model = new PhysicalModel(mesh, body, new ModelMaterial[] { modelMaterial });
             return model;
         }
 

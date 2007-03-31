@@ -12,7 +12,7 @@ using Dope.DDXX.Physics;
 namespace Dope.DDXX.MeshBuilder
 {
     [TestFixture]
-    public class PrimitiveTest : IGraphicsFactory, IMesh, IDevice, IGraphicsStream, IBody
+    public class PrimitiveTest : IGraphicsFactory, IMesh, IDevice, IGraphicsStream, IBody, ITextureFactory, ITexture
     {
         protected Primitive primitive;
         private int numFaces;
@@ -23,7 +23,8 @@ namespace Dope.DDXX.MeshBuilder
         private List<Vector3> positions;
         private List<Vector3> normals;
         private List<float> textureCoordinates;
-        bool useTextureCoordinates;
+        private bool useTextureCoordinates;
+        private string fileName;
         private short[] indices;
 
         protected enum Side
@@ -56,24 +57,25 @@ namespace Dope.DDXX.MeshBuilder
             textureCoordinates = new List<float>();
             vertexPosition = VertexPosition.POSITION;
             useTextureCoordinates = false;
+            fileName = null;
         }
 
         /// <summary>
-        /// Test the CreateModel method on a generic mesh.
+        /// Test the CreatePrimitive method on a generic mesh.
         /// </summary>
         [Test]
         public void TestCreateModel()
         {
             Vertex[] vertices;
             short[] indices;
-            CreateModel(out vertices, out indices);
-            IModel model = primitive.CreateModel(this, this);
+            CreatePrimitive(out vertices, out indices);
+            IModel model = primitive.CreateModel(this, this, this);
             CheckModel(vertices, indices, model);
             Assert.IsNotInstanceOfType(typeof(PhysicalModel), model, "Model shall not be PhysicalModel");
         }
 
         /// <summary>
-        /// Test the CreateModel method on a generic mesh with texture coordinates.
+        /// Test the CreatePrimitive method on a generic mesh with texture coordinates.
         /// </summary>
         [Test]
         public void TestCreateModelWithTexCoords()
@@ -81,8 +83,8 @@ namespace Dope.DDXX.MeshBuilder
             useTextureCoordinates = true;
             Vertex[] vertices;
             short[] indices;
-            CreateModel(out vertices, out indices);
-            IModel model = primitive.CreateModel(this, this);
+            CreatePrimitive(out vertices, out indices);
+            IModel model = primitive.CreateModel(this, this, this);
             CheckModel(vertices, indices, model);
             Assert.IsNotInstanceOfType(typeof(PhysicalModel), model, "Model shall not be PhysicalModel");
         }
@@ -95,11 +97,66 @@ namespace Dope.DDXX.MeshBuilder
         {
             Vertex[] vertices;
             short[] indices;
-            CreateModel(out vertices, out indices);
+            CreatePrimitive(out vertices, out indices);
             primitive.Body = this;
-            IModel model = primitive.CreateModel(this, this);
+            IModel model = primitive.CreateModel(this, this, this);
             CheckModel(vertices, indices, model);
             Assert.IsInstanceOfType(typeof(PhysicalModel), model, "Model shall be PhysicalModel");
+        }
+
+        /// <summary>
+        /// Test that a material is created ok.
+        /// </summary>
+        [Test]
+        public void TestMaterial()
+        {
+            fileName = "TheFile";
+            Material material = new Material();
+            material.Ambient = Color.White;
+            material.Diffuse = Color.Red;
+            ExtendedMaterial extendedMaterial = new ExtendedMaterial();
+            extendedMaterial.Material3D = material;
+            extendedMaterial.TextureFilename = fileName;
+            Vertex[] vertices;
+            short[] indices;
+            CreatePrimitive(out vertices, out indices);
+            primitive.Material = extendedMaterial;
+            IModel model = primitive.CreateModel(this, this, this);
+            CheckMaterial(model);
+            CheckModel(vertices, indices, model);
+        }
+
+        /// <summary>
+        /// Test that a material is created ok for a physical model.
+        /// </summary>
+        [Test]
+        public void TestMaterialOnBody()
+        {
+            fileName = "TheFile";
+            Material material = new Material();
+            material.Ambient = Color.White;
+            material.Diffuse = Color.Red;
+            ExtendedMaterial extendedMaterial = new ExtendedMaterial();
+            extendedMaterial.Material3D = material;
+            extendedMaterial.TextureFilename = fileName;
+            Vertex[] vertices;
+            short[] indices;
+            CreatePrimitive(out vertices, out indices);
+            primitive.Body = this;
+            primitive.Material = extendedMaterial;
+            IModel model = primitive.CreateModel(this, this, this);
+            CheckMaterial(model);
+            CheckModel(vertices, indices, model);
+        }
+
+        private void CheckMaterial(IModel model)
+        {
+            Assert.AreEqual(Color.White.ToArgb(), model.Materials[0].Ambient.ToArgb(),
+                "Ambient color should be white.");
+            Assert.AreEqual(Color.Red.ToArgb(), model.Materials[0].Diffuse.ToArgb(),
+                "Diffuse color should be red.");
+            Assert.AreEqual(this, model.Materials[0].DiffuseTexture,
+                "This reference should be the texture.");
         }
 
         private void CheckModel(Vertex[] vertices, short[] indices, IModel model)
@@ -123,7 +180,7 @@ namespace Dope.DDXX.MeshBuilder
                 Assert.AreEqual(indices[i], this.indices[i]);
         }
 
-        private void CreateModel(out Vertex[] vertices, out short[] indices)
+        private void CreatePrimitive(out Vertex[] vertices, out short[] indices)
         {
             numFaces = 1;
             numVertices = 2;
@@ -1734,6 +1791,167 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         public void ApplyForce(Vector3 vector3)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
+
+        #region ITextureFactory Members
+
+        public ITexture CreateFromFile(string file)
+        {
+            Assert.AreEqual(fileName, file, "File names should match.");
+            return this;
+        }
+
+        public ITexture CreateFullsizeRenderTarget(Format format)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public ITexture CreateFullsizeRenderTarget()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
+
+        #region ITexture Members
+
+
+        public void AddDirtyRectangle()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void AddDirtyRectangle(Rectangle rect)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public SurfaceDescription GetLevelDescription(int level)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public ISurface GetSurfaceLevel(int level)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public GraphicsStream LockRectangle(int level, LockFlags flags)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public GraphicsStream LockRectangle(int level, LockFlags flags, out int pitch)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public GraphicsStream LockRectangle(int level, Rectangle rect, LockFlags flags)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public GraphicsStream LockRectangle(int level, Rectangle rect, LockFlags flags, out int pitch)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Array LockRectangle(Type typeLock, int level, LockFlags flags, params int[] ranks)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Array LockRectangle(Type typeLock, int level, LockFlags flags, out int pitch, params int[] ranks)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Array LockRectangle(Type typeLock, int level, Rectangle rect, LockFlags flags, params int[] ranks)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Array LockRectangle(Type typeLock, int level, Rectangle rect, LockFlags flags, out int pitch, params int[] ranks)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void UnlockRectangle(int level)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
+
+        #region IBaseTexture Members
+
+
+        public int Priority
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public ResourceType Type
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public void PreLoad()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public int SetPriority(int priorityNew)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public TextureFilter AutoGenerateFilterType
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public int LevelCount
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public int LevelOfDetail
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public void GenerateMipSubLevels()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public int SetLevelOfDetail(int lodNew)
         {
             throw new Exception("The method or operation is not implemented.");
         }

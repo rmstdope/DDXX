@@ -11,6 +11,6 @@ namespace Dope.DDXX.MeshBuilder
         Vertex[] Vertices { get; }
         short[] Indices { get; }
         IBody Body { get; } 
-        IModel CreateModel(IGraphicsFactory factory, IDevice device);
+        IModel CreateModel(IGraphicsFactory factory, ITextureFactory textureFactory, IDevice device);
     }
 }

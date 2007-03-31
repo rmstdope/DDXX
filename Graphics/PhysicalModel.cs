@@ -32,6 +32,12 @@ namespace Dope.DDXX.Graphics
             Body = body;
         }
 
+        public PhysicalModel(IMesh mesh, IBody body, ModelMaterial[] materials)
+            : base(mesh, materials)
+        {
+            Body = body;
+        }
+
         public override void Step()
         {
             body.Step();

@@ -70,6 +70,22 @@ namespace Dope.DDXX.Graphics
                 particles.Add(new PhysicalParticle(1, 1));
             numVertices = 4;
             PhysicalModel model = new PhysicalModel(this, this);
+            Assert.AreEqual(this, model.Body, "This pointer should be Body.");
+        }
+
+        /// <summary>
+        /// Test creation of a model which does have the same number of vertices 
+        /// and particles in the IBody.
+        /// </summary>
+        [Test]
+        public void TestConstructorWithMaterials()
+        {
+            for (int i = 0; i < 4; i++)
+                particles.Add(new PhysicalParticle(1, 1));
+            numVertices = 4;
+            PhysicalModel model = new PhysicalModel(this, this, new ModelMaterial[] { null });
+            Assert.AreEqual(this, model.Body, "This pointer should be Body.");
+            Assert.AreEqual(null, model.Materials[0], "Material should be null");
         }
 
         /// <summary>
