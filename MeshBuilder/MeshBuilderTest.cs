@@ -215,7 +215,6 @@ namespace Dope.DDXX.MeshBuilder
         public void TestDiffuseTexture()
         {
             Assert.AreSame(null, builder.GetMaterial("Default1").DiffuseTexture);
-            Assert.AreSame(null, builder.GetMaterial("Default1").NormalTexture);
             fileName = "DiffuseTexture";
             builder.SetDiffuseTexture("Default1", fileName);
             Assert.AreSame(this, builder.GetMaterial("Default1").DiffuseTexture);
@@ -233,6 +232,32 @@ namespace Dope.DDXX.MeshBuilder
             TestDiffuseTexture();
             builder.SetDiffuseTexture("Default1", "");
             Assert.AreSame(null, builder.GetMaterial("Default1").DiffuseTexture);
+        }
+
+        /// <summary>
+        /// Test setting of the normal texture of a material.
+        /// </summary>
+        [Test]
+        public void TestNormalTexture()
+        {
+            Assert.AreSame(null, builder.GetMaterial("Default1").NormalTexture);
+            fileName = "NormalTexture";
+            builder.SetNormalTexture("Default1", fileName);
+            Assert.AreSame(this, builder.GetMaterial("Default1").NormalTexture);
+        }
+
+        /// <summary>
+        /// Test removing the normal texture of a material.
+        /// </summary>
+        [Test]
+        public void TestNormalTextureRemove()
+        {
+            TestNormalTexture();
+            builder.SetNormalTexture("Default1", null);
+            Assert.AreSame(null, builder.GetMaterial("Default1").NormalTexture);
+            TestNormalTexture();
+            builder.SetNormalTexture("Default1", "");
+            Assert.AreSame(null, builder.GetMaterial("Default1").NormalTexture);
         }
 
         #region IGraphicsFactory Members

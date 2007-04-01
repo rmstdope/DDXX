@@ -119,5 +119,19 @@ namespace Dope.DDXX.MeshBuilder
             else
                 material.DiffuseTexture = textureFactory.CreateFromFile(fileName);
         }
+
+        /// <summary>
+        /// Set the normal texture of a material.
+        /// </summary>
+        /// <param name="materialName">The name of the material.</param>
+        /// <param name="fileName">The name of the texture file. Set to null or "" to remove the texture.</param>
+        public void SetNormalTexture(string materialName, string fileName)
+        {
+            ModelMaterial material = GetMaterial(materialName);
+            if (fileName == null || fileName == "")
+                material.NormalTexture = null;
+            else
+                material.NormalTexture = textureFactory.CreateFromFile(fileName);
+        }
     }
 }
