@@ -53,7 +53,6 @@ namespace Dope.DDXX.Graphics.Skinning
         public override IMesh Mesh
         {
             get { return frame.Mesh; }
-            set { throw new DDXXException("Depricated! This should be removed!"); }
         }
 
         public override bool IsSkinned()

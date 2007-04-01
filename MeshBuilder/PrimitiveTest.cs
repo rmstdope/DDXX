@@ -369,7 +369,7 @@ namespace Dope.DDXX.MeshBuilder
 
         public int NumberFaces
         {
-            get { throw new Exception("The method or operation is not implemented."); }
+            get { return 0; }
         }
 
         public int NumberVertices
@@ -1617,7 +1617,8 @@ namespace Dope.DDXX.MeshBuilder
 
         public Array Read(Type returnType, params int[] ranks)
         {
-            throw new Exception("The method or operation is not implemented.");
+            // Used by PhysicalModel constructor
+            return new short[0];
         }
 
         public int Read(byte[] buffer, int offset, int count)

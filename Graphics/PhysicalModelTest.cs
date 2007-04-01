@@ -13,15 +13,17 @@ namespace Dope.DDXX.Graphics
     [TestFixture]
     public class PhysicalModelTest : IMesh, IBody, IGraphicsStream
     {
-        List<IPhysicalParticle> particles;
-        int numVertices;
+        private List<IPhysicalParticle> particles;
         private bool bodyStep;
         private bool vbLocked;
+        private bool ibLocked;
         private List<Vector3> positions;
         private List<Vector3> normals;
         private List<float> textureCoordinates;
-        bool useTextureCoordinates;
+        private bool useTextureCoordinates;
         private VertexPosition vertexPosition;
+        private int numVerticesAdd;
+        private short[] indices;
 
         private enum VertexPosition
         {
@@ -40,9 +42,17 @@ namespace Dope.DDXX.Graphics
             normals = new List<Vector3>();
             textureCoordinates = new List<float>();
             useTextureCoordinates = false;
-            numVertices = -1;
             vbLocked = false;
             vertexPosition = VertexPosition.POSITION;
+            numVerticesAdd = 0;
+            indices = new short[0];
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Assert.IsFalse(vbLocked, "Vertex buffer should not be locked.");
+            Assert.IsFalse(ibLocked, "Index buffer should not be locked.");
         }
 
         /// <summary>
@@ -53,9 +63,9 @@ namespace Dope.DDXX.Graphics
         [ExpectedException(typeof(DDXXException))]
         public void TestInvalidConstructor()
         {
+            numVerticesAdd = 1;
             for (int i = 0; i < 3; i++)
                 particles.Add(new PhysicalParticle(1, 1));
-            numVertices = 4;
             PhysicalModel model = new PhysicalModel(this, this);
         }
 
@@ -68,7 +78,6 @@ namespace Dope.DDXX.Graphics
         {
             for (int i = 0; i < 4; i++)
                 particles.Add(new PhysicalParticle(1, 1));
-            numVertices = 4;
             PhysicalModel model = new PhysicalModel(this, this);
             Assert.AreEqual(this, model.Body, "This pointer should be Body.");
         }
@@ -82,7 +91,6 @@ namespace Dope.DDXX.Graphics
         {
             for (int i = 0; i < 4; i++)
                 particles.Add(new PhysicalParticle(1, 1));
-            numVertices = 4;
             PhysicalModel model = new PhysicalModel(this, this, new ModelMaterial[] { null });
             Assert.AreEqual(this, model.Body, "This pointer should be Body.");
             Assert.AreEqual(null, model.Materials[0], "Material should be null");
@@ -94,19 +102,30 @@ namespace Dope.DDXX.Graphics
         [Test]
         public void TestStep()
         {
-            for (int i = 0; i < 4; i++)
-                particles.Add(new PhysicalParticle(new Vector3(i, i, i), 1, 1));
-            numVertices = 4;
+            Vector3[] myNormals = new Vector3[] 
+            {
+                new Vector3(1, 0, 1),
+                new Vector3(1, 0, 1),
+                new Vector3(0, 0, 1),
+                new Vector3(1, 0, 0)
+            };
+            for (int i = 0; i < myNormals.Length; i++)
+                myNormals[i].Normalize();
+            // One triangle facing 0, 0, -1 and one facing 0, 0, 1
+            particles.Add(new PhysicalParticle(new Vector3(0, 10, 0), 1, 1));
+            particles.Add(new PhysicalParticle(new Vector3(0, 0, 0), 1, 1));
+            particles.Add(new PhysicalParticle(new Vector3(-10, 0, 0), 1, 1));
+            particles.Add(new PhysicalParticle(new Vector3(0, 0, -10), 1, 1));
+            indices = new short[] { 0, 2, 1, 0, 1, 3 };
             PhysicalModel model = new PhysicalModel(this, this);
             model.Step();
             Assert.IsTrue(bodyStep, "Body.Step() should have been called.");
-            Assert.IsFalse(vbLocked, "Vertex buffer should not be locked.");
-            Assert.AreEqual(numVertices, positions.Count, 
-                "Number of written positions should equal numVertices.");
-            for (int i = 0; i < numVertices; i++)
+            Assert.AreEqual(particles.Count, positions.Count,
+                "Number of written positions should equal particles.Count.");
+            for (int i = 0; i < particles.Count; i++)
             {
                 Assert.AreEqual(particles[i].Position, positions[i]);
-                Assert.AreEqual(new Vector3(0, 0, -1), normals[i]);
+                Assert.AreEqual(myNormals[i], normals[i]);
             }
         }
 
@@ -119,17 +138,16 @@ namespace Dope.DDXX.Graphics
             useTextureCoordinates = true;
             for (int i = 0; i < 4; i++)
                 particles.Add(new PhysicalParticle(new Vector3(i, i, i), 1, 1));
-            numVertices = 4;
             PhysicalModel model = new PhysicalModel(this, this);
             model.Step();
             Assert.IsTrue(bodyStep, "Body.Step() should have been called.");
-            Assert.IsFalse(vbLocked, "Vertex buffer should not be locked.");
-            Assert.AreEqual(numVertices, positions.Count,
-                "Number of written positions should equal numVertices.");
-            for (int i = 0; i < numVertices; i++)
+            Assert.AreEqual(particles.Count, positions.Count,
+                "Number of written positions should equal particles.Count.");
+            for (int i = 0; i < particles.Count; i++)
             {
                 Assert.AreEqual(particles[i].Position, positions[i]);
-                Assert.AreEqual(new Vector3(0, 0, -1), normals[i]);
+                // Normals should be 0, 0, 0 since we have no indices
+                Assert.AreEqual(new Vector3(0, 0, 0), normals[i]);
             }
         }
 
@@ -189,12 +207,12 @@ namespace Dope.DDXX.Graphics
 
         public int NumberFaces
         {
-            get { throw new Exception("The method or operation is not implemented."); }
+            get { return indices.Length / 3; }
         }
 
         public int NumberVertices
         {
-            get { return numVertices; }
+            get { return particles.Count + numVerticesAdd; }
         }
 
         public Microsoft.DirectX.Direct3D.MeshOptions Options
@@ -299,7 +317,8 @@ namespace Dope.DDXX.Graphics
 
         public IGraphicsStream LockIndexBuffer(Microsoft.DirectX.Direct3D.LockFlags flags)
         {
-            throw new Exception("The method or operation is not implemented.");
+            ibLocked = true;
+            return this;
         }
 
         public Array LockIndexBuffer(Type typeIndex, Microsoft.DirectX.Direct3D.LockFlags flags, params int[] ranks)
@@ -330,7 +349,7 @@ namespace Dope.DDXX.Graphics
 
         public void UnlockIndexBuffer()
         {
-            throw new Exception("The method or operation is not implemented.");
+            ibLocked = false;
         }
 
         public void UnlockVertexBuffer()
@@ -652,7 +671,9 @@ namespace Dope.DDXX.Graphics
 
         public Array Read(Type returnType, params int[] ranks)
         {
-            throw new Exception("The method or operation is not implemented.");
+            Assert.IsTrue(ibLocked);
+            Assert.AreEqual(typeof(short), returnType);
+            return indices;
         }
 
         public int Read(byte[] buffer, int offset, int count)

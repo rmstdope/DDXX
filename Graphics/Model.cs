@@ -14,7 +14,6 @@ namespace Dope.DDXX.Graphics
         public override IMesh Mesh
         {
             get { return mesh; }
-            set { mesh = value; }
         }
 
         public Model(IMesh mesh)

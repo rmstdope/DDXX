@@ -89,7 +89,8 @@ TestVertexShader(InputVS input)
 	// Transform the position from object space to homogeneous projection space
 	output.Position = mul(input.Position, WorldViewProjectionT);
 	float3 normal = normalize(mul(input.Normal, WorldT));
-	output.Light = abs(dot(normal, normalize(float3(1, 1, -1))));
+	output.Light = abs(dot(normal, normalize(float3(0, 0, -1))));
+	output.Light = output.Light * output.Light;
 	output.TextureCoord = input.TextureCoord;
 	return output;
 }
@@ -97,7 +98,7 @@ TestVertexShader(InputVS input)
 float4
 TestPixelShader(TestStruct input) : COLOR0
 {
-	float diffuse = 0.5f + 0.5f * input.Light;
+	float diffuse = 0.1f + 0.9f * input.Light;
 	return diffuse * tex2D(BaseTextureSampler, input.TextureCoord.xy);
 }
 

@@ -188,7 +188,7 @@ namespace ShortPuzzle
             scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f);
 
             IModel model1 = ModelFactory.CreateBox(10, 10, 10);
-            model1.Mesh = model1.Mesh.Clone(MeshFlags.Managed, VertexFormats.Position | VertexFormats.Texture1 | VertexFormats.Normal, Device);
+            model1 = new Model(model1.Mesh.Clone(MeshFlags.Managed, VertexFormats.Position | VertexFormats.Texture1 | VertexFormats.Normal, Device));
             model1.Mesh.ComputeNormals();
             IGraphicsStream stream = model1.Mesh.LockVertexBuffer(LockFlags.None);
             CustomVertex.PositionNormalTextured[] vertices = new CustomVertex.PositionNormalTextured[model1.Mesh.NumberVertices];
