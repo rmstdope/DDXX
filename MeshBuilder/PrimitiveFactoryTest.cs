@@ -11,7 +11,7 @@ namespace Dope.DDXX.MeshBuilder
     public class PrimitiveFactoryTest : IBody
     {
         private PrimitiveFactory factory;
-        private Primitive primitive;
+        private IPrimitive primitive;
         private List<IPhysicalParticle> particles;
         private List<Dope.DDXX.Physics.IConstraint> constraints;
         private const float epsilon = 0.000001f;
@@ -39,7 +39,7 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestNumVerticesSingleSegment()
         {
-            Primitive box = factory.CreateBox(10, 20, 30, 1, 1, 1);
+            IPrimitive box = factory.CreateBox(10, 20, 30, 1, 1, 1);
             Assert.AreEqual(24, box.Vertices.Length, "The plane should have 24 vertices.");
             Assert.AreEqual(36, box.Indices.Length, "The plane should have 36 indices.");
         }
@@ -104,7 +104,7 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestNumVerticesPlaneSingleSegment()
         {
-            Primitive plane = factory.CreatePlane(10, 30, 1, 1, false);
+            IPrimitive plane = factory.CreatePlane(10, 30, 1, 1, false);
             Assert.AreEqual(4, plane.Vertices.Length, "The plane should have 4 vertices.");
             Assert.AreEqual(6, plane.Indices.Length, "The plane should have 6 indices.");
         }
@@ -115,7 +115,7 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestNumVerticesPlaneMultipleSegments()
         {
-            Primitive plane = factory.CreatePlane(20, 40, 1, 4, false);
+            IPrimitive plane = factory.CreatePlane(20, 40, 1, 4, false);
             Assert.AreEqual(10, plane.Vertices.Length, "The plane should have 10 vertices.");
             Assert.AreEqual(24, plane.Indices.Length, "The plane should have 24 indices.");
         }
@@ -201,7 +201,7 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestClothBody()
         {
-            Primitive cloth = factory.CreateCloth(this, 10, 30, 1, 1, false);
+            IPrimitive cloth = factory.CreateCloth(this, 10, 30, 1, 1, false);
             Assert.AreSame(this, cloth.Body, "Body should have been set to this.");
         }
 
@@ -211,7 +211,7 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestClothNumParticlesInBody1()
         {
-            Primitive cloth = factory.CreateCloth(this, 10, 30, 1, 1, false);
+            IPrimitive cloth = factory.CreateCloth(this, 10, 30, 1, 1, false);
             Assert.AreEqual(4, particles.Count, "We should have four particles.");
         }
 
@@ -221,7 +221,7 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestClothNumParticlesInBody2()
         {
-            Primitive cloth = factory.CreateCloth(this, 20, 40, 4, 2, false);
+            IPrimitive cloth = factory.CreateCloth(this, 20, 40, 4, 2, false);
             Assert.AreEqual(15, particles.Count, "We should have 15 particles.");
         }
 
@@ -231,7 +231,7 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestClothNumConstraintsInBody1()
         {
-            Primitive cloth = factory.CreateCloth(this, 10, 30, 1, 1, false);
+            IPrimitive cloth = factory.CreateCloth(this, 10, 30, 1, 1, false);
             Assert.AreEqual(4, constraints.Count, "We should have four constraints.");
         }
 
@@ -241,7 +241,7 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestClothNumConstraintsInBody2()
         {
-            Primitive cloth = factory.CreateCloth(this, 20, 40, 4, 2, false);
+            IPrimitive cloth = factory.CreateCloth(this, 20, 40, 4, 2, false);
             Assert.AreEqual(22, constraints.Count, "We should have 22 constraints.");
         }
 
@@ -251,7 +251,7 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestClothNumConstraintsInPinnedCloth1()
         {
-            Primitive cloth = factory.CreateCloth(this, 10, 30, 1, 1, new int[] { }, false);
+            IPrimitive cloth = factory.CreateCloth(this, 10, 30, 1, 1, new int[] { }, false);
             Assert.AreEqual(4, constraints.Count, "We should have four constraints.");
         }
 
@@ -261,7 +261,7 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestClothNumConstraintsInPinnedCloth2()
         {
-            Primitive cloth = factory.CreateCloth(this, 10, 30, 1, 1, new int[] { 0, 1 }, false);
+            IPrimitive cloth = factory.CreateCloth(this, 10, 30, 1, 1, new int[] { 0, 1 }, false);
             Assert.AreEqual(6, constraints.Count, "We should have six constraints.");
             // Now if we move particles 0 and 1 and then satisfy contraints 6 and 7, the two particles
             // shall be moved back.
@@ -283,8 +283,8 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestClothParticlePosition()
         {
-            Primitive cloth = factory.CreateCloth(this, 56, 87, 7, 9, false);
-            Primitive plane = factory.CreatePlane(56, 87, 7, 9, false);
+            IPrimitive cloth = factory.CreateCloth(this, 56, 87, 7, 9, false);
+            IPrimitive plane = factory.CreatePlane(56, 87, 7, 9, false);
             for (int i = 0; i < plane.Vertices.Length; i++)
             {
                 Assert.IsInstanceOfType(typeof(PhysicalParticle), particles[i],

@@ -70,25 +70,20 @@ namespace EngineTest
             XLoader.AddToScene(scene);
             //scene.ActiveCamera = scene.GetNodeByName("Camera") as CameraNode;
 
+            PrimitiveFactory primitiveFactory = new PrimitiveFactory();
             MeshBuilder builder = new MeshBuilder(D3DDriver.GraphicsFactory, D3DDriver.TextureFactory, 
-                D3DDriver.GetInstance().Device);
+                D3DDriver.GetInstance().Device, primitiveFactory);
             const int numSides = 20;
             Body body = new Body();
             body.Gravity = new Vector3(0, -3, 0);
 
-            PrimitiveFactory primitiveFactory = new PrimitiveFactory();
-            Primitive primitive = primitiveFactory.CreateCloth(body, 20, 20, numSides, numSides,
-                new int[] { 0, /*(numSides + 1) */ numSides }, true);
-            Material material = new Material();
-            material.Ambient = Color.White;
-            material.Diffuse = Color.Red;
-            ExtendedMaterial extendedMaterial = new ExtendedMaterial();
-            extendedMaterial.Material3D = material;
-            extendedMaterial.TextureFilename = "ABALONE.JPG";
-            primitive.Material = extendedMaterial;
-            builder.AddPrimitive(primitive, "Box");
-            model = builder.CreateModel("Box");
-            clothModel = new ModelNode("Box", model,
+            builder.CreateCloth("Cloth", body, 20, 20, numSides, numSides,
+                /*new int[] { 0, numSides },*/ true);
+            builder.AssignMaterial("Cloth", "Default1");
+            builder.SetDiffuseTexture("Default1", "ABALONE.JPG");
+
+            model = builder.CreateModel("Cloth");
+            clothModel = new ModelNode("Cloth", model,
                 new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Test", model));
             scene.AddNode(clothModel);
 

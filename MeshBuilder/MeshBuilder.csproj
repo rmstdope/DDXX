@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PrimitiveFactoryTest.cs" />
-    <Compile Include="IPrimitveFactory.cs" />
+    <Compile Include="IPrimitiveFactory.cs" />
     <Compile Include="Primitive.cs" />
     <Compile Include="PrimitiveFactory.cs" />
     <Compile Include="PrimitiveTest.cs" />

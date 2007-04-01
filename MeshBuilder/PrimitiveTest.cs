@@ -12,7 +12,7 @@ using Dope.DDXX.Physics;
 namespace Dope.DDXX.MeshBuilder
 {
     [TestFixture]
-    public class PrimitiveTest : IGraphicsFactory, IMesh, IDevice, IGraphicsStream, IBody, ITextureFactory, ITexture
+    public class PrimitiveTest : IGraphicsFactory, IMesh, IDevice, IGraphicsStream, IBody, ITexture
     {
         protected Primitive primitive;
         private int numFaces;
@@ -24,7 +24,6 @@ namespace Dope.DDXX.MeshBuilder
         private List<Vector3> normals;
         private List<float> textureCoordinates;
         private bool useTextureCoordinates;
-        private string fileName;
         private short[] indices;
 
         private enum VertexPosition
@@ -47,7 +46,6 @@ namespace Dope.DDXX.MeshBuilder
             textureCoordinates = new List<float>();
             vertexPosition = VertexPosition.POSITION;
             useTextureCoordinates = false;
-            fileName = null;
         }
 
         /// <summary>
@@ -59,7 +57,7 @@ namespace Dope.DDXX.MeshBuilder
             Vertex[] vertices;
             short[] indices;
             CreatePrimitive(out vertices, out indices);
-            IModel model = primitive.CreateModel(this, this, this);
+            IModel model = primitive.CreateModel(this, this);
             CheckModel(vertices, indices, model);
             Assert.IsNotInstanceOfType(typeof(PhysicalModel), model, "Model shall not be PhysicalModel");
         }
@@ -74,7 +72,7 @@ namespace Dope.DDXX.MeshBuilder
             Vertex[] vertices;
             short[] indices;
             CreatePrimitive(out vertices, out indices);
-            IModel model = primitive.CreateModel(this, this, this);
+            IModel model = primitive.CreateModel(this, this);
             CheckModel(vertices, indices, model);
             Assert.IsNotInstanceOfType(typeof(PhysicalModel), model, "Model shall not be PhysicalModel");
         }
@@ -89,7 +87,7 @@ namespace Dope.DDXX.MeshBuilder
             short[] indices;
             CreatePrimitive(out vertices, out indices);
             primitive.Body = this;
-            IModel model = primitive.CreateModel(this, this, this);
+            IModel model = primitive.CreateModel(this, this);
             CheckModel(vertices, indices, model);
             Assert.IsInstanceOfType(typeof(PhysicalModel), model, "Model shall be PhysicalModel");
         }
@@ -100,18 +98,15 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestMaterial()
         {
-            fileName = "TheFile";
             Material material = new Material();
             material.Ambient = Color.White;
             material.Diffuse = Color.Red;
-            ExtendedMaterial extendedMaterial = new ExtendedMaterial();
-            extendedMaterial.Material3D = material;
-            extendedMaterial.TextureFilename = fileName;
+            ModelMaterial modelMaterial = new ModelMaterial(material);
             Vertex[] vertices;
             short[] indices;
             CreatePrimitive(out vertices, out indices);
-            primitive.Material = extendedMaterial;
-            IModel model = primitive.CreateModel(this, this, this);
+            primitive.ModelMaterial = modelMaterial;
+            IModel model = primitive.CreateModel(this, this);
             CheckMaterial(model);
             CheckModel(vertices, indices, model);
         }
@@ -122,19 +117,16 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestMaterialOnBody()
         {
-            fileName = "TheFile";
             Material material = new Material();
             material.Ambient = Color.White;
             material.Diffuse = Color.Red;
-            ExtendedMaterial extendedMaterial = new ExtendedMaterial();
-            extendedMaterial.Material3D = material;
-            extendedMaterial.TextureFilename = fileName;
+            ModelMaterial modelMaterial = new ModelMaterial(material);
             Vertex[] vertices;
             short[] indices;
             CreatePrimitive(out vertices, out indices);
             primitive.Body = this;
-            primitive.Material = extendedMaterial;
-            IModel model = primitive.CreateModel(this, this, this);
+            primitive.ModelMaterial = modelMaterial;
+            IModel model = primitive.CreateModel(this, this);
             CheckMaterial(model);
             CheckModel(vertices, indices, model);
         }
@@ -145,8 +137,6 @@ namespace Dope.DDXX.MeshBuilder
                 "Ambient color should be white.");
             Assert.AreEqual(Color.Red.ToArgb(), model.Materials[0].Diffuse.ToArgb(),
                 "Diffuse color should be red.");
-            Assert.AreEqual(this, model.Materials[0].DiffuseTexture,
-                "This reference should be the texture.");
         }
 
         private void CheckModel(Vertex[] vertices, short[] indices, IModel model)
@@ -1732,26 +1722,6 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         public void ApplyForce(Vector3 vector3)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        #endregion
-
-        #region ITextureFactory Members
-
-        public ITexture CreateFromFile(string file)
-        {
-            Assert.AreEqual(fileName, file, "File names should match.");
-            return this;
-        }
-
-        public ITexture CreateFullsizeRenderTarget(Format format)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public ITexture CreateFullsizeRenderTarget()
         {
             throw new Exception("The method or operation is not implemented.");
         }

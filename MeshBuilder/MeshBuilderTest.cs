@@ -13,14 +13,40 @@ using Dope.DDXX.Physics;
 namespace Dope.DDXX.MeshBuilder
 {
     [TestFixture]
-    public class MeshBuilderTest : IGraphicsFactory, IModel, IPrimitive, IDevice, ITextureFactory
+    public class MeshBuilderTest : IGraphicsFactory, IModel, IPrimitive, IDevice, ITextureFactory, IPrimitiveFactory, IBody, ITexture
     {
         private MeshBuilder builder;
+        private float width;
+        private float height;
+        private float length;
+        private int widthSegments;
+        private int heightSegments;
+        private int lengthSegments;
+        private bool textured;
+        private int[] pinnedParticles;
+        private bool createPlaneCalled;
+        private bool createBoxCalled;
+        private bool createClothCalled;
+        private bool setMaterialCalled;
+        private string fileName;
         
         [SetUp]
         public void SetUp()
         {
-            builder = new MeshBuilder(this, this, this);
+            builder = new MeshBuilder(this, this, this, this);
+            width = -1.0f;
+            height = -1.0f;
+            length = -1.0f;
+            widthSegments = -1;
+            heightSegments = -1;
+            lengthSegments = -1;
+            textured = false;
+            pinnedParticles = new int[0];
+            createPlaneCalled = false;
+            createBoxCalled = false;
+            createClothCalled = false;
+            setMaterialCalled = false;
+            fileName = null;
         }
 
         /// <summary>
@@ -35,17 +61,6 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
-        /// Test to add two primitives with the same name.
-        /// </summary>
-        [Test]
-        [ExpectedException(typeof(DDXXException))]
-        public void TestMultipleAdd()
-        {
-            builder.AddPrimitive(this, "Name1");
-            builder.AddPrimitive(this, "Name1");
-        }
-
-        /// <summary>
         /// Test calling CreateMesh without having added the primitive first.
         /// </summary>
         [Test]
@@ -55,6 +70,169 @@ namespace Dope.DDXX.MeshBuilder
             IModel model = builder.CreateModel("Name1");
         }
 
+        /// <summary>
+        /// Test box creation using the factory
+        /// </summary>
+        [Test]
+        public void TestBoxCreation()
+        {
+            width = 1;
+            height = 2;
+            length = 3;
+            widthSegments = 4;
+            heightSegments = 5;
+            lengthSegments = 6;
+            builder.CreateBox("Box", length, width, height, 
+                lengthSegments, widthSegments, heightSegments);
+            Assert.AreSame(this, builder.GetPrimitive("Box"));
+            Assert.IsTrue(createBoxCalled, "CreateBox should have been called.");
+        }
+
+        /// <summary>
+        /// Test box creation of duplicate name
+        /// </summary>
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestBoxCreationFail()
+        {
+            TestBoxCreation();
+            builder.CreateBox("Box", length, width, height,
+                lengthSegments, widthSegments, heightSegments);
+        }
+
+        /// <summary>
+        /// Test plane creation using the factory
+        /// </summary>
+        [Test]
+        public void TestPlaneCreation()
+        {
+            width = 1;
+            height = 2;
+            widthSegments = 4;
+            heightSegments = 5;
+            textured = true;
+            builder.CreatePlane("Plane", width, height, widthSegments, heightSegments, textured);
+            Assert.AreSame(this, builder.GetPrimitive("Plane"));
+            Assert.IsTrue(createPlaneCalled, "CreatePlane should have been called.");
+        }
+
+        /// <summary>
+        /// Test plane creation of duplicate name
+        /// </summary>
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestPlaneCreationFail()
+        {
+            TestPlaneCreation();
+            builder.CreatePlane("Plane", width, height, widthSegments, heightSegments, textured);
+        }
+
+        /// <summary>
+        /// Test plane and box creation of duplicate name
+        /// </summary>
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestDuplicates()
+        {
+            TestBoxCreation();
+            builder.CreatePlane("Box", width, height, widthSegments, heightSegments, textured);
+        }
+
+        /// <summary>
+        /// Test cloth creation using the factory
+        /// </summary>
+        [Test]
+        public void TestClothCreationNoPinned()
+        {
+            width = 1;
+            height = 2;
+            widthSegments = 4;
+            heightSegments = 5;
+            textured = true;
+            builder.CreateCloth("Cloth", this, width, height, widthSegments, heightSegments, textured);
+            Assert.AreSame(this, builder.GetPrimitive("Cloth"));
+            Assert.IsTrue(createClothCalled, "CreateCloth should have been called.");
+        }
+
+        /// <summary>
+        /// Test cloth creation using the factory
+        /// </summary>
+        [Test]
+        public void TestClothCreationPinned()
+        {
+            width = 1;
+            height = 2;
+            widthSegments = 4;
+            heightSegments = 5;
+            textured = true;
+            pinnedParticles = new int[] { 3, 7, 6, 4, 8, 9, 65 };
+            builder.CreateCloth("Cloth", this, width, height, widthSegments, heightSegments, pinnedParticles, textured);
+            Assert.AreSame(this, builder.GetPrimitive("Cloth"));
+            Assert.IsTrue(createClothCalled, "CreateCloth should have been called.");
+        }
+
+        /// <summary>
+        /// Test material assignment with invalid material.
+        /// </summary>
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestMaterialAssignmentFail1()
+        {
+            TestBoxCreation();
+            builder.AssignMaterial("Box", "InvalidMaterial");
+        }
+
+        /// <summary>
+        /// Test material assignment.
+        /// </summary>
+        [Test]
+        public void TestMaterialAssignmentOK()
+        {
+            TestBoxCreation();
+            for (int i = 0; i < 6; i++)
+            {
+                setMaterialCalled = false;
+                builder.AssignMaterial("Box", "Default" + (i + 1));
+                Assert.IsTrue(setMaterialCalled);
+            }
+        }
+
+        /// <summary>
+        /// Test material assignment with invalid primitive.
+        /// </summary>
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestMaterialAssignmentFail2()
+        {
+            builder.AssignMaterial("InvalidPrimitive", "Default1");
+        }
+
+        /// <summary>
+        /// Test setting of the diffuse texture of a material.
+        /// </summary>
+        [Test]
+        public void TestDiffuseTexture()
+        {
+            Assert.AreSame(null, builder.GetMaterial("Default1").DiffuseTexture);
+            Assert.AreSame(null, builder.GetMaterial("Default1").NormalTexture);
+            fileName = "DiffuseTexture";
+            builder.SetDiffuseTexture("Default1", fileName);
+            Assert.AreSame(this, builder.GetMaterial("Default1").DiffuseTexture);
+        }
+
+        /// <summary>
+        /// Test removing the diffuse texture of a material.
+        /// </summary>
+        [Test]
+        public void TestDiffuseTextureRemove()
+        {
+            TestDiffuseTexture();
+            builder.SetDiffuseTexture("Default1", null);
+            Assert.AreSame(null, builder.GetMaterial("Default1").DiffuseTexture);
+            TestDiffuseTexture();
+            builder.SetDiffuseTexture("Default1", "");
+            Assert.AreSame(null, builder.GetMaterial("Default1").DiffuseTexture);
+        }
 
         #region IGraphicsFactory Members
 
@@ -200,13 +378,13 @@ namespace Dope.DDXX.MeshBuilder
         public IBody Body
         {
             get { throw new Exception("The method or operation is not implemented."); }
+            set { throw new Exception("The method or operation is not implemented."); }
         }
 
         public IModel CreateModel(IGraphicsFactory factory, 
-            ITextureFactory textureFactory, IDevice device)
+            IDevice device)
         {
             Assert.AreSame(this, factory, "Factory should be same as this.");
-            Assert.AreSame(this, textureFactory, "TextureFactory should be same as this.");
             return this;
         }
 
@@ -1095,7 +1273,8 @@ namespace Dope.DDXX.MeshBuilder
 
         public ITexture CreateFromFile(string file)
         {
-            throw new Exception("The method or operation is not implemented.");
+            Assert.AreEqual(fileName, file);
+            return this;
         }
 
         public ITexture CreateFullsizeRenderTarget(Format format)
@@ -1104,6 +1283,259 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         public ITexture CreateFullsizeRenderTarget()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
+
+
+        #region IPrimitiveFactory Members
+
+        public IPrimitive CreateCloth(IBody body, float width, float height, 
+            int widthSegments, int heightSegments, int[] pinnedParticles, bool textured)
+        {
+            createClothCalled = true;
+            Assert.AreSame(this, body);
+            Assert.AreEqual(this.width, width);
+            Assert.AreEqual(this.height, height);
+            Assert.AreEqual(this.widthSegments, widthSegments);
+            Assert.AreEqual(this.heightSegments, heightSegments);
+            Assert.AreEqual(this.textured, textured);
+            Assert.AreSame(this.pinnedParticles, pinnedParticles);
+            return this;
+        }
+
+        public IPrimitive CreateCloth(IBody body, float width, float height, 
+            int widthSegments, int heightSegments, bool textured)
+        {
+            createClothCalled = true;
+            Assert.AreSame(this, body);
+            Assert.AreEqual(this.width, width);
+            Assert.AreEqual(this.height, height);
+            Assert.AreEqual(this.widthSegments, widthSegments);
+            Assert.AreEqual(this.heightSegments, heightSegments);
+            Assert.AreEqual(this.textured, textured);
+            return this;
+        }
+
+        public IPrimitive CreatePlane(float width, float height, int widthSegments, int heightSegments, bool textured)
+        {
+            createPlaneCalled = true;
+            Assert.AreEqual(this.width, width);
+            Assert.AreEqual(this.height, height);
+            Assert.AreEqual(this.widthSegments, widthSegments);
+            Assert.AreEqual(this.heightSegments, heightSegments);
+            Assert.AreEqual(this.textured, textured);
+            return this;
+        }
+
+        public IPrimitive CreateBox(float length, float width, float height, int lengthSegments, int widthSegments, int heightSegments)
+        {
+            createBoxCalled = true;
+            Assert.AreEqual(this.length, length);
+            Assert.AreEqual(this.width, width);
+            Assert.AreEqual(this.height, height);
+            Assert.AreEqual(this.lengthSegments, lengthSegments);
+            Assert.AreEqual(this.widthSegments, widthSegments);
+            Assert.AreEqual(this.heightSegments, heightSegments);
+            return this;
+        }
+
+        #endregion
+
+        #region IBody Members
+
+        public void AddConstraint(Dope.DDXX.Physics.IConstraint constraint)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void AddParticle(IPhysicalParticle particle)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Vector3 Gravity
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public List<IPhysicalParticle> Particles
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public void ApplyForce(Vector3 vector3)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
+
+        #region IPrimitive Members
+
+
+        public ModelMaterial ModelMaterial
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                setMaterialCalled = true;
+            }
+        }
+
+        #endregion
+
+        #region ITexture Members
+
+
+        public void AddDirtyRectangle()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void AddDirtyRectangle(Rectangle rect)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public SurfaceDescription GetLevelDescription(int level)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public ISurface GetSurfaceLevel(int level)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public GraphicsStream LockRectangle(int level, LockFlags flags)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public GraphicsStream LockRectangle(int level, LockFlags flags, out int pitch)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public GraphicsStream LockRectangle(int level, Rectangle rect, LockFlags flags)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public GraphicsStream LockRectangle(int level, Rectangle rect, LockFlags flags, out int pitch)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Array LockRectangle(Type typeLock, int level, LockFlags flags, params int[] ranks)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Array LockRectangle(Type typeLock, int level, LockFlags flags, out int pitch, params int[] ranks)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Array LockRectangle(Type typeLock, int level, Rectangle rect, LockFlags flags, params int[] ranks)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Array LockRectangle(Type typeLock, int level, Rectangle rect, LockFlags flags, out int pitch, params int[] ranks)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void UnlockRectangle(int level)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
+
+        #region IBaseTexture Members
+
+        public Device Device
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public int Priority
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public ResourceType Type
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public void PreLoad()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public int SetPriority(int priorityNew)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public TextureFilter AutoGenerateFilterType
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public int LevelCount
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public int LevelOfDetail
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public void GenerateMipSubLevels()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public int SetLevelOfDetail(int lodNew)
         {
             throw new Exception("The method or operation is not implemented.");
         }

@@ -6,12 +6,12 @@ using Dope.DDXX.Physics;
 
 namespace Dope.DDXX.MeshBuilder
 {
-    public class PrimitiveFactory : IPrimitveFactory
+    public class PrimitiveFactory : IPrimitiveFactory
     {
-        public Primitive CreateCloth(IBody body, float width, float height,
+        public IPrimitive CreateCloth(IBody body, float width, float height,
             int widthSegments, int heightSegments, int[] pinnedParticles, bool textured)
         {
-            Primitive cloth = CreateCloth(body, width, height, widthSegments, heightSegments, textured);
+            IPrimitive cloth = CreateCloth(body, width, height, widthSegments, heightSegments, textured);
             foreach (int index in pinnedParticles)
             {
                 body.AddConstraint(new PositionConstraint(body.Particles[index],
@@ -20,7 +20,7 @@ namespace Dope.DDXX.MeshBuilder
             return cloth;
         }
 
-        public Primitive CreateCloth(IBody body, float width, float height,
+        public IPrimitive CreateCloth(IBody body, float width, float height,
             int widthSegments, int heightSegments, bool textured)
         {
             IPhysicalParticle p1;
@@ -30,7 +30,7 @@ namespace Dope.DDXX.MeshBuilder
             int x;
             int y;
 
-            Primitive cloth = CreatePlane(width, height, widthSegments, heightSegments, textured);
+            IPrimitive cloth = CreatePlane(width, height, widthSegments, heightSegments, textured);
             for (int i = 0; i < cloth.Vertices.Length; i++)
                 body.AddParticle(new PhysicalParticle(cloth.Vertices[i].Position, 1, 1));
             for (y = 0; y < heightSegments; y++)
@@ -74,7 +74,7 @@ namespace Dope.DDXX.MeshBuilder
             body.AddConstraint(new StickConstraint(p1, p2, (p1.Position - p2.Position).Length()));
         }
 
-        public Primitive CreatePlane(float width, float height,
+        public IPrimitive CreatePlane(float width, float height,
             int widthSegments, int heightSegments, bool textured)
         {
             short v = 0;
@@ -101,7 +101,7 @@ namespace Dope.DDXX.MeshBuilder
             return new Primitive(vertices, indices);
         }
 
-        public Primitive CreateBox(float length, float width, float height, int lengthSegments, int widthSegments, int heightSegments)
+        public IPrimitive CreateBox(float length, float width, float height, int lengthSegments, int widthSegments, int heightSegments)
         {
             short v = 0;
             short i = 0;

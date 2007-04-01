@@ -4,29 +4,52 @@ using System.Text;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
 using Microsoft.DirectX;
+using Dope.DDXX.Physics;
+using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.MeshBuilder
 {
     public class MeshBuilder
     {
-        private IGraphicsFactory factory;
+        private IGraphicsFactory graphicsFactory;
         private ITextureFactory textureFactory;
+        private IPrimitiveFactory primitiveFactory;
         private IDevice device;
-        private Dictionary<string, IPrimitive> primitives = new Dictionary<string,IPrimitive>();
+        private Dictionary<string, IPrimitive> primitives = new Dictionary<string, IPrimitive>();
+        private Dictionary<string, ModelMaterial> materials = new Dictionary<string, ModelMaterial>();
 
-        public MeshBuilder(IGraphicsFactory factory, ITextureFactory textureFactory, IDevice device)
+        public MeshBuilder(IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, 
+            IDevice device, IPrimitiveFactory primitiveFactory)
         {
-            this.factory = factory;
+            this.graphicsFactory = graphicsFactory;
             this.textureFactory = textureFactory;
+            this.primitiveFactory = primitiveFactory;
             this.device = device;
+            materials["Default1"] = new ModelMaterial(new Material());
+            materials["Default2"] = new ModelMaterial(new Material());
+            materials["Default3"] = new ModelMaterial(new Material());
+            materials["Default4"] = new ModelMaterial(new Material());
+            materials["Default5"] = new ModelMaterial(new Material());
+            materials["Default6"] = new ModelMaterial(new Material());
         }
 
-        public IPrimitive GetPrimitive(string name)
+        internal IPrimitive GetPrimitive(string name)
         {
-            return primitives[name];
+            if (primitives.ContainsKey(name))
+                return primitives[name];
+            else
+                throw new DDXXException("Can not find primitive " + name);
         }
 
-        public void AddPrimitive(IPrimitive primitive, string name)
+        internal ModelMaterial GetMaterial(string name)
+        {
+            if (materials.ContainsKey(name))
+                return materials[name];
+            else
+                throw new DDXXException("Can not find material " + name);
+        }
+
+        internal void AddPrimitive(IPrimitive primitive, string name)
         {
             if (primitives.ContainsKey(name))
                 throw new DDXXException("Can not add the two primitives with the same name.");
@@ -37,107 +60,60 @@ namespace Dope.DDXX.MeshBuilder
         {
             if (!primitives.ContainsKey(name))
                 throw new DDXXException("Can not create mesh from a primitive that does not exist.");
-            return primitives[name].CreateModel(factory, textureFactory, device);
+            return primitives[name].CreateModel(graphicsFactory, device);
+        }
+
+        public void CreateBox(string name, float length, float width, float height,
+            int lengthSegments, int widthSegments, int heightSegments)
+        {
+            IPrimitive box = primitiveFactory.CreateBox(length, width, height, 
+                lengthSegments, widthSegments, heightSegments);
+            AddPrimitive(box, name);
+        }
+
+        public void CreatePlane(string name, float width, float height,
+            int widthSegments, int heightSegments, bool textured)
+        {
+            IPrimitive plane = primitiveFactory.CreatePlane(width, height, 
+                widthSegments, heightSegments, textured);
+            AddPrimitive(plane, name);
+        }
+
+        public void CreateCloth(string name, IBody body, float width, float height,
+           int widthSegments, int heightSegments, int[] pinnedParticles, bool textured)
+        {
+            IPrimitive plane = primitiveFactory.CreateCloth(body, width, height, 
+                widthSegments, heightSegments, pinnedParticles, textured);
+            AddPrimitive(plane, name);
+        }
+
+        public void CreateCloth(string name, IBody body, float width, float height,
+            int widthSegments, int heightSegments, bool textured)
+        {
+            IPrimitive plane = primitiveFactory.CreateCloth(body, width, height, 
+                widthSegments, heightSegments, textured);
+            AddPrimitive(plane, name);
+        }
+
+        public void AssignMaterial(string primitiveName, string materialName)
+        {
+            IPrimitive primitive = GetPrimitive(primitiveName);
+            ModelMaterial material = GetMaterial(materialName);
+            primitive.ModelMaterial = material;
         }
 
         /// <summary>
-        /// Create a primitive that consist of a box.
+        /// Set the diffuse texture of a material.
         /// </summary>
-        /// <param name="length">The length of the plane (z)</param>
-        /// <param name="width">The width of the plane (x)</param>
-        /// <param name="height">The height of the plane (y)</param>
-        /// <param name="lengthSegments">The number of segments the plane has in z.</param>
-        /// <param name="widthSegments">The number of segments the plane has in x.</param>
-        /// <param name="heightSegments">The number of segments the plane has in y.</param>
-        /// <returns></returns>
-        public void CreateBoxPrimitive(string name, float length, float width, float height,
-            int lengthSegments, int widthSegments, int heightSegments)
+        /// <param name="materialName">The name of the material.</param>
+        /// <param name="fileName">The name of the texture file. Set to null or "" to remove the texture.</param>
+        public void SetDiffuseTexture(string materialName, string fileName)
         {
-            short v = 0;
-            short i = 0;
-            Vertex[] vertices = new Vertex[24];
-            short[] indices = new short[36];
-            // Front
-            i = BoxAddIndicesForSide(v, i, indices, widthSegments, heightSegments);
-            vertices[v].Normal = new Vector3(0, 0, -1);
-            vertices[v++].Position = new Vector3(-width / 2, height / 2, -length / 2);
-            vertices[v].Normal = new Vector3(0, 0, -1);
-            vertices[v++].Position = new Vector3(width / 2, height / 2, -length / 2);
-            vertices[v].Normal = new Vector3(0, 0, -1);
-            vertices[v++].Position = new Vector3(-width / 2, -height / 2, -length / 2);
-            vertices[v].Normal = new Vector3(0, 0, -1);
-            vertices[v++].Position = new Vector3(width / 2, -height / 2, -length / 2);
-            // Back
-            i = BoxAddIndicesForSide(v, i, indices, widthSegments, heightSegments);
-            vertices[v].Normal = new Vector3(0, 0, 1);
-            vertices[v++].Position = new Vector3(width / 2, height / 2, length / 2);
-            vertices[v].Normal = new Vector3(0, 0, 1);
-            vertices[v++].Position = new Vector3(-width / 2, height / 2, length / 2);
-            vertices[v].Normal = new Vector3(0, 0, 1);
-            vertices[v++].Position = new Vector3(width / 2, -height / 2, length / 2);
-            vertices[v].Normal = new Vector3(0, 0, 1);
-            vertices[v++].Position = new Vector3(-width / 2, -height / 2, length / 2);
-            // Top
-            i = BoxAddIndicesForSide(v, i, indices, widthSegments, lengthSegments);
-            vertices[v].Normal = new Vector3(0, 1, 0);
-            vertices[v++].Position = new Vector3(-width / 2, height / 2, length / 2);
-            vertices[v].Normal = new Vector3(0, 1, 0);
-            vertices[v++].Position = new Vector3(width / 2, height / 2, length / 2);
-            vertices[v].Normal = new Vector3(0, 1, 0);
-            vertices[v++].Position = new Vector3(-width / 2, height / 2, -length / 2);
-            vertices[v].Normal = new Vector3(0, 1, 0);
-            vertices[v++].Position = new Vector3(width / 2, height / 2, -length / 2);
-            // Bottom
-            i = BoxAddIndicesForSide(v, i, indices, widthSegments, lengthSegments);
-            vertices[v].Normal = new Vector3(0, -1, 0);
-            vertices[v++].Position = new Vector3(-width / 2, -height / 2, -length / 2);
-            vertices[v].Normal = new Vector3(0, -1, 0);
-            vertices[v++].Position = new Vector3(width / 2, -height / 2, -length / 2);
-            vertices[v].Normal = new Vector3(0, -1, 0);
-            vertices[v++].Position = new Vector3(-width / 2, -height / 2, length / 2);
-            vertices[v].Normal = new Vector3(0, -1, 0);
-            vertices[v++].Position = new Vector3(width / 2, -height / 2, length / 2);
-            // Left
-            i = BoxAddIndicesForSide(v, i, indices, lengthSegments, heightSegments);
-            vertices[v].Normal = new Vector3(-1, 0, 0);
-            vertices[v++].Position = new Vector3(-width / 2, height / 2, length / 2);
-            vertices[v].Normal = new Vector3(-1, 0, 0);
-            vertices[v++].Position = new Vector3(-width / 2, height / 2, -length / 2);
-            vertices[v].Normal = new Vector3(-1, 0, 0);
-            vertices[v++].Position = new Vector3(-width / 2, -height / 2, length / 2);
-            vertices[v].Normal = new Vector3(-1, 0, 0);
-            vertices[v++].Position = new Vector3(-width / 2, -height / 2, -length / 2);
-            // Right
-            i = BoxAddIndicesForSide(v, i, indices, lengthSegments, heightSegments);
-            vertices[v].Normal = new Vector3(1, 0, 0);
-            vertices[v++].Position = new Vector3(width / 2, height / 2, -length / 2);
-            vertices[v].Normal = new Vector3(1, 0, 0);
-            vertices[v++].Position = new Vector3(width / 2, height / 2, length / 2);
-            vertices[v].Normal = new Vector3(1, 0, 0);
-            vertices[v++].Position = new Vector3(width / 2, -height / 2, -length / 2);
-            vertices[v].Normal = new Vector3(1, 0, 0);
-            vertices[v++].Position = new Vector3(width / 2, -height / 2, length / 2);
-            AddPrimitive(new Primitive(vertices, indices), name);
+            ModelMaterial material = GetMaterial(materialName);
+            if (fileName == null || fileName == "")
+                material.DiffuseTexture = null;
+            else
+                material.DiffuseTexture = textureFactory.CreateFromFile(fileName);
         }
-
-        private static short BoxAddIndicesForSide(short v, short i, 
-            short[] indices, int widthSegments, int heightSegments)
-        {
-            for (int y = 0; y < heightSegments; y++)
-            {
-                for (int x = 0; x < widthSegments; x++)
-                {
-                    int vertex = v + x + y * (widthSegments + 1);
-                    indices[i++] = (short)vertex;
-                    indices[i++] = (short)(vertex + 1);
-                    indices[i++] = (short)(vertex + (widthSegments + 1));
-                    indices[i++] = (short)(vertex + 1);
-                    indices[i++] = (short)(vertex + 1 + +(widthSegments + 1));
-                    indices[i++] = (short)(vertex + +(widthSegments + 1));
-                }
-            }
-            return i;
-        }
-
     }
 }
