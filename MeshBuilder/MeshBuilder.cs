@@ -13,17 +13,16 @@ namespace Dope.DDXX.MeshBuilder
     {
         private IGraphicsFactory graphicsFactory;
         private ITextureFactory textureFactory;
-        private IPrimitiveFactory primitiveFactory;
+        private IPrimitiveFactory primitiveFactory = new PrimitiveFactory();
         private IDevice device;
         private Dictionary<string, IPrimitive> primitives = new Dictionary<string, IPrimitive>();
         private Dictionary<string, ModelMaterial> materials = new Dictionary<string, ModelMaterial>();
 
         public MeshBuilder(IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, 
-            IDevice device, IPrimitiveFactory primitiveFactory)
+            IDevice device)
         {
             this.graphicsFactory = graphicsFactory;
             this.textureFactory = textureFactory;
-            this.primitiveFactory = primitiveFactory;
             this.device = device;
             materials["Default1"] = new ModelMaterial(new Material());
             materials["Default2"] = new ModelMaterial(new Material());
@@ -31,6 +30,11 @@ namespace Dope.DDXX.MeshBuilder
             materials["Default4"] = new ModelMaterial(new Material());
             materials["Default5"] = new ModelMaterial(new Material());
             materials["Default6"] = new ModelMaterial(new Material());
+        }
+
+        internal IPrimitiveFactory PrimitiveFactory
+        {
+            set { primitiveFactory = value; }
         }
 
         internal IPrimitive GetPrimitive(string name)

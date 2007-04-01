@@ -70,15 +70,14 @@ namespace EngineTest
             XLoader.AddToScene(scene);
             //scene.ActiveCamera = scene.GetNodeByName("Camera") as CameraNode;
 
-            PrimitiveFactory primitiveFactory = new PrimitiveFactory();
             MeshBuilder builder = new MeshBuilder(D3DDriver.GraphicsFactory, D3DDriver.TextureFactory, 
-                D3DDriver.GetInstance().Device, primitiveFactory);
+                D3DDriver.GetInstance().Device);
             const int numSides = 20;
             Body body = new Body();
             body.Gravity = new Vector3(0, -3, 0);
 
             builder.CreateCloth("Cloth", body, 20, 20, numSides, numSides,
-                /*new int[] { 0, numSides },*/ true);
+                new int[] { 0, numSides }, true);
             builder.AssignMaterial("Cloth", "Default1");
             builder.SetDiffuseTexture("Default1", "ABALONE.JPG");
 

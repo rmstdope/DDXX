@@ -6,7 +6,7 @@ using Dope.DDXX.Physics;
 
 namespace Dope.DDXX.MeshBuilder
 {
-    public class PrimitiveFactory : IPrimitiveFactory
+    internal class PrimitiveFactory : IPrimitiveFactory
     {
         public IPrimitive CreateCloth(IBody body, float width, float height,
             int widthSegments, int heightSegments, int[] pinnedParticles, bool textured)

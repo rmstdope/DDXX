@@ -33,7 +33,8 @@ namespace Dope.DDXX.MeshBuilder
         [SetUp]
         public void SetUp()
         {
-            builder = new MeshBuilder(this, this, this, this);
+            builder = new MeshBuilder(this, this, this);
+            builder.PrimitiveFactory = this;
             width = -1.0f;
             height = -1.0f;
             length = -1.0f;
