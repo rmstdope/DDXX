@@ -8,7 +8,7 @@ using Dope.DDXX.Physics;
 namespace Dope.DDXX.MeshBuilder
 {
     [TestFixture]
-    public class BoxPrimitiveTest : IBody
+    public class PrimitiveFactoryTest : IBody
     {
         private PrimitiveFactory factory;
         private Primitive primitive;
