@@ -41,9 +41,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoxPrimitiveTest.cs" />
-    <Compile Include="ClothPrimitiveTest.cs" />
-    <Compile Include="PlanePrimitiveTest.cs" />
+    <Compile Include="IPrimitveFactory.cs" />
     <Compile Include="Primitive.cs" />
+    <Compile Include="PrimitiveFactory.cs" />
     <Compile Include="PrimitiveTest.cs" />
     <Compile Include="IPrimitive.cs" />
     <Compile Include="MeshBuilder.cs" />

@@ -1,57 +1,107 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Dope.DDXX.Graphics;
-using Dope.DDXX.Utility;
 using Microsoft.DirectX;
+using Dope.DDXX.Physics;
 
 namespace Dope.DDXX.MeshBuilder
 {
-    public class MeshBuilder
+    public class PrimitiveFactory : IPrimitveFactory
     {
-        private IGraphicsFactory factory;
-        private ITextureFactory textureFactory;
-        private IDevice device;
-        private Dictionary<string, IPrimitive> primitives = new Dictionary<string,IPrimitive>();
-
-        public MeshBuilder(IGraphicsFactory factory, ITextureFactory textureFactory, IDevice device)
+        public Primitive CreateCloth(IBody body, float width, float height,
+            int widthSegments, int heightSegments, int[] pinnedParticles, bool textured)
         {
-            this.factory = factory;
-            this.textureFactory = textureFactory;
-            this.device = device;
+            Primitive cloth = CreateCloth(body, width, height, widthSegments, heightSegments, textured);
+            foreach (int index in pinnedParticles)
+            {
+                body.AddConstraint(new PositionConstraint(body.Particles[index],
+                    body.Particles[index].Position));
+            }
+            return cloth;
         }
 
-        public IPrimitive GetPrimitive(string name)
+        public Primitive CreateCloth(IBody body, float width, float height,
+            int widthSegments, int heightSegments, bool textured)
         {
-            return primitives[name];
+            IPhysicalParticle p1;
+            IPhysicalParticle p2;
+            IPhysicalParticle p3;
+            IPhysicalParticle p4;
+            int x;
+            int y;
+
+            Primitive cloth = CreatePlane(width, height, widthSegments, heightSegments, textured);
+            for (int i = 0; i < cloth.Vertices.Length; i++)
+                body.AddParticle(new PhysicalParticle(cloth.Vertices[i].Position, 1, 1));
+            for (y = 0; y < heightSegments; y++)
+            {
+                for (x = 0; x < widthSegments; x++)
+                {
+                    // p1--p2
+                    // | \/     
+                    // | /\      
+                    // p3  p4
+                    p1 = body.Particles[(y + 0) * (widthSegments + 1) + x + 0];
+                    p2 = body.Particles[(y + 0) * (widthSegments + 1) + x + 1];
+                    p3 = body.Particles[(y + 1) * (widthSegments + 1) + x + 0];
+                    p4 = body.Particles[(y + 1) * (widthSegments + 1) + x + 1];
+                    AddConstraint(body, p1, p2);
+                    AddConstraint(body, p1, p3);
+                    //AddConstraint(body, p1, p4);
+                    //AddConstraint(body, p1, p4);
+                }
+                // p1
+                // |
+                // |
+                // p3
+                p1 = body.Particles[(y + 0) * (widthSegments + 1) + x + 0];
+                p3 = body.Particles[(y + 1) * (widthSegments + 1) + x + 0];
+                AddConstraint(body, p1, p3);
+            }
+            for (x = 0; x < widthSegments; x++)
+            {
+                // p1--p2
+                p1 = body.Particles[(y + 0) * (widthSegments + 1) + x + 0];
+                p2 = body.Particles[(y + 0) * (widthSegments + 1) + x + 1];
+                AddConstraint(body, p1, p2);
+            }
+            cloth.Body = body;
+            return cloth;
         }
 
-        public void AddPrimitive(IPrimitive primitive, string name)
+        private void AddConstraint(IBody body, IPhysicalParticle p1, IPhysicalParticle p2)
         {
-            if (primitives.ContainsKey(name))
-                throw new DDXXException("Can not add the two primitives with the same name.");
-            primitives[name] = primitive;
+            body.AddConstraint(new StickConstraint(p1, p2, (p1.Position - p2.Position).Length()));
         }
 
-        public IModel CreateModel(string name)
+        public Primitive CreatePlane(float width, float height,
+            int widthSegments, int heightSegments, bool textured)
         {
-            if (!primitives.ContainsKey(name))
-                throw new DDXXException("Can not create mesh from a primitive that does not exist.");
-            return primitives[name].CreateModel(factory, textureFactory, device);
+            short v = 0;
+            Vertex[] vertices = new Vertex[(widthSegments + 1) * (heightSegments + 1)];
+            short[] indices = new short[widthSegments * heightSegments * 6];
+
+            BoxAddIndicesForSide(0, 0, indices, widthSegments, heightSegments);
+            for (int y = 0; y < heightSegments + 1; y++)
+            {
+                float yPos = height * (0.5f - y / (float)heightSegments);
+                for (int x = 0; x < widthSegments + 1; x++)
+                {
+                    float xPos = width * (-0.5f + x / (float)widthSegments);
+                    vertices[v].Normal = new Vector3(0, 0, -1);
+                    vertices[v].Position = new Vector3(xPos, yPos, 0);
+                    if (textured)
+                    {
+                        vertices[v].U = x / (float)widthSegments;
+                        vertices[v].V = y / (float)heightSegments;
+                    }
+                    v++;
+                }
+            }
+            return new Primitive(vertices, indices);
         }
 
-        /// <summary>
-        /// Create a primitive that consist of a box.
-        /// </summary>
-        /// <param name="length">The length of the plane (z)</param>
-        /// <param name="width">The width of the plane (x)</param>
-        /// <param name="height">The height of the plane (y)</param>
-        /// <param name="lengthSegments">The number of segments the plane has in z.</param>
-        /// <param name="widthSegments">The number of segments the plane has in x.</param>
-        /// <param name="heightSegments">The number of segments the plane has in y.</param>
-        /// <returns></returns>
-        public void CreateBoxPrimitive(string name, float length, float width, float height,
-            int lengthSegments, int widthSegments, int heightSegments)
+        public Primitive CreateBox(float length, float width, float height, int lengthSegments, int widthSegments, int heightSegments)
         {
             short v = 0;
             short i = 0;
@@ -117,10 +167,10 @@ namespace Dope.DDXX.MeshBuilder
             vertices[v++].Position = new Vector3(width / 2, -height / 2, -length / 2);
             vertices[v].Normal = new Vector3(1, 0, 0);
             vertices[v++].Position = new Vector3(width / 2, -height / 2, length / 2);
-            AddPrimitive(new Primitive(vertices, indices), name);
+            return new Primitive(vertices, indices);
         }
 
-        private static short BoxAddIndicesForSide(short v, short i, 
+        private short BoxAddIndicesForSide(short v, short i,
             short[] indices, int widthSegments, int heightSegments)
         {
             for (int y = 0; y < heightSegments; y++)

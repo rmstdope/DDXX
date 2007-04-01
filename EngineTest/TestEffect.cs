@@ -76,7 +76,8 @@ namespace EngineTest
             Body body = new Body();
             body.Gravity = new Vector3(0, -3, 0);
 
-            Primitive primitive = Primitive.ClothPrimitive(body, 20, 20, numSides, numSides,
+            PrimitiveFactory primitiveFactory = new PrimitiveFactory();
+            Primitive primitive = primitiveFactory.CreateCloth(body, 20, 20, numSides, numSides,
                 new int[] { 0, /*(numSides + 1) */ numSides }, true);
             Material material = new Material();
             material.Ambient = Color.White;

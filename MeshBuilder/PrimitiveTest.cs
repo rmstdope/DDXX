@@ -27,16 +27,6 @@ namespace Dope.DDXX.MeshBuilder
         private string fileName;
         private short[] indices;
 
-        protected enum Side
-        {
-            FRONT = 0,
-            BACK,
-            TOP,
-            BOTTOM,
-            LEFT,
-            RIGHT
-        }
-
         private enum VertexPosition
         {
             POSITION,
@@ -199,55 +189,6 @@ namespace Dope.DDXX.MeshBuilder
             for (int i = 0; i < numFaces * 3; i++)
                 indices[i] = (short)i;
             primitive = new Primitive(vertices, indices);
-        }
-
-        protected int GetStartVertex(Side side, int lengthSegments, int widthSegments, int heightSegments)
-        {
-            return 4 * (int)side;
-        }
-
-        protected int GetStartIndex(Side side, int lengthSegments, int widthSegments, int heightSegments)
-        {
-            return 6 * (int)side;
-        }
-
-        protected void CheckInPlane(int startIndex, int endIndex, Plane plane)
-        {
-            for (int i = startIndex; i < endIndex; i++)
-            {
-                Assert.AreEqual(0.0f, plane.Dot(primitive.Vertices[i].Position), epsilon,
-                    "All points should be in plane (" + startIndex + ", " + endIndex + ")");
-            }
-        }
-
-        protected void CheckNormals(int startIndex, int endIndex, Vector3 normal)
-        {
-            for (int i = startIndex; i < endIndex; i++)
-                Assert.AreEqual(normal, primitive.Vertices[i].Normal);
-        }
-
-        protected void CheckClockwise(int startI, int numTriangles, Vector3 normal)
-        {
-            for (int i = 0; i < numTriangles; i++)
-            {
-                Vector3 v1 = primitive.Vertices[primitive.Indices[startI + i * 3 + 0]].Position;
-                Vector3 v2 = primitive.Vertices[primitive.Indices[startI + i * 3 + 1]].Position;
-                Vector3 v3 = primitive.Vertices[primitive.Indices[startI + i * 3 + 2]].Position;
-                Vector3 testNormal = Vector3.Cross(v2 - v1, v3 - v1);
-                testNormal.Normalize();
-                Assert.AreEqual(normal.X, testNormal.X, epsilon, "Normals should be equal.");
-                Assert.AreEqual(normal.Y, testNormal.Y, epsilon, "Normals should be equal.");
-                Assert.AreEqual(normal.Z, testNormal.Z, epsilon, "Normals should be equal.");
-            }
-        }
-
-        protected void CheckIndices(int startV, int endV, int startI, int endI)
-        {
-            for (int i = startI; i < endI; i++)
-            {
-                Assert.IsTrue(primitive.Indices[i] >= startV, "Indices must not point to vertex smaller than " + startV);
-                Assert.IsTrue(primitive.Indices[i] < endV, "Indices must not point to vertex larger or equal to " + endV);
-            }
         }
 
 
