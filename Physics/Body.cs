@@ -7,7 +7,7 @@ namespace Dope.DDXX.Physics
 {
     public class Body : Dope.DDXX.Physics.IBody
     {
-        private const int NUM_ITERATIONS = 4;
+        private const int NUM_ITERATIONS = 3;
         private Vector3 gravity = new Vector3(0, 0, 0);
         private List<IPhysicalParticle> particles = new List<IPhysicalParticle>();
         private List<IConstraint> constraints = new List<IConstraint>();

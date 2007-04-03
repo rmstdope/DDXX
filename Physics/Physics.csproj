@@ -43,7 +43,12 @@
   <ItemGroup>
     <Compile Include="Body.cs" />
     <Compile Include="BodyTest.cs" />
+    <Compile Include="BoundingConstraint.cs" />
+    <Compile Include="BoundingConstraintTest.cs" />
+    <Compile Include="BoundingSphere.cs" />
+    <Compile Include="BoundingSphereTest.cs" />
     <Compile Include="IBody.cs" />
+    <Compile Include="IBoundingObject.cs" />
     <Compile Include="IConstraint.cs" />
     <Compile Include="IPhysicalParticle.cs" />
     <Compile Include="PhysicalParticle.cs" />

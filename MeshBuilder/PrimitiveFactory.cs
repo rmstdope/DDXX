@@ -8,15 +8,15 @@ namespace Dope.DDXX.MeshBuilder
 {
     internal class PrimitiveFactory : IPrimitiveFactory
     {
+        internal const float HORIZONTAL_STIFFNESS = 0.8f;
+        internal const float VERTICAL_STIFFNESS = 0.8f;
+        internal const float DIAGONAL_STIFFNESS = 0.1f;
+
         public IPrimitive CreateCloth(IBody body, float width, float height,
             int widthSegments, int heightSegments, int[] pinnedParticles, bool textured)
         {
             IPrimitive cloth = CreateCloth(body, width, height, widthSegments, heightSegments, textured);
-            foreach (int index in pinnedParticles)
-            {
-                body.AddConstraint(new PositionConstraint(body.Particles[index],
-                    body.Particles[index].Position));
-            }
+            HandlePinnedParticles(body, pinnedParticles);
             return cloth;
         }
 
@@ -45,10 +45,10 @@ namespace Dope.DDXX.MeshBuilder
                     p2 = body.Particles[(y + 0) * (widthSegments + 1) + x + 1];
                     p3 = body.Particles[(y + 1) * (widthSegments + 1) + x + 0];
                     p4 = body.Particles[(y + 1) * (widthSegments + 1) + x + 1];
-                    AddConstraint(body, p1, p2);
-                    AddConstraint(body, p1, p3);
-                    //AddConstraint(body, p1, p4);
-                    //AddConstraint(body, p1, p4);
+                    AddStickConstraint(body, p1, p2, HORIZONTAL_STIFFNESS);
+                    AddStickConstraint(body, p1, p3, VERTICAL_STIFFNESS);
+                    AddStickConstraint(body, p1, p4, DIAGONAL_STIFFNESS);
+                    AddStickConstraint(body, p1, p4, DIAGONAL_STIFFNESS);
                 }
                 // p1
                 // |
@@ -56,22 +56,31 @@ namespace Dope.DDXX.MeshBuilder
                 // p3
                 p1 = body.Particles[(y + 0) * (widthSegments + 1) + x + 0];
                 p3 = body.Particles[(y + 1) * (widthSegments + 1) + x + 0];
-                AddConstraint(body, p1, p3);
+                AddStickConstraint(body, p1, p3, VERTICAL_STIFFNESS);
             }
             for (x = 0; x < widthSegments; x++)
             {
                 // p1--p2
                 p1 = body.Particles[(y + 0) * (widthSegments + 1) + x + 0];
                 p2 = body.Particles[(y + 0) * (widthSegments + 1) + x + 1];
-                AddConstraint(body, p1, p2);
+                AddStickConstraint(body, p1, p2, HORIZONTAL_STIFFNESS);
             }
             cloth.Body = body;
             return cloth;
         }
 
-        private void AddConstraint(IBody body, IPhysicalParticle p1, IPhysicalParticle p2)
+        private static void HandlePinnedParticles(IBody body, int[] pinnedParticles)
         {
-            body.AddConstraint(new StickConstraint(p1, p2, (p1.Position - p2.Position).Length()));
+            foreach (int index in pinnedParticles)
+            {
+                body.AddConstraint(new PositionConstraint(body.Particles[index],
+                    body.Particles[index].Position));
+            }
+        }
+
+        private void AddStickConstraint(IBody body, IPhysicalParticle p1, IPhysicalParticle p2, float stiffness)
+        {
+            body.AddConstraint(new StickConstraint(p1, p2, (p1.Position - p2.Position).Length(), stiffness));
         }
 
         public IPrimitive CreatePlane(float width, float height,

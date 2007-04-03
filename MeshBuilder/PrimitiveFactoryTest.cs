@@ -232,7 +232,7 @@ namespace Dope.DDXX.MeshBuilder
         public void TestClothNumConstraintsInBody1()
         {
             IPrimitive cloth = factory.CreateCloth(this, 10, 30, 1, 1, false);
-            Assert.AreEqual(4, constraints.Count, "We should have four constraints.");
+            Assert.AreEqual(6, constraints.Count, "We should have six constraints.");
         }
 
         /// <summary>
@@ -242,7 +242,7 @@ namespace Dope.DDXX.MeshBuilder
         public void TestClothNumConstraintsInBody2()
         {
             IPrimitive cloth = factory.CreateCloth(this, 20, 40, 4, 2, false);
-            Assert.AreEqual(22, constraints.Count, "We should have 22 constraints.");
+            Assert.AreEqual(38, constraints.Count, "We should have 38 constraints.");
         }
 
         /// <summary>
@@ -252,7 +252,7 @@ namespace Dope.DDXX.MeshBuilder
         public void TestClothNumConstraintsInPinnedCloth1()
         {
             IPrimitive cloth = factory.CreateCloth(this, 10, 30, 1, 1, new int[] { }, false);
-            Assert.AreEqual(4, constraints.Count, "We should have four constraints.");
+            Assert.AreEqual(6, constraints.Count, "We should have six constraints.");
         }
 
         /// <summary>
@@ -262,19 +262,19 @@ namespace Dope.DDXX.MeshBuilder
         public void TestClothNumConstraintsInPinnedCloth2()
         {
             IPrimitive cloth = factory.CreateCloth(this, 10, 30, 1, 1, new int[] { 0, 1 }, false);
-            Assert.AreEqual(6, constraints.Count, "We should have six constraints.");
+            Assert.AreEqual(8, constraints.Count, "We should have eight constraints.");
             // Now if we move particles 0 and 1 and then satisfy contraints 6 and 7, the two particles
             // shall be moved back.
             Vector3 original0 = particles[0].Position;
             Vector3 original1 = particles[1].Position;
             particles[0].Position = new Vector3(-100, -100, -100);
             particles[1].Position = new Vector3(-100, -100, -100);
-            constraints[4].Satisfy();
-            constraints[5].Satisfy();
+            constraints[constraints.Count - 2].Satisfy();
+            constraints[constraints.Count - 1].Satisfy();
             Assert.AreEqual(original0, particles[0].Position,
                 "Particle[0] should have been moved back.");
             Assert.AreEqual(original1, particles[1].Position,
-                "Particle[0] should have been moved back.");
+                "Particle[1] should have been moved back.");
         }
 
         /// <summary>

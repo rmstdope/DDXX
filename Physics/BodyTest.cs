@@ -12,7 +12,7 @@ namespace Dope.DDXX.Physics
     {
         private Body body;
         private Mockery mockery;
-        private const int NUM_ITERATIONS = 4;
+        private const int NUM_ITERATIONS = 3;
 
         [SetUp]
         public void SetUp()

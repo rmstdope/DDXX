@@ -17,10 +17,10 @@ namespace Dope.DDXX.Physics
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="invMass">1/m (mass of the particle)</param>
+        /// <param name="mass">mass of the particle</param>
         /// <param name="dragCoefficient">Drag coefficient of the particle.</param>
-        public PhysicalParticle(float invMass, float dragCoefficient)
-            : this(new Vector3(0, 0, 0), invMass, dragCoefficient)
+        public PhysicalParticle(float mass, float dragCoefficient)
+            : this(new Vector3(0, 0, 0), mass, dragCoefficient)
         {
             // Only contains call to other constructor
         }
@@ -29,13 +29,13 @@ namespace Dope.DDXX.Physics
         /// Constructor
         /// </summary>
         /// <param name="startPosition">The starting position of the particle.</param>
-        /// <param name="invMass">1/m (mass of the particle)</param>
+        /// <param name="mass">mass of the particle</param>
         /// <param name="dragCoefficient">Drag coefficient of the particle.</param>
-        public PhysicalParticle(Vector3 startPosition, float invMass, float dragCoefficient)
+        public PhysicalParticle(Vector3 startPosition, float mass, float dragCoefficient)
         {
             this.position = startPosition;
             this.oldPosition = startPosition;
-            this.invMass = invMass;
+            this.invMass = 1 / mass;
             lastDeltaTime = 1.0f;
             externalForces = new Vector3(0, 0, 0);
         }

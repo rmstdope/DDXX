@@ -22,6 +22,7 @@ namespace EngineTest
         private IScene scene;
         private ModelNode modelNode;
         private ModelNode clothModel;
+        private IBoundingObject sphere;
 
         //private ModelNode modelSkinning;
         private ModelNode modelNoSkinning;
@@ -40,7 +41,7 @@ namespace EngineTest
 
             camera = new CameraNode("MyCamera");
             //camera.WorldState.Tilt(2.0f);
-            camera.WorldState.MoveForward(-30.0f);
+            camera.WorldState.MoveForward(-3.0f);
             scene.AddNode(camera);
             scene.ActiveCamera = camera;
 
@@ -67,24 +68,31 @@ namespace EngineTest
             //scene.AddNode(modelNoSkinning);
 
             XLoader.Load("Flyscene.x", EffectFactory.CreateFromFile("Test.fxo"), "Skinning");
-            XLoader.AddToScene(scene);
+            //XLoader.AddToScene(scene);
             //scene.ActiveCamera = scene.GetNodeByName("Camera") as CameraNode;
 
             MeshBuilder builder = new MeshBuilder(D3DDriver.GraphicsFactory, D3DDriver.TextureFactory, 
                 D3DDriver.GetInstance().Device);
-            const int numSides = 20;
+            const int numSides = 10;
             Body body = new Body();
-            body.Gravity = new Vector3(0, -3, 0);
 
-            builder.CreateCloth("Cloth", body, 20, 20, numSides, numSides,
-                new int[] { 0, numSides }, true);
+            int[] pinned = new int[numSides + 1];
+            for (int i = 0; i < numSides + 1; i++)
+                pinned[i] = i;
+            builder.CreateCloth("Cloth", body, 2, 2, numSides, numSides,
+                pinned, true);
             builder.AssignMaterial("Cloth", "Default1");
-            builder.SetDiffuseTexture("Default1", "ABALONE.JPG");
+            builder.SetDiffuseTexture("Default1", "red glass.jpg");
 
             model = builder.CreateModel("Cloth");
             clothModel = new ModelNode("Cloth", model,
-                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Test", model));
+                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Glass", model));
             scene.AddNode(clothModel);
+
+            // Fix sphere
+            sphere = new BoundingSphere(0.5f);
+            for (int i = 0; i < body.Particles.Count; i++)
+                body.AddConstraint(new BoundingConstraint(body.Particles[i], sphere));
 
             scene.DebugPrintGraph();
             scene.Validate();
@@ -100,13 +108,18 @@ namespace EngineTest
 
         public override void Step()
         {
+            // Move sphere
+            Vector3 pos = new Vector3(0, 0.5f, 2 * (float)Math.Cos(Time.CurrentTime / 4));
+            sphere.Center = pos;
+            //sphere.
+
             // Long period
             Vector3 direction = new Vector3(
                 (float)Math.Sin(Time.CurrentTime / 5), 
                 0, 
                 (float)Math.Cos(Time.CurrentTime / 5));
-            Vector3 force = new Vector3(0, 0, -(float)Math.Abs(Math.Cos(Time.CurrentTime)) * 3);
-            ((PhysicalModel)clothModel.Model).Body.ApplyForce(force);
+            Vector3 force = new Vector3(0, 0, -(float)Math.Abs(Math.Cos(Time.CurrentTime)) * 10);
+            //((PhysicalModel)clothModel.Model).Body.ApplyForce(force);
 
             float scale = (Time.StepTime % 5.0f) / 5.0f;
             scale *= 2.0f;
@@ -115,7 +128,6 @@ namespace EngineTest
 
             modelNode.WorldState.Roll(scale / 100.0f);
             modelNode.WorldState.Turn(Time.DeltaTime);
-            //clothModel.WorldState.Tilt(Time.DeltaTime);
             scene.Step();
         }
 

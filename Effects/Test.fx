@@ -1,4 +1,5 @@
 #include <CommonFunctions.hlsl>
+#include <Glass.hlsl>
  
 struct InputVS
 {

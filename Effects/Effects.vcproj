@@ -196,6 +196,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Glass.hlsl"
+				>
+			</File>
+			<File
 				RelativePath=".\SharedVariables.hlsl"
 				>
 			</File>

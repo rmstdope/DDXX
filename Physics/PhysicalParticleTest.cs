@@ -65,7 +65,7 @@ namespace Dope.DDXX.Physics
         [Test]
         public void TestStepGravityForcesMassOfTwo()
         {
-            PhysicalParticle particle1 = new PhysicalParticle(new Vector3(0, 0, 0), 0.5f, 1);
+            PhysicalParticle particle1 = new PhysicalParticle(new Vector3(0, 0, 0), 2, 1);
             Time.SetDeltaTimeForTest(1.0f);
             particle1.ApplyForce(new Vector3(-2, -2, -2));
             particle1.ApplyForce(new Vector3(-2, -6, -10));
