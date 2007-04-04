@@ -17,6 +17,8 @@ namespace Dope.DDXX.Graphics
         private IGraphicsFactory factory;
         private ITexture texture1;
         private ITexture texture2;
+        private ICubeTexture cubeTexture1;
+        private ICubeTexture cubeTexture2;
 
         [SetUp]
         public void SetUp()
@@ -24,6 +26,8 @@ namespace Dope.DDXX.Graphics
             mockery = new Mockery();
             texture1 = mockery.NewMock<ITexture>();
             texture2 = mockery.NewMock<ITexture>();
+            cubeTexture1 = mockery.NewMock<ICubeTexture>();
+            cubeTexture2 = mockery.NewMock<ICubeTexture>();
             factory = mockery.NewMock<IGraphicsFactory>();
             presentParameters = new PresentParameters();
             presentParameters.BackBufferWidth = 100;
@@ -78,6 +82,26 @@ namespace Dope.DDXX.Graphics
                 Will(Return.Value(texture2));
             ITexture newTexture3 = textureFactory.CreateFromFile("fileName2");
             Assert.AreSame(texture2, newTexture3);
+        }
+
+        [Test]
+        public void CreateCubeFromFileTest()
+        {
+            Expect.Once.On(factory).
+                Method("CubeTextureFromFile").
+                WithAnyArguments().
+                Will(Return.Value(cubeTexture1));
+            ICubeTexture newTexture1 = textureFactory.CreateCubeFromFile("fileName");
+            Assert.AreSame(cubeTexture1, newTexture1);
+            ICubeTexture newTexture2 = textureFactory.CreateCubeFromFile("fileName");
+            Assert.AreSame(newTexture1, newTexture2);
+
+            Expect.Once.On(factory).
+                Method("CubeTextureFromFile").
+                WithAnyArguments().
+                Will(Return.Value(cubeTexture2));
+            ICubeTexture newTexture3 = textureFactory.CreateCubeFromFile("fileName2");
+            Assert.AreSame(cubeTexture2, newTexture3);
         }
     }
 }

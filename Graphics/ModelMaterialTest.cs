@@ -13,6 +13,7 @@ namespace Dope.DDXX.Graphics
         private Mockery mockery;
         private ITexture texture;
         private ITexture normalTexture;
+        private ICubeTexture reflectiveTexture;
         private ITextureFactory textureFactory;
         private Material material;
 
@@ -22,6 +23,7 @@ namespace Dope.DDXX.Graphics
             mockery = new Mockery();
             texture = mockery.NewMock<ITexture>();
             normalTexture = mockery.NewMock<ITexture>();
+            reflectiveTexture = mockery.NewMock<ICubeTexture>();
             textureFactory = mockery.NewMock<ITextureFactory>();
             material = new Material();
         }
@@ -33,7 +35,7 @@ namespace Dope.DDXX.Graphics
         }
 
         [Test]
-        public void TestConstructor1()
+        public void TestConstructorNoMaps()
         {
             ModelMaterial modelMaterial = new ModelMaterial(material);
             Assert.AreEqual(material.Ambient, modelMaterial.Ambient);
@@ -41,10 +43,11 @@ namespace Dope.DDXX.Graphics
             Assert.AreEqual(material.Specular, modelMaterial.Specular);
             Assert.IsNull(modelMaterial.DiffuseTexture);
             Assert.IsNull(modelMaterial.NormalTexture);
+            Assert.IsNull(modelMaterial.ReflectiveTexture);
         }
 
         [Test]
-        public void TestConstructor2()
+        public void TestConstructorDiffuse()
         {
             ModelMaterial modelMaterial = new ModelMaterial(material, texture);
             Assert.AreEqual(material.Ambient, modelMaterial.Ambient);
@@ -52,10 +55,11 @@ namespace Dope.DDXX.Graphics
             Assert.AreEqual(texture, modelMaterial.DiffuseTexture);
             Assert.AreEqual(material.Specular, modelMaterial.Specular);
             Assert.IsNull(modelMaterial.NormalTexture);
+            Assert.IsNull(modelMaterial.ReflectiveTexture);
         }
 
         [Test]
-        public void TestConstructor3()
+        public void TestConstructorDiffuseNormal()
         {
             ModelMaterial modelMaterial = new ModelMaterial(material, texture, normalTexture);
             Assert.AreEqual(material.Ambient, modelMaterial.Ambient);
@@ -63,10 +67,23 @@ namespace Dope.DDXX.Graphics
             Assert.AreEqual(texture, modelMaterial.DiffuseTexture);
             Assert.AreEqual(material.Specular, modelMaterial.Specular);
             Assert.AreEqual(normalTexture, modelMaterial.NormalTexture);
+            Assert.IsNull(modelMaterial.ReflectiveTexture);
         }
 
         [Test]
-        public void TestConstructor4()
+        public void TestConstructorDiffuseNormalReflective()
+        {
+            ModelMaterial modelMaterial = new ModelMaterial(material, texture, normalTexture, reflectiveTexture);
+            Assert.AreEqual(material.Ambient, modelMaterial.Ambient);
+            Assert.AreEqual(material.Diffuse, modelMaterial.Diffuse);
+            Assert.AreEqual(texture, modelMaterial.DiffuseTexture);
+            Assert.AreEqual(material.Specular, modelMaterial.Specular);
+            Assert.AreEqual(normalTexture, modelMaterial.NormalTexture);
+            Assert.AreEqual(reflectiveTexture, modelMaterial.ReflectiveTexture);
+        }
+
+        [Test]
+        public void TestConstructorDiffuseFromString()
         {
             Expect.Once.On(textureFactory).Method("CreateFromFile").
                 With("Texture").Will(Return.Value(texture));
@@ -76,10 +93,11 @@ namespace Dope.DDXX.Graphics
             Assert.AreEqual(texture, modelMaterial.DiffuseTexture);
             Assert.AreEqual(material.Specular, modelMaterial.Specular);
             Assert.IsNull(modelMaterial.NormalTexture);
+            Assert.IsNull(modelMaterial.ReflectiveTexture);
         }
 
         [Test]
-        public void TestConstructor5()
+        public void TestConstructorDiffuseNormalFromString()
         {
             Expect.Once.On(textureFactory).Method("CreateFromFile").
                 With("Texture").Will(Return.Value(texture));
@@ -92,6 +110,26 @@ namespace Dope.DDXX.Graphics
             Assert.AreEqual(texture, modelMaterial.DiffuseTexture);
             Assert.AreEqual(material.Specular, modelMaterial.Specular);
             Assert.AreEqual(normalTexture, modelMaterial.NormalTexture);
+            Assert.IsNull(modelMaterial.ReflectiveTexture);
+        }
+
+        [Test]
+        public void TestConstructorDiffuseNormalReflectiveFromString()
+        {
+            Expect.Once.On(textureFactory).Method("CreateFromFile").
+                With("Texture").Will(Return.Value(texture));
+            Expect.Once.On(textureFactory).Method("CreateFromFile").
+                With("NormalTexture").Will(Return.Value(normalTexture));
+            Expect.Once.On(textureFactory).Method("CreateCubeFromFile").
+                With("ReflectiveTexture").Will(Return.Value(reflectiveTexture));
+            ModelMaterial modelMaterial =
+                new ModelMaterial(material, "Texture", "NormalTexture", "ReflectiveTexture", textureFactory);
+            Assert.AreEqual(material.Ambient, modelMaterial.Ambient);
+            Assert.AreEqual(material.Diffuse, modelMaterial.Diffuse);
+            Assert.AreEqual(texture, modelMaterial.DiffuseTexture);
+            Assert.AreEqual(material.Specular, modelMaterial.Specular);
+            Assert.AreEqual(normalTexture, modelMaterial.NormalTexture);
+            Assert.AreEqual(reflectiveTexture, modelMaterial.ReflectiveTexture);
         }
 
     }

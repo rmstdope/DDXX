@@ -6,6 +6,7 @@ namespace Dope.DDXX.Graphics
     public interface ITextureFactory
     {
         ITexture CreateFromFile(string file);
+        ICubeTexture CreateCubeFromFile(string file);
         ITexture CreateFullsizeRenderTarget(Format format);
         ITexture CreateFullsizeRenderTarget();
     }

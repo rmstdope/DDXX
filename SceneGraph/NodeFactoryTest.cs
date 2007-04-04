@@ -1108,5 +1108,15 @@ namespace Dope.DDXX.SceneGraph
         }
 
         #endregion
+
+        #region ITextureFactory Members
+
+
+        public ICubeTexture CreateCubeFromFile(string file)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
     }
 }

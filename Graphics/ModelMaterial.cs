@@ -11,6 +11,7 @@ namespace Dope.DDXX.Graphics
         private Material material;
         private ITexture diffuseTexture;
         private ITexture normalTexture;
+        private ICubeTexture reflectiveTexture;
 
         public Color Ambient 
         {
@@ -55,6 +56,12 @@ namespace Dope.DDXX.Graphics
             set { normalTexture = value; }
         }
 
+        public ICubeTexture ReflectiveTexture
+        {
+            get { return reflectiveTexture; }
+            set { reflectiveTexture = value; }
+        }
+
         public ModelMaterial(Material material)
         {
             this.material = material;
@@ -83,12 +90,29 @@ namespace Dope.DDXX.Graphics
             this.normalTexture = normalTexture;
         }
 
+        public ModelMaterial(Material material, ITexture diffuseTexture, ITexture normalTexture, ICubeTexture reflectiveTexture)
+        {
+            this.material = material;
+            this.diffuseTexture = diffuseTexture;
+            this.normalTexture = normalTexture;
+            this.reflectiveTexture = reflectiveTexture;
+        }
+
         public ModelMaterial(Material material, string diffuseTextureName, 
             string normalTextureName, ITextureFactory factory)
         {
             this.material = material;
             this.diffuseTexture = factory.CreateFromFile(diffuseTextureName);
             this.normalTexture = factory.CreateFromFile(normalTextureName);
+        }
+
+        public ModelMaterial(Material material, string diffuseTextureName,
+            string normalTextureName, string reflectiveTextureName, ITextureFactory factory)
+        {
+            this.material = material;
+            this.diffuseTexture = factory.CreateFromFile(diffuseTextureName);
+            this.normalTexture = factory.CreateFromFile(normalTextureName);
+            this.reflectiveTexture = factory.CreateCubeFromFile(reflectiveTextureName);
         }
 
     }
