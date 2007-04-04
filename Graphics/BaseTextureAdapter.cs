@@ -14,6 +14,14 @@ namespace Dope.DDXX.Graphics
             baseTexture = texture;
         }
 
+        public BaseTexture BaseTextureDX 
+        { 
+            get 
+            { 
+                return baseTexture; 
+            } 
+        }
+
         #region IBaseTexture Members
 
         public Device Device

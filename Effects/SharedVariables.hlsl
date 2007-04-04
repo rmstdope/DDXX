@@ -109,17 +109,14 @@ float4x4 ViewProjectionT;
 /** Base texture for mesh */
 texture BaseTexture;
 
-/** Reflection texture for mesh */
-texture ReflectionTexture;
+/** Reflective texture for mesh */
+textureCUBE ReflectiveTexture;
 
 /** Normal texture for mesh */
 texture NormalTexture;
 
 /** The reflective factor of the material */
-float ReflectionFactor;
-
-/** 1 - the reflective factor of the material */
-float InvReflectionFactor;
+float ReflectiveFactor;
 
 /** Texture samplers */
 sampler BaseTextureSampler = sampler_state
@@ -132,9 +129,10 @@ sampler BaseTextureSampler = sampler_state
     AddressV	= Mirror;
     AddressW	= Mirror;
 };
-sampler ReflectionTextureSampler = sampler_state
+
+samplerCUBE ReflectiveTextureSampler = sampler_state
 {
-    Texture = (ReflectionTexture);
+    Texture = (ReflectiveTexture);
     MipFilter = LINEAR;
     MinFilter = LINEAR;
     MagFilter = LINEAR;

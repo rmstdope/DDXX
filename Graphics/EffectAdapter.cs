@@ -391,12 +391,12 @@ namespace Dope.DDXX.Graphics
             return effect.GetValueVertexShader(parameter);
         }
 
-        public void SetValue(EffectHandle parameter, ITexture texture)
+        public void SetValue(EffectHandle parameter, IBaseTexture texture)
         {
             if (texture == null)
                 effect.SetValue(parameter, (BaseTexture)null);
             else
-                effect.SetValue(parameter, ((TextureAdapter)texture).TextureDX);
+                effect.SetValue(parameter, ((BaseTextureAdapter)texture).BaseTextureDX);
         }
 
         public void SetValue(EffectHandle parameter, bool b)

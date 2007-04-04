@@ -203,6 +203,10 @@
 				RelativePath=".\SharedVariables.hlsl"
 				>
 			</File>
+			<File
+				RelativePath=".\SkyBox.hlsl"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Rules Files"

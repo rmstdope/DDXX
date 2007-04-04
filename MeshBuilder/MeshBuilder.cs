@@ -135,6 +135,26 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
+        /// Set the Reflective texture of a material.
+        /// </summary>
+        /// <param name="materialName">The name of the material.</param>
+        /// <param name="fileName">The name of the texture file. Set to null or "" to remove the texture.</param>
+        public void SetReflectiveTexture(string materialName, string fileName)
+        {
+            ModelMaterial material = GetMaterial(materialName);
+            if (fileName == null || fileName == "")
+                material.ReflectiveTexture = null;
+            else
+                material.ReflectiveTexture = textureFactory.CreateCubeFromFile(fileName);
+        }
+
+        public void SetReflectiveFactor(string materialName, float factor)
+        {
+            ModelMaterial material = GetMaterial(materialName);
+            material.ReflectiveFactor = factor;
+        }
+
+        /// <summary>
         /// Create a sky box model, i.e. four transformed and screen
         /// aligned vertices and no texture coordinates.
         /// </summary>
@@ -143,22 +163,24 @@ namespace Dope.DDXX.MeshBuilder
         /// <returns></returns>
         public IModel CreateSkyBoxModel(string name, string textureName)
         {
-            Vector4[] vertices = new Vector4[4];
+            Vector3[] vertices = new Vector3[4];
             float fHighW = -1.0f - (1.0f / device.Viewport.Width);
             float fHighH = -1.0f - (1.0f / device.Viewport.Height);
             float fLowW = 1.0f + (1.0f / device.Viewport.Width);
             float fLowH = 1.0f + (1.0f / device.Viewport.Height);
-            vertices[0] = new Vector4(fLowW, fLowH, 1.0f, 1.0f);
-            vertices[1] = new Vector4(fLowW, fHighH, 1.0f, 1.0f);
-            vertices[2] = new Vector4(fHighW, fLowH, 1.0f, 1.0f);
-            vertices[3] = new Vector4(fHighW, fHighH, 1.0f, 1.0f);
+            vertices[0] = new Vector3(fLowW, fLowH, 1.0f);
+            vertices[1] = new Vector3(fLowW, fHighH, 1.0f);
+            vertices[2] = new Vector3(fHighW, fLowH, 1.0f);
+            vertices[3] = new Vector3(fHighW, fHighH, 1.0f);
+            short[] indices = new short[] { 0, 1, 2, 3, 2, 1 };
             
             VertexElementArray declaration = new VertexElementArray();
-            declaration.AddTransformedPositions();
+            declaration.AddPositions();
 
             IMesh mesh = graphicsFactory.CreateMesh(2, 4, MeshFlags.Managed, 
                 declaration.VertexElements, device);
             mesh.SetVertexBufferData(vertices, LockFlags.None);
+            mesh.SetIndexBufferData(indices, LockFlags.None);
             ModelMaterial material = new ModelMaterial(new Material());
             material.ReflectiveTexture = textureFactory.CreateCubeFromFile(textureName);
             IModel model = new Model(mesh, new ModelMaterial[] { material });

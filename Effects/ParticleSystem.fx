@@ -1,20 +1,10 @@
+#include "SharedVariables.hlsl"
+
 //-----------------------------------------------------------------------------
 // Global variables
 //-----------------------------------------------------------------------------
 /** Projection matrix transposed */
 float4x4 ProjectionT;
-
-/** World * View matrix transposed */
-float4x4 WorldViewT;
-
-/** World * View * Projection matrix transposed */
-float4x4 WorldViewProjectionT;
-
-/** Particle texture */
-texture BaseTexture;
-
-/** Ambient color to modulate all colors with */
-shared float4 AmbientColor;
 
 //-----------------------------------------------------------------------------
 // Texture samplers

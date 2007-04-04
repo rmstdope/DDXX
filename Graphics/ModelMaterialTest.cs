@@ -4,6 +4,7 @@ using System.Text;
 using NUnit.Framework;
 using NMock2;
 using Microsoft.DirectX.Direct3D;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.Graphics
 {
@@ -41,9 +42,34 @@ namespace Dope.DDXX.Graphics
             Assert.AreEqual(material.Ambient, modelMaterial.Ambient);
             Assert.AreEqual(material.Diffuse, modelMaterial.Diffuse);
             Assert.AreEqual(material.Specular, modelMaterial.Specular);
+            Assert.AreEqual(0.0f, modelMaterial.ReflectiveFactor);
             Assert.IsNull(modelMaterial.DiffuseTexture);
             Assert.IsNull(modelMaterial.NormalTexture);
             Assert.IsNull(modelMaterial.ReflectiveTexture);
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestReflectiveFactorFail1()
+        {
+            ModelMaterial modelMaterial = new ModelMaterial(material);
+            modelMaterial.ReflectiveFactor = -0.1f;
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestReflectiveFactorFail2()
+        {
+            ModelMaterial modelMaterial = new ModelMaterial(material);
+            modelMaterial.ReflectiveFactor = 1.1f;
+        }
+
+        [Test]
+        public void TestReflectiveFactor()
+        {
+            ModelMaterial modelMaterial = new ModelMaterial(material);
+            modelMaterial.ReflectiveFactor = 0.3f;
+            Assert.AreEqual(0.3f, modelMaterial.ReflectiveFactor);
         }
 
         [Test]

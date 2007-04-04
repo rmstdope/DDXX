@@ -18,12 +18,15 @@ namespace Dope.DDXX.SceneGraph
         private EffectHandle worldViewProjT;
         private EffectHandle projT;
         private EffectHandle worldViewT;
+        private EffectHandle worldViewProjInvT;
 
         private EffectHandle ambientColor;
         private EffectHandle baseTexture;
         private EffectHandle normalTexture;
+        private EffectHandle reflectiveTexture;
         private EffectHandle materialDiffuseColor;
         private EffectHandle materialSpecularColor;
+        private EffectHandle reflectiveFactor;
 
         private EffectHandle animationMatrices;
 
@@ -81,17 +84,23 @@ namespace Dope.DDXX.SceneGraph
         private void CommonInitialize(IEffect effect)
         {
             worldT = effect.GetParameter(null, "WorldT");
-            worldViewProjT = effect.GetParameter(null, "WorldViewProjectionT");
-            projT = effect.GetParameter(null, "ProjectionT");
             worldViewT = effect.GetParameter(null, "WorldViewT");
+            worldViewProjT = effect.GetParameter(null, "WorldViewProjectionT");
+            worldViewProjInvT = effect.GetParameter(null, "InvWorldViewProjectionT");
+            projT = effect.GetParameter(null, "ProjectionT");
 
             ambientColor = effect.GetParameter(null, "AmbientColor");
             baseTexture = effect.GetParameter(null, "BaseTexture");
             normalTexture = effect.GetParameter(null, "NormalTexture");
+            reflectiveTexture = effect.GetParameter(null, "ReflectiveTexture");
+            reflectiveFactor = effect.GetParameter(null, "ReflectiveFactor");
             materialDiffuseColor = effect.GetParameter(null, "MaterialDiffuseColor");
             materialSpecularColor = effect.GetParameter(null, "MaterialSpecularColor");
 
             animationMatrices = effect.GetParameter(null, "AnimationMatrices");
+
+            if (reflectiveFactor == null)
+                throw new DDXXException("Missing mandatory variable ReflectiveFactor in Effect.");
         }
 
         #region IEffectHandler Members
@@ -109,14 +118,20 @@ namespace Dope.DDXX.SceneGraph
 
         public void SetNodeConstants(Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix)
         {
+            Matrix worldView = worldMatrix * viewMatrix;
+            Matrix worldViewProjection = worldView * projectionMatrix;
+            Matrix worldViewProjectionInv = worldViewProjection;
+            worldViewProjectionInv.Invert();
             if (worldT != null)
                 effect.SetValueTranspose(worldT, worldMatrix);
+            if (worldViewT != null)
+                effect.SetValueTranspose(worldViewT, worldView);
             if (worldViewProjT != null)
-                effect.SetValueTranspose(worldViewProjT, worldMatrix * viewMatrix * projectionMatrix);
+                effect.SetValueTranspose(worldViewProjT, worldViewProjection);
+            if (worldViewProjInvT != null)
+                effect.SetValueTranspose(worldViewProjInvT, worldViewProjectionInv);
             if (projT != null)
                 effect.SetValueTranspose(projT, projectionMatrix);
-            if (worldViewT != null)
-                effect.SetValueTranspose(worldViewT, worldMatrix * viewMatrix);
         }
 
         public void SetMaterialConstants(ColorValue ambientValue, ModelMaterial material, int index)
@@ -128,10 +143,13 @@ namespace Dope.DDXX.SceneGraph
                 effect.SetValue(baseTexture, material.DiffuseTexture);
             if (normalTexture != null)
                 effect.SetValue(normalTexture, material.NormalTexture);
+            if (reflectiveTexture != null)
+                effect.SetValue(reflectiveTexture, material.ReflectiveTexture);
             if (materialDiffuseColor != null)
                 effect.SetValue(materialDiffuseColor, material.DiffuseColor);
             if (materialSpecularColor != null)
                 effect.SetValue(materialSpecularColor, material.SpecularColor);
+            effect.SetValue(reflectiveFactor, material.ReflectiveFactor);
         }
 
         public void SetBones(Matrix[] matrices)

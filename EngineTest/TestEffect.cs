@@ -49,29 +49,21 @@ namespace EngineTest
             ps.Initialize(50, 200.0f, null);//"BlurBackground.jpg");
             scene.AddNode(ps);
 
-            // Create mesh
-            IEffect effect = D3DDriver.EffectFactory.CreateFromFile("Test.fxo");
-            IModel model = D3DDriver.ModelFactory.FromFile("Wanting More.x", ModelOptions.None);
-            EffectHandler effectHandler = new EffectHandler(effect, "TransparentText", model);
-            modelNode = new ModelNode("Text1", model, effectHandler);
-            scene.AddNode(modelNode);
-            //mesh.WorldState.Tilt(-(float)Math.PI / 2.0f);
+            //AddWantingMoreModel();
 
-            model = ModelFactory.FromFile("TiVi.x", ModelOptions.None);
-            modelNoSkinning = new ModelNode("No Skinning",
-                model,
-                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Skinning", model));
-            modelNoSkinning.WorldState.Scale(100.0f);
-            modelNoSkinning.WorldState.MoveRight(-50);
-            modelNoSkinning.WorldState.Roll((float)Math.PI);
-            modelNoSkinning.WorldState.Tilt((float)Math.PI / 2);
-            //scene.AddNode(modelNoSkinning);
+            //AddUnskinnedModel();
 
-            XLoader.Load("Flyscene.x", EffectFactory.CreateFromFile("Test.fxo"), "Skinning");
-            //XLoader.AddToScene(scene);
-            //scene.ActiveCamera = scene.GetNodeByName("Camera") as CameraNode;
+            //LoadFlyScene();
 
-            MeshBuilder builder = new MeshBuilder(D3DDriver.GraphicsFactory, D3DDriver.TextureFactory, 
+            TestMeshBuilder();
+
+            scene.DebugPrintGraph();
+            scene.Validate();
+        }
+
+        private void TestMeshBuilder()
+        {
+            MeshBuilder builder = new MeshBuilder(D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
                 D3DDriver.GetInstance().Device);
             const int numSides = 10;
             Body body = new Body();
@@ -83,8 +75,10 @@ namespace EngineTest
                 pinned, true);
             builder.AssignMaterial("Cloth", "Default1");
             builder.SetDiffuseTexture("Default1", "red glass.jpg");
+            builder.SetReflectiveTexture("Default1", "rnl_cross.dds");
+            builder.SetReflectiveFactor("Default1", 0.2f);
 
-            model = builder.CreateModel("Cloth");
+            IModel model = builder.CreateModel("Cloth");
             clothModel = new ModelNode("Cloth", model,
                 new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Glass", model));
             scene.AddNode(clothModel);
@@ -94,8 +88,39 @@ namespace EngineTest
             for (int i = 0; i < body.Particles.Count; i++)
                 body.AddConstraint(new BoundingConstraint(body.Particles[i], sphere));
 
-            scene.DebugPrintGraph();
-            scene.Validate();
+            model = builder.CreateSkyBoxModel("SkyBox", "rnl_cross.dds");
+            ModelNode skyBoxModel = new ModelNode("SkyBox", model,
+                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "SkyBox", model));
+            scene.AddNode(skyBoxModel);
+        }
+
+        private void LoadFlyScene()
+        {
+            XLoader.Load("Flyscene.x", EffectFactory.CreateFromFile("Test.fxo"), "Skinning");
+            XLoader.AddToScene(scene);
+            scene.ActiveCamera = scene.GetNodeByName("Camera") as CameraNode;
+        }
+
+        private void AddWantingMoreModel()
+        {
+            IEffect effect = D3DDriver.EffectFactory.CreateFromFile("Test.fxo");
+            IModel model = D3DDriver.ModelFactory.FromFile("Wanting More.x", ModelOptions.None);
+            EffectHandler effectHandler = new EffectHandler(effect, "TransparentText", model);
+            modelNode = new ModelNode("Text1", model, effectHandler);
+            scene.AddNode(modelNode);
+        }
+
+        private void AddUnskinnedModel()
+        {
+            IModel model = ModelFactory.FromFile("TiVi.x", ModelOptions.None);
+            modelNoSkinning = new ModelNode("No Skinning",
+                model,
+                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Skinning", model));
+            modelNoSkinning.WorldState.Scale(100.0f);
+            modelNoSkinning.WorldState.MoveRight(-50);
+            modelNoSkinning.WorldState.Roll((float)Math.PI);
+            modelNoSkinning.WorldState.Tilt((float)Math.PI / 2);
+            scene.AddNode(modelNoSkinning);
         }
 
         public override void StartTimeUpdated()
@@ -108,6 +133,10 @@ namespace EngineTest
 
         public override void Step()
         {
+            // Rotate camera
+            //camera.WorldState.Tilt(Time.DeltaTime / 2);
+            //camera.WorldState.Turn(Time.DeltaTime / 1.456f);
+
             // Move sphere
             Vector3 pos = new Vector3(0, 0.5f, 2 * (float)Math.Cos(Time.CurrentTime / 4));
             sphere.Center = pos;
@@ -121,13 +150,17 @@ namespace EngineTest
             Vector3 force = new Vector3(0, 0, -(float)Math.Abs(Math.Cos(Time.CurrentTime)) * 10);
             //((PhysicalModel)clothModel.Model).Body.ApplyForce(force);
 
-            float scale = (Time.StepTime % 5.0f) / 5.0f;
-            scale *= 2.0f;
-            modelNode.WorldState.Scaling = new Vector3(scale, scale, scale);
-            modelNode.WorldState.Position = new Vector3(0, scale * 200.0f, 0);
+            if (modelNode != null)
+            {
+                float scale = (Time.StepTime % 5.0f) / 5.0f;
+                scale *= 2.0f;
+                modelNode.WorldState.Scaling = new Vector3(scale, scale, scale);
+                modelNode.WorldState.Position = new Vector3(0, scale * 200.0f, 0);
 
-            modelNode.WorldState.Roll(scale / 100.0f);
-            modelNode.WorldState.Turn(Time.DeltaTime);
+                modelNode.WorldState.Roll(scale / 100.0f);
+                modelNode.WorldState.Turn(Time.DeltaTime);
+            }
+
             scene.Step();
         }
 

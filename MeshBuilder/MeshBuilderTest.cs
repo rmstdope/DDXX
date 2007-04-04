@@ -263,6 +263,32 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
+        /// Test setting of the reflective texture of a material.
+        /// </summary>
+        [Test]
+        public void TestReflectiveTexture()
+        {
+            Assert.AreSame(null, builder.GetMaterial("Default1").ReflectiveTexture);
+            fileName = "ReflectiveTexture";
+            builder.SetReflectiveTexture("Default1", fileName);
+            Assert.AreSame(this, builder.GetMaterial("Default1").ReflectiveTexture);
+        }
+
+        /// <summary>
+        /// Test removing the reflective texture of a material.
+        /// </summary>
+        [Test]
+        public void TestReflectiveTextureRemove()
+        {
+            TestReflectiveTexture();
+            builder.SetReflectiveTexture("Default1", null);
+            Assert.AreSame(null, builder.GetMaterial("Default1").ReflectiveTexture);
+            TestReflectiveTexture();
+            builder.SetReflectiveTexture("Default1", "");
+            Assert.AreSame(null, builder.GetMaterial("Default1").ReflectiveTexture);
+        }
+
+        /// <summary>
         /// Test creating a SkyBox Model
         /// </summary>
         [Test]
@@ -323,7 +349,7 @@ namespace Dope.DDXX.MeshBuilder
             Assert.AreEqual(4, numVertices);
             Assert.AreEqual(MeshFlags.Managed, options);
             Assert.AreEqual(declaration.Length, 2);
-            Assert.AreEqual(DeclarationUsage.PositionTransformed, declaration[0].DeclarationUsage);
+            Assert.AreEqual(DeclarationUsage.Position, declaration[0].DeclarationUsage);
             return this;
         }
 
@@ -1612,12 +1638,12 @@ namespace Dope.DDXX.MeshBuilder
 
         public void SetIndexBufferData(object data, LockFlags flags)
         {
-            throw new Exception("The method or operation is not implemented.");
+            Assert.AreEqual(new short[] { 0, 1, 2, 3, 2, 1 }, (short[])data);
         }
 
         public void SetVertexBufferData(object data, LockFlags flags)
         {
-            Vector4[] vertices = (Vector4[])data;
+            Vector3[] vertices = (Vector3[])data;
             Assert.AreEqual(4, vertices.Length);
             Assert.AreEqual(vertices[0].X, 1.01f);
             Assert.AreEqual(vertices[0].Y, 1.005f);
@@ -1628,10 +1654,7 @@ namespace Dope.DDXX.MeshBuilder
             Assert.AreEqual(vertices[3].X, -1.01f);
             Assert.AreEqual(vertices[3].Y, -1.005f);
             for (int i = 0; i < vertices.Length; i++)
-            {
                 Assert.AreEqual(1, vertices[i].Z);
-                Assert.AreEqual(1, vertices[i].W);
-            }
         }
 
         public void UnlockIndexBuffer()

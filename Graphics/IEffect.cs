@@ -682,7 +682,7 @@ namespace Dope.DDXX.Graphics
         //
         //   texture:
         //     A Microsoft.DirectX.Direct3D.BaseTexture object to set.
-        void SetValue(EffectHandle parameter, ITexture texture);
+        void SetValue(EffectHandle parameter, IBaseTexture texture);
         //
         // Summary:
         //     Sets the value of an arbitrary parameter or annotation, including simple

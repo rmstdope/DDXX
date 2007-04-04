@@ -288,8 +288,8 @@ BlinnPhongPixelShader_2_0(BlinnPhongInputPS inp,
 	if(useTextures) {
 		float3 tex = tex2D(BaseTextureSampler, inp.TextureCoord.xy).rgb;
 		if(reflectionMapping) {
-			float3 ref = tex2D(ReflectionTextureSampler, inp.TextureCoord.xy).rgb;
-			output.rgb =  (tex * InvReflectionFactor + ref * ReflectionFactor) * (light.Diffuse * (LightDiffuseColor[0] * MaterialDiffuseColor) + AmbientColor) + light.Specular * (LightSpecularColor[0] * MaterialSpecularColor);
+			float3 ref = texCUBE(ReflectiveTextureSampler, inp.TextureCoord.xyx).rgb;
+			output.rgb =  lerp(tex, ref, ReflectiveFactor) * (light.Diffuse * (LightDiffuseColor[0] * MaterialDiffuseColor) + AmbientColor) + light.Specular * (LightSpecularColor[0] * MaterialSpecularColor);
 		} else {
 			output.rgb = tex * (light.Diffuse * (LightDiffuseColor[0] * MaterialDiffuseColor) + AmbientColor) + light.Specular * (LightSpecularColor[0] * MaterialSpecularColor);
 		}

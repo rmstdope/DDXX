@@ -711,7 +711,7 @@ namespace Dope.DDXX.SceneGraph
 
         public EffectHandle GetParameter(EffectHandle constant, string name)
         {
-            return null;
+            return EffectHandle.FromString("Handle");
         }
 
         public EffectHandle GetParameterBySemantic(EffectHandle constant, string name)
@@ -894,7 +894,7 @@ namespace Dope.DDXX.SceneGraph
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public void SetValue(EffectHandle parameter, ITexture texture)
+        public void SetValue(EffectHandle parameter, IBaseTexture texture)
         {
             throw new Exception("The method or operation is not implemented.");
         }

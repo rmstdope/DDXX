@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.Graphics
 {
@@ -12,6 +13,7 @@ namespace Dope.DDXX.Graphics
         private ITexture diffuseTexture;
         private ITexture normalTexture;
         private ICubeTexture reflectiveTexture;
+        private float reflectiveFactor;
 
         public Color Ambient 
         {
@@ -60,6 +62,19 @@ namespace Dope.DDXX.Graphics
         {
             get { return reflectiveTexture; }
             set { reflectiveTexture = value; }
+        }
+
+        public float ReflectiveFactor
+        {
+            get { return reflectiveFactor; }
+            set 
+            { 
+                if (value < 0.0f)
+                    throw new DDXXException("Can not set reflective factor to less than zero.");
+                if (value > 1.0f)
+                    throw new DDXXException("Can not set reflective factor to more than one.");
+                reflectiveFactor = value; 
+            }
         }
 
         public ModelMaterial(Material material)
