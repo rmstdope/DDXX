@@ -13,7 +13,7 @@ using Dope.DDXX.Physics;
 namespace Dope.DDXX.MeshBuilder
 {
     [TestFixture]
-    public class MeshBuilderTest : IGraphicsFactory, IModel, IPrimitive, IDevice, ITextureFactory, IPrimitiveFactory, IBody, ITexture
+    public class MeshBuilderTest : IGraphicsFactory, IModel, IPrimitive, IDevice, ITextureFactory, IPrimitiveFactory, IBody, ICubeTexture, IMesh, ITexture
     {
         private MeshBuilder builder;
         private float width;
@@ -29,6 +29,7 @@ namespace Dope.DDXX.MeshBuilder
         private bool createClothCalled;
         private bool setMaterialCalled;
         private string fileName;
+        private Viewport viewport;
         
         [SetUp]
         public void SetUp()
@@ -48,13 +49,14 @@ namespace Dope.DDXX.MeshBuilder
             createClothCalled = false;
             setMaterialCalled = false;
             fileName = null;
+            viewport = new Viewport();
         }
 
         /// <summary>
         /// Test creating a Model from a primitive
         /// </summary>
         [Test]
-        public void TestCreateMesh()
+        public void TestCreateModel()
         {
             builder.AddPrimitive(this, "Name1");
             IModel model = builder.CreateModel("Name1");
@@ -260,6 +262,23 @@ namespace Dope.DDXX.MeshBuilder
             Assert.AreSame(null, builder.GetMaterial("Default1").NormalTexture);
         }
 
+        /// <summary>
+        /// Test creating a SkyBox Model
+        /// </summary>
+        [Test]
+        public void TestCreateSkyBox()
+        {
+            viewport.Width = 100;
+            viewport.Height = 200;
+            IModel model = builder.CreateSkyBoxModel("SkyBoxName", "SkyBoxTexture");
+            Assert.AreSame(this, model.Mesh, "This instance should be returned as Mesh.");
+            Assert.AreEqual(1, model.Materials.Length, "We should have one material."); 
+            Assert.AreSame(this, model.Materials[0].ReflectiveTexture, 
+                "This instance should be returned as reflective texture.");
+            Assert.IsNull(model.Materials[0].DiffuseTexture, "Diffuse texture should be null.");
+            Assert.IsNull(model.Materials[0].NormalTexture, "Normal texture should be null.");
+        }
+
         #region IGraphicsFactory Members
 
         public IManager Manager
@@ -299,7 +318,13 @@ namespace Dope.DDXX.MeshBuilder
 
         public IMesh CreateMesh(int numFaces, int numVertices, MeshFlags options, VertexElement[] declaration, IDevice device)
         {
-            throw new Exception("The method or operation is not implemented.");
+            // Ok for skybox only
+            Assert.AreEqual(numFaces, 2);
+            Assert.AreEqual(4, numVertices);
+            Assert.AreEqual(MeshFlags.Managed, options);
+            Assert.AreEqual(declaration.Length, 2);
+            Assert.AreEqual(DeclarationUsage.PositionTransformed, declaration[0].DeclarationUsage);
+            return this;
         }
 
         public IMesh CreateMesh(int numFaces, int numVertices, MeshFlags options, VertexFormats vertexFormat, IDevice device)
@@ -631,7 +656,7 @@ namespace Dope.DDXX.MeshBuilder
         {
             get
             {
-                throw new Exception("The method or operation is not implemented.");
+                return viewport;
             }
             set
             {
@@ -1423,70 +1448,482 @@ namespace Dope.DDXX.MeshBuilder
 
         #endregion
 
-        #region ITexture Members
+        #region ITextureFactory Members
 
 
-        public void AddDirtyRectangle()
+        public ICubeTexture CreateCubeFromFile(string file)
+        {
+            return this;
+        }
+
+        #endregion
+
+        #region IMesh Members
+
+        public VertexElement[] Declaration
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public IndexBuffer IndexBuffer
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public int NumberAttributes
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public int NumberBytesPerVertex
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public int NumberFaces
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public int NumberVertices
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public MeshOptions Options
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public VertexBuffer VertexBuffer
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public VertexFormats VertexFormat
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public IMesh Clean(CleanType cleanType, IGraphicsStream adjacency, IGraphicsStream adjacencyOut)
         {
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public void AddDirtyRectangle(Rectangle rect)
+        public IMesh Clean(CleanType cleanType, int[] adjacency, out int[] adjacencyOut)
         {
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public SurfaceDescription GetLevelDescription(int level)
+        public IMesh Clean(CleanType cleanType, IGraphicsStream adjacency, IGraphicsStream adjacencyOut, out string errorsAndWarnings)
         {
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public ISurface GetSurfaceLevel(int level)
+        public IMesh Clean(CleanType cleanType, int[] adjacency, out int[] adjacencyOut, out string errorsAndWarnings)
         {
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public GraphicsStream LockRectangle(int level, LockFlags flags)
+        public IMesh Clone(MeshFlags options, IGraphicsStream declaration, IDevice device)
         {
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public GraphicsStream LockRectangle(int level, LockFlags flags, out int pitch)
+        public IMesh Clone(MeshFlags options, VertexElement[] declaration, IDevice device)
         {
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public GraphicsStream LockRectangle(int level, Rectangle rect, LockFlags flags)
+        public IMesh Clone(MeshFlags options, VertexFormats vertexFormat, IDevice device)
         {
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public GraphicsStream LockRectangle(int level, Rectangle rect, LockFlags flags, out int pitch)
+        public void ComputeNormals()
         {
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public Array LockRectangle(Type typeLock, int level, LockFlags flags, params int[] ranks)
+        public void ComputeNormals(IGraphicsStream adjacency)
         {
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public Array LockRectangle(Type typeLock, int level, LockFlags flags, out int pitch, params int[] ranks)
+        public void ComputeNormals(int[] adjacency)
         {
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public Array LockRectangle(Type typeLock, int level, Rectangle rect, LockFlags flags, params int[] ranks)
+        public int[] ConvertAdjacencyToPointReps(IGraphicsStream adjacency)
         {
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public Array LockRectangle(Type typeLock, int level, Rectangle rect, LockFlags flags, out int pitch, params int[] ranks)
+        public int[] ConvertAdjacencyToPointReps(int[] adjaceny)
         {
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public void UnlockRectangle(int level)
+        public int[] ConvertPointRepsToAdjacency(IGraphicsStream pointReps)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public int[] ConvertPointRepsToAdjacency(int[] pointReps)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void DrawSubset(int attributeID)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void GenerateAdjacency(float epsilon, int[] adjacency)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public AttributeRange[] GetAttributeTable()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public IGraphicsStream LockIndexBuffer(LockFlags flags)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Array LockIndexBuffer(Type typeIndex, LockFlags flags, params int[] ranks)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public IGraphicsStream LockVertexBuffer(LockFlags flags)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Array LockVertexBuffer(Type typeVertex, LockFlags flags, params int[] ranks)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetIndexBufferData(object data, LockFlags flags)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetVertexBufferData(object data, LockFlags flags)
+        {
+            Vector4[] vertices = (Vector4[])data;
+            Assert.AreEqual(4, vertices.Length);
+            Assert.AreEqual(vertices[0].X, 1.01f);
+            Assert.AreEqual(vertices[0].Y, 1.005f);
+            Assert.AreEqual(vertices[1].X, 1.01f);
+            Assert.AreEqual(vertices[1].Y, -1.005f);
+            Assert.AreEqual(vertices[2].X, -1.01f);
+            Assert.AreEqual(vertices[2].Y, 1.005f);
+            Assert.AreEqual(vertices[3].X, -1.01f);
+            Assert.AreEqual(vertices[3].Y, -1.005f);
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                Assert.AreEqual(1, vertices[i].Z);
+                Assert.AreEqual(1, vertices[i].W);
+            }
+        }
+
+        public void UnlockIndexBuffer()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void UnlockVertexBuffer()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void UpdateSemantics(IGraphicsStream declaration)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void UpdateSemantics(VertexElement[] declaration)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void ComputeTangent(int texStage, int tangentIndex, int binormIndex, int wrap)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void ComputeTangent(int texStage, int tangentIndex, int binormIndex, int wrap, IGraphicsStream adjacency)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void ComputeTangent(int texStage, int tangentIndex, int binormIndex, int wrap, int[] adjacency)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void ComputeTangentFrame(TangentOptions options)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public bool Intersect(Vector3 rayPos, Vector3 rayDir)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public bool Intersect(Vector3 rayPos, Vector3 rayDir, out IntersectInformation closestHit)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public bool Intersect(Vector3 rayPos, Vector3 rayDir, out IntersectInformation[] allHits)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public bool Intersect(Vector3 rayPos, Vector3 rayDir, out IntersectInformation closestHit, out IntersectInformation[] allHits)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public bool IntersectSubset(int attributeId, Vector3 rayPos, Vector3 rayDir)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public bool IntersectSubset(int attributeId, Vector3 rayPos, Vector3 rayDir, out IntersectInformation closestHit)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public bool IntersectSubset(int attributeId, Vector3 rayPos, Vector3 rayDir, out IntersectInformation[] allHits)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public bool IntersectSubset(int attributeId, Vector3 rayPos, Vector3 rayDir, out IntersectInformation closestHit, out IntersectInformation[] allHits)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public IGraphicsStream LockAttributeBuffer(LockFlags flags)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public int[] LockAttributeBufferArray(LockFlags flags)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public IMesh Optimize(MeshFlags flags, IGraphicsStream adjacencyIn)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public IMesh Optimize(MeshFlags flags, int[] adjacencyIn)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public IMesh Optimize(MeshFlags flags, IGraphicsStream adjacencyIn, out int[] adjacencyOut, out int[] faceRemap, out IGraphicsStream vertexRemap)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public IMesh Optimize(MeshFlags flags, int[] adjacencyIn, out int[] adjacencyOut, out int[] faceRemap, out IGraphicsStream vertexRemap)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void OptimizeInPlace(MeshFlags flags, IGraphicsStream adjacencyIn)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void OptimizeInPlace(MeshFlags flags, int[] adjacencyIn)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void OptimizeInPlace(MeshFlags flags, IGraphicsStream adjacencyIn, out int[] adjacencyOut, out int[] faceRemap, out IGraphicsStream vertexRemap)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void OptimizeInPlace(MeshFlags flags, int[] adjacencyIn, out int[] adjacencyOut, out int[] faceRemap, out IGraphicsStream vertexRemap)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Save(System.IO.Stream stream, IGraphicsStream adjacency, ExtendedMaterial[] materials, XFileFormat format)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Save(System.IO.Stream stream, int[] adjacency, ExtendedMaterial[] materials, XFileFormat format)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Save(string filename, IGraphicsStream adjacency, ExtendedMaterial[] materials, XFileFormat format)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Save(string filename, int[] adjacency, ExtendedMaterial[] materials, XFileFormat format)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Save(System.IO.Stream stream, IGraphicsStream adjacency, ExtendedMaterial[] materials, EffectInstance[] effects, XFileFormat format)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Save(System.IO.Stream stream, int[] adjacency, ExtendedMaterial[] materials, EffectInstance[] effects, XFileFormat format)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Save(string filename, IGraphicsStream adjacency, ExtendedMaterial[] materials, EffectInstance[] effects, XFileFormat format)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Save(string filename, int[] adjacency, ExtendedMaterial[] materials, EffectInstance[] effects, XFileFormat format)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetAttributeTable(AttributeRange[] table)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void UnlockAttributeBuffer()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void UnlockAttributeBuffer(int[] dataAttribute)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Validate(IGraphicsStream adjacency)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Validate(int[] adjacency)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Validate(IGraphicsStream adjacency, out string errorsAndWarnings)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Validate(int[] adjacency, out string errorsAndWarnings)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void WeldVertices(WeldEpsilonsFlags flags, WeldEpsilons epsilons, int[] adjacencyIn)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void WeldVertices(WeldEpsilonsFlags flags, WeldEpsilons epsilons, IGraphicsStream adjacencyIn, IGraphicsStream adjacencyOut)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void WeldVertices(WeldEpsilonsFlags flags, WeldEpsilons epsilons, int[] adjacencyIn, out IGraphicsStream vertexRemap)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void WeldVertices(WeldEpsilonsFlags flags, WeldEpsilons epsilons, IGraphicsStream adjacencyIn, IGraphicsStream adjacencyOut, out int[] faceRemap, out IGraphicsStream vertexRemap)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void WeldVertices(WeldEpsilonsFlags flags, WeldEpsilons epsilons, int[] adjacencyIn, out int[] adjacencyOut, out int[] faceRemap, out IGraphicsStream vertexRemap)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
+
+        #region ICubeTexture Members
+
+        public void AddDirtyRectangle(CubeMapFace faceType)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void AddDirtyRectangle(CubeMapFace faceType, Rectangle rect)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Surface GetCubeMapSurface(CubeMapFace faceType, int level)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public GraphicsStream LockRectangle(CubeMapFace faceType, int level, LockFlags flags)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public GraphicsStream LockRectangle(CubeMapFace faceType, int level, LockFlags flags, out int pitch)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public GraphicsStream LockRectangle(CubeMapFace faceType, int level, Rectangle rect, LockFlags flags)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public GraphicsStream LockRectangle(CubeMapFace faceType, int level, Rectangle rect, LockFlags flags, out int pitch)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Array LockRectangle(Type typeLock, CubeMapFace faceType, int level, LockFlags flags, params int[] ranks)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Array LockRectangle(Type typeLock, CubeMapFace faceType, int level, LockFlags flags, out int pitch, params int[] ranks)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Array LockRectangle(Type typeLock, CubeMapFace faceType, int level, Rectangle rect, LockFlags flags, params int[] ranks)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Array LockRectangle(Type typeLock, CubeMapFace faceType, int level, Rectangle rect, LockFlags flags, out int pitch, params int[] ranks)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void UnlockRectangle(CubeMapFace faceType, int level)
         {
             throw new Exception("The method or operation is not implemented.");
         }
@@ -1568,10 +2005,70 @@ namespace Dope.DDXX.MeshBuilder
 
         #endregion
 
-        #region ITextureFactory Members
+        #region ITexture Members
 
 
-        public ICubeTexture CreateCubeFromFile(string file)
+        public void AddDirtyRectangle()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void AddDirtyRectangle(Rectangle rect)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public SurfaceDescription GetLevelDescription(int level)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public ISurface GetSurfaceLevel(int level)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public GraphicsStream LockRectangle(int level, LockFlags flags)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public GraphicsStream LockRectangle(int level, LockFlags flags, out int pitch)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public GraphicsStream LockRectangle(int level, Rectangle rect, LockFlags flags)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public GraphicsStream LockRectangle(int level, Rectangle rect, LockFlags flags, out int pitch)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Array LockRectangle(Type typeLock, int level, LockFlags flags, params int[] ranks)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Array LockRectangle(Type typeLock, int level, LockFlags flags, out int pitch, params int[] ranks)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Array LockRectangle(Type typeLock, int level, Rectangle rect, LockFlags flags, params int[] ranks)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Array LockRectangle(Type typeLock, int level, Rectangle rect, LockFlags flags, out int pitch, params int[] ranks)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void UnlockRectangle(int level)
         {
             throw new Exception("The method or operation is not implemented.");
         }

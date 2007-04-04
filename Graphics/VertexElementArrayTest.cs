@@ -69,6 +69,11 @@ namespace Dope.DDXX.Graphics
             new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
             VertexElement.VertexDeclarationEnd
         };
+        private VertexElement[] elementsW = new VertexElement[]
+        {
+            new VertexElement(0, 0, DeclarationType.Float4, DeclarationMethod.Default, DeclarationUsage.PositionTransformed, 0),
+            VertexElement.VertexDeclarationEnd
+        };
         private VertexElement[] elementsEmpty = new VertexElement[]
         {
             VertexElement.VertexDeclarationEnd
@@ -100,9 +105,20 @@ namespace Dope.DDXX.Graphics
             VertexElementArray array = new VertexElementArray();
             array.AddPositions();
             Assert.AreEqual(elementsP.Length, array.VertexElements.Length,
-                "Array should have only VertexDeclarationEnd element.");
+                "Array should have only Position and VertexDeclarationEnd elements.");
             for (int i = 0; i < elementsP.Length; i++)
                 Assert.IsTrue(elementsP[i].Equals(array.VertexElements[i]), "Index is " + i);
+        }
+
+        [Test]
+        public void TestAddTransformedPosition()
+        {
+            VertexElementArray array = new VertexElementArray();
+            array.AddTransformedPositions();
+            Assert.AreEqual(elementsW.Length, array.VertexElements.Length,
+                "Array should have only TransformedPosition and VertexDeclarationEnd elements.");
+            for (int i = 0; i < elementsW.Length; i++)
+                Assert.IsTrue(elementsW[i].Equals(array.VertexElements[i]), "Index is " + i);
         }
 
         [Test]

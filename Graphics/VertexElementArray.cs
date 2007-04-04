@@ -40,6 +40,11 @@ namespace Dope.DDXX.Graphics
             AddElement(DeclarationType.Float3, DeclarationUsage.Position, 0);
         }
 
+        public void AddTransformedPositions()
+        {
+            AddElement(DeclarationType.Float4, DeclarationUsage.PositionTransformed, 0);
+        }
+
         public void AddNormals()
         {
             AddElement(DeclarationType.Float3, DeclarationUsage.Normal, 0);

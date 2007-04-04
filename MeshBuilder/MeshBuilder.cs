@@ -133,5 +133,36 @@ namespace Dope.DDXX.MeshBuilder
             else
                 material.NormalTexture = textureFactory.CreateFromFile(fileName);
         }
+
+        /// <summary>
+        /// Create a sky box model, i.e. four transformed and screen
+        /// aligned vertices and no texture coordinates.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="textureName"></param>
+        /// <returns></returns>
+        public IModel CreateSkyBoxModel(string name, string textureName)
+        {
+            Vector4[] vertices = new Vector4[4];
+            float fHighW = -1.0f - (1.0f / device.Viewport.Width);
+            float fHighH = -1.0f - (1.0f / device.Viewport.Height);
+            float fLowW = 1.0f + (1.0f / device.Viewport.Width);
+            float fLowH = 1.0f + (1.0f / device.Viewport.Height);
+            vertices[0] = new Vector4(fLowW, fLowH, 1.0f, 1.0f);
+            vertices[1] = new Vector4(fLowW, fHighH, 1.0f, 1.0f);
+            vertices[2] = new Vector4(fHighW, fLowH, 1.0f, 1.0f);
+            vertices[3] = new Vector4(fHighW, fHighH, 1.0f, 1.0f);
+            
+            VertexElementArray declaration = new VertexElementArray();
+            declaration.AddTransformedPositions();
+
+            IMesh mesh = graphicsFactory.CreateMesh(2, 4, MeshFlags.Managed, 
+                declaration.VertexElements, device);
+            mesh.SetVertexBufferData(vertices, LockFlags.None);
+            ModelMaterial material = new ModelMaterial(new Material());
+            material.ReflectiveTexture = textureFactory.CreateCubeFromFile(textureName);
+            IModel model = new Model(mesh, new ModelMaterial[] { material });
+            return model;
+        }
     }
 }
