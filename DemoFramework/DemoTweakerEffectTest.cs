@@ -398,19 +398,32 @@ namespace Dope.DDXX.DemoFramework
 
         private void ExpectKey(Key key)
         {
-            Key[] keys = { Key.UpArrow, Key.DownArrow, Key.Tab, Key.PageDown, Key.PageUp, Key.NumPad0, Key.NumPad1, Key.NumPad2, Key.NumPad3, Key.NumPad4, Key.NumPad5, Key.NumPad6, Key.NumPad7, Key.NumPad8, Key.NumPad9, Key.NumPadPeriod, Key.NumPadMinus, Key.NumPadEnter };
-            for (int i = 0; i < keys.Length; i++)
+            Key[] noRepeatKeys = { Key.UpArrow, Key.DownArrow, Key.Tab, Key.NumPad0, Key.NumPad1, Key.NumPad2, Key.NumPad3, Key.NumPad4, Key.NumPad5, Key.NumPad6, Key.NumPad7, Key.NumPad8, Key.NumPad9, Key.NumPadPeriod, Key.NumPadMinus, Key.NumPadEnter };
+            Key[] slowRepeatKeys = { Key.PageDown, Key.PageUp };
+            for (int i = 0; i < slowRepeatKeys.Length; i++)
             {
                 bool pressed = false;
-                if (key == keys[i])
+                if (key == slowRepeatKeys[i])
+                {
+                    pressed = true;
+                }
+                Expect.Once.On(inputDriver).
+                    Method("KeyPressedSlowRepeat").
+                    With(slowRepeatKeys[i]).
+                    Will(Return.Value(pressed));
+            }
+            for (int i = 0; i < noRepeatKeys.Length; i++)
+            {
+                bool pressed = false;
+                if (key == noRepeatKeys[i])
                 {
                     pressed = true;
                 }
                 Expect.Once.On(inputDriver).
                     Method("KeyPressedNoRepeat").
-                    With(keys[i]).
+                    With(noRepeatKeys[i]).
                     Will(Return.Value(pressed));
-                if (pressed && i >= 5)
+                if (pressed && i >= 3)
                     return;
             }
         }

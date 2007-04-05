@@ -23,6 +23,13 @@ namespace EngineTest
         private ModelNode modelNode;
         private ModelNode clothModel;
         private IBoundingObject sphere;
+        private float reflectiveFactor;
+
+        public float ReflectiveFactor
+        {
+            get { return reflectiveFactor; }
+            set { reflectiveFactor = value; }
+        }
 
         //private ModelNode modelSkinning;
         private ModelNode modelNoSkinning;
@@ -134,6 +141,10 @@ namespace EngineTest
 
         public override void Step()
         {
+            if (clothModel != null)
+            {
+                clothModel.Model.Materials[0].ReflectiveFactor = reflectiveFactor;
+            }
             // Rotate camera
             //camera.WorldState.Tilt(Time.DeltaTime / 2);
             //camera.WorldState.Turn(Time.DeltaTime / 1.456f);

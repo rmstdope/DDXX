@@ -9,5 +9,6 @@ namespace Dope.DDXX.Input
         void Initialize(Control control);
         bool KeyPressed(Key key);
         bool KeyPressedNoRepeat(Key key);
+        bool KeyPressedSlowRepeat(Key key);
     }
 }

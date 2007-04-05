@@ -9,16 +9,47 @@ namespace Dope.DDXX.Input
 {
     public class InputDriver : IInputDriver
     {
+        private class KeyInfo
+        {
+            private float[] slowRepeatTimes = new float[] { 0.5f, 0.1f, 0.02f };
+            private int[] slowRepeatNums = new int[] { 3, 15, 200 };
+
+            public KeyInfo()
+            {
+                time = Time.CurrentTime;
+                numRepeats = 1;
+            }
+            public bool IsSlowRepeat()
+            {
+                float t = Time.CurrentTime;
+                for (int i = 0; i < slowRepeatTimes.Length; i++)
+                {
+                    if (numRepeats <= slowRepeatNums[i])
+                    {
+                        if (t >= time + slowRepeatTimes[i])
+                        {
+                            numRepeats++;
+                            time = t;
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+                return true;
+            }
+            private float time;
+            private int numRepeats;
+        }
         private static InputDriver instance;
         private static IInputFactory factory = new DirectInputFactory();
 
         private Device keyboard;
 
-        private List<Key> noRepeatList;
+        private Dictionary<Key, KeyInfo> pressEntries;
 
         private InputDriver()
         {
-            noRepeatList = new List<Key>();
+            Reset();
         }
 
         public static IInputFactory Factory
@@ -36,6 +67,10 @@ namespace Dope.DDXX.Input
             return instance;
         }
 
+        public void Reset()
+        {
+            pressEntries = new Dictionary<Key, KeyInfo>();
+        }
 
         public void Initialize(Control control)
         {
@@ -57,16 +92,40 @@ namespace Dope.DDXX.Input
         public bool KeyPressedNoRepeat(Key key)
         {
             bool pressed = factory.KeyPressed(keyboard, key);
-            if (noRepeatList.Contains(key))
+            if (pressEntries.ContainsKey(key))
             {
                 if (!pressed)
-                    noRepeatList.Remove(key);
+                    pressEntries.Remove(key);
             }
             else
             {
                 if (pressed)
                 {
-                    noRepeatList.Add(key);
+                    pressEntries.Add(key, new KeyInfo());
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool KeyPressedSlowRepeat(Key key)
+        {
+            bool pressed = factory.KeyPressed(keyboard, key);
+            if (pressEntries.ContainsKey(key))
+            {
+                if (!pressed)
+                    pressEntries.Remove(key);
+                else
+                {
+                    KeyInfo info = pressEntries[key];
+                    return info.IsSlowRepeat();
+                }
+            }
+            else
+            {
+                if (pressed)
+                {
+                    pressEntries.Add(key, new KeyInfo());
                     return true;
                 }
             }

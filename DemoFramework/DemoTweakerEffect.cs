@@ -340,12 +340,12 @@ namespace Dope.DDXX.DemoFramework
                 KeyTab();
                 handled = true;
             }
-            if (inputDriver.KeyPressedNoRepeat(Key.PageUp))
+            if (inputDriver.KeyPressedSlowRepeat(Key.PageUp))
             {   
                 KeyPlus();
                 handled = true;
             }
-            if (inputDriver.KeyPressedNoRepeat(Key.PageDown))
+            if (inputDriver.KeyPressedSlowRepeat(Key.PageDown))
             {
                 KeyPageDown();
                 handled = true;
