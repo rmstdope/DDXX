@@ -32,7 +32,7 @@ namespace Dope.DDXX.MeshBuilder
 
             IPrimitive cloth = CreatePlane(width, height, widthSegments, heightSegments, textured);
             for (int i = 0; i < cloth.Vertices.Length; i++)
-                body.AddParticle(new PhysicalParticle(cloth.Vertices[i].Position, 1, 1));
+                body.AddParticle(new PhysicalParticle(cloth.Vertices[i].Position, 1, 0.01f));
             for (y = 0; y < heightSegments; y++)
             {
                 for (x = 0; x < widthSegments; x++)

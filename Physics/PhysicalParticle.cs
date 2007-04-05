@@ -10,9 +10,11 @@ namespace Dope.DDXX.Physics
     {
         private Vector3 position;
         private Vector3 oldPosition;
+        private Vector3 lastVelocity;
         private float lastDeltaTime;
         private Vector3 externalForces;
         private float invMass;
+        private float dragCoefficient;
 
         /// <summary>
         /// Constructor
@@ -36,6 +38,8 @@ namespace Dope.DDXX.Physics
             this.position = startPosition;
             this.oldPosition = startPosition;
             this.invMass = 1 / mass;
+            this.lastVelocity = new Vector3(0, 0, 0);
+            this.dragCoefficient = dragCoefficient;
             lastDeltaTime = 1.0f;
             externalForces = new Vector3(0, 0, 0);
         }
@@ -54,7 +58,7 @@ namespace Dope.DDXX.Physics
 
         public void Step(Vector3 gravity)
         {
-            UpdatePosition(GetLastVelocity(), GetVelocityChange(gravity));
+            UpdatePosition(GetVelocity(), GetVelocityChange(gravity));
             UpdateLastDelta();
             externalForces = new Vector3(0, 0, 0);
         }
@@ -64,10 +68,11 @@ namespace Dope.DDXX.Physics
             lastDeltaTime = Time.DeltaTime;
         }
 
-        private void UpdatePosition(Vector3 lastVelocity, Vector3 velocityMod)
+        private void UpdatePosition(Vector3 velocity, Vector3 velocityMod)
         {
             oldPosition = position;
-            position += (lastVelocity + velocityMod * 0.5f) * Time.DeltaTime;
+            position += (velocity + velocityMod * 0.5f) * Time.DeltaTime;
+            this.lastVelocity = velocity;
         }
 
         private Vector3 GetVelocityChange(Vector3 gravity)
@@ -80,9 +85,12 @@ namespace Dope.DDXX.Physics
             return gravity + externalForces * invMass;
         }
 
-        private Vector3 GetLastVelocity()
+        private Vector3 GetVelocity()
         {
-            return (position - oldPosition) * (1 / lastDeltaTime);
+            // Calculate the average velocity last update
+            Vector3 velocity = (position - oldPosition) * (1 / lastDeltaTime);
+            // Add drag coefficient
+            return velocity * (1 - dragCoefficient);
         }
 
         public void ApplyForce(Vector3 force)

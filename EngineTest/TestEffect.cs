@@ -67,6 +67,7 @@ namespace EngineTest
                 D3DDriver.GetInstance().Device);
             const int numSides = 10;
             Body body = new Body();
+            //body.Gravity = new Vector3(0, -0.2f, 0);
 
             int[] pinned = new int[numSides + 1];
             for (int i = 0; i < numSides + 1; i++)
