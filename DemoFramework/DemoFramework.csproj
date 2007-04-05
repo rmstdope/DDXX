@@ -55,6 +55,7 @@
     <Compile Include="DemoEffectTypesTest.cs" />
     <Compile Include="DemoExecuter.cs" />
     <Compile Include="DemoExecuterTest.cs" />
+    <Compile Include="DemoMockTest.cs" />
     <Compile Include="DemoTweakerDemo.cs" />
     <Compile Include="DemoTweakerDemoTest.cs" />
     <Compile Include="DemoTweakerEffect.cs" />

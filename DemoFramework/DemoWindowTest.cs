@@ -16,7 +16,7 @@ namespace Dope.DDXX.DemoFramework
     public class DemoWindowTest : D3DMockTest
     {
         DemoWindow window;
-        Dope.DDXX.Input.IInputFactory iFactory;
+        IInputFactory iFactory;
 
         [SetUp]
         public override void SetUp()

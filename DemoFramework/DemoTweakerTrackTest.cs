@@ -12,36 +12,12 @@ using Dope.DDXX.Utility;
 namespace Dope.DDXX.DemoFramework
 {
     [TestFixture]
-    public class DemoTweakerTrackTest : D3DMockTest
+    public class DemoTweakerTrackTest : DemoMockTest
     {
         private DemoTweakerTrack tweaker;
         private IUserInterface userInterface;
         private IDemoRegistrator registrator;
         private Track track;
-
-        protected IDemoEffect CreateMockEffect(float start, float end)
-        {
-            IDemoEffect e = mockery.NewMock<IDemoEffect>();
-            Stub.On(e).
-                GetProperty("StartTime").
-                Will(Return.Value(start));
-            Stub.On(e).
-                GetProperty("EndTime").
-                Will(Return.Value(end));
-            return e;
-        }
-
-        protected IDemoPostEffect CreateMockPostEffect(float start, float end)
-        {
-            IDemoPostEffect e = mockery.NewMock<IDemoPostEffect>();
-            Stub.On(e).
-                GetProperty("StartTime").
-                Will(Return.Value(start));
-            Stub.On(e).
-                GetProperty("EndTime").
-                Will(Return.Value(end));
-            return e;
-        }
 
         [SetUp]
         public override void SetUp()
