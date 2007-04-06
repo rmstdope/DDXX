@@ -20,12 +20,17 @@ GlassVertexShader(GlassVertexInput input)
 	GlassPixelInput output;
 
 	// Transform the position from object space to homogeneous projection space
+	float3 positionWS = mul(input.Position, WorldT);
 	output.Position = mul(input.Position, WorldViewProjectionT);
 	float3 normal = normalize(mul(input.Normal, WorldT));
-	output.Light = abs(dot(normal, normalize(float3(0, 0, -1))));
-	output.Light = output.Light * output.Light;
+	float3 lightVec = LightPosition[0] - positionWS;
+	float d = length(lightVec);
+	float attenuation = saturate(6 / (d * d));//(1 / ((attenuation1) + (attenuation2 * d) + (attenuation3 * d * d))) * 1200.0f;
+	output.Light = saturate(dot(normal, normalize(lightVec)));//float3(1, 1, -1))));
+	output.Light = output.Light * attenuation;
+	//output.Light = output.Light * output.Light;
 	output.TextureCoord = input.TextureCoord;
-	float3 eyeVector =  mul(input.Position.xyz, WorldT) - EyePosition.xyz;
+	float3 eyeVector =  positionWS - EyePosition.xyz;
 	output.ReflectionVector = reflect(eyeVector, normal);
 
 	return output;
@@ -34,7 +39,7 @@ GlassVertexShader(GlassVertexInput input)
 float4
 GlassPixelShader(GlassPixelInput input) : COLOR0
 {
-	float diffuse = 0.1f + 0.9f * input.Light;
+	float diffuse = 0.03 + 0.97 * input.Light * MaterialDiffuseColor;
 	float4 color = diffuse * tex2D(BaseTextureSampler, input.TextureCoord.xy);
 	float4 reflection = texCUBE(ReflectiveTextureSampler, input.ReflectionVector.xyz);
 	return lerp(color, reflection, ReflectiveFactor);

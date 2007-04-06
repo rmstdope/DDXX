@@ -83,6 +83,8 @@ namespace Dope.DDXX.DemoEffects
             PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.One, Color.Black);
             PostProcessor.Process("UpSample4x", temp[1], startTexture);
             //PostProcessor.Process("Copy", temp[0], startTexture);
+
+
         }
     }
 }
