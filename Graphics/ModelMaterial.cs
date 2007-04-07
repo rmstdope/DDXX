@@ -130,5 +130,14 @@ namespace Dope.DDXX.Graphics
             this.reflectiveTexture = factory.CreateCubeFromFile(reflectiveTextureName);
         }
 
+        public ModelMaterial Clone()
+        {
+            ModelMaterial clone = new ModelMaterial(material);
+            clone.ReflectiveFactor = ReflectiveFactor;
+            clone.DiffuseTexture = DiffuseTexture;
+            clone.NormalTexture = NormalTexture;
+            clone.ReflectiveTexture = ReflectiveTexture;
+            return clone;
+        }
     }
 }
