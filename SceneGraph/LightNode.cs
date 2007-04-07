@@ -5,20 +5,28 @@ using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.SceneGraph
 {
-    public class LightNode : NodeBase
+    public abstract class LightNode : NodeBase
     {
-        private Light light;
+        private ColorValue diffuseColor;
+        private ColorValue specularColor;
 
-        public Light Light
-        {
-            get { return light; }
-            set { light = value; }
-        }
-
-        public LightNode(string name, Light light)
+        public LightNode(string name)
             : base(name)
         {
-            this.light = light;
+            diffuseColor = new ColorValue(1, 1, 1, 1);
+            specularColor = new ColorValue(1, 1, 1, 1);
+        }
+
+        public ColorValue DiffuseColor
+        {
+            get { return diffuseColor; }
+            set { diffuseColor = value; }
+        }
+
+        public ColorValue SpecularColor
+        {
+            get { return specularColor; }
+            set { specularColor = value; }
         }
 
         protected override void StepNode()
@@ -29,10 +37,9 @@ namespace Dope.DDXX.SceneGraph
         {
         }
 
-
         protected override void SetLightStateNode(LightState state)
         {
-            state.NewState(WorldState.Position, Light.DiffuseColor, Light.SpecularColor);
+            state.NewState(Position, DiffuseColor, SpecularColor);
         }
     }
 }

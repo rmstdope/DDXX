@@ -15,7 +15,7 @@ namespace EngineTest
     {
         Scene scene;
         CameraNode camera;
-        LightNode lightNode;
+        LightNode[] lightNodes = new LightNode[2];
 
         public ChessScene(float startTime, float endTime)
             : base(startTime, endTime)
@@ -58,13 +58,13 @@ namespace EngineTest
             scene.AddNode(camera);
             scene.ActiveCamera = camera;
 
-            Light light = new Light();
-            light.Type = LightType.Point;
-            light.Direction = new Vector3(1, 0, 0);
-            light.Diffuse = Color.White;
-            lightNode = new LightNode("Light1", light);
-            scene.AddNode(lightNode);
-       }
+            lightNodes[0] = new PointLightNode("Light0");
+            lightNodes[0].DiffuseColor = new ColorValue(0.8f, 0.6f, 0.2f);
+            scene.AddNode(lightNodes[0]);
+            lightNodes[1] = new PointLightNode("Light1");
+            lightNodes[1].DiffuseColor = new ColorValue(0.8f, 0.8f, 0.4f);
+            scene.AddNode(lightNodes[1]);
+        }
 
         public override void Step()
         {
@@ -74,9 +74,14 @@ namespace EngineTest
                 3, 20 * (float)Math.Cos(t));
             camera.WorldState.Rotation = Quaternion.RotationYawPitchRoll((float)Math.PI + t, 0, 0);
 
-            lightNode.WorldState.Position =
-                new Vector3(5 * (float)Math.Cos(Time.CurrentTime / 2), 2.0f, 5 * (float)Math.Sin(Time.CurrentTime / 2));
-            
+            lightNodes[0].Position = new Vector3(
+                7 * (float)Math.Cos(Time.CurrentTime / 2), 2.0f, 
+                7 * (float)Math.Sin(Time.CurrentTime / 2));
+
+            lightNodes[1].Position = new Vector3(
+                3 * (float)Math.Cos(Time.CurrentTime / 1.2f), 2.0f,
+                3 * (float)Math.Sin(Time.CurrentTime / 1.2f));
+
             scene.Step();
         }
 

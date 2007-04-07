@@ -61,7 +61,7 @@
     <Compile Include="IScene.cs" />
     <Compile Include="IXLoader.cs" />
     <Compile Include="LightNode.cs" />
-    <Compile Include="LightNodeTest.cs" />
+    <Compile Include="PointLightNodeTest.cs" />
     <Compile Include="LightState.cs" />
     <Compile Include="LightStateTest.cs" />
     <Compile Include="ModelNode.cs" />
@@ -72,6 +72,7 @@
     <Compile Include="NodeFactoryTest.cs" />
     <Compile Include="ParticleSystemNode.cs" />
     <Compile Include="ParticleSystemNodeTest.cs" />
+    <Compile Include="PointLightNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="SceneTest.cs" />

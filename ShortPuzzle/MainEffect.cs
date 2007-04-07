@@ -271,10 +271,8 @@ namespace ShortPuzzle
             lights = new LightNode[2];
             for (int i = 0; i < 2; i++)
             {
-                Light dxLight = new Light();
-                dxLight.DiffuseColor = new ColorValue(0.8f, 0.3f, 0.9f, 1.0f);
-                dxLight.Type = LightType.Point;
-                lights[i] = new LightNode("Point Light", dxLight);
+                lights[i] = new PointLightNode("Point Light");
+                lights[i].DiffuseColor = new ColorValue(0.8f, 0.3f, 0.9f, 1.0f);
                 scene.AddNode(lights[i]);
             }
 

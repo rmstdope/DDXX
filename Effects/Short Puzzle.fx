@@ -30,9 +30,9 @@ SimpleVertexShader(InputVS input)
 	output.TextureCoord = input.TextureCoord;
 	float3 N = normalize(mul(input.Normal, (float3x3)WorldT));
 
-	float3 L1 = normalize(LightPosition[0] - mul(input.Position, WorldT));
-	float3 L2 = normalize(LightPosition[1] - mul(input.Position, WorldT));
-	output.LightVector = max(0, dot(N, L1)) * LightDiffuseColor[0] + max(0, dot(N, L2)) * LightDiffuseColor[1];
+	float3 L1 = normalize(LightPositions[0] - mul(input.Position, WorldT));
+	float3 L2 = normalize(LightPositions[1] - mul(input.Position, WorldT));
+	output.LightVector = max(0, dot(N, L1)) * LightDiffuseColors[0] + max(0, dot(N, L2)) * LightDiffuseColors[1];
 	//float3 V = normalize(EyePosition.xyz - input.Position.xyz);
 	//float3 H = normalize(V + normalize(output.L));
 	

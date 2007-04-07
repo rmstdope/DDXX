@@ -31,9 +31,9 @@ namespace Dope.DDXX.SceneGraph
             ambientColor = new ColorValue(0.5f, 0.5f, 0.5f, 0.5f);
             IEffectFactory effectFactory = D3DDriver.EffectFactory;
             effect = effectFactory.CreateFromFile("PoolEffect.fxo");
-            lightDiffuseHandle = effect.GetParameter(null, "LightDiffuseColor");
-            lightSpecularHandle = effect.GetParameter(null, "LightSpecularColor");
-            lightPositionHandle = effect.GetParameter(null, "LightPosition");
+            lightDiffuseHandle = effect.GetParameter(null, "LightDiffuseColors");
+            lightSpecularHandle = effect.GetParameter(null, "LightSpecularColors");
+            lightPositionHandle = effect.GetParameter(null, "LightPositions");
             eyePositionHandle = effect.GetParameter(null, "EyePosition");
 
             if (lightDiffuseHandle == null || lightSpecularHandle == null || lightPositionHandle == null || eyePositionHandle == null)

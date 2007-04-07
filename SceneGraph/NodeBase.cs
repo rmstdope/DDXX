@@ -144,6 +144,10 @@ namespace Dope.DDXX.SceneGraph
                 Matrix m = WorldMatrix;
                 return new Vector3(m.M41, m.M42, m.M43);
             }
+            set
+            {
+                WorldState.Position = value;
+            }
         }
 
         #endregion

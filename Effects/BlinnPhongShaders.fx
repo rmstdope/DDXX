@@ -48,7 +48,7 @@ CalculateLightVectors(float4 Position,
 	if(LightType == DIRECTIONAL) {
 		output.L = LightDirection;
 	} else if(LightType == POINT) {
-		output.L = LightPosition[0] - Position;
+		output.L = LightPositions[0] - Position;
 	}
 	
 	// Normalize Light and View vectors
@@ -81,7 +81,7 @@ CalculateLightVectors_2(float4 Position,
 	if(LightType == DIRECTIONAL) {
 		output.L = LightDirection;
 	} else if(LightType == POINT) {
-		output.L = LightPosition[0] - Position;
+		output.L = LightPositions[0] - Position;
 	}
 	
 	output.L = output.L;
@@ -117,7 +117,7 @@ GetAttenuation(float4 Position,
 	if(LightType == DIRECTIONAL) {
 		output = float3(0.5f, 0.5f, 0.5f);
 	} else if(LightType == POINT) {
-		float3 lightDir = LightPosition[0] - Position;
+		float3 lightDir = LightPositions[0] - Position;
 		// Make [-LightRange..LightRange] become [0..1]
 		output = (lightDir / LightRange) * 0.5f + 0.5f;
 	}
@@ -289,12 +289,12 @@ BlinnPhongPixelShader_2_0(BlinnPhongInputPS inp,
 		float3 tex = tex2D(BaseTextureSampler, inp.TextureCoord.xy).rgb;
 		if(reflectionMapping) {
 			float3 ref = texCUBE(ReflectiveTextureSampler, inp.TextureCoord.xyx).rgb;
-			output.rgb =  lerp(tex, ref, ReflectiveFactor) * (light.Diffuse * (LightDiffuseColor[0] * MaterialDiffuseColor) + AmbientColor) + light.Specular * (LightSpecularColor[0] * MaterialSpecularColor);
+			output.rgb =  lerp(tex, ref, ReflectiveFactor) * (light.Diffuse * (LightDiffuseColors[0] * MaterialDiffuseColor) + AmbientColor) + light.Specular * (LightSpecularColors[0] * MaterialSpecularColor);
 		} else {
-			output.rgb = tex * (light.Diffuse * (LightDiffuseColor[0] * MaterialDiffuseColor) + AmbientColor) + light.Specular * (LightSpecularColor[0] * MaterialSpecularColor);
+			output.rgb = tex * (light.Diffuse * (LightDiffuseColors[0] * MaterialDiffuseColor) + AmbientColor) + light.Specular * (LightSpecularColors[0] * MaterialSpecularColor);
 		}
 	} else {
-		output.rgb = (light.Diffuse * (LightDiffuseColor[0] * MaterialDiffuseColor) + AmbientColor) + light.Specular * (LightSpecularColor[0] * MaterialSpecularColor);
+		output.rgb = (light.Diffuse * (LightDiffuseColors[0] * MaterialDiffuseColor) + AmbientColor) + light.Specular * (LightSpecularColors[0] * MaterialSpecularColor);
 	}
 
 	//if(LightType == POINT) {
