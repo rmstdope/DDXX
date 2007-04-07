@@ -9,7 +9,7 @@
 			DisplayName="Effect Builder for DX9"
 			CommandLine="fxc.exe [AllOptions] [AdditionalOptions]  /Fo&quot;$(InputName).fxo&quot; &quot;$(InputName).fx&quot;"
 			Outputs="$(InputName).fxo"
-			AdditionalDependencies="SharedVariables.hlsl;CommonFunctions.hlsl;DataTypes.hlsl;Glass.hlsl;SkyBox.hlsl"
+			AdditionalDependencies="SharedVariables.hlsl;CommonFunctions.hlsl;DataTypes.hlsl;Glass.hlsl;SkyBox.hlsl;ChessBoard.hlsl"
 			FileExtensions="*.fx"
 			ExecutionDescription="Compiling $(InputName).fx..."
 			>

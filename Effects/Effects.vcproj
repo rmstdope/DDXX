@@ -188,6 +188,10 @@
 			Filter="hlsl"
 			>
 			<File
+				RelativePath=".\ChessBoard.hlsl"
+				>
+			</File>
+			<File
 				RelativePath=".\CommonFunctions.hlsl"
 				>
 			</File>

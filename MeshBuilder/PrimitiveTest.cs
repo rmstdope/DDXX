@@ -60,6 +60,7 @@ namespace Dope.DDXX.MeshBuilder
             IModel model = primitive.CreateModel(this, this);
             CheckModel(vertices, indices, model);
             Assert.IsNotInstanceOfType(typeof(PhysicalModel), model, "Model shall not be PhysicalModel");
+            Assert.IsNotNull(model.Materials[0]);
         }
 
         /// <summary>

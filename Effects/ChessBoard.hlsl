@@ -1,4 +1,4 @@
-struct GlassVertexInput
+struct ChessVertexInput
 {
 	float4	Position					: POSITION;
 	float3	Normal						: NORMAL;
@@ -6,18 +6,18 @@ struct GlassVertexInput
 	float2	TextureCoord			: TEXCOORD0;
 };
 
-struct GlassPixelInput
+struct ChessPixelInput
 {
 	float4	Position					:	POSITION;
 	float4	Diffuse						:	COLOR0;
 	float2	TextureCoord			:	TEXCOORD0;
-	float3	ReflectionVector	: TEXCOORD2;
+	//float3	ReflectionVector	: TEXCOORD2;
 };
 
-GlassPixelInput
-GlassVertexShader(GlassVertexInput input)
+ChessPixelInput
+ChessVertexShader(ChessVertexInput input)
 {
-	GlassPixelInput output;
+	ChessPixelInput output;
 
 	// Transform the position from object space to homogeneous projection space
 	float3 positionWS = mul(input.Position, WorldT);
@@ -29,26 +29,27 @@ GlassVertexShader(GlassVertexInput input)
 		float3 lightVec = LightPositions[i] - positionWS;
 		float d = length(lightVec);
 		float attenuation = saturate(6 / (d * d));
-		output.Diffuse += LightDiffuseColors[i];// * saturate(dot(normal, normalize(lightVec))) * attenuation;
+		output.Diffuse += LightDiffuseColors[i] * saturate(dot(normal, normalize(lightVec))) * attenuation;
 	}
 	output.Diffuse *= MaterialDiffuseColor;
 	output.TextureCoord = input.TextureCoord;
-	float3 eyeVector =  positionWS - EyePosition.xyz;
-	output.ReflectionVector = reflect(eyeVector, normal);
+	//float3 eyeVector =  positionWS - EyePosition.xyz;
+	//output.ReflectionVector = reflect(eyeVector, normal);
 
 	return output;
 }
 
 float4
-GlassPixelShader(GlassPixelInput input) : COLOR0
+ChessPixelShader(ChessPixelInput input) : COLOR0
 {
-	float4 diffuse = 0.05 + 0.95 * input.Diffuse;
+	float4 diffuse = 0.03 + 0.97 * input.Diffuse;
 	float4 color = diffuse * tex2D(BaseTextureSampler, input.TextureCoord.xy);
-	float4 reflection = texCUBE(ReflectiveTextureSampler, input.ReflectionVector.xyz);
-	return lerp(color, reflection, ReflectiveFactor);
+	return color;
+	//float4 reflection = texCUBE(ReflectiveTextureSampler, input.ReflectionVector.xyz);
+	//return lerp(color, reflection, ReflectiveFactor);
 }
 
-technique GlassEffect
+technique ChessEffect
 <
 	bool NormalMapping = false;
 	bool Skinning = false;
@@ -56,15 +57,19 @@ technique GlassEffect
 {
 	pass BasePass
 	{
-		VertexShader			= compile vs_2_0 GlassVertexShader();
-		PixelShader				= compile ps_2_0 GlassPixelShader();
-		AlphaBlendEnable	= false;
+		VertexShader			= compile vs_2_0 ChessVertexShader();
+		PixelShader				= compile ps_2_0 ChessPixelShader();
+		AlphaBlendEnable	= true;
+		SrcBlend					= One;
+		DestBlend					= One;
+		BlendOp						= Add;
 		FillMode					= Solid;
 		//FillMode					= Wireframe;
 		ZEnable						=	true;
 		ZFunc							= Less;
+		ZWriteEnable			= true;
 		StencilEnable			= false;
-		CullMode					= None;
+		CullMode					= CCW;
 	}
 }
 

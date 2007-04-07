@@ -1,6 +1,7 @@
 #include <CommonFunctions.hlsl>
 #include <Glass.hlsl>
 #include <SkyBox.hlsl>
+#include <ChessBoard.hlsl>
  
 struct InputVS
 {

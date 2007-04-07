@@ -60,6 +60,8 @@ namespace Dope.DDXX.MeshBuilder
         {
             IModel model;
             IMesh mesh = CreateMesh(factory, device);
+            if (modelMaterial == null)
+                modelMaterial = new ModelMaterial(new Material());
             if (body == null)
                 model = new Model(mesh, new ModelMaterial[] { modelMaterial });
             else
