@@ -70,8 +70,13 @@ namespace Dope.DDXX.DemoEffects
                 float angle;
                 int sWidth = Device.PresentationParameters.BackBufferWidth;
                 int sHeight = Device.PresentationParameters.BackBufferHeight;
-                int tWidth = layer.Texture.GetSurfaceLevel(0).Description.Width;
-                int tHeight = layer.Texture.GetSurfaceLevel(0).Description.Height;
+                int tWidth;
+                int tHeight;
+                using (ISurface surface = layer.Texture.GetSurfaceLevel(0))
+                {
+                    tWidth = surface.Description.Width;
+                    tHeight = surface.Description.Height;
+                }
                 angle = (2.0f * (float)Math.PI * Time.StepTime) / (layer.Period);
                 sprite.Draw2D(layer.Texture, Rectangle.Empty, new SizeF(sWidth * 2.0f, sHeight * 2.0f), new PointF(tWidth / 2, tHeight / 2), angle, new PointF(sWidth / 2, sHeight / 2), layer.ColorModulation);
             }

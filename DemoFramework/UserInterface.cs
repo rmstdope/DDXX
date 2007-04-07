@@ -32,7 +32,8 @@ namespace Dope.DDXX.DemoFramework
             font = D3DDriver.GraphicsFactory.CreateFont(device, 16,  0, FontWeight.Bold,  1, false,  CharacterSet.Default, Precision.Default, FontQuality.ClearType, PitchAndFamily.DefaultPitch | PitchAndFamily.FamilyDoNotCare, "Times New Roman");
             
             whiteTexture = D3DDriver.GraphicsFactory.CreateTexture(device, 1, 1, 1, Usage.RenderTarget, Format.X8R8G8B8, Pool.Default);
-            device.ColorFill(whiteTexture.GetSurfaceLevel(0), new Rectangle(0, 0, 1, 1), Color.White);
+            using (ISurface renderTarget = whiteTexture.GetSurfaceLevel(0))
+                device.ColorFill(renderTarget, new Rectangle(0, 0, 1, 1), Color.White);
         }
 
         public void DrawControl(BaseControl control)

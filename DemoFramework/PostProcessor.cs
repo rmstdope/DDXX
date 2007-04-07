@@ -142,10 +142,13 @@ namespace Dope.DDXX.DemoFramework
 
         private void SetupProcessParameters(string technique, ITexture source, TextureID destination)
         {
-            device.SetRenderTarget(0, GetTexture(destination).GetSurfaceLevel(0));
-            effect.SetValue(sourceTextureParameter, source);
-            effect.Technique = technique;
-            device.VertexFormat = CustomVertex.TransformedTextured.Format;
+            using (ISurface renderTarget = GetTexture(destination).GetSurfaceLevel(0))
+            {
+                device.SetRenderTarget(0, renderTarget);
+                effect.SetValue(sourceTextureParameter, source);
+                effect.Technique = technique;
+                device.VertexFormat = CustomVertex.TransformedTextured.Format;
+            }
         }
 
         private void ProcessPasses(string technique, TextureID source, TextureID destination)

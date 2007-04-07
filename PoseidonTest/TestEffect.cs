@@ -80,15 +80,18 @@ namespace PoseidonTest
                 }
             }
 
-            ISurface oldTarget = demoEffect.GetDevice().GetRenderTarget(0);
-            //demoEffect.GetDevice().SetRenderTarget(0, tempTexture.GetSurfaceLevel(0));
-            demoEffect.GetDevice().SetRenderTarget(0, PostProcessor.OutputTexture.GetSurfaceLevel(0));
-            demoEffect.GetDevice().Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Blue, 1000, 0);
-            demoEffect.GetDevice().BeginScene();
-            demoEffect.RealRender();
-            demoEffect.GetDevice().EndScene();
-            demoEffect.GetDevice().SetRenderTarget(0, oldTarget);
-
+            using (ISurface oldTarget = demoEffect.GetDevice().GetRenderTarget(0))
+            {
+                using (ISurface newTarget = PostProcessor.OutputTexture.GetSurfaceLevel(0))
+                {
+                    demoEffect.GetDevice().SetRenderTarget(0, newTarget);
+                    demoEffect.GetDevice().Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Blue, 1000, 0);
+                    demoEffect.GetDevice().BeginScene();
+                    demoEffect.RealRender();
+                    demoEffect.GetDevice().EndScene();
+                    demoEffect.GetDevice().SetRenderTarget(0, oldTarget);
+                }
+            }
         }
 
     }

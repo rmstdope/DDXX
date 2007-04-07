@@ -213,45 +213,54 @@ namespace Dope.DDXX.DemoFramework
 
             //postProcessor.DebugWriteAllTextures();
 
-            ISurface source = postProcessor.OutputTexture.GetSurfaceLevel(0);
-            ISurface destination = device.GetRenderTarget(0);
-            device.StretchRectangle(source, new Rectangle(0, 0, source.Description.Width, source.Description.Height),
-                                    destination, new Rectangle(0, 0, destination.Description.Width, destination.Description.Height),
-                                    TextureFilter.None);
+            using (ISurface source = postProcessor.OutputTexture.GetSurfaceLevel(0))
+            {
+                using (ISurface destination = device.GetRenderTarget(0))
+                {
+                    device.StretchRectangle(source, new Rectangle(0, 0, source.Description.Width, source.Description.Height),
+                                            destination, new Rectangle(0, 0, destination.Description.Width, destination.Description.Height),
+                                            TextureFilter.None);
+                }
+            }
 
             device.Present();
         }
 
         private void RenderActiveTrack()
         {
-            ISurface originalTarget = device.GetRenderTarget(0);
-            device.SetRenderTarget(0, backBuffer.GetSurfaceLevel(0));
-            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Black, 1.0f, 0);
-            postProcessor.StartFrame(backBuffer);
-
-            if (tracks.Count != 0)
+            using (ISurface originalTarget = device.GetRenderTarget(0))
             {
-                IDemoEffect[] activeEffects = tracks[activeTrack].GetEffects(Time.StepTime);
-                if (activeEffects.Length != 0)
+                using (ISurface currentRenderTarget = backBuffer.GetSurfaceLevel(0))
                 {
-                    device.BeginScene();
-                    foreach (IDemoEffect effect in activeEffects)
+                    device.SetRenderTarget(0, currentRenderTarget);
+                }
+                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Black, 1.0f, 0);
+                postProcessor.StartFrame(backBuffer);
+
+                if (tracks.Count != 0)
+                {
+                    IDemoEffect[] activeEffects = tracks[activeTrack].GetEffects(Time.StepTime);
+                    if (activeEffects.Length != 0)
                     {
-                        effect.Render();
+                        device.BeginScene();
+                        foreach (IDemoEffect effect in activeEffects)
+                        {
+                            effect.Render();
+                        }
+                        device.EndScene();
                     }
-                    device.EndScene();
+
+                    IDemoPostEffect[] activePostEffects = tracks[activeTrack].GetPostEffects(Time.StepTime);
+                    foreach (IDemoPostEffect postEffect in activePostEffects)
+                    {
+                        postEffect.Render();
+                    }
                 }
 
-                IDemoPostEffect[] activePostEffects = tracks[activeTrack].GetPostEffects(Time.StepTime);
-                foreach (IDemoPostEffect postEffect in activePostEffects)
-                {
-                    postEffect.Render();
-                }
+                tweaker.Draw();
+
+                device.SetRenderTarget(0, originalTarget);
             }
-
-            tweaker.Draw();
-
-            device.SetRenderTarget(0, originalTarget);
         }
 
 

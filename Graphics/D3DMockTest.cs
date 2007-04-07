@@ -74,6 +74,8 @@ namespace Dope.DDXX.Graphics
             Stub.On(device).
                 GetProperty("RenderState").
                 Will(Return.Value(renderStateManager));
+            Stub.On(surface).
+                Method("Dispose");
 
             D3DDriver.GraphicsFactory = factory;
             D3DDriver.TextureFactory = textureFactory;
