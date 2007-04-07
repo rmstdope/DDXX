@@ -11,5 +11,10 @@ namespace Dope.DDXX.Graphics
         bool IsSkinned();
         void Draw(IEffectHandler effectHandler, ColorValue ambient, Matrix world, Matrix view, Matrix projection);
         void Step();
+        /// <summary>
+        /// Clones the materials of the Model. The Mesh still remains the same Mesh for time being.
+        /// </summary>
+        /// <returns>The clones IModel.</returns>
+        IModel Clone();
     }
 }

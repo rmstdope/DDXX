@@ -52,5 +52,14 @@ namespace Dope.DDXX.Graphics
         }
 
         public override void Step() { }
+
+        public override IModel Clone()
+        {
+            ModelMaterial[] newMaterials = new ModelMaterial[Materials.Length];
+            for (int i = 0; i < Materials.Length; i++)
+                newMaterials[i] = Materials[i].Clone();
+            IModel newModel = new Model(Mesh, newMaterials);
+            return newModel;
+        }
     }
 }

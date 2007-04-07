@@ -45,6 +45,11 @@ namespace Dope.DDXX.Graphics
 
         public abstract void Step();
 
+        public virtual IModel Clone()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
         #endregion
     }
 }

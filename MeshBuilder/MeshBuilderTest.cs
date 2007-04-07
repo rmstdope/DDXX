@@ -2097,5 +2097,15 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         #endregion
+
+        #region IModel Members
+
+
+        public IModel Clone()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
     }
 }

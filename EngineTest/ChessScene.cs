@@ -27,13 +27,13 @@ namespace EngineTest
             base.Initialize();
 
             scene = new Scene();
-            IModel whiteModel = ModelFactory.FromFile("ChamferBox1.X", ModelOptions.None);
-            IModel blackModel = ModelFactory.FromFile("ChamferBox2.X", ModelOptions.None);
+            IModel whiteModel = ModelFactory.FromFile("ChamferBox.X", ModelOptions.None);
+            IModel blackModel = whiteModel.Clone();
             whiteModel.Materials[0].ReflectiveTexture = TextureFactory.CreateCubeFromFile("rnl_cross.dds");
-            whiteModel.Materials[0].ReflectiveFactor = 0.01f;
+            whiteModel.Materials[0].ReflectiveFactor = 0.02f;
             whiteModel.Materials[0].DiffuseColor = ColorValue.FromColor(Color.White);
             blackModel.Materials[0].ReflectiveTexture = TextureFactory.CreateCubeFromFile("rnl_cross.dds");
-            blackModel.Materials[0].ReflectiveFactor = 0;
+            blackModel.Materials[0].ReflectiveFactor = 0.002f;
             blackModel.Materials[0].DiffuseColor = ColorValue.FromColor(Color.Black);
             for (int y = 0; y < 8; y++)
             {

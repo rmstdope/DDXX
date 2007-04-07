@@ -74,6 +74,37 @@ namespace Dope.DDXX.Graphics
             Assert.AreEqual(texture, model.Materials[1].DiffuseTexture);
         }
 
+        /// <summary>
+        /// Test that a model can be cloned, or rather that the materials get cloned.
+        /// </summary>
+        [Test]
+        public void CloneTest()
+        {
+            ConstructorTest();
+
+            IModel newModel = model.Clone();
+            Assert.AreNotSame(model, newModel);
+            CompareModelMaterials(newModel, model);
+            Assert.AreSame(model.Mesh, newModel.Mesh);
+        }
+
+        private void CompareModelMaterials(IModel model1, IModel model2)
+        {
+            Assert.AreEqual(model2.Materials.Length, model1.Materials.Length);
+            Assert.AreNotSame(model2.Materials, model1.Materials);
+            for (int i = 0; i < model2.Materials.Length; i++)
+            {
+                Assert.AreNotSame(model2.Materials[i], model1.Materials[i]);
+                Assert.AreEqual(model2.Materials[i].Ambient, model1.Materials[i].Ambient);
+                Assert.AreEqual(model2.Materials[i].Diffuse, model1.Materials[i].Diffuse);
+                Assert.AreEqual(model2.Materials[i].Specular, model1.Materials[i].Specular);
+                Assert.AreEqual(model2.Materials[i].DiffuseTexture, model1.Materials[i].DiffuseTexture);
+                Assert.AreEqual(model2.Materials[i].NormalTexture, model1.Materials[i].NormalTexture);
+                Assert.AreEqual(model2.Materials[i].ReflectiveTexture, model1.Materials[i].ReflectiveTexture);
+                Assert.AreEqual(model2.Materials[i].ReflectiveFactor, model1.Materials[i].ReflectiveFactor);
+            }
+        }
+
         class MaterialMatcher : Matcher
         {
             private ExtendedMaterial material;
