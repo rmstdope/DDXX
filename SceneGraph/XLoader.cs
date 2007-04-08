@@ -40,20 +40,20 @@ namespace Dope.DDXX.SceneGraph
 
         public void AddToScene(IScene scene)
         {
-            scene.AddNode(AddToScene(rootFrame.FrameHierarchy, null, scene));
+            scene.AddNode(AddToScene(rootFrame.FrameHierarchy, null));
             scene.HandleHierarchy(rootFrame);
         }
 
-        private INode AddToScene(IFrame frame, INode parentNode, IScene scene)
+        private INode AddToScene(IFrame frame, INode parentNode)
         {
             INode node = CreateNode(frame);
             if (frame.FrameFirstChild != null)
             {
-                node.AddChild(AddToScene(frame.FrameFirstChild, node, scene));
+                node.AddChild(AddToScene(frame.FrameFirstChild, node));
             }
             if (frame.FrameSibling != null)
             {
-                parentNode.AddChild(AddToScene(frame.FrameSibling, parentNode, scene));
+                parentNode.AddChild(AddToScene(frame.FrameSibling, parentNode));
             }
             return node;
         }

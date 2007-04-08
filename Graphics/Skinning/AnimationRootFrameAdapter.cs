@@ -18,7 +18,12 @@ namespace Dope.DDXX.Graphics.Skinning
 
         public IAnimationController AnimationController
         {
-            get { return new AnimationControllerAdapter(animationRootFrame.AnimationController); }
+            get 
+            { 
+                if (animationRootFrame.AnimationController != null)
+                    return new AnimationControllerAdapter(animationRootFrame.AnimationController);
+                return null;
+            }
         }
 
         public IFrame FrameHierarchy

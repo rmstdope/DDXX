@@ -37,8 +37,27 @@ namespace EngineTest
 
             CreatePlane();
             CreateChessBoard();
+            CreatePieces();
             CreateCamera();
             CreateLights();
+        }
+
+        private void CreatePieces()
+        {
+            IModel kingModel = ModelFactory.FromFile("King.X", ModelOptions.None);
+            kingModel.Materials[0].ReflectiveTexture = TextureFactory.CreateCubeFromFile("rnl_cross.dds");
+            kingModel.Materials[0].ReflectiveFactor = 0.02f;
+            kingModel.Materials[0].DiffuseColor = new ColorValue(0.3f, 0.3f, 0.3f);
+            ModelNode kingNode = new ModelNode("King", kingModel,
+                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Glass", kingModel));
+            scene.AddNode(kingNode);
+            ModelNode kingMirrorNode = CreateMirrorNode(kingNode);
+            scene.AddNode(kingMirrorNode);
+            kingNode.WorldState.MoveRight(1.9f * 3);
+            kingMirrorNode.WorldState.MoveRight(1.9f * 3);
+
+            XLoader.Load("ChessPieces.x", EffectFactory.CreateFromFile("Test.fxo"), "Glass");
+            XLoader.AddToScene(scene);
         }
 
         private void CreatePlane()
@@ -49,18 +68,25 @@ namespace EngineTest
             builder.SetReflectiveTexture("Default1", "rnl_cross.dds");
             builder.SetReflectiveFactor("Default1", 0.02f);
             IModel boxModel = builder.CreateModel("Box");
-            IModel mirrorModel = boxModel.Clone();
             boxModel.Materials[0].Diffuse = Color.DarkGray;
-            mirrorModel.Materials[0].Diffuse = Color.DarkGray;
-            mirrorModel.Materials[0].ReflectiveFactor = 0.0f;
             planeNode = new ModelNode("Box", boxModel,
                 new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Glass", boxModel));
-            mirrorNode = new ModelNode("Box", mirrorModel,
-                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Glass", mirrorModel));
+            scene.AddNode(planeNode);
+            mirrorNode = CreateMirrorNode(planeNode);
+            scene.AddNode(mirrorNode);
             planeNode.WorldState.MoveUp(1.5f);
             mirrorNode.WorldState.MoveUp(-1.5f);
-            scene.AddNode(planeNode);
-            scene.AddNode(mirrorNode);
+        }
+
+        private ModelNode CreateMirrorNode(ModelNode originalNode)
+        {
+            IModel mirrorModel = originalNode.Model.Clone();
+            mirrorModel.Materials[0].Diffuse = Color.DarkGray;
+            mirrorModel.Materials[0].ReflectiveFactor = 0.0f;
+            ModelNode mirrorNode = new ModelNode("Box", mirrorModel,
+                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Glass", mirrorModel));
+            mirrorNode.WorldState.Scale(new Vector3(1, -1, 1));
+            return mirrorNode;
         }
 
         private void CreateLights()
@@ -115,8 +141,8 @@ namespace EngineTest
             MoveCamera();
             MoveLights();
 
-            planeNode.WorldState.Tilt(Time.DeltaTime);
-            mirrorNode.WorldState.Tilt(Time.DeltaTime);
+            //planeNode.WorldState.Tilt(Time.DeltaTime);
+            //mirrorNode.WorldState.Tilt(Time.DeltaTime);
 
             scene.Step();
         }
@@ -136,8 +162,8 @@ namespace EngineTest
         {
             float t = Time.CurrentTime;
             camera.WorldState.Position =
-                new Vector3(15 * (float)Math.Sin(t),
-                3, 15 * (float)Math.Cos(t));
+                new Vector3(10 * (float)Math.Sin(t),
+                3, 10 * (float)Math.Cos(t));
             camera.WorldState.Rotation = Quaternion.RotationYawPitchRoll((float)Math.PI + t, 0, 0);
         }
 
