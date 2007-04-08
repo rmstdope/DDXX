@@ -31,6 +31,7 @@ ChessVertexShader(ChessVertexInput input)
 		float attenuation = saturate(6 / (d * d));
 		output.Diffuse += LightDiffuseColors[i] * saturate(dot(normal, normalize(lightVec))) * attenuation;
 	}
+	//output.Diffuse.a = 1;
 	output.Diffuse *= MaterialDiffuseColor;
 	output.TextureCoord = input.TextureCoord;
 	//float3 eyeVector =  positionWS - EyePosition.xyz;
@@ -61,7 +62,7 @@ technique ChessEffect
 		PixelShader				= compile ps_2_0 ChessPixelShader();
 		AlphaBlendEnable	= true;
 		SrcBlend					= One;
-		DestBlend					= One;
+		DestBlend					= SrcAlpha;
 		BlendOp						= Add;
 		FillMode					= Solid;
 		//FillMode					= Wireframe;

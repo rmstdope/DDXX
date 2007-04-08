@@ -51,7 +51,7 @@ namespace EngineTest
             IModel boxModel = builder.CreateModel("Box");
             IModel mirrorModel = boxModel.Clone();
             boxModel.Materials[0].Diffuse = Color.DarkGray;
-            mirrorModel.Materials[0].Diffuse = Color.Black;
+            mirrorModel.Materials[0].Diffuse = Color.DarkGray;
             mirrorModel.Materials[0].ReflectiveFactor = 0.0f;
             planeNode = new ModelNode("Box", boxModel,
                 new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Glass", boxModel));
@@ -66,10 +66,10 @@ namespace EngineTest
         private void CreateLights()
         {
             lightNodes[0] = new PointLightNode("Light0");
-            lightNodes[0].DiffuseColor = new ColorValue(0.8f, 0.6f, 0.2f);
+            lightNodes[0].DiffuseColor = new ColorValue(0.8f, 0.6f, 0.2f, 1.0f);
             scene.AddNode(lightNodes[0]);
             lightNodes[1] = new PointLightNode("Light1");
-            lightNodes[1].DiffuseColor = new ColorValue(0.8f, 0.8f, 0.4f);
+            lightNodes[1].DiffuseColor = new ColorValue(0.8f, 0.8f, 0.4f, 1.0f);
             scene.AddNode(lightNodes[1]);
         }
 
