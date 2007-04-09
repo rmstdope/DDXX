@@ -36,11 +36,15 @@ namespace EngineTest
                 Normal = new Vector3();
                 U = 0;
                 V = 0;
+                BiNormal = new Vector3();
+                Tangent = new Vector3();
             }
             public Vector3 Position;
             public Vector3 Normal;
             public float U;
             public float V;
+            public Vector3 BiNormal;
+            public Vector3 Tangent;
         }
 
         public CreationScene(float startTime, float endTime)
@@ -67,12 +71,12 @@ namespace EngineTest
             model = new Model(lineMesh);
             node = new ModelNode("LineTiVi", model,
                 new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Line", null));
-            //node.WorldState.Tilt(-(float)Math.PI / 2);
-            node.WorldState.MoveUp(-2);
+            node.WorldState.MoveUp(-1);
+            node.WorldState.Tilt(-(float)Math.PI / 2);
             scene.AddNode(node);
 
             CameraNode camera = new CameraNode("Camera");
-            camera.WorldState.MoveForward(-6);
+            camera.WorldState.MoveForward(-3);
             scene.AddNode(camera);
             scene.ActiveCamera = camera;
         }
@@ -94,10 +98,10 @@ namespace EngineTest
 
         private void GenerateModel()
         {
-            IModel model = ModelFactory.FromFile("king.X", ModelOptions.None);
+            IModel model = ModelFactory.FromFile("tivi.X", ModelOptions.None);
             IMesh mesh = model.Mesh;
             int[] adia = new int[mesh.NumberFaces * 3];
-            mesh.GenerateAdjacency(0.1f, adia);
+            mesh.GenerateAdjacency(0.01f, adia);
             mesh.WeldVertices(WeldEpsilonsFlags.WeldAll, new WeldEpsilons(), adia);
             IGraphicsStream stream = mesh.LockIndexBuffer(LockFlags.ReadOnly);
             short[] indices = (short[])stream.Read(typeof(short), new int[] { mesh.NumberFaces * 3 });
@@ -159,7 +163,7 @@ namespace EngineTest
                 if (e.V1 == vertex)
                 {
                     e.StartTime = t;
-                    e.Length = 0.1f + (float)(random.NextDouble() * 0.2f);
+                    e.Length = 0.4f + (float)(random.NextDouble() * 0.3f);
                     dstList.Add(e);
                     srcList.Remove(e);
                 }
