@@ -124,6 +124,8 @@
     <Compile Include="TextureAdapter.cs" />
     <Compile Include="TextureFactory.cs" />
     <Compile Include="TextureFactoryTest.cs" />
+    <Compile Include="UnindexedMesh.cs" />
+    <Compile Include="UnindexedMeshTest.cs" />
     <Compile Include="VertexBufferAdapter.cs" />
     <Compile Include="VertexElementArray.cs" />
     <Compile Include="VertexElementArrayTest.cs" />

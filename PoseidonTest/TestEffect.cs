@@ -327,7 +327,7 @@ namespace PoseidonTest
 
         private void SetBoxCoordinates(IMesh texturedMesh, float zOffset)
         {
-            using (VertexBuffer vb = texturedMesh.VertexBuffer)
+            using (IVertexBuffer vb = texturedMesh.VertexBuffer)
             {
                 CustomVertex.PositionNormalTextured[] verts =
                     (CustomVertex.PositionNormalTextured[])

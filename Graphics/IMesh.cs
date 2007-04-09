@@ -8,7 +8,7 @@ using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.Graphics
 {
-    public interface IMesh
+    public interface IMesh : IDisposable
     {
         // Summary:
         //     Retrieves a declaration that describes the vertices in a mesh.
@@ -21,11 +21,6 @@ namespace Dope.DDXX.Graphics
         // Summary:
         //     Gets a value that indicates whether the object is disposed.
         bool Disposed { get; }
-        //
-        // Summary:
-        //     Immediately releases the unmanaged resources used by the Microsoft.DirectX.Direct3D.Mesh
-        //     object.
-        void Dispose();
         //
         // Summary:
         //     Retrieves the data in an index buffer.
@@ -53,7 +48,7 @@ namespace Dope.DDXX.Graphics
         //
         // Summary:
         //     Retrieves the vertex buffer of a mesh.
-        VertexBuffer VertexBuffer { get; }
+        IVertexBuffer VertexBuffer { get; }
         //
         // Summary:
         //     Retrieves the vertex format that describes the contents of vertices.

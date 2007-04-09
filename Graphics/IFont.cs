@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace Dope.DDXX.Graphics
 {
-    public interface IFont
+    public interface IFont : IDisposable
     {
         // Summary:
         //     Retrieves a description of the current font object.

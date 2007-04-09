@@ -8,7 +8,7 @@ using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.Graphics
 {
-    public interface IDevice
+    public interface IDevice : IDisposable
     {
         // Summary:
         //     Retrieves an estimate of the amount of available texture memory.
@@ -431,11 +431,6 @@ namespace Dope.DDXX.Graphics
         //   handle:
         //     Handle of the cached high-order patch to delete.
         void DeletePatch(int handle);
-        //
-        // Summary:
-        //     Immediately releases the unmanaged resources used by the Microsoft.DirectX.Direct3D.Device
-        //     object.
-        void Dispose();
         //
         // Summary:
         //     Renders the specified geometric primitive, based on indexing into an array

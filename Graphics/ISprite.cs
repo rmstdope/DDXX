@@ -7,7 +7,7 @@ using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.Graphics
 {
-    public interface ISprite
+    public interface ISprite : IDisposable
     {
         // Summary:
         //     Retrieves the Microsoft Direct3D device associated with a sprite object.
@@ -28,11 +28,6 @@ namespace Dope.DDXX.Graphics
         //     Combination of zero or more values from the Microsoft.DirectX.Direct3D.SpriteFlags
         //     enumeration that describe sprite rendering options.
         void Begin(SpriteFlags flags);
-        //
-        // Summary:
-        //     Immediately releases the unmanaged resources used by the Microsoft.DirectX.Direct3D.Sprite
-        //     object.
-        void Dispose();
         //
         // Summary:
         //     Adds a sprite to the list of batched sprites.

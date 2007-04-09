@@ -529,9 +529,9 @@ namespace Dope.DDXX.Graphics
             get { return mesh.Options; }
         }
 
-        public VertexBuffer VertexBuffer
+        public IVertexBuffer VertexBuffer
         {
-            get { return mesh.VertexBuffer; }
+            get { return new VertexBufferAdapter(mesh.VertexBuffer); }
         }
 
         public VertexFormats VertexFormat

@@ -103,5 +103,14 @@ namespace Dope.DDXX.Graphics
         }
 
         #endregion
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            font.Dispose();
+        }
+
+        #endregion
     }
 }

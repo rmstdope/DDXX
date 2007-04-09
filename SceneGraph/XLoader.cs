@@ -7,7 +7,7 @@ using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.SceneGraph
 {
-    public class XLoader : Dope.DDXX.SceneGraph.IXLoader
+    public class XLoader : IXLoader
     {
         private DdxxAllocateHierarchy allocateHierarchy = new DdxxAllocateHierarchy();
         private IAnimationRootFrame rootFrame;

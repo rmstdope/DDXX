@@ -6,7 +6,7 @@ using Microsoft.DirectX;
 
 namespace Dope.DDXX.Graphics
 {
-    public interface IGraphicsStream
+    public interface IGraphicsStream : IDisposable
     {
         // Summary:
         //     Retrieves a value that indicates whether the current stream supports reading.
@@ -30,10 +30,6 @@ namespace Dope.DDXX.Graphics
         // Summary:
         //     Closes the current stream and releases any resources associated with it.
         void Close();
-        //
-        // Summary:
-        //     Immediately releases the unmanaged resources used by an object.
-        void Dispose();
         //
         // Summary:
         //     Reads from the current stream and advances the position within it by the

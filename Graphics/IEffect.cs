@@ -6,7 +6,7 @@ using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.Graphics
 {
-    public interface IEffect
+    public interface IEffect : IDisposable
     {
         // Summary:
         //     Retrieves an the number of parameters in an effect description.
@@ -108,11 +108,6 @@ namespace Dope.DDXX.Graphics
         // Returns:
         //     A string that contains the disassembled effect.
         string Disassemble(bool enableColorCode);
-        //
-        // Summary:
-        //     Immediately releases the unmanaged resources used by the Microsoft.DirectX.Direct3D.Effect
-        //     object.
-        void Dispose();
         //
         // Summary:
         //     Ends the application of the current effect technique.

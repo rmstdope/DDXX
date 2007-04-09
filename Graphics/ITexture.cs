@@ -8,7 +8,7 @@ using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.Graphics
 {
-    public interface ITexture : IBaseTexture
+    public interface ITexture : IBaseTexture, IDisposable
     {
         // Summary:
         //     Gets a value that indicates whether the object is disposed.

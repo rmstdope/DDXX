@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace Dope.DDXX.Graphics
 {
-    public interface ICubeTexture : IBaseTexture
+    public interface ICubeTexture : IBaseTexture, IDisposable
     {
         // Summary:
         //     Adds a dirty region to a cube texture resource.

@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace Dope.DDXX.Graphics
 {
-    public interface ILine
+    public interface ILine : IDisposable
     {
         // Summary:
         //     Retrieves or sets the antialiasing switch value for a line.

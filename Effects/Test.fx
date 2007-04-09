@@ -80,8 +80,8 @@ NormalMappingPixelShader(NormalMappingInputPS input) : COLOR0
 struct TestStruct
 {
 	float4	Position			:	POSITION;
-	float2	TextureCoord	:	TEXCOORD0;
-	float		Light					:	TEXCOORD1;
+	//float2	TextureCoord	:	TEXCOORD0;
+	//float		Light					:	TEXCOORD1;
 };
 
 TestStruct
@@ -91,39 +91,33 @@ TestVertexShader(InputVS input)
 
 	// Transform the position from object space to homogeneous projection space
 	output.Position = mul(input.Position, WorldViewProjectionT);
-	float3 normal = normalize(mul(input.Normal, WorldT));
-	output.Light = abs(dot(normal, normalize(float3(0, 0, -1))));
-	output.Light = output.Light * output.Light;
-	output.TextureCoord = input.TextureCoord;
+	//float3 normal = normalize(mul(input.Normal, WorldT));
+	//output.Light = abs(dot(normal, normalize(float3(0, 0, -1))));
+	//output.Light = output.Light * output.Light;
+	//output.TextureCoord = input.TextureCoord;
 	return output;
 }
 
 float4
 TestPixelShader(TestStruct input) : COLOR0
 {
-	float diffuse = 0.1f + 0.9f * input.Light;
-	return diffuse * tex2D(BaseTextureSampler, input.TextureCoord.xy);
+	//float diffuse = 0.1f + 0.9f * input.Light;
+	return 1;//diffuse * tex2D(BaseTextureSampler, input.TextureCoord.xy);
 }
 
 
 
 technique Test
-<
-	bool NormalMapping = false;
-	bool Skinning = false;
->
 {
 	pass BasePass
 	{
 		VertexShader			= compile vs_2_0 TestVertexShader();
 		PixelShader				= compile ps_2_0 TestPixelShader();
-		AlphaBlendEnable	= false;//true;
-		FillMode					= Solid;//<FillMode>;
-		ZEnable						=	true;
+		AlphaBlendEnable	= false;
+		FillMode					= Solid;
+		ZEnable						=	false;
 		ZFunc							= Less;
-		StencilEnable			= false; //true;
-		StencilFunc				= Equal;
-		StencilPass				= Incr;
+		StencilEnable			= false;
 		CullMode					= None;
 	}
 }

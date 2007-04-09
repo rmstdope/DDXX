@@ -6,7 +6,7 @@ using Microsoft.DirectX;
 
 namespace Dope.DDXX.Graphics
 {
-    public interface IVertexBuffer
+    public interface IVertexBuffer : IDisposable
     {
         // Summary:
         //     Retrieves a description of the vertex buffer resource.

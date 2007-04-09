@@ -202,7 +202,7 @@ namespace Dope.DDXX.SceneGraph
             get { throw new Exception("The method or operation is not implemented."); }
         }
 
-        public Microsoft.DirectX.Direct3D.VertexBuffer VertexBuffer
+        public IVertexBuffer VertexBuffer
         {
             get { throw new Exception("The method or operation is not implemented."); }
         }
