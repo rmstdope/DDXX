@@ -67,11 +67,12 @@ namespace EngineTest
             model = new Model(lineMesh);
             node = new ModelNode("LineTiVi", model,
                 new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Line", null));
-            node.WorldState.Tilt(-(float)Math.PI / 2);
+            //node.WorldState.Tilt(-(float)Math.PI / 2);
+            node.WorldState.MoveUp(-2);
             scene.AddNode(node);
 
             CameraNode camera = new CameraNode("Camera");
-            camera.WorldState.MoveForward(-600);
+            camera.WorldState.MoveForward(-6);
             scene.AddNode(camera);
             scene.ActiveCamera = camera;
         }
@@ -93,11 +94,11 @@ namespace EngineTest
 
         private void GenerateModel()
         {
-            IModel model = ModelFactory.FromFile("tiny.X", ModelOptions.None);
+            IModel model = ModelFactory.FromFile("king.X", ModelOptions.None);
             IMesh mesh = model.Mesh;
-            WeldEpsilons epsilon = new WeldEpsilons();
-            epsilon.Position = 0.01f;
-            mesh.WeldVertices(WeldEpsilonsFlags.WeldAll, epsilon, null);
+            int[] adia = new int[mesh.NumberFaces * 3];
+            mesh.GenerateAdjacency(0.1f, adia);
+            mesh.WeldVertices(WeldEpsilonsFlags.WeldAll, new WeldEpsilons(), adia);
             IGraphicsStream stream = mesh.LockIndexBuffer(LockFlags.ReadOnly);
             short[] indices = (short[])stream.Read(typeof(short), new int[] { mesh.NumberFaces * 3 });
             mesh.UnlockIndexBuffer();
@@ -127,16 +128,22 @@ namespace EngineTest
             GetEdges(undrawnEdges, drawingEdges, startVertex, 0);
             while (drawingEdges.Count != 0)
             {
-                drawingEdges.Sort(delegate(Edge e1, Edge e2)
-                {
-                    return Comparer<float>.Default.Compare(e1.StartTime, e2.StartTime);
-                });
+                SortEdges(drawingEdges);
                 Edge e = drawingEdges[0];
                 drawingEdges.RemoveAt(0);
                 drawnEdges.Add(e);
                 GetEdges(undrawnEdges, drawingEdges, e.V2, e.StartTime + e.Length);
             }
+            SortEdges(drawnEdges);
             return drawnEdges;
+        }
+
+        private void SortEdges(List<Edge> edges)
+        {
+            edges.Sort(delegate(Edge e1, Edge e2)
+            {
+                return Comparer<float>.Default.Compare(e1.StartTime, e2.StartTime);
+            });
         }
 
         private void GetEdges(List<Edge> srcList, List<Edge> dstList, int vertex, float t)
