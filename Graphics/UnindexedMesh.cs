@@ -10,15 +10,31 @@ namespace Dope.DDXX.Graphics
     {
         private IVertexBuffer vertexBuffer;
         private IDevice device;
-        private int numVertices;
+        private int numberVertices;
+        private int numberActiveVertices;
 
         public UnindexedMesh(IGraphicsFactory graphicsFactory, Type vertexType, int numVerts, 
             IDevice device, Usage usage, VertexFormats vertexFormat, Pool pool)
         {
             this.device = device;
-            this.numVertices = numVerts;
+            this.numberActiveVertices = numVerts;
+            this.numberVertices = numVerts;
             vertexBuffer = graphicsFactory.CreateVertexBuffer(vertexType, 
                 numVerts, device, usage, vertexFormat, pool);
+        }
+
+        public int NumberActiveVertices
+        {
+            get { return numberActiveVertices; }
+            set 
+            {
+                if (value < 0)
+                    throw new DDXXException("NumberActiveVertices can not be lesser than zero.");
+                if (value > numberVertices)
+                    throw new DDXXException("NumberActiveVertices can not be larger than " +
+                        numberVertices + ".");
+                numberActiveVertices = value; 
+            }
         }
 
         #region IMesh Members
@@ -60,7 +76,7 @@ namespace Dope.DDXX.Graphics
 
         public int NumberVertices
         {
-            get { throw new Exception("The method or operation is not implemented."); }
+            get { return numberVertices; }
         }
 
         public MeshOptions Options
@@ -152,8 +168,9 @@ namespace Dope.DDXX.Graphics
         {
             if (attributeID != 0)
                 throw new DDXXException("AttributeID must be zero in DrawSubset for UnindexedMesh.");
+            device.VertexFormat = vertexBuffer.Description.VertexFormat;
             device.SetStreamSource(0, vertexBuffer, 0);
-            device.DrawPrimitives(PrimitiveType.LineList, 0, numVertices / 2);
+            device.DrawPrimitives(PrimitiveType.LineList, 0, numberActiveVertices / 2);
         }
 
         public void GenerateAdjacency(float epsilon, int[] adjacency)

@@ -91,6 +91,7 @@ TestVertexShader(InputVS input)
 
 	// Transform the position from object space to homogeneous projection space
 	output.Position = mul(input.Position, WorldViewProjectionT);
+	//output.Position = 0;
 	//float3 normal = normalize(mul(input.Normal, WorldT));
 	//output.Light = abs(dot(normal, normalize(float3(0, 0, -1))));
 	//output.Light = output.Light * output.Light;
@@ -105,9 +106,7 @@ TestPixelShader(TestStruct input) : COLOR0
 	return 1;//diffuse * tex2D(BaseTextureSampler, input.TextureCoord.xy);
 }
 
-
-
-technique Test
+technique LineTest
 {
 	pass BasePass
 	{

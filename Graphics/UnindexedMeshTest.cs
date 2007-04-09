@@ -15,7 +15,8 @@ namespace Dope.DDXX.Graphics
         private int numVerts;
         private IDevice device;
         private Usage usage;
-        private VertexFormats vertexFormats;
+        private VertexFormats vertexFormatsSet;
+        private VertexFormats vertexFormatsGet;
         private Pool pool;
         private int streamNumber;
         private IVertexBuffer streamData;
@@ -34,7 +35,8 @@ namespace Dope.DDXX.Graphics
             numVerts = -1;
             device = null;
             usage = Usage.None;
-            vertexFormats = VertexFormats.None;
+            vertexFormatsSet = VertexFormats.None;
+            vertexFormatsGet = VertexFormats.None;
             pool = Pool.Scratch;
             streamNumber = -1;
             streamData = null;
@@ -56,7 +58,7 @@ namespace Dope.DDXX.Graphics
             Assert.AreEqual(10, numVerts);
             Assert.AreSame(this, device);
             Assert.AreEqual(Usage.WriteOnly, usage);
-            Assert.AreEqual(VertexFormats.PointSize, vertexFormats);
+            Assert.AreEqual(VertexFormats.PointSize, vertexFormatsSet);
             Assert.AreEqual(Pool.Default, pool);
             Assert.AreSame(this, mesh.VertexBuffer);
         }
@@ -70,7 +72,7 @@ namespace Dope.DDXX.Graphics
             Assert.AreEqual(1, numVerts);
             Assert.AreSame(this, device);
             Assert.AreEqual(Usage.SoftwareProcessing, usage);
-            Assert.AreEqual(VertexFormats.Normal, vertexFormats);
+            Assert.AreEqual(VertexFormats.Normal, vertexFormatsSet);
             Assert.AreEqual(Pool.Managed, pool);
             Assert.AreSame(this, mesh.VertexBuffer);
         }
@@ -78,6 +80,7 @@ namespace Dope.DDXX.Graphics
         [Test]
         public void TestDrawSubsetOK()
         {
+            vertexFormatsGet = VertexFormats.LastBetaUByte4;
             TestConstructor10Vertices();
             mesh.DrawSubset(0);
             Assert.AreEqual(0, streamNumber);
@@ -86,6 +89,7 @@ namespace Dope.DDXX.Graphics
             Assert.AreEqual(PrimitiveType.LineList, primitiveType);
             Assert.AreEqual(0, startVertex);
             Assert.AreEqual(5, primitiveCount);
+            Assert.AreEqual(VertexFormats.LastBetaUByte4, vertexFormatsSet);
         }
 
         [Test]
@@ -104,6 +108,45 @@ namespace Dope.DDXX.Graphics
         {
             TestConstructor10Vertices();
             mesh.SetVertexBufferData(this, LockFlags.NoSystemLock);
+        }
+
+        [Test]
+        public void TestActiveVerticesDraw()
+        {
+            TestConstructor10Vertices();
+            mesh.NumberActiveVertices = 2;
+            mesh.DrawSubset(0);
+            Assert.AreEqual(1, primitiveCount);
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestActiveVerticesTooLow()
+        {
+            TestConstructor10Vertices();
+            mesh.NumberActiveVertices = -1;
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestActiveVerticesTooHigh()
+        {
+            TestConstructor10Vertices();
+            mesh.NumberActiveVertices = 11;
+        }
+
+        [Test]
+        public void TestNumberVertices10()
+        {
+            TestConstructor10Vertices();
+            Assert.AreEqual(10, mesh.NumberVertices);
+        }
+
+        [Test]
+        public void TestNumberVertices1()
+        {
+            TestConstructor1Vertex();
+            Assert.AreEqual(1, mesh.NumberVertices);
         }
 
         #region IGraphicsFactory Members
@@ -210,7 +253,7 @@ namespace Dope.DDXX.Graphics
             this.numVerts = numVerts;
             this.device = device;
             this.usage = usage;
-            this.vertexFormats = vertexFormat;
+            this.vertexFormatsSet = vertexFormat;
             this.pool = pool;
             return this;
         }
@@ -244,9 +287,14 @@ namespace Dope.DDXX.Graphics
 
         #region IVertexBuffer Members
 
-        public Microsoft.DirectX.Direct3D.VertexBufferDescription Description
+        public VertexBufferDescription Description
         {
-            get { throw new Exception("The method or operation is not implemented."); }
+            get 
+            {
+                VertexBufferDescription desc = new VertexBufferDescription();
+                desc.VertexFormat = vertexFormatsGet;
+                return desc;
+            }
         }
 
         public bool Disposed
@@ -292,7 +340,6 @@ namespace Dope.DDXX.Graphics
 
         public void Dispose()
         {
-            throw new Exception("The method or operation is not implemented.");
         }
 
         #endregion
@@ -484,7 +531,7 @@ namespace Dope.DDXX.Graphics
             }
         }
 
-        public Microsoft.DirectX.Direct3D.VertexFormats VertexFormat
+        public VertexFormats VertexFormat
         {
             get
             {
@@ -492,7 +539,7 @@ namespace Dope.DDXX.Graphics
             }
             set
             {
-                throw new Exception("The method or operation is not implemented.");
+                vertexFormatsSet = value;
             }
         }
 
