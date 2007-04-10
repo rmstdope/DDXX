@@ -41,8 +41,8 @@ namespace EngineTest
                 Normal = new Vector3();
                 U = 0;
                 V = 0;
-                BiNormal = new Vector3();
-                Tangent = new Vector3();
+                //BiNormal = new Vector3();
+                //Tangent = new Vector3();
             }
             public Vector3 Position;
             public float BlendWeight1;
@@ -52,8 +52,8 @@ namespace EngineTest
             public Vector3 Normal;
             public float U;
             public float V;
-            public Vector3 BiNormal;
-            public Vector3 Tangent;
+            //public Vector3 BiNormal;
+            //public Vector3 Tangent;
         }
 
         public CreationScene(float startTime, float endTime)
@@ -136,7 +136,7 @@ namespace EngineTest
             lineVertices = new Vertex[edges.Count * 2];
 
             lineMesh = new UnindexedMesh(D3DDriver.GraphicsFactory, typeof(Vertex), lineVertices.Length, //undrawnEdges.Count * 2,
-                D3DDriver.GetInstance().Device, Usage.WriteOnly | Usage.Dynamic, VertexFormats.PositionBlend4 | VertexFormats.LastBetaUByte4, Pool.Default);
+                D3DDriver.GetInstance().Device, Usage.WriteOnly | Usage.Dynamic, VertexFormats.PositionBlend4 | VertexFormats.LastBetaUByte4 | VertexFormats.Normal, Pool.Default);
 
         }
 

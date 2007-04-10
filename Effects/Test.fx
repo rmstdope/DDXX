@@ -81,7 +81,7 @@ struct TestStruct
 {
 	float4	Position			:	POSITION;
 	//float2	TextureCoord	:	TEXCOORD0;
-	//float		Light					:	TEXCOORD1;
+	float		Light					:	TEXCOORD1;
 };
 
 TestStruct
@@ -91,8 +91,10 @@ TestVertexShader(InputVS input,
 	TestStruct output;
 
 	// Transform the position from object space to homogeneous projection space
-	float4 position = AnimateVertex(input.Position, input.BlendIndices, input.BlendWeights, numWeights);
-	output.Position = mul(position, WorldViewProjectionT);
+	AnimatedVertex_PN animated = AnimateVertex(input.Position, input.Normal, input.BlendIndices, input.BlendWeights, numWeights);
+	output.Position = mul(animated.Position, WorldViewProjectionT);
+	float3 normal = normalize(mul(animated.Normal, WorldT));
+	output.Light = saturate(dot(normal, float3(0, 0, -1)));
 	//output.Position = 0;
 	//float3 normal = normalize(mul(input.Normal, WorldT));
 	//output.Light = abs(dot(normal, normalize(float3(0, 0, -1))));
@@ -105,7 +107,7 @@ float4
 TestPixelShader(TestStruct input) : COLOR0
 {
 	//float diffuse = 0.1f + 0.9f * input.Light;
-	return 1;//diffuse * tex2D(BaseTextureSampler, input.TextureCoord.xy);
+	return 0.1f + input.Light;//diffuse * tex2D(BaseTextureSampler, input.TextureCoord.xy);
 }
 
 technique LineTest
@@ -120,7 +122,8 @@ technique LineTest
 		PixelShader				= compile ps_2_0 TestPixelShader();
 		AlphaBlendEnable	= false;
 		FillMode					= Solid;
-		ZEnable						=	false;
+		ZEnable						=	true;
+		ZWriteEnable			= true;
 		ZFunc							= Less;
 		StencilEnable			= false;
 		CullMode					= None;
@@ -139,7 +142,8 @@ technique LineTestSkinning
 		PixelShader				= compile ps_2_0 TestPixelShader();
 		AlphaBlendEnable	= false;
 		FillMode					= Solid;
-		ZEnable						=	false;
+		ZEnable						=	true;
+		ZWriteEnable			= true;
 		ZFunc							= Less;
 		StencilEnable			= false;
 		CullMode					= None;
