@@ -8,6 +8,7 @@ using Microsoft.DirectX;
 using Dope.DDXX.SceneGraph;
 using Dope.DDXX.Utility;
 using Dope.DDXX.Graphics.Skinning;
+using System.Drawing;
 
 namespace EngineTest
 {
@@ -82,7 +83,7 @@ namespace EngineTest
             model = node.Model;// new Model(lineMesh);
             model.Mesh = lineMesh;
             node = new ModelNode("LineTiVi", model,
-                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Line", model));
+                new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"), "LineDrawer", model));
             //node.WorldState.MoveUp(-1);
             //node.WorldState.Tilt(-(float)Math.PI / 2);
             scene.AddNode(node);
@@ -126,9 +127,13 @@ namespace EngineTest
 
         private void GenerateModel()
         {
-            XLoader.Load("tivi.x", EffectFactory.CreateFromFile("test.fxo"), "Line");
+            XLoader.Load("tivi.x", EffectFactory.CreateFromFile("TiVi.fxo"), "LineDrawer");
             XLoader.AddToScene(scene);
-            IModel model = ((ModelNode)(scene.GetNodeByName("TiVi"))).Model; //ModelFactory.FromFile("tivi.X", ModelOptions.None);
+            IModel model = ((ModelNode)(scene.GetNodeByName("TiVi"))).Model;
+            model.Materials[0].AmbientColor = new ColorValue(0.2f, 0.2f, 0.2f);
+            model.Materials[0].DiffuseColor = new ColorValue(0.5f, 0.5f, 0.2f);
+            model.Materials[0].SpecularColor = new ColorValue(0.5f, 0.5f, 0.5f);
+            model.Materials[0].Shininess = 32;
             IMesh mesh = model.Mesh;
             WeldVertices(mesh);
             ExtractMeshData(mesh);

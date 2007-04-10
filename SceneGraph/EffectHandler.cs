@@ -26,6 +26,7 @@ namespace Dope.DDXX.SceneGraph
         private EffectHandle reflectiveTexture;
         private EffectHandle materialDiffuseColor;
         private EffectHandle materialSpecularColor;
+        private EffectHandle materialShininess;
         private EffectHandle reflectiveFactor;
 
         private EffectHandle animationMatrices;
@@ -96,11 +97,14 @@ namespace Dope.DDXX.SceneGraph
             reflectiveFactor = effect.GetParameter(null, "ReflectiveFactor");
             materialDiffuseColor = effect.GetParameter(null, "MaterialDiffuseColor");
             materialSpecularColor = effect.GetParameter(null, "MaterialSpecularColor");
+            materialShininess = effect.GetParameter(null, "MaterialShininess");
 
             animationMatrices = effect.GetParameter(null, "AnimationMatrices");
 
             if (reflectiveFactor == null)
                 throw new DDXXException("Missing mandatory variable ReflectiveFactor in Effect.");
+            if (materialShininess == null)
+                throw new DDXXException("Missing mandatory variable MaterialShininess in Effect.");
         }
 
         #region IEffectHandler Members
@@ -149,6 +153,7 @@ namespace Dope.DDXX.SceneGraph
                 effect.SetValue(materialDiffuseColor, material.DiffuseColor);
             if (materialSpecularColor != null)
                 effect.SetValue(materialSpecularColor, material.SpecularColor);
+            effect.SetValue(materialShininess, material.Shininess);
             effect.SetValue(reflectiveFactor, material.ReflectiveFactor);
         }
 

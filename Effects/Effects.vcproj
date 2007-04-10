@@ -182,6 +182,10 @@
 				RelativePath=".\Test.fx"
 				>
 			</File>
+			<File
+				RelativePath=".\TiVi.fx"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="HLSL Files"

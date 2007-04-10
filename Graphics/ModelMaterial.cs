@@ -45,6 +45,11 @@ namespace Dope.DDXX.Graphics
             get { return material.SpecularColor; }
             set { material.SpecularColor = value; }
         }
+        public float Shininess
+        {
+            get { return material.SpecularSharpness; }
+            set { material.SpecularSharpness = value; }
+        }
 
         public ITexture DiffuseTexture
         {
