@@ -17,6 +17,7 @@ namespace EngineTest
         private string baseMesh;
         private Scene scene;
         private UnindexedMesh lineMesh;
+        private IMesh originalMesh;
         private IModel model;
         private ModelNode node;
         private Vertex[] lineVertices;
@@ -80,13 +81,12 @@ namespace EngineTest
 
             node = (ModelNode)scene.GetNodeByName("TiVi");
 
-            model = node.Model;// new Model(lineMesh);
+            model = node.Model;
+            originalMesh = model.Mesh;
             model.Mesh = lineMesh;
-            node = new ModelNode("LineTiVi", model,
-                new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"), "LineDrawer", model));
-            //node.WorldState.MoveUp(-1);
-            //node.WorldState.Tilt(-(float)Math.PI / 2);
-            scene.AddNode(node);
+            //node = new ModelNode("LineTiVi", model,
+            //    new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"), "LineDrawer", model));
+            //scene.AddNode(node);
 
             CameraNode camera = new CameraNode("Camera");
             camera.WorldState.MoveForward(-3);
@@ -127,14 +127,14 @@ namespace EngineTest
 
         private void GenerateModel()
         {
-            XLoader.Load("tivi.x", EffectFactory.CreateFromFile("TiVi.fxo"), "LineDrawer");
+            XLoader.Load("tivi.x", EffectFactory.CreateFromFile("TiVi.fxo"), "Solid");
             XLoader.AddToScene(scene);
             IModel model = ((ModelNode)(scene.GetNodeByName("TiVi"))).Model;
             model.Materials[0].AmbientColor = new ColorValue(0.2f, 0.2f, 0.2f);
             model.Materials[0].DiffuseColor = new ColorValue(0.5f, 0.5f, 0.2f);
             model.Materials[0].SpecularColor = new ColorValue(0.5f, 0.5f, 0.5f);
             model.Materials[0].Shininess = 32;
-            IMesh mesh = model.Mesh;
+            IMesh mesh = model.Mesh.Clone(MeshFlags.Managed, model.Mesh.Declaration, Device);
             WeldVertices(mesh);
             ExtractMeshData(mesh);
             edges = CreateEdges(indices, 0);
@@ -251,15 +251,27 @@ namespace EngineTest
             lineMesh.SetVertexBufferData(lineVertices, LockFlags.Discard);
             lineMesh.NumberActiveVertices = i * 2;
 
-            //node.WorldState.Turn(Time.DeltaTime);
-            //node.WorldState.Tilt(Time.DeltaTime / 1.234f);
-            //node.WorldState.Roll(Time.DeltaTime / 1.623f);
-
             scene.Step();
         }
 
         public override void Render()
         {
+            if (Time.CurrentTime > 20.0f)
+            {
+                model.Materials[0].AmbientColor = new ColorValue(0.2f, 0.2f, 0.2f);
+                model.Materials[0].DiffuseColor = new ColorValue(1.0f, 1.0f, 1.0f);
+                model.Materials[0].SpecularColor = new ColorValue(1.0f, 1.0f, 1.0f);
+                model.Materials[0].Shininess = 64;
+                model.Mesh = originalMesh;
+            }
+            else
+            {
+                model.Materials[0].AmbientColor = new ColorValue(0.2f, 0.2f, 0.2f);
+                model.Materials[0].DiffuseColor = new ColorValue(0.5f, 0.5f, 0.2f);
+                model.Materials[0].SpecularColor = new ColorValue(0.5f, 0.5f, 0.5f);
+                model.Materials[0].Shininess = 32;
+                model.Mesh = lineMesh;
+            }
             scene.Render();
         }
     }

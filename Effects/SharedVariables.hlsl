@@ -130,6 +130,17 @@ sampler BaseTextureSampler = sampler_state
     AddressW	= Mirror;
 };
 
+sampler BaseTextureSamplerBordered = sampler_state
+{
+    Texture = (BaseTexture);
+    MipFilter = Linear;
+    MinFilter = Linear;
+    MagFilter = Linear;
+    AddressU	= Border;
+    AddressV	= Border;
+    AddressW	= Border;
+};
+
 samplerCUBE ReflectiveTextureSampler = sampler_state
 {
     Texture = (ReflectiveTexture);
