@@ -85,12 +85,14 @@ struct TestStruct
 };
 
 TestStruct
-TestVertexShader(InputVS input)
+TestVertexShader(InputVS input,
+								 uniform int numWeights)
 {
 	TestStruct output;
 
 	// Transform the position from object space to homogeneous projection space
-	output.Position = mul(input.Position, WorldViewProjectionT);
+	float4 position = AnimateVertex(input.Position, input.BlendIndices, input.BlendWeights, numWeights);
+	output.Position = mul(position, WorldViewProjectionT);
 	//output.Position = 0;
 	//float3 normal = normalize(mul(input.Normal, WorldT));
 	//output.Light = abs(dot(normal, normalize(float3(0, 0, -1))));
@@ -107,10 +109,33 @@ TestPixelShader(TestStruct input) : COLOR0
 }
 
 technique LineTest
+<
+	bool NormalMapping = false;
+	bool Skinning = false;
+>
 {
 	pass BasePass
 	{
-		VertexShader			= compile vs_2_0 TestVertexShader();
+		VertexShader			= compile vs_2_0 TestVertexShader(0);
+		PixelShader				= compile ps_2_0 TestPixelShader();
+		AlphaBlendEnable	= false;
+		FillMode					= Solid;
+		ZEnable						=	false;
+		ZFunc							= Less;
+		StencilEnable			= false;
+		CullMode					= None;
+	}
+}
+
+technique LineTestSkinning
+<
+	bool NormalMapping = false;
+	bool Skinning = true;
+>
+{
+	pass BasePass
+	{
+		VertexShader			= compile vs_2_0 TestVertexShader(2);
 		PixelShader				= compile ps_2_0 TestPixelShader();
 		AlphaBlendEnable	= false;
 		FillMode					= Solid;

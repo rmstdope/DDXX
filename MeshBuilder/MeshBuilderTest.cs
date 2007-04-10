@@ -1297,7 +1297,6 @@ namespace Dope.DDXX.MeshBuilder
 
         public void Dispose()
         {
-            throw new Exception("The method or operation is not implemented.");
         }
 
         #endregion

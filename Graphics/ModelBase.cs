@@ -28,7 +28,7 @@ namespace Dope.DDXX.Graphics
         #region IModel Members
 
         public abstract IMesh Mesh
-        { get; }
+        { get; set; }
 
         public ModelMaterial[] Materials
         {

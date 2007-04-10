@@ -169,7 +169,6 @@ namespace Dope.DDXX.SceneGraph
 
         public void Dispose()
         {
-            throw new Exception("The method or operation is not implemented.");
         }
 
         public IndexBuffer IndexBuffer
@@ -1006,7 +1005,9 @@ namespace Dope.DDXX.SceneGraph
         {
             get
             {
-                throw new Exception("The method or operation is not implemented.");
+                MeshDataAdapter data = new MeshDataAdapter();
+                data.Mesh = this;
+                return data;
             }
             set
             {

@@ -7,6 +7,7 @@ using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX;
 using Dope.DDXX.SceneGraph;
 using Dope.DDXX.Utility;
+using Dope.DDXX.Graphics.Skinning;
 
 namespace EngineTest
 {
@@ -20,7 +21,7 @@ namespace EngineTest
         private Vertex[] lineVertices;
         private List<Edge> edges;
         private Vertex[] allVertices;
-        private Random random = new Random();
+        private short[] indices;
 
         public string BaseMesh
         {
@@ -33,6 +34,10 @@ namespace EngineTest
             public Vertex(int i)
             {
                 Position = new Vector3();
+                BlendWeight1 = 0;
+                BlendWeight2 = 0;
+                BlendWeight3 = 0;
+                BlendIndices = 0;
                 Normal = new Vector3();
                 U = 0;
                 V = 0;
@@ -40,6 +45,10 @@ namespace EngineTest
                 Tangent = new Vector3();
             }
             public Vector3 Position;
+            public float BlendWeight1;
+            public float BlendWeight2;
+            public float BlendWeight3;
+            public UInt32 BlendIndices;
             public Vector3 Normal;
             public float U;
             public float V;
@@ -68,21 +77,31 @@ namespace EngineTest
 
             GenerateModel();
 
-            model = new Model(lineMesh);
+            node = (ModelNode)scene.GetNodeByName("TiVi");
+
+            model = node.Model;// new Model(lineMesh);
+            model.Mesh = lineMesh;
             node = new ModelNode("LineTiVi", model,
-                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Line", null));
-            node.WorldState.MoveUp(-1);
-            node.WorldState.Tilt(-(float)Math.PI / 2);
+                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Line", model));
+            //node.WorldState.MoveUp(-1);
+            //node.WorldState.Tilt(-(float)Math.PI / 2);
             scene.AddNode(node);
 
             CameraNode camera = new CameraNode("Camera");
             camera.WorldState.MoveForward(-3);
+            camera.WorldState.MoveUp(1);
             scene.AddNode(camera);
             scene.ActiveCamera = camera;
         }
 
         private class Edge
         {
+            public short V1;
+            public short V2;
+            public float StartTime;
+            public float Length;
+            private static Random random = new Random();
+
             public Edge(short v1, short v2)
             {
                 V1 = v1;
@@ -90,31 +109,62 @@ namespace EngineTest
                 StartTime = -1;
                 Length = 0.0f;
             }
-            public short V1;
-            public short V2;
-            public float StartTime;
-            public float Length;
+
+            public void SwitchVertices()
+            {
+                short temp = V1;
+                V1 = V2;
+                V2 = temp;
+            }
+            
+            public void StartVertex(float startTime)
+            {
+                StartTime = startTime;
+                Length = 0.4f + (float)(random.NextDouble() * 0.3f);
+            }
         }
 
         private void GenerateModel()
         {
-            IModel model = ModelFactory.FromFile("tivi.X", ModelOptions.None);
+            XLoader.Load("tivi.x", EffectFactory.CreateFromFile("test.fxo"), "Line");
+            XLoader.AddToScene(scene);
+            IModel model = ((ModelNode)(scene.GetNodeByName("TiVi"))).Model; //ModelFactory.FromFile("tivi.X", ModelOptions.None);
             IMesh mesh = model.Mesh;
-            int[] adia = new int[mesh.NumberFaces * 3];
-            mesh.GenerateAdjacency(0.01f, adia);
-            mesh.WeldVertices(WeldEpsilonsFlags.WeldAll, new WeldEpsilons(), adia);
-            IGraphicsStream stream = mesh.LockIndexBuffer(LockFlags.ReadOnly);
-            short[] indices = (short[])stream.Read(typeof(short), new int[] { mesh.NumberFaces * 3 });
-            mesh.UnlockIndexBuffer();
-            stream = mesh.LockVertexBuffer(LockFlags.ReadOnly);
-            allVertices = (Vertex[])stream.Read(typeof(Vertex), new int[] { mesh.NumberVertices });
-            mesh.UnlockVertexBuffer();
+            WeldVertices(mesh);
+            ExtractMeshData(mesh);
             edges = CreateEdges(indices, 0);
             lineVertices = new Vertex[edges.Count * 2];
 
             lineMesh = new UnindexedMesh(D3DDriver.GraphicsFactory, typeof(Vertex), lineVertices.Length, //undrawnEdges.Count * 2,
-                D3DDriver.GetInstance().Device, Usage.WriteOnly | Usage.Dynamic, VertexFormats.Position, Pool.Default);
+                D3DDriver.GetInstance().Device, Usage.WriteOnly | Usage.Dynamic, VertexFormats.PositionBlend4 | VertexFormats.LastBetaUByte4, Pool.Default);
 
+        }
+
+        private void ExtractMeshData(IMesh mesh)
+        {
+            ExtractMeshIndices(mesh);
+            ExtractMeshVertices(mesh);
+        }
+
+        private void ExtractMeshVertices(IMesh mesh)
+        {
+            IGraphicsStream stream = mesh.LockVertexBuffer(LockFlags.ReadOnly);
+            allVertices = (Vertex[])stream.Read(typeof(Vertex), new int[] { mesh.NumberVertices });
+            mesh.UnlockVertexBuffer();
+        }
+
+        private void ExtractMeshIndices(IMesh mesh)
+        {
+            IGraphicsStream stream = mesh.LockIndexBuffer(LockFlags.ReadOnly);
+            indices = (short[])stream.Read(typeof(short), new int[] { mesh.NumberFaces * 3 });
+            mesh.UnlockIndexBuffer();
+        }
+
+        private static void WeldVertices(IMesh mesh)
+        {
+            int[] adia = new int[mesh.NumberFaces * 3];
+            mesh.GenerateAdjacency(0.01f, adia);
+            mesh.WeldVertices(WeldEpsilonsFlags.WeldAll, new WeldEpsilons(), adia);
         }
 
         private List<Edge> CreateEdges(short[] indices, int startVertex)
@@ -155,15 +205,10 @@ namespace EngineTest
             srcList.ForEach(delegate(Edge e)
             {
                 if (e.V2 == vertex)
-                {
-                    short temp = e.V1;
-                    e.V1 = e.V2;
-                    e.V2 = temp;
-                }
+                    e.SwitchVertices();
                 if (e.V1 == vertex)
                 {
-                    e.StartTime = t;
-                    e.Length = 0.4f + (float)(random.NextDouble() * 0.3f);
+                    e.StartVertex(t);
                     dstList.Add(e);
                     srcList.Remove(e);
                 }
@@ -185,7 +230,8 @@ namespace EngineTest
 
         public override void Step()
         {
-            for (int i = 0; i < edges.Count; i++)
+            int i;
+            for (i = 0; i < edges.Count; i++)
             {
                 if (edges[i].StartTime > Time.CurrentTime)
                     break;
@@ -198,6 +244,7 @@ namespace EngineTest
                 lineVertices[i * 2 + 1].Position = lineVertices[i * 2 + 0].Position + v * delta;
             }
             lineMesh.SetVertexBufferData(lineVertices, LockFlags.Discard);
+            lineMesh.NumberActiveVertices = i * 2;
 
             //node.WorldState.Turn(Time.DeltaTime);
             //node.WorldState.Tilt(Time.DeltaTime / 1.234f);

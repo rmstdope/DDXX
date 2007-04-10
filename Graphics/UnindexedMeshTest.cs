@@ -93,14 +93,13 @@ namespace Dope.DDXX.Graphics
         }
 
         [Test]
-        [ExpectedException(typeof(DDXXException))]
         public void TestDrawSubsetFail()
         {
             TestConstructor10Vertices();
             mesh.DrawSubset(1);
-            Assert.AreEqual(this, data);
-            Assert.AreEqual(0, lockAtOffset);
-            Assert.AreEqual(LockFlags.Discard, flags);
+            Assert.AreEqual(null, data);
+            Assert.AreEqual(-1, lockAtOffset);
+            Assert.AreEqual(LockFlags.None, flags);
         }
 
         [Test]

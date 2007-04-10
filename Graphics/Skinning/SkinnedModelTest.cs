@@ -31,6 +31,7 @@ namespace Dope.DDXX.Graphics.Skinning
         private IMeshContainer meshContainer;
         private MeshDataAdapter meshData;
         private IMesh mesh;
+        private IMesh newMesh;
         private ITextureFactory textureFactory;
         private IEffectHandler effectHandler;
         private IEffect effect;
@@ -57,6 +58,7 @@ namespace Dope.DDXX.Graphics.Skinning
             childChildSiblingFrame = mockery.NewMock<IFrame>();
             meshContainer = mockery.NewMock<IMeshContainer>();
             mesh = mockery.NewMock<IMesh>();
+            newMesh = mockery.NewMock<IMesh>();
             meshData = new MeshDataAdapter();
             meshData.Mesh = mesh;
             textureFactory = mockery.NewMock<ITextureFactory>();
@@ -116,7 +118,6 @@ namespace Dope.DDXX.Graphics.Skinning
         [Test]
         public void Constructor10BonesTest()
         {
-            IMesh newMesh = mockery.NewMock<IMesh>();
             IGraphicsStream adj = mockery.NewMock<IGraphicsStream>();
             Stub.On(frame).GetProperty("MeshContainer").Will(Return.Value(meshContainer));
             Stub.On(meshContainer).GetProperty("SkinInformation").Will(Return.Value(skinInformation));
@@ -134,12 +135,12 @@ namespace Dope.DDXX.Graphics.Skinning
                 With(Is.EqualTo(mesh), Is.EqualTo(MeshFlags.OptimizeVertexCache | MeshFlags.Managed),
                 Is.EqualTo(adj), Is.EqualTo(10), Is.Out, Is.Out).
                 Will(new IAction[] { namedParam1, namedParam2, result });
-            Expect.Once.On(meshContainer).SetProperty("MeshData");
             Expect.Once.On(meshContainer).SetProperty("Bones").To(Is.Null);
             Expect.Once.On(meshContainer).SetProperty("RestMatrices");
             Expect.Once.On(meshContainer).SetProperty("Frames");
 
             model = new SkinnedModel(rootFrame, frame, textureFactory);
+            Assert.AreSame(newMesh, model.Mesh);
         }
 
         /// <summary>
@@ -148,7 +149,6 @@ namespace Dope.DDXX.Graphics.Skinning
         [Test]
         public void Constructor61BonesTest()
         {
-            IMesh newMesh = mockery.NewMock<IMesh>();
             IGraphicsStream adj = mockery.NewMock<IGraphicsStream>();
             Stub.On(frame).GetProperty("MeshContainer").Will(Return.Value(meshContainer));
             Stub.On(meshContainer).GetProperty("SkinInformation").Will(Return.Value(skinInformation));
@@ -166,12 +166,12 @@ namespace Dope.DDXX.Graphics.Skinning
                 With(Is.EqualTo(mesh), Is.EqualTo(MeshFlags.OptimizeVertexCache | MeshFlags.Managed),
                 Is.EqualTo(adj), Is.EqualTo(60), Is.Out, Is.Out).
                 Will(new IAction[] { namedParam1, namedParam2, result });
-            Expect.Once.On(meshContainer).SetProperty("MeshData");
             Expect.Once.On(meshContainer).SetProperty("Bones").To(Is.Null);
             Expect.Once.On(meshContainer).SetProperty("RestMatrices");
             Expect.Once.On(meshContainer).SetProperty("Frames");
 
             model = new SkinnedModel(rootFrame, frame, textureFactory);
+            Assert.AreSame(newMesh, model.Mesh);
         }
 
         /// <summary>
@@ -210,7 +210,7 @@ namespace Dope.DDXX.Graphics.Skinning
                 Expect.Once.On(effectHandler).Method("SetMaterialConstants").With(Is.EqualTo(sceneAmbient), new MaterialMatcher(materials2[0]), Is.EqualTo(0));
                 Expect.Once.On(effect).Method("Begin").With(FX.None).Will(Return.Value(1));
                 Expect.Once.On(effect).Method("BeginPass").With(0);
-                Expect.Once.On(mesh).Method("DrawSubset").With(0);
+                Expect.Once.On(newMesh).Method("DrawSubset").With(0);
                 Expect.Once.On(effect).Method("EndPass");
                 Expect.Once.On(effect).Method("End");
 
@@ -222,7 +222,7 @@ namespace Dope.DDXX.Graphics.Skinning
                 Expect.Once.On(mesh).Method("DrawSubset").With(1);
                 Expect.Once.On(effect).Method("EndPass");
                 Expect.Once.On(effect).Method("BeginPass").With(1);
-                Expect.Once.On(mesh).Method("DrawSubset").With(1);
+                Expect.Once.On(newMesh).Method("DrawSubset").With(1);
                 Expect.Once.On(effect).Method("EndPass");
                 Expect.Once.On(effect).Method("End");
 

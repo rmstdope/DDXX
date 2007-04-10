@@ -187,7 +187,6 @@ namespace Dope.DDXX.Graphics
 
         public void Dispose()
         {
-            throw new Exception("The method or operation is not implemented.");
         }
 
         public Microsoft.DirectX.Direct3D.IndexBuffer IndexBuffer

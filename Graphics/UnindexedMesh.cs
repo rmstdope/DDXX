@@ -167,7 +167,7 @@ namespace Dope.DDXX.Graphics
         public void DrawSubset(int attributeID)
         {
             if (attributeID != 0)
-                throw new DDXXException("AttributeID must be zero in DrawSubset for UnindexedMesh.");
+                return;
             device.VertexFormat = vertexBuffer.Description.VertexFormat;
             device.SetStreamSource(0, vertexBuffer, 0);
             device.DrawPrimitives(PrimitiveType.LineList, 0, numberActiveVertices / 2);
