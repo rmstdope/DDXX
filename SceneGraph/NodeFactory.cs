@@ -29,7 +29,8 @@ namespace Dope.DDXX.SceneGraph
 
         private static ModelNode CommonCreateModelNode(IFrame frame, IEffect effect, string prefix, IModel model)
         {
-            IEffectHandler effectHandler = new EffectHandler(effect, prefix, model);
+            IEffectHandler effectHandler = new EffectHandler(effect, 
+                delegate(int material) { return prefix; }, model);
             ModelNode node = new ModelNode(frame.Name, model, effectHandler);
             node.EnableFrameHandling(frame);
             return node;

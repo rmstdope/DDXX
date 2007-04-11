@@ -153,16 +153,20 @@ namespace EngineTest
 
         private void ExtractMeshVertices(IMesh mesh)
         {
-            IGraphicsStream stream = mesh.LockVertexBuffer(LockFlags.ReadOnly);
-            allVertices = (Vertex[])stream.Read(typeof(Vertex), new int[] { mesh.NumberVertices });
-            mesh.UnlockVertexBuffer();
+            using (IGraphicsStream stream = mesh.LockVertexBuffer(LockFlags.ReadOnly))
+            {
+                allVertices = (Vertex[])stream.Read(typeof(Vertex), new int[] { mesh.NumberVertices });
+                mesh.UnlockVertexBuffer();
+            }
         }
 
         private void ExtractMeshIndices(IMesh mesh)
         {
-            IGraphicsStream stream = mesh.LockIndexBuffer(LockFlags.ReadOnly);
-            indices = (short[])stream.Read(typeof(short), new int[] { mesh.NumberFaces * 3 });
-            mesh.UnlockIndexBuffer();
+            using (IGraphicsStream stream = mesh.LockIndexBuffer(LockFlags.ReadOnly))
+            {
+                indices = (short[])stream.Read(typeof(short), new int[] { mesh.NumberFaces * 3 });
+                mesh.UnlockIndexBuffer();
+            }
         }
 
         private static void WeldVertices(IMesh mesh)
@@ -266,8 +270,8 @@ namespace EngineTest
             }
             else
             {
-                model.Materials[0].AmbientColor = new ColorValue(0.2f, 0.2f, 0.2f);
-                model.Materials[0].DiffuseColor = new ColorValue(0.5f, 0.5f, 0.2f);
+                model.Materials[0].AmbientColor = new ColorValue(0.4f, 0.4f, 0.4f);
+                model.Materials[0].DiffuseColor = new ColorValue(0.7f, 0.7f, 0.3f);
                 model.Materials[0].SpecularColor = new ColorValue(0.5f, 0.5f, 0.5f);
                 model.Materials[0].Shininess = 32;
                 model.Mesh = lineMesh;

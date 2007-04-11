@@ -21,6 +21,7 @@ float WhiteCutoff = 0.1f;
 float BloomScale = 1.5f;
 float4 Color = float4(1,1,1,1);
 float2 Offset = float2(0,0);
+float ZoomFactor = 1.0f;
 
 sampler2D LinearTextureSampler = sampler_state
 {
@@ -251,19 +252,33 @@ Copy(float2 Tex : TEXCOORD0) : COLOR0
 }
 
 //-----------------------------------------------------------------------------
+// Pixel Shader: ZoomAdd
+// Desc: Zooms the texture as well as adds it to the original one.
+//-----------------------------------------------------------------------------
+float4
+ZoomAdd(float2 Tex : TEXCOORD0) : COLOR0
+{
+	float4 originalColor = tex2D(LinearTextureSampler, Tex);
+	float4 zoomColor = tex2D(LinearTextureSampler, Tex * ZoomFactor + (1 - ZoomFactor) / 2);
+
+	return (originalColor + zoomColor * ZoomFactor) / (1 + ZoomFactor);
+	//return lerp(zoomColor, originalColor, 0.25 / ZoomFactor);
+}
+
+//-----------------------------------------------------------------------------
 // Pixel Shader: DownSample4x
 // Desc: Downsamples the texture to one fourth the size (in each dimension).
 //-----------------------------------------------------------------------------
 float4
 DownSample4x(float2 Tex : TEXCOORD0) : COLOR0
 {
-	float4 Color = 0;
+	float4 color = 0;
 
 	for (int i = 0; i < 16; i++) {
-		Color += tex2D(LinearTextureSampler, Tex + DownSample4xKernel[i].xy);
+		color += tex2D(LinearTextureSampler, Tex + DownSample4xKernel[i].xy);
 	}
 
-	return Color / 16;
+	return color / 16;
 }
 
 //-----------------------------------------------------------------------------
@@ -273,13 +288,13 @@ DownSample4x(float2 Tex : TEXCOORD0) : COLOR0
 float4
 HSmearPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 {
-	float4 Color = 0;
+	float4 color = 0;
 
 	for(int i = 0; i < cKernelSize20; i++) {    
-		Color += tex2D(PointTextureSampler,  Tex + HorizontalKernel20[i].xy ) * SmearWeight20;
+		color += tex2D(PointTextureSampler,  Tex + HorizontalKernel20[i].xy ) * SmearWeight20;
 	}
 
-	return Color;
+	return color;
 }
 
 //-----------------------------------------------------------------------------
@@ -289,13 +304,13 @@ HSmearPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 float4
 VSmearPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 {
-	float4 Color = 0;
+	float4 color = 0;
 
 	for(int i = 0; i < cKernelSize20; i++) {    
-		Color += tex2D(PointTextureSampler,  Tex + VerticalKernel20[i].xy ) * SmearWeight20;
+		color += tex2D(PointTextureSampler,  Tex + VerticalKernel20[i].xy ) * SmearWeight20;
 	}
 
-	return Color;
+	return color;
 }
 
 //-----------------------------------------------------------------------------
@@ -305,13 +320,13 @@ VSmearPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 float4
 HBlurPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 {
-	float4 Color = 0;
+	float4 color = 0;
 
 	for(int i = 0; i < cKernelSize20; i++) {    
-		Color += tex2D(PointTextureSampler,  Tex + HorizontalKernel20[i].xy ) * BlurWeights20[i];
+		color += tex2D(PointTextureSampler,  Tex + HorizontalKernel20[i].xy ) * BlurWeights20[i];
 	}
 
-	return Color;
+	return color;
 }
 
 //-----------------------------------------------------------------------------
@@ -321,13 +336,13 @@ HBlurPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 float4
 VBlurPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 {
-	float4 Color = 0;
+	float4 color = 0;
 
 	for(int i = 0; i < cKernelSize20; i++) {    
-		Color += tex2D(PointTextureSampler,  Tex + VerticalKernel20[i].xy ) * BlurWeights20[i];
+		color += tex2D(PointTextureSampler,  Tex + VerticalKernel20[i].xy ) * BlurWeights20[i];
 	}
 
-	return Color;
+	return color;
 }
 
 //-----------------------------------------------------------------------------
@@ -591,6 +606,20 @@ HDRLuminanceDS(float2 Tex : TEXCOORD0) : COLOR0
  * Techniques
  * ------------------
 ***********************************************************************************/
+
+technique ZoomAdd
+{
+	pass p0
+	<
+		float Scale = 1.0f;
+	>
+	{
+		VertexShader = null;
+		PixelShader = compile ps_2_0 ZoomAdd();
+		ZEnable = false;
+	}
+}
+
 
 technique DownSample4x
 {

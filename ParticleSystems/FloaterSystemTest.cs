@@ -46,6 +46,7 @@ namespace Dope.DDXX.ParticleSystems
             Stub.On(camera).GetProperty("ViewMatrix").Will(Return.Value(viewMatrix));
             Stub.On(camera).GetProperty("ProjectionMatrix").Will(Return.Value(projectionMatrix));
             Stub.On(scene).GetProperty("AmbientColor").Will(Return.Value(sceneAmbient));
+            Stub.On(graphicsStream).Method("Dispose");
         }
 
         [TearDown]

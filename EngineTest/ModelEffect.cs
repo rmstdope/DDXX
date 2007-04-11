@@ -27,7 +27,8 @@ namespace EngineTest
             // Create model
             IModel model = ModelFactory.FromFile("airplane 2.x", ModelOptions.EnsureTangents);
             IEffect effect = EffectFactory.CreateFromFile("Test.fxo");
-            EffectHandler effectHandler = new EffectHandler(effect, "Transparent", model);
+            EffectHandler effectHandler = new EffectHandler(effect, 
+                delegate(int material) { return "Transparent"; }, model);
             node = new ModelNode("Test Model", model, effectHandler);
             scene.AddNode(node);
 

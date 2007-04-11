@@ -84,21 +84,25 @@ namespace Dope.DDXX.MeshBuilder
                 declaration.AddTexCoords(0, 2);
             IMesh mesh = factory.CreateMesh(indices.Length / 3, vertices.Length, MeshFlags.Managed,
                 declaration.VertexElements, device);
-            IGraphicsStream stream = mesh.LockVertexBuffer(LockFlags.None);
-            for (int i = 0; i < vertices.Length; i++)
+            using (IGraphicsStream stream = mesh.LockVertexBuffer(LockFlags.None))
             {
-                stream.Write(vertices[i].Position);
-                stream.Write(vertices[i].Normal);
-                if (useTexCoords)
+                for (int i = 0; i < vertices.Length; i++)
                 {
-                    stream.Write(vertices[i].U);
-                    stream.Write(vertices[i].V);
+                    stream.Write(vertices[i].Position);
+                    stream.Write(vertices[i].Normal);
+                    if (useTexCoords)
+                    {
+                        stream.Write(vertices[i].U);
+                        stream.Write(vertices[i].V);
+                    }
                 }
+                mesh.UnlockVertexBuffer();
             }
-            mesh.UnlockVertexBuffer();
-            stream = mesh.LockIndexBuffer(LockFlags.None);
-            stream.Write(indices);
-            mesh.UnlockIndexBuffer();
+            using (IGraphicsStream stream = mesh.LockIndexBuffer(LockFlags.None))
+            {
+                stream.Write(indices);
+                mesh.UnlockIndexBuffer();
+            }
             return mesh;
         }
 

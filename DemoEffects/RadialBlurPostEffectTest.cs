@@ -2,18 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using NMock2;
-using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.DemoFramework;
+using NMock2;
 using System.Drawing;
+using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.DemoEffects
 {
     [TestFixture]
-    public class GlowPostEffectTest
+    public class RadialBlurPostEffectTest
     {
         private Mockery mockery;
-        private GlowPostEffect effect;
+        private RadialBlurPostEffect effect;
         private IPostProcessor postProcessor;
 
         [SetUp]
@@ -21,7 +21,7 @@ namespace Dope.DDXX.DemoEffects
         {
             mockery = new Mockery();
             postProcessor = mockery.NewMock<IPostProcessor>();
-            effect = new GlowPostEffect(1.0f, 2.0f);
+            effect = new RadialBlurPostEffect(1.0f, 2.0f);
             effect.Initialize(postProcessor);
         }
 
@@ -59,55 +59,44 @@ namespace Dope.DDXX.DemoEffects
                 Will(Return.Value(startTexture));
             using (mockery.Ordered)
             {
-                effect.Luminance = 0.06f;
-                effect.Exposure = 0.18f;
-                effect.WhiteCutoff = 0.1f;
-                effect.BloomScale = 1.5f;
-                Expect.Once.On(postProcessor).
-                    Method("SetValue").
-                    With("Luminance", 0.06f);
-                Expect.Once.On(postProcessor).
-                    Method("SetValue").
-                    With("Exposure", 0.18f);
-                Expect.Once.On(postProcessor).
-                    Method("SetValue").
-                    With("WhiteCutoff", 0.1f);
-                Expect.Once.On(postProcessor).
-                    Method("SetValue").
-                    With("BloomScale", 1.5f);
                 Expect.Once.On(postProcessor).
                     Method("SetBlendParameters").
                     With(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
                 Expect.Once.On(postProcessor).
-                    Method("Process").
-                    With("DownSample4x", startTexture, tempTexture1);
+                    Method("SetValue").With("ZoomFactor", 0.20f);
                 Expect.Once.On(postProcessor).
-                    Method("Process").
-                    With("DownSample4x", tempTexture1, tempTexture2);
+                    Method("Process").With("ZoomAdd", startTexture, tempTexture1);
                 Expect.Once.On(postProcessor).
-                    Method("Process").
-                    With("Brighten", tempTexture2, tempTexture1);
-                for (int i = 0; i < 2; i++)
-                {
-                    Expect.Once.On(postProcessor).
-                        Method("Process").
-                        With("HorizontalBloom", tempTexture1, tempTexture2);
-                    Expect.Once.On(postProcessor).
-                        Method("Process").
-                        With("VerticalBloom", tempTexture2, tempTexture1);
-                }
+                    Method("SetValue").With("ZoomFactor", 0.60f);
                 Expect.Once.On(postProcessor).
-                    Method("Process").
-                    With("UpSample4x", tempTexture1, tempTexture2);
+                    Method("Process").With("ZoomAdd", tempTexture1, tempTexture2);
+                Expect.Once.On(postProcessor).
+                    Method("SetValue").With("ZoomFactor", 0.80f);
+                Expect.Once.On(postProcessor).
+                    Method("Process").With("ZoomAdd", tempTexture2, tempTexture1);
+                Expect.Once.On(postProcessor).
+                    Method("SetValue").With("ZoomFactor", 0.90f);
+                Expect.Once.On(postProcessor).
+                    Method("Process").With("ZoomAdd", tempTexture1, tempTexture2);
+                Expect.Once.On(postProcessor).
+                    Method("SetValue").With("ZoomFactor", 0.95f);
+                Expect.Once.On(postProcessor).
+                    Method("Process").With("ZoomAdd", tempTexture2, tempTexture1);
+                Expect.Once.On(postProcessor).
+                    Method("SetValue").With("ZoomFactor", 0.975f);
+                Expect.Once.On(postProcessor).
+                    Method("Process").With("ZoomAdd", tempTexture1, tempTexture2);
+                Expect.Once.On(postProcessor).
+                    Method("SetValue").With("ZoomFactor", 0.9875f);
+                Expect.Once.On(postProcessor).
+                    Method("Process").With("ZoomAdd", tempTexture2, tempTexture1);
                 Expect.Once.On(postProcessor).
                     Method("SetBlendParameters").
                     With(BlendOperation.Add, Blend.One, Blend.One, Color.Black);
                 Expect.Once.On(postProcessor).
-                    Method("Process").
-                    With("UpSample4x", tempTexture2, startTexture);
+                    Method("Process").With("Copy", tempTexture1, startTexture);
+                effect.Render();
             }
-            effect.Render();
         }
-
     }
 }

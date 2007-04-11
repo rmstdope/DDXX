@@ -35,7 +35,8 @@ namespace EngineTest
 
             // create effect and node
             IEffect effect = EffectFactory.CreateFromFile("Test.fxo");
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, model);
             node = new ModelNode("Test Model", model, effectHandler);
             scene.AddNode(node);
 

@@ -9,6 +9,8 @@ using Microsoft.DirectX;
 
 namespace Dope.DDXX.SceneGraph
 {
+    public delegate string MaterialTechniqueChooser(int material);
+
     public class EffectHandler : IEffectHandler
     {
         private IEffect effect;
@@ -31,7 +33,12 @@ namespace Dope.DDXX.SceneGraph
 
         private EffectHandle animationMatrices;
 
-        public EffectHandler(IEffect effect, string prefix, IModel model)
+        public static MaterialTechniqueChooser Prefix(string prefix)
+        {
+            return delegate(int material) { return prefix; };
+        }
+
+        public EffectHandler(IEffect effect, MaterialTechniqueChooser prefix, IModel model)
         {
             this.effect = effect;
 
@@ -41,14 +48,15 @@ namespace Dope.DDXX.SceneGraph
                 techniques = new EffectHandle[model.Materials.Length];
             for (int i = 0; i < techniques.Length; i++)
             {
+                string prefixString = prefix(i);
                 techniques[i] = null;
                 while (techniques[i] == null || 
-                       !effect.GetTechniqueName(techniques[i]).StartsWith(prefix) || 
+                       !effect.GetTechniqueName(techniques[i]).StartsWith(prefixString) || 
                        !ValidateTechnique(model, i))
                 {
                     techniques[i] = effect.FindNextValidTechnique(techniques[i]);
                     if (techniques[i] == null)
-                        throw new DDXXException("Technique with prefix " + prefix + " not found in effect.");
+                        throw new DDXXException("Technique with prefix " + prefixString + " not found in effect.");
                 }
             }
 

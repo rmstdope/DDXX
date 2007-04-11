@@ -88,7 +88,8 @@ namespace EngineTest
 
             IModel model = builder.CreateModel("Cloth");
             clothModel = new ModelNode("Cloth", model,
-                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Glass", model));
+                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
+                delegate(int material) { return "Glass"; }, model));
             scene.AddNode(clothModel);
 
             // Fix sphere
@@ -98,7 +99,8 @@ namespace EngineTest
 
             model = builder.CreateSkyBoxModel("SkyBox", "rnl_cross.dds");
             ModelNode skyBoxModel = new ModelNode("SkyBox", model,
-                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "SkyBox", model));
+                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
+                delegate(int material) { return "SkyBox"; }, model));
             scene.AddNode(skyBoxModel);
         }
 
@@ -113,7 +115,8 @@ namespace EngineTest
         {
             IEffect effect = D3DDriver.EffectFactory.CreateFromFile("Test.fxo");
             IModel model = D3DDriver.ModelFactory.FromFile("Wanting More.x", ModelOptions.None);
-            EffectHandler effectHandler = new EffectHandler(effect, "TransparentText", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return "TransparentText"; }, model);
             modelNode = new ModelNode("Text1", model, effectHandler);
             scene.AddNode(modelNode);
         }
@@ -123,7 +126,8 @@ namespace EngineTest
             IModel model = ModelFactory.FromFile("TiVi.x", ModelOptions.None);
             modelNoSkinning = new ModelNode("No Skinning",
                 model,
-                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Skinning", model));
+                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
+                delegate(int material) { return "Skinning"; }, model));
             modelNoSkinning.WorldState.Scale(100.0f);
             modelNoSkinning.WorldState.MoveRight(-50);
             modelNoSkinning.WorldState.Roll((float)Math.PI);

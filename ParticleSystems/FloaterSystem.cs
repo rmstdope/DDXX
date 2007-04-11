@@ -128,17 +128,19 @@ namespace Dope.DDXX.ParticleSystems
         protected override void StepNode()
         {
             FloaterVertex vertex = new FloaterVertex();
-            IGraphicsStream stream = vertexBuffer.Lock(0, 0, LockFlags.Discard);
-            foreach (FloaterParticle particle in particles)
+            using (IGraphicsStream stream = vertexBuffer.Lock(0, 0, LockFlags.Discard))
             {
-                vertex.Position = particle.Position + new Vector3(particle.Amplitude.X * (float)Math.Sin(Time.StepTime / particle.Period.X + particle.Phase.X),
-                                                                  particle.Amplitude.Y * (float)Math.Sin(Time.StepTime / particle.Period.Y + particle.Phase.Y),
-                                                                  particle.Amplitude.Z * (float)Math.Sin(Time.StepTime / particle.Period.Z + particle.Phase.Z));
-                vertex.Size = particle.Size;
-                vertex.Color = particle.Color.ToArgb();
-                stream.Write(vertex);
+                foreach (FloaterParticle particle in particles)
+                {
+                    vertex.Position = particle.Position + new Vector3(particle.Amplitude.X * (float)Math.Sin(Time.StepTime / particle.Period.X + particle.Phase.X),
+                                                                      particle.Amplitude.Y * (float)Math.Sin(Time.StepTime / particle.Period.Y + particle.Phase.Y),
+                                                                      particle.Amplitude.Z * (float)Math.Sin(Time.StepTime / particle.Period.Z + particle.Phase.Z));
+                    vertex.Size = particle.Size;
+                    vertex.Color = particle.Color.ToArgb();
+                    stream.Write(vertex);
+                }
+                vertexBuffer.Unlock();
             }
-            vertexBuffer.Unlock();
         }
 
     }

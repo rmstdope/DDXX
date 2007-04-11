@@ -190,26 +190,28 @@ namespace ShortPuzzle
             IModel model1 = ModelFactory.CreateBox(10, 10, 10);
             model1 = new Model(model1.Mesh.Clone(MeshFlags.Managed, VertexFormats.Position | VertexFormats.Texture1 | VertexFormats.Normal, Device));
             model1.Mesh.ComputeNormals();
-            IGraphicsStream stream = model1.Mesh.LockVertexBuffer(LockFlags.None);
-            CustomVertex.PositionNormalTextured[] vertices = new CustomVertex.PositionNormalTextured[model1.Mesh.NumberVertices];
-            for (int i = 0; i < model1.Mesh.NumberVertices; i++)
+            using (IGraphicsStream stream = model1.Mesh.LockVertexBuffer(LockFlags.None))
             {
-                vertices[i] = (CustomVertex.PositionNormalTextured)stream.Read(typeof(CustomVertex.PositionNormalTextured));
+                CustomVertex.PositionNormalTextured[] vertices = new CustomVertex.PositionNormalTextured[model1.Mesh.NumberVertices];
+                for (int i = 0; i < model1.Mesh.NumberVertices; i++)
+                {
+                    vertices[i] = (CustomVertex.PositionNormalTextured)stream.Read(typeof(CustomVertex.PositionNormalTextured));
+                }
+                for (int i = 0; i < model1.Mesh.NumberVertices / 4; i++)
+                {
+                    vertices[i * 4 + 0].Tu = 0;
+                    vertices[i * 4 + 0].Tv = 0;
+                    vertices[i * 4 + 1].Tu = 1;
+                    vertices[i * 4 + 1].Tv = 0;
+                    vertices[i * 4 + 2].Tu = 1;
+                    vertices[i * 4 + 2].Tv = 1;
+                    vertices[i * 4 + 3].Tu = 0;
+                    vertices[i * 4 + 3].Tv = 1;
+                }
+                stream.Seek(0, System.IO.SeekOrigin.Begin);
+                stream.Write(vertices);
+                model1.Mesh.UnlockVertexBuffer();
             }
-            for (int i = 0; i < model1.Mesh.NumberVertices / 4; i++)
-            {
-                vertices[i * 4 + 0].Tu = 0;
-                vertices[i * 4 + 0].Tv = 0;
-                vertices[i * 4 + 1].Tu = 1;
-                vertices[i * 4 + 1].Tv = 0;
-                vertices[i * 4 + 2].Tu = 1;
-                vertices[i * 4 + 2].Tv = 1;
-                vertices[i * 4 + 3].Tu = 0;
-                vertices[i * 4 + 3].Tv = 1;
-            }
-            stream.Seek(0, System.IO.SeekOrigin.Begin);
-            stream.Write(vertices);
-            model1.Mesh.UnlockVertexBuffer();
             int[] adj = new int[model1.Mesh.NumberFaces * 3];
             model1.Mesh.GenerateAdjacency(1e-6f, adj);
             model1.Mesh.OptimizeInPlace(MeshFlags.OptimizeAttributeSort, adj);
@@ -240,7 +242,7 @@ namespace ShortPuzzle
             model2.Mesh.SetAttributeTable(attributes);
 
             IEffect effect = EffectFactory.CreateFromFile("Short Puzzle.fxo");
-            EffectHandler handler = new EffectHandler(effect, "", model2);
+            EffectHandler handler = new EffectHandler(effect, EffectHandler.Prefix(""), model2);
 
             const float distance = 14.0f;
             int c = 0;

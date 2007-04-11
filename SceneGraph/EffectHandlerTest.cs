@@ -137,7 +137,8 @@ namespace Dope.DDXX.SceneGraph
             ExpectMaterialParameters(null, null, null, null, null, null, materialShininessHandle);
             ExpectNoAnnotations();
 
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect, 
+                delegate(int m) { return ""; }, model);
             Assert.AreSame(effect, effectHandler.Effect);
             Assert.AreSame(validTechnique, effectHandler.Techniques[0]);
         }
@@ -153,7 +154,8 @@ namespace Dope.DDXX.SceneGraph
             ExpectMaterialParameters(null, null, null, null, null, null, materialShininessHandle);
             ExpectNoAnnotations();
 
-            EffectHandler effectHandler = new EffectHandler(effect, "", null);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, null);
             Assert.AreSame(effect, effectHandler.Effect);
             Assert.AreSame(validTechnique, effectHandler.Techniques[0]);
         }
@@ -167,7 +169,8 @@ namespace Dope.DDXX.SceneGraph
             ExpectMaterialParameters(null, null, null, null, null, null, materialShininessHandle);
             ExpectNoAnnotations();
 
-            EffectHandler effectHandler = new EffectHandler(effect, "", null);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, null);
         }
 
         [Test]
@@ -179,7 +182,8 @@ namespace Dope.DDXX.SceneGraph
             ExpectMaterialParameters(null, null, null, null, null, null, null);
             ExpectNoAnnotations();
 
-            EffectHandler effectHandler = new EffectHandler(effect, "", null);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, null);
         }
 
         /// <summary>
@@ -197,7 +201,8 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(effect).Method("GetValueBoolean").With(annotation).Will(Return.Value(false));
             Expect.Once.On(model).Method("IsSkinned").Will(Return.Value(true));
 
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, model);
         }
 
         /// <summary>
@@ -215,7 +220,8 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(effect).Method("GetValueBoolean").With(annotation).Will(Return.Value(true));
             Expect.Once.On(model).Method("IsSkinned").Will(Return.Value(false));
 
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, model);
         }
 
         /// <summary>
@@ -234,7 +240,8 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(effect).Method("GetValueBoolean").With(annotation).Will(Return.Value(false));
             modelMaterial.NormalTexture = normalTexture;
 
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect, 
+                delegate(int material) { return ""; }, model);
         }
 
         /// <summary>
@@ -253,7 +260,8 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(effect).Method("GetValueBoolean").With(annotation).Will(Return.Value(true));
             modelMaterial.NormalTexture = null;
 
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, model);
         }
 
         /// <summary>
@@ -274,7 +282,8 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(effect).Method("GetValueBoolean").With(annotation).Will(Return.Value(true));
             modelMaterial.NormalTexture = normalTexture;
 
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, model);
         }
 
         /// <summary>
@@ -295,7 +304,8 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(effect).Method("GetValueBoolean").With(annotation).Will(Return.Value(false));
             modelMaterial.NormalTexture = null;
 
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, model);
         }
 
         /// <summary>
@@ -319,7 +329,8 @@ namespace Dope.DDXX.SceneGraph
                 Expect.Once.On(effect).Method("GetValueBoolean").With(annotation).Will(Return.Value(true));
             }
 
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, model);
             Assert.AreEqual(effectHandler.Techniques.Length, 3);
             Assert.AreEqual(effectHandler.Techniques[0], validTechnique);
             Assert.AreEqual(effectHandler.Techniques[1], validTechnique);
@@ -336,7 +347,8 @@ namespace Dope.DDXX.SceneGraph
             ExpectNumberOfMaterials(1, null);
             Expect.Once.On(effect).Method("FindNextValidTechnique").
                 With(Is.Null).Will(Return.Value(null));
-            EffectHandler effectHandler = new EffectHandler(effect, "Valid", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return "Valid"; }, model);
         }
 
         /// <summary>
@@ -351,7 +363,8 @@ namespace Dope.DDXX.SceneGraph
             ExpectMeshParametersSet(worldT, worldViewProjectionT, projectionT, worldViewT, invMatrixT);
             ExpectMaterialParameters(null, null, null, null, null, null, materialShininessHandle);
             ExpectNoAnnotations();
-            EffectHandler effectHandler = new EffectHandler(effect, "Valid", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return "Valid"; }, model);
 
             effectHandler.SetNodeConstants(worldMatrix, viewMatrix, projMatrix);
         }
@@ -365,7 +378,8 @@ namespace Dope.DDXX.SceneGraph
             ExpectMeshParametersSet(worldT, worldViewProjectionT, projectionT, worldViewT, invMatrixT);
             ExpectMaterialParameters(null, null, null, null, null, null, materialShininessHandle);
             ExpectNoAnnotations();
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, model);
 
             effectHandler.SetNodeConstants(worldMatrix, viewMatrix, projMatrix);
         }
@@ -379,7 +393,8 @@ namespace Dope.DDXX.SceneGraph
             ExpectMeshParametersSet(null, worldViewProjectionT, projectionT, worldViewT, invMatrixT);
             ExpectMaterialParameters(null, null, null, null, null, null, materialShininessHandle);
             ExpectNoAnnotations();
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, model);
 
             effectHandler.SetNodeConstants(worldMatrix, viewMatrix, projMatrix);
         }
@@ -393,7 +408,8 @@ namespace Dope.DDXX.SceneGraph
             ExpectMeshParametersSet(worldT, null, projectionT, worldViewT, invMatrixT);
             ExpectMaterialParameters(null, null, null, null, null, null, materialShininessHandle);
             ExpectNoAnnotations();
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, model);
 
             effectHandler.SetNodeConstants(worldMatrix, viewMatrix, projMatrix);
         }
@@ -407,7 +423,8 @@ namespace Dope.DDXX.SceneGraph
             ExpectMeshParametersSet(worldT, worldViewProjectionT, null, worldViewT, invMatrixT);
             ExpectMaterialParameters(null, null, null, null, null, null, materialShininessHandle);
             ExpectNoAnnotations();
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, model);
 
             effectHandler.SetNodeConstants(worldMatrix, viewMatrix, projMatrix);
         }
@@ -421,7 +438,8 @@ namespace Dope.DDXX.SceneGraph
             ExpectMeshParametersSet(worldT, worldViewProjectionT, projectionT, null, invMatrixT);
             ExpectMaterialParameters(null, null, null, null, null, null, materialShininessHandle);
             ExpectNoAnnotations();
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, model);
 
             effectHandler.SetNodeConstants(worldMatrix, viewMatrix, projMatrix);
         }
@@ -435,7 +453,8 @@ namespace Dope.DDXX.SceneGraph
             ExpectMeshParametersSet(worldT, worldViewProjectionT, projectionT, worldViewT, null);
             ExpectMaterialParameters(null, null, null, null, null, null, materialShininessHandle);
             ExpectNoAnnotations();
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, model);
 
             effectHandler.SetNodeConstants(worldMatrix, viewMatrix, projMatrix);
         }
@@ -452,7 +471,8 @@ namespace Dope.DDXX.SceneGraph
             ExpectMaterialParameters(ambientColor, baseTexture, normalTextureHandle, reflectiveTextureHandle, materialDiffuseColor, materialSpecularColor, materialShininessHandle);
             ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, normalTexture, reflectiveTexture, true, materialDiffuse, true, materialSpecular);
             ExpectNoAnnotations();
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, model);
 
             effectHandler.SetMaterialConstants(sceneAmbient, modelMaterial, 0);
         }
@@ -469,7 +489,8 @@ namespace Dope.DDXX.SceneGraph
             ExpectMaterialParameters(null, baseTexture, normalTextureHandle, reflectiveTextureHandle, materialDiffuseColor, materialSpecularColor, materialShininessHandle);
             ExpectMaterialParametersSet(false, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, normalTexture, reflectiveTexture, true, materialDiffuse, true, materialSpecular);
             ExpectNoAnnotations();
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, model);
 
             effectHandler.SetMaterialConstants(sceneAmbient, modelMaterial, 0);
         }
@@ -484,7 +505,8 @@ namespace Dope.DDXX.SceneGraph
             ExpectMaterialParameters(ambientColor, null, normalTextureHandle, reflectiveTextureHandle, materialDiffuseColor, materialSpecularColor, materialShininessHandle);
             ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), null, normalTexture, reflectiveTexture, true, materialDiffuse, true, materialSpecular);
             ExpectNoAnnotations();
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, model);
 
             effectHandler.SetMaterialConstants(sceneAmbient, modelMaterial, 0);
         }
@@ -499,7 +521,8 @@ namespace Dope.DDXX.SceneGraph
             ExpectMaterialParameters(ambientColor, baseTexture, null, reflectiveTextureHandle, materialDiffuseColor, materialSpecularColor, materialShininessHandle);
             ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, null, reflectiveTexture, true, materialDiffuse, true, materialSpecular);
             ExpectNoAnnotations();
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, model);
 
             effectHandler.SetMaterialConstants(sceneAmbient, modelMaterial, 0);
         }
@@ -514,7 +537,8 @@ namespace Dope.DDXX.SceneGraph
             ExpectMaterialParameters(ambientColor, baseTexture, normalTextureHandle, null, materialDiffuseColor, materialSpecularColor, materialShininessHandle);
             ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, normalTexture, null, true, materialDiffuse, true, materialSpecular);
             ExpectNoAnnotations();
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, model);
 
             effectHandler.SetMaterialConstants(sceneAmbient, modelMaterial, 0);
         }
@@ -529,7 +553,8 @@ namespace Dope.DDXX.SceneGraph
             ExpectMaterialParameters(ambientColor, baseTexture, normalTextureHandle, reflectiveTextureHandle, null, materialSpecularColor, materialShininessHandle);
             ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, normalTexture, reflectiveTexture, false, materialDiffuse, true, materialSpecular);
             ExpectNoAnnotations();
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, model);
 
             effectHandler.SetMaterialConstants(sceneAmbient, modelMaterial, 0);
         }
@@ -544,7 +569,8 @@ namespace Dope.DDXX.SceneGraph
             ExpectMaterialParameters(ambientColor, baseTexture, normalTextureHandle, reflectiveTextureHandle, materialDiffuseColor, null, materialShininessHandle);
             ExpectMaterialParametersSet(true, ColorOperator.Modulate(sceneAmbient, materialAmbient), texture, normalTexture, reflectiveTexture, true, materialDiffuse, false, materialSpecular);
             ExpectNoAnnotations();
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, model);
 
             effectHandler.SetMaterialConstants(sceneAmbient, modelMaterial, 0);
         }
@@ -562,7 +588,8 @@ namespace Dope.DDXX.SceneGraph
             ExpectMaterialParameters(null, null, null, null, null, null, materialShininessHandle);
             ExpectMaterialParametersSet(false, new ColorValue(), null, null, null, false, new ColorValue(), false, new ColorValue());
             ExpectNoAnnotations();
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, model);
             effectHandler.Techniques = new EffectHandle[] { null, validTechnique };
 
             effectHandler.SetMaterialConstants(sceneAmbient, modelMaterial, 1);
@@ -580,7 +607,8 @@ namespace Dope.DDXX.SceneGraph
             ExpectMeshParameters(null, null, null, null, null, null, reflectiveFactorHandle);
             ExpectMaterialParameters(null, null, null, null, null, null, materialShininessHandle);
             ExpectNoAnnotations();
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, model);
 
             Matrix[] matrices = new Matrix[2];
             matrices[0] = Matrix.RotationX(1);
@@ -600,7 +628,8 @@ namespace Dope.DDXX.SceneGraph
             ExpectMeshParameters(null, null, null, null, null, animationMatrices, reflectiveFactorHandle);
             ExpectMaterialParameters(null, null, null, null, null, null, materialShininessHandle);
             ExpectNoAnnotations();
-            EffectHandler effectHandler = new EffectHandler(effect, "", model);
+            EffectHandler effectHandler = new EffectHandler(effect,
+                delegate(int material) { return ""; }, model);
 
             Matrix[] matrices = new Matrix[2];
             matrices[0] = Matrix.RotationX(1);

@@ -46,9 +46,11 @@ namespace Dope.DDXX.Graphics
         {
             normals = new Vector3[Mesh.NumberVertices];
             indices = new short[Mesh.NumberFaces * 3];
-            IGraphicsStream stream = Mesh.LockIndexBuffer(LockFlags.None);
-            indices = (short[])stream.Read(typeof(short), new int[] { Mesh.NumberFaces * 3 });
-            Mesh.UnlockIndexBuffer();
+            using (IGraphicsStream stream = Mesh.LockIndexBuffer(LockFlags.None))
+            {
+                indices = (short[])stream.Read(typeof(short), new int[] { Mesh.NumberFaces * 3 });
+                Mesh.UnlockIndexBuffer();
+            }
         }
 
         public override void Step()
@@ -82,15 +84,17 @@ namespace Dope.DDXX.Graphics
             VertexElementArray array = new VertexElementArray(Mesh.Declaration);
             bool texCoords = array.HasTexCoords(0);
 
-            IGraphicsStream stream = Mesh.LockVertexBuffer(LockFlags.None);
-            for (int i = 0; i < body.Particles.Count; i++)
+            using (IGraphicsStream stream = Mesh.LockVertexBuffer(LockFlags.None))
             {
-                stream.Write(body.Particles[i].Position);
-                stream.Write(normals[i]);
-                if (texCoords)
-                    stream.Seek(sizeof(float) * 2, System.IO.SeekOrigin.Current);
+                for (int i = 0; i < body.Particles.Count; i++)
+                {
+                    stream.Write(body.Particles[i].Position);
+                    stream.Write(normals[i]);
+                    if (texCoords)
+                        stream.Seek(sizeof(float) * 2, System.IO.SeekOrigin.Current);
+                }
+                Mesh.UnlockVertexBuffer();
             }
-            Mesh.UnlockVertexBuffer();
         }
     }
 }

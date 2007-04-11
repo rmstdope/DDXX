@@ -49,7 +49,8 @@ namespace EngineTest
             kingModel.Materials[0].ReflectiveFactor = 0.02f;
             kingModel.Materials[0].DiffuseColor = new ColorValue(0.3f, 0.3f, 0.3f);
             ModelNode kingNode = new ModelNode("King", kingModel,
-                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Glass", kingModel));
+                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
+                EffectHandler.Prefix("Glass"), kingModel));
             scene.AddNode(kingNode);
             ModelNode kingMirrorNode = CreateMirrorNode(kingNode);
             scene.AddNode(kingMirrorNode);
@@ -70,7 +71,8 @@ namespace EngineTest
             IModel boxModel = builder.CreateModel("Box");
             boxModel.Materials[0].Diffuse = Color.DarkGray;
             planeNode = new ModelNode("Box", boxModel,
-                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Glass", boxModel));
+                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
+                EffectHandler.Prefix("Glass"), boxModel));
             scene.AddNode(planeNode);
             mirrorNode = CreateMirrorNode(planeNode);
             scene.AddNode(mirrorNode);
@@ -84,7 +86,8 @@ namespace EngineTest
             mirrorModel.Materials[0].Diffuse = Color.DarkGray;
             mirrorModel.Materials[0].ReflectiveFactor = 0.0f;
             ModelNode mirrorNode = new ModelNode("Box", mirrorModel,
-                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Glass", mirrorModel));
+                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
+                EffectHandler.Prefix("Glass"), mirrorModel));
             mirrorNode.WorldState.Scale(new Vector3(1, -1, 1));
             return mirrorNode;
         }
@@ -127,7 +130,8 @@ namespace EngineTest
                     if ((y & 1) == 0 && (x & 1) == 1)
                         model = whiteModel;
                     ModelNode node = new ModelNode("FloorTile" + x + y, model,
-                        new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"), "Chess", model));
+                        new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
+                        EffectHandler.Prefix("Chess"), model));
                     node.WorldState.Tilt((float)Math.PI / 2);
                     node.WorldState.Position = new Vector3((x - 4) * 1.90f, 0, (y - 4) * 1.90f);
                     chessNodes.Add(node);

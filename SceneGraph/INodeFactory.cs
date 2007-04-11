@@ -4,6 +4,7 @@ using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.SceneGraph
 {
+    public delegate MaterialTechniqueChooser MeshTechniqueChooser(string meshName);
     public interface INodeFactory
     {
         CameraNode CreateCameraNode(IFrame frame);
