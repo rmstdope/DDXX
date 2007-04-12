@@ -14,16 +14,16 @@
 			<Parameter float="0.2"/>
 		</SetupCall>
 	</Effect-->
-	<!--Effect name="TestEffect" track="0" startTime="0.0" endTime="300.0" /-->
+	<Effect name="TestEffect" track="0" startTime="0.0" endTime="300.0" />
 	<!--Effect name="ChessScene" track="0" startTime="0.0" endTime="300.0" /-->
-  <Effect name="CreationScene" track="0" startTime="0.0" endTime="300.0">
+  <!--Effect name="CreationScene" track="0" startTime="0.0" endTime="300.0">
 		<Parameter name="BaseMesh" string="King.X" />
-	</Effect>
-  <!--PostEffect name="RadialBlurPostEffect" track="0" startTime="0.0" endTime="300.0" /-->
-  <PostEffect name="GlowPostEffect" track="0" startTime="0.0" endTime="300.0">
+	</Effect-->
+  <PostEffect name="RadialBlurPostEffect" track="0" startTime="0.0" endTime="300.0" />
+  <!--PostEffect name="GlowPostEffect" track="0" startTime="0.0" endTime="300.0">
     <Parameter name="BloomScale" float="1.5" />
     <Parameter name="Exposure" float="1" />
-  </PostEffect>
+  </PostEffect-->
   <!--Effect name="NormalMapEffect" track="0" startTime="0.0" endTime="300.0">
   </Effect-->
   <!--PostEffect name="BlurPostEffect" track="0" startTime="0.0" endTime="300.0">

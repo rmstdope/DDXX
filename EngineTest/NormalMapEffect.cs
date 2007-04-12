@@ -24,7 +24,7 @@ namespace EngineTest
 
             scene = new Scene();
 
-            // Create model
+            // Create modelTivi
             IModel model = ModelFactory.FromFile("airplane 2.x", ModelOptions.EnsureTangents);
 
             // Add normal map
@@ -33,7 +33,7 @@ namespace EngineTest
                 model.Materials[i].NormalTexture = TextureFactory.CreateFromFile("NormalMap.dds");
             }
 
-            // create effect and node
+            // create effect and nodeTiVi
             IEffect effect = EffectFactory.CreateFromFile("Test.fxo");
             EffectHandler effectHandler = new EffectHandler(effect,
                 delegate(int material) { return ""; }, model);

@@ -24,7 +24,7 @@ GlassVertexShader(GlassVertexInput input)
 	output.Position = mul(input.Position, WorldViewProjectionT);
 	float3 normal = normalize(mul(input.Normal, WorldT));
 	output.Diffuse = 0;
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 1; i++)
 	{
 		float3 lightVec = LightPositions[i] - positionWS;
 		float d = length(lightVec);

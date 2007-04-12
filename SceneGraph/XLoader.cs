@@ -17,7 +17,7 @@ namespace Dope.DDXX.SceneGraph
         private IDevice device;
         private IEffect effect;
         private string filename;
-        private string techniquePrefix;
+        private MeshTechniqueChooser techniquePrefix;
 
         /// <summary>
         /// Constructor. Will not perform the actual loading.
@@ -30,7 +30,7 @@ namespace Dope.DDXX.SceneGraph
             this.device = device;
         }
 
-        public void Load(string filename, IEffect effect, string techniquePrefix)
+        public void Load(string filename, IEffect effect, MeshTechniqueChooser techniquePrefix)
         {
             this.filename = filename;
             this.effect = effect;

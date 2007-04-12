@@ -24,6 +24,7 @@ namespace EngineTest
         private ModelNode clothModel;
         private IBoundingObject sphere;
         private float reflectiveFactor;
+        private PointLightNode light;
 
         public float ReflectiveFactor
         {
@@ -87,6 +88,7 @@ namespace EngineTest
             builder.SetReflectiveFactor("Default1", 0.2f);
 
             IModel model = builder.CreateModel("Cloth");
+            model.Materials[0].DiffuseColor = new ColorValue(0.6f, 0.6f, 0.6f);
             clothModel = new ModelNode("Cloth", model,
                 new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
                 delegate(int material) { return "Glass"; }, model));
@@ -102,11 +104,16 @@ namespace EngineTest
                 new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
                 delegate(int material) { return "SkyBox"; }, model));
             scene.AddNode(skyBoxModel);
+
+            light = new PointLightNode("");
+            light.DiffuseColor = new ColorValue(1.0f, 1.0f, 1.0f);
+            scene.AddNode(light);
         }
 
         private void LoadFlyScene()
         {
-            XLoader.Load("Flyscene.x", EffectFactory.CreateFromFile("Test.fxo"), "Skinning");
+            XLoader.Load("Flyscene.x", EffectFactory.CreateFromFile("Test.fxo"),
+                TechniqueChooser.MeshPrefix("Skinning"));
             XLoader.AddToScene(scene);
             scene.ActiveCamera = scene.GetNodeByName("Camera") as CameraNode;
         }
@@ -152,6 +159,9 @@ namespace EngineTest
             // Rotate camera
             //camera.WorldState.Tilt(Time.DeltaTime / 2);
             //camera.WorldState.Turn(Time.DeltaTime / 1.456f);
+
+            light.Position = new Vector3(2 * (float)Math.Sin(Time.CurrentTime), 0,
+                2 * (float)Math.Cos(Time.CurrentTime));
 
             // Move sphere
             Vector3 pos = new Vector3(0, 0.5f, 2 * (float)Math.Cos(Time.CurrentTime / 4));

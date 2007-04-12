@@ -37,9 +37,10 @@ SolidVertexShader(VertexShaderInput input,
 }
 
 float4
-SolidPixelShader(SolidPixelInput input) : COLOR0
+SolidPixelShader(SolidPixelInput input,
+								 uniform sampler textureSampler) : COLOR0
 {
-	return float4(input.Diffuse, 1) * tex2D(BaseTextureSampler, input.TexCoords) + float4(input.Specular, 1);
+	return float4(input.Diffuse, 1) * tex2D(textureSampler, input.TexCoords) + float4(input.Specular, 1);
 }
 
 struct LinePixelInput
@@ -80,7 +81,28 @@ technique SolidSkinning
 	pass BasePass
 	{
 		VertexShader			= compile vs_2_0 SolidVertexShader(2);
-		PixelShader				= compile ps_2_0 SolidPixelShader();
+		PixelShader				= compile ps_2_0 SolidPixelShader(BaseTextureSampler);
+		AlphaTestEnable		= false;
+		AlphaBlendEnable	= false;
+		FillMode					= Solid;
+		ZEnable						=	true;
+		ZWriteEnable			= true;
+		ZFunc							= Less;
+		StencilEnable			= false;
+		CullMode					= CCW;
+	}
+}
+
+technique TvScreenSkinning
+<
+	bool NormalMapping = false;
+	bool Skinning = true;
+>
+{
+	pass BasePass
+	{
+		VertexShader			= compile vs_2_0 SolidVertexShader(2);
+		PixelShader				= compile ps_2_0 SolidPixelShader(BaseTextureSamplerBordered);
 		AlphaTestEnable		= false;
 		AlphaBlendEnable	= false;
 		FillMode					= Solid;
@@ -104,7 +126,7 @@ technique LineDrawerSkinning
 		PixelShader				= compile ps_2_0 LinePixelShader();
 		AlphaTestEnable		= false;
 		AlphaBlendEnable	= false;
-		FillMode					= Solid;
+		FillMode					= Wireframe;
 		ZEnable						=	true;
 		ZWriteEnable			= true;
 		ZFunc							= Less;

@@ -5,7 +5,7 @@ namespace Dope.DDXX.SceneGraph
 {
     public interface IXLoader
     {
-        void Load(string filename, IEffect effect, string techniquePrefix);
+        void Load(string filename, IEffect effect, MeshTechniqueChooser techniquePrefix);
         void AddToScene(IScene scene);
     }
 }

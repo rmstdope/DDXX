@@ -31,6 +31,7 @@ namespace Dope.DDXX.SceneGraph
         private ModelNode rootChild2Child1Node;
         private CameraNode rootChild2Child2Node;
         private IAnimationRootFrame addedHierarchy;
+        private MeshTechniqueChooser prefix = TechniqueChooser.MeshPrefix("Prefix");
        
         [SetUp]
         public override void SetUp()
@@ -84,9 +85,11 @@ namespace Dope.DDXX.SceneGraph
                 Will(Return.Value(rootNode));
             Stub.On(nodeFactory).Method("CreateCameraNode").With(rootChild1).
                 Will(Return.Value(rootChild1Node));
-            Stub.On(nodeFactory).Method("CreateSkinnedModelNode").With(hierarchy, rootChild2, effect, "Prefix").
+            Stub.On(nodeFactory).Method("CreateSkinnedModelNode").
+                With(hierarchy, rootChild2, effect, prefix).
                 Will(Return.Value(rootChild2Node));
-            Stub.On(nodeFactory).Method("CreateModelNode").With(rootChild2Child1, effect, "Prefix").
+            Stub.On(nodeFactory).Method("CreateModelNode").
+                With(rootChild2Child1, effect, prefix).
                 Will(Return.Value(rootChild2Child1Node));
             Stub.On(nodeFactory).Method("CreateCameraNode").With(rootChild2Child2).
                 Will(Return.Value(rootChild2Child2Node));
@@ -108,7 +111,7 @@ namespace Dope.DDXX.SceneGraph
                 With(Is.EqualTo("file.x"), Is.EqualTo(device), Is.NotNull, Is.Null).
                 Will(Return.Value(hierarchy));
             loader = new XLoader(factory, nodeFactory, device);
-            loader.Load("file.x", effect, "Prefix");
+            loader.Load("file.x", effect, prefix);
         }
 
         /// <summary>

@@ -28,7 +28,8 @@ namespace Dope.DDXX.SceneGraph
         public void TestModelNode()
         {
             name = "A name";
-            ModelNode node = nodeFactory.CreateModelNode(this, this, "prefix");
+            ModelNode node = nodeFactory.CreateModelNode(this, this,
+                TechniqueChooser.MeshPrefix("prefix"));
             Assert.AreEqual(0, node.Children.Count, "Node should have no children.");
             Assert.AreEqual("A name", node.Name, "The name of the node should be 'A name'");
             Assert.IsNotNull(node.Model, "Model shall not be null.");
@@ -41,7 +42,8 @@ namespace Dope.DDXX.SceneGraph
         public void TestSkinnedModelNode()
         {
             name = "A name";
-            ModelNode node = nodeFactory.CreateSkinnedModelNode(this, this, this, "prefix");
+            ModelNode node = nodeFactory.CreateSkinnedModelNode(this, this, this,
+                TechniqueChooser.MeshPrefix("prefix"));
             Assert.AreEqual(0, node.Children.Count, "Node should have no children.");
             Assert.AreEqual("A name", node.Name, "The name of the node should be 'A name'");
             Assert.IsNotNull(node.Model, "Model shall not be null.");

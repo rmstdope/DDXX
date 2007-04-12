@@ -10,6 +10,21 @@ using Microsoft.DirectX;
 namespace Dope.DDXX.SceneGraph
 {
     public delegate string MaterialTechniqueChooser(int material);
+    public delegate MaterialTechniqueChooser MeshTechniqueChooser(string meshName);
+
+    public class TechniqueChooser
+    {
+        public static MaterialTechniqueChooser MaterialPrefix(string prefix)
+        {
+            return delegate(int material) { return prefix; };
+        }
+        public static MeshTechniqueChooser MeshPrefix(string prefix)
+        {
+            return delegate(string name) { return MaterialPrefix(prefix); };
+        }
+    }
+
+
 
     public class EffectHandler : IEffectHandler
     {
@@ -32,11 +47,6 @@ namespace Dope.DDXX.SceneGraph
         private EffectHandle reflectiveFactor;
 
         private EffectHandle animationMatrices;
-
-        public static MaterialTechniqueChooser Prefix(string prefix)
-        {
-            return delegate(int material) { return prefix; };
-        }
 
         public EffectHandler(IEffect effect, MaterialTechniqueChooser prefix, IModel model)
         {

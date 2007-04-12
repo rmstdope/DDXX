@@ -181,7 +181,7 @@ namespace PoseidonTest
 
             effect = EffectFactory.CreateFromFile("../../Effects/PosseTest.fxo");
             EffectHandler effectHandler = new EffectHandler(effect,
-                EffectHandler.Prefix("NoTex"), model);
+                TechniqueChooser.MaterialPrefix("NoTex"), model);
             virtualModelNode = new ModelNode("Mesh", model, effectHandler);
             virtualScene.AddNode(virtualModelNode);
             virtualScene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
@@ -208,7 +208,7 @@ namespace PoseidonTest
             IModel model = TexturedBox(ModelFactory.CreateBox(100, 100, 1), modelMaterials);
             IEffect effect = EffectFactory.CreateFromFile("../../Effects/PosseTest.fxo");
             EffectHandler effectHandler = new EffectHandler(effect,
-                EffectHandler.Prefix("Tex"), model);
+                TechniqueChooser.MaterialPrefix("Tex"), model);
             modelNode = new ModelNode("Mesh", model, effectHandler);
             modelNode.WorldState.Tilt(4.0f);
             //scene.AddNode(modelNode);

@@ -7,30 +7,31 @@ using Microsoft.DirectX;
 
 namespace Dope.DDXX.SceneGraph
 {
-    public class NodeFactory : Dope.DDXX.SceneGraph.INodeFactory
+    public class NodeFactory : INodeFactory
     {
         private ITextureFactory textureFactory;
+
         public NodeFactory(ITextureFactory textureFactory)
         {
             this.textureFactory = textureFactory;
         }
 
-        public ModelNode CreateModelNode(IFrame frame, IEffect effect, string prefix)
+        public ModelNode CreateModelNode(IFrame frame, IEffect effect, MeshTechniqueChooser prefix)
         {
             IModel model = new Model(frame.Mesh, textureFactory, frame.ExtendedMaterials);
             return CommonCreateModelNode(frame, effect, prefix, model);
         }
 
-        public ModelNode CreateSkinnedModelNode(IAnimationRootFrame animationRootFrame, IFrame frame, IEffect effect, string prefix)
+        public ModelNode CreateSkinnedModelNode(IAnimationRootFrame animationRootFrame, IFrame frame, IEffect effect, MeshTechniqueChooser prefix)
         {
             IModel model = new SkinnedModel(animationRootFrame, frame, textureFactory);
             return CommonCreateModelNode(frame, effect, prefix, model);
         }
 
-        private static ModelNode CommonCreateModelNode(IFrame frame, IEffect effect, string prefix, IModel model)
+        private static ModelNode CommonCreateModelNode(IFrame frame, IEffect effect, MeshTechniqueChooser prefix, IModel model)
         {
             IEffectHandler effectHandler = new EffectHandler(effect, 
-                delegate(int material) { return prefix; }, model);
+                prefix(frame.Name), model);
             ModelNode node = new ModelNode(frame.Name, model, effectHandler);
             node.EnableFrameHandling(frame);
             return node;
