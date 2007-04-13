@@ -67,7 +67,6 @@ namespace Dope.DDXX.DemoFramework
         public void TestInit()
         {
             TestEffect effect = new TestEffect(0.0f, 10.0f);
-            Assert.IsTrue(effect.IsDeviceEqual(null));
 
             effect.Initialize();
 

@@ -160,6 +160,21 @@ namespace Dope.DDXX.SceneGraph
             Assert.AreSame(validTechnique, effectHandler.Techniques[0]);
         }
 
+        /// <summary>
+        /// No model and no prefix.
+        /// </summary>
+        [Test]
+        public void ConstructorTestNoPrefix()
+        {
+            ExpectMeshParameters(worldT, worldViewProjectionT, projectionT, worldViewT, invMatrixT, null, reflectiveFactorHandle);
+            ExpectMaterialParameters(null, null, null, null, null, null, materialShininessHandle);
+
+            EffectHandler effectHandler = new EffectHandler(effect);
+            Assert.AreSame(effect, effectHandler.Effect);
+            Assert.AreSame(null, effectHandler.Techniques);
+        }
+
+
         [Test]
         [ExpectedException(typeof(DDXXException))]
         public void ConstructorMissingReflectiveFactor()

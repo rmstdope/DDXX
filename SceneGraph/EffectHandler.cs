@@ -48,6 +48,18 @@ namespace Dope.DDXX.SceneGraph
 
         private EffectHandle animationMatrices;
 
+        /// <summary>
+        ///  Initialize an EffectHandler without setting any Technique. This must be set
+        /// manually by the user or things will crash.
+        /// </summary>
+        /// <param name="effect"></param>
+        public EffectHandler(IEffect effect)
+        {
+            this.effect = effect;
+
+            CommonInitialize(effect);
+        }
+
         public EffectHandler(IEffect effect, MaterialTechniqueChooser prefix, IModel model)
         {
             this.effect = effect;

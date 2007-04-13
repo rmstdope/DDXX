@@ -10,10 +10,6 @@ namespace Dope.DDXX.DemoFramework
     {
         private float startTime;
         private float endTime;
-        private IDevice device;
-        private IEffectFactory effectFactory;
-        private IModelFactory modelFactory;
-        private ITextureFactory textureFactory;
         private IXLoader xLoader;
 
         protected BaseDemoEffect(float startTime, float endTime)
@@ -24,22 +20,27 @@ namespace Dope.DDXX.DemoFramework
 
         protected IDevice Device
         {
-            get { return device; }
+            get { return D3DDriver.GetInstance().Device; }
+        }
+
+        protected IGraphicsFactory GraphicsFactory
+        {
+            get { return D3DDriver.GraphicsFactory; }
         }
 
         protected IEffectFactory EffectFactory
         {
-            get { return effectFactory; }
+            get { return D3DDriver.EffectFactory; }
         }
 
         protected IModelFactory ModelFactory
         {
-            get { return modelFactory; }
+            get { return D3DDriver.ModelFactory; }
         }
 
         protected ITextureFactory TextureFactory
         {
-            get { return textureFactory; }
+            get { return D3DDriver.TextureFactory; }
         }
 
         protected IXLoader XLoader
@@ -75,11 +76,7 @@ namespace Dope.DDXX.DemoFramework
 
         public virtual void Initialize()
         {
-            device = D3DDriver.GetInstance().Device;
-            effectFactory = D3DDriver.EffectFactory;
-            modelFactory = D3DDriver.ModelFactory;
-            textureFactory = D3DDriver.TextureFactory;
-            xLoader = new XLoader(D3DDriver.GraphicsFactory, new NodeFactory(textureFactory), device);
+            xLoader = new XLoader(GraphicsFactory, new NodeFactory(TextureFactory), Device);
         }
 
         #endregion

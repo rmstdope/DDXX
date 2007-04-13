@@ -13,19 +13,6 @@ namespace Dope.DDXX.ParticleSystems
 {
     public class FloaterSystem : ParticleSystemNode
     {
-        public struct FloaterVertex
-        {
-            public Vector3 Position;
-            public float Size;
-            public int Color;
-            public FloaterVertex(Vector3 position, float size, int color)
-            {
-                Position = position;
-                Size = size;
-                Color = color;
-            }
-        }
-
         public class FloaterParticle : SystemParticle
         {
             public Vector3 Phase;
@@ -41,13 +28,12 @@ namespace Dope.DDXX.ParticleSystems
         }
 
         private float boundaryRadius;
-        private IVertexBuffer vertexBuffer;
         private VertexDeclaration vertexDeclaration;
         static private Random rand = new Random();
 
-        protected override IVertexBuffer VertexBuffer
+        protected override Type VertexType
         {
-            get { return vertexBuffer; }
+            get { return typeof(VertexColorPoint); }
         }
 
         protected override VertexDeclaration VertexDeclaration
@@ -67,10 +53,9 @@ namespace Dope.DDXX.ParticleSystems
 
         public void Initialize(int numParticles, float boundaryRadius, string texture)
         {
-            InitializeBase(numParticles);
+            InitializeBase(numParticles, D3DDriver.GetInstance().Device, 
+                D3DDriver.GraphicsFactory, D3DDriver.EffectFactory);
             this.boundaryRadius = boundaryRadius;
-
-            CreateVertexBuffer();
 
             CreateVertexDeclaration();
 
@@ -90,7 +75,7 @@ namespace Dope.DDXX.ParticleSystems
 
         private void SpawnParticle()
         {
-            FloaterParticle particle = new FloaterParticle(DistributeEvenlyInSphere(boundaryRadius), Color.Gray, 10.0f);
+            FloaterParticle particle = new FloaterParticle(DistributeEvenlyInSphere(boundaryRadius), Color.White, 10.0f);
             particles.Add(particle);
         }
 
@@ -108,11 +93,6 @@ namespace Dope.DDXX.ParticleSystems
             vertexDeclaration = D3DDriver.GraphicsFactory.CreateVertexDeclaration(Device, elements);
         }
 
-        private void CreateVertexBuffer()
-        {
-            vertexBuffer = D3DDriver.GraphicsFactory.CreateVertexBuffer(typeof(FloaterVertex), NumParticles, Device, Usage.WriteOnly | Usage.Dynamic, VertexFormats.None, Pool.Default);
-        }
-
         private Vector3 DistributeEvenlyInSphere(float radius)
         {
             Vector3 pos;
@@ -127,8 +107,8 @@ namespace Dope.DDXX.ParticleSystems
 
         protected override void StepNode()
         {
-            FloaterVertex vertex = new FloaterVertex();
-            using (IGraphicsStream stream = vertexBuffer.Lock(0, 0, LockFlags.Discard))
+            VertexColorPoint vertex = new VertexColorPoint();
+            using (IGraphicsStream stream = VertexBuffer.Lock(0, 0, LockFlags.Discard))
             {
                 foreach (FloaterParticle particle in particles)
                 {
@@ -139,7 +119,7 @@ namespace Dope.DDXX.ParticleSystems
                     vertex.Color = particle.Color.ToArgb();
                     stream.Write(vertex);
                 }
-                vertexBuffer.Unlock();
+                VertexBuffer.Unlock();
             }
         }
 

@@ -12,6 +12,7 @@ namespace Dope.DDXX.SceneGraph
     {
         private int numParticles;
         private IDevice device;
+        private IVertexBuffer vertexBuffer;
         protected IEffectHandler effectHandler;
         protected List<SystemParticle> particles;
         protected ModelMaterial material;
@@ -39,8 +40,13 @@ namespace Dope.DDXX.SceneGraph
             set { effectHandler = value; }
         }
 
-        protected abstract IVertexBuffer VertexBuffer { get; }
+        protected IVertexBuffer VertexBuffer 
+        {
+            get { return vertexBuffer; }
+        }
+
         protected abstract VertexDeclaration VertexDeclaration { get; }
+        protected abstract Type VertexType { get; }
 
         public ParticleSystemNode(string name)
             : base(name)
@@ -53,14 +59,17 @@ namespace Dope.DDXX.SceneGraph
             destinationBlend = Blend.One;
         }
 
-        protected void InitializeBase(int numParticles)
+        protected void InitializeBase(int numParticles, IDevice device,
+            IGraphicsFactory graphicsFactory, IEffectFactory effectFactory)
         {
             this.numParticles = numParticles;
-            this.device = D3DDriver.GetInstance().Device;
+            this.device = device;
             particles = new List<SystemParticle>();
 
-            IEffect effect = D3DDriver.EffectFactory.CreateFromFile("ParticleSystem.fxo");
-            this.effectHandler = new EffectHandler(effect, delegate(int material) { return ""; }, null);
+            IEffect effect = effectFactory.CreateFromFile("ParticleSystem.fxo");
+            this.effectHandler = new EffectHandler(effect);
+
+            vertexBuffer = graphicsFactory.CreateVertexBuffer(VertexType, numParticles, device, Usage.WriteOnly | Usage.Dynamic, VertexFormats.None, Pool.Default);
         }
 
         protected override void RenderNode(IScene scene)
@@ -78,7 +87,7 @@ namespace Dope.DDXX.SceneGraph
                 device.RenderState.BlendOperation = blendOperation;
                 device.RenderState.SourceBlend = sourceBlend;
                 device.RenderState.DestinationBlend = destinationBlend;
-                device.SetStreamSource(0, VertexBuffer, 0);
+                device.SetStreamSource(0, vertexBuffer, 0);
                 device.VertexDeclaration = VertexDeclaration;
                 device.DrawPrimitives(PrimitiveType.PointList, 0, ActiveParticles);
 

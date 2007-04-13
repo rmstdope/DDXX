@@ -9,14 +9,17 @@ using Dope.DDXX.SceneGraph;
 using Dope.DDXX.Utility;
 using Dope.DDXX.Graphics.Skinning;
 using System.Drawing;
+using Dope.DDXX.ParticleSystems;
 
 namespace EngineTest
 {
     public class CreationScene : BaseDemoEffect
     {
+        private const int MAX_NUM_DRAW_LINES = 100;
         private string baseMesh;
         private Scene scene;
         private UnindexedMesh lineTiViMesh;
+        //private UnindexedMesh drawLineMesh;
         private IMesh originalTiViMesh;
         private IModel modelTiVi;
         private ModelNode nodeTiVi;
@@ -46,6 +49,14 @@ namespace EngineTest
                 //BiNormal = new Vector3();
                 //Tangent = new Vector3();
             }
+            public VertexFormats VertexFormats
+            {
+                get
+                {
+                    return VertexFormats.PositionBlend4 | VertexFormats.LastBetaUByte4 |
+                        VertexFormats.Normal;
+                }
+            }
             public Vector3 Position;
             public float BlendWeight1;
             public float BlendWeight2;
@@ -68,9 +79,13 @@ namespace EngineTest
             base.Initialize();
             scene = new Scene();
 
-            GenerateModel();
+            //GenerateModel();
 
             SetUpCamera();
+
+            FallingStarSystem system = new FallingStarSystem("FS");
+            system.Initialize(100, Device, GraphicsFactory, EffectFactory, TextureFactory.CreateFromFile("red glass.jpg"));
+            scene.AddNode(system);
         }
 
         private void SetUpCamera()
@@ -114,8 +129,34 @@ namespace EngineTest
 
         private void GenerateModel()
         {
-            XLoader.Load("tivi.x", EffectFactory.CreateFromFile("TiVi.fxo"), 
-                delegate(string name) 
+            LoadAnimation();
+            IMesh clonedMesh = modelTiVi.Mesh.Clone(MeshFlags.Managed, modelTiVi.Mesh.Declaration, Device);
+            WeldVertices(clonedMesh);
+            ExtractMeshData(clonedMesh);
+            CreateEdges(indices, 0);
+            CreateLineMeshes();
+        }
+
+        private void CreateLineMeshes()
+        {
+            lineVertices = new Vertex[edges.Count * 2];
+            lineTiViMesh = new UnindexedMesh(GraphicsFactory, typeof(Vertex), lineVertices.Length,
+                Device, Usage.WriteOnly | Usage.Dynamic, lineVertices[0].VertexFormats, Pool.Default);
+
+            //drawLineMesh = new UnindexedMesh(GraphicsFactory, typeof(Vertex), MAX_NUM_DRAW_LINES * 2,
+            //    Device, Usage.WriteOnly | Usage.Dynamic, lineVertices[0].VertexFormats, Pool.Default);
+            //IModel model = new Model(drawLineMesh);
+            //ModelNode node = new ModelNode("Lines", modelTiVi,
+            //    new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"), 
+            //    TechniqueChooser.MaterialPrefix("Line"), model));
+            //scene.AddNode(node);
+
+        }
+
+        private void LoadAnimation()
+        {
+            XLoader.Load("tivi.x", EffectFactory.CreateFromFile("TiVi.fxo"),
+                delegate(string name)
                 {
                     return delegate(int material)
                     {
@@ -126,20 +167,9 @@ namespace EngineTest
                     };
                 });
             XLoader.AddToScene(scene);
-            IModel model = ((ModelNode)(scene.GetNodeByName("TiVi"))).Model;
-            IMesh mesh = model.Mesh.Clone(MeshFlags.Managed, model.Mesh.Declaration, Device);
-            WeldVertices(mesh);
-            ExtractMeshData(mesh);
-            edges = CreateEdges(indices, 0);
-            lineVertices = new Vertex[edges.Count * 2];
-
-            lineTiViMesh = new UnindexedMesh(D3DDriver.GraphicsFactory, typeof(Vertex), lineVertices.Length, //undrawnEdges.Count * 2,
-                D3DDriver.GetInstance().Device, Usage.WriteOnly | Usage.Dynamic, VertexFormats.PositionBlend4 | VertexFormats.LastBetaUByte4 | VertexFormats.Normal, Pool.Default);
-
             nodeTiVi = (ModelNode)scene.GetNodeByName("TiVi");
             modelTiVi = nodeTiVi.Model;
             originalTiViMesh = modelTiVi.Mesh;
-
         }
 
         private void ExtractMeshData(IMesh mesh)
@@ -173,11 +203,11 @@ namespace EngineTest
             mesh.WeldVertices(WeldEpsilonsFlags.WeldAll, new WeldEpsilons(), adia);
         }
 
-        private List<TiViEdge> CreateEdges(short[] indices, int startVertex)
+        private void CreateEdges(short[] indices, int startVertex)
         {
+            edges = new List<TiViEdge>();
             List<TiViEdge> undrawnEdges = new List<TiViEdge>();
             List<TiViEdge> drawingEdges = new List<TiViEdge>();
-            List<TiViEdge> drawnEdges = new List<TiViEdge>();
             for (int i = 0; i < indices.Length / 3; i++)
             {
                 AddEdge(undrawnEdges, indices[i * 3 + 0], indices[i * 3 + 1]);
@@ -185,17 +215,16 @@ namespace EngineTest
                 AddEdge(undrawnEdges, indices[i * 3 + 2], indices[i * 3 + 0]);
             }
 
-            GetEdges(undrawnEdges, drawingEdges, startVertex, 0);
+            GetEdgesForVertex(undrawnEdges, drawingEdges, startVertex, 0);
             while (drawingEdges.Count != 0)
             {
                 SortEdges(drawingEdges);
                 TiViEdge e = drawingEdges[0];
                 drawingEdges.RemoveAt(0);
-                drawnEdges.Add(e);
-                GetEdges(undrawnEdges, drawingEdges, e.V2, e.StartTime + e.Length);
+                edges.Add(e);
+                GetEdgesForVertex(undrawnEdges, drawingEdges, e.V2, e.StartTime + e.Length);
             }
-            SortEdges(drawnEdges);
-            return drawnEdges;
+            SortEdges(edges);
         }
 
         private void SortEdges(List<TiViEdge> edges)
@@ -206,7 +235,7 @@ namespace EngineTest
             });
         }
 
-        private void GetEdges(List<TiViEdge> srcList, List<TiViEdge> dstList, int vertex, float t)
+        private void GetEdgesForVertex(List<TiViEdge> srcList, List<TiViEdge> dstList, int vertex, float t)
         {
             srcList.ForEach(delegate(TiViEdge e)
             {
@@ -236,42 +265,48 @@ namespace EngineTest
 
         public override void Step()
         {
-            int i;
-            for (i = 0; i < edges.Count; i++)
+            if (nodeTiVi != null)
             {
-                if (edges[i].StartTime > Time.CurrentTime)
-                    break;
-                lineVertices[i * 2 + 0] = allVertices[edges[i].V1];
-                lineVertices[i * 2 + 1] = allVertices[edges[i].V2];
-                float delta = (Time.CurrentTime - edges[i].StartTime) / edges[i].Length;
-                if (delta > 1.0f)
-                    delta = 1.0f;
-                Vector3 v = lineVertices[i * 2 + 1].Position - lineVertices[i * 2 + 0].Position;
-                lineVertices[i * 2 + 1].Position = lineVertices[i * 2 + 0].Position + v * delta;
+                int i;
+                for (i = 0; i < edges.Count; i++)
+                {
+                    if (edges[i].StartTime > Time.CurrentTime)
+                        break;
+                    lineVertices[i * 2 + 0] = allVertices[edges[i].V1];
+                    lineVertices[i * 2 + 1] = allVertices[edges[i].V2];
+                    float delta = (Time.CurrentTime - edges[i].StartTime) / edges[i].Length;
+                    if (delta > 1.0f)
+                        delta = 1.0f;
+                    Vector3 v = lineVertices[i * 2 + 1].Position - lineVertices[i * 2 + 0].Position;
+                    lineVertices[i * 2 + 1].Position = lineVertices[i * 2 + 0].Position + v * delta;
+                }
+                lineTiViMesh.SetVertexBufferData(lineVertices, LockFlags.Discard);
+                lineTiViMesh.NumberActiveVertices = i * 2;
             }
-            lineTiViMesh.SetVertexBufferData(lineVertices, LockFlags.Discard);
-            lineTiViMesh.NumberActiveVertices = i * 2;
 
             scene.Step();
         }
 
         public override void Render()
         {
-            if (Time.CurrentTime > 25.0f)
+            if (nodeTiVi != null)
             {
-                modelTiVi.Materials[0].AmbientColor = new ColorValue(0.2f, 0.2f, 0.2f);
-                modelTiVi.Materials[0].DiffuseColor = new ColorValue(1.0f, 1.0f, 1.0f);
-                modelTiVi.Materials[0].SpecularColor = new ColorValue(1.0f, 1.0f, 1.0f);
-                modelTiVi.Materials[0].Shininess = 64;
-                modelTiVi.Mesh = originalTiViMesh;
-            }
-            else
-            {
-                modelTiVi.Materials[0].AmbientColor = new ColorValue(0.4f, 0.4f, 0.4f);
-                modelTiVi.Materials[0].DiffuseColor = new ColorValue(0.7f, 0.7f, 0.3f);
-                modelTiVi.Materials[0].SpecularColor = new ColorValue(0.5f, 0.5f, 0.5f);
-                modelTiVi.Materials[0].Shininess = 32;
-                modelTiVi.Mesh = lineTiViMesh;
+                if (Time.CurrentTime > 25.0f)
+                {
+                    modelTiVi.Materials[0].AmbientColor = new ColorValue(0.2f, 0.2f, 0.2f);
+                    modelTiVi.Materials[0].DiffuseColor = new ColorValue(1.0f, 1.0f, 1.0f);
+                    modelTiVi.Materials[0].SpecularColor = new ColorValue(1.0f, 1.0f, 1.0f);
+                    modelTiVi.Materials[0].Shininess = 64;
+                    modelTiVi.Mesh = originalTiViMesh;
+                }
+                else
+                {
+                    modelTiVi.Materials[0].AmbientColor = new ColorValue(0.4f, 0.4f, 0.4f);
+                    modelTiVi.Materials[0].DiffuseColor = new ColorValue(0.7f, 0.7f, 0.3f);
+                    modelTiVi.Materials[0].SpecularColor = new ColorValue(0.5f, 0.5f, 0.5f);
+                    modelTiVi.Materials[0].Shininess = 32;
+                    modelTiVi.Mesh = lineTiViMesh;
+                }
             }
             scene.Render();
         }

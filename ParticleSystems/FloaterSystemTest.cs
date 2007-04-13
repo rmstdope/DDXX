@@ -13,7 +13,7 @@ namespace Dope.DDXX.ParticleSystems
     [TestFixture]
     public class FloaterSystemTest : D3DMockTest
     {
-        private FloaterSystem floaterSystem;
+        private FloaterSystem system;
         private IVertexBuffer vertexBuffer;
         private IGraphicsStream graphicsStream;
         private EffectHandle technique;
@@ -32,7 +32,7 @@ namespace Dope.DDXX.ParticleSystems
 
             SetupTime();
             
-            floaterSystem = new FloaterSystem("FS");
+            system = new FloaterSystem("FS");
             
             vertexBuffer = mockery.NewMock<IVertexBuffer>();
             graphicsStream = mockery.NewMock<IGraphicsStream>();
@@ -60,10 +60,10 @@ namespace Dope.DDXX.ParticleSystems
         {
             ExpectEffect();
             ExpectVertexBuffer();
-            floaterSystem.Initialize(100, 50.0f, null);
-            floaterSystem.EffectHandler = effectHandler;
-            Assert.AreEqual(50.0f, floaterSystem.BoundaryRadius);
-            Assert.AreEqual(100, floaterSystem.NumParticles);
+            system.Initialize(100, 50.0f, null);
+            system.EffectHandler = effectHandler;
+            Assert.AreEqual(50.0f, system.BoundaryRadius);
+            Assert.AreEqual(100, system.NumParticles);
         }
 
         [Test]
@@ -75,10 +75,10 @@ namespace Dope.DDXX.ParticleSystems
                 Method("CreateFromFile").
                 WithAnyArguments().
                 Will(Return.Value(texture));
-            floaterSystem.Initialize(100, 50.0f, "Texture");
-            floaterSystem.EffectHandler = effectHandler;
-            Assert.AreEqual(50.0f, floaterSystem.BoundaryRadius);
-            Assert.AreEqual(100, floaterSystem.NumParticles);
+            system.Initialize(100, 50.0f, "Texture");
+            system.EffectHandler = effectHandler;
+            Assert.AreEqual(50.0f, system.BoundaryRadius);
+            Assert.AreEqual(100, system.NumParticles);
         }
 
         [Test]
@@ -95,7 +95,7 @@ namespace Dope.DDXX.ParticleSystems
                 With(new CheckVertex(500.0f, 10.0f));
             Expect.Once.On(vertexBuffer).
                 Method("Unlock");
-            floaterSystem.Step();
+            system.Step();
         }
 
         [Test]
@@ -125,7 +125,7 @@ namespace Dope.DDXX.ParticleSystems
                 Expect.Once.On(effect).Method("End");
             }
 
-            floaterSystem.Render(scene);
+            system.Render(scene);
         }
 
         private void ExpectVertexBuffer()
@@ -146,22 +146,10 @@ namespace Dope.DDXX.ParticleSystems
                 Method("CreateFromFile").
                 WithAnyArguments().
                 Will(Return.Value(effect));
-            Expect.Once.On(effect).
-                Method("FindNextValidTechnique").
-                WithAnyArguments().
-                Will(Return.Value(technique));
             Stub.On(effect).
                 Method("GetParameter").
                 WithAnyArguments().
                 Will(Return.Value(EffectHandle.FromString("1")));
-            Stub.On(effect).
-                Method("GetTechniqueName").
-                WithAnyArguments().
-                Will(Return.Value("TechName"));
-            Stub.On(effect).
-                Method("GetAnnotation").
-                WithAnyArguments().
-                Will(Return.Value(null));
         }
 
         private class CheckVertex : Matcher
@@ -181,9 +169,9 @@ namespace Dope.DDXX.ParticleSystems
 
             public override bool Matches(object o)
             {
-                if (!(o is FloaterSystem.FloaterVertex))
+                if (!(o is VertexColorPoint))
                     return false;
-                FloaterSystem.FloaterVertex v = (FloaterSystem.FloaterVertex)o;
+                VertexColorPoint v = (VertexColorPoint)o;
                 if (v.Position.Length() > radius)
                     return false;
                 if (v.Size > maxSize)
