@@ -27,6 +27,7 @@ namespace EngineTest
         private List<TiViEdge> edges;
         private Vertex[] allVertices;
         private short[] indices;
+        private CameraNode camera;
 
         public string BaseMesh
         {
@@ -84,15 +85,16 @@ namespace EngineTest
             SetUpCamera();
 
             FallingStarSystem system = new FallingStarSystem("FS");
-            system.Initialize(100, Device, GraphicsFactory, EffectFactory, TextureFactory.CreateFromFile("red glass.jpg"));
+            system.Initialize(100, Device, GraphicsFactory, EffectFactory, null);
             scene.AddNode(system);
         }
 
         private void SetUpCamera()
         {
-            CameraNode camera = new CameraNode("Camera");
-            camera.WorldState.MoveForward(-3);
-            camera.WorldState.MoveUp(1);
+            camera = new CameraNode("Camera");
+            camera.WorldState.MoveForward(-10);
+            //camera.WorldState.MoveForward(-3);
+            //camera.WorldState.MoveUp(1);
             scene.AddNode(camera);
             scene.ActiveCamera = camera;
         }
@@ -265,6 +267,9 @@ namespace EngineTest
 
         public override void Step()
         {
+            //camera.WorldState.Roll(Time.DeltaTime);
+            //camera.WorldState.Tilt(Time.DeltaTime / 3.245f);
+            //camera.WorldState.Turn(Time.DeltaTime / 2.245f);
             if (nodeTiVi != null)
             {
                 int i;

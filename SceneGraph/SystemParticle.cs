@@ -19,5 +19,10 @@ namespace Dope.DDXX.SceneGraph
             this.Size = size;
         }
 
+        public virtual bool Alive 
+        {
+            get { return true; } 
+        }
+
     }
 }

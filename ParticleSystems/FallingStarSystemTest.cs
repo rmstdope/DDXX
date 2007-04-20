@@ -5,6 +5,7 @@ using NUnit.Framework;
 using Dope.DDXX.Graphics;
 using Microsoft.DirectX.Direct3D;
 using NMock2;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.ParticleSystems
 {
@@ -32,6 +33,7 @@ namespace Dope.DDXX.ParticleSystems
             effect = mockery.NewMock<IEffect>();
             vertexBuffer = mockery.NewMock<IVertexBuffer>();
             texture = mockery.NewMock<ITexture>();
+            Time.Initialize();
         }
 
         [TearDown]
@@ -83,6 +85,16 @@ namespace Dope.DDXX.ParticleSystems
                 With(Is.Anything, Is.EqualTo(num), Is.EqualTo(device), Is.EqualTo(Usage.Dynamic | Usage.WriteOnly),
                 Is.EqualTo(VertexFormats.None), Is.EqualTo(Pool.Default)).
                 Will(Return.Value(vertexBuffer));
+            Expect.Once.On(graphicsFactory).
+                Method("CreateVertexDeclaration").
+                With(device, new VertexElement[] 
+                {
+                    new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
+                    new VertexElement(0, 12, DeclarationType.Float1, DeclarationMethod.Default, DeclarationUsage.PointSize, 0),
+                    new VertexElement(0, 16, DeclarationType.Color, DeclarationMethod.Default, DeclarationUsage.Color, 0),
+                    VertexElement.VertexDeclarationEnd
+                }).
+                Will(Return.Value(null));
         }
 
         private class SaveData: Matcher

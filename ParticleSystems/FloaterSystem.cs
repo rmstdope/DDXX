@@ -29,7 +29,6 @@ namespace Dope.DDXX.ParticleSystems
 
         private float boundaryRadius;
         private VertexDeclaration vertexDeclaration;
-        static private Random rand = new Random();
 
         protected override Type VertexType
         {
@@ -51,10 +50,14 @@ namespace Dope.DDXX.ParticleSystems
         {
         }
 
-        public void Initialize(int numParticles, float boundaryRadius, string texture)
+        public void Initialize(int numParticles, float boundaryRadius, string textureFile)
         {
+            ITexture texture = null;
+            if (textureFile != null)
+                texture = D3DDriver.TextureFactory.CreateFromFile(textureFile);
+
             InitializeBase(numParticles, D3DDriver.GetInstance().Device, 
-                D3DDriver.GraphicsFactory, D3DDriver.EffectFactory);
+                D3DDriver.GraphicsFactory, D3DDriver.EffectFactory, texture);
             this.boundaryRadius = boundaryRadius;
 
             CreateVertexDeclaration();
@@ -63,19 +66,11 @@ namespace Dope.DDXX.ParticleSystems
             {
                 SpawnParticle();
             }
-
-            if (texture == null)
-                effectHandler.Techniques = new EffectHandle[] { EffectHandle.FromString("PointSpriteNoTexture") };
-            else
-            {
-                material.DiffuseTexture = D3DDriver.TextureFactory.CreateFromFile(texture);
-                effectHandler.Techniques = new EffectHandle[] { EffectHandle.FromString("PointSprite") };
-            }
         }
 
         private void SpawnParticle()
         {
-            FloaterParticle particle = new FloaterParticle(DistributeEvenlyInSphere(boundaryRadius), Color.White, 10.0f);
+            FloaterParticle particle = new FloaterParticle(RandomPositionInSphere(boundaryRadius), Color.White, 10.0f);
             particles.Add(particle);
         }
 
@@ -91,18 +86,6 @@ namespace Dope.DDXX.ParticleSystems
 
             // Use the vertex element array to create a vertex declaration.
             vertexDeclaration = D3DDriver.GraphicsFactory.CreateVertexDeclaration(Device, elements);
-        }
-
-        private Vector3 DistributeEvenlyInSphere(float radius)
-        {
-            Vector3 pos;
-            do
-            {
-                pos = new Vector3((float)(rand.NextDouble() * radius),
-                                  (float)(rand.NextDouble() * radius),
-                                  (float)(rand.NextDouble() * radius));
-            } while (pos.Length() > radius);
-            return pos;
         }
 
         protected override void StepNode()

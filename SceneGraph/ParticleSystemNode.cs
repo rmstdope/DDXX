@@ -5,6 +5,7 @@ using Dope.DDXX.Graphics;
 using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Physics;
 using System.Drawing;
+using Microsoft.DirectX;
 
 namespace Dope.DDXX.SceneGraph
 {
@@ -19,6 +20,7 @@ namespace Dope.DDXX.SceneGraph
         protected BlendOperation blendOperation;
         protected Blend sourceBlend;
         protected Blend destinationBlend;
+        static protected Random rand = new Random();
 
         public IDevice Device
         {
@@ -59,17 +61,37 @@ namespace Dope.DDXX.SceneGraph
             destinationBlend = Blend.One;
         }
 
+        protected Vector3 RandomPositionInSphere(float radius)
+        {
+            Vector3 pos;
+            do
+            {
+                pos = new Vector3((float)(((rand.NextDouble() * 2) - 1) * radius),
+                                  (float)(((rand.NextDouble() * 2) - 1) * radius),
+                                  (float)(((rand.NextDouble() * 2) - 1) * radius));
+            } while (pos.Length() > radius);
+            return pos;
+        }
+
         protected void InitializeBase(int numParticles, IDevice device,
-            IGraphicsFactory graphicsFactory, IEffectFactory effectFactory)
+            IGraphicsFactory graphicsFactory, IEffectFactory effectFactory, ITexture texture)
         {
             this.numParticles = numParticles;
             this.device = device;
             particles = new List<SystemParticle>();
 
             IEffect effect = effectFactory.CreateFromFile("ParticleSystem.fxo");
-            this.effectHandler = new EffectHandler(effect);
+            effectHandler = new EffectHandler(effect);
 
             vertexBuffer = graphicsFactory.CreateVertexBuffer(VertexType, numParticles, device, Usage.WriteOnly | Usage.Dynamic, VertexFormats.None, Pool.Default);
+
+            if (texture == null)
+                effectHandler.Techniques = new EffectHandle[] { EffectHandle.FromString("PointSpriteNoTexture") };
+            else
+            {
+                material.DiffuseTexture = texture;
+                effectHandler.Techniques = new EffectHandle[] { EffectHandle.FromString("PointSprite") };
+            }
         }
 
         protected override void RenderNode(IScene scene)

@@ -12,20 +12,30 @@ namespace Dope.DDXX.ParticleSystems
 {
     public class FallingStarSystem : ParticleSystemNode
     {
+        private VertexDeclaration vertexDeclaration;
         private VertexColorPoint[] vertexData;
-        static private Random rand = new Random();
 
         public class FallingStarParticle : SystemParticle
         {
-            public Vector3 Phase;
-            public Vector3 Period;
-            public Vector3 Amplitude;
+            private bool alive;
+            public Vector3 Velocity;
             public FallingStarParticle(Vector3 position, Color color, float size)
                 : base(position, color, size)
             {
-                Phase = 2.0f * (float)Math.PI * new Vector3((float)rand.NextDouble(), (float)rand.NextDouble(), (float)rand.NextDouble());
-                Period = new Vector3(2, 2, 2) + 4.0f * (float)Math.PI * new Vector3((float)rand.NextDouble(), (float)rand.NextDouble(), (float)rand.NextDouble());
-                Amplitude = new Vector3(20, 20, 20) + 60.0f * new Vector3((float)rand.NextDouble(), (float)rand.NextDouble(), (float)rand.NextDouble());
+                alive = true;
+                Velocity = new Vector3((float)rand.NextDouble() * 0.3f, -1, 
+                    (float)rand.NextDouble() * 0.3f);
+                Velocity.Normalize();
+            }
+
+            public void Kill()
+            {
+                alive = false;
+            }
+
+            public override bool Alive
+            {
+                get { return alive; }
             }
         }
 
@@ -37,38 +47,31 @@ namespace Dope.DDXX.ParticleSystems
         public void Initialize(int numParticles, IDevice device, IGraphicsFactory graphicsFactory, 
             IEffectFactory effectFactory, ITexture texture)
         {
-            base.InitializeBase(numParticles, device, graphicsFactory, effectFactory);
+            base.InitializeBase(numParticles, device, graphicsFactory, effectFactory, texture);
 
+            CreateVertexDeclaration(graphicsFactory);
             vertexData = new VertexColorPoint[NumParticles];
 
             while (ActiveParticles < NumParticles)
                 SpawnParticle();
+        }
 
-            if (texture == null)
-                effectHandler.Techniques = new EffectHandle[] { EffectHandle.FromString("PointSpriteNoTexture") };
-            else
+        private void CreateVertexDeclaration(IGraphicsFactory graphicsFactory)
+        {
+            VertexElement[] elements = new VertexElement[]
             {
-                material.DiffuseTexture = texture;
-                effectHandler.Techniques = new EffectHandle[] { EffectHandle.FromString("PointSprite") };
-            }
+                new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
+                new VertexElement(0, 12, DeclarationType.Float1, DeclarationMethod.Default, DeclarationUsage.PointSize, 0),
+                new VertexElement(0, 16, DeclarationType.Color, DeclarationMethod.Default, DeclarationUsage.Color, 0),
+                VertexElement.VertexDeclarationEnd 
+            };
+            vertexDeclaration = graphicsFactory.CreateVertexDeclaration(Device, elements);
         }
 
         private void SpawnParticle()
         {
-            FallingStarParticle particle = new FallingStarParticle(DistributeEvenlyInSphere(5.0f), Color.White, 10.0f);
+            FallingStarParticle particle = new FallingStarParticle(RandomPositionInSphere(2.0f), Color.White, (float)rand.NextDouble() * 0.2f);
             particles.Add(particle);
-        }
-
-        private Vector3 DistributeEvenlyInSphere(float radius)
-        {
-            Vector3 pos;
-            do
-            {
-                pos = new Vector3((float)(rand.NextDouble() * radius),
-                                  (float)(rand.NextDouble() * radius),
-                                  (float)(rand.NextDouble() * radius));
-            } while (pos.Length() > radius);
-            return pos;
         }
 
         protected override Type VertexType
@@ -78,28 +81,25 @@ namespace Dope.DDXX.ParticleSystems
 
         protected override VertexDeclaration VertexDeclaration
         {
-            get 
-            {
-                VertexElement[] elements = new VertexElement[]
-                {
-                    new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
-                    new VertexElement(0, 12, DeclarationType.Float1, DeclarationMethod.Default, DeclarationUsage.PointSize, 0),
-                    new VertexElement(0, 16, DeclarationType.Color, DeclarationMethod.Default, DeclarationUsage.Color, 0),
-                    VertexElement.VertexDeclarationEnd 
-                };
-                return D3DDriver.GraphicsFactory.CreateVertexDeclaration(Device, elements);
-            }
+            get { return vertexDeclaration; }
         }
 
         protected override void StepNode()
         {
+            foreach (FallingStarParticle particle in particles)
+            {
+                particle.Position += particle.Velocity * Time.DeltaTime;
+                if (particle.Position.Length() > 2.0)
+                    particle.Kill();
+            }
+            particles.RemoveAll(delegate(SystemParticle particle) 
+                { return !particle.Alive; });
+            while (ActiveParticles < NumParticles)
+                SpawnParticle();
             int i = 0;
             foreach (FallingStarParticle particle in particles)
             {
-                vertexData[i].Position = particle.Position + 
-                    new Vector3(particle.Amplitude.X * (float)Math.Sin(Time.StepTime / particle.Period.X + particle.Phase.X),
-                                particle.Amplitude.Y * (float)Math.Sin(Time.StepTime / particle.Period.Y + particle.Phase.Y),
-                                particle.Amplitude.Z * (float)Math.Sin(Time.StepTime / particle.Period.Z + particle.Phase.Z));
+                vertexData[i].Position = particle.Position;
                 vertexData[i].Size = particle.Size;
                 vertexData[i].Color = particle.Color.ToArgb();
                 i++;
