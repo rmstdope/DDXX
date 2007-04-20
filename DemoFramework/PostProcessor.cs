@@ -237,5 +237,16 @@ namespace Dope.DDXX.DemoFramework
         {
             effect.SetValue(name, value);
         }
+
+        public void SetValue(string name, Vector2 value)
+        {
+            float[] values = new float[] { value.X, value.Y };
+            effect.SetValue(name, values);
+        }
+
+        public void SetValue(string name, Vector4 value)
+        {
+            effect.SetValue(name, value);
+        }
     }
 }

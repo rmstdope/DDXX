@@ -4,6 +4,7 @@ using System.Text;
 using Dope.DDXX.Graphics;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using Microsoft.DirectX;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -85,5 +86,20 @@ namespace Dope.DDXX.DemoFramework
         /// <param name="parameter">The name of the parameter.</param>
         /// <param name="value">The value to set it to.</param>
         void SetValue(string parameter, float[] value);
+
+        /// <summary>
+        /// Set the value of a parameter in the effects.
+        /// </summary>
+        /// <param name="parameter">The name of the parameter.</param>
+        /// <param name="value">The value to set it to.</param>
+        void SetValue(string parameter, Vector2 value);
+
+        /// <summary>
+        /// Set the value of a parameter in the effects.
+        /// </summary>
+        /// <param name="parameter">The name of the parameter.</param>
+        /// <param name="value">The value to set it to.</param>
+        void SetValue(string parameter, Vector4 value);
+
     }
 }

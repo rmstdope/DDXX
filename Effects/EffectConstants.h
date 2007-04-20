@@ -47,5 +47,6 @@
  * Other constants
  */
 #define MAX_NUM_BONES 40
+#define PIx2 6.283185307179586476925286766559
 
 #endif

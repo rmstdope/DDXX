@@ -15,13 +15,24 @@ texture SourceTexture2;
 // 1x1 floating point texture for average luminance
 texture LuminanceTexture;
 
+// For glow effect
 float Luminance = 0.06;
 float Exposure = 0.3f;//0.18;
 float WhiteCutoff = 0.1f;
 float BloomScale = 1.5f;
+
+// For color Effect
 float4 Color = float4(1,1,1,1);
+
+// For blend effect
 float2 Offset = float2(0,0);
+
+// For ZoomAdd effect
 float ZoomFactor = 1.0f;
+
+// For Perturbation effect
+float4 PerturbationStrength;
+float2 PerturbationTime;
 
 sampler2D LinearTextureSampler = sampler_state
 {
@@ -250,6 +261,30 @@ Copy(float2 Tex : TEXCOORD0) : COLOR0
 {
 	return tex2D(LinearTextureSampler, Tex);
 }
+
+//-----------------------------------------------------------------------------
+// Pixel Shader: Perturbate
+// Desc: Perturbates the texture with cos and sin functions.
+//-----------------------------------------------------------------------------
+float4
+Perturbate(float2 TexCoords1 : TEXCOORD0) : COLOR0
+{
+	float2 posDistortion = float2(TexCoords1.x * PerturbationStrength.x + 
+																TexCoords1.y * PerturbationStrength.y,
+																TexCoords1.x * PerturbationStrength.z + 
+																TexCoords1.y * PerturbationStrength.w);
+
+	float2 angles = float2(posDistortion.x + PerturbationTime.x * PIx2,
+												 posDistortion.y + PerturbationTime.y * PIx2);
+
+	float2 distortion = float2(cos(angles.x), sin(angles.y));
+
+	distortion *= 10;
+	distortion *= float2(1/800.f, 1/600.0f);
+
+	return tex2D(LinearTextureSampler, TexCoords1 + distortion);
+}
+
 
 //-----------------------------------------------------------------------------
 // Pixel Shader: ZoomAdd
@@ -606,6 +641,19 @@ HDRLuminanceDS(float2 Tex : TEXCOORD0) : COLOR0
  * Techniques
  * ------------------
 ***********************************************************************************/
+
+technique Perturbate
+{
+	pass p0
+	<
+		float Scale = 1.0f;
+	>
+	{
+		VertexShader = null;
+		PixelShader = compile ps_2_0 Perturbate();
+		ZEnable = false;
+	}
+}
 
 technique ZoomAdd
 {

@@ -38,6 +38,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeshBuilder", "MeshBuilder\MeshBuilder.csproj", "{CF2AB575-856D-4160-8DCD-7A5729579892}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiVi", "TiVi\TiVi.csproj", "{76DE320A-769A-49E2-97F4-E20372BA460F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{31EADBD1-17AA-4177-9809-6A8FE6CF30D8} = {31EADBD1-17AA-4177-9809-6A8FE6CF30D8}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
