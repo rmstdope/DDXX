@@ -30,6 +30,17 @@ namespace EngineTest
         private ISprite sprite;
         private ITexture flareTexture;
         private List<int> flareIndices = new List<int>();
+        private int startVertex = 8;
+
+        public int StartVertex
+        {
+            get { return startVertex; }
+            set 
+            { 
+                startVertex = value;
+                CreateLineMesh(startVertex);
+            }
+        }
 
         public string BaseMesh
         {
@@ -110,7 +121,7 @@ namespace EngineTest
             public short V2;
             public float StartTime;
             public float Length;
-            private static Random random = new Random();
+            private static Random random = new Random(0xBEEF);
 
             public TiViEdge(short v1, short v2)
             {
@@ -130,7 +141,7 @@ namespace EngineTest
             public void StartVertex(float startTime)
             {
                 StartTime = startTime;
-                Length = 0.3f + (float)(random.NextDouble() * 0.1f);
+                Length = 0.2f + (float)(random.NextDouble() * 0.4f);
             }
         }
 
@@ -140,7 +151,12 @@ namespace EngineTest
             IMesh clonedMesh = modelTiVi.Mesh.Clone(MeshFlags.Managed, modelTiVi.Mesh.Declaration, Device);
             WeldVertices(clonedMesh);
             ExtractMeshData(clonedMesh);
-            CreateEdges(indices, 0);
+            CreateLineMesh(StartVertex);
+        }
+
+        private void CreateLineMesh(int start)
+        {
+            CreateEdges(indices, start);
             CreateLineMeshes();
         }
 
@@ -331,9 +347,20 @@ namespace EngineTest
                 pos.TransformCoordinate(matrix);
                 pos *= 0.5f;
                 pos += new Vector3(0.5f, 0.5f, 0);
-                sprite.Draw2D(flareTexture, Rectangle.Empty, new SizeF(flareSize, flareSize), new PointF(pos.X * 800 - flareSize / 2, 600 - pos.Y * 600 - flareSize / 2), Color.White);
+                pos.X *= Device.Viewport.Width;
+                pos.Y *= Device.Viewport.Height;
+                pos.Y = Device.Viewport.Height - pos.Y;
+                pos -= new Vector3(flareSize / 2.0f, flareSize / 2.0f, 0);
+                sprite.Draw2D(flareTexture, Rectangle.Empty, new SizeF(flareSize, flareSize), 
+                    new PointF(pos.X, pos.Y), Color.White);
             }
             sprite.End();
         }
     }
 }
+
+// 3.6 - Head done
+// 4.8 - Arm starts
+// 10.8 - Fingers ends
+// 14 - All done
+
