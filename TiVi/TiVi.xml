@@ -1,16 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Effects>
-	<Effect name="ChessScene" track="0" startTime="0.0" endTime="300.0"/>
-	<!--Effect name="CreationScene" track="0" startTime="0.0" endTime="300.0">
-		<Parameter name="BaseMesh" string="King.X" />
-	</Effect-->
+	<!--Effect name="ChessScene" track="0" startTime="0.0" endTime="300.0"/-->
+	<Effect name="CreationScene" track="0" startTime="0.0" endTime="300.0">
+		<Parameter name="BaseMesh" string="Tivi-Creation.X" />
+	</Effect>
 	<!--PostEffect name="RadialBlurPostEffect" track="0" startTime="0.0" endTime="300.0" /-->
-	<!--PostEffect name="GlowPostEffect" track="0" startTime="0.0" endTime="300.0">
+	<PostEffect name="GlowPostEffect" track="0" startTime="0.0" endTime="300.0">
 		<Parameter name="BloomScale" float="1.5" />
 		<Parameter name="Exposure" float="1" />
-	</PostEffect-->
-  <PostEffect name="RingsPostEffect" track="0" startTime="0.0" endTime="300.0">
+	</PostEffect>
+  <!--PostEffect name="OverlayPostEffect" track="0" startTime="0.0" endTime="300.0">
+    <Parameter name="AddNoise" bool="true" />
+    <Parameter name="Filename" string="Noise2.jpg" />
+    <Parameter name="BlendFactor" float="0.1" />
+  </PostEffect-->
+  <!--PostEffect name="RingsPostEffect" track="0" startTime="10.0" endTime="300.0">
     <Parameter name="Distance" float="50" />
     <Parameter name="Scale" float="10" />
-  </PostEffect>
+  </PostEffect-->
 </Effects>

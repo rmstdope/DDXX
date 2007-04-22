@@ -21,6 +21,7 @@ namespace Dope.DDXX.DemoFramework
         private IDemoRegistrator registrator;
         private List<Track> tracks;
         private IInputDriver inputDriver;
+        private TweakerSettings settings = new TweakerSettings();
 
         [SetUp]
         public override void SetUp()
@@ -32,7 +33,7 @@ namespace Dope.DDXX.DemoFramework
             inputDriver = mockery.NewMock<IInputDriver>();
             Stub.On(registrator).GetProperty("StartTime").Will(Return.Value(0.5f));
 
-            tweaker = new DemoTweakerDemo();
+            tweaker = new DemoTweakerDemo(settings);
             tweaker.UserInterface = userInterface;
 
             Time.Initialize();
@@ -165,9 +166,11 @@ namespace Dope.DDXX.DemoFramework
         class ControlMatcher : Matcher
         {
             private string test;
-            public ControlMatcher(string test)
+            private TweakerSettings settings;
+            public ControlMatcher(string test, TweakerSettings settings)
             {
                 this.test = test;
+                this.settings = settings;
             }
 
             public override void DescribeTo(TextWriter writer)
@@ -206,11 +209,17 @@ namespace Dope.DDXX.DemoFramework
                         Assert.AreEqual(1, mainBox.Children[1].Children.Count);
                         Assert.AreEqual(15, mainBox.Children[1].Children[0].Children.Count);
                         Assert.AreEqual("Track 0", ((TextControl)mainBox.Children[1].Children[0].Children[12].Children[0]).Text);
-                        Assert.AreEqual(Color.Crimson, ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Color);
+                        Assert.AreEqual(settings.TextAlpha, ((TextControl)mainBox.Children[1].Children[0].Children[12].Children[0]).Alpha);
+                        Assert.AreEqual(settings.SelectedColor, ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Color);
+                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Alpha);
                         Assert.AreEqual("Track 1", ((TextControl)mainBox.Children[1].Children[0].Children[13].Children[0]).Text);
-                        Assert.AreEqual(Color.DarkBlue, ((BoxControl)mainBox.Children[1].Children[0].Children[13]).Color);
+                        Assert.AreEqual(settings.TextAlpha, ((TextControl)mainBox.Children[1].Children[0].Children[13].Children[0]).Alpha);
+                        Assert.AreEqual(settings.UnselectedColor, ((BoxControl)mainBox.Children[1].Children[0].Children[13]).Color);
+                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[13]).Alpha);
                         Assert.AreEqual("Track 2", ((TextControl)mainBox.Children[1].Children[0].Children[14].Children[0]).Text);
-                        Assert.AreEqual(Color.DarkBlue, ((BoxControl)mainBox.Children[1].Children[0].Children[14]).Color);
+                        Assert.AreEqual(settings.TextAlpha, ((TextControl)mainBox.Children[1].Children[0].Children[14].Children[0]).Alpha);
+                        Assert.AreEqual(settings.UnselectedColor, ((BoxControl)mainBox.Children[1].Children[0].Children[14]).Color);
+                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[14]).Alpha);
                         break;
                     case "TestDraw5Tracks2":
                         // mainWindow
@@ -227,11 +236,17 @@ namespace Dope.DDXX.DemoFramework
                         Assert.AreEqual(1, mainBox.Children[1].Children.Count);
                         Assert.AreEqual(15, mainBox.Children[1].Children[0].Children.Count);
                         Assert.AreEqual("Track 0", ((TextControl)mainBox.Children[1].Children[0].Children[12].Children[0]).Text);
-                        Assert.AreEqual(Color.DarkBlue, ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Color);
+                        Assert.AreEqual(settings.TextAlpha, ((TextControl)mainBox.Children[1].Children[0].Children[12].Children[0]).Alpha);
+                        Assert.AreEqual(settings.UnselectedColor, ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Color);
+                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Alpha);
                         Assert.AreEqual("Track 1", ((TextControl)mainBox.Children[1].Children[0].Children[13].Children[0]).Text);
-                        Assert.AreEqual(Color.Crimson, ((BoxControl)mainBox.Children[1].Children[0].Children[13]).Color);
+                        Assert.AreEqual(settings.TextAlpha, ((TextControl)mainBox.Children[1].Children[0].Children[13].Children[0]).Alpha);
+                        Assert.AreEqual(settings.SelectedColor, ((BoxControl)mainBox.Children[1].Children[0].Children[13]).Color);
+                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[13]).Alpha);
                         Assert.AreEqual("Track 2", ((TextControl)mainBox.Children[1].Children[0].Children[14].Children[0]).Text);
-                        Assert.AreEqual(Color.DarkBlue, ((BoxControl)mainBox.Children[1].Children[0].Children[14]).Color);
+                        Assert.AreEqual(settings.TextAlpha, ((TextControl)mainBox.Children[1].Children[0].Children[14].Children[0]).Alpha);
+                        Assert.AreEqual(settings.UnselectedColor, ((BoxControl)mainBox.Children[1].Children[0].Children[14]).Color);
+                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[14]).Alpha);
                         break;
                     case "TestDraw5Tracks3":
                         // mainWindow
@@ -248,11 +263,17 @@ namespace Dope.DDXX.DemoFramework
                         Assert.AreEqual(1, mainBox.Children[1].Children.Count);
                         Assert.AreEqual(15, mainBox.Children[1].Children[0].Children.Count);
                         Assert.AreEqual("Track 2", ((TextControl)mainBox.Children[1].Children[0].Children[12].Children[0]).Text);
-                        Assert.AreEqual(Color.DarkBlue, ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Color);
+                        Assert.AreEqual(settings.TextAlpha, ((TextControl)mainBox.Children[1].Children[0].Children[12].Children[0]).Alpha);
+                        Assert.AreEqual(settings.UnselectedColor, ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Color);
+                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Alpha);
                         Assert.AreEqual("Track 3", ((TextControl)mainBox.Children[1].Children[0].Children[13].Children[0]).Text);
-                        Assert.AreEqual(Color.DarkBlue, ((BoxControl)mainBox.Children[1].Children[0].Children[13]).Color);
+                        Assert.AreEqual(settings.TextAlpha, ((TextControl)mainBox.Children[1].Children[0].Children[13].Children[0]).Alpha);
+                        Assert.AreEqual(settings.UnselectedColor, ((BoxControl)mainBox.Children[1].Children[0].Children[13]).Color);
+                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[13]).Alpha);
                         Assert.AreEqual("Track 4", ((TextControl)mainBox.Children[1].Children[0].Children[14].Children[0]).Text);
-                        Assert.AreEqual(Color.Crimson, ((BoxControl)mainBox.Children[1].Children[0].Children[14]).Color);
+                        Assert.AreEqual(settings.TextAlpha, ((TextControl)mainBox.Children[1].Children[0].Children[14].Children[0]).Alpha);
+                        Assert.AreEqual(settings.SelectedColor, ((BoxControl)mainBox.Children[1].Children[0].Children[14]).Color);
+                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[14]).Alpha);
                         break;
                     case "TestDrawEffects":
                         // mainWindow
@@ -290,7 +311,7 @@ namespace Dope.DDXX.DemoFramework
                 Method("BeginScene");
             Expect.Once.On(userInterface).
                 Method("DrawControl").
-                With(new ControlMatcher(name));
+                With(new ControlMatcher(name, settings));
             Expect.Once.On(device).
                 Method("EndScene");
         }

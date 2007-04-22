@@ -15,6 +15,7 @@ namespace Dope.DDXX.DemoFramework
         private int currentTweaker;
         private IDemoTweaker[] tweakers;
         private IDemoTweakerContext context;
+        private ITweakerSettings settings;
         private bool visable;
 
         public object IdentifierToChild() { return 0; }
@@ -30,11 +31,12 @@ namespace Dope.DDXX.DemoFramework
             get { return currentTweaker < -1; } 
         }
 
-        public DemoTweakerMain(IDemoTweakerContext context, IDemoTweaker[] tweakers)
+        public DemoTweakerMain(IDemoTweakerContext context, IDemoTweaker[] tweakers, ITweakerSettings settings)
         {
             currentTweaker = -1;
             this.tweakers = tweakers;
             this.context = context;
+            this.settings = settings;
             visable = true;
         }
 
@@ -86,6 +88,18 @@ namespace Dope.DDXX.DemoFramework
 
             if (inputDriver.KeyPressedNoRepeat(Key.F1))
                 visable = !visable;
+
+            if (inputDriver.KeyPressedNoRepeat(Key.F2))
+                settings.SetTransparency(Transparency.Low);
+            if (inputDriver.KeyPressedNoRepeat(Key.F3))
+                settings.SetTransparency(Transparency.Medium);
+            if (inputDriver.KeyPressedNoRepeat(Key.F4))
+                settings.SetTransparency(Transparency.High);
+
+            if (inputDriver.KeyPressedNoRepeat(Key.F5))
+                settings.NextColorSchema();
+            if (inputDriver.KeyPressedNoRepeat(Key.F6))
+                settings.PreviousColorSchema();
 
             return true;
         }

@@ -35,7 +35,7 @@ namespace Dope.DDXX.SceneGraph
             float fov2 = (float)Math.PI / 2;
             float aspect1 = 4.0f / 3.0f;
             float aspect2 = 16.0f / 9.0f;
-            float zNear1 = 1.0f;
+            float zNear1 = 0.01f;
             float zNear2 = 0.5f;
             float zFar1 = 1000.0f;
             float zFar2 = 5000.0f;

@@ -114,7 +114,7 @@ namespace EngineTest
 
         private void GenerateModel()
         {
-            XLoader.Load("tivi.x", EffectFactory.CreateFromFile("TiVi.fxo"), 
+            XLoader.Load(BaseMesh, EffectFactory.CreateFromFile("TiVi.fxo"), 
                 delegate(string name) 
                 {
                     return delegate(int material)

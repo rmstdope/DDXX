@@ -90,6 +90,7 @@ namespace EngineTest
 
         private void SetUpCamera()
         {
+            //CameraNode camera = (CameraNode)scene.GetNodeByName("Camera01");
             CameraNode camera = new CameraNode("Camera");
             camera.WorldState.MoveForward(-3);
             camera.WorldState.MoveUp(1);
@@ -123,7 +124,7 @@ namespace EngineTest
             public void StartVertex(float startTime)
             {
                 StartTime = startTime;
-                Length = 0.4f + (float)(random.NextDouble() * 0.3f);
+                Length = 0.3f + (float)(random.NextDouble() * 0.1f);
             }
         }
 
@@ -155,7 +156,7 @@ namespace EngineTest
 
         private void LoadAnimation()
         {
-            XLoader.Load("tivi.x", EffectFactory.CreateFromFile("TiVi.fxo"),
+            XLoader.Load(BaseMesh, EffectFactory.CreateFromFile("TiVi.fxo"),
                 delegate(string name)
                 {
                     return delegate(int material)

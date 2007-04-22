@@ -15,6 +15,12 @@ namespace Dope.DDXX.DemoFramework
         private Color color;
         private int shadowOffset = 1;
 
+        public float Alpha
+        {
+            get { return alpha; }
+            set { alpha = value; }
+        }
+
         public string Text
         {
             get { return text; }

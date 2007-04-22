@@ -14,18 +14,12 @@ namespace Dope.DDXX.DemoFramework
     {
         private IUserInterface userInterface;
         private IDemoRegistrator registrator;
+        private TweakerSettings tweakerSettings;
 
         private BoxControl mainWindow;
         private BoxControl titleWindow;
         private TextControl titleText;
         private BoxControl timeWindow;
-
-        private float alpha = 0.4f;
-        private float textAlpha = 0.6f;
-        private Color titleColor = Color.Aquamarine;
-        private Color timeColor = Color.BurlyWood;
-        private Color selectedTrackColor = Color.Crimson;
-        private Color trackColor = Color.DarkBlue;
 
         private int currentEffect;
         private Track currentTrack;
@@ -73,12 +67,13 @@ namespace Dope.DDXX.DemoFramework
             set { userInterface = value; }
         }
 
-        public DemoTweakerTrack()
+        public DemoTweakerTrack(TweakerSettings settings)
         {
             userInterface = new UserInterface();
             currentEffect = 0;
             startTime = 0;
             timeScale = 10.0f;
+            tweakerSettings = settings;
         }
 
         public void KeyUp()
@@ -101,18 +96,20 @@ namespace Dope.DDXX.DemoFramework
             startTime = registrator.StartTime;
 
             userInterface.Initialize();
-
-            CreateControls();
         }
 
-        private void CreateControls()
+        private void CreateBaseControls()
         {
             mainWindow = new BoxControl(new RectangleF(0.05f, 0.05f, 0.90f, 0.90f), 0.0f, Color.Black, null);
 
-            titleWindow = new BoxControl(new RectangleF(0.0f, 0.0f, 1.0f, 0.05f), alpha, titleColor, mainWindow);
-            titleText = new TextControl("DDXX Tweaker", new RectangleF(0.0f, 0.0f, 1.0f, 1.0f), DrawTextFormat.Center | DrawTextFormat.VerticalCenter, textAlpha, Color.White, titleWindow);
+            titleWindow = new BoxControl(new RectangleF(0.0f, 0.0f, 1.0f, 0.05f), 
+                tweakerSettings.Alpha, tweakerSettings.TitleColor, mainWindow);
+            titleText = new TextControl("DDXX Tweaker", new RectangleF(0.0f, 0.0f, 1.0f, 1.0f), 
+                DrawTextFormat.Center | DrawTextFormat.VerticalCenter, 
+                tweakerSettings.TextAlpha, Color.White, titleWindow);
 
-            timeWindow = new BoxControl(new RectangleF(0.0f, 0.05f, 1.0f, 0.95f), alpha, timeColor, mainWindow);
+            timeWindow = new BoxControl(new RectangleF(0.0f, 0.05f, 1.0f, 0.95f), 
+                tweakerSettings.Alpha, tweakerSettings.TimeColor, mainWindow);
         }
 
         public bool HandleInput(IInputDriver inputDriver)
@@ -142,7 +139,7 @@ namespace Dope.DDXX.DemoFramework
 
         private void DrawTimeWindow()
         {
-            timeWindow.Children.Clear();
+            CreateBaseControls();
 
             BoxControl timelineWindow = new BoxControl(new RectangleF(0.02f, 0.04f, 0.96f, 0.92f), 0.0f, Color.Black, timeWindow);
 
@@ -171,18 +168,18 @@ namespace Dope.DDXX.DemoFramework
                     ex2 = 1.0f;
                 if (ex1 < 1.0f && ex2 > 0.0f)
                 {
-                    BoxControl trackWindow = new BoxControl(new RectangleF(ex1, y, ex2 - ex1, 0.05f), alpha, boxColor, timelineWindow);
-                    new TextControl(allEffects[i].GetType().Name, new RectangleF(0.0f, 0.0f, 1.0f, 1.0f), DrawTextFormat.Center | DrawTextFormat.VerticalCenter, textAlpha, textColor, trackWindow);
+                    BoxControl trackWindow = new BoxControl(new RectangleF(ex1, y, ex2 - ex1, 0.05f), tweakerSettings.Alpha, boxColor, timelineWindow);
+                    new TextControl(allEffects[i].GetType().Name, new RectangleF(0.0f, 0.0f, 1.0f, 1.0f), DrawTextFormat.Center | DrawTextFormat.VerticalCenter, tweakerSettings.TextAlpha, textColor, trackWindow);
                 }
                 else if (ex1 >= 1.0f)
                 {
                     BoxControl trackWindow = new BoxControl(new RectangleF(0.0f, y, 1.0f, 0.05f), 0.0f, boxColor, timelineWindow);
-                    new TextControl(allEffects[i].GetType().Name + "-->", new RectangleF(0.0f, 0.0f, 1.0f, 1.0f), DrawTextFormat.Right | DrawTextFormat.VerticalCenter, textAlpha, textColor, trackWindow);
+                    new TextControl(allEffects[i].GetType().Name + "-->", new RectangleF(0.0f, 0.0f, 1.0f, 1.0f), DrawTextFormat.Right | DrawTextFormat.VerticalCenter, tweakerSettings.TextAlpha, textColor, trackWindow);
                 }
                 else
                 {
                     BoxControl trackWindow = new BoxControl(new RectangleF(0.0f, y, 1.0f, 0.05f), 0.0f, boxColor, timelineWindow);
-                    new TextControl("<--" + allEffects[i].GetType().Name, new RectangleF(0.0f, 0.0f, 1.0f, 1.0f), DrawTextFormat.Left | DrawTextFormat.VerticalCenter, textAlpha, textColor, trackWindow);
+                    new TextControl("<--" + allEffects[i].GetType().Name, new RectangleF(0.0f, 0.0f, 1.0f, 1.0f), DrawTextFormat.Left | DrawTextFormat.VerticalCenter, tweakerSettings.TextAlpha, textColor, trackWindow);
                 }
                 y += 0.075f;
             }
@@ -192,12 +189,12 @@ namespace Dope.DDXX.DemoFramework
         {
             if (i == currentEffect)
             {
-                boxColor = selectedTrackColor;
+                boxColor = tweakerSettings.SelectedColor;
                 textColor = Color.White;
             }
             else
             {
-                boxColor = trackColor;
+                boxColor = tweakerSettings.UnselectedColor;
                 textColor = Color.Gray;
             }
         }
@@ -224,8 +221,8 @@ namespace Dope.DDXX.DemoFramework
         //        float ex2 = (effect.EndTime - startTime) / timeScale;
         //        if (ex2 > 1.0f)
         //            ex2 = 1.0f;
-        //        new TextControl(effect.GetTweakableType().Name, new PointF(ex1, ey), DrawTextFormat.Bottom | DrawTextFormat.Left, alpha, Color.SkyBlue, trackWindow);
-        //        new LineControl(new RectangleF(ex1, ey, ex2 - ex1, 0.0f), alpha, Color.SkyBlue, trackWindow);
+        //        new TextControl(effect.GetTweakableType().Name, new PointF(ex1, ey), DrawTextFormat.Bottom | DrawTextFormat.Left, tweakerSettings.Alpha, Color.SkyBlue, trackWindow);
+        //        new LineControl(new RectangleF(ex1, ey, ex2 - ex1, 0.0f), tweakerSettings.Alpha, Color.SkyBlue, trackWindow);
         //        ey += 0.14f;
         //        if (ey > 1.0f)
         //            ey = 0.2f;
@@ -244,17 +241,17 @@ namespace Dope.DDXX.DemoFramework
 
         private void DrawTimeLine(BoxControl timelineWindow)
         {
-            new LineControl(new RectangleF(0.0f, 0.01f, 1.0f, 0.0f), alpha, Color.White, timelineWindow);
+            new LineControl(new RectangleF(0.0f, 0.01f, 1.0f, 0.0f), tweakerSettings.Alpha, Color.White, timelineWindow);
             for (int i = 0; i < 5; i++)
             {
                 float x = i / 4.0f;
                 float t = startTime + timeScale * i / 4.0f;
-                new TextControl(t.ToString(), new PointF(x, 0.0f), DrawTextFormat.Bottom | DrawTextFormat.Center, alpha, Color.White, timelineWindow);
-                new LineControl(new RectangleF(x, 0.0f, 0.0f, 0.02f), alpha, Color.White, timelineWindow);
+                new TextControl(t.ToString(), new PointF(x, 0.0f), DrawTextFormat.Bottom | DrawTextFormat.Center, tweakerSettings.Alpha, Color.White, timelineWindow);
+                new LineControl(new RectangleF(x, 0.0f, 0.0f, 0.02f), tweakerSettings.Alpha, Color.White, timelineWindow);
             }
             while ((Time.StepTime - startTime) / timeScale > 0.9f)
                 startTime += timeScale * 0.9f;
-            new LineControl(new RectangleF((Time.StepTime - startTime) / timeScale, 0.0f, 0.0f, 1.0f), alpha, Color.White, timelineWindow);
+            new LineControl(new RectangleF((Time.StepTime - startTime) / timeScale, 0.0f, 0.0f, 1.0f), tweakerSettings.Alpha, Color.White, timelineWindow);
         }
     }
 }

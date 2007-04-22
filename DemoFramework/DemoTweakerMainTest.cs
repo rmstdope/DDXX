@@ -20,6 +20,7 @@ namespace Dope.DDXX.DemoFramework
         private IDemoTweaker[] tweakers;
         private IInputDriver input;
         private IDemoTweakerContext context;
+        private ITweakerSettings settings;
 
         [SetUp]
         public override void SetUp()
@@ -27,8 +28,9 @@ namespace Dope.DDXX.DemoFramework
             base.SetUp();
 
             context = mockery.NewMock<IDemoTweakerContext>();
+            settings = mockery.NewMock<ITweakerSettings>();
             tweakers = new IDemoTweaker[] { mockery.NewMock<IDemoTweaker>(), mockery.NewMock<IDemoTweaker>() };
-            tweaker = new DemoTweakerMain(context, tweakers);
+            tweaker = new DemoTweakerMain(context, tweakers, settings);
             input = mockery.NewMock<IInputDriver>();
 
             Time.Initialize();
@@ -59,9 +61,9 @@ namespace Dope.DDXX.DemoFramework
 
             // Call twice with no key press
             // This should not case any context change
-            ExpectKeypresses(0, 0, 0, 0, 0, 0);
+            ExpectKeypresses(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
             tweaker.HandleInput(input);
-            ExpectKeypresses(0, 0, 0, 0, 0, 0);
+            ExpectKeypresses(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
             tweaker.HandleInput(input);
         }
 
@@ -70,7 +72,7 @@ namespace Dope.DDXX.DemoFramework
         {
             TestInitialize();
 
-            ExpectKeypresses(0, 0, 1, 0, 0, 0);
+            ExpectKeypresses(0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
             Expect.Once.On(context).Method("TogglePause");
             tweaker.HandleInput(input);
         }
@@ -80,7 +82,7 @@ namespace Dope.DDXX.DemoFramework
         {
             TestInitialize();
 
-            ExpectKeypresses(1, 0, 0, 0, 0, 0);
+            ExpectKeypresses(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
             Expect.Once.On(context).Method("JumpInTime").With(5.0f);
             tweaker.HandleInput(input);
         }
@@ -90,7 +92,7 @@ namespace Dope.DDXX.DemoFramework
         {
             TestInitialize();
 
-            ExpectKeypresses(0, 1, 0, 0, 0, 0);
+            ExpectKeypresses(0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
             Expect.Once.On(context).Method("JumpInTime").With(-5.0f);
             tweaker.HandleInput(input);
         }
@@ -102,10 +104,10 @@ namespace Dope.DDXX.DemoFramework
 
             // First call once with Return pressed
             // Then call and see that context was changed
-            ExpectKeypresses(0, 0, 0, 1, -1, -1);
+            ExpectKeypresses(0, 0, 0, 1, -1, -1, -1, -1, -1, -1, -1);
             ExpectTweakerTransition(-1, 0);
             tweaker.HandleInput(input);
-            ExpectKeypresses(0, 0, 0, 0, 0, 0);
+            ExpectKeypresses(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
             ExpectTweakerInput(0, false);
             tweaker.HandleInput(input);
 
@@ -113,11 +115,11 @@ namespace Dope.DDXX.DemoFramework
             tweaker.HandleInput(input);
 
             // Now go to level 2
-            ExpectKeypresses(0, 0, 0, 1, -1, -1);
+            ExpectKeypresses(0, 0, 0, 1, -1, -1, -1, -1, -1, -1, -1);
             ExpectTweakerTransition(0, 1);
             ExpectTweakerInput(0, false);
             tweaker.HandleInput(input);
-            ExpectKeypresses(0, 0, 0, 0, 0, 0);
+            ExpectKeypresses(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
             ExpectTweakerInput(1, false);
             tweaker.HandleInput(input);
 
@@ -125,11 +127,11 @@ namespace Dope.DDXX.DemoFramework
             tweaker.HandleInput(input);
 
             // Go back to 1
-            ExpectKeypresses(0, 0, 0, 0, 1, -1);
+            ExpectKeypresses(0, 0, 0, 0, 1, -1, -1, -1, -1, -1, -1);
             ExpectTweakerTransition(1, 0);
             ExpectTweakerInput(1, false);
             tweaker.HandleInput(input);
-            ExpectKeypresses(0, 0, 0, 0, 0, 0);
+            ExpectKeypresses(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
             ExpectTweakerInput(0, false);
             tweaker.HandleInput(input);
 
@@ -137,9 +139,69 @@ namespace Dope.DDXX.DemoFramework
             tweaker.HandleInput(input);
 
             // And finally back to no selection
-            ExpectKeypresses(0, 0, 0, 0, 1, -1);
+            ExpectKeypresses(0, 0, 0, 0, 1, -1, -1, -1, -1, -1, -1);
             ExpectTweakerTransition(0, -1);
             ExpectTweakerInput(0, false);
+            tweaker.HandleInput(input);
+        }
+
+        [Test]
+        public void TestF2()
+        {
+            TestInitialize();
+
+            // Press F2
+            Expect.Once.On(settings).
+                Method("SetTransparency").With(Transparency.Low);
+            ExpectKeypresses(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+            tweaker.HandleInput(input);
+        }
+
+        [Test]
+        public void TestF3()
+        {
+            TestInitialize();
+
+            // Press F3
+            Expect.Once.On(settings).
+                Method("SetTransparency").With(Transparency.Medium);
+            ExpectKeypresses(0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0);
+            tweaker.HandleInput(input);
+        }
+
+        [Test]
+        public void TestF4()
+        {
+            TestInitialize();
+
+            // Press F4
+            Expect.Once.On(settings).
+                Method("SetTransparency").With(Transparency.High);
+            ExpectKeypresses(0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
+            tweaker.HandleInput(input);
+        }
+
+        [Test]
+        public void TestF5()
+        {
+            TestInitialize();
+
+            // Press F5
+            Expect.Once.On(settings).
+                Method("NextColorSchema");
+            ExpectKeypresses(0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0);
+            tweaker.HandleInput(input);
+        }
+
+        [Test]
+        public void TestF6()
+        {
+            TestInitialize();
+
+            // Press F6
+            Expect.Once.On(settings).
+                Method("PreviousColorSchema");
+            ExpectKeypresses(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
             tweaker.HandleInput(input);
         }
 
@@ -149,14 +211,14 @@ namespace Dope.DDXX.DemoFramework
             TestInitialize();
 
             // Draw 0
-            ExpectKeypresses(0, 0, 0, 1, -1, -1);
+            ExpectKeypresses(0, 0, 0, 1, -1, -1, -1, -1, -1, -1, -1);
             ExpectTweakerTransition(-1, 0);
             tweaker.HandleInput(input);
             ExpectTweakerDraw(0);
             tweaker.Draw();
 
             // Draw 1
-            ExpectKeypresses(0, 0, 0, 1, -1, -1);
+            ExpectKeypresses(0, 0, 0, 1, -1, -1, -1, -1, -1, -1, -1);
             ExpectTweakerTransition(0, 1);
             ExpectTweakerInput(0, false);
             tweaker.HandleInput(input);
@@ -164,13 +226,13 @@ namespace Dope.DDXX.DemoFramework
             tweaker.Draw();
 
             // Turn GUI off
-            ExpectKeypresses(0, 0, 0, 0, 0, 1);
+            ExpectKeypresses(0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0);
             ExpectTweakerInput(1, false);
             tweaker.HandleInput(input);
             tweaker.Draw();
 
             // Turn GUI on
-            ExpectKeypresses(0, 0, 0, 0, 0, 1);
+            ExpectKeypresses(0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0);
             ExpectTweakerInput(1, false);
             tweaker.HandleInput(input);
             ExpectTweakerDraw(1);
@@ -205,7 +267,7 @@ namespace Dope.DDXX.DemoFramework
                 Method("Draw");
         }
 
-        private void ExpectKeypresses(int right, int left, int space, int enter, int escape, int f1)
+        private void ExpectKeypresses(int right, int left, int space, int enter, int escape, int f1, int f2, int f3, int f4, int f5, int f6)
         {
             if (right != -1)
                 Expect.Once.On(input).
@@ -237,6 +299,31 @@ namespace Dope.DDXX.DemoFramework
                     Method("KeyPressedNoRepeat").
                     With(Key.F1).
                     Will(Return.Value(f1 != 0));
+            if (f2 != -1)
+                Expect.Once.On(input).
+                    Method("KeyPressedNoRepeat").
+                    With(Key.F2).
+                    Will(Return.Value(f2 != 0));
+            if (f3 != -1)
+                Expect.Once.On(input).
+                    Method("KeyPressedNoRepeat").
+                    With(Key.F3).
+                    Will(Return.Value(f3 != 0));
+            if (f4 != -1)
+                Expect.Once.On(input).
+                    Method("KeyPressedNoRepeat").
+                    With(Key.F4).
+                    Will(Return.Value(f4 != 0));
+            if (f5 != -1)
+                Expect.Once.On(input).
+                    Method("KeyPressedNoRepeat").
+                    With(Key.F5).
+                    Will(Return.Value(f5 != 0));
+            if (f6 != -1)
+                Expect.Once.On(input).
+                    Method("KeyPressedNoRepeat").
+                    With(Key.F6).
+                    Will(Return.Value(f6 != 0));
         }
 
     }

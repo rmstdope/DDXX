@@ -59,6 +59,7 @@ namespace Dope.DDXX.DemoFramework
         private IDemoRegistrator registrator;
         private TestClass tester;
         private IInputDriver inputDriver;
+        private TweakerSettings settings = new TweakerSettings();
 
         [SetUp]
         public override void SetUp()
@@ -71,7 +72,7 @@ namespace Dope.DDXX.DemoFramework
             Stub.On(registrator).GetProperty("StartTime").Will(Return.Value(0.5f));
 
             tester = new TestClass();
-            tweaker = new DemoTweakerEffect();
+            tweaker = new DemoTweakerEffect(settings);
             tweaker.IdentifierFromParent(tester);
             tweaker.UserInterface = userInterface;
 

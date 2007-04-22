@@ -32,7 +32,7 @@ namespace Dope.DDXX.DemoFramework
         private int activeTrack = 0;
 
         private DemoEffectTypes effectTypes = new DemoEffectTypes();
-
+        private TweakerSettings settings = new TweakerSettings();
 
         public float StartTime
         {
@@ -97,7 +97,7 @@ namespace Dope.DDXX.DemoFramework
             this.soundDriver = soundDriver;
             this.inputDriver = inputDriver;
             this.postProcessor = postProcessor;
-            tweaker = new DemoTweakerMain(this, new IDemoTweaker[] { new DemoTweakerDemo(), new DemoTweakerTrack(), new DemoTweakerEffect() });
+            tweaker = new DemoTweakerMain(this, new IDemoTweaker[] { new DemoTweakerDemo(settings), new DemoTweakerTrack(settings), new DemoTweakerEffect(settings) }, settings);
         }
 
         public void Initialize(string song)

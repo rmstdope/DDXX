@@ -16,16 +16,12 @@ namespace Dope.DDXX.DemoFramework
         private IUserInterface userInterface;
         private IDemoRegistrator registrator;
         private ITweakableContainer currentContainer;
+        private TweakerSettings tweakerSettings;
 
         private BoxControl mainWindow;
         private BoxControl titleWindow;
         private TextControl titleText;
         private BoxControl tweakableWindow;
-
-        private float alpha = 0.4f;
-        private float textAlpha = 0.6f;
-        private Color titleColor = Color.Aquamarine;
-        private Color timeColor = Color.BurlyWood;
 
         private int currentVariable;
         private int currentSelection;
@@ -59,11 +55,12 @@ namespace Dope.DDXX.DemoFramework
             set { userInterface = value; }
         }
 
-        public DemoTweakerEffect()
+        public DemoTweakerEffect(TweakerSettings settings)
         {
             userInterface = new UserInterface();
             currentVariable = 0;
             currentSelection = 0;
+            tweakerSettings = settings;
         }
 
         public void KeyTab()
@@ -145,6 +142,11 @@ namespace Dope.DDXX.DemoFramework
                     }
                     currentContainer.SetValue(CurrentVariable, color);
                     break;
+                case TweakableType.String:
+                    // Next value can not be performed on strings
+                    break;
+                default:
+                    throw new DDXXException("Not implemented for this TweakableType.");
             }
         }
 
@@ -196,6 +198,11 @@ namespace Dope.DDXX.DemoFramework
                     }
                     currentContainer.SetValue(CurrentVariable, Color.FromArgb(a, r, g, b));
                     break;
+                case TweakableType.String:
+                    // Not applicable for this type.
+                    break;
+                default:
+                    throw new DDXXException("Not implemented for this TweakableType.");
             }
         }
 
@@ -225,18 +232,20 @@ namespace Dope.DDXX.DemoFramework
             this.registrator = registrator;
 
             userInterface.Initialize();
-
-            CreateControls();
         }
 
-        private void CreateControls()
+        private void CreateBaseControls()
         {
             mainWindow = new BoxControl(new RectangleF(0.05f, 0.05f, 0.90f, 0.90f), 0.0f, Color.Black, null);
 
-            titleWindow = new BoxControl(new RectangleF(0.0f, 0.0f, 1.0f, 0.05f), alpha, titleColor, mainWindow);
-            titleText = new TextControl("DDXX Tweaker", new RectangleF(0.0f, 0.0f, 1.0f, 1.0f), DrawTextFormat.Center | DrawTextFormat.VerticalCenter, textAlpha, Color.White, titleWindow);
+            titleWindow = new BoxControl(new RectangleF(0.0f, 0.0f, 1.0f, 0.05f), 
+                tweakerSettings.Alpha, tweakerSettings.TitleColor, mainWindow);
+            titleText = new TextControl("DDXX Tweaker", new RectangleF(0.0f, 0.0f, 1.0f, 1.0f), 
+                DrawTextFormat.Center | DrawTextFormat.VerticalCenter, 
+                tweakerSettings.TextAlpha, Color.White, titleWindow);
 
-            tweakableWindow = new BoxControl(new RectangleF(0.0f, 0.05f, 1.0f, 0.95f), alpha, timeColor, mainWindow);
+            tweakableWindow = new BoxControl(new RectangleF(0.0f, 0.05f, 1.0f, 0.95f), 
+                tweakerSettings.Alpha, tweakerSettings.TimeColor, mainWindow);
         }
 
         public void Draw()
@@ -251,7 +260,7 @@ namespace Dope.DDXX.DemoFramework
         private void DrawWindow()
         {
             const int NumVisableVariables = 13;
-            tweakableWindow.Children.Clear();
+            CreateBaseControls();
 
             Color boxColor;
             //Color textColor;
@@ -294,6 +303,9 @@ namespace Dope.DDXX.DemoFramework
                     Color alphaColor = Color.FromArgb(currentContainer.GetColorValue(num).A, currentContainer.GetColorValue(num).A, currentContainer.GetColorValue(num).A, currentContainer.GetColorValue(num).A);
                     new BoxControl(new RectangleF(x + 4 * w / 5.0f + 0 * w / 10.0f, y, w / 10.0f, h), 1.0f, currentContainer.GetColorValue(num), tweakableWindow);
                     new BoxControl(new RectangleF(x + 4 * w / 5.0f + 1 * w / 10.0f, y, w / 10.0f, h), 1.0f, alphaColor, tweakableWindow);
+                    break;
+                case TweakableType.String:
+                    new TextControl(currentContainer.GetStringValue(num), new RectangleF(x, y, w, h), DrawTextFormat.Center | DrawTextFormat.VerticalCenter, alpha, GetSelectionColor(0, alpha), tweakableWindow);
                     break;
                 default:
                     throw new DDXXException("Unknown value type.");

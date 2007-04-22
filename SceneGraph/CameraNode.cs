@@ -9,7 +9,7 @@ namespace Dope.DDXX.SceneGraph
     {
         private float fov = (float)Math.PI / 4;
 
-        private float nearZ = 1.0f;
+        private float nearZ = 0.01f;
 
         private float farZ = 1000.0f;
 
