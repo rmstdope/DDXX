@@ -9,7 +9,7 @@ using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.DemoEffects
 {
-    public class RingsPostEffect : BaseDemoPostEffect
+    public class RingsPostEffect : SinglePassPostEffect
     {
         private float scale = 1.0f;
         private float distance = 1.0f;
@@ -31,13 +31,8 @@ namespace Dope.DDXX.DemoEffects
         {
         }
 
-        public override void Render()
+        protected override void SetParameters()
         {
-            TextureID startTexture = PostProcessor.OutputTextureID;
-            TextureID endTexture = TextureID.FULLSIZE_TEXTURE_1;
-            if (startTexture == endTexture)
-                endTexture = TextureID.FULLSIZE_TEXTURE_2;
-
             PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
             PostProcessor.SetValue("RingsDistance", distance);
             PostProcessor.SetValue("RingsScale", scale);
@@ -46,7 +41,11 @@ namespace Dope.DDXX.DemoEffects
             t *= 1.75847f;
             float time2 = (float)(t - Math.Truncate(t));
             PostProcessor.SetValue("WaveTime", new Vector2(time1, time2));
-            PostProcessor.Process("Rings", startTexture, endTexture);
+        }
+
+        protected override string  TechniqueName
+        {
+        	get { return "Rings"; }
         }
     }
 }

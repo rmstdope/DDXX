@@ -52,6 +52,7 @@
     <Compile Include="OverlayPostEffectTest.cs" />
     <Compile Include="RingsPostEffect.cs" />
     <Compile Include="RingsPostEffectTest.cs" />
+    <Compile Include="SinglePassPostEffect.cs" />
     <Compile Include="WavePostEffect.cs" />
     <Compile Include="WavePostEffectTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

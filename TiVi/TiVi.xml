@@ -9,5 +9,8 @@
 		<Parameter name="BloomScale" float="1.5" />
 		<Parameter name="Exposure" float="1" />
 	</PostEffect-->
-	<PostEffect name="RingsPostEffect" track="0" startTime="0.0" endTime="300.0" />
+  <PostEffect name="RingsPostEffect" track="0" startTime="0.0" endTime="300.0">
+    <Parameter name="Distance" float="50" />
+    <Parameter name="Scale" float="10" />
+  </PostEffect>
 </Effects>
