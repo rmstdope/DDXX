@@ -11,16 +11,10 @@ using Microsoft.DirectX;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public class DemoTweakerEffect : IDemoTweaker
+    public class DemoTweakerEffect : DemoTweakerBase, IDemoTweaker
     {
-        private IUserInterface userInterface;
-        private IDemoRegistrator registrator;
         private ITweakableContainer currentContainer;
-        private TweakerSettings tweakerSettings;
 
-        private BoxControl mainWindow;
-        private BoxControl titleWindow;
-        private TextControl titleText;
         private BoxControl tweakableWindow;
 
         private int currentVariable;
@@ -50,17 +44,11 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        public IUserInterface UserInterface
-        {
-            set { userInterface = value; }
-        }
-
         public DemoTweakerEffect(TweakerSettings settings)
+            : base(settings)
         {
-            userInterface = new UserInterface();
             currentVariable = 0;
             currentSelection = 0;
-            tweakerSettings = settings;
         }
 
         public void KeyTab()
@@ -227,33 +215,12 @@ namespace Dope.DDXX.DemoFramework
             get { return false; }
         }
 
-        public void Initialize(IDemoRegistrator registrator)
-        {
-            this.registrator = registrator;
-
-            userInterface.Initialize();
-        }
-
-        private void CreateBaseControls()
-        {
-            mainWindow = new BoxControl(new RectangleF(0.05f, 0.05f, 0.90f, 0.90f), 0.0f, Color.Black, null);
-
-            titleWindow = new BoxControl(new RectangleF(0.0f, 0.0f, 1.0f, 0.05f), 
-                tweakerSettings.Alpha, tweakerSettings.TitleColor, mainWindow);
-            titleText = new TextControl("DDXX Tweaker", new RectangleF(0.0f, 0.0f, 1.0f, 1.0f), 
-                DrawTextFormat.Center | DrawTextFormat.VerticalCenter, 
-                tweakerSettings.TextAlpha, Color.White, titleWindow);
-
-            tweakableWindow = new BoxControl(new RectangleF(0.0f, 0.05f, 1.0f, 0.95f), 
-                tweakerSettings.Alpha, tweakerSettings.TimeColor, mainWindow);
-        }
-
         public void Draw()
         {
             DrawWindow();
 
             D3DDriver.GetInstance().Device.BeginScene();
-            userInterface.DrawControl(mainWindow);
+            UserInterface.DrawControl(MainWindow);
             D3DDriver.GetInstance().Device.EndScene();
         }
 
@@ -261,6 +228,8 @@ namespace Dope.DDXX.DemoFramework
         {
             const int NumVisableVariables = 13;
             CreateBaseControls();
+            tweakableWindow = new BoxControl(new RectangleF(0.0f, 0.05f, 1.0f, 0.95f),
+                Settings.Alpha, Settings.TimeColor, MainWindow);
 
             Color boxColor;
             //Color textColor;
