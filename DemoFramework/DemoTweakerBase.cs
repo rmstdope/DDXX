@@ -75,7 +75,10 @@ namespace Dope.DDXX.DemoFramework
 
             titleWindow = new BoxControl(new RectangleF(0.0f, 0.0f, 1.0f, 0.05f),
                 Settings.Alpha, Settings.TitleColor, mainWindow);
-            titleText = new TextControl("DDXX Tweaker", new RectangleF(0.0f, 0.0f, 1.0f, 1.0f),
+            int seconds = (int)Time.CurrentTime;
+            int hundreds = (int)((Time.CurrentTime - seconds) * 100);
+            string titleString = "DDXX Tweaker - " + seconds.ToString("D3") + "." + hundreds.ToString("D2");
+            titleText = new TextControl(titleString, new RectangleF(0.0f, 0.0f, 1.0f, 1.0f),
                 DrawTextFormat.Center | DrawTextFormat.VerticalCenter,
                 Settings.TextAlpha, Color.White, titleWindow);
         }
