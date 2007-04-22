@@ -27,6 +27,9 @@ namespace EngineTest
         private List<TiViEdge> edges;
         private Vertex[] allVertices;
         private short[] indices;
+        private ISprite sprite;
+        private ITexture flareTexture;
+        private List<int> flareIndices = new List<int>();
 
         public string BaseMesh
         {
@@ -82,6 +85,9 @@ namespace EngineTest
             GenerateModel();
 
             SetUpCamera();
+
+            sprite = GraphicsFactory.CreateSprite(Device);
+            flareTexture = TextureFactory.CreateFromFile("Flare.dds");
 
             //FallingStarSystem system = new FallingStarSystem("FS");
             //system.Initialize(100, Device, GraphicsFactory, EffectFactory, TextureFactory.CreateFromFile("red glass.jpg"));
@@ -269,6 +275,7 @@ namespace EngineTest
             if (nodeTiVi != null)
             {
                 int i;
+                flareIndices.Clear();
                 for (i = 0; i < edges.Count; i++)
                 {
                     if (edges[i].StartTime > Time.CurrentTime)
@@ -278,6 +285,8 @@ namespace EngineTest
                     float delta = (Time.CurrentTime - edges[i].StartTime) / edges[i].Length;
                     if (delta > 1.0f)
                         delta = 1.0f;
+                    else
+                        flareIndices.Add(i * 2 + 1);
                     Vector3 v = lineVertices[i * 2 + 1].Position - lineVertices[i * 2 + 0].Position;
                     lineVertices[i * 2 + 1].Position = lineVertices[i * 2 + 0].Position + v * delta;
                 }
@@ -310,6 +319,21 @@ namespace EngineTest
                 }
             }
             scene.Render();
+
+            sprite.Begin(SpriteFlags.AlphaBlend);
+            Matrix[] matrices = ((SkinnedModel)modelTiVi).GetBoneMatrices(0);
+            for (int i = 0; i < flareIndices.Count; i++)
+            {
+                float flareSize = 20;
+                Vertex v = lineVertices[flareIndices[i]];
+                Matrix matrix = matrices[v.BlendIndices & 0xFF] * scene.ActiveCamera.ViewMatrix * scene.ActiveCamera.ProjectionMatrix;
+                Vector3 pos = v.Position;
+                pos.TransformCoordinate(matrix);
+                pos *= 0.5f;
+                pos += new Vector3(0.5f, 0.5f, 0);
+                sprite.Draw2D(flareTexture, Rectangle.Empty, new SizeF(flareSize, flareSize), new PointF(pos.X * 800 - flareSize / 2, 600 - pos.Y * 600 - flareSize / 2), Color.White);
+            }
+            sprite.End();
         }
     }
 }

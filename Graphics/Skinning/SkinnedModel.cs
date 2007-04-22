@@ -67,21 +67,11 @@ namespace Dope.DDXX.Graphics.Skinning
         public override void Draw(IEffectHandler effectHandler, ColorValue ambient, Matrix world, Matrix view, Matrix projection)
         {
             effectHandler.SetNodeConstants(Matrix.Identity/*frame.TransformationMatrix * world*/, view, projection);
-            BoneCombination[] bones = frame.MeshContainer.Bones;
             for (int j = 0; j < frame.MeshContainer.GetMaterials().Length; j++)
             {
                 if (frame.MeshContainer.SkinInformation != null)
                 {
-                    Matrix[] skinMatrices = new Matrix[frame.MeshContainer.SkinInformation.NumberBones];
-                    for (int i = 0; i < frame.MeshContainer.SkinInformation.NumberBones; i++)
-                    {
-                        int index = bones[j].BoneId[i];
-                        if (index != -1)
-                        {
-                            skinMatrices[i] = frame.MeshContainer.RestMatrices[index] *
-                                frame.MeshContainer.Frames[index].CombinedTransformationMatrix;
-                        }
-                    }
+                    Matrix[] skinMatrices = GetBoneMatrices(j);
                     effectHandler.SetBones(skinMatrices);
                 }
                 effectHandler.SetMaterialConstants(ambient, Materials[j], j);
@@ -94,6 +84,22 @@ namespace Dope.DDXX.Graphics.Skinning
                 }
                 effectHandler.Effect.End();
             }
+        }
+
+        public Matrix[] GetBoneMatrices(int material)
+        {
+            BoneCombination[] bones = frame.MeshContainer.Bones;
+            Matrix[] skinMatrices = new Matrix[frame.MeshContainer.SkinInformation.NumberBones];
+            for (int i = 0; i < frame.MeshContainer.SkinInformation.NumberBones; i++)
+            {
+                int index = bones[material].BoneId[i];
+                if (index != -1)
+                {
+                    skinMatrices[i] = frame.MeshContainer.RestMatrices[index] *
+                        frame.MeshContainer.Frames[index].CombinedTransformationMatrix;
+                }
+            }
+            return skinMatrices;
         }
 
         public override void Step()
