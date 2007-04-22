@@ -9,9 +9,16 @@ using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.DemoEffects
 {
-    public class PerturbationPostEffect : BaseDemoPostEffect
+    public class WavePostEffect : BaseDemoPostEffect
     {
         private Vector4 strength = new Vector4(30.0f, 20.0f, 25.0f, 27.0f);
+        private float scale = 1.0f;
+
+        public float Scale
+        {
+            get { return scale; }
+            set { scale = value; }
+        }
 
         public Vector4 Strength
         {
@@ -19,7 +26,7 @@ namespace Dope.DDXX.DemoEffects
             set { strength = value; }
         }
 
-        public PerturbationPostEffect(float startTime, float endTime)
+        public WavePostEffect(float startTime, float endTime)
             : base(startTime, endTime)
         {
         }
@@ -32,13 +39,14 @@ namespace Dope.DDXX.DemoEffects
                 endTexture = TextureID.FULLSIZE_TEXTURE_2;
 
             PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
-            PostProcessor.SetValue("PerturbationStrength", strength);
+            PostProcessor.SetValue("WaveStrength", strength);
+            PostProcessor.SetValue("WaveScale", scale);
             float t = Time.CurrentTime;
             float time1 = (float)(t - Math.Truncate(t));
             t *= 1.75847f;
             float time2 = (float)(t - Math.Truncate(t));
-            PostProcessor.SetValue("PerturbationTime", new Vector2(time1, time2));
-            PostProcessor.Process("Perturbate", startTexture, endTexture);
+            PostProcessor.SetValue("WaveTime", new Vector2(time1, time2));
+            PostProcessor.Process("Wave", startTexture, endTexture);
         }
     }
 }

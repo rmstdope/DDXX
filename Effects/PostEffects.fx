@@ -30,9 +30,10 @@ float2 Offset = float2(0,0);
 // For ZoomAdd effect
 float ZoomFactor = 1.0f;
 
-// For Perturbation effect
-float4 PerturbationStrength;
-float2 PerturbationTime;
+// For Wave effect
+float4 WaveStrength;
+float2 WaveTime;
+float WaveScale;
 
 sampler2D LinearTextureSampler = sampler_state
 {
@@ -263,24 +264,24 @@ Copy(float2 Tex : TEXCOORD0) : COLOR0
 }
 
 //-----------------------------------------------------------------------------
-// Pixel Shader: Perturbate
-// Desc: Perturbates the texture with cos and sin functions.
+// Pixel Shader: Wave
+// Desc: Waves the texture with cos and sin functions.
 //-----------------------------------------------------------------------------
 float4
-Perturbate(float2 TexCoords1 : TEXCOORD0) : COLOR0
+Wave(float2 TexCoords1 : TEXCOORD0) : COLOR0
 {
-	float2 posDistortion = float2(TexCoords1.x * PerturbationStrength.x + 
-																TexCoords1.y * PerturbationStrength.y,
-																TexCoords1.x * PerturbationStrength.z + 
-																TexCoords1.y * PerturbationStrength.w);
+	float2 posDistortion = float2(TexCoords1.x * WaveStrength.x + 
+																TexCoords1.y * WaveStrength.y,
+																TexCoords1.x * WaveStrength.z + 
+																TexCoords1.y * WaveStrength.w);
 
-	float2 angles = float2(posDistortion.x + PerturbationTime.x * PIx2,
-												 posDistortion.y + PerturbationTime.y * PIx2);
+	float2 angles = float2(posDistortion.x + WaveTime.x * PIx2,
+												 posDistortion.y + WaveTime.y * PIx2);
 
 	float2 distortion = float2(cos(angles.x), sin(angles.y));
 
-	distortion *= 10;
-	distortion *= float2(1/800.f, 1/600.0f);
+	distortion *= WaveScale;
+	distortion *= TextureDimensions;
 
 	return tex2D(LinearTextureSampler, TexCoords1 + distortion);
 }
@@ -642,7 +643,7 @@ HDRLuminanceDS(float2 Tex : TEXCOORD0) : COLOR0
  * ------------------
 ***********************************************************************************/
 
-technique Perturbate
+technique Wave
 {
 	pass p0
 	<
@@ -650,7 +651,7 @@ technique Perturbate
 	>
 	{
 		VertexShader = null;
-		PixelShader = compile ps_2_0 Perturbate();
+		PixelShader = compile ps_2_0 Wave();
 		ZEnable = false;
 	}
 }

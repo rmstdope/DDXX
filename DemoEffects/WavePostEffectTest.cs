@@ -12,20 +12,21 @@ using Dope.DDXX.Utility;
 namespace Dope.DDXX.DemoEffects
 {
     [TestFixture]
-    public class PerturbationPostEffectTest
+    public class WavePostEffectTest
     {
         private Mockery mockery;
-        private PerturbationPostEffect effect;
+        private WavePostEffect effect;
         private IPostProcessor postProcessor;
         private Vector4 strength;
         private Vector2 time;
+        private float scale;
 
         [SetUp]
         public void SetUp()
         {
             mockery = new Mockery();
             postProcessor = mockery.NewMock<IPostProcessor>();
-            effect = new PerturbationPostEffect(1.0f, 2.0f);
+            effect = new WavePostEffect(1.0f, 2.0f);
             effect.Initialize(postProcessor);
             Time.Initialize();
             Time.Pause();
@@ -44,6 +45,7 @@ namespace Dope.DDXX.DemoEffects
             Time.CurrentTime = 11.25f;
             strength = new Vector4(1, 2, 3, 4);
             time = new Vector2(0.25f, 0.7827875f);
+            scale = 15.0f;
             TestRender(TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1);
         }
 
@@ -54,6 +56,7 @@ namespace Dope.DDXX.DemoEffects
             Time.CurrentTime = 1.33f; // 2,3387651
             strength = new Vector4(4, 3, 2, 1);
             time = new Vector2(0.33f, 0.3387651f);
+            scale = 1.0f;
             TestRender(TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_2);
         }
 
@@ -63,17 +66,20 @@ namespace Dope.DDXX.DemoEffects
                 GetProperty("OutputTextureID").
                 Will(Return.Value(startTexture));
             effect.Strength = strength;
-            //using (mockery.Ordered)
+            effect.Scale = scale;
+            using (mockery.Ordered)
             {
                 Expect.Once.On(postProcessor).
                     Method("SetBlendParameters").
                     With(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
                 Expect.Once.On(postProcessor).
-                    Method("SetValue").With("PerturbationStrength", strength);
+                    Method("SetValue").With("WaveStrength", strength);
                 Expect.Once.On(postProcessor).
-                    Method("SetValue").With(Is.EqualTo("PerturbationTime"), new Vector2Matcher(time));
+                    Method("SetValue").With("WaveScale", scale);
                 Expect.Once.On(postProcessor).
-                    Method("Process").With("Perturbate", startTexture, endTexture);
+                    Method("SetValue").With(Is.EqualTo("WaveTime"), new Vector2Matcher(time));
+                Expect.Once.On(postProcessor).
+                    Method("Process").With("Wave", startTexture, endTexture);
                 effect.Render();
             }
         }

@@ -50,8 +50,8 @@
     <Compile Include="MonochromePostEffectTest.cs" />
     <Compile Include="OverlayPostEffect.cs" />
     <Compile Include="OverlayPostEffectTest.cs" />
-    <Compile Include="PerturbationPostEffect.cs" />
-    <Compile Include="PerturbationPostEffectTest.cs" />
+    <Compile Include="WavePostEffect.cs" />
+    <Compile Include="WavePostEffectTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RadialBlurPostEffect.cs" />
     <Compile Include="RadialBlurPostEffectTest.cs" />
