@@ -166,10 +166,10 @@ namespace EngineTest
         private void MoveCamera()
         {
             float t = Time.CurrentTime;
-            camera.WorldState.Position =
-                new Vector3(10 * (float)Math.Sin(t),
-                3, 10 * (float)Math.Cos(t));
-            camera.WorldState.Rotation = Quaternion.RotationYawPitchRoll((float)Math.PI + t, 0, 0);
+            //camera.WorldState.Position =
+            //    new Vector3(10 * (float)Math.Sin(t),
+            //    3, 10 * (float)Math.Cos(t));
+            //camera.WorldState.Rotation = Quaternion.RotationYawPitchRoll((float)Math.PI + t, 0, 0);
         }
 
         public override void Render()

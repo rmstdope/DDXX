@@ -50,6 +50,8 @@
     <Compile Include="MonochromePostEffectTest.cs" />
     <Compile Include="OverlayPostEffect.cs" />
     <Compile Include="OverlayPostEffectTest.cs" />
+    <Compile Include="RingsPostEffect.cs" />
+    <Compile Include="RingsPostEffectTest.cs" />
     <Compile Include="WavePostEffect.cs" />
     <Compile Include="WavePostEffectTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -35,6 +35,10 @@ float4 WaveStrength;
 float2 WaveTime;
 float WaveScale;
 
+// For Rings effect
+float RingsDistance;
+float RingsScale;
+
 sampler2D LinearTextureSampler = sampler_state
 {
 	texture = <SourceTexture>;
@@ -262,6 +266,27 @@ Copy(float2 Tex : TEXCOORD0) : COLOR0
 {
 	return tex2D(LinearTextureSampler, Tex);
 }
+
+//-----------------------------------------------------------------------------
+// Pixel Shader: Rings
+// Desc: Create rings with sin function.
+//-----------------------------------------------------------------------------
+float4
+Rings(float2 TexCoords1 : TEXCOORD0) : COLOR0
+{
+	float2 fromCenter = TexCoords1 - 0.5f;
+
+	float len = length(fromCenter);
+	float distortion = sin(len * RingsDistance + WaveTime.x * PIx2);
+	distortion *= cos(len * RingsDistance + WaveTime.x * PIx2);
+
+	//distortion = distortion * distortion;
+	distortion = distortion * RingsScale;
+	distortion *= TextureDimensions;
+
+	return tex2D(LinearTextureSampler, TexCoords1 + fromCenter * distortion / len);
+}
+
 
 //-----------------------------------------------------------------------------
 // Pixel Shader: Wave
@@ -642,6 +667,19 @@ HDRLuminanceDS(float2 Tex : TEXCOORD0) : COLOR0
  * Techniques
  * ------------------
 ***********************************************************************************/
+
+technique Rings
+{
+	pass p0
+	<
+		float Scale = 1.0f;
+	>
+	{
+		VertexShader = null;
+		PixelShader = compile ps_2_0 Rings();
+		ZEnable = false;
+	}
+}
 
 technique Wave
 {
