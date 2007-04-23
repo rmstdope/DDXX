@@ -99,5 +99,12 @@ namespace Dope.DDXX.Graphics
         {
             return factory.CreateTexture(device, presentParameters.BackBufferWidth, presentParameters.BackBufferHeight, 1, Usage.RenderTarget, format, Pool.Default);
         }
+
+        public ITexture CreateFromFunction(int width, int height, int numLevels, Usage usage, Format format, Pool pool, Fill2DTextureCallback callbackFunction)
+        {
+            ITexture texture = factory.CreateTexture(device, width, height, numLevels, usage, format, pool);
+            texture.FillTexture(callbackFunction);
+            return texture;
+        }
     }
 }

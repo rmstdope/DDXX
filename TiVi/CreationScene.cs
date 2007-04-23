@@ -29,8 +29,37 @@ namespace EngineTest
         private short[] indices;
         private ISprite sprite;
         private ITexture flareTexture;
+        private ITexture whiteTexture;
         private List<int> flareIndices = new List<int>();
         private int startVertex = 8;
+        private float flareSize = 20;
+        private float flashStart = 2;
+        private float flashMiddle = 2.3f;
+        private float flashEnd = 2.6f;
+
+        public float FlashEnd
+        {
+            get { return flashEnd; }
+            set { flashEnd = value; }
+        }
+
+        public float FlashMiddle
+        {
+            get { return flashMiddle; }
+            set { flashMiddle = value; }
+        }
+
+        public float FlashStart
+        {
+            get { return flashStart; }
+            set { flashStart = value; }
+        }
+
+        public float FlareSize
+        {
+            get { return flareSize; }
+            set { flareSize = value; }
+        }
 
         public int StartVertex
         {
@@ -68,7 +97,8 @@ namespace EngineTest
                 get
                 {
                     return VertexFormats.PositionBlend4 | VertexFormats.LastBetaUByte4 |
-                        VertexFormats.Normal;
+                        VertexFormats.Normal;//| VertexFormats.Texture0 | 
+                        //(VertexFormats)(1 << (int)VertexFormats.TextureCountShift);
                 }
             }
             public Vector3 Position;
@@ -99,6 +129,9 @@ namespace EngineTest
 
             sprite = GraphicsFactory.CreateSprite(Device);
             flareTexture = TextureFactory.CreateFromFile("Flare.dds");
+            whiteTexture = TextureFactory.CreateFromFunction(64, 64, 1, Usage.None,
+                Format.A8R8G8B8, Pool.Managed,
+                delegate(Vector2 coord, Vector2 texel) { return new Vector4(1, 1, 1, 1); });
 
             //FallingStarSystem system = new FallingStarSystem("FS");
             //system.Initialize(100, Device, GraphicsFactory, EffectFactory, TextureFactory.CreateFromFile("red glass.jpg"));
@@ -335,12 +368,36 @@ namespace EngineTest
                 }
             }
             scene.Render();
+            DrawFlares();
 
+            DrawFlash();
+        }
+
+        private void DrawFlash()
+        {
+            if (Time.CurrentTime < flashStart)
+                return;
+            if (Time.CurrentTime > flashEnd)
+                return;
+            int flashAlpha;
+            if (Time.CurrentTime > FlashMiddle)
+                flashAlpha = 255 - (int)(255 * (Time.CurrentTime - flashMiddle) / (flashEnd - flashMiddle));
+            else
+                flashAlpha = (int)(255 * (Time.CurrentTime - flashStart) / (flashMiddle - flashStart));
+            sprite.Begin(SpriteFlags.AlphaBlend);
+            sprite.Draw2D(whiteTexture, Rectangle.Empty,
+                new SizeF(Device.Viewport.Width, Device.Viewport.Height),
+                new PointF(0, 0),
+                Color.FromArgb(flashAlpha, Color.White));
+            sprite.End();
+        }
+
+        private void DrawFlares()
+        {
             sprite.Begin(SpriteFlags.AlphaBlend);
             Matrix[] matrices = ((SkinnedModel)modelTiVi).GetBoneMatrices(0);
             for (int i = 0; i < flareIndices.Count; i++)
             {
-                float flareSize = 20;
                 Vertex v = lineVertices[flareIndices[i]];
                 Matrix matrix = matrices[v.BlendIndices & 0xFF] * scene.ActiveCamera.ViewMatrix * scene.ActiveCamera.ProjectionMatrix;
                 Vector3 pos = v.Position;
@@ -351,7 +408,7 @@ namespace EngineTest
                 pos.Y *= Device.Viewport.Height;
                 pos.Y = Device.Viewport.Height - pos.Y;
                 pos -= new Vector3(flareSize / 2.0f, flareSize / 2.0f, 0);
-                sprite.Draw2D(flareTexture, Rectangle.Empty, new SizeF(flareSize, flareSize), 
+                sprite.Draw2D(flareTexture, Rectangle.Empty, new SizeF(flareSize, flareSize),
                     new PointF(pos.X, pos.Y), Color.White);
             }
             sprite.End();

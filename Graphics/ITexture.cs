@@ -10,6 +10,8 @@ namespace Dope.DDXX.Graphics
 {
     public interface ITexture : IBaseTexture, IDisposable
     {
+        void FillTexture(Fill2DTextureCallback callbackFunction);
+
         // Summary:
         //     Gets a value that indicates whether the object is disposed.
         bool Disposed { get; }

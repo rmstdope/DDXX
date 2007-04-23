@@ -1869,5 +1869,14 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         #endregion
+
+        #region ITexture Members
+
+        public void FillTexture(Fill2DTextureCallback callbackFunction)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
     }
 }

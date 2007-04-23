@@ -5,10 +5,10 @@
 		<Parameter name="BaseMesh" string="Tivi-Creation.X" />
 	</Effect>
 	<!--PostEffect name="RadialBlurPostEffect" track="0" startTime="0.0" endTime="300.0" /-->
-	<PostEffect name="GlowPostEffect" track="0" startTime="0.0" endTime="300.0">
+	<!--PostEffect name="GlowPostEffect" track="0" startTime="0.0" endTime="300.0">
 		<Parameter name="BloomScale" float="1.5" />
 		<Parameter name="Exposure" float="1" />
-	</PostEffect>
+	</PostEffect-->
   <!--PostEffect name="OverlayPostEffect" track="0" startTime="0.0" endTime="300.0">
     <Parameter name="AddNoise" bool="true" />
     <Parameter name="Filename" string="Noise2.jpg" />

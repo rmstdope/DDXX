@@ -27,6 +27,11 @@ namespace Dope.DDXX.Graphics
         {
             return new TextureAdapter(TextureLoader.FromFile(device, srcFile, width, height, mipLevels, usage, format, pool, filter, mipFilter, colorKey));
         }
+
+        public void FillTexture(Fill2DTextureCallback callbackFunction)
+        {
+            TextureLoader.FillTexture(texture, callbackFunction);
+        }
         
         #region ITexture Members
 

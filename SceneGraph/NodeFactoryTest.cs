@@ -1121,5 +1121,15 @@ namespace Dope.DDXX.SceneGraph
         }
 
         #endregion
+
+        #region ITextureFactory Members
+
+
+        public ITexture CreateFromFunction(int width, int height, int numLevels, Usage usage, Format format, Pool pool, Fill2DTextureCallback callbackFunction)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
     }
 }

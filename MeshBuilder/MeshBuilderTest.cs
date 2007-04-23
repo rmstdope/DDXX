@@ -2106,5 +2106,53 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         #endregion
+
+        #region ITextureFactory Members
+
+
+        public ITexture CreateFromFunction(int width, int height, int numLevels, Usage usage, Format format, Pool pool, Fill2DTextureCallback callbackFunction)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
+
+        #region ITextureFactory Members
+
+        ITexture ITextureFactory.CreateFromFile(string file)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        ICubeTexture ITextureFactory.CreateCubeFromFile(string file)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        ITexture ITextureFactory.CreateFullsizeRenderTarget(Format format)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        ITexture ITextureFactory.CreateFullsizeRenderTarget()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        ITexture ITextureFactory.CreateFromFunction(int width, int height, int numLevels, Usage usage, Format format, Pool pool, Fill2DTextureCallback callbackFunction)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
+
+        #region ITexture Members
+
+        public void FillTexture(Fill2DTextureCallback callbackFunction)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
     }
 }
