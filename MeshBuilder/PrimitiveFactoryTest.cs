@@ -294,6 +294,105 @@ namespace Dope.DDXX.MeshBuilder
             }
         }
 
+        [Test]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void TestSphereNuOutOfRange()
+        {
+            factory.CreateSphere(1.0f, 7, 4);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void TestSphereNvOutOfRange()
+        {
+            factory.CreateSphere(1.0f, 8, 2);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestSphereNuNotMultOf4()
+        {
+            factory.CreateSphere(1.0f, 9, 4);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestSphereNvNotEven()
+        {
+            factory.CreateSphere(1.0f, 8, 5);
+        }
+
+        [Test]
+        public void TestSphereVertexCount()
+        {
+            IPrimitive sphere = factory.CreateSphere(1.0f, 4, 2);
+            Assert.AreEqual(8+2, sphere.Vertices.Length);
+            sphere = factory.CreateSphere(1.0f, 8, 8);
+            Assert.AreEqual(64+2, sphere.Vertices.Length);
+        }
+
+        [Test]
+        public void TestSphereVertexPositions()
+        {
+            float radius = 10.0f;
+            IPrimitive sphere = factory.CreateSphere(radius, 8, 8);
+            foreach (Vertex v in sphere.Vertices) {
+                Assert.AreEqual(radius, v.Position.Length());
+            }
+        }
+
+        [Test]
+        public void TestSphereIndices()
+        {
+            short Nu = 4;
+            short Nv = 2;
+            IPrimitive sphere = factory.CreateSphere(1.0f, Nu, Nv);
+            // Nv+2 because top and bottom special to generate square cover
+            Assert.AreEqual(3*2*Nu*(Nv-1) + 2*3*(Nu/4+1)*4 + 2*3*2, sphere.Indices.Length);
+            short[] indices = new short[] {
+                0,1,5,
+                1,5,4,
+                1,2,6,
+                2,6,5,
+                2,3,7,
+                3,7,6,
+                3,0,4,
+                0,4,7,
+                8,1,0,  // extra row to bottom square
+                8,9,1,
+                9,2,1,
+                9,10,2,
+                10,3,2,
+                10,11,3,
+                11,0,3,
+                11,8,0,
+                11,10,9, // bottom
+                10,9,8,
+                12,4,5, // extra row to top square
+                13,12,5,
+                13,5,6,
+                14,13,6,
+                14,6,7,
+                15,14,7,
+                15,7,4,
+                12,15,4,
+                12,13,14, // top
+                13,14,15,
+            };
+            Assert.AreEqual(84, indices.Length);
+            for (int i = 0; i < indices.Length; i+=3)
+            {
+                CheckTriangle(i, indices[i], indices[i + 1], indices[i + 2], sphere.Indices); 
+            }
+        }
+
+        private void CheckTriangle(int t, int i, int j, int k, short[] indices)
+        {
+            Assert.AreEqual(i, indices[t], "t=" + t + ", i=" + i + ", j=" + j + ", k=" + k);
+            Assert.AreEqual(j, indices[t + 1], "t=" + t + ", i=" + i + ", j=" + j + ", k=" + k);
+            Assert.AreEqual(k, indices[t + 2], "t=" + t + ", i=" + i + ", j=" + j + ", k=" + k);
+        }
+
         private void CheckPlaneVertexLimits(float width, float height, int widthSegments, int heightSegments)
         {
             int v = 0;

@@ -198,5 +198,158 @@ namespace Dope.DDXX.MeshBuilder
             return i;
         }
 
+        //        |z
+        //        |     _
+        //        |phi_/
+        //        | _/r 
+        //        |/_______ y
+        //       / \_   
+        //      / th \_ 
+        //    x/  eta  \
+        // theta in 0,2pi    phi in 0,pi
+        public IPrimitive CreateSphere(float radius, short Nu, short Nv)
+        {
+            if (Nu < 4)
+                throw new ArgumentOutOfRangeException("Nu", "Must be at least 4");
+            if (Nv < 2)
+                throw new ArgumentOutOfRangeException("Nv", "Must be at least 2");
+            if ((Nu % 4) != 0)
+                throw new ArgumentException("Must be multiple of four", "Nu");
+            List<Vertex> vertexList = new List<Vertex>();
+            double du = 2 * Math.PI / Nu;
+            double dv = Math.PI / Nv;
+            double phi;
+            for (double invphi = dv / 2.0f; invphi < Math.PI; invphi += dv)
+            {
+                phi = Math.PI - invphi; // want to go from down upwards
+                for (double theta = du / 2.0f; theta < 2 * Math.PI; theta += du)
+                {
+                    Vector3 p = new Vector3();
+                    p.X = (float)(radius * Math.Cos(theta) * Math.Sin(phi));
+                    p.Y = (float)(radius * Math.Sin(theta) * Math.Sin(phi));
+                    p.Z = (float)(radius * Math.Cos(phi));
+                    Vertex v = new Vertex();
+                    v.Position = p;
+                    vertexList.Add(v);
+                }
+            }
+            // Bottom
+            // a square => 4 step circle, halfway to bottom center
+            // from the bottommost circle with Nu vertices,
+            // where each 1/4th of the vertices will be connected to 
+            // one corner of the bottom square
+            short firstBottomIndex = (short)vertexList.Count;
+            du = 2 * Math.PI / 4;
+            phi = Math.PI - (dv / 2);
+            for (double theta = 0; theta < 2 * Math.PI; theta += du)
+            {
+                Vector3 p = new Vector3();
+                p.X = (float)(radius * Math.Cos(theta) * Math.Sin(phi));
+                p.Y = (float)(radius * Math.Sin(theta) * Math.Sin(phi));
+                p.Z = (float)(radius * Math.Cos(phi));
+                Vertex v = new Vertex();
+                v.Position = p;
+                vertexList.Add(v);
+            }
+            // Top
+            short firstTopIndex = (short)vertexList.Count;
+            du = 2 * Math.PI / 4;
+            phi = (dv / 2);
+            for (double theta = 0; theta < 2 * Math.PI; theta += du)
+            {
+                Vector3 p = new Vector3();
+                p.X = (float)(radius * Math.Cos(theta) * Math.Sin(phi));
+                p.Y = (float)(radius * Math.Sin(theta) * Math.Sin(phi));
+                p.Z = (float)(radius * Math.Cos(phi));
+                Vertex v = new Vertex();
+                v.Position = p;
+                vertexList.Add(v);
+            }
+
+            // indices
+            List<short> indexList = new List<short>();
+            for (short i = 0; i < Nv-1; i++)
+            {
+                for (short j = 0; j < Nu; j++)
+                {
+                    SphereAddQuadIndices(j, i, Nu, Nv, indexList);
+                }
+            }
+            // bottom
+            for (short i = 0; i < 4; i++)
+            {
+                short c = (short)(Nu / 4);
+                short inext = (short)((i + 1) % 4);
+                short k = (short)(c * i);
+                short jnext = 1;
+                for (short j = 0; j < c; j++)
+                {
+                    k = (short)(c * i);
+                    jnext = (short)(j + 1);
+                    indexList.Add((short)(firstBottomIndex + i));
+                    indexList.Add((short)((k + jnext) % Nu));
+                    indexList.Add((short)(k + j));
+                }
+                indexList.Add((short)(firstBottomIndex + i));
+                indexList.Add((short)(firstBottomIndex + inext));
+                indexList.Add((short)((k + jnext) % Nu));
+            }
+            // bottom cover
+            indexList.Add((short)(firstBottomIndex + 3));
+            indexList.Add((short)(firstBottomIndex + 2));
+            indexList.Add((short)(firstBottomIndex + 1));
+            indexList.Add((short)(firstBottomIndex + 2));
+            indexList.Add((short)(firstBottomIndex + 1));
+            indexList.Add((short)(firstBottomIndex + 0));
+            // top
+            for (short i = 0; i < 4; i++)
+            {
+                short c = (short)(Nu / 4);
+                short inext = (short)((i + 1) % 4);
+                short k = (short)(c * i);
+                short jnext = 1;
+                for (short j = 0; j < c; j++)
+                {
+                    k = (short)(c * i + (Nv - 1) * Nu);
+                    jnext = (short)(j + 1);
+                    indexList.Add((short)(firstTopIndex + i));
+                    indexList.Add((short)(k + j));
+                    indexList.Add((short)(((k + jnext) % Nu) + (Nv - 1) * Nu));
+                }
+                indexList.Add((short)(firstTopIndex + inext));
+                indexList.Add((short)(firstTopIndex + i));
+                indexList.Add((short)(((k + jnext) % Nu) + (Nv - 1) * Nu));
+            }
+            // top cover
+            indexList.Add((short)(firstTopIndex + 0));
+            indexList.Add((short)(firstTopIndex + 1));
+            indexList.Add((short)(firstTopIndex + 2));
+            indexList.Add((short)(firstTopIndex + 1));
+            indexList.Add((short)(firstTopIndex + 2));
+            indexList.Add((short)(firstTopIndex + 3));
+            
+            // create and return primitive
+            Vertex[] vertices = vertexList.ToArray();
+            short[] indices = indexList.ToArray();
+            return new Primitive(vertices, indices);
+        }
+
+        private static void SphereAddQuadIndices(short theta, short phi,
+            short Nu, short Nv, List<short> indexList)
+        {
+            short lastOnRow = (short)((Nu - 1) + phi * Nu);
+            short firstOnRow = (short)(phi * Nu);
+
+            short vertex = (short)(theta + phi * Nu);
+            short nextVertex = (short)(vertex + 1);
+            if (vertex == lastOnRow)
+                nextVertex = firstOnRow;
+            indexList.Add((short)(vertex));
+            indexList.Add((short)(nextVertex));
+            indexList.Add((short)(nextVertex + Nu));
+            indexList.Add((short)(nextVertex));
+            indexList.Add((short)(nextVertex + Nu));
+            indexList.Add((short)(vertex + Nu));
+        }
     }
 }
