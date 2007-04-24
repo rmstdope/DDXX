@@ -15,5 +15,9 @@ namespace Dope.DDXX.MeshBuilder
             int widthSegments, int heightSegments, bool textured);
         IPrimitive CreateBox(float length, float width, float height,
             int lengthSegments, int widthSegments, int heightSegments);
+        IPrimitive CreateSphere(float radius, short Nu, short Nv);
+        IPrimitive CreateSphere2(float radius, int rings);
+        IPrimitive CreateChamferBox(float length, float width, float height, float fillet,
+            int lengthSegments, int widthSegments, int heightSegments, int filletSegments);
     }
 }

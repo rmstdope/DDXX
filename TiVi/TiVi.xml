@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Effects>
-	<!--Effect name="ChessScene" track="0" startTime="0.0" endTime="300.0"/-->
-	<Effect name="CreationScene" track="0" startTime="0.0" endTime="300.0">
+	<Effect name="ChessScene" track="0" startTime="0.0" endTime="300.0"/>
+	<!--Effect name="CreationScene" track="0" startTime="0.0" endTime="300.0">
 		<Parameter name="BaseMesh" string="Tivi-Creation.X" />
-	</Effect>
+	</Effect-->
 	<!--PostEffect name="RadialBlurPostEffect" track="0" startTime="0.0" endTime="300.0" /-->
 	<!--PostEffect name="GlowPostEffect" track="0" startTime="0.0" endTime="300.0">
 		<Parameter name="BloomScale" float="1.5" />

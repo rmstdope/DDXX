@@ -104,7 +104,7 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
-        /// Test plane creation using the factory
+        /// Test sphere creation using the factory
         /// </summary>
         [Test]
         public void TestPlaneCreation()
@@ -120,7 +120,7 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
-        /// Test plane creation of duplicate name
+        /// Test sphere creation of duplicate name
         /// </summary>
         [Test]
         [ExpectedException(typeof(DDXXException))]
@@ -131,7 +131,7 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
-        /// Test plane and box creation of duplicate name
+        /// Test sphere and box creation of duplicate name
         /// </summary>
         [Test]
         [ExpectedException(typeof(DDXXException))]
@@ -2149,6 +2149,26 @@ namespace Dope.DDXX.MeshBuilder
         #region ITexture Members
 
         public void FillTexture(Fill2DTextureCallback callbackFunction)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
+
+        #region IPrimitiveFactory Members
+
+
+        public IPrimitive CreateSphere2(float radius, int rings)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public IPrimitive CreateSphere(float radius, short Nu, short Nv)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public IPrimitive CreateChamferBox(float length, float width, float height, float fillet, int lengthSegments, int widthSegments, int heightSegments, int filletSegments)
         {
             throw new Exception("The method or operation is not implemented.");
         }

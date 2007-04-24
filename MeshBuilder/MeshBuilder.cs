@@ -99,6 +99,12 @@ namespace Dope.DDXX.MeshBuilder
             AddPrimitive(plane, name);
         }
 
+        public void CreateSphere(string name, float radius, short rings)
+        {
+            IPrimitive sphere = primitiveFactory.CreateSphere2(radius, rings);
+            AddPrimitive(sphere, name);
+        }
+
         public void AssignMaterial(string primitiveName, string materialName)
         {
             IPrimitive primitive = GetPrimitive(primitiveName);
@@ -155,7 +161,7 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
-        /// Create a sky box model, i.e. four transformed and screen
+        /// Create a sky box model, ring.e. four transformed and screen
         /// aligned vertices and no texture coordinates.
         /// </summary>
         /// <param name="name"></param>

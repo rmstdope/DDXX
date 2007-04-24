@@ -351,5 +351,188 @@ namespace Dope.DDXX.MeshBuilder
             indexList.Add((short)(nextVertex + Nu));
             indexList.Add((short)(vertex + Nu));
         }
+
+        public IPrimitive CreateChamferBox(float length, float width, float height, float fillet, 
+            int lengthSegments, int widthSegments, int heightSegments, int filletSegments)
+        {
+            if (fillet > length / 2 || fillet > width / 2 || fillet > height / 2)
+                throw new ArgumentException("Must not be larger than max(length, width, height)", 
+                    "fillet");
+            if (filletSegments < 2)
+                throw new ArgumentException("Must be at least 2", "filletSegments");
+
+            int rings = (filletSegments - 1) * 4;
+            List<Vertex> vertexList;
+            List<short> indexList;
+            CreateSphereLists(fillet, rings, out vertexList, out indexList);
+
+            // Add vertices for extra y=0 ring
+            for (int i = 0; i < rings; i++)
+            {
+                vertexList.Add(new Vertex());
+            }
+            // Add vertices for extra x=0 ring
+            for (int i = 0; i < rings + 2; i++)
+            {
+                vertexList.Add(new Vertex());
+            }
+            // Add vertices for extra z=0 ring
+            for (int i = 0; i < rings + 4; i++)
+            {
+                vertexList.Add(new Vertex());
+            }
+
+            // create and return primitive
+            Vertex[] vertices = vertexList.ToArray();
+            short[] indices = indexList.ToArray();
+
+            return new Primitive(vertices, indices);
+        }
+
+        //        |z
+        //        |th   _
+        //        |eta_/
+        //        | _/r 
+        //        |/_______ y
+        //       / \_   
+        //      /    \_ 
+        //    x/  phi  \
+        // theta in 0,2pi    phi in 0,pi
+        public IPrimitive CreateSphere2(float radius, int rings)
+        {
+            if ((rings  % 4) != 0)
+                throw new ArgumentException("Must be multiple of four", "rings");
+
+            List<Vertex> vertexList;
+            List<short> indexList;
+            CreateSphereLists(radius, rings, out vertexList, out indexList);
+
+            // create and return primitive
+            Vertex[] vertices = vertexList.ToArray();
+            short[] indices = indexList.ToArray();
+
+            return new Primitive(vertices, indices);
+        }
+
+        private void CreateSphereLists(float radius, int rings, out List<Vertex> vertexList, out List<short> indexList)
+        {
+            vertexList = new List<Vertex>();
+            indexList = new List<short>();
+
+            int phiCount = (rings - 2) / 2 + 2;
+            AddTopVertex(radius, vertexList);
+            AddTopIndices(rings, indexList);
+            for (int i = 0; i < phiCount - 2; i++)
+            {
+                float phi = (float)((i + 1) * (Math.PI / (phiCount - 1)));
+                for (int j = 0; j < rings; j++)
+                {
+                    float theta = (float)(j * 2 * Math.PI / rings);
+                    AddRingVertex(radius, vertexList, phi, theta);
+                }
+                if (i != 0)
+                {
+                    AddRingIndices(rings, i, indexList);
+                }
+            }
+            AddBottomVertex(radius, vertexList);
+            AddBottomIndices(rings, indexList);
+
+            // Set normals
+            for (int i = 0; i < vertexList.Count; i++)
+            {
+                Vertex vertex = vertexList[i];
+                Vector3 normal = vertex.Position;
+                normal.Normalize();
+                vertex.Normal = normal;
+                // http://www.mvps.org/directx/articles/spheremap.htm
+                vertex.U = (float)(Math.Asin(normal.X) / Math.PI) + 0.5f;
+                vertex.V = (float)(Math.Asin(normal.Y) / Math.PI) + 0.5f;
+                vertexList[i] = vertex;
+            }
+        }
+
+        private Vertex AddRingVertex(float radius, List<Vertex> vertexList, float phi, float theta)
+        {
+            Vertex v = new Vertex();
+            v.Position = GetSpherePos(radius, phi, theta);
+            vertexList.Add(v);
+            return v;
+        }
+
+        private void AddRingIndices(int rings, int ring, List<short> indexList)
+        {
+            for (int j = 0; j < rings; j++)
+            {
+                short i1 = GetVertexNumber(rings, ring - 1, j);
+                short i2 = GetVertexNumber(rings, ring - 1, j + 1);
+                short i3 = GetVertexNumber(rings, ring, j);
+                short i4 = GetVertexNumber(rings, ring, j + 1);
+                indexList.Add(i1);
+                indexList.Add(i2);
+                indexList.Add(i4);
+                indexList.Add(i1);
+                indexList.Add(i4);
+                indexList.Add(i3);
+            }
+        }
+
+        private void AddTopIndices(int rings, List<short> indexList)
+        {
+            for (int i = 0; i < rings; i++)
+            {
+                short i1 = 0;
+                short i2 = GetVertexNumber(rings, 0, i + 1);
+                short i3 = GetVertexNumber(rings, 0, i);
+                indexList.Add(i1);
+                indexList.Add(i2);
+                indexList.Add(i3);
+            }
+        }
+
+        private void AddBottomIndices(int rings, List<short> indexList)
+        {
+            int phiCount = (rings - 2) / 2;
+            for (int i = 0; i < rings; i++)
+            {
+                short i1 = GetVertexNumber(rings, phiCount - 1, i);
+                short i2 = GetVertexNumber(rings, phiCount - 1, i + 1);
+                short i3 = GetVertexNumber(rings, phiCount, 0);
+                indexList.Add(i1);
+                indexList.Add(i2);
+                indexList.Add(i3);
+            }
+        }
+
+        private short GetVertexNumber(int rings, int ring, int vertex)
+        {
+            // Skip top vertex
+            short index = 1;
+            // Jump to correct ring
+            index += (short)(ring * rings);
+            // Get correct vertex (with modulo to support wrapping)
+            index += (short)(vertex % rings);
+
+            return index;
+        }
+
+        private void AddBottomVertex(float radius, List<Vertex> vertexList)
+        {
+            AddTopVertex(-radius, vertexList);
+        }
+
+        private void AddTopVertex(float radius, List<Vertex> vertexList)
+        {
+            Vertex v = new Vertex();
+            v.Position = new Vector3(0, radius, 0);
+            vertexList.Add(v);
+        }
+
+        private Vector3 GetSpherePos(float radius, float phi, float theta)
+        {
+            float y = (float)(radius * Math.Cos(phi));
+            float innerRadius = (float)(-radius * Math.Sin(phi));
+            return new Vector3((float)(innerRadius * Math.Sin(theta)), y, (float)(-innerRadius * Math.Cos(theta)));
+        }
     }
 }

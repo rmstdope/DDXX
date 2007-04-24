@@ -64,7 +64,8 @@ namespace EngineTest
 
         private void CreatePlane()
         {
-            builder.CreatePlane("Box", 3, 3, 6, 6, true);
+            //builder.CreatePlane("Box", 3, 3, 6, 6, true);
+            builder.CreateSphere("Box", 3, 64);
             builder.AssignMaterial("Box", "Default1");
             builder.SetDiffuseTexture("Default1", "red glass.jpg");
             builder.SetReflectiveTexture("Default1", "rnl_cross.dds");
@@ -77,8 +78,8 @@ namespace EngineTest
             scene.AddNode(planeNode);
             mirrorNode = CreateMirrorNode(planeNode);
             scene.AddNode(mirrorNode);
-            planeNode.WorldState.MoveUp(1.5f);
-            mirrorNode.WorldState.MoveUp(-1.5f);
+            planeNode.WorldState.MoveUp(3f);
+            mirrorNode.WorldState.MoveUp(-3f);
         }
 
         private ModelNode CreateMirrorNode(ModelNode originalNode)
