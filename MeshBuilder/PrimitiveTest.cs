@@ -14,7 +14,7 @@ namespace Dope.DDXX.MeshBuilder
     [TestFixture]
     public class PrimitiveTest : IGraphicsFactory, IMesh, IDevice, IGraphicsStream, IBody, ITexture
     {
-        protected Primitive primitive;
+        protected IPrimitive primitive;
         private int numFaces;
         private int numVertices;
         private bool vbLocked;
@@ -130,6 +130,120 @@ namespace Dope.DDXX.MeshBuilder
             IModel model = primitive.CreateModel(this, this);
             CheckMaterial(model);
             CheckModel(vertices, indices, model);
+        }
+
+        /// <summary>
+        /// Test welding two verices with same position.
+        /// Check only positions.
+        /// </summary>
+        [Test]
+        public void TestWeldingSamePosition()
+        {
+            Vector3[] position = new Vector3[] { new Vector3(), new Vector3() };
+            Vector3[] newPositions = new Vector3[] { new Vector3() };
+            primitive = CreatePrimitiveFromLists(position, null, null, null);
+            primitive.Weld(0.0f);
+            CompareVertices(primitive, newPositions, null, null);
+        }
+
+        /// <summary>
+        /// Test welding of same position with more vertices
+        /// </summary>
+        [Test]
+        public void TestWeldingSamePositionMoreVertices()
+        {
+            Vector3[] positions = new Vector3[] { new Vector3(0.1f, 0, 0), new Vector3(), new Vector3(0.3f, 0, 0), new Vector3() };
+            Vector3[] newPositions = new Vector3[] { new Vector3(0.1f, 0, 0), new Vector3(), new Vector3(0.3f, 0, 0) };
+            primitive = CreatePrimitiveFromLists(positions, null, null, null);
+            primitive.Weld(0.0f);
+            CompareVertices(primitive, newPositions, null, null);
+        }
+
+        /// <summary>
+        /// Test welding vertices with different normals (should be averaged).
+        /// </summary>
+        [Test]
+        public void TestWeldingDifferentNormals()
+        {
+            Vector3[] positions = new Vector3[] { new Vector3(), new Vector3() };
+            Vector3[] newPositions = new Vector3[] { new Vector3() };
+            Vector3[] normals = new Vector3[] { new Vector3(1, 0, 0), new Vector3(0, 1, 0) };
+            Vector3[] newNormals = new Vector3[] { new Vector3(1, 1, 0) };
+            primitive = CreatePrimitiveFromLists(positions, normals, null, null);
+            primitive.Weld(0.0f);
+            CompareVertices(primitive, newPositions, newNormals, null);
+        }
+
+        /// <summary>
+        /// Test welding vertices with different normals (should be averaged).
+        /// </summary>
+        [Test]
+        public void TestWeldingDifferentUV()
+        {
+            Vector3[] positions = new Vector3[] { new Vector3(), new Vector3() };
+            Vector3[] newPositions = new Vector3[] { new Vector3() };
+            Vector2[] uv = new Vector2[] { new Vector2(10, 20), new Vector2(30, 20) };
+            Vector2[] newUV = new Vector2[] { new Vector2(20, 20) };
+            primitive = CreatePrimitiveFromLists(positions, null, uv, null);
+            primitive.Weld(0.0f);
+            CompareVertices(primitive, newPositions, null, newUV);
+        }
+
+        /// <summary>
+        /// Test welding two vertices that are close enough but not on the same position.
+        /// </summary>
+        [Test]
+        public void TestWeldingDifferentPositions()
+        {
+            Vector3[] positions = new Vector3[] { 
+                new Vector3(0.0f, 0, 0), new Vector3(0.5f, 0, 0), 
+                new Vector3(0.3f, 0, 0), new Vector3(0.1f, 0, 0) };
+            Vector3[] newPositions = new Vector3[] { 
+                new Vector3(0.0f, 0, 0), new Vector3(0.5f, 0, 0), 
+                new Vector3(0.3f, 0, 0) };
+            primitive = CreatePrimitiveFromLists(positions, null, null, null);
+            primitive.Weld(0.1f);
+            CompareVertices(primitive, newPositions, null, null);
+        }
+
+        private IPrimitive CreatePrimitiveFromLists(Vector3[] positions,
+            Vector3[] normals, Vector2[] uv, short[] indices)
+        {
+            Vertex[] vertices = new Vertex[positions.Length];
+            for (int i = 0; i < positions.Length; i++)
+            {
+                vertices[i].Position = positions[i];
+                if (normals != null)
+                {
+                    normals[i].Normalize();
+                    vertices[i].Normal = normals[i];
+                }
+                if (uv != null)
+                {
+                    vertices[i].U = uv[i].X;
+                    vertices[i].V = uv[i].Y;
+                }
+            }
+            return new Primitive(vertices, indices);
+        }
+
+        private void CompareVertices(IPrimitive primitive, Vector3[] newPositions, Vector3[] newNormals, Vector2[] newUV)
+        {
+            Assert.AreEqual(newPositions.Length, primitive.Vertices.Length);
+            for (int i = 0; i < newPositions.Length; i++)
+            {
+                Assert.AreEqual(newPositions[i], primitive.Vertices[i].Position);
+                if (newNormals != null)
+                {
+                    newNormals[i].Normalize();
+                    Assert.AreEqual(newNormals[i], primitive.Vertices[i].Normal);
+                }
+                if (newUV != null)
+                {
+                    Assert.AreEqual(newUV[i].X, primitive.Vertices[i].U);
+                    Assert.AreEqual(newUV[i].Y, primitive.Vertices[i].V);
+                }
+            }
         }
 
         private void CheckMaterial(IModel model)

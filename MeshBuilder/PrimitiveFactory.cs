@@ -366,21 +366,21 @@ namespace Dope.DDXX.MeshBuilder
             List<short> indexList;
             CreateSphereLists(fillet, rings, out vertexList, out indexList);
 
-            // Add vertices for extra y=0 ring
-            for (int i = 0; i < rings; i++)
-            {
-                vertexList.Add(new Vertex());
-            }
-            // Add vertices for extra x=0 ring
-            for (int i = 0; i < rings + 2; i++)
-            {
-                vertexList.Add(new Vertex());
-            }
-            // Add vertices for extra z=0 ring
-            for (int i = 0; i < rings + 4; i++)
-            {
-                vertexList.Add(new Vertex());
-            }
+            //// Add vertices for extra y=0 ring
+            //for (int i = 0; i < rings; i++)
+            //{
+            //    vertexList.Add(new Vertex());
+            //}
+            //// Add vertices for extra x=0 ring
+            //for (int i = 0; i < rings + 2; i++)
+            //{
+            //    vertexList.Add(new Vertex());
+            //}
+            //// Add vertices for extra z=0 ring
+            //for (int i = 0; i < rings + 4; i++)
+            //{
+            //    vertexList.Add(new Vertex());
+            //}
 
             // create and return primitive
             Vertex[] vertices = vertexList.ToArray();
@@ -420,20 +420,26 @@ namespace Dope.DDXX.MeshBuilder
             indexList = new List<short>();
 
             int phiCount = (rings - 2) / 2 + 2;
-            AddTopVertex(radius, vertexList);
+            AddTopVertices(radius, vertexList, rings + 4);
             AddTopIndices(rings, indexList);
             for (int i = 0; i < phiCount - 2; i++)
             {
-                float phi = (float)((i + 1) * (Math.PI / (phiCount - 1)));
-                for (int j = 0; j < rings; j++)
-                {
-                    float theta = (float)(j * 2 * Math.PI / rings);
-                    AddRingVertex(radius, vertexList, phi, theta);
-                }
-                if (i != 0)
-                {
-                    AddRingIndices(rings, i, indexList);
-                }
+                //int doubleRings = 1;
+                //if (i == (phiCount - 1) / 2)
+                //    doubleRings = 2;
+                //for (int d = 0; d < doubleRings; d++)
+                //{
+                    float phi = (float)((i + 1) * (Math.PI / (phiCount - 1)));
+                    for (int j = 0; j < rings; j++)
+                    {
+                        float theta = (float)(j * 2 * Math.PI / rings);
+                        AddRingVertex(radius, vertexList, phi, theta);
+                    }
+                    if (i != 0)
+                    {
+                        AddRingIndices(rings, i, indexList);
+                    }
+                //}
             }
             AddBottomVertex(radius, vertexList);
             AddBottomIndices(rings, indexList);
@@ -518,10 +524,10 @@ namespace Dope.DDXX.MeshBuilder
 
         private void AddBottomVertex(float radius, List<Vertex> vertexList)
         {
-            AddTopVertex(-radius, vertexList);
+            AddTopVertices(-radius, vertexList, 0);
         }
 
-        private void AddTopVertex(float radius, List<Vertex> vertexList)
+        private void AddTopVertices(float radius, List<Vertex> vertexList, int num)
         {
             Vertex v = new Vertex();
             v.Position = new Vector3(0, radius, 0);

@@ -14,5 +14,6 @@ namespace Dope.DDXX.MeshBuilder
         IBody Body { get; set; }
         ModelMaterial ModelMaterial { get; set; }
         IModel CreateModel(IGraphicsFactory factory, IDevice device);
+        void Weld(float distance);
     }
 }

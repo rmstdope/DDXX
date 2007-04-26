@@ -294,162 +294,162 @@ namespace Dope.DDXX.MeshBuilder
             }
         }
 
-        [Test]
-        [ExpectedException(typeof(ArgumentException))]
-        public void TestSphereRingsNotMulOf4()
-        {
-            factory.CreateSphere2(1.0f, 5);
-        }
+        //[Test]
+        //[ExpectedException(typeof(ArgumentException))]
+        //public void TestSphereRingsNotMulOf4()
+        //{
+        //    factory.CreateSphere2(1.0f, 5);
+        //}
 
-        [Test]
-        public void TestSphereVertexCount1()
-        {
-            IPrimitive sphere = factory.CreateSphere2(1.0f, 4);
-            Assert.AreEqual(4 + 2, sphere.Vertices.Length);
-            sphere = factory.CreateSphere2(1.0f, 8);
-            Assert.AreEqual(8 * 3 + 2, sphere.Vertices.Length);
-        }
+        //[Test]
+        //public void TestSphereVertexCount1()
+        //{
+        //    IPrimitive sphere = factory.CreateSphere2(1.0f, 4);
+        //    Assert.AreEqual(4 + 2, sphere.Vertices.Length);
+        //    sphere = factory.CreateSphere2(1.0f, 8);
+        //    Assert.AreEqual(8 * 3 + 2, sphere.Vertices.Length);
+        //}
 
-        [Test]
-        public void TestSphereVertexOnRadius4()
-        {
-            float radius = 10.0f;
-            IPrimitive sphere = factory.CreateSphere2(radius, 4);
-            foreach (Vertex v in sphere.Vertices)
-            {
-                Assert.AreEqual(radius, v.Position.Length(), epsilon);
-            }
-        }
+        //[Test]
+        //public void TestSphereVertexOnRadius4()
+        //{
+        //    float radius = 10.0f;
+        //    IPrimitive sphere = factory.CreateSphere2(radius, 4);
+        //    foreach (Vertex v in sphere.Vertices)
+        //    {
+        //        Assert.AreEqual(radius, v.Position.Length(), epsilon);
+        //    }
+        //}
 
-        [Test]
-        public void TestSphereVertexOnRadius32()
-        {
-            float radius = 5.0f;
-            IPrimitive sphere = factory.CreateSphere2(radius, 32);
-            foreach (Vertex v in sphere.Vertices)
-            {
-                Assert.AreEqual(radius, v.Position.Length(), epsilon);
-            }
-        }
+        //[Test]
+        //public void TestSphereVertexOnRadius32()
+        //{
+        //    float radius = 5.0f;
+        //    IPrimitive sphere = factory.CreateSphere2(radius, 32);
+        //    foreach (Vertex v in sphere.Vertices)
+        //    {
+        //        Assert.AreEqual(radius, v.Position.Length(), epsilon);
+        //    }
+        //}
 
-        [Test]
-        public void TestSphereIndexCount()
-        {
-            IPrimitive sphere = factory.CreateSphere2(1.0f, 4);
-            Assert.AreEqual(4 * 3 + 4 * 3, sphere.Indices.Length);
-            sphere = factory.CreateSphere2(1.0f, 8);
-            Assert.AreEqual(8 * 3 + 6 * 8 * 2 + 8 * 3, sphere.Indices.Length);
-        }
+        //[Test]
+        //public void TestSphereIndexCount()
+        //{
+        //    IPrimitive sphere = factory.CreateSphere2(1.0f, 4);
+        //    Assert.AreEqual(4 * 3 + 4 * 3, sphere.Indices.Length);
+        //    sphere = factory.CreateSphere2(1.0f, 8);
+        //    Assert.AreEqual(8 * 3 + 6 * 8 * 2 + 8 * 3, sphere.Indices.Length);
+        //}
 
-        [Test]
-        public void TestSphereIndicesValues4()
-        {
-            IPrimitive sphere = factory.CreateSphere2(1.0f, 4);
-            short[] indices = new short[] {
-                // Top
-                0,2,1,
-                0,3,2,
-                0,4,3,
-                0,1,4,
-                // Bottom
-                1,2,5,
-                2,3,5,
-                3,4,5,
-                4,1,5,
-            };
-            for (int i = 0; i < indices.Length; i++)
-            {
-                Assert.AreEqual(indices[i], sphere.Indices[i]);
-            }
-        }
+        //[Test]
+        //public void TestSphereIndicesValues4()
+        //{
+        //    IPrimitive sphere = factory.CreateSphere2(1.0f, 4);
+        //    short[] indices = new short[] {
+        //        // Top
+        //        0,2,1,
+        //        0,3,2,
+        //        0,4,3,
+        //        0,1,4,
+        //        // Bottom
+        //        1,2,5,
+        //        2,3,5,
+        //        3,4,5,
+        //        4,1,5,
+        //    };
+        //    for (int i = 0; i < indices.Length; i++)
+        //    {
+        //        Assert.AreEqual(indices[i], sphere.Indices[i]);
+        //    }
+        //}
 
-        [Test]
-        public void TestSphereIndicesValues8()
-        {
-            IPrimitive sphere = factory.CreateSphere2(1.0f, 8);
-            short[] indices = new short[] {
-                // Top
-                 0,2,1,
-                 0,3,2,
-                 0,4,3,
-                 0,5,4,
-                 0,6,5,
-                 0,7,6,
-                 0,8,7,
-                 0,1,8,
-                // Ring 1
-                 1, 2,10,
-                 1,10, 9,
-                 2, 3,11,
-                 2,11,10,
-                 3, 4,12,
-                 3,12,11,
-                 4, 5,13,
-                 4,13,12,
-                 5, 6,14,
-                 5,14,13,
-                 6, 7,15,
-                 6,15,14,
-                 7, 8,16,
-                 7,16,15,
-                 8, 1, 9,
-                 8, 9,16,
-                // Ring 2
-                 9,10,18,
-                 9,18,17,
-                10,11,19,
-                10,19,18,
-                11,12,20,
-                11,20,19,
-                12,13,21,
-                12,21,20,
-                13,14,22,
-                13,22,21,
-                14,15,23,
-                14,23,22,
-                15,16,24,
-                15,24,23,
-                16, 9,17,
-                16,17,24,
-                // Bottom
-                17,18,25,
-                18,19,25,
-                19,20,25,
-                20,21,25,
-                21,22,25,
-                22,23,25,
-                23,24,25,
-                24,17,25,
-            };
-            for (int i = 0; i < indices.Length; i++)
-            {
-                Assert.AreEqual(indices[i], sphere.Indices[i], "Index " + i);
-            }
-        }
+        //[Test]
+        //public void TestSphereIndicesValues8()
+        //{
+        //    IPrimitive sphere = factory.CreateSphere2(1.0f, 8);
+        //    short[] indices = new short[] {
+        //        // Top
+        //         0,2,1,
+        //         0,3,2,
+        //         0,4,3,
+        //         0,5,4,
+        //         0,6,5,
+        //         0,7,6,
+        //         0,8,7,
+        //         0,1,8,
+        //        // Ring 1
+        //         1, 2,10,
+        //         1,10, 9,
+        //         2, 3,11,
+        //         2,11,10,
+        //         3, 4,12,
+        //         3,12,11,
+        //         4, 5,13,
+        //         4,13,12,
+        //         5, 6,14,
+        //         5,14,13,
+        //         6, 7,15,
+        //         6,15,14,
+        //         7, 8,16,
+        //         7,16,15,
+        //         8, 1, 9,
+        //         8, 9,16,
+        //        // Ring 2
+        //         9,10,18,
+        //         9,18,17,
+        //        10,11,19,
+        //        10,19,18,
+        //        11,12,20,
+        //        11,20,19,
+        //        12,13,21,
+        //        12,21,20,
+        //        13,14,22,
+        //        13,22,21,
+        //        14,15,23,
+        //        14,23,22,
+        //        15,16,24,
+        //        15,24,23,
+        //        16, 9,17,
+        //        16,17,24,
+        //        // Bottom
+        //        17,18,25,
+        //        18,19,25,
+        //        19,20,25,
+        //        20,21,25,
+        //        21,22,25,
+        //        22,23,25,
+        //        23,24,25,
+        //        24,17,25,
+        //    };
+        //    for (int i = 0; i < indices.Length; i++)
+        //    {
+        //        Assert.AreEqual(indices[i], sphere.Indices[i], "Index " + i);
+        //    }
+        //}
 
-        [Test]
-        public void TestSphereVertexNormalsR1()
-        {
-            IPrimitive sphere = factory.CreateSphere2(1.0f, 32);
-            foreach (Vertex v in sphere.Vertices)
-            {
-                Assert.AreEqual(v.Position.X, v.Normal.X, epsilon);
-                Assert.AreEqual(v.Position.Y, v.Normal.Y, epsilon);
-                Assert.AreEqual(v.Position.Z, v.Normal.Z, epsilon);
-            }
-        }
+        //[Test]
+        //public void TestSphereVertexNormalsR1()
+        //{
+        //    IPrimitive sphere = factory.CreateSphere2(1.0f, 32);
+        //    foreach (Vertex v in sphere.Vertices)
+        //    {
+        //        Assert.AreEqual(v.Position.X, v.Normal.X, epsilon);
+        //        Assert.AreEqual(v.Position.Y, v.Normal.Y, epsilon);
+        //        Assert.AreEqual(v.Position.Z, v.Normal.Z, epsilon);
+        //    }
+        //}
 
-        [Test]
-        public void TestSphereVertexNormalsR10()
-        {
-            IPrimitive sphere = factory.CreateSphere2(10.0f, 32);
-            foreach (Vertex v in sphere.Vertices)
-            {
-                Vector3 expected = v.Position;
-                expected.Normalize();
-                Assert.AreEqual(expected, v.Normal);
-            }
-        }
+        //[Test]
+        //public void TestSphereVertexNormalsR10()
+        //{
+        //    IPrimitive sphere = factory.CreateSphere2(10.0f, 32);
+        //    foreach (Vertex v in sphere.Vertices)
+        //    {
+        //        Vector3 expected = v.Position;
+        //        expected.Normalize();
+        //        Assert.AreEqual(expected, v.Normal);
+        //    }
+        //}
 
         [Test]
         [ExpectedException(typeof(ArgumentException))]
@@ -465,22 +465,22 @@ namespace Dope.DDXX.MeshBuilder
             factory.CreateChamferBox(10, 10, 10, 1, 1, 1, 1, 1);
         }
 
-        [Test]
-        public void TestChamferBoxVertexCount()
-        {
-            int rings = 4;
-            int filletSegments = (rings / 4) + 1;
-            IPrimitive chamferBox = factory.CreateChamferBox(10, 10, 10, 1, 1, 1, 1, filletSegments);
-            IPrimitive sphere = factory.CreateSphere2(1, rings);
-            Assert.AreEqual(sphere.Vertices.Length + rings + (rings + 2) + (rings + 4), 
-                chamferBox.Vertices.Length);
-            rings = 8;
-            filletSegments = (rings / 4) + 1;
-            chamferBox = factory.CreateChamferBox(10, 10, 10, 1, 1, 1, 1, filletSegments);
-            sphere = factory.CreateSphere2(1, rings);
-            Assert.AreEqual(sphere.Vertices.Length + rings + (rings + 2) + (rings + 4),
-                chamferBox.Vertices.Length);
-        }
+        //[Test]
+        //public void TestChamferBoxVertexCount()
+        //{
+        //    int rings = 4;
+        //    int filletSegments = (rings / 4) + 1;
+        //    IPrimitive chamferBox = factory.CreateChamferBox(10, 10, 10, 1, 1, 1, 1, filletSegments);
+        //    IPrimitive sphere = factory.CreateSphere2(1, rings);
+        //    Assert.AreEqual(sphere.Vertices.Length + rings + (rings + 2) + (rings + 4), 
+        //        chamferBox.Vertices.Length);
+        //    rings = 8;
+        //    filletSegments = (rings / 4) + 1;
+        //    chamferBox = factory.CreateChamferBox(10, 10, 10, 1, 1, 1, 1, filletSegments);
+        //    sphere = factory.CreateSphere2(1, rings);
+        //    Assert.AreEqual(sphere.Vertices.Length + rings + (rings + 2) + (rings + 4),
+        //        chamferBox.Vertices.Length);
+        //}
 
         [Test]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]

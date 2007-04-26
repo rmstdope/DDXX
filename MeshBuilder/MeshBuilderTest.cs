@@ -30,6 +30,7 @@ namespace Dope.DDXX.MeshBuilder
         private bool setMaterialCalled;
         private string fileName;
         private Viewport viewport;
+        private float weldDistance;
         
         [SetUp]
         public void SetUp()
@@ -50,6 +51,7 @@ namespace Dope.DDXX.MeshBuilder
             setMaterialCalled = false;
             fileName = null;
             viewport = new Viewport();
+            weldDistance = 1e6f;
         }
 
         /// <summary>
@@ -296,13 +298,36 @@ namespace Dope.DDXX.MeshBuilder
         {
             viewport.Width = 100;
             viewport.Height = 200;
-            IModel model = builder.CreateSkyBoxModel("SkyBoxName", "SkyBoxTexture");
+            fileName = "SkyBoxTexture";
+            IModel model = builder.CreateSkyBoxModel("SkyBoxName", fileName);
             Assert.AreSame(this, model.Mesh, "This instance should be returned as Mesh.");
             Assert.AreEqual(1, model.Materials.Length, "We should have one material."); 
             Assert.AreSame(this, model.Materials[0].ReflectiveTexture, 
                 "This instance should be returned as reflective texture.");
             Assert.IsNull(model.Materials[0].DiffuseTexture, "Diffuse texture should be null.");
             Assert.IsNull(model.Materials[0].NormalTexture, "Normal texture should be null.");
+        }
+
+        /// <summary>
+        /// Test welding of vertices in a primitive
+        /// </summary>
+        [Test]
+        public void TestWelding25()
+        {
+            TestBoxCreation();
+            builder.Weld("Box", 2.5f);
+            Assert.AreEqual(2.5f, weldDistance);
+        }
+
+        /// <summary>
+        /// Test welding of vertices in a primitive
+        /// </summary>
+        [Test]
+        public void TestWelding0()
+        {
+            TestBoxCreation();
+            builder.Weld("Box", 0);
+            Assert.AreEqual(0, weldDistance);
         }
 
         #region IGraphicsFactory Members
@@ -2121,12 +2146,14 @@ namespace Dope.DDXX.MeshBuilder
 
         ITexture ITextureFactory.CreateFromFile(string file)
         {
-            throw new Exception("The method or operation is not implemented.");
+            Assert.AreEqual(fileName, file);
+            return this;
         }
 
         ICubeTexture ITextureFactory.CreateCubeFromFile(string file)
         {
-            throw new Exception("The method or operation is not implemented.");
+            Assert.AreEqual(fileName, file);
+            return this;
         }
 
         ITexture ITextureFactory.CreateFullsizeRenderTarget(Format format)
@@ -2171,6 +2198,16 @@ namespace Dope.DDXX.MeshBuilder
         public IPrimitive CreateChamferBox(float length, float width, float height, float fillet, int lengthSegments, int widthSegments, int heightSegments, int filletSegments)
         {
             throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
+
+        #region IPrimitive Members
+
+
+        public void Weld(float distance)
+        {
+            weldDistance = distance;
         }
 
         #endregion

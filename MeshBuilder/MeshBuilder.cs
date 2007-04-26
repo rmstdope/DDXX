@@ -192,5 +192,11 @@ namespace Dope.DDXX.MeshBuilder
             IModel model = new Model(mesh, new ModelMaterial[] { material });
             return model;
         }
+
+        public void Weld(string primitiveName, float distance)
+        {
+            IPrimitive primitive = GetPrimitive(primitiveName);
+            primitive.Weld(distance);
+        }
     }
 }

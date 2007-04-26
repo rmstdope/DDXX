@@ -107,5 +107,30 @@ namespace Dope.DDXX.MeshBuilder
         }
 
 
+
+        public void Weld(float distance)
+        {
+            List<Vertex> newVertices = new List<Vertex>(vertices);
+            for (int i = 0; i < newVertices.Count; i++)
+            {
+                for (int j = i + 1; j < newVertices.Count; j++)
+                {
+                    if ((newVertices[i].Position - newVertices[j].Position).Length() <= distance)
+                    {
+                        Vertex v1 = newVertices[i];
+                        Vertex v2 = newVertices[j];
+                        Vector3 normal = v1.Normal + v2.Normal;
+                        normal.Normalize();
+                        v1.Normal = normal;
+                        v1.U = (v1.U + v2.U) / 2;
+                        v1.V = (v1.V + v2.V) / 2;
+                        newVertices.RemoveAt(j);
+                        newVertices[i] = v1;
+                        j--;
+                    }
+                }
+            }
+            vertices = newVertices.ToArray();
+        }
     }
 }
