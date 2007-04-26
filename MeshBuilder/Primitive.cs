@@ -126,6 +126,13 @@ namespace Dope.DDXX.MeshBuilder
                         v1.V = (v1.V + v2.V) / 2;
                         newVertices.RemoveAt(j);
                         newVertices[i] = v1;
+                        for (int k = 0; k < indices.Length; k++)
+                        {
+                            if (indices[k] == j)
+                                indices[k] = (short)i;
+                            if (indices[k] > j)
+                                indices[k]--;
+                        }
                         j--;
                     }
                 }

@@ -206,6 +206,28 @@ namespace Dope.DDXX.MeshBuilder
             CompareVertices(primitive, newPositions, null, null);
         }
 
+        [Test]
+        public void TestWeldingIndices1()
+        {
+            Vector3[] positions = new Vector3[] { new Vector3(), new Vector3() };
+            short[] indices = new short[] { 0, 1, };
+            short[] newIndices = new short[] { 0, 0 };
+            primitive = CreatePrimitiveFromLists(positions, null, null, indices);
+            primitive.Weld(0.0f);
+            CompareIndices(primitive, newIndices);
+        }
+
+        [Test]
+        public void TestWeldingIndices2()
+        {
+            Vector3[] positions = new Vector3[] { new Vector3(), new Vector3() };
+            short[] indices = new short[] { 0, 1, 2, 3, 2, 1, 0 };
+            short[] newIndices = new short[] { 0, 0, 1, 2, 1, 0, 0 };
+            primitive = CreatePrimitiveFromLists(positions, null, null, indices);
+            primitive.Weld(0.0f);
+            CompareIndices(primitive, newIndices);
+        }
+
         private IPrimitive CreatePrimitiveFromLists(Vector3[] positions,
             Vector3[] normals, Vector2[] uv, short[] indices)
         {
@@ -224,6 +246,8 @@ namespace Dope.DDXX.MeshBuilder
                     vertices[i].V = uv[i].Y;
                 }
             }
+            if (indices == null)
+                indices = new short[] { };
             return new Primitive(vertices, indices);
         }
 
@@ -244,6 +268,13 @@ namespace Dope.DDXX.MeshBuilder
                     Assert.AreEqual(newUV[i].Y, primitive.Vertices[i].V);
                 }
             }
+        }
+
+        private void CompareIndices(IPrimitive primitive, short[] newIndices)
+        {
+            Assert.AreEqual(newIndices.Length, primitive.Indices.Length);
+            for (int i = 0; i < newIndices.Length; i++)
+                Assert.AreEqual(newIndices[i], primitive.Indices[i]);
         }
 
         private void CheckMaterial(IModel model)
