@@ -403,18 +403,18 @@ namespace Dope.DDXX.MeshBuilder
 
             // Add a top
             indexList.Add(0);
+            indexList.Add((short)(filletSegments * 2));
             indexList.Add((short)filletSegments);
-            indexList.Add((short)(filletSegments * 2));
             indexList.Add(0);
-            indexList.Add((short)(filletSegments * 2));
             indexList.Add((short)(filletSegments * 3));
+            indexList.Add((short)(filletSegments * 2));
             // Add bottom
             indexList.Add((short)(vertexList.Count - 1 - 0));
+            indexList.Add((short)(vertexList.Count - 1 - filletSegments * 2));
             indexList.Add((short)(vertexList.Count - 1 - filletSegments));
-            indexList.Add((short)(vertexList.Count - 1 - filletSegments * 2));
             indexList.Add((short)(vertexList.Count - 1 - 0));
-            indexList.Add((short)(vertexList.Count - 1 - filletSegments * 2));
             indexList.Add((short)(vertexList.Count - 1 - filletSegments * 3));
+            indexList.Add((short)(vertexList.Count - 1 - filletSegments * 2));
 
             // create and return primitive
             Vertex[] vertices = vertexList.ToArray();

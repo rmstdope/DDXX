@@ -64,7 +64,7 @@ technique GlassEffect
 		ZEnable						=	true;
 		ZFunc							= Less;
 		StencilEnable			= false;
-		CullMode					= None;
+		CullMode					= CCW; //None;
 	}
 }
 
