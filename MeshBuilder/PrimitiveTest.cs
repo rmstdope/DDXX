@@ -206,23 +206,61 @@ namespace Dope.DDXX.MeshBuilder
             CompareVertices(primitive, newPositions, null, null);
         }
 
+        /// <summary>
+        /// Test that indices are changed when welding.
+        /// </summary>
         [Test]
         public void TestWeldingIndices1()
         {
-            Vector3[] positions = new Vector3[] { new Vector3(), new Vector3() };
-            short[] indices = new short[] { 0, 1, };
-            short[] newIndices = new short[] { 0, 0 };
+            Vector3[] positions = new Vector3[] { 
+                new Vector3(), new Vector3() , new Vector3(1, 1, 1), new Vector3(2, 2, 2) };
+            short[] indices = new short[] { 1, 2, 3 };
+            short[] newIndices = new short[] { 0, 1, 2 };
             primitive = CreatePrimitiveFromLists(positions, null, null, indices);
             primitive.Weld(0.0f);
             CompareIndices(primitive, newIndices);
         }
 
+        /// <summary>
+        /// Test that more indices are changed when welding.
+        /// </summary>
         [Test]
         public void TestWeldingIndices2()
         {
-            Vector3[] positions = new Vector3[] { new Vector3(), new Vector3() };
-            short[] indices = new short[] { 0, 1, 2, 3, 2, 1, 0 };
-            short[] newIndices = new short[] { 0, 0, 1, 2, 1, 0, 0 };
+            Vector3[] positions = new Vector3[] { 
+                new Vector3(), new Vector3() , new Vector3(1, 1, 1), new Vector3(2, 2, 2) };
+            short[] indices = new short[] { 0, 2, 3, 3, 2, 1 };
+            short[] newIndices = new short[] { 0, 1, 2, 2, 1, 0 };
+            primitive = CreatePrimitiveFromLists(positions, null, null, indices);
+            primitive.Weld(0.0f);
+            CompareIndices(primitive, newIndices);
+        }
+
+        /// <summary>
+        /// Test that welding removes unnecessary triangles.
+        /// </summary>
+        [Test]
+        public void TestWeldingRemoveTriangles()
+        {
+            Vector3[] positions = new Vector3[] { 
+                new Vector3(), new Vector3() , new Vector3(1, 1, 1), new Vector3(2, 2, 2) };
+            short[] indices = new short[] { 0, 1, 2 };
+            short[] newIndices = new short[] {  };
+            primitive = CreatePrimitiveFromLists(positions, null, null, indices);
+            primitive.Weld(0.0f);
+            CompareIndices(primitive, newIndices);
+        }
+
+        /// <summary>
+        /// Test more welding removes unnecessary triangles.
+        /// </summary>
+        [Test]
+        public void TestWeldingRemoveTriangles2()
+        {
+            Vector3[] positions = new Vector3[] { 
+                new Vector3(), new Vector3() , new Vector3(1, 1, 1), new Vector3(2, 2, 2) };
+            short[] indices = new short[] { 0, 0, 0, 0, 1, 2, 1, 2, 3, 2, 2, 2, 3, 3, 3, 1, 1, 1 };
+            short[] newIndices = new short[] { 0, 1, 2 };
             primitive = CreatePrimitiveFromLists(positions, null, null, indices);
             primitive.Weld(0.0f);
             CompareIndices(primitive, newIndices);

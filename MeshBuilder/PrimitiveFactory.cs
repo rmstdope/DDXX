@@ -367,17 +367,17 @@ namespace Dope.DDXX.MeshBuilder
             CreateSphereLists(fillet, rings, out vertexList, out indexList);
 
             //// Add vertices for extra y=0 ring
-            //for (int i = 0; i < rings; i++)
+            //for (int sourceIndex = 0; sourceIndex < rings; sourceIndex++)
             //{
             //    vertexList.Add(new Vertex());
             //}
             //// Add vertices for extra x=0 ring
-            //for (int i = 0; i < rings + 2; i++)
+            //for (int sourceIndex = 0; sourceIndex < rings + 2; sourceIndex++)
             //{
             //    vertexList.Add(new Vertex());
             //}
             //// Add vertices for extra z=0 ring
-            //for (int i = 0; i < rings + 4; i++)
+            //for (int sourceIndex = 0; sourceIndex < rings + 4; sourceIndex++)
             //{
             //    vertexList.Add(new Vertex());
             //}
@@ -425,7 +425,7 @@ namespace Dope.DDXX.MeshBuilder
             for (int i = 0; i < phiCount - 2; i++)
             {
                 //int doubleRings = 1;
-                //if (i == (phiCount - 1) / 2)
+                //if (sourceIndex == (phiCount - 1) / 2)
                 //    doubleRings = 2;
                 //for (int d = 0; d < doubleRings; d++)
                 //{

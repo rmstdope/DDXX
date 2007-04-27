@@ -117,27 +117,55 @@ namespace Dope.DDXX.MeshBuilder
                 {
                     if ((newVertices[i].Position - newVertices[j].Position).Length() <= distance)
                     {
-                        Vertex v1 = newVertices[i];
-                        Vertex v2 = newVertices[j];
-                        Vector3 normal = v1.Normal + v2.Normal;
-                        normal.Normalize();
-                        v1.Normal = normal;
-                        v1.U = (v1.U + v2.U) / 2;
-                        v1.V = (v1.V + v2.V) / 2;
-                        newVertices.RemoveAt(j);
-                        newVertices[i] = v1;
-                        for (int k = 0; k < indices.Length; k++)
-                        {
-                            if (indices[k] == j)
-                                indices[k] = (short)i;
-                            if (indices[k] > j)
-                                indices[k]--;
-                        }
+                        RemoveVertex(newVertices, i, j);
                         j--;
                     }
                 }
             }
             vertices = newVertices.ToArray();
+            RemoveTriangles();
+        }
+
+        private void RemoveTriangles()
+        {
+            List<short> newIndices = new List<short>(indices);
+            for (int i = 0; i < newIndices.Count; i += 3)
+            {
+                short i1 = newIndices[i + 0];
+                short i2 = newIndices[i + 1];
+                short i3 = newIndices[i + 2];
+                if (i1 == i2 || i1 == i3 || i2 == i3)
+                {
+                    newIndices.RemoveRange(i, 3);
+                    i -= 3;
+                }
+            }
+            indices = newIndices.ToArray();
+        }
+
+        private void RemoveVertex(List<Vertex> newVertices, int sourceIndex, int destIndex)
+        {
+            Vertex v1 = newVertices[sourceIndex];
+            Vertex v2 = newVertices[destIndex];
+            Vector3 normal = v1.Normal + v2.Normal;
+            normal.Normalize();
+            v1.Normal = normal;
+            v1.U = (v1.U + v2.U) / 2;
+            v1.V = (v1.V + v2.V) / 2;
+            newVertices.RemoveAt(destIndex);
+            newVertices[sourceIndex] = v1;
+            RemoveVertexFromIndices(sourceIndex, destIndex);
+        }
+
+        private void RemoveVertexFromIndices(int sourceIndex, int destIndex)
+        {
+            for (int i = 0; i < indices.Length; i++)
+            {
+                if (indices[i] == destIndex)
+                    indices[i] = (short)sourceIndex;
+                if (indices[i] > destIndex)
+                    indices[i]--;
+            }
         }
     }
 }

@@ -294,21 +294,21 @@ namespace Dope.DDXX.MeshBuilder
             }
         }
 
-        //[Test]
-        //[ExpectedException(typeof(ArgumentException))]
-        //public void TestSphereRingsNotMulOf4()
-        //{
-        //    factory.CreateSphere2(1.0f, 5);
-        //}
+        [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestSphereRingsNotMulOf4()
+        {
+            factory.CreateSphere2(1.0f, 5);
+        }
 
-        //[Test]
-        //public void TestSphereVertexCount1()
-        //{
-        //    IPrimitive sphere = factory.CreateSphere2(1.0f, 4);
-        //    Assert.AreEqual(4 + 2, sphere.Vertices.Length);
-        //    sphere = factory.CreateSphere2(1.0f, 8);
-        //    Assert.AreEqual(8 * 3 + 2, sphere.Vertices.Length);
-        //}
+        [Test]
+        public void TestSphereVertexCount1()
+        {
+            IPrimitive sphere = factory.CreateSphere2(1.0f, 4);
+            Assert.AreEqual(4 + 2, sphere.Vertices.Length);
+            sphere = factory.CreateSphere2(1.0f, 8);
+            Assert.AreEqual(8 * 3 + 2, sphere.Vertices.Length);
+        }
 
         //[Test]
         //public void TestSphereVertexOnRadius4()
@@ -357,9 +357,9 @@ namespace Dope.DDXX.MeshBuilder
         //        3,4,5,
         //        4,1,5,
         //    };
-        //    for (int i = 0; i < indices.Length; i++)
+        //    for (int sourceIndex = 0; sourceIndex < indices.Length; sourceIndex++)
         //    {
-        //        Assert.AreEqual(indices[i], sphere.Indices[i]);
+        //        Assert.AreEqual(indices[sourceIndex], sphere.Indices[sourceIndex]);
         //    }
         //}
 
@@ -421,9 +421,9 @@ namespace Dope.DDXX.MeshBuilder
         //        23,24,25,
         //        24,17,25,
         //    };
-        //    for (int i = 0; i < indices.Length; i++)
+        //    for (int sourceIndex = 0; sourceIndex < indices.Length; sourceIndex++)
         //    {
-        //        Assert.AreEqual(indices[i], sphere.Indices[i], "Index " + i);
+        //        Assert.AreEqual(indices[sourceIndex], sphere.Indices[sourceIndex], "Index " + sourceIndex);
         //    }
         //}
 
@@ -569,9 +569,9 @@ namespace Dope.DDXX.MeshBuilder
 
         private void CheckTriangle(int t, int i, int j, int k, short[] indices)
         {
-            Assert.AreEqual(i, indices[t], "t=" + t + ", ring=" + i + ", j=" + j + ", k=" + k);
-            Assert.AreEqual(j, indices[t + 1], "t=" + t + ", ring=" + i + ", j=" + j + ", k=" + k);
-            Assert.AreEqual(k, indices[t + 2], "t=" + t + ", ring=" + i + ", j=" + j + ", k=" + k);
+            Assert.AreEqual(i, indices[t], "t=" + t + ", ring=" + i + ", destIndex=" + j + ", i=" + k);
+            Assert.AreEqual(j, indices[t + 1], "t=" + t + ", ring=" + i + ", destIndex=" + j + ", i=" + k);
+            Assert.AreEqual(k, indices[t + 2], "t=" + t + ", ring=" + i + ", destIndex=" + j + ", i=" + k);
         }
 
         private void CheckPlaneVertexLimits(float width, float height, int widthSegments, int heightSegments)
