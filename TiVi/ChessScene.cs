@@ -65,7 +65,7 @@ namespace EngineTest
         private void CreatePlane()
         {
             //builder.CreatePlane("Box", 3, 3, 6, 6, true);
-            builder.CreateSphere("Box", 3, 64);
+            builder.CreateChamferBox("Box", 2.0f, 2.0f, 1.2f, 0.5f, 5);
             builder.AssignMaterial("Box", "Default1");
             builder.SetDiffuseTexture("Default1", "red glass.jpg");
             builder.SetReflectiveTexture("Default1", "rnl_cross.dds");

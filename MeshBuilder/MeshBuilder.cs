@@ -105,6 +105,12 @@ namespace Dope.DDXX.MeshBuilder
             AddPrimitive(sphere, name);
         }
 
+        public void CreateChamferBox(string name, float length, float width, float height, float fillet, int filletSegments)
+        {
+            IPrimitive chamferBox = primitiveFactory.CreateChamferBox(length, width, height, fillet, 1, 1, 1, filletSegments);
+            AddPrimitive(chamferBox, name);
+        }
+
         public void AssignMaterial(string primitiveName, string materialName)
         {
             IPrimitive primitive = GetPrimitive(primitiveName);

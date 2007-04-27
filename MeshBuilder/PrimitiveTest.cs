@@ -139,7 +139,7 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestWeldingSamePosition()
         {
-            Vector3[] position = new Vector3[] { new Vector3(), new Vector3() };
+            Vector3[] position = new Vector3[] { new Vector3(), new Vector3(1e-10f, 0, 0) };
             Vector3[] newPositions = new Vector3[] { new Vector3() };
             primitive = CreatePrimitiveFromLists(position, null, null, null);
             primitive.Weld(0.0f);
@@ -237,10 +237,10 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
-        /// Test that welding removes unnecessary triangles.
+        /// Test that welding removes triangles with two vertices equals.
         /// </summary>
         [Test]
-        public void TestWeldingRemoveTriangles()
+        public void TestWeldingRemoveTrianglesSameVertices()
         {
             Vector3[] positions = new Vector3[] { 
                 new Vector3(), new Vector3() , new Vector3(1, 1, 1), new Vector3(2, 2, 2) };
@@ -252,15 +252,46 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
-        /// Test more welding removes unnecessary triangles.
+        /// Test that welding removes triangles with two vertices equals.
         /// </summary>
         [Test]
-        public void TestWeldingRemoveTriangles2()
+        public void TestWeldingRemoveTrianglesSameVertices2()
         {
             Vector3[] positions = new Vector3[] { 
                 new Vector3(), new Vector3() , new Vector3(1, 1, 1), new Vector3(2, 2, 2) };
             short[] indices = new short[] { 0, 0, 0, 0, 1, 2, 1, 2, 3, 2, 2, 2, 3, 3, 3, 1, 1, 1 };
             short[] newIndices = new short[] { 0, 1, 2 };
+            primitive = CreatePrimitiveFromLists(positions, null, null, indices);
+            primitive.Weld(0.0f);
+            CompareIndices(primitive, newIndices);
+        }
+
+        /// <summary>
+        /// Test that welding remove duplicated triangles.
+        /// </summary>
+        [Test]
+        public void TestWeldingRemoveDuplicateTriangles()
+        {
+            Vector3[] positions = new Vector3[] { 
+                new Vector3(1,1,1), new Vector3(2,2,2) , new Vector3(3,3,3) };
+            short[] indices = new short[] { 0, 1, 2, 0, 1, 2};
+            short[] newIndices = new short[] { 0, 1, 2 };
+            primitive = CreatePrimitiveFromLists(positions, null, null, indices);
+            primitive.Weld(0.0f);
+            CompareIndices(primitive, newIndices);
+        }
+
+        /// <summary>
+        /// Test that welding remove duplicated triangles even if permutated.
+        /// We must make sure that culling is honored though!
+        /// </summary>
+        [Test]
+        public void TestWeldingRemoveDuplicateTriangles2()
+        {
+            Vector3[] positions = new Vector3[] { 
+                new Vector3(1,1,1), new Vector3(2,2,2) , new Vector3(3,3,3) };
+            short[] indices = new short[] { 0, 1, 2, 0, 1, 2, 1, 2, 0, 2, 0, 1, 2, 1, 0 };
+            short[] newIndices = new short[] { 0, 1, 2, 2, 1, 0};
             primitive = CreatePrimitiveFromLists(positions, null, null, indices);
             primitive.Weld(0.0f);
             CompareIndices(primitive, newIndices);

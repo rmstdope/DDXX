@@ -110,12 +110,14 @@ namespace Dope.DDXX.MeshBuilder
 
         public void Weld(float distance)
         {
+            const float epsilon = 1e-9f;
             List<Vertex> newVertices = new List<Vertex>(vertices);
             for (int i = 0; i < newVertices.Count; i++)
             {
                 for (int j = i + 1; j < newVertices.Count; j++)
                 {
-                    if ((newVertices[i].Position - newVertices[j].Position).Length() <= distance)
+                    if ((newVertices[i].Position - newVertices[j].Position).Length() <= 
+                        distance + epsilon)
                     {
                         RemoveVertex(newVertices, i, j);
                         j--;
@@ -123,10 +125,37 @@ namespace Dope.DDXX.MeshBuilder
                 }
             }
             vertices = newVertices.ToArray();
-            RemoveTriangles();
+            RemoveNonTriangles();
+            RemoveDuplicateTriangles();
         }
 
-        private void RemoveTriangles()
+        private void RemoveDuplicateTriangles()
+        {
+            List<short> newIndices = new List<short>(indices);
+            for (int i = 0; i < newIndices.Count; i += 3)
+            {
+                short i1 = newIndices[i + 0];
+                short i2 = newIndices[i + 1];
+                short i3 = newIndices[i + 2];
+                for (int j = i + 3; j < newIndices.Count; j += 3)
+                {
+                    short j1 = newIndices[j + 0];
+                    short j2 = newIndices[j + 1];
+                    short j3 = newIndices[j + 2];
+                    // Remove only if triangles have the same culling!
+                    if (i1 == j1 && i2 == j2 && i3 == j3 ||
+                        i1 == j2 && i2 == j3 && i3 == j1 ||
+                        i1 == j3 && i2 == j1 && i3 == j2)
+                    {
+                        newIndices.RemoveRange(j, 3);
+                        j -= 3;
+                    }
+                }
+            }
+            indices = newIndices.ToArray();
+        }
+
+        private void RemoveNonTriangles()
         {
             List<short> newIndices = new List<short>(indices);
             for (int i = 0; i < newIndices.Count; i += 3)

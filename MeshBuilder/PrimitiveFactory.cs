@@ -365,28 +365,49 @@ namespace Dope.DDXX.MeshBuilder
             List<Vertex> vertexList;
             List<short> indexList;
             CreateSphereLists(fillet, rings, out vertexList, out indexList);
+            int verticesPerQuarter = 1 + rings / 4;
+            for (int i = 0; i < vertexList.Count; i++)
+            {
+                Vector3 add = new Vector3();
+                if (i < vertexList.Count / 2)
+                    add.Y = height / 2 - fillet;
+                else
+                    add.Y = -(height / 2 - fillet);
+                int quarter = ((i / verticesPerQuarter) % 4);
+                if (quarter == 0)
+                    add += new Vector3(-(width / 2 - fillet), 0, length / 2 - fillet);
+                if (quarter == 1)
+                    add += new Vector3(-(width/ 2 - fillet), 0, -(length / 2 - fillet));
+                if (quarter == 2)
+                    add += new Vector3(width / 2 - fillet, 0, -(length / 2 - fillet));
+                if (quarter == 3)
+                    add += new Vector3(width / 2 - fillet, 0, length / 2 - fillet);
+                Vertex vertex = vertexList[i];
+                Vector3 position = vertex.Position;
+                position += add;
+                vertex.Position = position;
+                vertexList[i] = vertex;
+            }
 
-            //// Add vertices for extra y=0 ring
-            //for (int sourceIndex = 0; sourceIndex < rings; sourceIndex++)
-            //{
-            //    vertexList.Add(new Vertex());
-            //}
-            //// Add vertices for extra x=0 ring
-            //for (int sourceIndex = 0; sourceIndex < rings + 2; sourceIndex++)
-            //{
-            //    vertexList.Add(new Vertex());
-            //}
-            //// Add vertices for extra z=0 ring
-            //for (int sourceIndex = 0; sourceIndex < rings + 4; sourceIndex++)
-            //{
-            //    vertexList.Add(new Vertex());
-            //}
+            // Remap uv
+            for (int i = 0; i < vertexList.Count; i++)
+            {
+                Vertex vertex = vertexList[i];
+                Vector3 normal = vertex.Position;
+                //normal.Normalize();
+                // http://www.mvps.org/directx/articles/spheremap.htm
+                vertex.U = (float)(Math.Asin(normal.X) / Math.PI) + 0.5f;
+                vertex.V = (float)(Math.Asin(normal.Y) / Math.PI) + 0.5f;
+                //vertexList[i] = vertex;
+            }
 
             // create and return primitive
             Vertex[] vertices = vertexList.ToArray();
             short[] indices = indexList.ToArray();
 
-            return new Primitive(vertices, indices);
+            IPrimitive primitive = new Primitive(vertices, indices);
+            primitive.Weld(0.0f);
+            return primitive;
         }
 
         //        |z
@@ -411,7 +432,9 @@ namespace Dope.DDXX.MeshBuilder
             Vertex[] vertices = vertexList.ToArray();
             short[] indices = indexList.ToArray();
 
-            return new Primitive(vertices, indices);
+            IPrimitive primitive = new Primitive(vertices, indices);
+            primitive.Weld(0.0f);
+            return primitive;
         }
 
         private void CreateSphereLists(float radius, int rings, out List<Vertex> vertexList, out List<short> indexList)
@@ -419,30 +442,29 @@ namespace Dope.DDXX.MeshBuilder
             vertexList = new List<Vertex>();
             indexList = new List<short>();
 
-            int phiCount = (rings - 2) / 2 + 2;
-            AddTopVertices(radius, vertexList, rings + 4);
-            AddTopIndices(rings, indexList);
-            for (int i = 0; i < phiCount - 2; i++)
+            int phiCount = rings / 2 + 1;
+            int chamferRings = rings + 2;
+            double phi = 0;
+            for (int i = 0; i < phiCount + 1; i++)
             {
-                //int doubleRings = 1;
-                //if (sourceIndex == (phiCount - 1) / 2)
-                //    doubleRings = 2;
-                //for (int d = 0; d < doubleRings; d++)
-                //{
-                    float phi = (float)((i + 1) * (Math.PI / (phiCount - 1)));
-                    for (int j = 0; j < rings; j++)
-                    {
-                        float theta = (float)(j * 2 * Math.PI / rings);
-                        AddRingVertex(radius, vertexList, phi, theta);
-                    }
-                    if (i != 0)
-                    {
-                        AddRingIndices(rings, i, indexList);
-                    }
-                //}
+                double theta = 0;
+                for (int j = 0; j < rings + 4; j++)
+                {
+                    AddRingVertex(radius, vertexList, phi, theta);
+                    // Make sure to add two vertices at theta={PI/2, PI, 3*PI/2}
+                    bool shouldAdd = true;
+                    for (int k = 1; k < 4; k++)
+                        if (j == k - 1 + k * rings / 4)
+                            shouldAdd = false;
+                    if (shouldAdd)
+                        theta += 2 * Math.PI / rings;
+                }
+                if (i != 0)
+                    AddRingIndices(rings + 4, i, indexList);
+                // Make sure to add two rings at phi=PI/2
+                if (i != phiCount / 2)
+                    phi += (Math.PI / (phiCount - 1));
             }
-            AddBottomVertex(radius, vertexList);
-            AddBottomIndices(rings, indexList);
 
             // Set normals
             for (int i = 0; i < vertexList.Count; i++)
@@ -458,7 +480,7 @@ namespace Dope.DDXX.MeshBuilder
             }
         }
 
-        private Vertex AddRingVertex(float radius, List<Vertex> vertexList, float phi, float theta)
+        private Vertex AddRingVertex(float radius, List<Vertex> vertexList, double phi, double theta)
         {
             Vertex v = new Vertex();
             v.Position = GetSpherePos(radius, phi, theta);
@@ -512,8 +534,7 @@ namespace Dope.DDXX.MeshBuilder
 
         private short GetVertexNumber(int rings, int ring, int vertex)
         {
-            // Skip top vertex
-            short index = 1;
+            short index = 0;
             // Jump to correct ring
             index += (short)(ring * rings);
             // Get correct vertex (with modulo to support wrapping)
@@ -534,7 +555,7 @@ namespace Dope.DDXX.MeshBuilder
             vertexList.Add(v);
         }
 
-        private Vector3 GetSpherePos(float radius, float phi, float theta)
+        private Vector3 GetSpherePos(float radius, double phi, double theta)
         {
             float y = (float)(radius * Math.Cos(phi));
             float innerRadius = (float)(-radius * Math.Sin(phi));
