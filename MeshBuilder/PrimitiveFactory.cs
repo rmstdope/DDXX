@@ -370,7 +370,7 @@ namespace Dope.DDXX.MeshBuilder
             {
                 Vector3 add = new Vector3();
                 if (i < vertexList.Count / 2)
-                    add.Y = height / 2 - fillet;
+                    add.Y = (height / 2 - fillet);
                 else
                     add.Y = -(height / 2 - fillet);
                 int quarter = ((i / verticesPerQuarter) % 4);
@@ -394,12 +394,27 @@ namespace Dope.DDXX.MeshBuilder
             {
                 Vertex vertex = vertexList[i];
                 Vector3 normal = vertex.Position;
-                //normal.Normalize();
+                normal.Normalize();
                 // http://www.mvps.org/directx/articles/spheremap.htm
                 vertex.U = (float)(Math.Asin(normal.X) / Math.PI) + 0.5f;
                 vertex.V = (float)(Math.Asin(normal.Y) / Math.PI) + 0.5f;
-                //vertexList[i] = vertex;
+                vertexList[i] = vertex;
             }
+
+            // Add a top
+            indexList.Add(0);
+            indexList.Add((short)filletSegments);
+            indexList.Add((short)(filletSegments * 2));
+            indexList.Add(0);
+            indexList.Add((short)(filletSegments * 2));
+            indexList.Add((short)(filletSegments * 3));
+            // Add bottom
+            indexList.Add((short)(vertexList.Count - 1 - 0));
+            indexList.Add((short)(vertexList.Count - 1 - filletSegments));
+            indexList.Add((short)(vertexList.Count - 1 - filletSegments * 2));
+            indexList.Add((short)(vertexList.Count - 1 - 0));
+            indexList.Add((short)(vertexList.Count - 1 - filletSegments * 2));
+            indexList.Add((short)(vertexList.Count - 1 - filletSegments * 3));
 
             // create and return primitive
             Vertex[] vertices = vertexList.ToArray();
