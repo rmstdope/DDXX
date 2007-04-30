@@ -15,12 +15,13 @@ namespace Dope.DDXX.DemoFramework
     {
         string source = @"
 using Dope.DDXX.DemoFramework;
+using Dope.DDXX.Graphics;
 using Microsoft.DirectX;
 public class FooEffect : TweakableContainer, IDemoEffect 
 {
   protected float start; protected float end;
   public FooEffect(float f1, float f2) { start = f1; end = f2;}
-  public void Step() {} public void Render() {} public void Initialize() {} 
+  public void Step() {} public void Render() {} public void Initialize(IGraphicsFactory graphicsFactory, IDevice device) {} 
   public float StartTime { get { return start;} set { start = value;} }
   public float EndTime { get { return end;} set { end = value;} }
 }
@@ -151,7 +152,7 @@ public class Dummy {}
             string d3dAssembly = Assembly.GetAssembly(typeof(Microsoft.DirectX.Vector3)).CodeBase;
             d3dAssembly = d3dAssembly.Remove(0, 8);
             //string d3dAssembly = assemblyDir + "Microsoft.DirectX.Direct3D.dll";
-            CompilerParameters cp = new CompilerParameters(new string[] { "Dope.DDXX.DemoFramework.dll", d3dAssembly });
+            CompilerParameters cp = new CompilerParameters(new string[] { "Dope.DDXX.DemoFramework.dll", "Dope.DDXX.Graphics.dll", d3dAssembly });
             results = provider.CompileAssemblyFromSource(cp, source);
             if (results.Errors.HasErrors)
             {

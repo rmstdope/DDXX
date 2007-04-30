@@ -41,10 +41,8 @@ namespace EngineTest
             scene = new Scene();
         }
 
-        public override void Initialize()
+        protected override void Initialize()
         {
-            base.Initialize();
-
             scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f);
 
             camera = new CameraNode("MyCamera");
@@ -63,9 +61,9 @@ namespace EngineTest
 
             //LoadFlyScene();
 
-            TestMeshBuilder();
+            //TestMeshBuilder();
 
-            scene.DebugPrintGraph();
+            //scene.DebugPrintGraph();
             scene.Validate();
         }
 

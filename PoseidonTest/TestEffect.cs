@@ -142,10 +142,8 @@ namespace PoseidonTest
             get { return heightMap; }
         }
 
-        public override void Initialize()
+        protected override void Initialize()
         {
-            base.Initialize();
-
             InitializeVirtualScene();
 
             sourceTextureHandle = effect.GetParameter(null, "PosseSourceTexture");

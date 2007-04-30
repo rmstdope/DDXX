@@ -688,6 +688,10 @@ namespace Dope.DDXX.DemoFramework
         }
         public override void Step() { }
         public override void Render() { }
+
+        protected override void Initialize()
+        {
+        }
     }
     public class BarEffect : BaseDemoEffect
     {
@@ -724,6 +728,7 @@ namespace Dope.DDXX.DemoFramework
         public void Setup(string param) { setupParam = param; }
         public override void Step() { }
         public override void Render() { }
+        protected override void Initialize() { }
     }
     public class FooGlow : BaseDemoPostEffect
     {

@@ -180,10 +180,8 @@ namespace ShortPuzzle
         {
         }
 
-        public override void Initialize()
+        protected override void Initialize()
         {
-            base.Initialize();
-
             scene = new Scene();
             scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f);
 

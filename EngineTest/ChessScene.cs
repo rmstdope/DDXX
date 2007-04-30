@@ -27,10 +27,8 @@ namespace EngineTest
         {
         }
 
-        public override void Initialize()
+        protected override void Initialize()
         {
-            base.Initialize();
-
             builder = new MeshBuilder(D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
                 D3DDriver.GetInstance().Device);
             scene = new Scene();

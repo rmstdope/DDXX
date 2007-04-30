@@ -36,10 +36,8 @@ namespace Dope.DDXX.DemoEffects
             textureLayers = new List<TextureLayer>();
         }
 
-        public override void Initialize()
+        protected override void Initialize()
         {
-            base.Initialize();
-
             sprite = D3DDriver.GraphicsFactory.CreateSprite(Device);
 
             foreach (TextureLayer layer in textureLayers)

@@ -63,9 +63,8 @@ namespace EngineTest
         {
         }
 
-        public override void Initialize()
+        protected override void Initialize()
         {
-            base.Initialize();
             scene = new Scene();
 
             GenerateModel();

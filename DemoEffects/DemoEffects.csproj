@@ -39,6 +39,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -53,6 +54,8 @@
     <Compile Include="RingsPostEffect.cs" />
     <Compile Include="RingsPostEffectTest.cs" />
     <Compile Include="SinglePassPostEffect.cs" />
+    <Compile Include="TextFadingEffect.cs" />
+    <Compile Include="TextFadingEffectTest.cs" />
     <Compile Include="WavePostEffect.cs" />
     <Compile Include="WavePostEffectTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

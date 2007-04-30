@@ -126,7 +126,7 @@ namespace Dope.DDXX.DemoFramework
             {
                 foreach (IDemoEffect effect in track.Effects)
                 {
-                    effect.Initialize();
+                    effect.Initialize(D3DDriver.GraphicsFactory, D3DDriver.GetInstance().Device);
                 }
                 foreach (IDemoPostEffect postEffect in track.PostEffects)
                 {

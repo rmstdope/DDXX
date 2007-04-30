@@ -10,6 +10,8 @@ namespace Dope.DDXX.DemoFramework
     {
         private float startTime;
         private float endTime;
+        private IGraphicsFactory graphicsFactory;
+        private IDevice device;
         private IXLoader xLoader;
 
         protected BaseDemoEffect(float startTime, float endTime)
@@ -20,12 +22,12 @@ namespace Dope.DDXX.DemoFramework
 
         protected IDevice Device
         {
-            get { return D3DDriver.GetInstance().Device; }
+            get { return device; }
         }
 
         protected IGraphicsFactory GraphicsFactory
         {
-            get { return D3DDriver.GraphicsFactory; }
+            get { return graphicsFactory; }
         }
 
         protected IEffectFactory EffectFactory
@@ -47,6 +49,8 @@ namespace Dope.DDXX.DemoFramework
         {
             get { return xLoader; }
         }
+
+        protected abstract void Initialize();
 
         #region IDemoEffect Members
 
@@ -74,9 +78,14 @@ namespace Dope.DDXX.DemoFramework
         {
         }
 
-        public virtual void Initialize()
+        public void Initialize(IGraphicsFactory graphicsFactory, IDevice device)
         {
+            this.graphicsFactory = graphicsFactory;
+            this.device = device;
+
             xLoader = new XLoader(GraphicsFactory, new NodeFactory(TextureFactory), Device);
+            
+            Initialize();
         }
 
         #endregion

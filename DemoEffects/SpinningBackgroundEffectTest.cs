@@ -36,7 +36,7 @@ namespace Dope.DDXX.DemoEffects
         public void TestInitialize()
         {
             ExpectSprite();
-            spin.Initialize();
+            spin.Initialize(factory, device);
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace Dope.DDXX.DemoEffects
             spin.AddTextureLayer(new SpinningBackgroundEffect.TextureLayer("file", 2 * (float)Math.PI, Color.Aqua, 0.2f));
 
             ExpectSprite();
-            spin.Initialize();
+            spin.Initialize(factory, device);
         }
 
         [Test]
@@ -60,14 +60,14 @@ namespace Dope.DDXX.DemoEffects
             spin.AddTextureLayer(new SpinningBackgroundEffect.TextureLayer("file2", -2, Color.Azure, 0.4f));
 
             ExpectSprite();
-            spin.Initialize();
+            spin.Initialize(factory, device);
         }
 
         [Test]
         public void TestRender1()
         {
             ExpectSprite();
-            spin.Initialize();
+            spin.Initialize(factory, device);
             Expect.Once.On(sprite).Method("Begin").With(SpriteFlags.AlphaBlend);
             Expect.Once.On(sprite).Method("End");
             spin.Render();
