@@ -65,5 +65,17 @@ namespace Dope.DDXX.Graphics
         //     total number of levels). Subsequent calls to this method return the maximum
         //     value, not the previously set LOD value.
         int SetLevelOfDetail(int lodNew);
+        //
+        // Summary:
+        //     Saves a texture to a file.
+        //
+        // Parameters:
+        //   destFile:
+        //     String that specifies the file name of the source image.
+        //
+        //   destFormat:
+        //     An Microsoft.DirectX.Direct3D.ImageFileFormat flag that specifies the file
+        //     format to use when saving. See Remarks.
+        void Save(string destFile, ImageFileFormat destFormat);
     }
 }

@@ -39,8 +39,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChessScene.cs" />
-    <Compile Include="CreationScene.cs" />
     <Compile Include="EmptyEffect.cs" />
     <Compile Include="EngineTest.cs">
     </Compile>

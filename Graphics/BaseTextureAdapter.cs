@@ -100,6 +100,11 @@ namespace Dope.DDXX.Graphics
             return baseTexture.SetLevelOfDetail(lodNew);
         }
 
+        public void Save(string destFile, ImageFileFormat destFormat)
+        {
+            TextureLoader.Save(destFile, destFormat, baseTexture);
+        }
+
         #endregion
     }
 }

@@ -2211,5 +2211,15 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         #endregion
+
+        #region IBaseTexture Members
+
+
+        public void Save(string destFile, ImageFileFormat destFormat)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
     }
 }
