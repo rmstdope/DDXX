@@ -13,10 +13,10 @@ namespace Dope.DDXX.DemoFramework
         void AddPostEffect(string effectName, int effectTrack, float startTime, float endTime);
         void AddTransition(string effectName, int destinationTrack);
 
-        void AddFloatParameter(string name, float value);
-        void AddIntParameter(string name, int value);
+        void AddFloatParameter(string name, float value, float stepSize);
+        void AddIntParameter(string name, int value, float stepSize);
         void AddStringParameter(string name, string value);
-        void AddVector3Parameter(string name, Vector3 value);
+        void AddVector3Parameter(string name, Vector3 value, float stepSize);
         void AddColorParameter(string parameterName, Color color);
         void AddBoolParameter(string parameterName, bool color);
 

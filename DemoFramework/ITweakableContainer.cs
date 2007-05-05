@@ -22,5 +22,6 @@ namespace Dope.DDXX.DemoFramework
         float GetStepSize(int num);
         //void SetStepSize(string variableName, float size)
         string GetTweakableName(int index);
+        void SetValuesInListener(IEffectChangeListener xmlReader);
     }
 }

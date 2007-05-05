@@ -109,6 +109,33 @@ namespace Dope.DDXX.DemoFramework
             return properties[index].Name;
         }
 
+        public void SetValuesInListener(IEffectChangeListener xmlReader)
+        {
+            for (int i = 0; i < properties.Count; i++)
+            {
+                if (properties[i].Name == "StartTime" || properties[i].Name == "EndTime")
+                    continue;
+                switch (GetTweakableType(i))
+                {
+                    case TweakableType.Integer:
+                        xmlReader.SetIntParam(GetType().Name, GetTweakableName(i), GetIntValue(i));
+                        break;
+                    case TweakableType.Float:
+                        xmlReader.SetFloatParam(GetType().Name, GetTweakableName(i), GetFloatValue(i));
+                        break;
+                    case TweakableType.Vector3:
+                        xmlReader.SetVector3Param(GetType().Name, GetTweakableName(i), GetVector3Value(i));
+                        break;
+                    case TweakableType.Color:
+                        xmlReader.SetColorParam(GetType().Name, GetTweakableName(i), GetColorValue(i));
+                        break;
+                    case TweakableType.String:
+                        xmlReader.SetStringParam(GetType().Name, GetTweakableName(i), GetStringValue(i));
+                        break;
+                }
+            }
+        }
+
         #endregion
 
         private List<PropertyInfo> GetProperties()

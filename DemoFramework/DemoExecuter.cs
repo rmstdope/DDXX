@@ -33,6 +33,7 @@ namespace Dope.DDXX.DemoFramework
 
         private DemoEffectTypes effectTypes = new DemoEffectTypes();
         private TweakerSettings settings = new TweakerSettings();
+        private DemoXMLReader xmlReader;
 
         public float StartTime
         {
@@ -199,6 +200,22 @@ namespace Dope.DDXX.DemoFramework
 
                 Render();
             }
+
+            if (xmlReader != null)
+            {
+                foreach (Track track in tracks)
+                {
+                    foreach (ITweakableContainer container in track.Effects)
+                    {
+                        container.SetValuesInListener(xmlReader);
+                    }
+                    foreach (ITweakableContainer container in track.PostEffects)
+                    {
+                        container.SetValuesInListener(xmlReader);
+                    }
+                }
+                xmlReader.Write("new.xml");
+            }
         }
 
         private void SynchronizeSong()
@@ -268,7 +285,7 @@ namespace Dope.DDXX.DemoFramework
         {
             if (xmlFile != "")
             {
-                DemoXMLReader xmlReader = new DemoXMLReader(this);
+                xmlReader = new DemoXMLReader(this);
                 xmlReader.Read(xmlFile);
             }
         }
@@ -295,42 +312,44 @@ namespace Dope.DDXX.DemoFramework
             // TODO Add transition support
         }
 
-        public void AddFloatParameter(string name, float value)
+        public void AddFloatParameter(string name, float value, float stepSize)
         {
-            AddParameter(name, value);
+            AddParameter(name, value, stepSize);
         }
 
-        public void AddIntParameter(string name, int value)
+        public void AddIntParameter(string name, int value, float stepSize)
         {
-            AddParameter(name, value);
+            AddParameter(name, value, stepSize);
         }
 
-        private void AddParameter(string name, object value)
+        private void AddParameter(string name, object value, float stepSize)
         {
             if (lastAddedEffect != null)
             {
                 effectTypes.SetProperty(lastAddedEffect, name, value);
+                ITweakableContainer container = lastAddedEffect as ITweakableContainer;
+                container.SetStepSize(container.GetTweakableNumber(name), stepSize);
             }
         }
 
         public void AddStringParameter(string name, string value)
         {
-            AddParameter(name, value);
+            AddParameter(name, value, 0);
         }
 
-        public void AddVector3Parameter(string name, Vector3 value)
+        public void AddVector3Parameter(string name, Vector3 value, float stepSize)
         {
-            AddParameter(name, value);
+            AddParameter(name, value, stepSize);
         }
 
         public void AddColorParameter(string name, Color value)
         {
-            AddParameter(name, value);
+            AddParameter(name, value, 0);
         }
 
         public void AddBoolParameter(string name, bool value)
         {
-            AddParameter(name, value);
+            AddParameter(name, value, 0);
         }
 
         public void AddSetupCall(string name, List<object> parameters)

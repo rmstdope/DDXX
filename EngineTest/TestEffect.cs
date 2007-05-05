@@ -17,7 +17,7 @@ namespace EngineTest
 {
     public class TestEffect : BaseDemoEffect
     {
-        private const int NUM_CIRCLES = 20;
+        private const int NUM_CIRCLES = 60;
         private struct BlitCircle
         {
             public Vector2 Offset;
@@ -81,9 +81,9 @@ namespace EngineTest
                 circles[i] = new BlitCircle();
                 circles[i].Offset = new Vector2((float)(2 * Math.PI * rand.NextDouble()),
                     (float)(2 * Math.PI * rand.NextDouble()));
-                circles[i].Period = new Vector2((float)(1.5f + 3 * rand.NextDouble()),
-                    (float)(1.5f + 3 * rand.NextDouble()));
-                circles[i].Size = 40 + rand.Next(30);
+                circles[i].Period = new Vector2((float)(0.5f + 3 * rand.NextDouble()),
+                    (float)(0.5f + 3 * rand.NextDouble()));
+                circles[i].Size = 10 + rand.Next(20);
                 circles[i].Scale = new Vector2(50 + 80 * (float)(rand.NextDouble()),
                     50 + 80 * (float)(rand.NextDouble()));
             }

@@ -81,21 +81,21 @@ namespace Dope.DDXX.DemoFramework
                 }
             }
 
-            public void AddIntParameter(string name, int value)
+            public void AddIntParameter(string name, int value, float stepSize)
             {
-                AddParameter(name, new Parameter(name, TweakableType.Integer, value));
+                AddParameter(name, new Parameter(name, TweakableType.Integer, value, stepSize));
             }
-            public void AddFloatParameter(string name, float value)
+            public void AddFloatParameter(string name, float value, float stepSize)
             {
-                AddParameter(name, new Parameter(name, TweakableType.Float, value));
+                AddParameter(name, new Parameter(name, TweakableType.Float, value, stepSize));
             }
             public void AddStringParameter(string name, string value)
             {
                 AddParameter(name, new Parameter(name, TweakableType.String, value));
             }
-            public void AddVector3Parameter(string name, Vector3 value)
+            public void AddVector3Parameter(string name, Vector3 value, float stepSize)
             {
-                AddParameter(name, new Parameter(name, TweakableType.Vector3, value));
+                AddParameter(name, new Parameter(name, TweakableType.Vector3, value, stepSize));
             }
             public void AddColorParameter(string name, Color value)
             {
@@ -323,12 +323,13 @@ namespace Dope.DDXX.DemoFramework
 <Effects>
 <!-- Here is a comment -->
 <Effect name=""fooeffect"" track=""1"" startTime=""3.5"" endTime=""7.5"">
-<Parameter name=""fooparam"" int=""3"" />
-<Parameter name=""barparam"" float=""4.3"" />
+<Parameter name=""intparam"" int=""3"" />
+<Parameter name=""floatparam"" float=""4.3"" />
 <Parameter name=""strparam"" string=""foostr"" />
 <Parameter name=""colparamnamed"" Color=""SlateBlue"" />
 <Parameter name=""colparam"" Color=""SlateBlue"" />
 <Parameter name=""boolparam"" bool=""true"" />
+<Parameter name=""floatstepparam"" float=""3.4"" step=""0.1"" />
 <SetupCall name=""AddTextureLayer"">
 <Parameter string=""BlurBackground.jpg"" />
 <Parameter float=""35.0"" />
@@ -444,30 +445,82 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual(0, effectBuilder.EffectTrack);
         }
 
-        [Test]
-        public void TestGetParameters()
+        private Dictionary<string, Parameter> GetFooEffectParameters()
         {
             ReadXML(twoEffectContents);
             effectBuilder.NextEffect();
-            Assert.AreEqual("fooeffect", effectBuilder.EffectName);
             Dictionary<string, Parameter> parameters = effectBuilder.GetParameters();
-            Assert.AreEqual(6, parameters.Count);
+            return parameters;
+        }
+
+        [Test]
+        public void TestGetNumParameters()
+        {
+            Dictionary<string, Parameter> parameters = GetFooEffectParameters();
+            Assert.AreEqual(7, parameters.Count);
+        }
+
+        [Test]
+        public void TestIntParameter()
+        {
+            Dictionary<string, Parameter> parameters = GetFooEffectParameters();
             Parameter parameter;
-            Assert.IsTrue(parameters.TryGetValue("fooparam", out parameter));
+            Assert.IsTrue(parameters.TryGetValue("intparam", out parameter));
             Assert.AreEqual(TweakableType.Integer, parameter.Type);
             Assert.AreEqual(3, parameter.IntValue);
-            Assert.IsTrue(parameters.TryGetValue("barparam", out parameter));
+            Assert.AreEqual(1, parameter.StepSize);
+        }
+
+        [Test]
+        public void TestFloatParameter()
+        {
+            Dictionary<string, Parameter> parameters = GetFooEffectParameters();
+            Parameter parameter;
+            Assert.IsTrue(parameters.TryGetValue("floatparam", out parameter));
             Assert.AreEqual(TweakableType.Float, parameter.Type);
             Assert.AreEqual(4.3f, parameter.FloatValue);
+            Assert.AreEqual(1, parameter.StepSize);
+        }
+
+        [Test]
+        public void TestStringParameter()
+        {
+            Dictionary<string, Parameter> parameters = GetFooEffectParameters();
+            Parameter parameter;
             Assert.IsTrue(parameters.TryGetValue("strparam", out parameter));
             Assert.AreEqual(TweakableType.String, parameter.Type);
             Assert.AreEqual("foostr", parameter.StringValue);
+        }
+
+        [Test]
+        public void TestColorParameter()
+        {
+            Dictionary<string, Parameter> parameters = GetFooEffectParameters();
+            Parameter parameter;
             Assert.IsTrue(parameters.TryGetValue("colparam", out parameter));
             Assert.AreEqual(TweakableType.Color, parameter.Type);
             Assert.AreEqual(Color.SlateBlue, parameter.ColorValue);
+        }
+
+        [Test]
+        public void TestBoolParameter()
+        {
+            Dictionary<string, Parameter> parameters = GetFooEffectParameters();
+            Parameter parameter;
             Assert.IsTrue(parameters.TryGetValue("boolparam", out parameter));
             Assert.AreEqual(TweakableType.Bool, parameter.Type);
             Assert.AreEqual(true, parameter.BoolValue);
+        }
+
+        [Test]
+        public void TestFloatParameterStep()
+        {
+            Dictionary<string, Parameter> parameters = GetFooEffectParameters();
+            Parameter parameter;
+            Assert.IsTrue(parameters.TryGetValue("floatstepparam", out parameter));
+            Assert.AreEqual(TweakableType.Float, parameter.Type);
+            Assert.AreEqual(3.4f, parameter.FloatValue);
+            Assert.AreEqual(0.1, parameter.StepSize);
         }
 
         [Test]
@@ -526,9 +579,9 @@ namespace Dope.DDXX.DemoFramework
             DemoXMLReader reader = ReadXMLString(twoEffectContents);
             reader.SetColorParam("fooeffect", "colparamnamed", Color.SpringGreen);
             reader.SetColorParam("fooeffect", "colparam", Color.FromArgb(255, 100, 101, 102));
-            reader.SetFloatParam("fooeffect", "barparam", 8.6f);
+            reader.SetFloatParam("fooeffect", "floatparam", 8.6f);
             reader.SetBoolParam("fooeffect", "boolparam", false);
-            reader.SetIntParam("fooeffect", "fooparam", 7);
+            reader.SetIntParam("fooeffect", "intparam", 7);
             reader.SetStringParam("bareffect", "goo", "goovalue");
             reader.SetVector3Param("fooglow", "glowdir", new Vector3(1.2f, 2.3f, 3.4f));
             reader.SetStartTime("fooeffect", 15);
@@ -554,10 +607,10 @@ namespace Dope.DDXX.DemoFramework
             Assert.IsTrue(parameters.TryGetValue("boolparam", out parameter));
             Assert.AreEqual(TweakableType.Bool, parameter.Type);
             Assert.AreEqual(false, (object)parameter.BoolValue);
-            Assert.IsTrue(parameters.TryGetValue("barparam", out parameter));
+            Assert.IsTrue(parameters.TryGetValue("floatparam", out parameter));
             Assert.AreEqual(TweakableType.Float, parameter.Type);
             Assert.AreEqual(8.6, parameter.FloatValue);
-            Assert.IsTrue(parameters.TryGetValue("fooparam", out parameter));
+            Assert.IsTrue(parameters.TryGetValue("intparam", out parameter));
             Assert.AreEqual(TweakableType.Integer, parameter.Type);
             Assert.AreEqual(7, parameter.IntValue);
             effectBuilder.NextEffect();
@@ -576,13 +629,34 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual(new Vector3(1.2f, 2.3f, 3.4f), parameter.Vector3Value);
         }
 
+        [Test]
+        public void TestAddingParameter()
+        {
+            Parameter parameter;
+            DemoXMLReader reader = ReadXMLString(twoEffectContents);
+            effectBuilder.NextEffect();
+            Dictionary<string, Parameter> parameters = effectBuilder.GetParameters();
+            Assert.IsFalse(parameters.TryGetValue("newParameter", out parameter));
+            reader.SetFloatParam("fooeffect", "newParameter", 1.2f);
+            string filename = tempFiles.New();
+            reader.Write(filename);
+
+            string written = File.ReadAllText(filename);
+            effectBuilder = new BuilderStub();
+            reader = ReadXML(written);
+            effectBuilder.NextEffect();
+            parameters = effectBuilder.GetParameters();
+            Assert.IsTrue(parameters.TryGetValue("newParameter", out parameter));
+            Assert.AreEqual(TweakableType.Float, parameter.Type);
+            Assert.AreEqual(1.2f, parameter.FloatValue);
+        }
 
         [Test]
         [ExpectedException(typeof(DDXXException))]
         public void TestSetMissingEffectParam()
         {
             DemoXMLReader reader = ReadXMLString(twoEffectContents);
-            reader.SetIntParam("gazonkeffect", "barparam", 8);
+            reader.SetIntParam("gazonkeffect", "floatparam", 8);
         }
 
         [Test]

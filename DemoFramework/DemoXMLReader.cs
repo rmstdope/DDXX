@@ -20,6 +20,7 @@ namespace Dope.DDXX.DemoFramework
         public string name;
         public object value;
         public TweakableType Type;
+        public float StepSize;
 
         #region Value access
         public int IntValue
@@ -60,6 +61,14 @@ namespace Dope.DDXX.DemoFramework
             this.name = name;
             this.Type = type;
             this.value = value;
+            this.StepSize = 1;
+        }
+        public Parameter(string name, TweakableType type, object value, float stepSize)
+        {
+            this.name = name;
+            this.Type = type;
+            this.value = value;
+            this.StepSize = stepSize;
         }
         #endregion
     }
@@ -221,6 +230,7 @@ namespace Dope.DDXX.DemoFramework
             TweakableType parameterType = TweakableType.Unknown;
             string parameterName = null;
             string parameterValue = "";
+            float parameterStep = 1;
             foreach (XmlAttribute attr in node.Attributes)
             {
                 string name = attr.Name;
@@ -229,6 +239,9 @@ namespace Dope.DDXX.DemoFramework
                 {
                     case "name":
                         parameterName = value;
+                        break;
+                    case "step":
+                        parameterStep = ParseFloat(value);
                         break;
                     default:
                         parameterType = GetParameterType(name);
@@ -241,7 +254,7 @@ namespace Dope.DDXX.DemoFramework
             }
             if (parameterName != null && parameterType != TweakableType.Unknown)
             {
-                AddParameter(parameterName, parameterType, parameterValue);
+                AddParameter(parameterName, parameterType, parameterValue, parameterStep);
             }
             else
             {
@@ -330,21 +343,21 @@ namespace Dope.DDXX.DemoFramework
             return color;
         }
 
-        private void AddParameter(string parameterName, TweakableType parameterType, string parameterValue)
+        private void AddParameter(string parameterName, TweakableType parameterType, string parameterValue, float parameterStep)
         {
             switch (parameterType)
             {
                 case TweakableType.Float:
-                    effectBuilder.AddFloatParameter(parameterName, ParseFloat(parameterValue));
+                    effectBuilder.AddFloatParameter(parameterName, ParseFloat(parameterValue), parameterStep);
                     break;
                 case TweakableType.Integer:
-                    effectBuilder.AddIntParameter(parameterName, int.Parse(parameterValue));
+                    effectBuilder.AddIntParameter(parameterName, int.Parse(parameterValue), parameterStep);
                     break;
                 case TweakableType.String:
                     effectBuilder.AddStringParameter(parameterName, parameterValue);
                     break;
                 case TweakableType.Vector3:
-                    effectBuilder.AddVector3Parameter(parameterName, ParseVector3(parameterValue));
+                    effectBuilder.AddVector3Parameter(parameterName, ParseVector3(parameterValue), parameterStep);
                     break;
                 case TweakableType.Color:
                     effectBuilder.AddColorParameter(parameterName, ParseColor(parameterValue));
@@ -463,11 +476,29 @@ namespace Dope.DDXX.DemoFramework
         private XmlAttribute GetParamValueAttr(string effect, string param, TweakableType ty)
         {
             XmlNode paramNode = FindParamNode(effect, param);
+            if (paramNode == null)
+                paramNode = CreateParameterNode(effect, param, ty);
             XmlAttribute attr = GetAttribute(paramNode, GetParameterTypeString(ty));
             if (attr == null)
                 throw new DDXXException("XmlNode " + param + " in effect " + effect +
                     " is not a float parameter: " + paramNode.ToString());
             return attr;
+        }
+
+        private XmlNode CreateParameterNode(string effect, string param, TweakableType ty)
+        {
+            XmlNode effectNode = FindParameterContainer(effect);
+            if (effectNode.ChildNodes.Count == 0)
+                effectNode.AppendChild(doc.CreateWhitespace("\r\n  "));
+            XmlNode lastWhitespace = effectNode.LastChild;
+            XmlElement newElement = doc.CreateElement("Parameter");
+            effectNode.AppendChild(newElement);
+            XmlWhitespace newWhitespace = doc.CreateWhitespace(lastWhitespace.Value);
+            effectNode.AppendChild(newWhitespace);
+            newElement.SetAttribute("name", param);
+            newElement.SetAttribute(GetParameterTypeString(ty), "");
+            lastWhitespace.Value += "  ";
+            return newElement;
         }
 
         private string FloatToString(float value)

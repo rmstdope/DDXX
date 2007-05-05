@@ -54,7 +54,7 @@ namespace EngineTest
             }
             catch (DDXXException exception)
             {
-                for (int i = 0; i < 1; i++)
+                for (int i = 0; i < 2; i++)
                 {
                     Cursor.Show();
                     if (DialogResult.Yes == MessageBox.Show(exception.ToString(), "It seems you are having problems...", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2))
@@ -65,7 +65,7 @@ namespace EngineTest
             }
             catch (Exception exception)
             {
-                for (int i = 0; i < 1; i++)
+                for (int i = 0; i < 2; i++)
                 {
                     Cursor.Show();
                     MessageBox.Show(exception.ToString(), "Demo Error");

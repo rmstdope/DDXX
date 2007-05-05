@@ -14,7 +14,6 @@ namespace Dope.DDXX.DemoFramework
     public class DemoTweakerEffect : DemoTweakerBase, IDemoTweaker
     {
         private ITweakableContainer currentContainer;
-
         private BoxControl tweakableWindow;
 
         private int currentVariable;
@@ -75,10 +74,13 @@ namespace Dope.DDXX.DemoFramework
 
         private void ChangeValue(float stepValue)
         {
+            string variableName = currentContainer.GetTweakableName(CurrentVariable);
+
             switch (currentContainer.GetTweakableType(CurrentVariable))
             {
                 case TweakableType.Float:
-                    currentContainer.SetValue(CurrentVariable, (currentContainer.GetFloatValue(CurrentVariable) + stepValue));
+                    float newValue = (currentContainer.GetFloatValue(CurrentVariable) + stepValue);
+                    currentContainer.SetValue(CurrentVariable, newValue);
                     break;
                 case TweakableType.Integer:
                     currentContainer.SetValue(CurrentVariable, (currentContainer.GetIntValue(CurrentVariable) + (int)stepValue));
