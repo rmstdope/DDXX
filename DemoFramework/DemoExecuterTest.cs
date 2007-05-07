@@ -118,9 +118,10 @@ namespace Dope.DDXX.DemoFramework
                 Method("HandleInput").
                 Will(Return.Value(true));
             Time.CurrentTime = 5;
+            Time.SetDeltaTimeForTest(1.0f);
             executer.Step();
-            Assert.Greater(Time.CurrentTime, 5.0f);
-
+            Time.UnSetDeltaTimeForTest();
+            Assert.Greater(Time.StepTime, 5.0f);
         }
 
         [Test]
@@ -229,6 +230,7 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(device).
                 Method("Present");
             Time.CurrentTime = 2.0f;
+            Time.SetDeltaTimeForTest(1.0f);
 
             Expect.Once.On(tweaker).
                 Method("Draw");
@@ -236,6 +238,7 @@ namespace Dope.DDXX.DemoFramework
                 GetProperty("Quit").Will(Return.Value(false));
             executer.Run();
             Assert.Greater(Time.StepTime, 2.0f);
+            Time.UnSetDeltaTimeForTest();
         }
 
         [Test]

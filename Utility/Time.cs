@@ -13,7 +13,7 @@ namespace Dope.DDXX.Utility
         static long frequency = 0;
         static float deltaTime = 0;
         static bool paused = false;
-        //static long pausedTime = 0;
+        static bool useConstantDelta = false;
 
         [DllImport("Kernel32.dll")]
         private static extern bool QueryPerformanceCounter(out long lpPerformanceCount);
@@ -97,15 +97,22 @@ namespace Dope.DDXX.Utility
         public static void Step()
         {
             long time;
-            if (paused)
+            if (useConstantDelta)
             {
-                deltaTime = 0.0f;
+                lastTime += (long)(deltaTime * frequency);
             }
             else
             {
-                QueryPerformanceCounter(out time);
-                deltaTime = (float)(time - lastTime - startTime) / (float)frequency;
-                lastTime = time - startTime;
+                if (paused)
+                {
+                    deltaTime = 0.0f;
+                }
+                else
+                {
+                    QueryPerformanceCounter(out time);
+                    deltaTime = (float)(time - lastTime - startTime) / (float)frequency;
+                    lastTime = time - startTime;
+                }
             }
         }
 
@@ -131,7 +138,13 @@ namespace Dope.DDXX.Utility
 
         public static void SetDeltaTimeForTest(float delta)
         {
+            useConstantDelta = true;
             deltaTime = delta;
+        }
+
+        public static void UnSetDeltaTimeForTest()
+        {
+            useConstantDelta = false;
         }
     }
 }
