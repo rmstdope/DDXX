@@ -108,7 +108,7 @@ namespace Dope.DDXX.Graphics
         [Test]
         public void TestCreateFail()
         {
-            // No factory set
+            // No graphicsFactory set
             try
             {
                 D3DDriver.DestroyInstance();

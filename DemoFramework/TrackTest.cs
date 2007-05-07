@@ -4,6 +4,7 @@ using System.Text;
 using Dope.DDXX.Graphics;
 using NUnit.Framework;
 using NMock2;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -17,6 +18,7 @@ namespace Dope.DDXX.DemoFramework
         {
             base.SetUp();
             track = new Track();
+            Time.Initialize();
         }
 
         [TearDown]
@@ -157,5 +159,195 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual(new IDemoPostEffect[] { e4, e2, e1, e5 }, track.GetPostEffects(5.0f));
         }
 
+        [Test]
+        public void TestEndTimeOneEffect()
+        {
+            track.Register(CreateMockEffect(5, 10));
+            Assert.AreEqual(10, track.EndTime);
+        }
+
+        [Test]
+        public void TestEndTimeMoreEffects()
+        {
+            track.Register(CreateMockEffect(5, 10));
+            track.Register(CreateMockEffect(5, 15));
+            track.Register(CreateMockEffect(5, 12));
+            Assert.AreEqual(15, track.EndTime);
+        }
+
+        [Test]
+        public void TestEndTimeSingleEffectAndPostEffect()
+        {
+            track.Register(CreateMockEffect(5, 10));
+            track.Register(CreateMockPostEffect(5, 12));
+            Assert.AreEqual(12, track.EndTime);
+        }
+
+        [Test]
+        public void TestEndTimeMoreEffectAndPostEffect()
+        {
+            track.Register(CreateMockEffect(5, 10));
+            track.Register(CreateMockEffect(5, 15));
+            track.Register(CreateMockPostEffect(5, 12));
+            track.Register(CreateMockPostEffect(5, 18));
+            Assert.AreEqual(18, track.EndTime);
+        }
+
+        [Test]
+        public void TestInitializeOneEffectAndPostEffect()
+        {
+            IDemoEffect e1 = CreateMockEffect(5, 10);
+            track.Register(e1);
+            IDemoPostEffect pe1 = CreateMockPostEffect(5, 12);
+            track.Register(pe1);
+            Expect.Once.On(e1).Method("Initialize").With(graphicsFactory, device);
+            Expect.Once.On(pe1).Method("Initialize").With(postProcessor);
+            track.Initialize(graphicsFactory, device, postProcessor);
+        }
+
+        [Test]
+        public void TestInitializeMoreEffectAndPostEffect()
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                IDemoEffect e1 = CreateMockEffect(5, 10);
+                track.Register(e1);
+                Expect.Once.On(e1).Method("Initialize").With(graphicsFactory, device);
+                IDemoPostEffect pe1 = CreateMockPostEffect(5, 12);
+                track.Register(pe1);
+                Expect.Once.On(pe1).Method("Initialize").With(postProcessor);
+            }
+            track.Initialize(graphicsFactory, device, postProcessor);
+        }
+
+        [Test]
+        public void TestStepOneEffectWithinTime()
+        {
+            Time.Pause();
+            Time.CurrentTime = 6.0f;
+            IDemoEffect e1 = CreateMockEffect(5, 10);
+            track.Register(e1);
+            Expect.Once.On(e1).Method("Step");
+            track.Step();
+        }
+
+        [Test]
+        public void TestStepOneEffectOutsideTime()
+        {
+            Time.Pause();
+            Time.CurrentTime = 1.0f;
+            IDemoEffect e1 = CreateMockEffect(5, 10);
+            track.Register(e1);
+            track.Step();
+        }
+
+        [Test]
+        public void TestStepMoreEffects()
+        {
+            Time.Pause();
+            Time.CurrentTime = 6.0f;
+            IDemoEffect e1 = CreateMockEffect(4, 10);
+            track.Register(e1);
+            Expect.Once.On(e1).Method("Step");
+            e1 = CreateMockEffect(1, 19);
+            track.Register(e1);
+            Expect.Once.On(e1).Method("Step");
+            e1 = CreateMockEffect(7, 10);
+            track.Register(e1);
+            e1 = CreateMockEffect(3, 5);
+            track.Register(e1);
+            track.Step();
+        }
+
+        [Test]
+        public void TestRenderNoEffects()
+        {
+            using (mockery.Ordered)
+            {
+                Expect.Once.On(device).Method("BeginScene");
+                Expect.Once.On(device).Method("EndScene");
+            }
+            track.Render(device);
+        }
+
+        [Test]
+        public void TestRenderOneEffect()
+        {
+            Time.Pause();
+            Time.CurrentTime = 8.0f;
+            IDemoEffect e1 = CreateMockEffect(4, 10);
+            track.Register(e1);
+            using (mockery.Ordered)
+            {
+                Expect.Once.On(device).Method("BeginScene");
+                Expect.Once.On(e1).Method("Render");
+                Expect.Once.On(device).Method("EndScene");
+            }
+            track.Render(device);
+        }
+
+        [Test]
+        public void TestRenderOnePostEffect()
+        {
+            Time.Pause();
+            Time.CurrentTime = 8.0f;
+            IDemoPostEffect pe1 = CreateMockPostEffect(4, 10);
+            track.Register(pe1);
+            using (mockery.Ordered)
+            {
+                Expect.Once.On(device).Method("BeginScene");
+                Expect.Once.On(device).Method("EndScene");
+                Expect.Once.On(pe1).Method("Render");
+            }
+            track.Render(device);
+        }
+
+        [Test]
+        public void TestRenderMoreEffects()
+        {
+            Time.Pause();
+            Time.CurrentTime = 8.0f;
+            IDemoEffect e1 = CreateMockEffect(4, 10);
+            track.Register(e1);
+            IDemoEffect e2 = CreateMockEffect(5, 10);
+            track.Register(e2);
+            IDemoPostEffect pe1 = CreateMockPostEffect(4, 10);
+            track.Register(pe1);
+            IDemoPostEffect pe2 = CreateMockPostEffect(5, 10);
+            track.Register(pe2);
+            using (mockery.Ordered)
+            {
+                Expect.Once.On(device).Method("BeginScene");
+                Expect.Once.On(e1).Method("Render");
+                Expect.Once.On(e2).Method("Render");
+                Expect.Once.On(device).Method("EndScene");
+                Expect.Once.On(pe1).Method("Render");
+                Expect.Once.On(pe2).Method("Render");
+            }
+            track.Render(device);
+        }
+
+        [Test]
+        public void TestRenderOnlyWithinTime()
+        {
+            Time.Pause();
+            Time.CurrentTime = 4.0f;
+            IDemoEffect e1 = CreateMockEffect(4, 10);
+            track.Register(e1);
+            IDemoEffect e2 = CreateMockEffect(5, 10);
+            track.Register(e2);
+            IDemoPostEffect pe1 = CreateMockPostEffect(4, 10);
+            track.Register(pe1);
+            IDemoPostEffect pe2 = CreateMockPostEffect(5, 10);
+            track.Register(pe2);
+            using (mockery.Ordered)
+            {
+                Expect.Once.On(device).Method("BeginScene");
+                Expect.Once.On(e1).Method("Render");
+                Expect.Once.On(device).Method("EndScene");
+                Expect.Once.On(pe1).Method("Render");
+            }
+            track.Render(device);
+        }
     }
 }

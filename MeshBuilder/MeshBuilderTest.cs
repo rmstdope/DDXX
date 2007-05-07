@@ -76,7 +76,7 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
-        /// Test box creation using the factory
+        /// Test box creation using the graphicsFactory
         /// </summary>
         [Test]
         public void TestBoxCreation()
@@ -106,7 +106,7 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
-        /// Test sphere creation using the factory
+        /// Test sphere creation using the graphicsFactory
         /// </summary>
         [Test]
         public void TestPlaneCreation()
@@ -144,7 +144,7 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
-        /// Test cloth creation using the factory
+        /// Test cloth creation using the graphicsFactory
         /// </summary>
         [Test]
         public void TestClothCreationNoPinned()
@@ -160,7 +160,7 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
-        /// Test cloth creation using the factory
+        /// Test cloth creation using the graphicsFactory
         /// </summary>
         [Test]
         public void TestClothCreationPinned()

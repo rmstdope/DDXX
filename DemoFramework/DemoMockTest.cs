@@ -9,10 +9,13 @@ namespace Dope.DDXX.DemoFramework
 {
     public class DemoMockTest : D3DMockTest
     {
+        protected IPostProcessor postProcessor;
+
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
+            postProcessor = mockery.NewMock<IPostProcessor>();
         }
 
         [TearDown]

@@ -56,7 +56,7 @@ namespace Dope.DDXX.DemoFramework
         {
             base.SetUp();
 
-            D3DDriver.EffectFactory = new EffectFactory(null, factory);
+            D3DDriver.EffectFactory = new EffectFactory(null, graphicsFactory);
             poolEffect = mockery.NewMock<IEffect>();
         }
 
@@ -71,7 +71,7 @@ namespace Dope.DDXX.DemoFramework
         {
             TestEffect effect = new TestEffect(0.0f, 10.0f);
 
-            effect.Initialize(factory, device);
+            effect.Initialize(graphicsFactory, device);
 
             Assert.IsTrue(effect.IsDeviceEqual(D3DDriver.GetInstance().Device));
         }

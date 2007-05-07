@@ -40,7 +40,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestInitialize()
         {
-            Expect.Once.On(factory).
+            Expect.Once.On(graphicsFactory).
                 Method("CreateLine").
                 WithAnyArguments().
                 Will(Return.Value(line));
@@ -50,15 +50,15 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(line).
                 SetProperty("Antialias").
                 To(false);
-            Expect.Once.On(factory).
+            Expect.Once.On(graphicsFactory).
                 Method("CreateSprite").
                 WithAnyArguments().
                 Will(Return.Value(sprite));
-            Expect.Once.On(factory).
+            Expect.Once.On(graphicsFactory).
                 Method("CreateFont").
                 WithAnyArguments().
                 Will(Return.Value(font));
-            Expect.Once.On(factory).
+            Expect.Once.On(graphicsFactory).
                 Method("CreateTexture").
                 WithAnyArguments().
                 Will(Return.Value(texture));

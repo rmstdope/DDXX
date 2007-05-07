@@ -12,7 +12,7 @@ namespace Dope.DDXX.Graphics
     public class D3DMockTest
     {
         protected Mockery mockery;
-        protected IGraphicsFactory factory;
+        protected IGraphicsFactory graphicsFactory;
         protected IDevice device;
         protected ITexture texture;
         protected ISurface surface;
@@ -37,7 +37,7 @@ namespace Dope.DDXX.Graphics
             presentParameters.BackBufferWidth = 400;
 
             mockery = new Mockery();
-            factory = mockery.NewMock<IGraphicsFactory>();
+            graphicsFactory = mockery.NewMock<IGraphicsFactory>();
             textureFactory = mockery.NewMock<ITextureFactory>();
             effectFactory = mockery.NewMock<IEffectFactory>();
             device = mockery.NewMock<IDevice>();
@@ -48,10 +48,10 @@ namespace Dope.DDXX.Graphics
             prerequisits = mockery.NewMock<IPrerequisits>();
             effect = mockery.NewMock<IEffect>();
 
-            Stub.On(factory).
+            Stub.On(graphicsFactory).
                 GetProperty("Manager").
                 Will(Return.Value(manager));
-            Stub.On(factory).
+            Stub.On(graphicsFactory).
                 Method("CreateDevice").
                 WithAnyArguments().
                 Will(Return.Value(device));
@@ -77,7 +77,7 @@ namespace Dope.DDXX.Graphics
             Stub.On(surface).
                 Method("Dispose");
 
-            D3DDriver.GraphicsFactory = factory;
+            D3DDriver.GraphicsFactory = graphicsFactory;
             D3DDriver.TextureFactory = textureFactory;
             D3DDriver.EffectFactory = effectFactory;
             D3DDriver.GetInstance().Device = device;
@@ -121,13 +121,13 @@ namespace Dope.DDXX.Graphics
 
     //    public void ExpectBaseDemoEffects(int num)
     //    {
-    //        effectFactory = new EffectFactory(device, factory);
-    //        textureFactory = new TextureFactory(device, factory, presentParameters);
+    //        effectFactory = new EffectFactory(device, graphicsFactory);
+    //        textureFactory = new TextureFactory(device, graphicsFactory, presentParameters);
     //        D3DDriver.EffectFactory = effectFactory;
     //        D3DDriver.TextureFactory = textureFactory;
     //        effect = mockery.NewMock<IEffect>();
 
-    //        Expect.Once.On(factory).
+    //        Expect.Once.On(graphicsFactory).
     //            Method("EffectFromFile").
     //            Will(Return.Value(effect));
     //        for (int i = 0; i < num; i++)

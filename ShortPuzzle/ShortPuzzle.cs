@@ -82,10 +82,10 @@ namespace ShortPuzzle
                     Type[] constrArgs = new Type[] { typeof(float), typeof(float) };
                     ConstructorInfo constrInfo = effect.GetConstructor(constrArgs);
                     if (constrInfo == null)
-                        throw new DDXXException("Couldn't find constructor (float,float) in " + effect.FullName);
+                        throw new DDXXException("Couldn'maxTime find constructor (float,float) in " + effect.FullName);
                     IDemoEffect demoEffect = (IDemoEffect)constrInfo.Invoke(new object[] { 0.0f, length });
                     if (demoEffect == null)
-                        throw new DDXXException("Couldn't create instance of " + effect.FullName);
+                        throw new DDXXException("Couldn'maxTime create instance of " + effect.FullName);
                     executer.Register(0, demoEffect);
                 }
             }
@@ -103,7 +103,10 @@ namespace ShortPuzzle
         {
             desc = setup.DeviceDescription;
             window = new DemoWindow();
-            executer = new DemoExecuter(SoundDriver.GetInstance(), InputDriver.GetInstance(), new PostProcessor());
+            executer = new DemoExecuter(D3DDriver.GetInstance().Device,
+                D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
+                SoundDriver.GetInstance(), InputDriver.GetInstance(),
+                new PostProcessor());
         }
     }
 }

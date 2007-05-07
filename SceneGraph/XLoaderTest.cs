@@ -107,10 +107,10 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void TestLoad()
         {
-            Expect.Once.On(factory).Method("LoadHierarchy").
+            Expect.Once.On(graphicsFactory).Method("LoadHierarchy").
                 With(Is.EqualTo("file.x"), Is.EqualTo(device), Is.NotNull, Is.Null).
                 Will(Return.Value(hierarchy));
-            loader = new XLoader(factory, nodeFactory, device);
+            loader = new XLoader(graphicsFactory, nodeFactory, device);
             loader.Load("file.x", effect, prefix);
         }
 

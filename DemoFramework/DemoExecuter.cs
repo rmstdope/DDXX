@@ -23,6 +23,8 @@ namespace Dope.DDXX.DemoFramework
         private FMOD.Channel channel;
 
         private IDevice device;
+        private IGraphicsFactory graphicsFactory;
+        private ITextureFactory textureFactory;
         private ITexture backBuffer;
         private IPostProcessor postProcessor;
         private IDemoTweaker tweaker;
@@ -37,31 +39,20 @@ namespace Dope.DDXX.DemoFramework
 
         public float StartTime
         {
-            get
-            {
-                return 0.0f;
-            }
+            get { return 0.0f; }
         }
 
         public float EndTime
         {
             get
             {
-                float t = 0.0f;
+                float maxTime = 0.0f;
                 foreach (Track track in tracks)
                 {
-                    foreach (IDemoEffect effect in track.Effects)
-                    {
-                        if (effect.EndTime > t)
-                            t = effect.EndTime;
-                    }
-                    foreach (IDemoPostEffect postEffect in track.PostEffects)
-                    {
-                        if (postEffect.EndTime > t)
-                            t = postEffect.EndTime;
-                    }
+                    if (track.EndTime > maxTime)
+                        maxTime = track.EndTime;
                 }
-                return t;
+                return maxTime;
             }
         }
 
@@ -93,8 +84,11 @@ namespace Dope.DDXX.DemoFramework
             set { tweaker = value; }
         }
 
-        public DemoExecuter(ISoundDriver soundDriver, IInputDriver inputDriver, IPostProcessor postProcessor)
+        public DemoExecuter(IDevice device, IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, ISoundDriver soundDriver, IInputDriver inputDriver, IPostProcessor postProcessor)
         {
+            this.device = device;
+            this.graphicsFactory = graphicsFactory;
+            this.textureFactory = textureFactory;
             this.soundDriver = soundDriver;
             this.inputDriver = inputDriver;
             this.postProcessor = postProcessor;
@@ -125,14 +119,7 @@ namespace Dope.DDXX.DemoFramework
 
             foreach (Track track in tracks)
             {
-                foreach (IDemoEffect effect in track.Effects)
-                {
-                    effect.Initialize(D3DDriver.GraphicsFactory, D3DDriver.GetInstance().Device);
-                }
-                foreach (IDemoPostEffect postEffect in track.PostEffects)
-                {
-                    postEffect.Initialize(postProcessor);
-                }
+                track.Initialize(graphicsFactory, device, postProcessor);
             }
 
             tweaker.Initialize(this);
@@ -140,8 +127,7 @@ namespace Dope.DDXX.DemoFramework
 
         private void InitializeGraphics()
         {
-            device = D3DDriver.GetInstance().Device;
-            backBuffer = D3DDriver.TextureFactory.CreateFullsizeRenderTarget();
+            backBuffer = textureFactory.CreateFullsizeRenderTarget();
         }
 
         private void InitializeSound(string song)
@@ -175,10 +161,7 @@ namespace Dope.DDXX.DemoFramework
 
             foreach (Track track in tracks)
             {
-                foreach (IDemoEffect effect in track.GetEffects(Time.StepTime))
-                {
-                    effect.Step();
-                }
+                track.Step();
             }
 
             tweaker.HandleInput(inputDriver);
@@ -203,17 +186,7 @@ namespace Dope.DDXX.DemoFramework
 
             if (xmlReader != null)
             {
-                foreach (Track track in tracks)
-                {
-                    foreach (ITweakableContainer container in track.Effects)
-                    {
-                        container.SetValuesInListener(xmlReader);
-                    }
-                    foreach (ITweakableContainer container in track.PostEffects)
-                    {
-                        container.SetValuesInListener(xmlReader);
-                    }
-                }
+                Update(xmlReader);
                 xmlReader.Write("new.xml");
             }
         }
@@ -248,31 +221,13 @@ namespace Dope.DDXX.DemoFramework
             using (ISurface originalTarget = device.GetRenderTarget(0))
             {
                 using (ISurface currentRenderTarget = backBuffer.GetSurfaceLevel(0))
-                {
                     device.SetRenderTarget(0, currentRenderTarget);
-                }
+
                 device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Black, 1.0f, 0);
                 postProcessor.StartFrame(backBuffer);
 
                 if (tracks.Count != 0)
-                {
-                    IDemoEffect[] activeEffects = tracks[activeTrack].GetEffects(Time.StepTime);
-                    if (activeEffects.Length != 0)
-                    {
-                        device.BeginScene();
-                        foreach (IDemoEffect effect in activeEffects)
-                        {
-                            effect.Render();
-                        }
-                        device.EndScene();
-                    }
-
-                    IDemoPostEffect[] activePostEffects = tracks[activeTrack].GetPostEffects(Time.StepTime);
-                    foreach (IDemoPostEffect postEffect in activePostEffects)
-                    {
-                        postEffect.Render();
-                    }
-                }
+                    tracks[activeTrack].Render(device);
 
                 tweaker.Draw();
 

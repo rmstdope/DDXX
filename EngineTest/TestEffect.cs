@@ -26,7 +26,7 @@ namespace EngineTest
             public Vector2 Scale;
         }
 
-        private FloaterSystem ps;
+        //private FloaterSystem ps;
         private CameraNode camera;
         private IScene scene;
         private ModelNode modelNode;

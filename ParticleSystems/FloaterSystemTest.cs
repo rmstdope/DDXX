@@ -130,11 +130,11 @@ namespace Dope.DDXX.ParticleSystems
 
         private void ExpectVertexBuffer()
         {
-            Expect.Once.On(factory).
+            Expect.Once.On(graphicsFactory).
                 Method("CreateVertexBuffer").
                 With(Is.Anything, Is.EqualTo(100), Is.Anything, Is.EqualTo(Usage.WriteOnly | Usage.Dynamic), Is.EqualTo(VertexFormats.None), Is.EqualTo(Pool.Default)).
                 Will(Return.Value(vertexBuffer));
-            Expect.Once.On(factory).
+            Expect.Once.On(graphicsFactory).
                 Method("CreateVertexDeclaration").
                 WithAnyArguments().
                 Will(Return.Value(null));

@@ -30,8 +30,8 @@ namespace Dope.DDXX.DemoFramework
             startTexture = mockery.NewMock<ITexture>();
             fullsizeTexture1 = mockery.NewMock<ITexture>();
 
-            D3DDriver.TextureFactory = new TextureFactory(device, factory, presentParameters);
-            D3DDriver.EffectFactory = new EffectFactory(device, factory);
+            D3DDriver.TextureFactory = new TextureFactory(device, graphicsFactory, presentParameters);
+            D3DDriver.EffectFactory = new EffectFactory(device, graphicsFactory);
             postProcessor = new PostProcessor();
 
             sourceTextureParameter = EffectHandle.FromString("A");
@@ -48,7 +48,7 @@ namespace Dope.DDXX.DemoFramework
         public void InitializeSetup()
         {
             effect = mockery.NewMock<IEffect>();
-            Expect.Once.On(factory).
+            Expect.Once.On(graphicsFactory).
                 Method("EffectFromFile").
                 With(Is.EqualTo(device), Is.EqualTo("PostEffects.fxo"), Is.Null, Is.EqualTo(""), Is.Anything, Is.Anything).
                 Will(Return.Value(effect));
@@ -56,7 +56,7 @@ namespace Dope.DDXX.DemoFramework
                 Method("GetParameter").
                 With(null, "SourceTexture").
                 Will(Return.Value(sourceTextureParameter));
-            Stub.On(factory).
+            Stub.On(graphicsFactory).
                 Method("CreateTexture").
                 With(device, presentParameters.BackBufferWidth, presentParameters.BackBufferHeight, 1, Usage.RenderTarget, presentParameters.BackBufferFormat, Pool.Default).
                 Will(Return.Value(fullsizeTexture1));

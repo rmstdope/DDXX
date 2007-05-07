@@ -22,7 +22,7 @@ namespace Dope.DDXX.SceneGraph
     //        particleSystem = new ParticleSystemNode("PS");
     //        effect = mockery.NewMock<IEffect>();
     //        technique = EffectHandle.FromString("1");
-    //        D3DDriver.EffectFactory = new EffectFactory(device, factory);
+    //        D3DDriver.EffectFactory = new EffectFactory(device, graphicsFactory);
     //    }
 
     //    [TearDown]
@@ -35,7 +35,7 @@ namespace Dope.DDXX.SceneGraph
     //    public void TestInitialize()
     //    {
     //        // Effect creation
-    //        Expect.Once.On(factory).
+    //        Expect.Once.On(graphicsFactory).
     //            Method("EffectFromFile").
     //            WithAnyArguments().
     //            Will(Return.Value(effect));

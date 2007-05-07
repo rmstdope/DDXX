@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Dope.DDXX.Graphics;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -94,5 +96,50 @@ namespace Dope.DDXX.DemoFramework
             throw new Exception("The method or operation is not implemented.");
         }
 
+        internal float EndTime
+        {
+            get 
+            {
+                float maxTime = 0;
+                foreach (IDemoEffect effect in effects)
+                {
+                    if (effect.EndTime > maxTime)
+                        maxTime = effect.EndTime;
+                }
+                foreach (IDemoPostEffect effect in postEffects)
+                {
+                    if (effect.EndTime > maxTime)
+                        maxTime = effect.EndTime;
+                }
+                return maxTime; 
+            }
+        }
+
+        internal void Initialize(IGraphicsFactory graphicsFactory, IDevice device, IPostProcessor postProcessor)
+        {
+            foreach (IDemoEffect effect in effects)
+                effect.Initialize(graphicsFactory, device);
+            foreach (IDemoPostEffect effect in postEffects)
+                effect.Initialize(postProcessor);
+        }
+
+        internal void Step()
+        {
+            foreach (IDemoEffect effect in GetEffects(Time.StepTime))
+                if (IsWithinTime(effect))
+                    effect.Step();
+        }
+
+        internal void Render(IDevice device)
+        {
+            device.BeginScene();
+            IDemoEffect[] activeEffects = GetEffects(Time.StepTime);
+            foreach (IDemoEffect effect in activeEffects)
+                effect.Render();
+            device.EndScene();
+            IDemoPostEffect[] activePostEffects = GetPostEffects(Time.StepTime);
+            foreach (IDemoPostEffect effect in activePostEffects)
+                effect.Render();
+        }
     }
 }

@@ -39,7 +39,7 @@ namespace Dope.DDXX.Graphics
         {
             if (graphicsFactory == null)
             {
-                throw new DDXXException("The DX factory needs to be set before the D3DDriver can be created.");
+                throw new DDXXException("The DX graphicsFactory needs to be set before the D3DDriver can be created.");
             }
 
             manager = graphicsFactory.Manager;

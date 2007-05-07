@@ -83,7 +83,7 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void TestConstructorOK()
         {
-            Expect.Once.On(factory).
+            Expect.Once.On(graphicsFactory).
                 Method("EffectFromFile").
                 WithAnyArguments().
                 Will(Return.Value(effect));
@@ -106,7 +106,7 @@ namespace Dope.DDXX.SceneGraph
         [ExpectedException(typeof(DDXXException))]
         public void TestConstructorFail1()
         {
-            Expect.Once.On(factory).
+            Expect.Once.On(graphicsFactory).
                 Method("EffectFromFile").
                 WithAnyArguments().
                 Will(Return.Value(effect));
@@ -129,7 +129,7 @@ namespace Dope.DDXX.SceneGraph
         [ExpectedException(typeof(DDXXException))]
         public void TestConstructorFail2()
         {
-            Expect.Once.On(factory).
+            Expect.Once.On(graphicsFactory).
                 Method("EffectFromFile").
                 WithAnyArguments().
                 Will(Return.Value(effect));
@@ -152,7 +152,7 @@ namespace Dope.DDXX.SceneGraph
         [ExpectedException(typeof(DDXXException))]
         public void TestConstructorFail3()
         {
-            Expect.Once.On(factory).
+            Expect.Once.On(graphicsFactory).
                 Method("EffectFromFile").
                 WithAnyArguments().
                 Will(Return.Value(effect));
@@ -175,7 +175,7 @@ namespace Dope.DDXX.SceneGraph
         [ExpectedException(typeof(DDXXException))]
         public void TestConstructorFail4()
         {
-            Expect.Once.On(factory).
+            Expect.Once.On(graphicsFactory).
                 Method("EffectFromFile").
                 WithAnyArguments().
                 Will(Return.Value(effect));

@@ -63,8 +63,10 @@ namespace TiVi
         {
             desc = setup.DeviceDescription;
             window = new DemoWindow();
-            executer = new DemoExecuter(SoundDriver.GetInstance(), 
-                InputDriver.GetInstance(), new PostProcessor());
+            executer = new DemoExecuter(D3DDriver.GetInstance().Device,
+                D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
+                SoundDriver.GetInstance(), InputDriver.GetInstance(),
+                new PostProcessor());
         }
 
     }

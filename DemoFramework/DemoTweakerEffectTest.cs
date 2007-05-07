@@ -181,7 +181,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestVector()
         {
-            // Tab doesn't affect int
+            // Tab doesn'maxTime affect int
             ExpectKey(Key.Tab);
             tweaker.HandleInput(inputDriver);
             tester.IntType = 10;

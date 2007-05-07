@@ -2,22 +2,22 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Text;
-using Microsoft.DirectX.Direct3D;
-using Dope.DDXX.Graphics;
-using FMOD;
-using Dope.DDXX.Input;
-using Dope.DDXX.Sound;
-using Dope.DDXX.Utility;
-using NUnit.Framework;
-using NMock2;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.CodeDom.Compiler;
-using Microsoft.CSharp;
 using System.IO;
+using System.Drawing;
+using Microsoft.CSharp;
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
-using System.Drawing;
+using Microsoft.DirectX.Direct3D;
+using FMOD;
+using NUnit.Framework;
+using NMock2;
+using Dope.DDXX.Graphics;
+using Dope.DDXX.Input;
+using Dope.DDXX.Sound;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -29,7 +29,6 @@ namespace Dope.DDXX.DemoFramework
         private IDemoTweaker tweaker;
         private ISoundDriver soundDriver;
         private IInputDriver inputDriver;
-        private IPostProcessor postProcessor;
         private IEffectChangeListener effectChangeListener;
         private FMOD.Sound sound;
         private FMOD.Channel channel;
@@ -78,9 +77,8 @@ namespace Dope.DDXX.DemoFramework
             D3DDriver.GetInstance().Initialize(null, desc, prerequisits);
 
             soundDriver = mockery.NewMock<ISoundDriver>();
-            postProcessor = mockery.NewMock<IPostProcessor>();
             inputDriver = mockery.NewMock<IInputDriver>();
-            executer = new DemoExecuter(soundDriver, inputDriver, postProcessor);
+            executer = new DemoExecuter(device, graphicsFactory, textureFactory, soundDriver, inputDriver, postProcessor);
             tweaker = mockery.NewMock<IDemoTweaker>();
             executer.Tweaker = tweaker;
 
@@ -657,9 +655,8 @@ namespace Dope.DDXX.DemoFramework
 
         private void ExpectGraphicsInitialize()
         {
-            Expect.Once.On(factory).
-                Method("CreateTexture").
-                With(device, presentParameters.BackBufferWidth, presentParameters.BackBufferHeight, 1, Usage.RenderTarget, presentParameters.BackBufferFormat, Pool.Default).
+            Expect.Once.On(textureFactory).
+                Method("CreateFullsizeRenderTarget").
                 Will(Return.Value(texture));
         }
 
