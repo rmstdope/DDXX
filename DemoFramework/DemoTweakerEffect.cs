@@ -43,7 +43,7 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        public DemoTweakerEffect(TweakerSettings settings)
+        public DemoTweakerEffect(ITweakerSettings settings)
             : base(settings)
         {
             currentVariable = 0;
@@ -387,5 +387,11 @@ namespace Dope.DDXX.DemoFramework
         }
 
         #endregion
+
+        public bool ShouldSave(IInputDriver inputDriver)
+        {
+            return true;
+        }
+
     }
 }

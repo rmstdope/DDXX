@@ -10,12 +10,11 @@ using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public class DemoTweakerMain : IDemoTweaker
+    public class DemoTweakerMain : DemoTweakerBase, IDemoTweaker
     {
         private int currentTweaker;
         private IDemoTweaker[] tweakers;
         private IDemoTweakerContext context;
-        private ITweakerSettings settings;
         private bool visable;
 
         public object IdentifierToChild() { return 0; }
@@ -32,16 +31,18 @@ namespace Dope.DDXX.DemoFramework
         }
 
         public DemoTweakerMain(IDemoTweakerContext context, IDemoTweaker[] tweakers, ITweakerSettings settings)
+            : base(settings)
         {
             currentTweaker = -1;
             this.tweakers = tweakers;
             this.context = context;
-            this.settings = settings;
             visable = true;
         }
 
-        public void Initialize(IDemoRegistrator registrator)
+        public override void Initialize(IDemoRegistrator registrator)
         {
+            base.Initialize(registrator);
+
             foreach (IDemoTweaker tweaker in tweakers)
                 tweaker.Initialize(registrator);
         }
@@ -90,16 +91,16 @@ namespace Dope.DDXX.DemoFramework
                 visable = !visable;
 
             if (inputDriver.KeyPressedNoRepeat(Key.F2))
-                settings.SetTransparency(Transparency.Low);
+                Settings.SetTransparency(Transparency.Low);
             if (inputDriver.KeyPressedNoRepeat(Key.F3))
-                settings.SetTransparency(Transparency.Medium);
+                Settings.SetTransparency(Transparency.Medium);
             if (inputDriver.KeyPressedNoRepeat(Key.F4))
-                settings.SetTransparency(Transparency.High);
+                Settings.SetTransparency(Transparency.High);
 
             if (inputDriver.KeyPressedNoRepeat(Key.F5))
-                settings.NextColorSchema();
+                Settings.NextColorSchema();
             if (inputDriver.KeyPressedNoRepeat(Key.F6))
-                settings.PreviousColorSchema();
+                Settings.PreviousColorSchema();
 
             return true;
         }
@@ -111,6 +112,37 @@ namespace Dope.DDXX.DemoFramework
 
             if (visable)
                 tweakers[currentTweaker].Draw();
+        }
+
+        public bool ShouldSave(IInputDriver inputDriver)
+        {
+            bool save = true;
+            while (!inputDriver.KeyPressedNoRepeat(Key.Return))
+            {
+                if (inputDriver.KeyPressedNoRepeat(Key.RightArrow))
+                    save = false;
+                if (inputDriver.KeyPressedNoRepeat(Key.LeftArrow))
+                    save = true;
+
+                CreateBaseControls();
+                BoxControl tweakableWindow = new BoxControl(new RectangleF(0.0f, 0.05f, 1.0f, 0.95f),
+                    Settings.Alpha, Settings.TimeColor, MainWindow);
+                new TextControl("Should old XML file be overwritten?", new RectangleF(0.0f, 0.0f, 1.0f, 0.9f), DrawTextFormat.Center | DrawTextFormat.VerticalCenter, 1.0f, Color.White, tweakableWindow);
+                Color yesColor = Color.DarkGray;
+                Color noColor = Color.DarkGray;
+                if (save)
+                    yesColor = Color.White;
+                else
+                    noColor = Color.White;
+                new TextControl("Yes>>>", new RectangleF(0.0f, 0.0f, 0.5f, 1.0f), DrawTextFormat.Right | DrawTextFormat.VerticalCenter, 1.0f, yesColor, tweakableWindow);
+                new TextControl("<<<No", new RectangleF(0.5f, 0.0f, 0.5f, 1.0f), DrawTextFormat.Left | DrawTextFormat.VerticalCenter, 1.0f, noColor, tweakableWindow);
+
+                D3DDriver.GetInstance().Device.BeginScene();
+                UserInterface.DrawControl(MainWindow);
+                D3DDriver.GetInstance().Device.EndScene();
+                D3DDriver.GetInstance().Device.Present();
+            }
+            return save;
         }
 
     }

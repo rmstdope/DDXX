@@ -28,7 +28,7 @@
 		<Parameter name="BaseMesh" string="King.X" />
 	</Effect-->
   <PostEffect name="WavePostEffect" track="0" startTime="0.0" endTime="300.0">
-    <Parameter name="Scale" float="7.150069" step="0.01" />
+    <Parameter name="Scale" float="1" step="0.01"/>
   </PostEffect>
   <PostEffect name="RadialBlurPostEffect" track="0" startTime="0.0" endTime="300.0" />
   <PostEffect name="GlowPostEffect" track="0" startTime="0.0" endTime="300.0">

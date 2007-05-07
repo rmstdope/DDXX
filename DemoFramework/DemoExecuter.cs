@@ -191,8 +191,11 @@ namespace Dope.DDXX.DemoFramework
 
             if (xmlReader != null)
             {
-                Update(xmlReader);
-                xmlReader.Write("new.xml");
+                if (tweaker.ShouldSave(inputDriver))
+                {
+                    Update(xmlReader);
+                    xmlReader.Write();
+                }
             }
         }
 

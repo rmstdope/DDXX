@@ -13,5 +13,6 @@ namespace Dope.DDXX.DemoFramework
         bool HandleInput(IInputDriver inputDriver);
         object IdentifierToChild();
         void IdentifierFromParent(object id);
+        bool ShouldSave(IInputDriver inputDriver);
     }
 }

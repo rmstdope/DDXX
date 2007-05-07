@@ -9,7 +9,7 @@ namespace Dope.DDXX.DemoFramework
 {
     public class DemoTweakerBase
     {
-        private TweakerSettings settings;
+        private ITweakerSettings settings;
         private IUserInterface userInterface;
         private IDemoRegistrator registrator;
         private float startTime;
@@ -43,7 +43,7 @@ namespace Dope.DDXX.DemoFramework
             get { return registrator; }
         }
 
-        public TweakerSettings Settings
+        public ITweakerSettings Settings
         {
             get { return settings; }
         }
@@ -53,7 +53,7 @@ namespace Dope.DDXX.DemoFramework
             get { return mainWindow; }
         }
 
-        public DemoTweakerBase(TweakerSettings settings)
+        public DemoTweakerBase(ITweakerSettings settings)
         {
             startTime = 0;
             timeScale = 10.0f;
@@ -61,7 +61,7 @@ namespace Dope.DDXX.DemoFramework
             this.settings = settings;
         }
 
-        public void Initialize(IDemoRegistrator registrator)
+        public virtual void Initialize(IDemoRegistrator registrator)
         {
             this.registrator = registrator;
             startTime = registrator.StartTime;

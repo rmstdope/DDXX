@@ -21,6 +21,8 @@ namespace Dope.DDXX.DemoFramework
         private IInputDriver input;
         private IDemoTweakerContext context;
         private ITweakerSettings settings;
+        private IDemoRegistrator registrator;
+        private IUserInterface userInterface;
 
         [SetUp]
         public override void SetUp()
@@ -32,6 +34,15 @@ namespace Dope.DDXX.DemoFramework
             tweakers = new IDemoTweaker[] { mockery.NewMock<IDemoTweaker>(), mockery.NewMock<IDemoTweaker>() };
             tweaker = new DemoTweakerMain(context, tweakers, settings);
             input = mockery.NewMock<IInputDriver>();
+            registrator = mockery.NewMock<IDemoRegistrator>();
+            userInterface = mockery.NewMock<IUserInterface>();
+            Stub.On(registrator).GetProperty("StartTime").Will(Return.Value(0.5f));
+            tweaker.UserInterface = userInterface;
+
+            Stub.On(settings).GetProperty("Alpha").Will(Return.Value(0.0f));
+            Stub.On(settings).GetProperty("TitleColor").Will(Return.Value(Color.Wheat));
+            Stub.On(settings).GetProperty("TextAlpha").Will(Return.Value(0.0f));
+            Stub.On(settings).GetProperty("TimeColor").Will(Return.Value(Color.DarkGray));
 
             Time.Initialize();
         }
@@ -47,11 +58,13 @@ namespace Dope.DDXX.DemoFramework
         {
             Expect.Once.On(tweakers[0]).
                 Method("Initialize").
-                With(Is.Null);
+                With(registrator);
             Expect.Once.On(tweakers[1]).
                 Method("Initialize").
-                With(Is.Null);
-            tweaker.Initialize(null);
+                With(registrator);
+            Expect.Once.On(userInterface).
+                Method("Initialize");
+            tweaker.Initialize(registrator);
         }
 
         [Test]
@@ -237,7 +250,63 @@ namespace Dope.DDXX.DemoFramework
             tweaker.HandleInput(input);
             ExpectTweakerDraw(1);
             tweaker.Draw();
+        }
 
+        [Test]
+        public void TestShouldSaveNoMovement()
+        {
+            TestInitialize();
+
+            ExpectKeypresses(-1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1);
+            Assert.IsTrue(tweaker.ShouldSave(input));
+        }
+
+        [Test]
+        public void TestShouldSaveMoveLeft()
+        {
+            TestInitialize();
+
+            ExpectKeypresses(0, 1, -1, 0, -1, -1, -1, -1, -1, -1, -1);
+            ExpectKeypresses(-1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1);
+            ExpectDraw("TestShouldSaveMoveLeft");
+            Assert.IsTrue(tweaker.ShouldSave(input));
+        }
+
+        [Test]
+        public void TestShouldSaveMoveRight()
+        {
+            TestInitialize();
+
+            ExpectKeypresses(1, 0, -1, 0, -1, -1, -1, -1, -1, -1, -1);
+            ExpectKeypresses(-1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1);
+            ExpectDraw("TestShouldSaveMoveRight");
+            Assert.IsFalse(tweaker.ShouldSave(input));
+        }
+
+        [Test]
+        public void TestShouldSaveMoveRightAndLeft()
+        {
+            TestInitialize();
+
+            ExpectKeypresses(1, 0, -1, 0, -1, -1, -1, -1, -1, -1, -1);
+            ExpectKeypresses(0, 1, -1, 0, -1, -1, -1, -1, -1, -1, -1);
+            ExpectDraw("TestShouldSaveMoveRightAndLeft1");
+            ExpectKeypresses(-1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1);
+            ExpectDraw("TestShouldSaveMoveRightAndLeft2");
+            Assert.IsTrue(tweaker.ShouldSave(input));
+        }
+
+        private void ExpectDraw(string name)
+        {
+            Expect.Once.On(device).
+                Method("BeginScene");
+            Expect.Once.On(userInterface).
+                Method("DrawControl").
+                With(new ControlMatcher(name));
+            Expect.Once.On(device).
+                Method("EndScene");
+            Expect.Once.On(device).
+                Method("Present");
         }
 
         private void ExpectTweakerTransition(int from, int to)
@@ -324,6 +393,49 @@ namespace Dope.DDXX.DemoFramework
                     Method("KeyPressedNoRepeat").
                     With(Key.F6).
                     Will(Return.Value(f6 != 0));
+        }
+
+        class ControlMatcher : Matcher
+        {
+            private string test;
+            public ControlMatcher(string test)
+            {
+                this.test = test;
+            }
+
+            public override void DescribeTo(TextWriter writer)
+            {
+                writer.WriteLine("Matcher");
+            }
+
+            public override bool Matches(object o)
+            {
+                if (!(o is BoxControl))
+                    Assert.Fail();
+                BoxControl mainBox = (BoxControl)o;
+
+                // mainWindow
+                // 0 titleWindow
+                // 1 tweakableWindow
+                //   0 "Should..."
+                //   1 "Yes..."
+                //   2 "No..."
+                Assert.AreEqual(3, mainBox.Children[1].Children.Count);
+                TextControl yes = (TextControl)mainBox.Children[1].Children[1];
+                TextControl no = (TextControl)mainBox.Children[1].Children[2];
+                if (test == "TestShouldSaveMoveLeft" ||
+                    test == "TestShouldSaveMoveRightAndLeft2")
+                    {
+                    Assert.AreEqual(Color.White, yes.Color);
+                    Assert.AreEqual(Color.DarkGray, no.Color);
+                }
+                else
+                {
+                    Assert.AreEqual(Color.White, no.Color);
+                    Assert.AreEqual(Color.DarkGray, yes.Color);
+                }
+                return true;
+            }
         }
 
     }

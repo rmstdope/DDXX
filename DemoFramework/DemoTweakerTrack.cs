@@ -52,7 +52,7 @@ namespace Dope.DDXX.DemoFramework
             get { return currentEffect; }
         }
 
-        public DemoTweakerTrack(TweakerSettings settings)
+        public DemoTweakerTrack(ITweakerSettings settings)
             : base(settings)
         {
             currentEffect = 0;
@@ -169,6 +169,11 @@ namespace Dope.DDXX.DemoFramework
             Array.Copy(effects, allEffects, effects.Length);
             Array.Copy(postEffects, 0, allEffects, effects.Length, postEffects.Length);
             return allEffects;
+        }
+
+        public bool ShouldSave(IInputDriver inputDriver)
+        {
+            return true;
         }
 
     }

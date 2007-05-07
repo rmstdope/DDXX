@@ -27,7 +27,7 @@ namespace Dope.DDXX.DemoFramework
             get { return currentTrack; }
         }
 
-        public DemoTweakerDemo(TweakerSettings settings)
+        public DemoTweakerDemo(ITweakerSettings settings)
             : base(settings)
         {
             currentTrack = 0;
@@ -129,6 +129,11 @@ namespace Dope.DDXX.DemoFramework
                 if (ey > 1.0f)
                     ey = 0.2f;
             }
+        }
+
+        public bool ShouldSave(IInputDriver inputDriver)
+        {
+            return true;
         }
 
     }

@@ -77,6 +77,7 @@ namespace Dope.DDXX.DemoFramework
     {
         private IDemoEffectBuilder effectBuilder;
         private XmlDocument doc;
+        private string filename;
 
         public DemoXMLReader(IDemoEffectBuilder builder)
         {
@@ -85,6 +86,7 @@ namespace Dope.DDXX.DemoFramework
 
         public void Read(string filename)
         {
+            this.filename = filename;
             doc = new XmlDocument();
             doc.PreserveWhitespace = true;
             using (Stream inputStream = new FileStream(FileUtility.FilePath(filename), FileMode.Open))
@@ -401,6 +403,13 @@ namespace Dope.DDXX.DemoFramework
                 case TweakableType.Bool: return "bool";
                 default: return null;
             }
+        }
+
+
+        public void Write()
+        {
+            using (Stream outStream = new FileStream(FileUtility.FilePath(filename), FileMode.Create))
+                doc.Save(outStream);
         }
 
         public void Write(string filename)
