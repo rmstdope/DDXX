@@ -38,7 +38,9 @@ namespace TiVi
 
                     DevicePrerequisits prerequisits = new DevicePrerequisits();
                     window.Initialize("Engine Test", desc, prerequisits);
-                    executer.Initialize("", new Assembly[] { Assembly.GetExecutingAssembly(), Assembly.GetAssembly(typeof(GlowPostEffect)) }, "TiVi.xml");
+                    executer.Initialize(D3DDriver.GetInstance().Device,
+                        D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
+                        "", new Assembly[] { Assembly.GetExecutingAssembly(), Assembly.GetAssembly(typeof(GlowPostEffect)) }, "TiVi.xml");
 
                     executer.Run();
                     window.CleanUp();
@@ -63,8 +65,7 @@ namespace TiVi
         {
             desc = setup.DeviceDescription;
             window = new DemoWindow();
-            executer = new DemoExecuter(D3DDriver.GetInstance().Device,
-                D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
+            executer = new DemoExecuter(new DemoFactory(), 
                 SoundDriver.GetInstance(), InputDriver.GetInstance(),
                 new PostProcessor());
         }

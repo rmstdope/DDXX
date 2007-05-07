@@ -78,7 +78,7 @@ namespace Dope.DDXX.DemoFramework
 
             soundDriver = mockery.NewMock<ISoundDriver>();
             inputDriver = mockery.NewMock<IInputDriver>();
-            executer = new DemoExecuter(device, graphicsFactory, textureFactory, soundDriver, inputDriver, postProcessor);
+            executer = new DemoExecuter(new DemoFactory(), soundDriver, inputDriver, postProcessor);
             tweaker = mockery.NewMock<IDemoTweaker>();
             executer.Tweaker = tweaker;
 
@@ -160,7 +160,7 @@ namespace Dope.DDXX.DemoFramework
             ExpectTweakerInitialize();
             ExpectGraphicsInitialize();
 
-            executer.Initialize("");
+            executer.Initialize(device, graphicsFactory, textureFactory, "");
         }
 
         [Test]
@@ -171,7 +171,7 @@ namespace Dope.DDXX.DemoFramework
             ExpectTweakerInitialize();
             ExpectGraphicsInitialize();
 
-            executer.Initialize(null);
+            executer.Initialize(device, graphicsFactory, textureFactory, null);
         }
 
         [Test]
@@ -187,7 +187,7 @@ namespace Dope.DDXX.DemoFramework
             ExpectTweakerInitialize();
             ExpectGraphicsInitialize();
 
-            executer.Initialize("Dope.DDXX.DemoFramework.dll");
+            executer.Initialize(device, graphicsFactory, textureFactory, "Dope.DDXX.DemoFramework.dll");
         }
 
         [Test]
@@ -214,7 +214,7 @@ namespace Dope.DDXX.DemoFramework
                 Method("Initialize").
                 With(Is.NotNull);
 
-            executer.Initialize(null);
+            executer.Initialize(device, graphicsFactory, textureFactory, null);
         }
 
         [Test]
@@ -427,7 +427,7 @@ namespace Dope.DDXX.DemoFramework
 
             DemoXMLReaderTest.TempFiles tempFiles = new DemoXMLReaderTest.TempFiles();
             FileUtility.SetLoadPaths(new string[] { "" });
-            executer.Initialize("", tempFiles.New(twoEffectContents));
+            executer.Initialize(device, graphicsFactory, textureFactory, "", tempFiles.New(twoEffectContents));
             Assert.AreEqual(3, executer.NumTracks);
             Assert.AreEqual(1, executer.Tracks[0].Effects.Length);
             Assert.AreEqual(0, executer.Tracks[0].PostEffects.Length);
@@ -461,7 +461,7 @@ namespace Dope.DDXX.DemoFramework
 
             DemoXMLReaderTest.TempFiles tempFiles = new DemoXMLReaderTest.TempFiles();
             FileUtility.SetLoadPaths(new string[] { "" });
-            executer.Initialize("", tempFiles.New(twoEffectContents));
+            executer.Initialize(device, graphicsFactory, textureFactory, "", tempFiles.New(twoEffectContents));
 
 
             expectIntParam("FooEffect", "FooParam", 3);

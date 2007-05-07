@@ -46,7 +46,9 @@ namespace ShortPuzzle
                     prerequisits.ShaderModel = 2;
 
                     window.Initialize("Short Puzzle", desc, prerequisits);
-                    executer.Initialize("scanner_of_dope-woo-192.mp3");//test.mp3");
+                    executer.Initialize(D3DDriver.GetInstance().Device, 
+                        D3DDriver.GraphicsFactory, D3DDriver.TextureFactory, 
+                        "scanner_of_dope-woo-192.mp3");//test.mp3");
                     executer.Run();
                     window.CleanUp();
                 }
@@ -103,8 +105,7 @@ namespace ShortPuzzle
         {
             desc = setup.DeviceDescription;
             window = new DemoWindow();
-            executer = new DemoExecuter(D3DDriver.GetInstance().Device,
-                D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
+            executer = new DemoExecuter(new DemoFactory(),
                 SoundDriver.GetInstance(), InputDriver.GetInstance(),
                 new PostProcessor());
         }

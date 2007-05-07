@@ -12,6 +12,7 @@ namespace Dope.DDXX.DemoFramework
     public class TrackTest : DemoMockTest
     {
         private Track track;
+        private IEffectChangeListener effectChangeListener;
 
         [SetUp]
         public override void SetUp()
@@ -19,6 +20,7 @@ namespace Dope.DDXX.DemoFramework
             base.SetUp();
             track = new Track();
             Time.Initialize();
+            effectChangeListener = mockery.NewMock<IEffectChangeListener>();
         }
 
         [TearDown]
@@ -348,6 +350,39 @@ namespace Dope.DDXX.DemoFramework
                 Expect.Once.On(pe1).Method("Render");
             }
             track.Render(device);
+        }
+
+        [Test]
+        public void TestUpdateListenerOneEffect()
+        {
+            IDemoEffect e1 = CreateMockEffect(4, 10);
+            track.Register(e1);
+            Expect.Once.On(e1).Method("UpdateListener").With(effectChangeListener);
+            track.UpdateListener(effectChangeListener);
+        }
+
+        [Test]
+        public void TestUpdateListenerOnePostEffect()
+        {
+            IDemoPostEffect pe1 = CreateMockPostEffect(4, 10);
+            track.Register(pe1);
+            Expect.Once.On(pe1).Method("UpdateListener").With(effectChangeListener);
+            track.UpdateListener(effectChangeListener);
+        }
+
+        [Test]
+        public void TestUpdateListenerMoreEffect()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                IDemoEffect e1 = CreateMockEffect(4, 10);
+                track.Register(e1);
+                Expect.Once.On(e1).Method("UpdateListener").With(effectChangeListener);
+                IDemoPostEffect pe1 = CreateMockPostEffect(4, 10);
+                track.Register(pe1);
+                Expect.Once.On(pe1).Method("UpdateListener").With(effectChangeListener);
+            }
+            track.UpdateListener(effectChangeListener);
         }
     }
 }

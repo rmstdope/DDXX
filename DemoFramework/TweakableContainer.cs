@@ -37,6 +37,8 @@ namespace Dope.DDXX.DemoFramework
                     return TweakableType.Color;
                 case "String":
                     return TweakableType.String;
+                case "Boolean":
+                    return TweakableType.Bool;
                 default:
                     return TweakableType.Unknown;
             }
@@ -83,6 +85,11 @@ namespace Dope.DDXX.DemoFramework
             return (Color)properties[num].GetGetMethod().Invoke(this, null);
         }
 
+        public bool GetBoolValue(int num)
+        {
+            return (bool)properties[num].GetGetMethod().Invoke(this, null);
+        }
+
         public void SetValue(int num, object value)
         {
             properties[num].GetSetMethod().Invoke(this, new object[] { value });
@@ -109,29 +116,43 @@ namespace Dope.DDXX.DemoFramework
             return properties[index].Name;
         }
 
-        public void SetValuesInListener(IEffectChangeListener xmlReader)
+        public void UpdateListener(IEffectChangeListener changeListener)
         {
             for (int i = 0; i < properties.Count; i++)
             {
-                if (properties[i].Name == "StartTime" || properties[i].Name == "EndTime")
-                    continue;
-                switch (GetTweakableType(i))
+                if (properties[i].Name == "StartTime")
+                    changeListener.SetStartTime(GetType().Name, GetFloatValue(i));
+                else if (properties[i].Name == "EndTime")
+                    changeListener.SetEndTime(GetType().Name, GetFloatValue(i));
+                else
                 {
-                    case TweakableType.Integer:
-                        xmlReader.SetIntParam(GetType().Name, GetTweakableName(i), GetIntValue(i));
-                        break;
-                    case TweakableType.Float:
-                        xmlReader.SetFloatParam(GetType().Name, GetTweakableName(i), GetFloatValue(i));
-                        break;
-                    case TweakableType.Vector3:
-                        xmlReader.SetVector3Param(GetType().Name, GetTweakableName(i), GetVector3Value(i));
-                        break;
-                    case TweakableType.Color:
-                        xmlReader.SetColorParam(GetType().Name, GetTweakableName(i), GetColorValue(i));
-                        break;
-                    case TweakableType.String:
-                        xmlReader.SetStringParam(GetType().Name, GetTweakableName(i), GetStringValue(i));
-                        break;
+                    switch (GetTweakableType(i))
+                    {
+                        case TweakableType.Integer:
+                            changeListener.SetIntParam(GetType().Name, 
+                                GetTweakableName(i), GetIntValue(i));
+                            break;
+                        case TweakableType.Float:
+                            changeListener.SetFloatParam(GetType().Name, 
+                                GetTweakableName(i), GetFloatValue(i));
+                            break;
+                        case TweakableType.String:
+                            changeListener.SetStringParam(GetType().Name, 
+                                GetTweakableName(i), GetStringValue(i));
+                            break;
+                        case TweakableType.Vector3:
+                            changeListener.SetVector3Param(GetType().Name, 
+                                GetTweakableName(i), GetVector3Value(i));
+                            break;
+                        case TweakableType.Color:
+                            changeListener.SetColorParam(GetType().Name, 
+                                GetTweakableName(i), GetColorValue(i));
+                            break;
+                        case TweakableType.Bool:
+                            changeListener.SetBoolParam(GetType().Name,
+                                GetTweakableName(i), GetBoolValue(i));
+                            break;
+                    }
                 }
             }
         }
@@ -145,7 +166,8 @@ namespace Dope.DDXX.DemoFramework
                 typeof(float),
                 typeof(Vector3),
                 typeof(string),
-                typeof(Color)
+                typeof(Color),
+                typeof(bool)
             });
             PropertyInfo[] array = this.GetType().GetProperties();
             List<PropertyInfo> list = new List<PropertyInfo>(array);

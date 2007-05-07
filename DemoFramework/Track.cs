@@ -6,7 +6,7 @@ using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public class Track
+    public class Track : Dope.DDXX.DemoFramework.ITrack
     {
         List<IDemoEffect> effects = new List<IDemoEffect>();
         List<IDemoPostEffect> postEffects = new List<IDemoPostEffect>();
@@ -32,35 +32,35 @@ namespace Dope.DDXX.DemoFramework
             return 0;
         }
 
-        internal IDemoEffect[] Effects
+        public IDemoEffect[] Effects
         {
             get { return effects.ToArray(); }
         }
-        internal IDemoPostEffect[] PostEffects
+        public IDemoPostEffect[] PostEffects
         {
             get { return postEffects.ToArray(); }
         }
 
-        internal void Register(IDemoEffect effect)
+        public void Register(IDemoEffect effect)
         {
             effects.Add(effect);
             effects.Sort(CompareRegisterableByTime);
         }
-        internal void Register(IDemoPostEffect postEffect)
+        public void Register(IDemoPostEffect postEffect)
         {
             postEffects.Add(postEffect);
             postEffects.Sort(CompareRegisterableByTime);
         }
 
 
-        internal IDemoEffect[] GetEffects(float time)
+        public IDemoEffect[] GetEffects(float time)
         {
             searchTime = time;
             List<IDemoEffect> valid = effects.FindAll(IsWithinTime);
             return valid.ToArray();
         }
 
-        internal IDemoEffect[] GetEffects(float startTime, float endTime)
+        public IDemoEffect[] GetEffects(float startTime, float endTime)
         {
             List<IDemoEffect> valid = effects.FindAll(
                 delegate(IDemoEffect effect) 
@@ -72,14 +72,14 @@ namespace Dope.DDXX.DemoFramework
             return valid.ToArray();
         }
 
-        internal IDemoPostEffect[] GetPostEffects(float time)
+        public IDemoPostEffect[] GetPostEffects(float time)
         {
             searchTime = time;
             List<IDemoPostEffect> valid = postEffects.FindAll(IsWithinTime);
             return valid.ToArray();
         }
 
-        internal IDemoPostEffect[] GetPostEffects(float startTime, float endTime)
+        public IDemoPostEffect[] GetPostEffects(float startTime, float endTime)
         {
             List<IDemoPostEffect> valid = postEffects.FindAll(
                 delegate(IDemoPostEffect effect)
@@ -91,12 +91,12 @@ namespace Dope.DDXX.DemoFramework
             return valid.ToArray();
         }
 
-        internal bool IsActive(float p)
+        public bool IsActive(float p)
         {
             throw new Exception("The method or operation is not implemented.");
         }
 
-        internal float EndTime
+        public float EndTime
         {
             get 
             {
@@ -115,7 +115,7 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        internal void Initialize(IGraphicsFactory graphicsFactory, IDevice device, IPostProcessor postProcessor)
+        public void Initialize(IGraphicsFactory graphicsFactory, IDevice device, IPostProcessor postProcessor)
         {
             foreach (IDemoEffect effect in effects)
                 effect.Initialize(graphicsFactory, device);
@@ -123,14 +123,14 @@ namespace Dope.DDXX.DemoFramework
                 effect.Initialize(postProcessor);
         }
 
-        internal void Step()
+        public void Step()
         {
             foreach (IDemoEffect effect in GetEffects(Time.StepTime))
                 if (IsWithinTime(effect))
                     effect.Step();
         }
 
-        internal void Render(IDevice device)
+        public void Render(IDevice device)
         {
             device.BeginScene();
             IDemoEffect[] activeEffects = GetEffects(Time.StepTime);
@@ -140,6 +140,14 @@ namespace Dope.DDXX.DemoFramework
             IDemoPostEffect[] activePostEffects = GetPostEffects(Time.StepTime);
             foreach (IDemoPostEffect effect in activePostEffects)
                 effect.Render();
+        }
+
+        public void UpdateListener(IEffectChangeListener effectChangeListener)
+        {
+            foreach (IDemoEffect effect in effects)
+                effect.UpdateListener(effectChangeListener);
+            foreach (IDemoPostEffect effect in postEffects)
+                effect.UpdateListener(effectChangeListener);
         }
     }
 }

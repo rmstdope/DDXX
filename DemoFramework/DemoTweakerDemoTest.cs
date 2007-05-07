@@ -19,7 +19,7 @@ namespace Dope.DDXX.DemoFramework
         private DemoTweakerDemo tweaker;
         private IUserInterface userInterface;
         private IDemoRegistrator registrator;
-        private List<Track> tracks;
+        private List<ITrack> tracks;
         private IInputDriver inputDriver;
         private TweakerSettings settings = new TweakerSettings();
 
@@ -38,7 +38,7 @@ namespace Dope.DDXX.DemoFramework
 
             Time.Initialize();
 
-            tracks = new List<Track>();
+            tracks = new List<ITrack>();
             Stub.On(registrator).
                 GetProperty("Tracks").
                 Will(Return.Value(tracks));

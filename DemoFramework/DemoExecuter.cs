@@ -19,7 +19,7 @@ namespace Dope.DDXX.DemoFramework
     public class DemoExecuter : IDemoEffectBuilder, IDemoRegistrator, IDemoTweakerContext
     {
         private ISoundDriver soundDriver;
-        private FMOD.Sound sound = null;
+        private FMOD.Sound sound;
         private FMOD.Channel channel;
 
         private IDevice device;
@@ -30,9 +30,10 @@ namespace Dope.DDXX.DemoFramework
         private IDemoTweaker tweaker;
 
         private IInputDriver inputDriver;
-        private List<Track> tracks = new List<Track>();
-        private int activeTrack = 0;
+        private List<ITrack> tracks = new List<ITrack>();
+        private int activeTrack;
 
+        private IDemoFactory demoFactory;
         private DemoEffectTypes effectTypes = new DemoEffectTypes();
         private TweakerSettings settings = new TweakerSettings();
         private DemoXMLReader xmlReader;
@@ -47,7 +48,7 @@ namespace Dope.DDXX.DemoFramework
             get
             {
                 float maxTime = 0.0f;
-                foreach (Track track in tracks)
+                foreach (ITrack track in tracks)
                 {
                     if (track.EndTime > maxTime)
                         maxTime = track.EndTime;
@@ -58,13 +59,10 @@ namespace Dope.DDXX.DemoFramework
 
         public int NumTracks
         {
-            get
-            {
-                return tracks.Count;
-            }
+            get { return tracks.Count; }
         }
 
-        public List<Track> Tracks
+        public List<ITrack> Tracks
         {
             get { return tracks; }
         }
@@ -84,29 +82,36 @@ namespace Dope.DDXX.DemoFramework
             set { tweaker = value; }
         }
 
-        public DemoExecuter(IDevice device, IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, ISoundDriver soundDriver, IInputDriver inputDriver, IPostProcessor postProcessor)
+        public DemoExecuter(IDemoFactory demoFactory, ISoundDriver soundDriver, IInputDriver inputDriver, IPostProcessor postProcessor)
         {
-            this.device = device;
-            this.graphicsFactory = graphicsFactory;
-            this.textureFactory = textureFactory;
+            activeTrack = 0;
+            this.demoFactory = demoFactory;
             this.soundDriver = soundDriver;
             this.inputDriver = inputDriver;
             this.postProcessor = postProcessor;
             tweaker = new DemoTweakerMain(this, new IDemoTweaker[] { new DemoTweakerDemo(settings), new DemoTweakerTrack(settings), new DemoTweakerEffect(settings) }, settings);
         }
 
-        public void Initialize(string song)
+        public void Initialize(IDevice device, IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, string song)
         {
-            this.Initialize(song, new Assembly[] { Assembly.GetCallingAssembly() }, "");
+            this.Initialize(device, graphicsFactory, textureFactory, song, 
+                new Assembly[] { Assembly.GetCallingAssembly() }, "");
         }
 
-        public void Initialize(string song, string xmlFile)
+        public void Initialize(IDevice device, IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, string song, string xmlFile)
         {
-            this.Initialize(song, new Assembly[] { Assembly.GetCallingAssembly() }, xmlFile);
+            this.Initialize(device, graphicsFactory, textureFactory, song, 
+                new Assembly[] { Assembly.GetCallingAssembly() }, xmlFile);
         }
 
-        public void Initialize(string song, Assembly[] assemblies, string xmlFile)
+        public void Initialize(IDevice device, IGraphicsFactory graphicsFactory, 
+            ITextureFactory textureFactory, string song, Assembly[] assemblies, 
+            string xmlFile)
         {
+            this.device = device;
+            this.graphicsFactory = graphicsFactory;
+            this.textureFactory = textureFactory;
+
             effectTypes.Initialize(assemblies);
 
             InitializeFromFile(xmlFile);
@@ -117,7 +122,7 @@ namespace Dope.DDXX.DemoFramework
 
             postProcessor.Initialize(device);
 
-            foreach (Track track in tracks)
+            foreach (ITrack track in tracks)
             {
                 track.Initialize(graphicsFactory, device, postProcessor);
             }
@@ -141,7 +146,7 @@ namespace Dope.DDXX.DemoFramework
         {
             while (NumTracks <= track)
             {
-                tracks.Add(new Track());
+                tracks.Add(demoFactory.CreateTrack());
             }
             tracks[track].Register(effect);
         }
@@ -150,7 +155,7 @@ namespace Dope.DDXX.DemoFramework
         {
             while (NumTracks <= track)
             {
-                tracks.Add(new Track());
+                tracks.Add(demoFactory.CreateTrack());
             }
             tracks[track].Register(postEffect);
         }
@@ -159,7 +164,7 @@ namespace Dope.DDXX.DemoFramework
         {
             Time.Step();
 
-            foreach (Track track in tracks)
+            foreach (ITrack track in tracks)
             {
                 track.Step();
             }
@@ -242,6 +247,14 @@ namespace Dope.DDXX.DemoFramework
             {
                 xmlReader = new DemoXMLReader(this);
                 xmlReader.Read(xmlFile);
+            }
+        }
+
+        public void Update(IEffectChangeListener effectChangeListener)
+        {
+            foreach (ITrack track in tracks)
+            {
+                track.UpdateListener(effectChangeListener);
             }
         }
 
@@ -352,63 +365,5 @@ namespace Dope.DDXX.DemoFramework
 
         #endregion
 
-        public void Update(IEffectChangeListener effectChangeListener)
-        {
-            foreach (Track track in tracks)
-            {
-                ITweakableContainer[] effects = track.Effects;
-                ITweakableContainer[] postEffects = track.PostEffects;
-                ITweakableContainer[] allEffects = new ITweakableContainer[effects.Length+postEffects.Length];
-                Array.Copy(effects, allEffects, effects.Length);
-                Array.Copy(postEffects, 0, allEffects, effects.Length, postEffects.Length);
-                foreach (ITweakableContainer effect in allEffects)
-                {
-                    for (int i = 0; i < effect.GetNumTweakables(); i++)
-                    {
-                        string effectName = effect.GetType().Name;
-                        string paramName = effect.GetTweakableName(i);
-                        if (paramName == "StartTime")
-                        {
-                            effectChangeListener.SetStartTime(effectName, effect.GetFloatValue(i));
-                        }
-                        else if (paramName == "EndTime")
-                        {
-                            effectChangeListener.SetEndTime(effectName, effect.GetFloatValue(i));
-                        }
-                        else
-                        {
-                            switch (effect.GetTweakableType(i))
-                            {
-                                case TweakableType.Integer:
-                                    effectChangeListener.SetIntParam(effectName,
-                                        paramName,
-                                        effect.GetIntValue(i));
-                                    break;
-                                case TweakableType.Float:
-                                    effectChangeListener.SetFloatParam(effectName,
-                                        paramName,
-                                        effect.GetFloatValue(i));
-                                    break;
-                                case TweakableType.String:
-                                    effectChangeListener.SetStringParam(effectName,
-                                        paramName,
-                                        effect.GetStringValue(i));
-                                    break;
-                                case TweakableType.Vector3:
-                                    effectChangeListener.SetVector3Param(effectName,
-                                        paramName,
-                                        effect.GetVector3Value(i));
-                                    break;
-                                case TweakableType.Color:
-                                    effectChangeListener.SetColorParam(effectName,
-                                        paramName,
-                                        effect.GetColorValue(i));
-                                    break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 }

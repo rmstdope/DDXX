@@ -8,7 +8,7 @@ namespace Dope.DDXX.DemoFramework
     {
         float StartTime { get; }
         float EndTime { get; }
-        List<Track> Tracks { get; }
+        List<ITrack> Tracks { get; }
         IDemoEffect[] Effects(int track);
         IDemoPostEffect[] PostEffects(int track);
         void Register(int track, IDemoEffect effect);

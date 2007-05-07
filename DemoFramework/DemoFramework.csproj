@@ -55,6 +55,7 @@
     <Compile Include="DemoEffectTypesTest.cs" />
     <Compile Include="DemoExecuter.cs" />
     <Compile Include="DemoExecuterTest.cs" />
+    <Compile Include="DemoFactory.cs" />
     <Compile Include="DemoMockTest.cs" />
     <Compile Include="DemoTweakerBase.cs" />
     <Compile Include="DemoTweakerDemo.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="DemoWindowTest.cs" />
     <Compile Include="IDemoEffect.cs" />
     <Compile Include="IDemoEffectBuilder.cs" />
+    <Compile Include="IDemoFactory.cs" />
     <Compile Include="IDemoPostEffect.cs" />
     <Compile Include="IDemoRegistrator.cs" />
     <Compile Include="IDemoTweaker.cs" />
@@ -79,6 +81,7 @@
     <Compile Include="IPostProcessor.cs" />
     <Compile Include="IRegisterable.cs" />
     <Compile Include="ISetupDialog.cs" />
+    <Compile Include="ITrack.cs" />
     <Compile Include="ITweakableContainer.cs" />
     <Compile Include="ITweakerSettings.cs" />
     <Compile Include="IUserInterface.cs" />

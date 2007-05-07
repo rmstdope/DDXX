@@ -51,7 +51,9 @@ namespace PoseidonTest
                     //    new Assembly[] { Assembly.GetExecutingAssembly() }, 
                     //    "PoseidonTest.xml");
                     RegisterEffects(executer);
-                    executer.Initialize("");
+                    executer.Initialize(D3DDriver.GetInstance().Device,
+                        D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
+                        "");
                     executer.Run();
                     window.CleanUp();
                 }
@@ -91,9 +93,8 @@ namespace PoseidonTest
         {
             desc = setup.DeviceDescription;
             window = new DemoWindow();
-            executer = new DemoExecuter(D3DDriver.GetInstance().Device,
-                D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
-                SoundDriver.GetInstance(), InputDriver.GetInstance(), 
+            executer = new DemoExecuter(new DemoFactory(),
+                SoundDriver.GetInstance(), InputDriver.GetInstance(),
                 new PostProcessor());
         }
 

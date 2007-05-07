@@ -5,91 +5,135 @@ using NUnit.Framework;
 using Dope.DDXX.Utility;
 using Microsoft.DirectX;
 using System.Drawing;
+using NMock2;
 
 namespace Dope.DDXX.DemoFramework
 {
     [TestFixture]
-    public class TweakableContainerTest
+    public class TweakableContainerTest : IEffectChangeListener
     {
+        private class EmptyContainer : TweakableContainer
+        {
+        };
+
         private class TestClass : TweakableContainer
         {
-            int intType;
+            private int intType;
             public int IntType
             {
                 get { return intType; }
                 set { intType = value; }
             }
 
-            float floatType;
+            private float floatType;
             public float FloatType
             {
                 get { return floatType; }
                 set { floatType = value; }
             }
 
-            Vector3 vector3Type;
+            private Vector3 vector3Type;
             public Vector3 Vector3Type
             {
                 get { return vector3Type; }
                 set { vector3Type = value; }
             }
 
-            string stringType;
+            private string stringType;
             public string StringType
             {
                 get { return stringType; }
                 set { stringType = value; }
             }
 
-            Color colorType;
+            private Color colorType;
             public Color ColorType
             {
                 get { return colorType; }
                 set { colorType = value; }
             }
 
-            int noSetter = 1;
+            private bool boolType;
+            public bool BoolType
+            {
+                get { return boolType; }
+                set { boolType = value; }
+            }
+
+            private int noSetter = 1;
             public int NoSetter
             {
                 get { return noSetter; }
             }
 
-            float noGetter;
+            private float noGetter;
             public float NoGetter
             {
                 set { noGetter = value; }
             }
 
-            DDXXException invalidType;
+            private DDXXException invalidType;
             public DDXXException InvalidType
             {
                 get { return invalidType; }
                 set { invalidType = value; }
             }
 
+            private float startTime;
+            public float StartTime
+            {
+                get { return startTime; }
+                set { startTime = value; }
+            }
+
+            private float endTime;
+            public float EndTime
+            {
+                get { return endTime; }
+                set { endTime = value; }
+            }
         }
 
-        private TweakableContainer container;
+        private TestClass container;
+
+        private float startTime;
+        private float endTime;
+        private int intType;
+        private float floatType;
+        private Vector3 vector3Type;
+        private string stringType;
+        private Color colorType;
+        private bool boolType;
+
         private enum Types
         {
             INT_TYPE,
             FLOAT_TYPE,
             VECTOR3_TYPE,
             STRING_TYPE,
-            COLOR_TYPE
+            COLOR_TYPE,
+            BOOL_TYPE
         }
 
         [SetUp]
         public void SetUp()
         {
             container = new TestClass();
+            startTime = -1;
+            endTime = -1;
+            intType = -1;
+            floatType = -1;
+            vector3Type = new Vector3();
+            stringType = null;
+            colorType = new Color();
+            boolType = false;
         }
 
         [Test]
         public void TestEnumeration()
         {
             // Check that only properties with get _and_ set is returned
-            Assert.AreEqual(5, container.GetNumTweakables());
+            Assert.AreEqual(8, container.GetNumTweakables());
         }
 
         [Test]
@@ -100,6 +144,7 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual("Vector3Type", container.GetTweakableName((int)Types.VECTOR3_TYPE));
             Assert.AreEqual("StringType", container.GetTweakableName((int)Types.STRING_TYPE));
             Assert.AreEqual("ColorType", container.GetTweakableName((int)Types.COLOR_TYPE));
+            Assert.AreEqual("BoolType", container.GetTweakableName((int)Types.BOOL_TYPE));
         }
 
         [Test]
@@ -110,6 +155,7 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual(TweakableType.Vector3, container.GetTweakableType((int)Types.VECTOR3_TYPE));
             Assert.AreEqual(TweakableType.String, container.GetTweakableType((int)Types.STRING_TYPE));
             Assert.AreEqual(TweakableType.Color, container.GetTweakableType((int)Types.COLOR_TYPE));
+            Assert.AreEqual(TweakableType.Bool, container.GetTweakableType((int)Types.BOOL_TYPE));
         }
 
         [Test]
@@ -158,6 +204,15 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
+        public void TestGetSetBool()
+        {
+            container.SetValue((int)Types.BOOL_TYPE, true);
+            Assert.IsTrue(container.GetBoolValue((int)Types.BOOL_TYPE));
+            container.SetValue((int)Types.BOOL_TYPE, false);
+            Assert.IsFalse(container.GetBoolValue((int)Types.BOOL_TYPE));
+        }
+
+        [Test]
         public void TestStepSize()
         {
             Assert.AreEqual(1.0f, container.GetStepSize((int)Types.INT_TYPE));
@@ -185,6 +240,161 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual((int)Types.VECTOR3_TYPE, container.GetTweakableNumber("Vector3Type"));
             Assert.AreEqual((int)Types.STRING_TYPE, container.GetTweakableNumber("StringType"));
             Assert.AreEqual((int)Types.COLOR_TYPE, container.GetTweakableNumber("ColorType"));
+            Assert.AreEqual((int)Types.BOOL_TYPE, container.GetTweakableNumber("BoolType"));
         }
+
+        [Test]
+        public void TestUpdateStartTime()
+        {
+            container.StartTime = 1.0f;
+            container.UpdateListener(this);
+            Assert.AreEqual(1.0f, startTime);
+
+            container.StartTime = 2.0f;
+            container.UpdateListener(this);
+            Assert.AreEqual(2.0f, startTime);
+        }
+
+        [Test]
+        public void TestUpdateEndTime()
+        {
+            container.EndTime = 5.0f;
+            container.UpdateListener(this);
+            Assert.AreEqual(5.0f, endTime);
+
+            container.EndTime = 2.0f;
+            container.UpdateListener(this);
+            Assert.AreEqual(2.0f, endTime);
+        }
+
+        [Test]
+        public void TestUpdateIntParameter()
+        {
+            container.IntType = 2;
+            container.UpdateListener(this);
+            Assert.AreEqual(2, intType);
+
+            container.IntType = -500;
+            container.UpdateListener(this);
+            Assert.AreEqual(-500, intType);
+        }
+
+        [Test]
+        public void TestUpdateFloatParameter()
+        {
+            container.FloatType = 2.3f;
+            container.UpdateListener(this);
+            Assert.AreEqual(2.3f, floatType);
+
+            container.FloatType = -5.34f;
+            container.UpdateListener(this);
+            Assert.AreEqual(-5.34f, floatType);
+        }
+
+        [Test]
+        public void TestUpdateStringParameter()
+        {
+            container.StringType = "hejsan";
+            container.UpdateListener(this);
+            Assert.AreEqual("hejsan", stringType);
+
+            container.StringType = "svejsan";
+            container.UpdateListener(this);
+            Assert.AreEqual("svejsan", stringType);
+        }
+
+        [Test]
+        public void TestUpdateVector3Parameter()
+        {
+            container.Vector3Type = new Vector3(1, 2, 3);
+            container.UpdateListener(this);
+            Assert.AreEqual(new Vector3(1, 2, 3), vector3Type);
+
+            container.Vector3Type = new Vector3(-1, -2, -3);
+            container.UpdateListener(this);
+            Assert.AreEqual(new Vector3(-1, -2, -3), vector3Type);
+        }
+
+        [Test]
+        public void TestUpdateColorParameter()
+        {
+            container.ColorType = Color.Yellow;
+            container.UpdateListener(this);
+            Assert.AreEqual(Color.Yellow, colorType);
+
+            container.ColorType = Color.Black;
+            container.UpdateListener(this);
+            Assert.AreEqual(Color.Black, colorType);
+        }
+
+        [Test]
+        public void TestUpdateBoolParameter()
+        {
+            container.BoolType = true;
+            container.UpdateListener(this);
+            Assert.IsTrue(boolType);
+
+            container.BoolType = false;
+            container.UpdateListener(this);
+            Assert.IsFalse(boolType);
+        }
+
+        #region IEffectChangeListener Members
+
+        public void SetStartTime(string effectName, float value)
+        {
+            Assert.AreEqual("TestClass", effectName);
+            startTime = value;
+        }
+
+        public void SetEndTime(string effectName, float value)
+        {
+            Assert.AreEqual("TestClass", effectName);
+            endTime = value;
+        }
+
+        public void SetColorParam(string effectName, string param, Color value)
+        {
+            Assert.AreEqual("TestClass", effectName);
+            Assert.AreEqual("ColorType", param);
+            colorType = value;
+        }
+
+        public void SetFloatParam(string effectName, string param, float value)
+        {
+            Assert.AreEqual("TestClass", effectName);
+            Assert.AreEqual("FloatType", param);
+            floatType = value;
+        }
+
+        public void SetIntParam(string effectName, string param, int value)
+        {
+            Assert.AreEqual("TestClass", effectName);
+            Assert.AreEqual("IntType", param);
+            intType = value;
+        }
+
+        public void SetStringParam(string effectName, string param, string value)
+        {
+            Assert.AreEqual("TestClass", effectName);
+            Assert.AreEqual("StringType", param);
+            stringType = value;
+        }
+
+        public void SetVector3Param(string effectName, string param, Vector3 value)
+        {
+            Assert.AreEqual("TestClass", effectName);
+            Assert.AreEqual("Vector3Type", param);
+            vector3Type = value;
+        }
+
+        public void SetBoolParam(string effectName, string param, bool value)
+        {
+            Assert.AreEqual("TestClass", effectName);
+            Assert.AreEqual("BoolType", param);
+            boolType = value;
+        }
+
+        #endregion
     }
 }
