@@ -102,54 +102,6 @@ namespace Dope.DDXX.Graphics
         {
             Time.Initialize();
         }
-
-        //public void SetupD3DDriver()
-        //{
-        //    DeviceDescription desc = CreateDescription();
-        //    PresentParameters param = new PresentParameters();
-        //    desc.deviceType = DeviceType.Reference;
-        //    desc.windowed = false;
-        //    param.Windowed = false;
-        //    param.SwapEffect = SwapEffect.Flip;
-        //    param.BackBufferCount = 2;
-        //    param.BackBufferWidth = desc.width;
-        //    param.BackBufferHeight = desc.height;
-        //    param.BackBufferFormat = desc.colorFormat;
-        //    Expect.Once.On(prerequisits).Method("CheckPrerequisits").With(0, desc.deviceType);
-        //    D3DDriver.GetInstance().Initialize(null, desc, prerequisits);
-        //}
-
-    //    public void ExpectBaseDemoEffects(int num)
-    //    {
-    //        effectFactory = new EffectFactory(device, graphicsFactory);
-    //        textureFactory = new TextureFactory(device, graphicsFactory, presentParameters);
-    //        D3DDriver.EffectFactory = effectFactory;
-    //        D3DDriver.TextureFactory = textureFactory;
-    //        effect = mockery.NewMock<IEffect>();
-
-    //        Expect.Once.On(graphicsFactory).
-    //            Method("EffectFromFile").
-    //            Will(Return.Value(effect));
-    //        for (int i = 0; i < num; i++)
-    //        {
-    //            Expect.Once.On(effect).
-    //                Method("GetParameter").
-    //                With(null, "LightDiffuseColor").
-    //                Will(Return.Value(EffectHandle.FromString("1")));
-    //            Expect.Once.On(effect).
-    //                Method("GetParameter").
-    //                With(null, "LightSpecularColor").
-    //                Will(Return.Value(EffectHandle.FromString("1")));
-    //            Expect.Once.On(effect).
-    //                Method("GetParameter").
-    //                With(null, "LightPosition").
-    //                Will(Return.Value(EffectHandle.FromString("1")));
-    //            Expect.Once.On(effect).
-    //                Method("GetParameter").
-    //                With(null, "EyePosition").
-    //                Will(Return.Value(EffectHandle.FromString("1")));
-    //        }
-    //    }
     }
 
     public class FloatMatcher : Matcher

@@ -23,15 +23,17 @@ namespace Dope.DDXX.DemoFramework
 {
 
     [TestFixture]
-    public class DemoExecuterTest : TrackTest
+    public class DemoExecuterTest : DemoMockTest, IDemoFactory
     {
-        DemoExecuter executer;
+        private DemoExecuter executer;
         private IDemoTweaker tweaker;
         private ISoundDriver soundDriver;
         private IInputDriver inputDriver;
         private IEffectChangeListener effectChangeListener;
         private FMOD.Sound sound;
         private FMOD.Channel channel;
+        private List<ITrack> tracks;
+        private int trackNum;
 
         private string twoEffectContents =
 @"<Effects>
@@ -68,23 +70,20 @@ namespace Dope.DDXX.DemoFramework
             sound = new FMOD.Sound();
             channel = new FMOD.Channel();
 
-            DeviceDescription desc = new DeviceDescription();
-            desc.deviceType = Microsoft.DirectX.Direct3D.DeviceType.Hardware;
-            desc.width = presentParameters.BackBufferWidth;
-            desc.height = presentParameters.BackBufferHeight;
-            desc.colorFormat = presentParameters.BackBufferFormat;
-            Expect.Once.On(prerequisits).Method("CheckPrerequisits").WithAnyArguments();
-            D3DDriver.GetInstance().Initialize(null, desc, prerequisits);
-
             soundDriver = mockery.NewMock<ISoundDriver>();
             inputDriver = mockery.NewMock<IInputDriver>();
-            executer = new DemoExecuter(new DemoFactory(), soundDriver, inputDriver, postProcessor);
+            executer = new DemoExecuter(this, soundDriver, inputDriver, postProcessor);
             tweaker = mockery.NewMock<IDemoTweaker>();
             executer.Tweaker = tweaker;
 
             effectChangeListener = mockery.NewMock<IEffectChangeListener>();
 
             Stub.On(inputDriver).Method("KeyPressedNoRepeat").With(Key.Space).Will(Return.Value(false));
+
+            trackNum = 0;
+            tracks = new List<ITrack>();
+            for (int i = 0; i < 100; i++)
+                tracks.Add(mockery.NewMock<ITrack>());
         }
 
         [TearDown]
@@ -96,60 +95,32 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestTracks()
         {
-            IDemoEffect t0e1 = CreateMockEffect(0, 10);
-            IDemoPostEffect t1e1 = CreateMockPostEffect(5, 15);
-
             Assert.AreEqual(0, executer.NumTracks);
-            executer.Register(0, t0e1);
+
+            RegisterEffect(0, 0, 10);
             Assert.AreEqual(1, executer.NumTracks);
-            executer.Register(1, t1e1);
+
+            RegisterEffect(1, 5, 15);
             Assert.AreEqual(2, executer.NumTracks);
         }
 
         [Test]
         public void TestStep()
         {
-            IDemoEffect t0e1 = CreateMockEffect(0, 10);
-            IDemoEffect t0e2 = CreateMockEffect(10, 15);
-            IDemoEffect t1e1 = CreateMockEffect(3, 12);
-            IDemoEffect t1e2 = CreateMockEffect(1, 2);
+            RegisterEffect(0, 0, 10);
+            RegisterEffect(1, 3, 12);
 
-            executer.Register(0, t0e1);
-            executer.Register(0, t0e2);
-            executer.Register(1, t1e1);
-            executer.Register(1, t1e2);
-
-
-            Time.Initialize();
-            Time.Pause();
-
-            Expect.Once.On(t0e1).
+            Expect.Once.On(tracks[0]).
                 Method("Step");
-            Expect.Once.On(t1e1).
+            Expect.Once.On(tracks[1]).
                 Method("Step");
             Expect.Once.On(tweaker).
                 Method("HandleInput").
                 Will(Return.Value(true));
             Time.CurrentTime = 5;
             executer.Step();
+            Assert.Greater(Time.CurrentTime, 5.0f);
 
-            Expect.Once.On(t0e1).
-                Method("Step");
-            Expect.Once.On(t1e2).
-                Method("Step");
-            Expect.Once.On(tweaker).
-                Method("HandleInput").
-                Will(Return.Value(true));
-            Time.CurrentTime = 1;
-            executer.Step();
-
-            Time.CurrentTime = 20;
-            Expect.Once.On(tweaker).
-                Method("HandleInput").
-            Will(Return.Value(true));
-            executer.Step();
-
-            Time.Resume();
         }
 
         [Test]
@@ -193,26 +164,18 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestInitializeOKEffects()
         {
-            IDemoEffect effect1 = CreateMockEffect(1, 2);
-            executer.Register(0, effect1);
-            IDemoEffect effect2 = CreateMockEffect(1, 2);
-            executer.Register(100, effect2);
-            IDemoPostEffect postEffect = CreateMockPostEffect(1, 2);
-            executer.Register(1, postEffect);
+            RegisterEffect(0, 1, 2);
+            RegisterEffect(49, 1, 2);
+            RegisterPostEffect(1, 1, 2);
 
             ExpectSoundInitialize();
             ExpectPostProcessorInitialize();
             ExpectTweakerInitialize();
             ExpectGraphicsInitialize();
 
-            // Effects
-            Expect.Once.On(effect1).
-                Method("Initialize");
-            Expect.Once.On(effect2).
-                Method("Initialize");
-            Expect.Once.On(postEffect).
-                Method("Initialize").
-                With(Is.NotNull);
+            for (int i = 0; i < 50; i++)
+                Expect.Once.On(tracks[i]).
+                    Method("Initialize").With(graphicsFactory, device, postProcessor);
 
             executer.Initialize(device, graphicsFactory, textureFactory, null);
         }
@@ -220,26 +183,23 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestRegister()
         {
+            Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(1.0f));
+            Stub.On(tracks[1]).GetProperty("EndTime").Will(Return.Value(3.0f));
+            Stub.On(tracks[2]).GetProperty("EndTime").Will(Return.Value(2.0f));
             Assert.AreEqual(0.0f, executer.StartTime);
             Assert.AreEqual(0.0f, executer.EndTime);
 
-            IDemoEffect t0e1 = CreateMockEffect(1, 2);
-            executer.Register(0, t0e1);
-
+            RegisterEffect(0, 1, 2);
             Assert.AreEqual(0.0f, executer.StartTime);
-            Assert.AreEqual(2.0f, executer.EndTime);
+            Assert.AreEqual(1.0f, executer.EndTime);
 
-            IDemoEffect t0e2 = CreateMockEffect(5, 100);
-            executer.Register(0, t0e2);
-
+            RegisterEffect(1, 1, 2);
             Assert.AreEqual(0.0f, executer.StartTime);
-            Assert.AreEqual(100.0f, executer.EndTime);
+            Assert.AreEqual(3.0f, executer.EndTime);
 
-            IDemoPostEffect t0e3 = CreateMockPostEffect(99, 101);
-            executer.Register(0, t0e3);
-
+            RegisterEffect(2, 1, 2);
             Assert.AreEqual(0.0f, executer.StartTime);
-            Assert.AreEqual(101.0f, executer.EndTime);
+            Assert.AreEqual(3.0f, executer.EndTime);
         }
 
         [Test]
@@ -248,30 +208,22 @@ namespace Dope.DDXX.DemoFramework
             TestInitializeOKSong();
 
             Expect.Once.On(tweaker).
-                Method("HandleInput").
-                Will(Return.Value(true));
+                Method("HandleInput").Will(Return.Value(true));
             Expect.Once.On(soundDriver).
-                Method("PlaySound").
-                Will(Return.Value(channel));
+                Method("PlaySound").Will(Return.Value(channel));
             Expect.Once.On(soundDriver).
-                Method("SetPosition").
-                With(Is.EqualTo(channel), Is.Anything);
+                Method("SetPosition").With(Is.EqualTo(channel), Is.Anything);
             Expect.Exactly(2).On(device).
-                Method("GetRenderTarget").
-                With(0).
-                Will(Return.Value(surface));
+                Method("GetRenderTarget").With(0).Will(Return.Value(surface));
             Expect.Exactly(2).On(device).
-                Method("SetRenderTarget").
-                With(0, surface);
+                Method("SetRenderTarget").With(0, surface);
             Expect.Once.On(device).
                 Method("Clear").
                 With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Black, 1.0f, 0);
             Expect.Once.On(postProcessor).
-                Method("StartFrame").
-                With(texture);
+                Method("StartFrame").With(texture);
             Expect.Once.On(postProcessor).
-                GetProperty("OutputTexture").
-                Will(Return.Value(texture));
+                GetProperty("OutputTexture").Will(Return.Value(texture));
             Expect.Once.On(device).
                 Method("StretchRectangle");
             Expect.Once.On(device).
@@ -281,140 +233,46 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(tweaker).
                 Method("Draw");
             Stub.On(tweaker).
-                GetProperty("Quit").
-                Will(Return.Value(false));
+                GetProperty("Quit").Will(Return.Value(false));
             executer.Run();
             Assert.Greater(Time.StepTime, 2.0f);
         }
 
         [Test]
-        public void TestRun1Effect()
+        public void TestRun1Track()
         {
             TestInitializeOKNoSong1();
+
+            RegisterEffect(0, 0, 0);
+            Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(1000.0f));
 
             Expect.Once.On(device).
                 Method("Clear").
                 With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Black, 1.0f, 0);
             Expect.Once.On(postProcessor).
-                Method("StartFrame").
-                With(texture);
-            Expect.Once.On(device).
-                Method("BeginScene");
+                Method("StartFrame").With(texture);
             Expect.Exactly(2).On(device).
-                Method("GetRenderTarget").
-                With(0).
-                Will(Return.Value(surface));
+                Method("GetRenderTarget").With(0).Will(Return.Value(surface));
             Expect.Exactly(2).On(device).
-                Method("SetRenderTarget").
-                With(0, surface);
-            Expect.Once.On(device).
-                Method("EndScene");
+                Method("SetRenderTarget").With(0, surface);
             Expect.Once.On(postProcessor).
-                GetProperty("OutputTexture").
-                Will(Return.Value(texture));
+                GetProperty("OutputTexture").Will(Return.Value(texture));
             Expect.Once.On(device).
                 Method("StretchRectangle");
             Expect.Once.On(device).
                 Method("Present");
-            IDemoEffect effect = CreateMockEffect(0, 10.0f);
-            Expect.Once.On(effect).
+            Expect.Once.On(tracks[0]).
                 Method("Step");
             Expect.Once.On(tweaker).
-                Method("HandleInput").
-                Will(Return.Value(true));
-            Expect.Once.On(effect).
-                Method("Render");
+                Method("HandleInput").Will(Return.Value(true));
+            Expect.Once.On(tracks[0]).
+                Method("Render").With(device);
             Expect.Once.On(tweaker).
                 Method("Draw");
 
             LimitRunLoop(1);
 
-            executer.Register(0, effect);
             executer.Run();
-        }
-
-        [Test]
-        public void TestRenderOneTrack1()
-        {
-            TestInitializeOKNoSong1();
-
-            Expect.Once.On(device).
-                Method("Clear").
-                With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Black, 1.0f, 0);
-            Expect.Once.On(postProcessor).
-                Method("StartFrame").
-                With(texture);
-            Expect.Once.On(device).
-                Method("BeginScene");
-            Expect.Exactly(2).On(device).
-                Method("GetRenderTarget").
-                With(0).
-                Will(Return.Value(surface));
-            Expect.Exactly(2).On(device).
-                Method("SetRenderTarget").
-                With(0, surface);
-            Expect.Once.On(device).
-                Method("EndScene");
-            Expect.Once.On(postProcessor).
-                GetProperty("OutputTexture").
-                Will(Return.Value(texture));
-            Expect.Once.On(device).
-                Method("StretchRectangle");
-            Expect.Once.On(device).
-                Method("Present");
-
-            Time.CurrentTime = 5.0f;
-            IDemoEffect effect = CreateMockEffect(0, 10.0f);
-            Expect.Once.On(effect).
-                Method("Render");
-            Expect.Once.On(tweaker).
-                Method("Draw");
-            executer.Register(0, effect);
-            executer.Render();
-        }
-
-        [Test]
-        public void TestRenderOneTrack2()
-        {
-            TestInitializeOKNoSong1();
-
-            Expect.Once.On(device).
-                Method("Clear").
-                With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Black, 1.0f, 0);
-            Expect.Once.On(postProcessor).
-                Method("StartFrame").
-                With(texture);
-            Expect.Once.On(device).
-                Method("BeginScene");
-            Expect.Exactly(2).On(device).
-                Method("GetRenderTarget").
-                With(0).
-                Will(Return.Value(surface));
-            Expect.Exactly(2).On(device).
-                Method("SetRenderTarget").
-                With(0, surface);
-            Expect.Once.On(device).
-                Method("EndScene");
-            Expect.Once.On(postProcessor).
-                GetProperty("OutputTexture").
-                Will(Return.Value(texture));
-            Expect.Once.On(device).
-                Method("StretchRectangle");
-            Expect.Once.On(device).
-                Method("Present");
-
-            Time.CurrentTime = 5.0f;
-            IDemoEffect effect = CreateMockEffect(0, 10.0f);
-            IDemoPostEffect postEffect = CreateMockPostEffect(0, 10.0f);
-            Expect.Once.On(effect).
-                Method("Render");
-            Expect.Once.On(postEffect).
-                Method("Render");
-            Expect.Once.On(tweaker).
-                Method("Draw");
-            executer.Register(0, effect);
-            executer.Register(0, postEffect);
-            executer.Render();
         }
 
         [Test]
@@ -427,28 +285,14 @@ namespace Dope.DDXX.DemoFramework
 
             DemoXMLReaderTest.TempFiles tempFiles = new DemoXMLReaderTest.TempFiles();
             FileUtility.SetLoadPaths(new string[] { "" });
+            Expect.Once.On(tracks[0]).Method("Register").WithAnyArguments();
+            Expect.Once.On(tracks[0]).Method("Initialize").With(graphicsFactory, device, postProcessor);
+            Expect.Once.On(tracks[1]).Method("Register").WithAnyArguments();
+            Expect.Once.On(tracks[1]).Method("Initialize").With(graphicsFactory, device, postProcessor);
+            Expect.Once.On(tracks[2]).Method("Register").WithAnyArguments();
+            Expect.Once.On(tracks[2]).Method("Initialize").With(graphicsFactory, device, postProcessor);
             executer.Initialize(device, graphicsFactory, textureFactory, "", tempFiles.New(twoEffectContents));
             Assert.AreEqual(3, executer.NumTracks);
-            Assert.AreEqual(1, executer.Tracks[0].Effects.Length);
-            Assert.AreEqual(0, executer.Tracks[0].PostEffects.Length);
-            Assert.AreEqual(1, executer.Tracks[1].Effects.Length);
-            Assert.AreEqual(0, executer.Tracks[1].PostEffects.Length);
-            Assert.AreEqual(0, executer.Tracks[2].Effects.Length);
-            Assert.AreEqual(1, executer.Tracks[2].PostEffects.Length);
-
-            Assert.AreEqual(typeof(BarEffect), executer.Tracks[0].Effects[0].GetType());
-            Assert.AreEqual(typeof(FooEffect), executer.Tracks[1].Effects[0].GetType());
-            Assert.AreEqual(typeof(FooGlow), executer.Tracks[2].PostEffects[0].GetType());
-
-            Assert.AreEqual("string value", ((BarEffect)executer.Tracks[0].Effects[0]).Goo);
-            Assert.AreEqual(new Vector3(5.4f, 4.3f, 3.2f), ((BarEffect)executer.Tracks[0].Effects[0]).VecParam);
-            Assert.AreEqual("MethodCalled", ((BarEffect)executer.Tracks[0].Effects[0]).SetupParam);
-
-            Assert.AreEqual(3, ((FooEffect)executer.Tracks[1].Effects[0]).FooParam);
-            Assert.AreEqual(4.3f, ((FooEffect)executer.Tracks[1].Effects[0]).BarParam);
-            Assert.AreEqual("foostr", ((FooEffect)executer.Tracks[1].Effects[0]).StrParam);
-
-            Assert.AreEqual(5.4f, ((FooGlow)executer.Tracks[2].PostEffects[0]).GlowParam);
         }
 
         [Test]
@@ -461,64 +305,17 @@ namespace Dope.DDXX.DemoFramework
 
             DemoXMLReaderTest.TempFiles tempFiles = new DemoXMLReaderTest.TempFiles();
             FileUtility.SetLoadPaths(new string[] { "" });
+            for (int i = 0; i < 3; i++)
+            {
+                Expect.Once.On(tracks[i]).Method("Register").WithAnyArguments();
+                Expect.Once.On(tracks[i]).Method("Initialize").With(graphicsFactory, device, postProcessor);
+            }
             executer.Initialize(device, graphicsFactory, textureFactory, "", tempFiles.New(twoEffectContents));
 
-
-            expectIntParam("FooEffect", "FooParam", 3);
-            expectFloatParam("FooEffect", "BarParam", 4.3f);
-            expectStringParam("FooEffect", "StrParam", "foostr");
-
-            expectStringParam("BarEffect", "Goo", "string value");
-            expectVector3Param("BarEffect", "VecParam", new Vector3(5.4f, 4.3f, 3.2f));
-            expectColorParam("BarEffect", "ColParam", Color.FromArgb(250, 101, 102, 103));
-            expectColorParam("BarEffect", "ColParamNamed", Color.SlateBlue);
-
-            expectFloatParam("FooGlow", "GlowParam", 5.4f);
-
-            expectStartEndTime("FooEffect", 0.0f, 6.5f);
-            expectStartEndTime("BarEffect", 2.5f, 5.2f);
-            expectStartEndTime("FooGlow", 3.4f, 4.5f);
-
+            for (int i = 0; i < 3; i++)
+                Expect.Once.On(tracks[i]).Method("UpdateListener").With(effectChangeListener);
             executer.Update(effectChangeListener);
 
-        }
-
-        private void expectStartEndTime(string effectName, float start, float end)
-        {
-            Expect.Once.On(effectChangeListener).
-                Method("SetStartTime").With(effectName, start);
-            Expect.Once.On(effectChangeListener).
-                Method("SetEndTime").With(effectName, end);
-        }
-
-        private void expectStringParam(string effectName, string paramName, string value)
-        {
-            Expect.Once.On(effectChangeListener).
-                Method("SetStringParam").With(effectName, paramName, value);
-        }
-
-        private void expectIntParam(string effectName, string paramName, int value)
-        {
-            Expect.Once.On(effectChangeListener).
-                Method("SetIntParam").With(effectName, paramName, value);
-        }
-
-        private void expectVector3Param(string effectName, string paramName, Vector3 value)
-        {
-            Expect.Once.On(effectChangeListener).
-                Method("SetVector3Param").With(effectName, paramName, value);
-        }
-
-        private void expectColorParam(string effectName, string paramName, Color value)
-        {
-            Expect.Once.On(effectChangeListener).
-                Method("SetColorParam").With(effectName, paramName, value);
-        }
-
-        private void expectFloatParam(string effectName, string paramName, float value)
-        {
-            Expect.Once.On(effectChangeListener).
-                Method("SetFloatParam").With(effectName, paramName, value);
         }
 
         [Test]
@@ -567,9 +364,9 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestJumpSong()
         {
-            IDemoEffect effect = CreateMockEffect(0, 10);
-            Expect.Once.On(effect).Method("Initialize");
-            executer.Register(0, effect);
+            RegisterEffect(0, 0, 0);
+            Expect.Once.On(tracks[0]).Method("Initialize").WithAnyArguments();
+            Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(100.0f));
             TestInitializeOKSong();
 
             Time.CurrentTime = 1.0f;
@@ -583,9 +380,9 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestJumpNoSong()
         {
-            IDemoEffect effect = CreateMockEffect(0, 10);
-            Expect.Once.On(effect).Method("Initialize");
-            executer.Register(0, effect);
+            RegisterEffect(0, 0, 0);
+            Expect.Once.On(tracks[0]).Method("Initialize").WithAnyArguments();
+            Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(100.0f));
             TestInitializeOKNoSong1();
 
             Time.CurrentTime = 1.0f;
@@ -598,9 +395,9 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestJumpBeforeStart()
         {
-            IDemoEffect effect = CreateMockEffect(0, 10);
-            Expect.Once.On(effect).Method("Initialize");
-            executer.Register(0, effect);
+            RegisterEffect(0, 0, 0);
+            Expect.Once.On(tracks[0]).Method("Initialize").WithAnyArguments();
+            Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(100.0f));
             TestInitializeOKSong();
 
             Time.CurrentTime = 5.0f;
@@ -614,9 +411,9 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestJumpPastEnd()
         {
-            IDemoEffect effect = CreateMockEffect(0, 10);
-            Expect.Once.On(effect).Method("Initialize");
-            executer.Register(0, effect);
+            RegisterEffect(0, 0, 0);
+            Expect.Once.On(tracks[0]).Method("Initialize").WithAnyArguments();
+            Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(10.0f));
             TestInitializeOKSong();
 
             Time.CurrentTime = 5.0f;
@@ -625,6 +422,22 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(soundDriver).Method("SetPosition");
             executer.JumpInTime(10.0f);
             Assert.AreEqual(10.0f, Time.CurrentTime, 0.00001f);
+        }
+
+        private IDemoEffect RegisterEffect(int track, float startTime, float endTime)
+        {
+            IDemoEffect effect = CreateMockEffect(startTime, endTime);
+            Expect.Once.On(tracks[track]).Method("Register").With(effect);
+            executer.Register(track, effect);
+            return effect;
+        }
+
+        private IDemoPostEffect RegisterPostEffect(int track, float startTime, float endTime)
+        {
+            IDemoPostEffect effect = CreateMockPostEffect(startTime, endTime);
+            Expect.Once.On(tracks[track]).Method("Register").With(effect);
+            executer.Register(track, effect);
+            return effect;
         }
 
         private void LimitRunLoop(int numCalls)
@@ -660,6 +473,15 @@ namespace Dope.DDXX.DemoFramework
                 Will(Return.Value(texture));
         }
 
+
+        #region IDemoFactory Members
+
+        public ITrack CreateTrack()
+        {
+            return tracks[trackNum++];
+        }
+
+        #endregion
     }
 
     public class FooEffect : BaseDemoEffect
