@@ -16,6 +16,7 @@ namespace Dope.DDXX.DemoFramework
         private IDemoTweaker[] tweakers;
         private IDemoTweakerContext context;
         private bool visable;
+        private bool saveNeeded;
 
         public object IdentifierToChild() { return 0; }
         public void IdentifierFromParent(object id) { }
@@ -34,6 +35,7 @@ namespace Dope.DDXX.DemoFramework
             : base(settings)
         {
             currentTweaker = -1;
+            saveNeeded = false;
             this.tweakers = tweakers;
             this.context = context;
             visable = true;
@@ -74,6 +76,7 @@ namespace Dope.DDXX.DemoFramework
             {
                 if (currentTweaker < tweakers.Length - 1)
                 {
+                    saveNeeded = true;
                     if (currentTweaker != -1)
                         tweakers[currentTweaker + 1].IdentifierFromParent(tweakers[currentTweaker].IdentifierToChild());
                     currentTweaker++;
@@ -116,6 +119,9 @@ namespace Dope.DDXX.DemoFramework
 
         public bool ShouldSave(IInputDriver inputDriver)
         {
+            if (!saveNeeded)
+                return false;
+
             bool save = true;
             while (!inputDriver.KeyPressedNoRepeat(Key.Return))
             {

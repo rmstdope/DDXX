@@ -253,9 +253,16 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
-        public void TestShouldSaveNoMovement()
+        public void TestShouldSaveWithoutAccess()
         {
             TestInitialize();
+            Assert.IsFalse(tweaker.ShouldSave(input));
+        }
+
+        [Test]
+        public void TestShouldSaveNoMovement()
+        {
+            TestInput();
 
             ExpectKeypresses(-1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1);
             Assert.IsTrue(tweaker.ShouldSave(input));
@@ -264,7 +271,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestShouldSaveMoveLeft()
         {
-            TestInitialize();
+            TestInput();
 
             ExpectKeypresses(0, 1, -1, 0, -1, -1, -1, -1, -1, -1, -1);
             ExpectKeypresses(-1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1);
@@ -275,7 +282,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestShouldSaveMoveRight()
         {
-            TestInitialize();
+            TestInput();
 
             ExpectKeypresses(1, 0, -1, 0, -1, -1, -1, -1, -1, -1, -1);
             ExpectKeypresses(-1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1);
@@ -286,7 +293,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestShouldSaveMoveRightAndLeft()
         {
-            TestInitialize();
+            TestInput();
 
             ExpectKeypresses(1, 0, -1, 0, -1, -1, -1, -1, -1, -1, -1);
             ExpectKeypresses(0, 1, -1, 0, -1, -1, -1, -1, -1, -1, -1);

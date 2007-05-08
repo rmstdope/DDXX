@@ -72,7 +72,7 @@ namespace EngineTest
             scene.AddNode(camera);
             scene.ActiveCamera = camera;
 
-            circleTexture = TextureFactory.CreateFromFunction(128, 128, 0, Usage.None, Format.A8R8G8B8, Pool.Managed, circleCallback);
+            circleTexture = TextureFactory.CreateFromFunction(512, 512, 0, Usage.None, Format.A8R8G8B8, Pool.Managed, circleCallback);
             circleSprite = GraphicsFactory.CreateSprite(Device);
             circles = new BlitCircle[NUM_CIRCLES];
             Random rand = new Random();
@@ -243,6 +243,11 @@ namespace EngineTest
             point = center - size * 0.5f;
             circleSprite.Draw2D(circleTexture, Rectangle.Empty, new SizeF(size.X, size.Y),
                 new PointF(point.X, point.Y), Color.White);
+            size = new Vector2(800, 800);
+            point = center - size * 0.5f;
+            point.Y += size.Y / 1.9f;
+            circleSprite.Draw2D(circleTexture, Rectangle.Empty, new SizeF(size.X, size.Y),
+                new PointF(point.X, point.Y), Color.Black);
             for (int i = 0; i < NUM_CIRCLES; i++)
             {
                 float x = circles[i].Offset.X + Time.CurrentTime / circles[i].Period.X;
