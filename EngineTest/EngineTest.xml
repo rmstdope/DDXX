@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Effects song="dope-wanting_more-dhw2006-v2-320.mp3">
-  <!--Effect name="SpinningBackgroundEffect" track="0" startTime="0" endTime="9">
+<Effects>
+<!--Effects song="dope-wanting_more-dhw2006-v2-320.mp3"-->
+    <!--Effect name="SpinningBackgroundEffect" track="0" startTime="0" endTime="9">
 		<SetupCall name="AddTextureLayer">
 			<Parameter string="BlurBackground.jpg"/>
 			<Parameter float="35.0"/>
@@ -20,9 +21,18 @@
 		<Parameter name="TextColor" Color="White" />
 		<Parameter name="Text" string=".dope" />
 	</Effect-->
-  <Effect name="TestEffect" track="0" startTime="0" endTime="300">
+  <!--Effect name="TestEffect" track="0" startTime="0" endTime="300">
     <Parameter name="ReflectiveFactor" float="0" />
-  </Effect>
+  </Effect-->
+  <Effect name="DofCubesEffect" track="0" startTime="0" endTime="300" />
+  <!--Effect name="SunEffect" track="0" startTime="0" endTime="300" /-->
+  <!--PostEffect name="RadialBlurPostEffect" track="0" startTime="0" endTime="300" />
+  <PostEffect name="GlowPostEffect" track="0" startTime="0" endTime="300">
+    <Parameter name="BloomScale" float="1.4" step="0.01" />
+    <Parameter name="Exposure" float="0.5000006" step="0.01" />
+    <Parameter name="WhiteCutoff" float="0.4999999" step="0.01" />
+    <Parameter name="Luminance" float="0.23" step="0.01" />
+  </PostEffect-->
   <!--Effect name="ChessScene" track="0" startTime="0.0" endTime="300.0" /-->
   <!--Effect name="CreationScene" track="0" startTime="0.0" endTime="300.0">
 		<Parameter name="BaseMesh" string="King.X" />
@@ -30,13 +40,6 @@
   <!--PostEffect name="WavePostEffect" track="0" startTime="0.0" endTime="300.0">
     <Parameter name="Scale" float="1" step="0.01"/>
   </PostEffect-->
-  <PostEffect name="RadialBlurPostEffect" track="0" startTime="0" endTime="300" />
-  <PostEffect name="GlowPostEffect" track="0" startTime="0" endTime="300">
-    <Parameter name="BloomScale" float="1.4" step="0.01" />
-    <Parameter name="Exposure" float="0.5000006" step="0.01" />
-    <Parameter name="WhiteCutoff" float="0.4999999" step="0.01" />
-    <Parameter name="Luminance" float="0.23" step="0.01" />
-  </PostEffect>
   <!--Effect name="NormalMapEffect" track="0" startTime="0.0" endTime="300.0">
   </Effect-->
   <!--PostEffect name="BlurPostEffect" track="0" startTime="0.0" endTime="300.0">

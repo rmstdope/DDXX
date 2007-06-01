@@ -135,6 +135,14 @@
       <Project>{E2280509-C330-4684-90FD-336B8CD4D7EF}</Project>
       <Name>Input</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MeshBuilder\MeshBuilder.csproj">
+      <Project>{CF2AB575-856D-4160-8DCD-7A5729579892}</Project>
+      <Name>MeshBuilder</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Physics\Physics.csproj">
+      <Project>{6F7E70F2-FC19-4399-84BD-F60AC491E970}</Project>
+      <Name>Physics</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SceneGraph\SceneGraph.csproj">
       <Project>{BF75F16E-5056-4484-BFE2-72F8733B8BF3}</Project>
       <Name>SceneGraph</Name>

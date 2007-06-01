@@ -2,6 +2,7 @@
 #include <Glass.hlsl>
 #include <SkyBox.hlsl>
 #include <ChessBoard.hlsl>
+#include <DepthOfField.hlsl>
  
 struct InputVS
 {

@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DofCubesEffect.cs" />
     <Compile Include="EmptyEffect.cs" />
     <Compile Include="EngineTest.cs">
     </Compile>
@@ -64,6 +65,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="SunEffect.cs" />
     <Compile Include="TestEffect.cs" />
   </ItemGroup>
   <ItemGroup>

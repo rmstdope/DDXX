@@ -204,6 +204,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DepthOfField.hlsl"
+				>
+			</File>
+			<File
 				RelativePath=".\Glass.hlsl"
 				>
 			</File>

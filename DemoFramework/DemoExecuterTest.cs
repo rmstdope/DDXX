@@ -221,7 +221,7 @@ namespace Dope.DDXX.DemoFramework
                 Method("SetRenderTarget").With(0, surface);
             Expect.Once.On(device).
                 Method("Clear").
-                With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Black, 1.0f, 0);
+                With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.CornflowerBlue, 1.0f, 0);
             Expect.Once.On(postProcessor).
                 Method("StartFrame").With(texture);
             Expect.Once.On(postProcessor).
@@ -252,7 +252,7 @@ namespace Dope.DDXX.DemoFramework
 
             Expect.Once.On(device).
                 Method("Clear").
-                With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.Black, 1.0f, 0);
+                With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.CornflowerBlue, 1.0f, 0);
             Expect.Once.On(postProcessor).
                 Method("StartFrame").With(texture);
             Expect.Exactly(2).On(device).

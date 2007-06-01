@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.SceneGraph;
+using Dope.DDXX.Physics;
+using Dope.DDXX.MeshBuilder;
+using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -13,6 +16,7 @@ namespace Dope.DDXX.DemoFramework
         private IGraphicsFactory graphicsFactory;
         private IDevice device;
         private IXLoader xLoader;
+        private Dope.DDXX.MeshBuilder.MeshBuilder meshBuilder;
 
         protected BaseDemoEffect(float startTime, float endTime)
         {
@@ -48,6 +52,27 @@ namespace Dope.DDXX.DemoFramework
         protected IXLoader XLoader
         {
             get { return xLoader; }
+        }
+
+        protected Dope.DDXX.MeshBuilder.MeshBuilder MeshBuilder
+        {
+            // Lazy creation
+            get
+            {
+                if (meshBuilder == null)
+                    meshBuilder = new Dope.DDXX.MeshBuilder.MeshBuilder(GraphicsFactory, TextureFactory, Device);
+                return meshBuilder;
+            }
+        }
+
+        protected void CreateStandardSceneAndCamera(out IScene scene, out CameraNode camera, float distance)
+        {
+            scene = new Scene();
+            scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f);
+            camera = new CameraNode("Standard Camera");
+            camera.WorldState.MoveForward(-distance);
+            scene.AddNode(camera);
+            scene.ActiveCamera = camera;
         }
 
         protected abstract void Initialize();
