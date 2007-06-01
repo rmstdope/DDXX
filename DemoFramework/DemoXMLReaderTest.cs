@@ -48,6 +48,7 @@ namespace Dope.DDXX.DemoFramework
             private Effect currentEffect;
             private Effect currentPostEffect;
             private Effect currentTransition;
+            private string songName;
 
             #region IDemoEffectBuilder implementation
 
@@ -116,6 +117,12 @@ namespace Dope.DDXX.DemoFramework
                     throw new InvalidOperationException("Adding parameters before any effects");
                 }
             }
+
+            public void SetSong(string filename)
+            {
+                songName = filename;
+            }
+
             #endregion
 
             #region Test access
@@ -244,6 +251,10 @@ namespace Dope.DDXX.DemoFramework
                         throw new InvalidOperationException("No current transition");
                 }
             }
+            public string SongName
+            {
+                get { return songName; }
+            }
 
             #endregion
 
@@ -278,6 +289,7 @@ namespace Dope.DDXX.DemoFramework
                 else
                     throw new InvalidOperationException("No current effect");
             }
+
         }
         #endregion
 
@@ -667,6 +679,33 @@ namespace Dope.DDXX.DemoFramework
             reader.Write(tempFilename);
             string written = File.ReadAllText(tempFilename);
             Assert.AreEqual(twoEffectContents, written);
+        }
+
+        [Test]
+        public void TestSong1()
+        {
+            string songXml =
+@"<Effects song=""song1.mp3""></Effects>";
+            ReadXML(songXml);
+            Assert.AreEqual("song1.mp3", effectBuilder.SongName);
+        }
+
+        [Test]
+        public void TestSong2()
+        {
+            string songXml =
+@"<Effects song=""song2.mp3""></Effects>";
+            ReadXML(songXml);
+            Assert.AreEqual("song2.mp3", effectBuilder.SongName);
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestUnknownAttribute()
+        {
+            string songXml =
+@"<Effects unknown=""x""></Effects>";
+            ReadXML(songXml);
         }
 
         private DemoXMLReader ReadXML(string contents)

@@ -21,5 +21,7 @@ namespace Dope.DDXX.DemoFramework
         void AddBoolParameter(string parameterName, bool color);
 
         void AddSetupCall(string name, List<object> parameters);
+
+        void SetSong(string filename);
     }
 }

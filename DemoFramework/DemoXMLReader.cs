@@ -114,6 +114,17 @@ namespace Dope.DDXX.DemoFramework
             }
             if (effectsNode == null)
                 throw new DDXXException("No effects found");
+            foreach (XmlAttribute node in effectsNode.Attributes)
+            {
+                switch (node.Name)
+                {
+                    case "song":
+                        effectBuilder.SetSong(node.InnerText);
+                        break;
+                    default:
+                        throw new DDXXException("Unknown attribute '" + node.Name + "' in xml file " + doc.Name);
+                }
+            }
             foreach (XmlNode node in effectsNode.ChildNodes)
             {
                 if (node.NodeType == XmlNodeType.Element && node.Name == "Effect")

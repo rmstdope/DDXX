@@ -48,7 +48,6 @@ namespace EngineTest
                     window.Initialize("Engine Test", desc, prerequisits);
                     executer.Initialize(D3DDriver.GetInstance().Device,
                         D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
-                        ""/*dope-wanting_more-dhw2006-v2-320.mp3"*/, 
                         new Assembly[] { Assembly.GetExecutingAssembly(), 
                             Assembly.GetAssembly(typeof(GlowPostEffect)) }, 
                         "EngineTest.xml");

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Effects>
+<Effects song="dope-wanting_more-dhw2006-v2-320.mp3">
   <!--Effect name="SpinningBackgroundEffect" track="0" startTime="0" endTime="9">
 		<SetupCall name="AddTextureLayer">
 			<Parameter string="BlurBackground.jpg"/>

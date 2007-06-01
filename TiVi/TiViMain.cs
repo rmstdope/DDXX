@@ -40,7 +40,7 @@ namespace TiVi
                     window.Initialize("Engine Test", desc, prerequisits);
                     executer.Initialize(D3DDriver.GetInstance().Device,
                         D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
-                        "", new Assembly[] { Assembly.GetExecutingAssembly(), Assembly.GetAssembly(typeof(GlowPostEffect)) }, "TiVi.xml");
+                        new Assembly[] { Assembly.GetExecutingAssembly(), Assembly.GetAssembly(typeof(GlowPostEffect)) }, "TiVi.xml");
 
                     executer.Run();
                     window.CleanUp();

@@ -38,6 +38,8 @@ namespace Dope.DDXX.DemoFramework
         private TweakerSettings settings = new TweakerSettings();
         private DemoXMLReader xmlReader;
 
+        private string songFilename;
+
         public float StartTime
         {
             get { return 0.0f; }
@@ -92,20 +94,22 @@ namespace Dope.DDXX.DemoFramework
             tweaker = new DemoTweakerMain(this, new IDemoTweaker[] { new DemoTweakerDemo(settings), new DemoTweakerTrack(settings), new DemoTweakerEffect(settings) }, settings);
         }
 
-        public void Initialize(IDevice device, IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, string song)
+        public void Initialize(IDevice device, IGraphicsFactory graphicsFactory,
+            ITextureFactory textureFactory)
         {
-            this.Initialize(device, graphicsFactory, textureFactory, song, 
+            this.Initialize(device, graphicsFactory, textureFactory, 
                 new Assembly[] { Assembly.GetCallingAssembly() }, "");
         }
 
-        public void Initialize(IDevice device, IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, string song, string xmlFile)
+        public void Initialize(IDevice device, IGraphicsFactory graphicsFactory,
+            ITextureFactory textureFactory, string xmlFile)
         {
-            this.Initialize(device, graphicsFactory, textureFactory, song, 
+            this.Initialize(device, graphicsFactory, textureFactory, 
                 new Assembly[] { Assembly.GetCallingAssembly() }, xmlFile);
         }
 
         public void Initialize(IDevice device, IGraphicsFactory graphicsFactory, 
-            ITextureFactory textureFactory, string song, Assembly[] assemblies, 
+            ITextureFactory textureFactory, Assembly[] assemblies, 
             string xmlFile)
         {
             this.device = device;
@@ -118,7 +122,7 @@ namespace Dope.DDXX.DemoFramework
 
             InitializeGraphics();
 
-            InitializeSound(song);
+            InitializeSound();
 
             postProcessor.Initialize(device);
 
@@ -135,11 +139,11 @@ namespace Dope.DDXX.DemoFramework
             backBuffer = textureFactory.CreateFullsizeRenderTarget();
         }
 
-        private void InitializeSound(string song)
+        private void InitializeSound()
         {
             soundDriver.Initialize();
-            if (song != null && song != "")
-                sound = soundDriver.CreateSound(song);
+            if (songFilename != null && songFilename != "")
+                sound = soundDriver.CreateSound(songFilename);
         }
 
         public void Register(int track, IDemoEffect effect)
@@ -331,6 +335,11 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
+        public void SetSong(string filename)
+        {
+            songFilename = filename;
+        }
+
         #endregion
 
         #region IDemoTweakerContext Members
@@ -367,6 +376,7 @@ namespace Dope.DDXX.DemoFramework
         }
 
         #endregion
+
 
     }
 }
