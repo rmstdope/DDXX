@@ -45,6 +45,8 @@
   <ItemGroup>
     <Compile Include="BlurPostEffect.cs" />
     <Compile Include="BlurPostEffectTest.cs" />
+    <Compile Include="DepthOfFieldPostEffect.cs" />
+    <Compile Include="DepthOfFieldPostEffectTest.cs" />
     <Compile Include="GlowPostEffect.cs" />
     <Compile Include="GlowPostEffectTest.cs" />
     <Compile Include="MonochromePostEffect.cs" />

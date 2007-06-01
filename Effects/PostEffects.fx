@@ -220,7 +220,7 @@ static const float BlurWeights20[cKernelSize20] =
 ///////////////////////////////////////////////////
 // Filtering kernel variables for DoF 2.0 kernels
 ///////////////////////////////////////////////////
-float2 DofKernel20[12] = 
+float2 PreScaledDofKernel20[12] = 
 {
 	{ 1.0f,  0.0f},
 	{ 0.5f,  0.8660f},
@@ -236,6 +236,10 @@ float2 DofKernel20[12] =
 	{ 0.0f, -1.7320f},
 	{ 1.5f, -0.8660f},
 };
+float2 DofKernel20[12]
+<
+	string ConvertPixelsToTexels = "PreScaledDofKernel20";
+>;
 
 ///////////////////////////////////////////////////
 // Other stuff
@@ -454,8 +458,8 @@ MonoPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 //-----------------------------------------------------------------------------
 float4
 DoFPixelShader(float2 Tex					: TEXCOORD0,
-								 uniform float2 kernelArray[12],
-								 uniform int numSamples) : COLOR0
+							 uniform float2 kernelArray[12],
+							 uniform int numSamples) : COLOR0
 {
 	float4 original = tex2D(LinearTextureSampler, Tex);
 	float3 blurred = 0;
@@ -952,7 +956,7 @@ technique Blend
 	}
 }
 
-technique DoF
+technique DepthOfField
 {
 	pass BasePass
 	<

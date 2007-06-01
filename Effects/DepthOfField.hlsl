@@ -9,9 +9,12 @@ struct DoFPixelInput
 {
 	float4	Position					:	POSITION;
 	float3	Normal						:	TEXCOORD0;
+	float4	Diffuse						: COLOR0;
 };
 
-//float3 lightVector = normalize(float3(1, 2, -5));
+float4 FocalPlane = float4(0.0f, 0.0f, 1.0f, -5.0f);
+float  HyperfocalDistance = 2.5f;
+float  MaxBlurFactor = 12.0f / 13.0f; //3.0f / 4.0f;
 
 DoFPixelInput
 DoFVertexShader(DoFVertexInput input)
@@ -21,6 +24,19 @@ DoFVertexShader(DoFVertexInput input)
 	output.Position = mul(input.Position, WorldViewProjectionT);
 	output.Normal = mul(input.Normal, (float3x3)WorldViewT);
 
+	// Tranform the position from object space to view space
+	float3 ViewPosition = mul(input.Position, (float4x3)WorldViewT);
+
+	// Compute blur factor and place in output alpha
+	float BlurFactor = dot(float4(ViewPosition, 1.0), FocalPlane) * HyperfocalDistance;
+	output.Diffuse.a = BlurFactor * BlurFactor;
+
+	// Put a cap on the max blur value.  This is required to ensure that the center pixel
+	// is always weighted in the blurred image.  I.E. in the PS11 case, the correct maximum
+	// value is (NumSamples - 1) / NumSamples, otherwise at BlurFactor == 1.0f, only the outer
+	// samples are contributing to the blurred image which causes annoying ring artifacts
+	output.Diffuse.rgba = min(output.Diffuse.a, MaxBlurFactor);
+
 	return output;
 }
 
@@ -28,11 +44,12 @@ float4
 DoFPixelShader(DoFPixelInput input) : COLOR0
 {
 	float coord = max(0, dot(LightDirections[0], normalize(input.Normal)));
-	float4 diffuse = tex1D(BaseTextureSampler, coord);
+	float3 diffuse = tex1D(BaseTextureSampler, coord);
 	float specular = pow(coord, 16);
 	specular = smoothstep(0.299, 0.3, specular);
-	return diffuse + specular;
-	//return specular;
+	float3 color = diffuse + specular;
+	//return float4(color, input.Diffuse.r);
+	return input.Diffuse;
 }
 
 float4

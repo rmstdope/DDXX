@@ -81,6 +81,9 @@ namespace EngineTest
 
             boxNode.WorldState.Roll(Time.DeltaTime * 1.2f);
             boxNode.WorldState.Turn(Time.DeltaTime);
+            boxNode.WorldState.Position =
+                new Vector3((float)Math.Sin(Time.StepTime),
+                0.0f, (float)Math.Cos(Time.StepTime));
             scene.Step();
         }
 
