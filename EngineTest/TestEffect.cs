@@ -57,8 +57,13 @@ namespace EngineTest
         {
             Vector2 centered = texCoord - new Vector2(0.5f, 0.5f);
             float distance = centered.Length();
-            if (distance < 0.5f)
+            if (distance < 0.3f)
                 return new Vector4(1, 1, 1, 1);
+            else if (distance < 0.5f)
+            {
+                float scaled = (0.5f - distance) / 0.2f;
+                return new Vector4(scaled, scaled, scaled, scaled);
+            }
             return new Vector4(0, 0, 0, 0);
         }
 
@@ -243,11 +248,11 @@ namespace EngineTest
             point = center - size * 0.5f;
             circleSprite.Draw2D(circleTexture, Rectangle.Empty, new SizeF(size.X, size.Y),
                 new PointF(point.X, point.Y), Color.White);
-            size = new Vector2(800, 800);
-            point = center - size * 0.5f;
-            point.Y += size.Y / 1.9f;
-            circleSprite.Draw2D(circleTexture, Rectangle.Empty, new SizeF(size.X, size.Y),
-                new PointF(point.X, point.Y), Color.Black);
+            //size = new Vector2(800, 800);
+            //point = center - size * 0.5f;
+            //point.Y += size.Y / 1.9f;
+            //circleSprite.Draw2D(circleTexture, Rectangle.Empty, new SizeF(size.X, size.Y),
+            //    new PointF(point.X, point.Y), Color.Black);
             for (int i = 0; i < NUM_CIRCLES; i++)
             {
                 float x = circles[i].Offset.X + Time.CurrentTime / circles[i].Period.X;
