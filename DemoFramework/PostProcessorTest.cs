@@ -58,7 +58,7 @@ namespace Dope.DDXX.DemoFramework
                 Will(Return.Value(sourceTextureParameter));
             Stub.On(graphicsFactory).
                 Method("CreateTexture").
-                With(device, presentParameters.BackBufferWidth, presentParameters.BackBufferHeight, 1, Usage.RenderTarget, presentParameters.BackBufferFormat, Pool.Default).
+                With(device, presentParameters.BackBufferWidth, presentParameters.BackBufferHeight, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default).
                 Will(Return.Value(fullsizeTexture1));
         }
 

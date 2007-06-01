@@ -136,7 +136,7 @@ namespace Dope.DDXX.DemoFramework
 
         private void InitializeGraphics()
         {
-            backBuffer = textureFactory.CreateFullsizeRenderTarget();
+            backBuffer = textureFactory.CreateFullsizeRenderTarget(Format.A8R8G8B8);
         }
 
         private void InitializeSound()

@@ -55,7 +55,7 @@ namespace Dope.DDXX.DemoFramework
                 if (i == (int)TextureID.INPUT_TEXTURE)
                     textures[i] = new TextureContainer(null);
                 else
-                    textures[i] = new TextureContainer(D3DDriver.TextureFactory.CreateFullsizeRenderTarget());
+                    textures[i] = new TextureContainer(D3DDriver.TextureFactory.CreateFullsizeRenderTarget(Format.A8R8G8B8));
             }
 
             HandleAnnotations();
