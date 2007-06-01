@@ -46,6 +46,8 @@
   <ItemGroup>
     <Compile Include="CameraNode.cs" />
     <Compile Include="CameraNodeTest.cs" />
+    <Compile Include="DirectionalLightNode.cs" />
+    <Compile Include="DirectionalLightNodeTest.cs" />
     <Compile Include="DummyNode.cs" />
     <Compile Include="EffectHandler.cs">
       <SubType>Code</SubType>

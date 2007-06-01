@@ -51,7 +51,7 @@ namespace Dope.DDXX.Sound
 
             FMOD.Sound sound = new FMOD.Sound();
 
-            result = system.CreateSound(FileUtility.FilePath(file), FMOD.MODE._2D | FMOD.MODE.HARDWARE | FMOD.MODE.CREATESTREAM, ref sound);
+            result = system.CreateSound(FileUtility.FilePath(file), FMOD.MODE._2D | FMOD.MODE.HARDWARE | FMOD.MODE.CREATESTREAM | FMOD.MODE.ACCURATETIME, ref sound);
 
             if (result != RESULT.OK)
                 throw new DDXXException("Could not load FMOD file " + file + ".");

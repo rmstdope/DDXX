@@ -416,16 +416,16 @@ namespace Dope.DDXX.MeshBuilder
             indexList.Add((short)(vertexList.Count - 1 - filletSegments * 3));
             indexList.Add((short)(vertexList.Count - 1 - filletSegments * 2));
 
-            // FIXME: This if for test!!!!
-            // Recalc normals
-            for (int i = 0; i < vertexList.Count; i++)
-            {
-                Vertex vertex = vertexList[i];
-                Vector3 normal = vertex.Position;
-                normal.Normalize();
-                vertex.Normal = normal;
-                vertexList[i] = vertex;
-            }
+            //// FIXME: This if for test!!!!
+            //// Recalc normals
+            //for (int i = 0; i < vertexList.Count; i++)
+            //{
+            //    Vertex vertex = vertexList[i];
+            //    Vector3 normal = vertex.Position;
+            //    normal.Normalize();
+            //    vertex.Normal = normal;
+            //    vertexList[i] = vertex;
+            //}
 
             // create and return primitive
             Vertex[] vertices = vertexList.ToArray();

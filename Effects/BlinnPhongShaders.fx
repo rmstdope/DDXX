@@ -46,7 +46,7 @@ CalculateLightVectors(float4 Position,
 	LightVectors output;
 	
 	if(LightType == DIRECTIONAL) {
-		output.L = LightDirection;
+		output.L = LightDirections[0];
 	} else if(LightType == POINT) {
 		output.L = LightPositions[0] - Position;
 	}
@@ -79,7 +79,7 @@ CalculateLightVectors_2(float4 Position,
 	LightVectors output;
 	
 	if(LightType == DIRECTIONAL) {
-		output.L = LightDirection;
+		output.L = LightDirections[0];
 	} else if(LightType == POINT) {
 		output.L = LightPositions[0] - Position;
 	}

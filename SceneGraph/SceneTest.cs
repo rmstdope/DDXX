@@ -45,11 +45,12 @@ namespace Dope.DDXX.SceneGraph
         private Scene graph;
         private TestNode node1;
         private TestNode node2;
-        private LightNode light1;
-        private LightNode light2;
+        private PointLightNode light1;
+        private DirectionalLightNode light2;
         private EffectHandle lightDiffuse;
         private EffectHandle lightSpecular;
         private EffectHandle lightPosition;
+        private EffectHandle lightDirection;
         private EffectHandle eyePosition;
 
         [SetUp]
@@ -60,12 +61,13 @@ namespace Dope.DDXX.SceneGraph
             node1 = new TestNode("TestNode1");
             node2 = new TestNode("TestNode2");
             light1 = new PointLightNode("LightNode1");
-            light2 = new PointLightNode("LightNode2");
+            light2 = new DirectionalLightNode("LightNode2");
             effect = mockery.NewMock<IEffect>();
 
             lightDiffuse = EffectHandle.FromString("LightDiffuseColors");
             lightSpecular = EffectHandle.FromString("LightSpecularColors");
             lightPosition = EffectHandle.FromString("LightPositions");
+            lightDirection = EffectHandle.FromString("LightDirections");
             eyePosition = EffectHandle.FromString("EyePosition");
 
             DeviceDescription desc = new DeviceDescription();
@@ -91,6 +93,9 @@ namespace Dope.DDXX.SceneGraph
                 With(null, "LightPositions").
                 Will(Return.Value(lightPosition));
             Expect.Once.On(effect).Method("GetParameter").
+                With(null, "LightDirections").
+                Will(Return.Value(lightDirection));
+            Expect.Once.On(effect).Method("GetParameter").
                 With(null, "LightDiffuseColors").
                 Will(Return.Value(lightDiffuse));
             Expect.Once.On(effect).Method("GetParameter").
@@ -113,6 +118,9 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(effect).Method("GetParameter").
                 With(null, "LightPositions").
                 Will(Return.Value(null));
+            Expect.Once.On(effect).Method("GetParameter").
+                With(null, "LightDirections").
+                Will(Return.Value(lightDirection));
             Expect.Once.On(effect).Method("GetParameter").
                 With(null, "LightDiffuseColors").
                 Will(Return.Value(lightDiffuse));
@@ -137,6 +145,9 @@ namespace Dope.DDXX.SceneGraph
                 With(null, "LightPositions").
                 Will(Return.Value(lightPosition));
             Expect.Once.On(effect).Method("GetParameter").
+                With(null, "LightDirections").
+                Will(Return.Value(lightDirection));
+            Expect.Once.On(effect).Method("GetParameter").
                 With(null, "LightDiffuseColors").
                 Will(Return.Value(null));
             Expect.Once.On(effect).Method("GetParameter").
@@ -159,6 +170,9 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(effect).Method("GetParameter").
                 With(null, "LightPositions").
                 Will(Return.Value(lightPosition));
+            Expect.Once.On(effect).Method("GetParameter").
+                With(null, "LightDirections").
+                Will(Return.Value(lightDirection));
             Expect.Once.On(effect).Method("GetParameter").
                 With(null, "LightDiffuseColors").
                 Will(Return.Value(lightDiffuse));
@@ -183,6 +197,9 @@ namespace Dope.DDXX.SceneGraph
                 With(null, "LightPositions").
                 Will(Return.Value(lightPosition));
             Expect.Once.On(effect).Method("GetParameter").
+                With(null, "LightDirections").
+                Will(Return.Value(lightDirection));
+            Expect.Once.On(effect).Method("GetParameter").
                 With(null, "LightDiffuseColors").
                 Will(Return.Value(lightDiffuse));
             Expect.Once.On(effect).Method("GetParameter").
@@ -191,6 +208,32 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(effect).Method("GetParameter").
                 With(null, "EyePosition").
                 Will(Return.Value(null));
+            graph = new Scene();
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestConstructorFail5()
+        {
+            Expect.Once.On(graphicsFactory).
+                Method("EffectFromFile").
+                WithAnyArguments().
+                Will(Return.Value(effect));
+            Expect.Once.On(effect).Method("GetParameter").
+                With(null, "LightPositions").
+                Will(Return.Value(lightPosition));
+            Expect.Once.On(effect).Method("GetParameter").
+                With(null, "LightDirections").
+                Will(Return.Value(null));
+            Expect.Once.On(effect).Method("GetParameter").
+                With(null, "LightDiffuseColors").
+                Will(Return.Value(lightDiffuse));
+            Expect.Once.On(effect).Method("GetParameter").
+                With(null, "LightSpecularColors").
+                Will(Return.Value(lightSpecular));
+            Expect.Once.On(effect).Method("GetParameter").
+                With(null, "EyePosition").
+                Will(Return.Value(eyePosition));
             graph = new Scene();
         }
 
@@ -204,13 +247,13 @@ namespace Dope.DDXX.SceneGraph
             Vector3 position1 = new Vector3(0.13f, 0.23f, 0.33f);
             ColorValue diffuse2 = new ColorValue(0.111f, 0.211f, 0.311f, 0.411f);
             ColorValue specular2 = new ColorValue(0.121f, 0.221f, 0.321f, 0.421f);
-            Vector3 position2 = new Vector3(0.131f, 0.231f, 0.331f);
+            Vector3 direction2 = new Vector3(0.131f, 0.231f, 0.331f);
             light1.DiffuseColor = diffuse1;
             light1.SpecularColor = specular1;
             light1.Position = position1;
             light2.DiffuseColor = diffuse2;
             light2.SpecularColor = specular2;
-            light2.Position = position2;
+            light2.Direction = direction2;
             Assert.AreEqual(1, graph.NumNodes);
 
             CameraNode camera = new CameraNode("Camera");
@@ -234,6 +277,9 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(effect).
                 Method("SetValue").
                 With(Is.EqualTo(lightPosition), Is.Anything);
+            Expect.Once.On(effect).
+                Method("SetValue").
+                With(Is.EqualTo(lightDirection), Is.Anything);
             Expect.Once.On(effect).
                 Method("SetValue").
                 With(eyePosition, new Vector4(1, 2, 3, 1));

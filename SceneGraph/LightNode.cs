@@ -37,9 +37,5 @@ namespace Dope.DDXX.SceneGraph
         {
         }
 
-        protected override void SetLightStateNode(LightState state)
-        {
-            state.NewState(Position, DiffuseColor, SpecularColor);
-        }
     }
 }

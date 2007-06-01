@@ -206,7 +206,12 @@ namespace Dope.DDXX.DemoFramework
         private void SynchronizeSong()
         {
             if (sound != null)
+            {
                 soundDriver.SetPosition(channel, Time.CurrentTime);
+                //Time.CurrentTime = soundDriver.GetPosition(channel);
+                //System.Diagnostics.Debug.Write("Syncronizing sound: SoundTime=" + soundDriver.GetPosition(channel));
+                //System.Diagnostics.Debug.WriteLine(", ActualTime: " + Time.CurrentTime);
+            }
         }
 
         internal void Render()

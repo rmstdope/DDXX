@@ -102,7 +102,7 @@ namespace Dope.DDXX.Sound
             try
             {
                 Expect.Once.On(system).
-                    Method("CreateSound").With(Is.EqualTo("./Dope.DDXX.Sound.dll"), Is.EqualTo(FMOD.MODE._2D | FMOD.MODE.HARDWARE | FMOD.MODE.CREATESTREAM), Is.Anything).
+                    Method("CreateSound").With(Is.EqualTo("./Dope.DDXX.Sound.dll"), Is.EqualTo(FMOD.MODE._2D | FMOD.MODE.HARDWARE | FMOD.MODE.CREATESTREAM | FMOD.MODE.ACCURATETIME), Is.Anything).
                     Will(Return.Value(RESULT.ERR_SUBSOUNDS));
                 sound = driver.CreateSound("Dope.DDXX.Sound.dll");
                 Assert.Fail();
@@ -110,7 +110,7 @@ namespace Dope.DDXX.Sound
             catch (DDXXException) { }
 
             Expect.Once.On(system).
-                Method("CreateSound").With(Is.EqualTo("./Dope.DDXX.Sound.dll"), Is.EqualTo(FMOD.MODE._2D | FMOD.MODE.HARDWARE | FMOD.MODE.CREATESTREAM), Is.Anything).
+                Method("CreateSound").With(Is.EqualTo("./Dope.DDXX.Sound.dll"), Is.EqualTo(FMOD.MODE._2D | FMOD.MODE.HARDWARE | FMOD.MODE.CREATESTREAM | FMOD.MODE.ACCURATETIME), Is.Anything).
                 Will(Return.Value(RESULT.OK));
             sound = driver.CreateSound("Dope.DDXX.Sound.dll");
             Assert.IsNotNull(sound);

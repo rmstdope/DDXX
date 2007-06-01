@@ -23,7 +23,7 @@ shared float4 AmbientColor;
  * Light direction
  * Used for directional lights and spot lights
  */
-shared float3 LightDirection;
+shared float4 LightDirections[5];
 
 /** 
  * Diffuse Light and Material color

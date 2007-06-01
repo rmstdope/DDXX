@@ -21,6 +21,7 @@ namespace EngineTest
         private CameraNode camera;
         private ModelNode boxNode;
         private ITexture celTexture;
+        private DirectionalLightNode light;
 
         public DofCubesEffect(float startTime, float endTime)
             : base(startTime, endTime)
@@ -29,12 +30,12 @@ namespace EngineTest
 
         private Vector4 celMapCallback(Vector2 texCoord, Vector2 texelSize)
         {
-            if (texCoord.X < 0.5f)
-                return new Vector4(0.4f, 0.2f, 0.2f, 1.0f);
-            else if (texCoord.X < 0.7f)
-                return new Vector4(0.6f, 0.3f, 0.3f, 1.0f);
+            if (texCoord.X < 0.3f)
+                return new Vector4(0.6f, 0.1f, 0.1f, 1.0f);
+            else if (texCoord.X < 0.6f)
+                return new Vector4(0.8f, 0.1f, 0.1f, 1.0f);
             else if (texCoord.X < 0.9f)
-                return new Vector4(0.8f, 0.4f, 0.4f, 1.0f);
+                return new Vector4(1.0f, 0.2f, 0.2f, 1.0f);
             return new Vector4(1, 1, 1, 1);
         }
 
@@ -54,6 +55,9 @@ namespace EngineTest
                 delegate(int material) { return "CelWithDoF"; }, model));
             scene.AddNode(boxNode);
 
+            light = new DirectionalLightNode("Light");
+            scene.AddNode(light);
+
             scene.Validate();
         }
 
@@ -67,7 +71,15 @@ namespace EngineTest
 
         public override void Step()
         {
-            boxNode.WorldState.Roll(Time.DeltaTime);
+            Vector3 dir = new Vector3();
+            float phi = Time.StepTime;
+            float theta = Time.StepTime * 2.123f;
+            dir.X = (float)(Math.Cos(theta) * Math.Sin(phi));
+            dir.Y = (float)(Math.Sin(theta) * Math.Sin(phi));
+            dir.Z = (float)(Math.Cos(phi));
+            light.Direction = dir;
+
+            boxNode.WorldState.Roll(Time.DeltaTime * 1.2f);
             boxNode.WorldState.Turn(Time.DeltaTime);
             scene.Step();
         }
