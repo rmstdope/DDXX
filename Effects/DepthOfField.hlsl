@@ -12,9 +12,16 @@ struct DoFPixelInput
 	float4	Diffuse						: COLOR0;
 };
 
+struct OutlinePixelInput
+{
+	float4	Position					:	POSITION;
+	float4	Diffuse						: COLOR0;
+};
+
 float4 FocalPlane = float4(0.0f, 0.0f, 1.0f, -5.0f);
-float  HyperfocalDistance = 2.5f;
-float  MaxBlurFactor = 12.0f / 13.0f; //3.0f / 4.0f;
+float  HyperfocalDistance = 2.0f;
+//float  MaxBlurFactor = 3.0f / 4.0f;
+float  MaxBlurFactor = 12.0f / 13.0f;
 
 DoFPixelInput
 DoFVertexShader(DoFVertexInput input)
@@ -48,20 +55,35 @@ DoFPixelShader(DoFPixelInput input) : COLOR0
 	float specular = pow(coord, 16);
 	specular = smoothstep(0.299, 0.3, specular);
 	float3 color = diffuse + specular;
-	//return float4(color, input.Diffuse.r);
-	return input.Diffuse;
+	return float4(color, input.Diffuse.r);
+	//return input.Diffuse;
+}
+
+OutlinePixelInput
+OutlineVertexShader(DoFVertexInput input)
+{
+	OutlinePixelInput output;
+
+	// Tranform the position from object space to view space
+	float3 ViewPosition = mul(input.Position, (float4x3)WorldViewT);
+
+	// Compute blur factor and place in output alpha
+	float BlurFactor = dot(float4(ViewPosition, 1.0), FocalPlane) * HyperfocalDistance;
+	output.Diffuse.a = BlurFactor * BlurFactor;
+
+	// Put a cap on the max blur value.  This is required to ensure that the center pixel
+	// is always weighted in the blurred image.  I.E. in the PS11 case, the correct maximum
+	// value is (NumSamples - 1) / NumSamples, otherwise at BlurFactor == 1.0f, only the outer
+	// samples are contributing to the blurred image which causes annoying ring artifacts
+	output.Diffuse.rgba = min(output.Diffuse.a, MaxBlurFactor);
+	output.Position = mul(input.Position + float4(input.Normal * 0.02, 0), WorldViewProjectionT);
+	return output;
 }
 
 float4
-OutlineVertexShader(DoFVertexInput input) : POSITION
+OutlinePixelShader(OutlinePixelInput input) : COLOR0
 {
-	return mul(input.Position + float4(input.Normal * 0.02, 0), WorldViewProjectionT);
-}
-
-float4
-OutlinePixelShader() : COLOR0
-{
-	return 0;
+	return float4(0, 0, 0, input.Diffuse.r);
 }
 
 technique CelWithDoF

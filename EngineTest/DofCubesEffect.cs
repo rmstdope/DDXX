@@ -77,7 +77,7 @@ namespace EngineTest
             dir.X = (float)(Math.Cos(theta) * Math.Sin(phi));
             dir.Y = (float)(Math.Sin(theta) * Math.Sin(phi));
             dir.Z = (float)(Math.Cos(phi));
-            light.Direction = dir;
+            light.Direction = new Vector3(0, 0, -1);// dir;
 
             boxNode.WorldState.Roll(Time.DeltaTime * 1.2f);
             boxNode.WorldState.Turn(Time.DeltaTime);
