@@ -17,11 +17,12 @@ namespace EngineTest
 {
     public class DofCubesEffect : BaseDemoEffect
     {
+        private const int NUM_LIGHTS = 2;
         private IScene scene;
         private CameraNode camera;
         private ModelNode boxNode;
         private ITexture celTexture;
-        private DirectionalLightNode light;
+        private List<DirectionalLightNode> lights = new List<DirectionalLightNode>();
 
         public DofCubesEffect(float startTime, float endTime)
             : base(startTime, endTime)
@@ -31,12 +32,12 @@ namespace EngineTest
         private Vector4 celMapCallback(Vector2 texCoord, Vector2 texelSize)
         {
             if (texCoord.X < 0.3f)
-                return new Vector4(0.6f, 0.1f, 0.1f, 1.0f);
+                return new Vector4(0.0f, 0.0f, 0.0f, 1.0f);
             else if (texCoord.X < 0.6f)
-                return new Vector4(0.8f, 0.1f, 0.1f, 1.0f);
-            else if (texCoord.X < 0.9f)
-                return new Vector4(1.0f, 0.2f, 0.2f, 1.0f);
-            return new Vector4(1, 1, 1, 1);
+                return new Vector4(0.0f, 0.0f, 0.2f, 1.0f);
+            //else if (texCoord.X < 0.9f)
+                return new Vector4(0.1f, 0.1f, 0.4f, 1.0f);
+            //return new Vector4(0.1f, 0.3f, 0.4f, 1);
         }
 
         protected override void Initialize()
@@ -48,16 +49,24 @@ namespace EngineTest
             MeshBuilder.AssignMaterial("Box", "Default1");
             MeshBuilder.SetDiffuseTexture("Default1", "red glass.jpg");
             IModel model = MeshBuilder.CreateModel("Box");
-            model.Materials[0].DiffuseColor = new ColorValue(0.6f, 0.6f, 0.6f);
+            //model.Materials[0].DiffuseColor = new ColorValue(0.6f, 0.6f, 0.6f);
+            model.Materials[0].AmbientColor = new ColorValue(0.1f, 0.1f, 0.6f);
             model.Materials[0].DiffuseTexture = celTexture;
             boxNode = new ModelNode("Box", model,
                 new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
                 delegate(int material) { return "CelWithDoF"; }, model));
             scene.AddNode(boxNode);
 
-            light = new DirectionalLightNode("Light");
-            scene.AddNode(light);
-
+            for (int i = 0; i < NUM_LIGHTS; i++)
+            {
+                Random rand = new Random(17);
+                lights.Add(new DirectionalLightNode("Light" + i));
+                scene.AddNode(lights[i]);
+                float x = i - 0.5f;
+                float y = (float)(rand.NextDouble() - 0.5);
+                float z = (float)(-rand.NextDouble());
+                lights[i].Direction =new Vector3(x, y, z);
+            }
             scene.Validate();
         }
 
@@ -77,7 +86,8 @@ namespace EngineTest
             dir.X = (float)(Math.Cos(theta) * Math.Sin(phi));
             dir.Y = (float)(Math.Sin(theta) * Math.Sin(phi));
             dir.Z = (float)(Math.Cos(phi));
-            light.Direction = new Vector3(0, 0, -1);// dir;
+            //light.Direction = dir;
+            //light.Direction = new Vector3(0, 0, -1);
 
             boxNode.WorldState.Roll(Time.DeltaTime * 1.2f);
             boxNode.WorldState.Turn(Time.DeltaTime);

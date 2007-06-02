@@ -9,6 +9,7 @@ struct DoFPixelInput
 {
 	float4	Position					:	POSITION;
 	float3	Normal						:	TEXCOORD0;
+	float3	InvEye						:	TEXCOORD1;
 	float4	Diffuse						: COLOR0;
 };
 
@@ -28,8 +29,10 @@ DoFVertexShader(DoFVertexInput input)
 {
 	DoFPixelInput output;
 
+	float3 positionWS = mul(input.Position, WorldT);
 	output.Position = mul(input.Position, WorldViewProjectionT);
-	output.Normal = mul(input.Normal, (float3x3)WorldViewT);
+	output.Normal = mul(input.Normal, (float3x3)WorldT);
+	output.InvEye = EyePosition.xyz - positionWS;
 
 	// Tranform the position from object space to view space
 	float3 ViewPosition = mul(input.Position, (float4x3)WorldViewT);
@@ -50,13 +53,18 @@ DoFVertexShader(DoFVertexInput input)
 float4
 DoFPixelShader(DoFPixelInput input) : COLOR0
 {
-	float coord = max(0, dot(LightDirections[0], normalize(input.Normal)));
-	float3 diffuse = tex1D(BaseTextureSampler, coord);
-	float specular = pow(coord, 16);
-	specular = smoothstep(0.299, 0.3, specular);
-	float3 color = diffuse + specular;
+	float3 color = AmbientColor;
+	float3 normalVector = normalize(input.Normal);
+	for (int i = 0; i < 2; i++) {
+		float3 halfVector = normalize((normalize(input.InvEye) + LightDirections[i]) / 2);
+		float coord = max(0, dot(LightDirections[0], normalVector));
+		float3 diffuse = tex1D(BaseTextureSampler, coord);
+		float specular = max(0, dot(halfVector, normalVector));
+		specular = pow(specular, 64);
+		specular = smoothstep(0.49, 0.5, specular);
+		color += diffuse + specular;
+	}
 	return float4(color, input.Diffuse.r);
-	//return input.Diffuse;
 }
 
 OutlinePixelInput
