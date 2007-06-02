@@ -7,7 +7,7 @@ using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.SceneGraph
 {
-    public abstract class SystemParticle
+    public abstract class SystemParticle : ISystemParticle
     {
         public Vector3 Position;
         public Color Color;

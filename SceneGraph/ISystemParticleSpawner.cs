@@ -7,7 +7,7 @@ namespace Dope.DDXX.SceneGraph
 {
     public interface ISystemParticleSpawner
     {
-        SystemParticle Spawn();
+        ISystemParticle Spawn();
         Type VertexType { get; }
         VertexDeclaration VertexDeclaration { get; }
         int NumInitialSpawns { get; }

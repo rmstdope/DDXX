@@ -36,7 +36,7 @@ namespace Dope.DDXX.ParticleSystems
             get { return maxNumParticles; }
         }
 
-        public SystemParticle Spawn()
+        public ISystemParticle Spawn()
         {
             return new FloaterParticle(RandomPositionInSphere(boundingRadius), Color.White, 10.0f);
         }

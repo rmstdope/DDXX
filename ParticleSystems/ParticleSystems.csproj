@@ -40,12 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FallingStarSystem.cs" />
-    <Compile Include="FallingStarSystemTest.cs" />
     <Compile Include="FallingSystemParticle.cs" />
     <Compile Include="FloaterParticle.cs" />
-    <Compile Include="FloaterSystem.cs" />
-    <Compile Include="FloaterSystemTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Vertex.cs" />
   </ItemGroup>

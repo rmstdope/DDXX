@@ -9,46 +9,28 @@ using Microsoft.DirectX;
 
 namespace Dope.DDXX.SceneGraph
 {
-    public abstract class ParticleSystemNode : NodeBase
+    public class ParticleSystemNode : NodeBase
     {
-        private int numParticles;
         private IDevice device;
         private IVertexBuffer vertexBuffer;
-        protected IEffectHandler effectHandler;
-        protected List<SystemParticle> particles;
-        protected ModelMaterial material;
-        protected BlendOperation blendOperation;
-        protected Blend sourceBlend;
-        protected Blend destinationBlend;
-        static protected Random rand = new Random();
-
-        public IDevice Device
-        {
-            get { return device; }
-        }
-
-        public int NumParticles
-        {
-            get { return numParticles; }
-        }
-
-        public int ActiveParticles
-        {
-            get { return particles.Count; }
-        }
+        private IEffectHandler effectHandler;
+        private List<ISystemParticle> particles;
+        private ModelMaterial material;
+        private BlendOperation blendOperation;
+        private Blend sourceBlend;
+        private Blend destinationBlend;
+        static private Random rand = new Random();
+        private ISystemParticleSpawner particleSpawner;
 
         public IEffectHandler EffectHandler
         {
             set { effectHandler = value; }
         }
 
-        protected IVertexBuffer VertexBuffer 
+        public int ActiveParticles
         {
-            get { return vertexBuffer; }
+            get { return particles.Count; }
         }
-
-        protected abstract VertexDeclaration VertexDeclaration { get; }
-        protected abstract Type VertexType { get; }
 
         public ParticleSystemNode(string name)
             : base(name)
@@ -73,17 +55,18 @@ namespace Dope.DDXX.SceneGraph
             return pos;
         }
 
-        protected void InitializeBase(int numParticles, IDevice device,
+        public void Initialize(ISystemParticleSpawner spawner, IDevice device,
             IGraphicsFactory graphicsFactory, IEffectFactory effectFactory, ITexture texture)
         {
-            this.numParticles = numParticles;
+            particleSpawner = spawner;
+
             this.device = device;
-            particles = new List<SystemParticle>();
+            particles = new List<ISystemParticle>();
 
             IEffect effect = effectFactory.CreateFromFile("ParticleSystem.fxo");
             effectHandler = new EffectHandler(effect);
 
-            vertexBuffer = graphicsFactory.CreateVertexBuffer(VertexType, numParticles, device, Usage.WriteOnly | Usage.Dynamic, VertexFormats.None, Pool.Default);
+            vertexBuffer = graphicsFactory.CreateVertexBuffer(particleSpawner.VertexType, particleSpawner.MaxNumParticles, device, Usage.WriteOnly | Usage.Dynamic, VertexFormats.None, Pool.Default);
 
             if (texture == null)
                 effectHandler.Techniques = new EffectHandle[] { EffectHandle.FromString("PointSpriteNoTexture") };
@@ -91,6 +74,21 @@ namespace Dope.DDXX.SceneGraph
             {
                 material.DiffuseTexture = texture;
                 effectHandler.Techniques = new EffectHandle[] { EffectHandle.FromString("PointSprite") };
+            }
+
+            for (int i = 0; i < particleSpawner.NumInitialSpawns; i++)
+                particles.Add(particleSpawner.Spawn());
+        }
+
+        protected override void StepNode()
+        {
+            using (IGraphicsStream stream = vertexBuffer.Lock(0, 0, LockFlags.Discard))
+            {
+                foreach (ISystemParticle particle in particles)
+                {
+                    particle.StepAndWrite(stream);
+                }
+                vertexBuffer.Unlock();
             }
         }
 
@@ -110,7 +108,7 @@ namespace Dope.DDXX.SceneGraph
                 device.RenderState.SourceBlend = sourceBlend;
                 device.RenderState.DestinationBlend = destinationBlend;
                 device.SetStreamSource(0, vertexBuffer, 0);
-                device.VertexDeclaration = VertexDeclaration;
+                device.VertexDeclaration = particleSpawner.VertexDeclaration;
                 device.DrawPrimitives(PrimitiveType.PointList, 0, ActiveParticles);
 
                 effectHandler.Effect.EndPass();

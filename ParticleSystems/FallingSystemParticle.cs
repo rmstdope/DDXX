@@ -28,21 +28,9 @@ namespace Dope.DDXX.ParticleSystems
             vertexDeclaration = graphicsFactory.CreateVertexDeclaration(device, elements);
         }
 
-        public SystemParticle Spawn()
+        public ISystemParticle Spawn()
         {
-            return new FallingStarParticle(RandomPositionInSphere(100.0f), Color.Red, Rand.Float(5) + 5);
-        }
-
-        protected Vector3 RandomPositionInSphere(float radius)
-        {
-            Vector3 pos;
-            do
-            {
-                pos = new Vector3(Rand.Float(-radius, radius),
-                    Rand.Float(-radius, radius),
-                    Rand.Float(-radius, radius));
-            } while (pos.Length() > radius);
-            return pos;
+            return new FallingStarParticle(100.0f);
         }
 
         public Type VertexType
@@ -68,30 +56,50 @@ namespace Dope.DDXX.ParticleSystems
 
     public class FallingStarParticle : SystemParticle
     {
-        private bool alive;
+        private float radius;
         public Vector3 Velocity;
-        public FallingStarParticle(Vector3 position, Color color, float size)
-            : base(position, color, size)
+        public FallingStarParticle(float radius)
+            : base(FallingStarParticle.RandomPositionInSphere(radius), Color.Red, Rand.Float(5) + 5)
         {
-            alive = true;
+            this.radius = radius;
             Velocity = new Vector3(Rand.Float(0, 0.3), -1, Rand.Float(0, 0.3));
             Velocity.Normalize();
             Velocity *= 50;
         }
 
-        public void Kill()
+        private static Vector3 RandomPositionInSphere(float radius)
         {
-            alive = false;
+            Vector3 pos;
+            do
+            {
+                pos = new Vector3(Rand.Float(-radius, radius),
+                    Rand.Float(-radius, radius),
+                    Rand.Float(-radius, radius));
+            } while (pos.Length() > radius);
+            return pos;
         }
 
-        public override bool Alive
+        private void Respawn()
         {
-            get { return alive; }
+            Position = FallingStarParticle.RandomPositionInSphere(radius);
+            Color = Color.Red;
+            Size = Rand.Float(5) + 5;
+            Velocity = new Vector3(Rand.Float(0, 0.3), -1, Rand.Float(0, 0.3));
+            Velocity.Normalize();
+            Velocity *= 50;
         }
 
         public override void StepAndWrite(IGraphicsStream stream)
         {
-            throw new Exception("The method or operation is not implemented.");
+            VertexColorPoint vertex;
+
+            Position += Velocity * Time.DeltaTime;
+            if (Position.Length() > radius)
+                Respawn();
+            vertex.Position = Position;
+            vertex.Size = Size;
+            vertex.Color = Color.ToArgb();
+            stream.Write(vertex);
         }
     }
 }

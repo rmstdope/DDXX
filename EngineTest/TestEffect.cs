@@ -17,8 +17,8 @@ namespace EngineTest
 {
     public class TestEffect : BaseDemoEffect
     {
-        private FloaterSystem floaterSystem;
-        private FallingStarSystem starSystem;
+        private ParticleSystemNode floaterSystem;
+        private ParticleSystemNode starSystem;
         private CameraNode camera;
         private IScene scene;
         private ModelNode modelNode;
@@ -68,14 +68,14 @@ namespace EngineTest
 
             ITexture circleTexture = TextureFactory.CreateFromFunction(64, 64, 0, Usage.None, Format.A8R8G8B8, Pool.Managed, circleCallback);
 
-            floaterSystem = new FloaterSystem("FloaterSystem");
+            floaterSystem = new ParticleSystemNode("FloaterSystem");
             ISystemParticleSpawner spawner = new FloaterParticleSpawner(GraphicsFactory, Device, 50, 100.0f);
-            floaterSystem.Initialize(spawner, circleTexture);
+            floaterSystem.Initialize(spawner, Device, GraphicsFactory, EffectFactory, circleTexture);
             floaterSystem.WorldState.MoveForward(500.0f);
             floaterSystem.WorldState.MoveRight(100.0f);
             scene.AddNode(floaterSystem);
 
-            starSystem = new FallingStarSystem("StarSystem");
+            starSystem = new ParticleSystemNode("StarSystem");
             //ISystemParticleSpawner spawner = new FloaterParticleSpawner(50, 100.0f, D3DDriver.GraphicsFactory, D3DDriver.GetInstance().Device);
             spawner = new FallingStarParticleSpawner(GraphicsFactory, Device, 100);
             starSystem.Initialize(spawner, Device, GraphicsFactory, EffectFactory, circleTexture);
