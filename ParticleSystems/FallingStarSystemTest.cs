@@ -47,7 +47,7 @@ namespace Dope.DDXX.ParticleSystems
         {
             ExpectEffect();
             ExpectVertexBuffer(100);
-            system.Initialize(100, device, graphicsFactory, effectFactory, null);
+            system.Initialize(new FallingStarParticleSpawner(graphicsFactory, device, 100), device, graphicsFactory, effectFactory, null);
             Assert.AreEqual(100, system.NumParticles);
         }
 
@@ -56,7 +56,7 @@ namespace Dope.DDXX.ParticleSystems
         {
             ExpectEffect();
             ExpectVertexBuffer(20);
-            system.Initialize(20, device, graphicsFactory, effectFactory, texture);
+            system.Initialize(new FallingStarParticleSpawner(graphicsFactory, device, 20), device, graphicsFactory, effectFactory, texture);
             Assert.AreEqual(20, system.NumParticles);
         }
 

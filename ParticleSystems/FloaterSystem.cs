@@ -13,36 +13,16 @@ namespace Dope.DDXX.ParticleSystems
 {
     public class FloaterSystem : ParticleSystemNode
     {
-        public class FloaterParticle : SystemParticle
-        {
-            public Vector3 Phase;
-            public Vector3 Period;
-            public Vector3 Amplitude;
-            public FloaterParticle(Vector3 position, Color color, float size)
-                : base(position, color, size)
-            {
-                Phase = 2.0f * (float)Math.PI * new Vector3((float)rand.NextDouble(), (float)rand.NextDouble(), (float)rand.NextDouble());
-                Period = new Vector3(2, 2, 2) + 4.0f * (float)Math.PI * new Vector3((float)rand.NextDouble(), (float)rand.NextDouble(), (float)rand.NextDouble());
-                Amplitude = new Vector3(20, 20, 20) + 60.0f * new Vector3((float)rand.NextDouble(), (float)rand.NextDouble(), (float)rand.NextDouble());
-            }
-        }
-
-        private float boundaryRadius;
-        private VertexDeclaration vertexDeclaration;
+        private ISystemParticleSpawner particleSpawner;
 
         protected override Type VertexType
         {
-            get { return typeof(VertexColorPoint); }
+            get { return particleSpawner.VertexType; }
         }
 
         protected override VertexDeclaration VertexDeclaration
         {
-            get { return vertexDeclaration; }
-        }
-
-        public float BoundaryRadius
-        {
-            get { return boundaryRadius; }
+            get { return particleSpawner.VertexDeclaration; }
         }
 
         public FloaterSystem(string name)
@@ -50,57 +30,24 @@ namespace Dope.DDXX.ParticleSystems
         {
         }
 
-        public void Initialize(int numParticles, float boundaryRadius, string textureFile)
+        public void Initialize(ISystemParticleSpawner spawner, ITexture texture)
         {
-            ITexture texture = null;
-            if (textureFile != null)
-                texture = D3DDriver.TextureFactory.CreateFromFile(textureFile);
+            particleSpawner = spawner;
 
-            InitializeBase(numParticles, D3DDriver.GetInstance().Device, 
+            InitializeBase(particleSpawner.MaxNumParticles, D3DDriver.GetInstance().Device, 
                 D3DDriver.GraphicsFactory, D3DDriver.EffectFactory, texture);
-            this.boundaryRadius = boundaryRadius;
 
-            CreateVertexDeclaration();
-
-            while (ActiveParticles < NumParticles)
-            {
-                SpawnParticle();
-            }
-        }
-
-        private void SpawnParticle()
-        {
-            FloaterParticle particle = new FloaterParticle(RandomPositionInSphere(boundaryRadius), Color.White, 10.0f);
-            particles.Add(particle);
-        }
-
-        private void CreateVertexDeclaration()
-        {
-            VertexElement[] elements = new VertexElement[]
-            {
-                new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
-                new VertexElement(0, 12, DeclarationType.Float1, DeclarationMethod.Default, DeclarationUsage.PointSize, 0),
-                new VertexElement(0, 16, DeclarationType.Color, DeclarationMethod.Default, DeclarationUsage.Color, 0),
-                VertexElement.VertexDeclarationEnd 
-            };
-
-            // Use the vertex element array to create a vertex declaration.
-            vertexDeclaration = D3DDriver.GraphicsFactory.CreateVertexDeclaration(Device, elements);
+            for (int i = 0; i < particleSpawner.NumInitialSpawns; i++)
+                particles.Add(particleSpawner.Spawn());
         }
 
         protected override void StepNode()
         {
-            VertexColorPoint vertex = new VertexColorPoint();
             using (IGraphicsStream stream = VertexBuffer.Lock(0, 0, LockFlags.Discard))
             {
-                foreach (FloaterParticle particle in particles)
+                foreach (SystemParticle particle in particles)
                 {
-                    vertex.Position = particle.Position + new Vector3(particle.Amplitude.X * (float)Math.Sin(Time.StepTime / particle.Period.X + particle.Phase.X),
-                                                                      particle.Amplitude.Y * (float)Math.Sin(Time.StepTime / particle.Period.Y + particle.Phase.Y),
-                                                                      particle.Amplitude.Z * (float)Math.Sin(Time.StepTime / particle.Period.Z + particle.Phase.Z));
-                    vertex.Size = particle.Size;
-                    vertex.Color = particle.Color.ToArgb();
-                    stream.Write(vertex);
+                    particle.StepAndWrite(stream);
                 }
                 VertexBuffer.Unlock();
             }

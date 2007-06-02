@@ -13,10 +13,15 @@ namespace Dope.DDXX.Utility
             set { Rand.random = value; }
         }
 
-        public static float Float(float min, float max)
+        public static float Float(double max)
         {
-            float range = max - min;
-            return (float)random.NextDouble() * range + min;
+            return Float(0, max);
+        }
+
+        public static float Float(double min, double max)
+        {
+            double range = max - min;
+            return (float)(random.NextDouble() * range + min);
         }
 
         public static int Int(int min, int max)

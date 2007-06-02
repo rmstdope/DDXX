@@ -56,35 +56,29 @@ namespace Dope.DDXX.ParticleSystems
         }
 
         [Test]
-        public void TestInitialize1()
+        public void TestInitializeNoTexture()
         {
             ExpectEffect();
             ExpectVertexBuffer();
-            system.Initialize(100, 50.0f, null);
+            system.Initialize(new FloaterParticleSpawner(D3DDriver.GraphicsFactory, D3DDriver.GetInstance().Device, 100, 50.0f), null);
             system.EffectHandler = effectHandler;
-            Assert.AreEqual(50.0f, system.BoundaryRadius);
             Assert.AreEqual(100, system.NumParticles);
         }
 
         [Test]
-        public void TestInitialize2()
+        public void TestInitializeTexture()
         {
             ExpectEffect();
             ExpectVertexBuffer();
-            Expect.Once.On(textureFactory).
-                Method("CreateFromFile").
-                WithAnyArguments().
-                Will(Return.Value(texture));
-            system.Initialize(100, 50.0f, "Texture");
+            system.Initialize(new FloaterParticleSpawner(D3DDriver.GraphicsFactory, D3DDriver.GetInstance().Device, 100, 50.0f), texture);
             system.EffectHandler = effectHandler;
-            Assert.AreEqual(50.0f, system.BoundaryRadius);
             Assert.AreEqual(100, system.NumParticles);
         }
 
         [Test]
         public void TestStep()
         {
-            TestInitialize1();
+            TestInitializeNoTexture();
 
             Expect.Once.On(vertexBuffer).
                 Method("Lock").
@@ -101,7 +95,7 @@ namespace Dope.DDXX.ParticleSystems
         [Test]
         public void TestRender()
         {
-            TestInitialize1();
+            TestInitializeTexture();
 
             Stub.On(effectHandler).GetProperty("Effect").Will(Return.Value(effect));
 

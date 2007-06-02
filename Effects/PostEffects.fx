@@ -453,8 +453,8 @@ MonoPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 //-----------------------------------------------------------------------------
 // Pixel Shader: DoFPixelShader
 // Desc: Post effect shader for ps 2.0 that creates a depth of field feel.
-//       Alpha channel needs to be filled with focus values [0.5..1] where
-//       0.5 is in focus and 1 is not.
+//       Alpha channel needs to be filled with focus values [0..1] where
+//       0 is in focus and 1 is not.
 //-----------------------------------------------------------------------------
 float4
 DoFPixelShader(float2 Tex					: TEXCOORD0,
@@ -462,18 +462,63 @@ DoFPixelShader(float2 Tex					: TEXCOORD0,
 							 uniform int numSamples) : COLOR0
 {
 	float4 original = tex2D(LinearTextureSampler, Tex);
-	float3 blurred = 0;
+	float4 blurred = 0;
 	
 	for(int i = 0; i < numSamples; i++) {
 		// Lookup into the rendertarget based by offsetting the 
 		// original UV by KernelArray[i].
-		float4 current = tex2D(LinearTextureSampler, Tex + kernelArray[i]);
+		float4 current = tex2D(LinearTextureSampler, Tex + kernelArray[i] * 1.5);
 
 		// Lerp between original rgb and the jitter rgb based on the alpha value
-		blurred += lerp(original.rgb, current.rgb, saturate(original.a * current.a));
+		blurred += lerp(original, current, saturate(original.a * current.a));
 	}
 
-	return float4(blurred / numSamples, 0.0f);
+	return blurred / numSamples;//float4(blurred / numSamples, 0.0f);
+}
+
+//-----------------------------------------------------------------------------
+// Pixel Shader: DoFPixelShaderVertical
+// Desc: Post effect shader for ps 2.0 that creates a depth of field feel.
+//       Alpha channel needs to be filled with focus values [0..1] where
+//       0 is in focus and 1 is not.
+//-----------------------------------------------------------------------------
+float4
+DoFPixelShaderVertical(float2 Tex : TEXCOORD0) : COLOR0
+{
+	float4 original = tex2D(PointTextureSampler, Tex);
+	float3 blurred = 0;
+
+	for(int i = 0; i < cKernelSize20 - 1; i++) {    
+		float4 current = tex2D(LinearTextureSampler,  Tex + VerticalKernel20[i].xy );// * DofBlurWeights20[i];
+
+		// Lerp between original rgb and the jitter rgb based on the alpha value
+		blurred += lerp(original.rgb, current.rgb, saturate(original.a * current.a)) * BlurWeights20[i];
+	}
+
+	return float4(blurred, 0.0f);
+}
+
+//-----------------------------------------------------------------------------
+// Pixel Shader: DoFPixelShaderHorizontal
+// Desc: Post effect shader for ps 2.0 that creates a depth of field feel.
+//       Alpha channel needs to be filled with focus values [0..1] where
+//       0 is in focus and 1 is not.
+//-----------------------------------------------------------------------------
+float4
+DoFPixelShaderHorizontal(float2 Tex : TEXCOORD0) : COLOR0
+{
+	float4 original = tex2D(PointTextureSampler, Tex);
+	float3 blurred = 0;
+
+	for(int i = 0; i < cKernelSize20 - 1; i++) {    
+		float4 current = tex2D(LinearTextureSampler,  Tex + HorizontalKernel20[i].xy );// * DofBlurWeights20[i];
+
+		// Lerp between original rgb and the jitter rgb based on the alpha value
+		blurred += lerp(original.rgb, current.rgb, saturate(original.a * current.a)) * BlurWeights20[i];
+	}
+
+	//return float4(blurred / (cKernelSize20 - 1), 0.0f);
+	return float4(blurred, 0.0f);
 }
 
 //-----------------------------------------------------------------------------
@@ -952,6 +997,32 @@ technique Blend
 		//SrcBlend					= <SourceBlend>;
 		//DestBlend					= <DestBlend>;
 		//BlendFactor					= <BlendFactor>;
+		ZEnable						= false;
+	}
+}
+
+technique DepthOfFieldVertical
+{
+	pass BasePass
+	<
+		float Scale = 1.0f;
+	>
+	{
+		VertexShader			= null;
+		PixelShader				= compile ps_2_0 DoFPixelShaderVertical();
+		ZEnable						= false;
+	}
+}
+
+technique DepthOfFieldHorizontal
+{
+	pass BasePass
+	<
+		float Scale = 1.0f;
+	>
+	{
+		VertexShader			= null;
+		PixelShader				= compile ps_2_0 DoFPixelShaderHorizontal();
 		ZEnable						= false;
 	}
 }

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX;
 using System.Drawing;
+using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.SceneGraph
 {
-    public class SystemParticle
+    public abstract class SystemParticle
     {
         public Vector3 Position;
         public Color Color;
@@ -24,5 +25,6 @@ namespace Dope.DDXX.SceneGraph
             get { return true; } 
         }
 
+        public abstract void StepAndWrite(IGraphicsStream stream);
     }
 }
