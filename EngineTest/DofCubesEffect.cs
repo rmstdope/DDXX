@@ -59,12 +59,11 @@ namespace EngineTest
 
             for (int i = 0; i < NUM_LIGHTS; i++)
             {
-                Random rand = new Random(17);
                 lights.Add(new DirectionalLightNode("Light" + i));
                 scene.AddNode(lights[i]);
                 float x = i - 0.5f;
-                float y = (float)(rand.NextDouble() - 0.5);
-                float z = (float)(-rand.NextDouble());
+                float y = Rand.Float(-1, 1);
+                float z = Rand.Float(-1, 0);
                 lights[i].Direction =new Vector3(x, y, z);
             }
             scene.Validate();
