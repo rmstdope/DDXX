@@ -7,6 +7,6 @@ namespace Dope.DDXX.Graphics
 {
     public interface IPrerequisits
     {
-        void CheckPrerequisits(int adapter, DeviceType deviceType);
+        void CheckPrerequisits(IManager manager, int adapter, DeviceType deviceType);
     }
 }

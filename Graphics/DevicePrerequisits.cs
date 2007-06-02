@@ -35,9 +35,9 @@ namespace Dope.DDXX.Graphics
             PixelShaderVersion = new Version(0, 0);
         }
 
-        public void CheckPrerequisits(int adapter, DeviceType deviceType)
+        public void CheckPrerequisits(IManager manager, int adapter, DeviceType deviceType)
         {
-            Caps caps = D3DDriver.GraphicsFactory.Manager.GetDeviceCaps(adapter, deviceType);
+            Caps caps = manager.GetDeviceCaps(adapter, deviceType);
 
             if (caps.VertexShaderVersion < new Version(ShaderModel, 0) ||
                 caps.PixelShaderVersion < new Version(ShaderModel, 0))

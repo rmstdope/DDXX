@@ -251,6 +251,7 @@ namespace Dope.DDXX.Graphics
         {
             DeviceDescription desc = CreateDescription();
             PresentParameters param = new PresentParameters();
+            Caps caps;
 
             // Test a valid call with windowed HAL
             desc.deviceType = DeviceType.Hardware;
@@ -260,8 +261,11 @@ namespace Dope.DDXX.Graphics
             param.BackBufferCount = 1;
             Expect.Once.On(factory).
                 Method("CreateDevice").
-                With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(null), Is.EqualTo(CreateFlags.HardwareVertexProcessing), new IsEqualPP(param)).
+                With(Is.EqualTo(0), Is.EqualTo(desc.deviceType), Is.EqualTo(null), Is.EqualTo(CreateFlags.SoftwareVertexProcessing), new IsEqualPP(param)).
                 Will(Return.Value(device));
+            Expect.Once.On(manager).
+                Method("GetDeviceCaps").With(0, DeviceType.Hardware).
+                Will(Return.Value(caps));
             Expect.Once.On(prerequisits).Method("CheckPrerequisits").WithAnyArguments();
             driver.Initialize(null, desc, prerequisits);
             Assert.AreEqual(device, driver.Device);

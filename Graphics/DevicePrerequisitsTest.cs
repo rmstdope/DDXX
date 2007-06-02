@@ -9,24 +9,26 @@ using Dope.DDXX.Utility;
 namespace Dope.DDXX.Graphics
 {
     [TestFixture]
-    public class DevicePrerequisitsTest : D3DMockTest
+    public class DevicePrerequisitsTest// : D3DMockTest
     {
+        private Mockery mockery;
+        private IManager manager;
         private DevicePrerequisits prereq;
         private Caps caps;
 
         [SetUp]
-        public override void SetUp()
+        public void SetUp()
         {
-            base.SetUp();
+            mockery = new Mockery();
+            manager = mockery.NewMock<IManager>();
 
             prereq  = new DevicePrerequisits();
             caps = new Caps();
         }
 
         [TearDown]
-        public override void TearDown()
+        public void TearDown()
         {
-            base.TearDown();
         }
 
         [Test]
@@ -36,7 +38,7 @@ namespace Dope.DDXX.Graphics
                 Method("GetDeviceCaps").
                 With(0, DeviceType.Hardware).
                 Will(Return.Value(caps));
-            prereq.CheckPrerequisits(0, DeviceType.Hardware); 
+            prereq.CheckPrerequisits(manager, 0, DeviceType.Hardware); 
         }
 
         [Test]
@@ -48,7 +50,7 @@ namespace Dope.DDXX.Graphics
                 Method("GetDeviceCaps").
                 With(0, DeviceType.Hardware).
                 Will(Return.Value(caps));
-            prereq.CheckPrerequisits(0, DeviceType.Hardware);
+            prereq.CheckPrerequisits(manager, 0, DeviceType.Hardware);
         }
 
         [Test]
@@ -60,7 +62,7 @@ namespace Dope.DDXX.Graphics
                 Method("GetDeviceCaps").
                 With(0, DeviceType.Hardware).
                 Will(Return.Value(caps));
-            prereq.CheckPrerequisits(0, DeviceType.Hardware);
+            prereq.CheckPrerequisits(manager, 0, DeviceType.Hardware);
         }
 
         [Test]
@@ -72,7 +74,7 @@ namespace Dope.DDXX.Graphics
                 Method("GetDeviceCaps").
                 With(0, DeviceType.Hardware).
                 Will(Return.Value(caps));
-            prereq.CheckPrerequisits(0, DeviceType.Hardware);
+            prereq.CheckPrerequisits(manager, 0, DeviceType.Hardware);
         }
 
         [Test]
@@ -84,7 +86,7 @@ namespace Dope.DDXX.Graphics
                 Method("GetDeviceCaps").
                 With(0, DeviceType.Hardware).
                 Will(Return.Value(caps));
-            prereq.CheckPrerequisits(0, DeviceType.Hardware);
+            prereq.CheckPrerequisits(manager, 0, DeviceType.Hardware);
         }
     }
 }

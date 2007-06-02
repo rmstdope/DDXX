@@ -27,6 +27,8 @@ namespace Dope.DDXX.Graphics
 
         public virtual void SetUp()
         {
+            Caps caps;
+
             displayMode.Width = 800;
             displayMode.Height = 600;
             displayMode.Format = Format.R8G8B8;
@@ -55,6 +57,9 @@ namespace Dope.DDXX.Graphics
                 Method("CreateDevice").
                 WithAnyArguments().
                 Will(Return.Value(device));
+            Stub.On(manager).
+                Method("GetDeviceCaps").With(0, DeviceType.Hardware).
+                Will(Return.Value(caps));
             Stub.On(manager).
                 Method("CurrentDisplayMode").
                 With(0).

@@ -87,7 +87,7 @@ namespace Dope.DDXX.Graphics
             PresentParameters present = GetPresentParameters(desc);
             CreateFlags createFlags = GetCreateFlags(desc);
 
-            prerequisits.CheckPrerequisits(0, desc.deviceType);
+            prerequisits.CheckPrerequisits(manager, 0, desc.deviceType);
 
             device = graphicsFactory.CreateDevice(0, desc.deviceType, control, createFlags, present);
 
@@ -117,7 +117,11 @@ namespace Dope.DDXX.Graphics
             }
             else if (desc.deviceType == DeviceType.Hardware)
             {
-                createFlags = CreateFlags.HardwareVertexProcessing;
+                Caps caps = manager.GetDeviceCaps(0, DeviceType.Hardware);
+                if (caps.DeviceCaps.SupportsHardwareTransformAndLight)
+                    createFlags = CreateFlags.HardwareVertexProcessing;
+                else
+                    createFlags = CreateFlags.SoftwareVertexProcessing;
             }
             else
             {

@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+# Visual C# Express 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EngineTest", "EngineTest\EngineTest.csproj", "{54A5AA11-1E81-4874-A50A-056D3327CA10}"
 	ProjectSection(ProjectDependencies) = postProject
 		{31EADBD1-17AA-4177-9809-6A8FE6CF30D8} = {31EADBD1-17AA-4177-9809-6A8FE6CF30D8}
