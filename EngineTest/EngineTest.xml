@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Effects>
+<Effects song="99.mid">
 <!--Effects song="dope-wanting_more-dhw2006-v2-320.mp3"-->
     <!--Effect name="SpinningBackgroundEffect" track="0" startTime="0" endTime="9">
 		<SetupCall name="AddTextureLayer">
@@ -24,8 +24,9 @@
   <!--Effect name="TestEffect" track="0" startTime="0" endTime="300">
     <Parameter name="ReflectiveFactor" float="0" />
   </Effect-->
-  <Effect name="DofCubesEffect" track="0" startTime="0" endTime="300" />
-  <PostEffect name="DepthOfFieldPostEffect" track="0" startTime="0.0" endTime="300.0" />
+  <Effect name="TimeSyncEffect" track="0" startTime="0" endTime="300" />
+  <!--Effect name="DofCubesEffect" track="0" startTime="0" endTime="300" /-->
+  <!--PostEffect name="DepthOfFieldPostEffect" track="0" startTime="0.0" endTime="300.0" /-->
   <!--Effect name="SunEffect" track="0" startTime="0" endTime="300" /-->
   <!--PostEffect name="RadialBlurPostEffect" track="0" startTime="0" endTime="300" />
   <PostEffect name="GlowPostEffect" track="0" startTime="0" endTime="300">

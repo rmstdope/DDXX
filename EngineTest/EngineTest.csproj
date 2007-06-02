@@ -67,6 +67,7 @@
     </Compile>
     <Compile Include="SunEffect.cs" />
     <Compile Include="TestEffect.cs" />
+    <Compile Include="TimeSyncEffect.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DemoEffects\DemoEffects.csproj">
