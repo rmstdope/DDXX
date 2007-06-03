@@ -12,6 +12,7 @@ using Dope.DDXX.Utility;
 using Dope.DDXX.ParticleSystems;
 using Dope.DDXX.Graphics.Skinning;
 using Dope.DDXX.MeshBuilder;
+using TextureBuilder;
 
 namespace EngineTest
 {
@@ -28,6 +29,8 @@ namespace EngineTest
         private IBoundingObject sphere;
         private float reflectiveFactor;
         private PointLightNode light;
+        private ISprite sprite;
+        private ITexture perlinTexture;
 
         public float ReflectiveFactor
         {
@@ -96,6 +99,13 @@ namespace EngineTest
             spiralSystem2.WorldState.MoveUp(100.0f);
             scene.AddNode(spiralSystem1);
             //scene.AddNode(spiralSystem2);
+
+            IGenerator generator1 = new MarbleGenerator(4, 8, 0.5f);
+            IGenerator generator2 = new ColorModulationGenerator(generator1, Color.Red);
+            TextureBuilder.TextureBuilder builder = new TextureBuilder.TextureBuilder(TextureFactory);
+            perlinTexture = builder.Generate(generator2, 256, 256, 1, Format.A8R8G8B8);
+            //texture.Save("test.jpg", ImageFileFormat.Jpg);
+            sprite = GraphicsFactory.CreateSprite(Device);
 
             //AddWantingMoreModel();
 
@@ -238,6 +248,11 @@ namespace EngineTest
         public override void Render()
         {
             scene.Render();
+            sprite.Begin(SpriteFlags.None);
+            Device.RenderState.AlphaBlendEnable = false;
+            sprite.Draw2D(perlinTexture, Rectangle.Empty, new SizeF(256, 256), new PointF(200, 200), 
+                Color.FromArgb(255, Color.White));
+            sprite.End();
         }
 
     }
