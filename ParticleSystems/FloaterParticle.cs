@@ -31,6 +31,21 @@ namespace Dope.DDXX.ParticleSystems
             vertexDeclaration = graphicsFactory.CreateVertexDeclaration(device, elements);
         }
 
+        public BlendOperation BlendOperation
+        {
+            get { return BlendOperation.Add; }
+        }
+
+        public Blend SourceBlend
+        {
+            get { return Blend.One; }
+        }
+
+        public Blend DestinationBlend
+        {
+            get { return Blend.One; }
+        }
+
         public int MaxNumParticles
         {
             get { return maxNumParticles; }

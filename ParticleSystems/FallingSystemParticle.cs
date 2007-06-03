@@ -28,6 +28,21 @@ namespace Dope.DDXX.ParticleSystems
             vertexDeclaration = graphicsFactory.CreateVertexDeclaration(device, elements);
         }
 
+        public BlendOperation BlendOperation
+        {
+            get { return BlendOperation.Add; }
+        }
+
+        public Blend SourceBlend
+        {
+            get { return Blend.One; }
+        }
+
+        public Blend DestinationBlend
+        {
+            get { return Blend.One; }
+        }
+
         public ISystemParticle Spawn()
         {
             return new FallingStarParticle(100.0f);

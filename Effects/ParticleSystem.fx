@@ -160,9 +160,6 @@ technique PointSpriteNoTexture
 		PointSpriteEnable = true;
 		ZFunc							= Less;
 		ZWriteEnable			= false;
-		AlphaBlendEnable	= true;
-		SrcBlend					= SrcAlpha;
-		DestBlend					= One;
   }
 }
 
@@ -176,13 +173,10 @@ technique PointSprite
 		PointSpriteEnable = true;
 		ZFunc							= Less;
 		ZWriteEnable			= false;
-		AlphaBlendEnable	= true;
-		SrcBlend					= SrcAlpha;
-		DestBlend					= InvSrcAlpha;
   }
 }
 
-technique PreTransformed
+technique XXXPreTransformed
 {
 	pass P0
 	{
@@ -197,7 +191,7 @@ technique PreTransformed
   }
 }
 
-technique Generic
+technique XXXGeneric
 {
 	pass P0
 	{

@@ -16,9 +16,6 @@ namespace Dope.DDXX.SceneGraph
         private IEffectHandler effectHandler;
         private List<ISystemParticle> particles;
         private ModelMaterial material;
-        private BlendOperation blendOperation;
-        private Blend sourceBlend;
-        private Blend destinationBlend;
         static private Random rand = new Random();
         private ISystemParticleSpawner particleSpawner;
 
@@ -38,9 +35,6 @@ namespace Dope.DDXX.SceneGraph
             Material dxMaterial = new Material();
             dxMaterial.Ambient = Color.White;
             material = new ModelMaterial(dxMaterial);
-            blendOperation = BlendOperation.Add;
-            sourceBlend = Blend.One;
-            destinationBlend = Blend.One;
         }
 
         protected Vector3 RandomPositionInSphere(float radius)
@@ -108,9 +102,9 @@ namespace Dope.DDXX.SceneGraph
                 effectHandler.Effect.BeginPass(i);
 
                 device.RenderState.AlphaBlendEnable = true;
-                device.RenderState.BlendOperation = blendOperation;
-                device.RenderState.SourceBlend = sourceBlend;
-                device.RenderState.DestinationBlend = destinationBlend;
+                device.RenderState.BlendOperation = particleSpawner.BlendOperation;
+                device.RenderState.SourceBlend = particleSpawner.SourceBlend;
+                device.RenderState.DestinationBlend = particleSpawner.DestinationBlend;
                 device.SetStreamSource(0, vertexBuffer, 0);
                 device.VertexDeclaration = particleSpawner.VertexDeclaration;
                 device.DrawPrimitives(PrimitiveType.PointList, 0, ActiveParticles);

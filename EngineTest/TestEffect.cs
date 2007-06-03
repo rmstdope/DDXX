@@ -19,7 +19,8 @@ namespace EngineTest
     {
         private ParticleSystemNode floaterSystem;
         private ParticleSystemNode starSystem;
-        private ParticleSystemNode spiralSystem;
+        private ParticleSystemNode spiralSystem1;
+        private ParticleSystemNode spiralSystem2;
         private CameraNode camera;
         private IScene scene;
         private ModelNode modelNode;
@@ -83,12 +84,18 @@ namespace EngineTest
             starSystem.WorldState.MoveRight(-100.0f);
             //scene.AddNode(starSystem);
 
-            spiralSystem = new ParticleSystemNode("SpiralSystem");
+            spiralSystem1 = new ParticleSystemNode("SpiralSystem1");
+            spiralSystem2 = new ParticleSystemNode("SpiralSystem2");
             spawner = new SpiralParticleSpawner(GraphicsFactory, Device, 5000);
-            spiralSystem.Initialize(spawner, Device, GraphicsFactory, EffectFactory, circleTexture);
-            spiralSystem.WorldState.MoveForward(500.0f);
-            spiralSystem.WorldState.MoveUp(-100.0f);
-            scene.AddNode(spiralSystem);
+            spiralSystem1.Initialize(spawner, Device, GraphicsFactory, EffectFactory, circleTexture);
+            spawner = new SpiralParticleSpawner(GraphicsFactory, Device, 5000);
+            spiralSystem2.Initialize(spawner, Device, GraphicsFactory, EffectFactory, null);
+            spiralSystem1.WorldState.MoveForward(500.0f);
+            spiralSystem2.WorldState.MoveForward(500.0f);
+            spiralSystem1.WorldState.MoveUp(100.0f);
+            spiralSystem2.WorldState.MoveUp(100.0f);
+            scene.AddNode(spiralSystem1);
+            //scene.AddNode(spiralSystem2);
 
             //AddWantingMoreModel();
 
@@ -222,6 +229,8 @@ namespace EngineTest
                 modelNode.WorldState.Roll(scale / 100.0f);
                 modelNode.WorldState.Turn(Time.DeltaTime);
             }
+
+            spiralSystem1.WorldState.Turn(-Time.DeltaTime * 0.05f);
 
             scene.Step();
         }

@@ -29,10 +29,25 @@ namespace Dope.DDXX.ParticleSystems
             vertexDeclaration = graphicsFactory.CreateVertexDeclaration(device, elements);
         }
 
+        public BlendOperation BlendOperation
+        {
+            get { return BlendOperation.Add; }
+        }
+
+        public Blend SourceBlend
+        {
+            get { return Blend.SourceAlpha; }
+        }
+
+        public Blend DestinationBlend
+        {
+            get { return Blend.InvSourceAlpha; }
+        }
+
         public ISystemParticle Spawn()
         {
             Vector3 position = new Vector3(Rand.Float(-1, 1), Rand.Float(-1, 1), Rand.Float(-1, 1));
-            Vector3 velocity = new Vector3((float)Math.Sin(nextTime * 0.8f), 0, (float)Math.Cos(nextTime * 0.8f));
+            Vector3 velocity = new Vector3((float)Math.Sin(nextTime * 0.8f), -0.6f, (float)Math.Cos(nextTime * 0.8f));
             position *= 10;
             velocity *= 20;
             velocity += new Vector3(Rand.Float(-1, 1), Rand.Float(-1, 1), Rand.Float(-1, 1)) * 1.4f;
@@ -71,11 +86,13 @@ namespace Dope.DDXX.ParticleSystems
     public class SpiralParticle : SystemParticle
     {
         private Vector3 velocity;
+        private float stopTime;
 
         public SpiralParticle(Vector3 position, Vector3 velocity, float size)
-            : base(position, Color.White, size)
+            : base(position, Color.FromArgb(200, Color.White), size)
         {
             this.velocity = velocity;
+            stopTime = 7;
         }
 
         public override void StepAndWrite(IGraphicsStream stream)
@@ -91,7 +108,22 @@ namespace Dope.DDXX.ParticleSystems
 
         public void Step(float time)
         {
-            Position += velocity * time;
+            float newTime = time;
+            if (stopTime <= 0)
+                newTime = 0;
+            else if (stopTime - newTime <= 0)
+                newTime = stopTime;
+            stopTime -= newTime;
+            Position += velocity * newTime;
+            Position.Y += velocity.Y * (time - newTime);
+                //Vector2 xz = new Vector2(Position.X, Position.Z);
+                //float length = xz.Length();
+                //if (length > 100)
+                //{
+                //    xz *= 100 / length;
+                //    Position.X = xz.X;
+                //    Position.Z = xz.Y;
+                //}
         }
     }
 }
