@@ -2,26 +2,33 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX;
+using System.Drawing;
 
 namespace TextureBuilder
 {
-    public class PerlinNoiseGenerator : IGenerator
+    public class PerlinNoiseGenerator : GeneratorBase
     {
         private int numOctaves;
         private float baseFrequency;
         private float persistence;
+        private Vector4 color;
+        private Vector4 colorDiff;
 
         public PerlinNoiseGenerator(int numOctaves, float baseFrequency, float persistance)
         {
             this.numOctaves = numOctaves;
             this.baseFrequency = baseFrequency;
             this.persistence = persistance;
+            color = new Vector4(0, 0, 0, 0);
+            colorDiff = new Vector4(1, 1, 1, 1);
         }
 
-        public Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
         {
             float value = PerlinNoise(textureCoordinate);
-            return new Vector4(value, value, value, value);
+            //Vector4 hsla = new Vector4(169 / 255.0f, 255 / 255.0f, 0.75f + value / 3, value);
+            //return HslaToRgba(hsla);
+            return color + colorDiff * value;
         }
 
         private float Noise(int x, int y)
@@ -88,7 +95,15 @@ namespace TextureBuilder
 
                 total += InterpolatedNoise(position.X * frequency, position.Y * frequency) * amplitude;
             }
-            return ((total + 1) / 2);
+            return (total + 1) / 2.0f;
+        }
+
+
+        public void SetColors(Color color1, Color color2)
+        {
+            color = ColorToRgba(color1);
+            Vector4 color2Vec = ColorToRgba(color2);
+            colorDiff = color2Vec - color;
         }
 
     }

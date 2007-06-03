@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColorModulationGenerator.cs" />
+    <Compile Include="GeneratorBase.cs" />
     <Compile Include="IGenerator.cs" />
     <Compile Include="MarbleGenerator.cs" />
     <Compile Include="PerlinNoiseGenerator.cs" />

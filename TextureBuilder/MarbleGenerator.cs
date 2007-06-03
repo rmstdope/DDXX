@@ -5,21 +5,33 @@ using Microsoft.DirectX;
 
 namespace TextureBuilder
 {
-    public class MarbleGenerator : IGenerator
+    public class MarbleGenerator : GeneratorBase
     {
         private IGenerator perlinGenerator;
+        private float veinPeriodX;
+        private float veinPeriodY;
+        private float turbSize;
+        private float turbPower;
 
-        public MarbleGenerator(int numOctaves, float baseFrequency, float persistance)
+        public MarbleGenerator(float veinPeriodX, float veinPeriodY, float turbulenceSize, float turbulencePower)
         {
-            perlinGenerator = new PerlinNoiseGenerator(numOctaves, baseFrequency, persistance);
+            this.turbSize = turbulenceSize;
+            this.veinPeriodX = veinPeriodX;
+            this.veinPeriodY = veinPeriodY;
+            this.turbPower = turbulencePower;
+            perlinGenerator = new PerlinNoiseGenerator(6, turbSize, 0.5f);
         }
 
-        public Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
         {
             float value = perlinGenerator.GetPixel(textureCoordinate, texelSize).X;
-            value = (float)Math.Cos((textureCoordinate.X / 256 + value) * 12 * Math.PI);
+            value = value * 2 - 1;
+            value = (float)Math.Cos((textureCoordinate.X * veinPeriodX +
+                textureCoordinate.Y * veinPeriodY + value * turbPower) * (float)Math.PI);
             value = (value + 1) / 2.0f;
-            return new Vector4(value, value, value, value);
+            Vector4 hsla = new Vector4(0.5f, 0.4f, 0.0f + value / 1.0f, value);
+            return HslaToRgba(hsla);
+            //return new Vector4(value, value, value, value);
         }
     }
 }

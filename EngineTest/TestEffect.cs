@@ -100,10 +100,11 @@ namespace EngineTest
             scene.AddNode(spiralSystem1);
             //scene.AddNode(spiralSystem2);
 
-            IGenerator generator1 = new MarbleGenerator(4, 8, 0.5f);
-            IGenerator generator2 = new ColorModulationGenerator(generator1, Color.Red);
+            MarbleGenerator generator1 = new MarbleGenerator(8, 10, 10.0f, 6.0f);
+            //generator1.SetColors(Color.Black, Color.Blue);
+            //IGenerator generator2 = new ColorModulationGenerator(generator1, Color.Red);
             TextureBuilder.TextureBuilder builder = new TextureBuilder.TextureBuilder(TextureFactory);
-            perlinTexture = builder.Generate(generator2, 256, 256, 1, Format.A8R8G8B8);
+            perlinTexture = builder.Generate(generator1, 256, 256, 1, Format.A8R8G8B8);
             //texture.Save("test.jpg", ImageFileFormat.Jpg);
             sprite = GraphicsFactory.CreateSprite(Device);
 
