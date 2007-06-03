@@ -82,6 +82,8 @@ namespace Dope.DDXX.SceneGraph
 
         protected override void StepNode()
         {
+            while (particleSpawner.MaxNumParticles != particles.Count && particleSpawner.ShouldSpawn())
+                particles.Add(particleSpawner.Spawn());
             using (IGraphicsStream stream = vertexBuffer.Lock(0, 0, LockFlags.Discard))
             {
                 foreach (ISystemParticle particle in particles)
@@ -94,6 +96,8 @@ namespace Dope.DDXX.SceneGraph
 
         protected override void RenderNode(IScene scene)
         {
+            if (particles.Count == 0)
+                return;
             effectHandler.SetNodeConstants(WorldMatrix, scene.ActiveCamera.ViewMatrix, scene.ActiveCamera.ProjectionMatrix);
             effectHandler.SetMaterialConstants(scene.AmbientColor, material, 0);
 

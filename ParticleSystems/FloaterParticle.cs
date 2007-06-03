@@ -67,6 +67,11 @@ namespace Dope.DDXX.ParticleSystems
         {
             get { return maxNumParticles;  }
         }
+
+        public bool ShouldSpawn()
+        {
+            return false;
+        }
     }
 
     public class FloaterParticle : SystemParticle

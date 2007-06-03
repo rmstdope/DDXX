@@ -160,7 +160,7 @@ namespace Dope.DDXX.DemoFramework
                 CustomVertex.TransformedTextured[] vertices = CreateVertexStruct(technique, source, destination, pass);
                 effect.BeginPass(pass);
                 if (shouldClear)
-                    device.Clear(ClearFlags.Target, Color.Black, 0, 0);
+                    device.Clear(ClearFlags.Target, Color.DarkSlateBlue, 0, 0);
                 device.DrawUserPrimitives(PrimitiveType.TriangleStrip, 2, vertices);
                 effect.EndPass();
             }

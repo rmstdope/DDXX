@@ -1,21 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.DirectX.Direct3D;
+using Dope.DDXX.Graphics;
+using Dope.DDXX.SceneGraph;
 using Microsoft.DirectX;
 using System.Drawing;
-using Dope.DDXX.SceneGraph;
-using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
-using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.ParticleSystems
 {
-    public class FallingStarParticleSpawner : ISystemParticleSpawner
+    public class SpiralParticleSpawner : ISystemParticleSpawner
     {
         private VertexDeclaration vertexDeclaration;
         private int maxNumParticles;
+        private float nextTime = -20;
 
-        public FallingStarParticleSpawner(IGraphicsFactory graphicsFactory, IDevice device, int maxNumParticles)
+        public SpiralParticleSpawner(IGraphicsFactory graphicsFactory, IDevice device, int maxNumParticles)
         {
             this.maxNumParticles = maxNumParticles;
             VertexElement[] elements = new VertexElement[]
@@ -30,7 +31,15 @@ namespace Dope.DDXX.ParticleSystems
 
         public ISystemParticle Spawn()
         {
-            return new FallingStarParticle(100.0f);
+            Vector3 position = new Vector3(Rand.Float(-1, 1), Rand.Float(-1, 1), Rand.Float(-1, 1));
+            Vector3 velocity = new Vector3((float)Math.Sin(nextTime * 0.8f), 0, (float)Math.Cos(nextTime * 0.8f));
+            position *= 10;
+            velocity *= 20;
+            velocity += new Vector3(Rand.Float(-1, 1), Rand.Float(-1, 1), Rand.Float(-1, 1)) * 1.4f;
+            SpiralParticle particle = new SpiralParticle(position, velocity, Rand.Float(5, 10));
+            particle.Step(Time.StepTime - nextTime);
+            nextTime += 0.02f;
+            return particle;
         }
 
         public Type VertexType
@@ -45,7 +54,7 @@ namespace Dope.DDXX.ParticleSystems
 
         public int NumInitialSpawns
         {
-            get { return maxNumParticles; }
+            get { return 0; }
         }
 
         public int MaxNumParticles
@@ -55,56 +64,34 @@ namespace Dope.DDXX.ParticleSystems
 
         public bool ShouldSpawn()
         {
-            return false;
+            return (Time.StepTime > nextTime);
         }
     }
 
-    public class FallingStarParticle : SystemParticle
+    public class SpiralParticle : SystemParticle
     {
-        private float radius;
-        public Vector3 Velocity;
-        public FallingStarParticle(float radius)
-            : base(FallingStarParticle.RandomPositionInSphere(radius), Color.Red, Rand.Float(5) + 5)
-        {
-            this.radius = radius;
-            Velocity = new Vector3(Rand.Float(0, 0.3), -1, Rand.Float(0, 0.3));
-            Velocity.Normalize();
-            Velocity *= 50;
-        }
+        private Vector3 velocity;
 
-        private static Vector3 RandomPositionInSphere(float radius)
+        public SpiralParticle(Vector3 position, Vector3 velocity, float size)
+            : base(position, Color.White, size)
         {
-            Vector3 pos;
-            do
-            {
-                pos = new Vector3(Rand.Float(-radius, radius),
-                    Rand.Float(-radius, radius),
-                    Rand.Float(-radius, radius));
-            } while (pos.Length() > radius);
-            return pos;
-        }
-
-        private void Respawn()
-        {
-            Position = FallingStarParticle.RandomPositionInSphere(radius);
-            Color = Color.Red;
-            Size = Rand.Float(5) + 5;
-            Velocity = new Vector3(Rand.Float(0, 0.3), -1, Rand.Float(0, 0.3));
-            Velocity.Normalize();
-            Velocity *= 50;
+            this.velocity = velocity;
         }
 
         public override void StepAndWrite(IGraphicsStream stream)
         {
             VertexColorPoint vertex;
 
-            Position += Velocity * Time.DeltaTime;
-            if (Position.Length() > radius)
-                Respawn();
+            Step(Time.DeltaTime);
             vertex.Position = Position;
             vertex.Size = Size;
             vertex.Color = Color.ToArgb();
             stream.Write(vertex);
+        }
+
+        public void Step(float time)
+        {
+            Position += velocity * time;
         }
     }
 }

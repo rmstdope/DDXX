@@ -178,7 +178,7 @@ technique PointSprite
 		ZWriteEnable			= false;
 		AlphaBlendEnable	= true;
 		SrcBlend					= SrcAlpha;
-		DestBlend					= One;
+		DestBlend					= InvSrcAlpha;
   }
 }
 

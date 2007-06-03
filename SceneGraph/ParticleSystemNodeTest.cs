@@ -53,8 +53,8 @@ namespace Dope.DDXX.SceneGraph
         public void TestInitializeNoTexture()
         {
             ExpectEffect();
-            ExpectVertexBuffer(100, typeof(float));
-            ExpectSpawner(2, 100, typeof(float));
+            ExpectVertexBuffer(5, typeof(float));
+            ExpectSpawner(2, 5, typeof(float));
             system.Initialize(spawner, device, graphicsFactory, effectFactory, null);
         }
 
@@ -63,15 +63,75 @@ namespace Dope.DDXX.SceneGraph
         {
             ExpectEffect();
             ExpectVertexBuffer(20, typeof(int));
-            ExpectSpawner(5, 20, typeof(int));
+            ExpectSpawner(20, 20, typeof(int));
             system.Initialize(spawner, device, graphicsFactory, effectFactory, texture);
         }
 
         [Test]
-        public void TestStep()
+        public void TestStepNoCreate()
         {
             TestInitializeNoTexture();
 
+            Expect.Once.On(spawner).
+                Method("ShouldSpawn").Will(Return.Value(false));
+            Expect.Once.On(vertexBuffer).
+                Method("Lock").
+                With(0, 0, LockFlags.Discard).
+                Will(Return.Value(graphicsStream));
+            foreach (ISystemParticle particle in particles)
+                Expect.Once.On(particle).Method("StepAndWrite").With(graphicsStream);
+            Expect.Once.On(vertexBuffer).
+                Method("Unlock");
+            system.Step();
+        }
+
+        [Test]
+        public void TestStepAllCreated()
+        {
+            TestInitializeWithTexture();
+
+            Expect.Once.On(vertexBuffer).
+                Method("Lock").
+                With(0, 0, LockFlags.Discard).
+                Will(Return.Value(graphicsStream));
+            foreach (ISystemParticle particle in particles)
+                Expect.Once.On(particle).Method("StepAndWrite").With(graphicsStream);
+            Expect.Once.On(vertexBuffer).
+                Method("Unlock");
+            system.Step();
+        }
+
+        [Test]
+        public void TestStepCreateOne()
+        {
+            TestInitializeNoTexture();
+
+            Expect.Once.On(spawner).Method("ShouldSpawn").Will(Return.Value(true));
+            particles.Add(mockery.NewMock<ISystemParticle>());
+            Expect.Once.On(spawner).Method("Spawn").Will(Return.Value(particles[particles.Count - 1]));
+            Expect.Once.On(spawner).Method("ShouldSpawn").Will(Return.Value(false));
+            Expect.Once.On(vertexBuffer).
+                Method("Lock").
+                With(0, 0, LockFlags.Discard).
+                Will(Return.Value(graphicsStream));
+            foreach (ISystemParticle particle in particles)
+                Expect.Once.On(particle).Method("StepAndWrite").With(graphicsStream);
+            Expect.Once.On(vertexBuffer).
+                Method("Unlock");
+            system.Step();
+        }
+
+        [Test]
+        public void TestStepCreateThree()
+        {
+            TestInitializeNoTexture();
+
+            Expect.Exactly(3).On(spawner).Method("ShouldSpawn").Will(Return.Value(true));
+            for (int i = 0; i < 3; i++)
+            {
+                particles.Add(mockery.NewMock<ISystemParticle>());
+                Expect.Once.On(spawner).Method("Spawn").Will(Return.Value(particles[particles.Count - 1]));
+            }
             Expect.Once.On(vertexBuffer).
                 Method("Lock").
                 With(0, 0, LockFlags.Discard).

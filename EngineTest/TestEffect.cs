@@ -19,6 +19,7 @@ namespace EngineTest
     {
         private ParticleSystemNode floaterSystem;
         private ParticleSystemNode starSystem;
+        private ParticleSystemNode spiralSystem;
         private CameraNode camera;
         private IScene scene;
         private ModelNode modelNode;
@@ -73,15 +74,21 @@ namespace EngineTest
             floaterSystem.Initialize(spawner, Device, GraphicsFactory, EffectFactory, circleTexture);
             floaterSystem.WorldState.MoveForward(500.0f);
             floaterSystem.WorldState.MoveRight(100.0f);
-            scene.AddNode(floaterSystem);
+            //scene.AddNode(floaterSystem);
 
             starSystem = new ParticleSystemNode("StarSystem");
-            //ISystemParticleSpawner spawner = new FloaterParticleSpawner(50, 100.0f, D3DDriver.GraphicsFactory, D3DDriver.GetInstance().Device);
             spawner = new FallingStarParticleSpawner(GraphicsFactory, Device, 100);
             starSystem.Initialize(spawner, Device, GraphicsFactory, EffectFactory, circleTexture);
             starSystem.WorldState.MoveForward(500.0f);
             starSystem.WorldState.MoveRight(-100.0f);
-            scene.AddNode(starSystem);
+            //scene.AddNode(starSystem);
+
+            spiralSystem = new ParticleSystemNode("SpiralSystem");
+            spawner = new SpiralParticleSpawner(GraphicsFactory, Device, 5000);
+            spiralSystem.Initialize(spawner, Device, GraphicsFactory, EffectFactory, circleTexture);
+            spiralSystem.WorldState.MoveForward(500.0f);
+            spiralSystem.WorldState.MoveUp(-100.0f);
+            scene.AddNode(spiralSystem);
 
             //AddWantingMoreModel();
 

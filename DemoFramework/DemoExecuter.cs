@@ -37,6 +37,7 @@ namespace Dope.DDXX.DemoFramework
         private DemoEffectTypes effectTypes = new DemoEffectTypes();
         private TweakerSettings settings = new TweakerSettings();
         private DemoXMLReader xmlReader;
+        private Color backgroundColor = Color.DarkSlateBlue;
 
         private string songFilename;
 
@@ -240,7 +241,7 @@ namespace Dope.DDXX.DemoFramework
                 using (ISurface currentRenderTarget = backBuffer.GetSurfaceLevel(0))
                     device.SetRenderTarget(0, currentRenderTarget);
 
-                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.CornflowerBlue, 1.0f, 0);
+                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, backgroundColor, 1.0f, 0);
                 postProcessor.StartFrame(backBuffer);
 
                 if (tracks.Count != 0)

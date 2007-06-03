@@ -12,5 +12,6 @@ namespace Dope.DDXX.SceneGraph
         VertexDeclaration VertexDeclaration { get; }
         int NumInitialSpawns { get; }
         int MaxNumParticles { get; }
+        bool ShouldSpawn();
     }
 }
