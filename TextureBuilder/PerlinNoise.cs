@@ -6,15 +6,17 @@ using System.Drawing;
 
 namespace TextureBuilder
 {
-    public class PerlinNoiseGenerator : GeneratorBase
+    public class PerlinNoise : Generator
     {
         private int numOctaves;
         private float baseFrequency;
         private float persistence;
         private Vector4 color;
         private Vector4 colorDiff;
+        protected bool createTurbulence = false;
 
-        public PerlinNoiseGenerator(int numOctaves, float baseFrequency, float persistance)
+        public PerlinNoise(int numOctaves, float baseFrequency, float persistance)
+            : base(0)
         {
             this.numOctaves = numOctaves;
             this.baseFrequency = baseFrequency;
@@ -25,7 +27,7 @@ namespace TextureBuilder
 
         public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
         {
-            float value = PerlinNoise(textureCoordinate);
+            float value = CreatePerlinNoise(textureCoordinate);
             //Vector4 hsla = new Vector4(169 / 255.0f, 255 / 255.0f, 0.75f + value / 3, value);
             //return HslaToRgba(hsla);
             return color + colorDiff * value;
@@ -57,7 +59,6 @@ namespace TextureBuilder
 
         private float SmoothNoise(int x, int y)
         {
-            //return Noise(x, y);
             float corners = (Noise(x - 1, y - 1) + Noise(x + 1, y - 1) +
                 Noise(x - 1, y + 1) + Noise(x + 1, y + 1)) / 16;
             float sides = (Noise(x - 1, y) + Noise(x + 1, y) +
@@ -84,7 +85,7 @@ namespace TextureBuilder
             return Interpolate(i1, i2, fractionalY);
         }
 
-        private float PerlinNoise(Vector2 position)
+        private float CreatePerlinNoise(Vector2 position)
         {
             float total = 0;
             for (int i = 0; i < numOctaves; i++)
@@ -93,9 +94,15 @@ namespace TextureBuilder
                 float frequency = baseFrequency * (float)Math.Pow(2, i);
                 float amplitude = (float)Math.Pow(persistence, i);
 
-                total += InterpolatedNoise(position.X * frequency, position.Y * frequency) * amplitude;
+                if (createTurbulence)
+                    total += (float)Math.Abs(InterpolatedNoise(position.X * frequency, position.Y * frequency) * amplitude);
+                else
+                    total += InterpolatedNoise(position.X * frequency, position.Y * frequency) * amplitude;
             }
-            return (total + 1) / 2.0f;
+            if (createTurbulence)
+                return total;
+            else
+                return (total + 1) / 2.0f;
         }
 
 

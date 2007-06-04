@@ -5,7 +5,7 @@ using Microsoft.DirectX;
 
 namespace TextureBuilder
 {
-    public class MarbleGenerator : GeneratorBase
+    public class Marble : Generator
     {
         private IGenerator perlinGenerator;
         private float veinPeriodX;
@@ -13,13 +13,14 @@ namespace TextureBuilder
         private float turbSize;
         private float turbPower;
 
-        public MarbleGenerator(float veinPeriodX, float veinPeriodY, float turbulenceSize, float turbulencePower)
+        public Marble(float veinPeriodX, float veinPeriodY, float turbulenceSize, float turbulencePower)
+            : base(0)
         {
             this.turbSize = turbulenceSize;
             this.veinPeriodX = veinPeriodX;
             this.veinPeriodY = veinPeriodY;
             this.turbPower = turbulencePower;
-            perlinGenerator = new PerlinNoiseGenerator(6, turbSize, 0.5f);
+            perlinGenerator = new PerlinTurbulence(6, turbSize, 0.5f);
         }
 
         public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
@@ -29,7 +30,7 @@ namespace TextureBuilder
             value = (float)Math.Cos((textureCoordinate.X * veinPeriodX +
                 textureCoordinate.Y * veinPeriodY + value * turbPower) * (float)Math.PI);
             value = (value + 1) / 2.0f;
-            Vector4 hsla = new Vector4(0.5f, 0.4f, 0.0f + value / 1.0f, value);
+            Vector4 hsla = new Vector4(0.5f, 0.4f, 0.0f + 0.04f / value, value);
             return HslaToRgba(hsla);
             //return new Vector4(value, value, value, value);
         }

@@ -6,8 +6,19 @@ using System.Drawing;
 
 namespace TextureBuilder
 {
-    public abstract class GeneratorBase : IGenerator
+    public abstract class Generator : IGenerator
     {
+        private int numInputPins;
+        private IGenerator[] inputPins;
+
+        public Generator(int numInputPins)
+        {
+            if (numInputPins < 0)
+                throw new ArgumentOutOfRangeException("numInputPins", numInputPins, "Must be greater or equal to zero.");
+            this.numInputPins = numInputPins;
+            inputPins = new IGenerator[numInputPins];
+        }
+
         protected Vector4 ColorToRgba(Color color1)
         {
             return new Vector4(color1.R / 255f, color1.G / 255f, color1.B / 255f, color1.A / 255f);
@@ -57,5 +68,28 @@ namespace TextureBuilder
         }
 
         public abstract Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize);
+
+        public void ConnectToInput(int inputPin, IGenerator outputGenerator)
+        {
+            ValidateInputPin(inputPin);
+            inputPins[inputPin] = outputGenerator;
+        }
+
+        protected Vector4 GetInput(int inputPin, Vector2 textureCoordinate)
+        {
+            ValidateInputPin(inputPin);
+            if (inputPins[inputPin] == null)
+                throw new ArgumentException("Input " + inputPin + "has not been connected yet.");
+            return inputPins[inputPin].GetPixel(textureCoordinate, new Vector2());
+        }
+
+        private void ValidateInputPin(int inputPin)
+        {
+            if (inputPin < 0)
+                throw new ArgumentOutOfRangeException("inputPin", inputPin, "Must not be negative.");
+            if (inputPin >= numInputPins)
+                throw new ArgumentOutOfRangeException("inputPin", inputPin, "Must be less than number of input pins.");
+        }
+
     }
 }

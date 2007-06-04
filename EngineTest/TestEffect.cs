@@ -30,7 +30,8 @@ namespace EngineTest
         private float reflectiveFactor;
         private PointLightNode light;
         private ISprite sprite;
-        private ITexture perlinTexture;
+        private ITexture generatedTexture1;
+        private ITexture generatedTexture2;
 
         public float ReflectiveFactor
         {
@@ -100,13 +101,10 @@ namespace EngineTest
             scene.AddNode(spiralSystem1);
             //scene.AddNode(spiralSystem2);
 
-            MarbleGenerator generator1 = new MarbleGenerator(8, 10, 10.0f, 6.0f);
             //generator1.SetColors(Color.Black, Color.Blue);
             //IGenerator generator2 = new ColorModulationGenerator(generator1, Color.Red);
-            TextureBuilder.TextureBuilder builder = new TextureBuilder.TextureBuilder(TextureFactory);
-            perlinTexture = builder.Generate(generator1, 256, 256, 1, Format.A8R8G8B8);
-            //texture.Save("test.jpg", ImageFileFormat.Jpg);
-            sprite = GraphicsFactory.CreateSprite(Device);
+
+            InitializeTextures();
 
             //AddWantingMoreModel();
 
@@ -201,6 +199,23 @@ namespace EngineTest
         {
         }
 
+        private void InitializeTextures()
+        {
+            TextureBuilder.TextureBuilder builder = new TextureBuilder.TextureBuilder(TextureFactory);
+            sprite = GraphicsFactory.CreateSprite(Device);
+
+            //IGenerator generator1 = new MarbleGenerator(1, 2, 4.0f, 3.0f);
+            IGenerator generator1 = new PerlinNoise(6, 8, 0.5f);
+
+            IGenerator generator2 = new ColorModulation(new Vector4(0.8f, 0.1f, 0.1f, 1));
+            generator2.ConnectToInput(0, generator1);
+            generatedTexture1 = builder.Generate(generator2, 256, 256, 1, Format.A8R8G8B8);
+
+            generator2 = new ColorBlend(new Vector4(0, 0, 0, 0), new Vector4(0.8f, 0.1f, 0.1f, 1));
+            generator2.ConnectToInput(0, generator1);
+            generatedTexture2 = builder.Generate(generator2, 256, 256, 1, Format.A8R8G8B8);
+        }
+
         public override void Step()
         {
             if (clothModel != null)
@@ -251,8 +266,20 @@ namespace EngineTest
             scene.Render();
             sprite.Begin(SpriteFlags.None);
             Device.RenderState.AlphaBlendEnable = false;
-            sprite.Draw2D(perlinTexture, Rectangle.Empty, new SizeF(256, 256), new PointF(200, 200), 
-                Color.FromArgb(255, Color.White));
+            if (generatedTexture1 != null)
+            {
+                sprite.Draw2D(generatedTexture1, Rectangle.Empty, new SizeF(256, 256), new PointF(100, 44),
+                    Color.FromArgb(255, Color.White));
+                sprite.Draw2D(generatedTexture1, Rectangle.Empty, new SizeF(256, 256), new PointF(100, 300),
+                    Color.FromArgb(255, Color.White));
+            }
+            if (generatedTexture2 != null)
+            {
+                sprite.Draw2D(generatedTexture2, Rectangle.Empty, new SizeF(256, 256), new PointF(400, 44),
+                    Color.FromArgb(255, Color.White));
+                sprite.Draw2D(generatedTexture2, Rectangle.Empty, new SizeF(256, 256), new PointF(400, 300),
+                    Color.FromArgb(255, Color.White));
+            }
             sprite.End();
         }
 
