@@ -12,7 +12,7 @@ using Dope.DDXX.Utility;
 using Dope.DDXX.ParticleSystems;
 using Dope.DDXX.Graphics.Skinning;
 using Dope.DDXX.MeshBuilder;
-using TextureBuilder;
+using Dope.DDXX.TextureBuilder;
 
 namespace EngineTest
 {
@@ -32,6 +32,7 @@ namespace EngineTest
         private ISprite sprite;
         private ITexture generatedTexture1;
         private ITexture generatedTexture2;
+        private ModelNode terrainModel;
 
         public float ReflectiveFactor
         {
@@ -105,6 +106,22 @@ namespace EngineTest
             //IGenerator generator2 = new ColorModulationGenerator(generator1, Color.Red);
 
             InitializeTextures();
+
+            IGenerator generator = new PerlinNoise(5, 8, 0.5f);
+            MeshBuilder builder = new MeshBuilder(GraphicsFactory, TextureFactory, Device);
+            builder.CreateTerrain("Terrain", generator, 10.0f, 20.0f, 20.0f, 50, 50, true);
+            builder.AssignMaterial("Terrain", "Default1");
+            builder.SetDiffuseTexture("Default1", "square.tga");
+            IModel model = builder.CreateModel("Terrain");
+            model.Mesh.ComputeNormals();
+            model.Materials[0].AmbientColor = new ColorValue(0.1f, 0.1f, 0.1f);
+            model.Materials[0].DiffuseColor = new ColorValue(0.6f, 0.6f, 0.6f);
+            terrainModel = new ModelNode("Terrain", model,
+                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
+                delegate(int material) { return "Terrain"; }, model));
+            scene.AddNode(terrainModel);
+            terrainModel.WorldState.MoveUp(-6);
+            
 
             //AddWantingMoreModel();
 
@@ -201,19 +218,34 @@ namespace EngineTest
 
         private void InitializeTextures()
         {
-            TextureBuilder.TextureBuilder builder = new TextureBuilder.TextureBuilder(TextureFactory);
+            Dope.DDXX.TextureBuilder.TextureBuilder builder = new Dope.DDXX.TextureBuilder.TextureBuilder(TextureFactory);
             sprite = GraphicsFactory.CreateSprite(Device);
 
             //IGenerator generator1 = new MarbleGenerator(1, 2, 4.0f, 3.0f);
-            IGenerator generator1 = new PerlinNoise(6, 8, 0.5f);
+            //IGenerator generator1 = new PerlinNoise(6, 8, 0.5f);
+            IGenerator bricks = new Bricks(4, 8, 0.025f);
+            IGenerator noise = new PerlinNoise(6, 32, 0.5f);
+            IGenerator noise2 = new PerlinNoise(4, 128, 0.5f);
+            IGenerator madd = new Madd(0.5f, 0.5f);
+            IGenerator madd2 = new Madd(1.0f, 0.6f);
+            IGenerator modulate = new Modulate();
+            IGenerator factor = new FactorBlend(0.5f);
+            IGenerator colorModulation = new ColorBlend(new Vector4(0.3f, 0.3f, 0.3f, 1), new Vector4(0.89f, 0.45f, 0.36f, 1));
 
-            IGenerator generator2 = new ColorModulation(new Vector4(0.8f, 0.1f, 0.1f, 1));
-            generator2.ConnectToInput(0, generator1);
-            generatedTexture1 = builder.Generate(generator2, 256, 256, 1, Format.A8R8G8B8);
+            madd.ConnectToInput(0, noise);
+            madd2.ConnectToInput(0, noise2);
+            modulate.ConnectToInput(0, bricks);
+            modulate.ConnectToInput(1, madd);
+            factor.ConnectToInput(0, bricks);
+            factor.ConnectToInput(1, madd2);
 
-            generator2 = new ColorBlend(new Vector4(0, 0, 0, 0), new Vector4(0.8f, 0.1f, 0.1f, 1));
-            generator2.ConnectToInput(0, generator1);
-            generatedTexture2 = builder.Generate(generator2, 256, 256, 1, Format.A8R8G8B8);
+            //generator2 = new ColorModulation(new Vector4(0.8f, 0.1f, 0.1f, 1));
+            colorModulation.ConnectToInput(0, factor);
+            generatedTexture1 = builder.Generate(madd2, 256, 256, 1, Format.A8R8G8B8);
+
+            IGenerator rect = new RoundedRectangle(new Vector2(1.0f, 0.9f), new Vector2(0.5f, 0.5f), 0.1f);
+            colorModulation.ConnectToInput(0, rect);
+            generatedTexture2 = builder.Generate(rect, 256, 256, 1, Format.A8R8G8B8);
         }
 
         public override void Step()
@@ -257,30 +289,46 @@ namespace EngineTest
             }
 
             spiralSystem1.WorldState.Turn(-Time.DeltaTime * 0.05f);
+            terrainModel.WorldState.Turn(Time.DeltaTime / 2);
+            //terrainModel.WorldState.Tilt(Time.DeltaTime / 1.2345f);
 
             scene.Step();
         }
 
         public override void Render()
         {
+            //for (int y = 0; y < 2; y++)
+            //{
+            //    for (int x = 0; x < 2; x++)
+            //    {
+            //        Viewport viewport = Device.Viewport;
+            //        viewport.Width = 400;
+            //        viewport.Height = 300;
+            //        viewport.Y = y * 300;
+            //        viewport.X = x * 400;
+            //        Device.Viewport = viewport;
+
+            //        scene.Render();
+            //    }
+            //}
             scene.Render();
-            sprite.Begin(SpriteFlags.None);
-            Device.RenderState.AlphaBlendEnable = false;
-            if (generatedTexture1 != null)
-            {
-                sprite.Draw2D(generatedTexture1, Rectangle.Empty, new SizeF(256, 256), new PointF(100, 44),
-                    Color.FromArgb(255, Color.White));
-                sprite.Draw2D(generatedTexture1, Rectangle.Empty, new SizeF(256, 256), new PointF(100, 300),
-                    Color.FromArgb(255, Color.White));
-            }
-            if (generatedTexture2 != null)
-            {
-                sprite.Draw2D(generatedTexture2, Rectangle.Empty, new SizeF(256, 256), new PointF(400, 44),
-                    Color.FromArgb(255, Color.White));
-                sprite.Draw2D(generatedTexture2, Rectangle.Empty, new SizeF(256, 256), new PointF(400, 300),
-                    Color.FromArgb(255, Color.White));
-            }
-            sprite.End();
+            //sprite.Begin(SpriteFlags.None);
+            //Device.RenderState.AlphaBlendEnable = false;
+            //if (generatedTexture1 != null)
+            //{
+            //    sprite.Draw2D(generatedTexture1, Rectangle.Empty, new SizeF(256, 256), new PointF(100, 44),
+            //        Color.FromArgb(255, Color.White));
+            //    sprite.Draw2D(generatedTexture1, Rectangle.Empty, new SizeF(256, 256), new PointF(100, 300),
+            //        Color.FromArgb(255, Color.White));
+            //}
+            //if (generatedTexture2 != null)
+            //{
+            //    sprite.Draw2D(generatedTexture2, Rectangle.Empty, new SizeF(256, 256), new PointF(356, 44),
+            //        Color.FromArgb(255, Color.White));
+            //    sprite.Draw2D(generatedTexture2, Rectangle.Empty, new SizeF(256, 256), new PointF(356, 300),
+            //        Color.FromArgb(255, Color.White));
+            //}
+            //sprite.End();
         }
 
     }

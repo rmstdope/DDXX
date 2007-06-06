@@ -1,5 +1,6 @@
 ﻿using System;
 using Dope.DDXX.Graphics;
+using Dope.DDXX.TextureBuilder;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -11,7 +12,8 @@ namespace Dope.DDXX.DemoFramework
         IDemoEffect[] GetEffects(float startTime, float endTime);
         IDemoPostEffect[] GetPostEffects(float startTime, float endTime);
         IDemoPostEffect[] GetPostEffects(float time);
-        void Initialize(IGraphicsFactory graphicsFactory, IDevice device, IPostProcessor postProcessor);
+        void Initialize(IGraphicsFactory graphicsFactory, IDevice device, ITextureFactory textureFactory, 
+            ITextureBuilder textureBuilder, IPostProcessor postProcessor);
         bool IsActive(float p);
         IDemoPostEffect[] PostEffects { get; }
         void Register(IDemoPostEffect postEffect);

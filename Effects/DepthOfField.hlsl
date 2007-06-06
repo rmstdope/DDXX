@@ -23,12 +23,25 @@ float4 FocalPlane = float4(0.0f, 0.0f, 1.0f, -5.0f);
 float  HyperfocalDistance = 2.0f;
 //float  MaxBlurFactor = 3.0f / 4.0f;
 float  MaxBlurFactor = 12.0f / 13.0f;
+float ChamferAdd = 0.2;
 
 DoFPixelInput
 DoFVertexShader(DoFVertexInput input)
 {
 	DoFPixelInput output;
 
+	if (input.Position.x > 0)
+		input.Position.x += ChamferAdd;
+	else
+		input.Position.x -= ChamferAdd;
+	if (input.Position.y > 0)
+		input.Position.y += ChamferAdd;
+	else
+		input.Position.y -= ChamferAdd;
+	if (input.Position.z > 0)
+		input.Position.z += ChamferAdd;
+	else
+		input.Position.z -= ChamferAdd;
 	float3 positionWS = mul(input.Position, WorldT);
 	output.Position = mul(input.Position, WorldViewProjectionT);
 	output.Normal = mul(input.Normal, (float3x3)WorldT);
@@ -72,6 +85,18 @@ OutlineVertexShader(DoFVertexInput input)
 {
 	OutlinePixelInput output;
 
+	if (input.Position.x > 0)
+		input.Position.x += ChamferAdd;
+	else
+		input.Position.x -= ChamferAdd;
+	if (input.Position.y > 0)
+		input.Position.y += ChamferAdd;
+	else
+		input.Position.y -= ChamferAdd;
+	if (input.Position.z > 0)
+		input.Position.z += ChamferAdd;
+	else
+		input.Position.z -= ChamferAdd;
 	// Tranform the position from object space to view space
 	float3 ViewPosition = mul(input.Position, (float4x3)WorldViewT);
 

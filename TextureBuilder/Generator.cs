@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.DirectX;
 using System.Drawing;
 
-namespace TextureBuilder
+namespace Dope.DDXX.TextureBuilder
 {
     public abstract class Generator : IGenerator
     {

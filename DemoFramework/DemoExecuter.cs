@@ -13,6 +13,7 @@ using Dope.DDXX.Sound;
 using Dope.DDXX.Utility;
 using System.Reflection;
 using System.IO;
+using Dope.DDXX.TextureBuilder;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -25,6 +26,7 @@ namespace Dope.DDXX.DemoFramework
         private IDevice device;
         private IGraphicsFactory graphicsFactory;
         private ITextureFactory textureFactory;
+        private ITextureBuilder textureBuilder;
         private ITexture backBuffer;
         private IPostProcessor postProcessor;
         private IDemoTweaker tweaker;
@@ -37,7 +39,7 @@ namespace Dope.DDXX.DemoFramework
         private DemoEffectTypes effectTypes = new DemoEffectTypes();
         private TweakerSettings settings = new TweakerSettings();
         private DemoXMLReader xmlReader;
-        private Color backgroundColor = Color.Black;//Color.DarkSlateBlue;
+        private Color backgroundColor = Color.DarkSlateBlue;
 
         private string songFilename;
 
@@ -85,6 +87,12 @@ namespace Dope.DDXX.DemoFramework
             set { tweaker = value; }
         }
 
+        public Color BackgroundColor
+        {
+            set { backgroundColor = value; }
+            get { return backgroundColor; }
+        }
+
         public DemoExecuter(IDemoFactory demoFactory, ISoundDriver soundDriver, IInputDriver inputDriver, IPostProcessor postProcessor)
         {
             activeTrack = 0;
@@ -96,26 +104,27 @@ namespace Dope.DDXX.DemoFramework
         }
 
         public void Initialize(IDevice device, IGraphicsFactory graphicsFactory,
-            ITextureFactory textureFactory)
+            ITextureFactory textureFactory, ITextureBuilder textureBuilder)
         {
-            this.Initialize(device, graphicsFactory, textureFactory, 
+            this.Initialize(device, graphicsFactory, textureFactory, textureBuilder,
                 new Assembly[] { Assembly.GetCallingAssembly() }, "");
         }
 
         public void Initialize(IDevice device, IGraphicsFactory graphicsFactory,
-            ITextureFactory textureFactory, string xmlFile)
+            ITextureFactory textureFactory, ITextureBuilder textureBuilder, string xmlFile)
         {
-            this.Initialize(device, graphicsFactory, textureFactory, 
+            this.Initialize(device, graphicsFactory, textureFactory, textureBuilder,
                 new Assembly[] { Assembly.GetCallingAssembly() }, xmlFile);
         }
 
         public void Initialize(IDevice device, IGraphicsFactory graphicsFactory, 
-            ITextureFactory textureFactory, Assembly[] assemblies, 
+            ITextureFactory textureFactory, ITextureBuilder textureBuilder, Assembly[] assemblies, 
             string xmlFile)
         {
             this.device = device;
             this.graphicsFactory = graphicsFactory;
             this.textureFactory = textureFactory;
+            this.textureBuilder = textureBuilder;
 
             effectTypes.Initialize(assemblies);
 
@@ -129,7 +138,7 @@ namespace Dope.DDXX.DemoFramework
 
             foreach (ITrack track in tracks)
             {
-                track.Initialize(graphicsFactory, device, postProcessor);
+                track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, postProcessor);
             }
 
             tweaker.Initialize(this);
@@ -309,7 +318,8 @@ namespace Dope.DDXX.DemoFramework
             {
                 effectTypes.SetProperty(lastAddedEffect, name, value);
                 ITweakableContainer container = lastAddedEffect as ITweakableContainer;
-                container.SetStepSize(container.GetTweakableNumber(name), stepSize);
+                if (stepSize > 0)
+                    container.SetStepSize(container.GetTweakableNumber(name), stepSize);
             }
         }
 

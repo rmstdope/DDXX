@@ -243,7 +243,7 @@ namespace Dope.DDXX.DemoFramework
             TweakableType parameterType = TweakableType.Unknown;
             string parameterName = null;
             string parameterValue = "";
-            float parameterStep = 1;
+            float parameterStep = -1;
             foreach (XmlAttribute attr in node.Attributes)
             {
                 string name = attr.Name;

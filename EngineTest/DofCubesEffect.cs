@@ -23,6 +23,7 @@ namespace EngineTest
         private ModelNode boxNode;
         private ITexture celTexture;
         private List<DirectionalLightNode> lights = new List<DirectionalLightNode>();
+        private IEffect boxEffect;
 
         public DofCubesEffect(float startTime, float endTime)
             : base(startTime, endTime)
@@ -45,15 +46,16 @@ namespace EngineTest
             CreateStandardSceneAndCamera(out scene, out camera, 5.0f);
             celTexture = TextureFactory.CreateFromFunction(64, 1, 0, Usage.None, Format.A8R8G8B8, Pool.Managed, celMapCallback);
 
-            MeshBuilder.CreateChamferBox("Box", 0.5f, 0.5f, 0.5f, 0.1f, 4);
+            MeshBuilder.CreateChamferBox("Box", 0.40001f, 0.40001f, 0.40001f, 0.2f, 12);
             MeshBuilder.AssignMaterial("Box", "Default1");
             MeshBuilder.SetDiffuseTexture("Default1", "red glass.jpg");
             IModel model = MeshBuilder.CreateModel("Box");
             //model.Materials[0].DiffuseColor = new ColorValue(0.6f, 0.6f, 0.6f);
             model.Materials[0].AmbientColor = new ColorValue(0.1f, 0.1f, 0.6f);
             model.Materials[0].DiffuseTexture = celTexture;
+            boxEffect = EffectFactory.CreateFromFile("Test.fxo");
             boxNode = new ModelNode("Box", model,
-                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
+                new EffectHandler(boxEffect,
                 delegate(int material) { return "CelWithDoF"; }, model));
             scene.AddNode(boxNode);
 
@@ -85,19 +87,24 @@ namespace EngineTest
             dir.X = (float)(Math.Cos(theta) * Math.Sin(phi));
             dir.Y = (float)(Math.Sin(theta) * Math.Sin(phi));
             dir.Z = (float)(Math.Cos(phi));
-            //light.Direction = dir;
-            //light.Direction = new Vector3(0, 0, -1);
 
             boxNode.WorldState.Roll(Time.DeltaTime * 1.2f);
             boxNode.WorldState.Turn(Time.DeltaTime);
             boxNode.WorldState.Position =
                 new Vector3((float)Math.Sin(Time.StepTime),
                 0.0f, (float)Math.Cos(Time.StepTime));
+
             scene.Step();
         }
 
         public override void Render()
         {
+            float add = (float)(Math.Sin(Time.CurrentTime) + 1) / 2;
+            boxEffect.SetValue(EffectHandle.FromString("ChamferAdd"), 
+                add);
+            float scale = add + 0.2f;
+            scale = 0.2f / scale;
+            boxNode.WorldState.Scaling = new Vector3(scale, scale, scale);
             scene.Render();
         }
     }

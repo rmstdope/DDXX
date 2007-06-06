@@ -17,6 +17,7 @@ namespace Dope.DDXX.DemoFramework
         Vector3 GetVector3Value(int num);
         string GetStringValue(int num);
         Color GetColorValue(int num);
+        bool GetBoolValue(int num);
         void SetValue(int num, object value);
         void SetStepSize(int num, float size);
         float GetStepSize(int num);

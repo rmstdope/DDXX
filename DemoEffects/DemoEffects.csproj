@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AspectilizerPostEffect.cs" />
+    <Compile Include="AspectilizerPostEffectTest.cs" />
     <Compile Include="BlurPostEffect.cs" />
     <Compile Include="BlurPostEffectTest.cs" />
     <Compile Include="DepthOfFieldPostEffect.cs" />
@@ -71,6 +73,10 @@
     <ProjectReference Include="..\Graphics\Graphics.csproj">
       <Project>{B64087ED-595E-4597-84D8-D273FF00B2DA}</Project>
       <Name>Graphics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TextureBuilder\TextureBuilder.csproj">
+      <Project>{712F1F16-E7BC-4D96-8B1A-AEA31365FD95}</Project>
+      <Name>TextureBuilder</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utility\Utility.csproj">
       <Project>{31D76405-2DD3-436A-BE65-963DE822511E}</Project>

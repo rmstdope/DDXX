@@ -7,7 +7,7 @@ using Dope.DDXX.Graphics;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX;
 
-namespace TextureBuilder
+namespace Dope.DDXX.TextureBuilder
 {
     [TestFixture]
     public class TextureBuilderTest

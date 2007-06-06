@@ -5,9 +5,9 @@ using Dope.DDXX.Graphics;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX;
 
-namespace TextureBuilder
+namespace Dope.DDXX.TextureBuilder
 {
-    public class TextureBuilder
+    public class TextureBuilder : ITextureBuilder
     {
         private ITextureFactory textureFactory;
 

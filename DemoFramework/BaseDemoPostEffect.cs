@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.SceneGraph;
+using Dope.DDXX.TextureBuilder;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -12,6 +13,8 @@ namespace Dope.DDXX.DemoFramework
         private float endTime;
         private IPostProcessor postProcessor;
         private ITextureFactory textureFactory;
+        private ITextureBuilder textureBuilder;
+        private IDevice device;
 
         protected IPostProcessor PostProcessor
         {
@@ -23,11 +26,23 @@ namespace Dope.DDXX.DemoFramework
             get { return textureFactory; }
         }
 
+        protected ITextureBuilder TextureBuilder
+        {
+            get { return textureBuilder; }
+        }
+
+        protected IDevice Device
+        {
+            get { return device; }
+        }
+
         protected BaseDemoPostEffect(float startTime, float endTime)
         {
             StartTime = startTime;
             EndTime = endTime;
         }
+
+        protected abstract void Initialize();
 
         #region IDemoPostEffect Members
 
@@ -53,10 +68,13 @@ namespace Dope.DDXX.DemoFramework
         {
         }
 
-        public virtual void Initialize(IPostProcessor postProcessor)
+        public void Initialize(IPostProcessor postProcessor, ITextureFactory textureFactory, ITextureBuilder textureBuilder, IDevice device)
         {
             this.postProcessor = postProcessor;
-            textureFactory = D3DDriver.TextureFactory;
+            this.textureFactory = textureFactory;
+            this.textureBuilder = textureBuilder;
+            this.device = device;
+            Initialize();
         }
 
         #endregion

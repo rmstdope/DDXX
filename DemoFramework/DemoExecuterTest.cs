@@ -18,6 +18,7 @@ using Dope.DDXX.Graphics;
 using Dope.DDXX.Input;
 using Dope.DDXX.Sound;
 using Dope.DDXX.Utility;
+using Dope.DDXX.TextureBuilder;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -30,6 +31,7 @@ namespace Dope.DDXX.DemoFramework
         private ISoundDriver soundDriver;
         private IInputDriver inputDriver;
         private IEffectChangeListener effectChangeListener;
+        private ITextureBuilder textureBuilder;
         private FMOD.Sound sound;
         private FMOD.Channel channel;
         private List<ITrack> tracks;
@@ -75,6 +77,7 @@ namespace Dope.DDXX.DemoFramework
             executer = new DemoExecuter(this, soundDriver, inputDriver, postProcessor);
             tweaker = mockery.NewMock<IDemoTweaker>();
             executer.Tweaker = tweaker;
+            textureBuilder = mockery.NewMock<ITextureBuilder>();
 
             effectChangeListener = mockery.NewMock<IEffectChangeListener>();
 
@@ -132,7 +135,7 @@ namespace Dope.DDXX.DemoFramework
             ExpectTweakerInitialize();
             ExpectGraphicsInitialize();
 
-            executer.Initialize(device, graphicsFactory, textureFactory);
+            executer.Initialize(device, graphicsFactory, textureFactory, textureBuilder);
         }
 
         [Test]
@@ -143,7 +146,7 @@ namespace Dope.DDXX.DemoFramework
             ExpectTweakerInitialize();
             ExpectGraphicsInitialize();
 
-            executer.Initialize(device, graphicsFactory, textureFactory);
+            executer.Initialize(device, graphicsFactory, textureFactory, textureBuilder);
         }
 
         [Test]
@@ -160,7 +163,7 @@ namespace Dope.DDXX.DemoFramework
             ExpectTweakerInitialize();
             ExpectGraphicsInitialize();
 
-            executer.Initialize(device, graphicsFactory, textureFactory);
+            executer.Initialize(device, graphicsFactory, textureFactory, textureBuilder);
         }
 
         [Test]
@@ -177,9 +180,9 @@ namespace Dope.DDXX.DemoFramework
 
             for (int i = 0; i < 50; i++)
                 Expect.Once.On(tracks[i]).
-                    Method("Initialize").With(graphicsFactory, device, postProcessor);
+                    Method("Initialize").With(graphicsFactory, device, textureFactory, textureBuilder, postProcessor);
 
-            executer.Initialize(device, graphicsFactory, textureFactory);
+            executer.Initialize(device, graphicsFactory, textureFactory, textureBuilder);
         }
 
         [Test]
@@ -209,6 +212,7 @@ namespace Dope.DDXX.DemoFramework
         {
             TestInitializeOKSong();
 
+            executer.BackgroundColor = Color.CornflowerBlue;
             Expect.Once.On(tweaker).
                 Method("HandleInput").Will(Return.Value(true));
             Expect.Once.On(soundDriver).
@@ -250,9 +254,10 @@ namespace Dope.DDXX.DemoFramework
             RegisterEffect(0, 0, 0);
             Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(1000.0f));
 
+            executer.BackgroundColor = Color.DarkSlateBlue;
             Expect.Once.On(device).
                 Method("Clear").
-                With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.CornflowerBlue, 1.0f, 0);
+                With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.DarkSlateBlue, 1.0f, 0);
             Expect.Once.On(postProcessor).
                 Method("StartFrame").With(texture);
             Expect.Exactly(2).On(device).
@@ -290,12 +295,12 @@ namespace Dope.DDXX.DemoFramework
             DemoXMLReaderTest.TempFiles tempFiles = new DemoXMLReaderTest.TempFiles();
             FileUtility.SetLoadPaths(new string[] { "" });
             Expect.Once.On(tracks[0]).Method("Register").WithAnyArguments();
-            Expect.Once.On(tracks[0]).Method("Initialize").With(graphicsFactory, device, postProcessor);
+            Expect.Once.On(tracks[0]).Method("Initialize").With(graphicsFactory, device, textureFactory, textureBuilder, postProcessor);
             Expect.Once.On(tracks[1]).Method("Register").WithAnyArguments();
-            Expect.Once.On(tracks[1]).Method("Initialize").With(graphicsFactory, device, postProcessor);
+            Expect.Once.On(tracks[1]).Method("Initialize").With(graphicsFactory, device, textureFactory, textureBuilder, postProcessor);
             Expect.Once.On(tracks[2]).Method("Register").WithAnyArguments();
-            Expect.Once.On(tracks[2]).Method("Initialize").With(graphicsFactory, device, postProcessor);
-            executer.Initialize(device, graphicsFactory, textureFactory, tempFiles.New(twoEffectContents));
+            Expect.Once.On(tracks[2]).Method("Initialize").With(graphicsFactory, device, textureFactory, textureBuilder, postProcessor);
+            executer.Initialize(device, graphicsFactory, textureFactory, textureBuilder, tempFiles.New(twoEffectContents));
             Assert.AreEqual(3, executer.NumTracks);
         }
 
@@ -316,7 +321,7 @@ namespace Dope.DDXX.DemoFramework
 
             DemoXMLReaderTest.TempFiles tempFiles = new DemoXMLReaderTest.TempFiles();
             FileUtility.SetLoadPaths(new string[] { "" });
-            executer.Initialize(device, graphicsFactory, textureFactory, tempFiles.New(songXml));
+            executer.Initialize(device, graphicsFactory, textureFactory, textureBuilder, tempFiles.New(songXml));
             Assert.AreEqual(0, executer.NumTracks);
         }
 
@@ -333,9 +338,9 @@ namespace Dope.DDXX.DemoFramework
             for (int i = 0; i < 3; i++)
             {
                 Expect.Once.On(tracks[i]).Method("Register").WithAnyArguments();
-                Expect.Once.On(tracks[i]).Method("Initialize").With(graphicsFactory, device, postProcessor);
+                Expect.Once.On(tracks[i]).Method("Initialize").With(graphicsFactory, device, textureFactory, textureBuilder, postProcessor);
             }
-            executer.Initialize(device, graphicsFactory, textureFactory, tempFiles.New(twoEffectContents));
+            executer.Initialize(device, graphicsFactory, textureFactory, textureBuilder, tempFiles.New(twoEffectContents));
 
             for (int i = 0; i < 3; i++)
                 Expect.Once.On(tracks[i]).Method("UpdateListener").With(effectChangeListener);
@@ -584,5 +589,6 @@ namespace Dope.DDXX.DemoFramework
             set { glowParam = value; }
         }
         public override void Render() { }
+        protected override void Initialize() { }
     }
 }

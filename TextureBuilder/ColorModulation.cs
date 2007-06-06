@@ -4,7 +4,7 @@ using System.Text;
 using System.Drawing;
 using Microsoft.DirectX;
 
-namespace TextureBuilder
+namespace Dope.DDXX.TextureBuilder
 {
     public class ColorModulation : Generator
     {

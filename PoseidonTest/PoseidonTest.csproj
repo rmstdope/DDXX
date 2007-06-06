@@ -95,6 +95,10 @@
       <Project>{FFA67C42-A1E3-4C9F-887A-E5DEB52DDEB4}</Project>
       <Name>Sound</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TextureBuilder\TextureBuilder.csproj">
+      <Project>{712F1F16-E7BC-4D96-8B1A-AEA31365FD95}</Project>
+      <Name>TextureBuilder</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Utility\Utility.csproj">
       <Project>{31D76405-2DD3-436A-BE65-963DE822511E}</Project>
       <Name>Utility</Name>

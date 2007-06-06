@@ -62,7 +62,7 @@ namespace Dope.DDXX.DemoFramework
                 currentSelection = 0;
         }
 
-        private void KeyPlus()
+        private void KeyPageUp()
         {
             ChangeValue(currentContainer.GetStepSize(CurrentVariable));
         }
@@ -134,6 +134,9 @@ namespace Dope.DDXX.DemoFramework
                     break;
                 case TweakableType.String:
                     // Next value can not be performed on strings
+                    break;
+                case TweakableType.Bool:
+                    currentContainer.SetValue(CurrentVariable, !currentContainer.GetBoolValue(CurrentVariable));
                     break;
                 default:
                     throw new DDXXException("Not implemented for this TweakableType.");
@@ -278,8 +281,11 @@ namespace Dope.DDXX.DemoFramework
                 case TweakableType.String:
                     new TextControl(currentContainer.GetStringValue(num), new RectangleF(x, y, w, h), DrawTextFormat.Center | DrawTextFormat.VerticalCenter, alpha, GetSelectionColor(0, alpha), tweakableWindow);
                     break;
+                case TweakableType.Bool:
+                    new TextControl(currentContainer.GetBoolValue(num) ? "true" : "false", new RectangleF(x, y, w, h), DrawTextFormat.Center | DrawTextFormat.VerticalCenter, alpha, GetSelectionColor(0, alpha), tweakableWindow);
+                    break;
                 default:
-                    throw new DDXXException("Unknown value type.");
+                    break;
             }
         }
 
@@ -325,7 +331,7 @@ namespace Dope.DDXX.DemoFramework
             }
             if (inputDriver.KeyPressedSlowRepeat(Key.PageUp))
             {   
-                KeyPlus();
+                KeyPageUp();
                 handled = true;
             }
             if (inputDriver.KeyPressedSlowRepeat(Key.PageDown))

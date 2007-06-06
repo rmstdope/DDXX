@@ -47,5 +47,9 @@ namespace Dope.DDXX.DemoEffects
         {
         	get { return "Rings"; }
         }
+
+        protected override void Initialize()
+        {
+        }
     }
 }

@@ -21,13 +21,13 @@ namespace Dope.DDXX.DemoEffects
         public bool SubtractNoise
         {
             get { return subtractNoise; }
-            set { subtractNoise = value; }
+            set { subtractNoise = value; addNoise = !value; }
         }
 
         public bool AddNoise
         {
             get { return addNoise; }
-            set { addNoise = value; }
+            set { addNoise = value; subtractNoise = !value; }
         }
 
         public float BlendFactor
@@ -42,17 +42,21 @@ namespace Dope.DDXX.DemoEffects
             set { filename = value; }
         }
 
+        public ITexture Texture
+        {
+            set { texture = value; }
+        }
+
         public OverlayPostEffect(float start, float end)
             : base(start, end)
         {
+            SetStepSize(GetTweakableNumber("BlendFactor"), 0.01f);
         }
 
-        public override void Initialize(IPostProcessor postProcessor)
+        protected override void Initialize()
         {
-            base.Initialize(postProcessor);
-
-            if (filename == null)
-                throw new DDXXException("OverlayPostEffect.Filename must be set before Initialize is called.");
+            if (texture == null && filename == null)
+                throw new DDXXException("OverlayPostEffect.Filename or OverlayPostEffect.Texture must be set before Initialize is called.");
 
             if (!addNoise && !subtractNoise)
                 throw new DDXXException("Either AddNoise or SubtractNoise must be set to true for OverlayPostEffect.");
@@ -60,7 +64,9 @@ namespace Dope.DDXX.DemoEffects
             if (addNoise && subtractNoise)
                 throw new DDXXException("AddNoise and SubtractNoise cen not both be set for OverlayPostEffect.");
 
-            texture = TextureFactory.CreateFromFile(filename);
+            if (texture == null)
+                texture = TextureFactory.CreateFromFile(filename);
+
         }
 
         public override void Render()

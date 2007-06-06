@@ -46,5 +46,9 @@ namespace Dope.DDXX.DemoEffects
                 PostProcessor.Process("VerticalBloom", temp[0], temp[1]);
             }
         }
+
+        protected override void Initialize()
+        {
+        }
     }
 }

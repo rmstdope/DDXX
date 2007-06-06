@@ -14,6 +14,7 @@ using Dope.DDXX.Utility;
 using Dope.DDXX.DemoEffects;
 using Dope.DDXX.Sound;
 using Dope.DDXX.Input;
+using Dope.DDXX.TextureBuilder;
 
 namespace ShortPuzzle
 {
@@ -47,7 +48,8 @@ namespace ShortPuzzle
 
                     window.Initialize("Short Puzzle", desc, prerequisits);
                     executer.Initialize(D3DDriver.GetInstance().Device, 
-                        D3DDriver.GraphicsFactory, D3DDriver.TextureFactory, 
+                        D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
+                        new TextureBuilder(D3DDriver.TextureFactory),
                         "scanner_of_dope-woo-192.mp3");//test.mp3");
                     executer.Run();
                     window.CleanUp();

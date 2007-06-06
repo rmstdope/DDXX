@@ -10,6 +10,7 @@ using Dope.DDXX.Graphics;
 using Dope.DDXX.Input;
 using Dope.DDXX.Sound;
 using Dope.DDXX.Utility;
+using Dope.DDXX.TextureBuilder;
 
 namespace TiVi
 {
@@ -39,7 +40,7 @@ namespace TiVi
                     DevicePrerequisits prerequisits = new DevicePrerequisits();
                     window.Initialize("Engine Test", desc, prerequisits);
                     executer.Initialize(D3DDriver.GetInstance().Device,
-                        D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
+                        D3DDriver.GraphicsFactory, D3DDriver.TextureFactory, new TextureBuilder(D3DDriver.TextureFactory),
                         new Assembly[] { Assembly.GetExecutingAssembly(), Assembly.GetAssembly(typeof(GlowPostEffect)) }, "TiVi.xml");
 
                     executer.Run();

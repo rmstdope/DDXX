@@ -22,7 +22,7 @@ namespace Dope.DDXX.DemoEffects
             mockery = new Mockery();
             postProcessor = mockery.NewMock<IPostProcessor>();
             effect = new RadialBlurPostEffect(1.0f, 2.0f);
-            effect.Initialize(postProcessor);
+            effect.Initialize(postProcessor, null, null, null);
         }
 
         [TearDown]

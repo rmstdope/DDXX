@@ -105,12 +105,6 @@ namespace Dope.DDXX.DemoFramework
             return steps[num];
         }
 
-        //public void SetStepSize(string variableName, float size)
-        //{
-        //    steps[
-        //    throw new Exception("The method or operation is not implemented.");
-        //}
-
         public string GetTweakableName(int index)
         {
             return properties[index].Name;

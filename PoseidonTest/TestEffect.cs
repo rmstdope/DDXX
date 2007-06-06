@@ -94,6 +94,11 @@ namespace PoseidonTest
             }
         }
 
+        protected override void Initialize()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
     }
 
     public class PosseTestEffect : BaseDemoEffect

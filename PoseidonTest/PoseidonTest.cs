@@ -14,6 +14,7 @@ using Dope.DDXX.Utility;
 using Dope.DDXX.DemoEffects;
 using Dope.DDXX.Sound;
 using Dope.DDXX.Input;
+using Dope.DDXX.TextureBuilder;
 
 namespace PoseidonTest
 {
@@ -53,6 +54,7 @@ namespace PoseidonTest
                     RegisterEffects(executer);
                     executer.Initialize(D3DDriver.GetInstance().Device,
                         D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
+                        new TextureBuilder(D3DDriver.TextureFactory),
                         "");
                     executer.Run();
                     window.CleanUp();

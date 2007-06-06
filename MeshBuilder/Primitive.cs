@@ -106,8 +106,6 @@ namespace Dope.DDXX.MeshBuilder
             return mesh;
         }
 
-
-
         public void Weld(float distance)
         {
             const float epsilon = 1e-9f;

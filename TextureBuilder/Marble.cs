@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX;
 
-namespace TextureBuilder
+namespace Dope.DDXX.TextureBuilder
 {
     public class Marble : Generator
     {

@@ -4,11 +4,12 @@ using System.Text;
 using NUnit.Framework;
 using Microsoft.DirectX;
 using Dope.DDXX.Physics;
+using Dope.DDXX.TextureBuilder;
 
 namespace Dope.DDXX.MeshBuilder
 {
     [TestFixture]
-    public class PrimitiveFactoryTest : IBody
+    public class PrimitiveFactoryTest : IBody, IGenerator
     {
         private IPrimitiveFactory factory;
         private IPrimitive primitive;
@@ -24,6 +25,7 @@ namespace Dope.DDXX.MeshBuilder
             LEFT,
             RIGHT
         }
+        private Vector4 pixelValue;
 
         [SetUp]
         public void SetUp()
@@ -707,6 +709,83 @@ namespace Dope.DDXX.MeshBuilder
             }
         }
 
+        [Test]
+        public void TestTerrainHeightOne()
+        {
+            pixelValue = new Vector4(1, 1, 1, 1);
+            IPrimitive terrain = factory.CreateTerrain(this, 1.0f, 2.0f, 2.0f, 2, 2, false);
+            IPrimitive plane = factory.CreatePlane(2.0f, 2.0f, 2, 2, false);
+            Assert.AreEqual(terrain.Indices.Length, plane.Indices.Length);
+            Assert.AreEqual(terrain.Vertices.Length, plane.Vertices.Length);
+            for (int i = 0; i < terrain.Indices.Length; i++)
+                Assert.AreEqual(terrain.Indices[i], plane.Indices[i]);
+            for (int i = 0; i < terrain.Vertices.Length; i++)
+            {
+                Assert.AreEqual(terrain.Vertices[i].Position.X, plane.Vertices[i].Position.X);
+                Assert.AreEqual(terrain.Vertices[i].Position.Y, 1.0f);
+                Assert.AreEqual(terrain.Vertices[i].Position.Z, plane.Vertices[i].Position.Y);
+            }
+        }
+
+        [Test]
+        public void TestTerrainHeightX()
+        {
+            pixelValue = new Vector4(0, 1, 1, 1);
+            IPrimitive terrain = factory.CreateTerrain(this, 1.0f, 4.0f, 4.0f, 4, 4, true);
+            IPrimitive plane = factory.CreatePlane(4.0f, 4.0f, 4, 4, true);
+            Assert.AreEqual(terrain.Indices.Length, plane.Indices.Length);
+            Assert.AreEqual(terrain.Vertices.Length, plane.Vertices.Length);
+            for (int i = 0; i < terrain.Indices.Length; i++)
+                Assert.AreEqual(terrain.Indices[i], plane.Indices[i]);
+            for (int y = 0; y < 5; y++)
+            {
+                for (int x = 0; x < 5; x++)
+                {
+                    Assert.AreEqual(terrain.Vertices[y * 5 + x].Position.X, plane.Vertices[y * 5 + x].Position.X);
+                    Assert.AreEqual(terrain.Vertices[y * 5 + x].Position.Y, x * (1.0f / 4.0f));
+                    Assert.AreEqual(terrain.Vertices[y * 5 + x].Position.Z, plane.Vertices[y * 5 + x].Position.Y);
+                }
+            }
+        }
+
+        [Test]
+        public void TestTerrainHeightY()
+        {
+            pixelValue = new Vector4(1, 0, 1, 1);
+            IPrimitive terrain = factory.CreateTerrain(this, 2.0f, 4.0f, 4.0f, 4, 4, true);
+            IPrimitive plane = factory.CreatePlane(4.0f, 4.0f, 4, 4, true);
+            Assert.AreEqual(terrain.Indices.Length, plane.Indices.Length);
+            Assert.AreEqual(terrain.Vertices.Length, plane.Vertices.Length);
+            for (int i = 0; i < terrain.Indices.Length; i++)
+                Assert.AreEqual(terrain.Indices[i], plane.Indices[i]);
+            for (int y = 0; y < 5; y++)
+            {
+                for (int x = 0; x < 5; x++)
+                {
+                    Assert.AreEqual(terrain.Vertices[y * 5 + x].Position.X, plane.Vertices[y * 5 + x].Position.X);
+                    Assert.AreEqual(terrain.Vertices[y * 5 + x].Position.Y, 2.0f * y * (1.0f / 4.0f));
+                    Assert.AreEqual(terrain.Vertices[y * 5 + x].Position.Z, plane.Vertices[y * 5 + x].Position.Y);
+                }
+            }
+        }
+
+        #region IGenerator Members
+
+        public Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        {
+            if (pixelValue.X == 0)
+                return new Vector4(textureCoordinate.X, 0, 0, 0);
+            if (pixelValue.Y == 0)
+                return new Vector4(textureCoordinate.Y, 0, 0, 0);
+            return pixelValue;
+        }
+
+        public void  ConnectToInput(int inputPin, IGenerator outputGenerator)
+        {
+ 	        throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
 
         #region IBody Members
 

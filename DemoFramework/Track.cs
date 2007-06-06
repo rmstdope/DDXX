@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
+using Dope.DDXX.TextureBuilder;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public class Track : Dope.DDXX.DemoFramework.ITrack
+    public class Track : ITrack
     {
         List<IDemoEffect> effects = new List<IDemoEffect>();
         List<IDemoPostEffect> postEffects = new List<IDemoPostEffect>();
@@ -115,12 +116,13 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        public void Initialize(IGraphicsFactory graphicsFactory, IDevice device, IPostProcessor postProcessor)
+        public void Initialize(IGraphicsFactory graphicsFactory, IDevice device, ITextureFactory textureFactory, 
+            ITextureBuilder textureBuilder, IPostProcessor postProcessor)
         {
             foreach (IDemoEffect effect in effects)
                 effect.Initialize(graphicsFactory, device);
             foreach (IDemoPostEffect effect in postEffects)
-                effect.Initialize(postProcessor);
+                effect.Initialize(postProcessor, textureFactory, textureBuilder, device);
         }
 
         public void Step()

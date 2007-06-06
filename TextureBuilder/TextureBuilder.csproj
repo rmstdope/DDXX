@@ -7,8 +7,8 @@
     <ProjectGuid>{712F1F16-E7BC-4D96-8B1A-AEA31365FD95}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TextureBuilder</RootNamespace>
-    <AssemblyName>TextureBuilder</AssemblyName>
+    <RootNamespace>Dope.DDXX.TextureBuilder</RootNamespace>
+    <AssemblyName>Dope.DDXX.TextureBuilder</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,15 +39,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bricks.cs" />
     <Compile Include="ColorBlend.cs" />
     <Compile Include="ColorModulation.cs" />
+    <Compile Include="FactorBlend.cs" />
     <Compile Include="Generator.cs" />
     <Compile Include="GeneratorTest.cs" />
     <Compile Include="IGenerator.cs" />
+    <Compile Include="ITextureBuilder.cs" />
+    <Compile Include="Madd.cs" />
     <Compile Include="Marble.cs" />
+    <Compile Include="Modulate.cs" />
     <Compile Include="PerlinNoise.cs" />
     <Compile Include="PerlinTurbulence.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoundedRectangle.cs" />
     <Compile Include="TextureBuilder.cs" />
     <Compile Include="TextureBuilderTest.cs" />
   </ItemGroup>
@@ -55,6 +61,10 @@
     <ProjectReference Include="..\Graphics\Graphics.csproj">
       <Project>{B64087ED-595E-4597-84D8-D273FF00B2DA}</Project>
       <Name>Graphics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utility\Utility.csproj">
+      <Project>{31D76405-2DD3-436A-BE65-963DE822511E}</Project>
+      <Name>Utility</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

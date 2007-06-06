@@ -4,7 +4,7 @@ using System.Text;
 using NUnit.Framework;
 using Microsoft.DirectX;
 
-namespace TextureBuilder
+namespace Dope.DDXX.TextureBuilder
 {
     [TestFixture]
     public class GeneratorTest

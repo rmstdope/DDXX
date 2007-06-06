@@ -86,5 +86,9 @@ namespace Dope.DDXX.DemoEffects
 
 
         }
+
+        protected override void Initialize()
+        {
+        }
     }
 }

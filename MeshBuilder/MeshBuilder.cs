@@ -6,6 +6,7 @@ using Dope.DDXX.Utility;
 using Microsoft.DirectX;
 using Dope.DDXX.Physics;
 using Microsoft.DirectX.Direct3D;
+using Dope.DDXX.TextureBuilder;
 
 namespace Dope.DDXX.MeshBuilder
 {
@@ -111,6 +112,12 @@ namespace Dope.DDXX.MeshBuilder
             AddPrimitive(chamferBox, name);
         }
 
+        public void CreateTerrain(string name, IGenerator generator, float heightScale, float width, float depth, int widthSegments, int depthSegments, bool textured)
+        {
+            IPrimitive terrain = primitiveFactory.CreateTerrain(generator, heightScale, width, depth, widthSegments, depthSegments, textured);
+            AddPrimitive(terrain, name);
+        }
+
         public void AssignMaterial(string primitiveName, string materialName)
         {
             IPrimitive primitive = GetPrimitive(primitiveName);
@@ -204,5 +211,6 @@ namespace Dope.DDXX.MeshBuilder
             IPrimitive primitive = GetPrimitive(primitiveName);
             primitive.Weld(distance);
         }
+
     }
 }

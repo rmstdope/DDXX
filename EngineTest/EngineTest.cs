@@ -14,6 +14,7 @@ using Dope.DDXX.Utility;
 using Dope.DDXX.DemoEffects;
 using Dope.DDXX.Sound;
 using Dope.DDXX.Input;
+using Dope.DDXX.TextureBuilder;
 
 namespace EngineTest
 {
@@ -46,10 +47,21 @@ namespace EngineTest
                     DevicePrerequisits prerequisits = new DevicePrerequisits();
 
                     window.Initialize("Engine Test", desc, prerequisits);
+
+                    //Viewport viewport = D3DDriver.GetInstance().Device.Viewport;
+                    //float ratio = (10.0f / 16.0f) * (viewport.Width / (float)viewport.Height);
+                    //TextureBuilder.TextureBuilder builder = new TextureBuilder.TextureBuilder(D3DDriver.TextureFactory);
+                    //IGenerator rect = new RoundedRectangle(new Vector2(1.0f, ratio), new Vector2(0.5f, 0.5f), 0.05f);
+                    //OverlayPostEffect overlay = new OverlayPostEffect(0, 1000.0f);
+                    //overlay.AddNoise = true;
+                    //overlay.Texture = builder.Generate(rect, viewport.Width, viewport.Height, 1, Format.A8R8G8B8);
+                    //executer.Register(0, overlay);
+
                     executer.Initialize(D3DDriver.GetInstance().Device,
                         D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
+                        new TextureBuilder(D3DDriver.TextureFactory),
                         new Assembly[] { Assembly.GetExecutingAssembly(), 
-                            Assembly.GetAssembly(typeof(GlowPostEffect)) }, 
+                            Assembly.GetAssembly(typeof(GlowPostEffect)) },
                         "EngineTest.xml");
 
                     executer.Run();

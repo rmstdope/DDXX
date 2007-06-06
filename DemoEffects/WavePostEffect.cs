@@ -48,5 +48,8 @@ namespace Dope.DDXX.DemoEffects
             get { return "Wave"; }
         }
 
+        protected override void Initialize()
+        {
+        }
     }
 }

@@ -5,6 +5,7 @@ using Dope.DDXX.Graphics;
 using NUnit.Framework;
 using NMock2;
 using Dope.DDXX.Utility;
+using Dope.DDXX.TextureBuilder;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -13,6 +14,7 @@ namespace Dope.DDXX.DemoFramework
     {
         private Track track;
         private IEffectChangeListener effectChangeListener;
+        private ITextureBuilder textureBuilder;
 
         [SetUp]
         public override void SetUp()
@@ -21,6 +23,7 @@ namespace Dope.DDXX.DemoFramework
             track = new Track();
             Time.Initialize();
             effectChangeListener = mockery.NewMock<IEffectChangeListener>();
+            textureBuilder = mockery.NewMock<ITextureBuilder>();
         }
 
         [TearDown]
@@ -203,8 +206,8 @@ namespace Dope.DDXX.DemoFramework
             IDemoPostEffect pe1 = CreateMockPostEffect(5, 12);
             track.Register(pe1);
             Expect.Once.On(e1).Method("Initialize").With(graphicsFactory, device);
-            Expect.Once.On(pe1).Method("Initialize").With(postProcessor);
-            track.Initialize(graphicsFactory, device, postProcessor);
+            Expect.Once.On(pe1).Method("Initialize").With(postProcessor, textureFactory, textureBuilder, device);
+            track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, postProcessor);
         }
 
         [Test]
@@ -217,9 +220,9 @@ namespace Dope.DDXX.DemoFramework
                 Expect.Once.On(e1).Method("Initialize").With(graphicsFactory, device);
                 IDemoPostEffect pe1 = CreateMockPostEffect(5, 12);
                 track.Register(pe1);
-                Expect.Once.On(pe1).Method("Initialize").With(postProcessor);
+                Expect.Once.On(pe1).Method("Initialize").With(postProcessor, textureFactory, textureBuilder, device);
             }
-            track.Initialize(graphicsFactory, device, postProcessor);
+            track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, postProcessor);
         }
 
         [Test]

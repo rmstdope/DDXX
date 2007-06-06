@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("TextureBuilder")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Motorola")]
-[assembly: AssemblyProduct("TextureBuilder")]
-[assembly: AssemblyCopyright("Copyright © Motorola 2007")]
+[assembly: AssemblyCompany("Dope Demo Production")]
+[assembly: AssemblyProduct("DDXX")]
+[assembly: AssemblyCopyright("Copyright © Dope 2007")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

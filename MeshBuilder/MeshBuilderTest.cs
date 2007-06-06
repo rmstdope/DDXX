@@ -2221,5 +2221,15 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         #endregion
+
+        #region IPrimitiveFactory Members
+
+
+        public IPrimitive CreateTerrain(Dope.DDXX.TextureBuilder.IGenerator heightMapGenerator, float heightScale, float width, float height, int widthSegments, int heightSegments, bool textured)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
     }
 }

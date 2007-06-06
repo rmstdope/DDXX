@@ -31,6 +31,8 @@ namespace Dope.DDXX.DemoFramework
         {
             endCalled = true;
         }
+
+        protected override void Initialize() { }
     }
 
     [TestFixture]
@@ -52,7 +54,7 @@ namespace Dope.DDXX.DemoFramework
             PostProcessor postProcessor = new PostProcessor();
             TestPostEffect effect = new TestPostEffect(0.0f, 10.0f);
 
-            effect.Initialize(postProcessor);
+            effect.Initialize(postProcessor, null, null, null);
         }
 
         [Test]

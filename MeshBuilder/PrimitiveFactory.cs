@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX;
 using Dope.DDXX.Physics;
+using Dope.DDXX.TextureBuilder;
 
 namespace Dope.DDXX.MeshBuilder
 {
@@ -587,5 +588,26 @@ namespace Dope.DDXX.MeshBuilder
             float innerRadius = (float)(-radius * Math.Sin(phi));
             return new Vector3((float)(innerRadius * Math.Sin(theta)), y, (float)(-innerRadius * Math.Cos(theta)));
         }
+
+        public IPrimitive CreateTerrain(IGenerator heightMapGenerator, float heightScale, float width, float depth, 
+            int widthSegments, int depthSegments, bool textured)
+        {
+            IPrimitive primitive = CreatePlane(width, depth, widthSegments, depthSegments, textured);
+            for (int y = 0; y < depthSegments + 1; y++)
+            {
+                for (int x = 0; x < widthSegments + 1; x++)
+                {
+                    Vector4 heightValue = heightMapGenerator.GetPixel(
+                        new Vector2(x / (float)widthSegments, y / (float)depthSegments), new Vector2());
+                    Vertex vertex = primitive.Vertices[y * (widthSegments + 1) + x];
+                    Vector3 position = new Vector3(vertex.Position.X, heightValue.X * heightScale, vertex.Position.Y);
+                    vertex.Position = position;
+                    vertex.Normal = new Vector3(0, 1, 0);
+                    primitive.Vertices[y * (widthSegments + 1) + x] = vertex;
+                }
+            }
+            return primitive;
+        }
+
     }
 }

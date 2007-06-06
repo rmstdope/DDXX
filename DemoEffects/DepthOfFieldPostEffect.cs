@@ -36,5 +36,9 @@ namespace Dope.DDXX.DemoEffects
                 //PostProcessor.Process("DepthOfField", TextureID.FULLSIZE_TEXTURE_2, TextureID.FULLSIZE_TEXTURE_1);
             }
         }
+
+        protected override void Initialize()
+        {
+        }
     }
 }

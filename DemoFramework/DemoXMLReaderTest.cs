@@ -480,7 +480,7 @@ namespace Dope.DDXX.DemoFramework
             Assert.IsTrue(parameters.TryGetValue("intparam", out parameter));
             Assert.AreEqual(TweakableType.Integer, parameter.Type);
             Assert.AreEqual(3, parameter.IntValue);
-            Assert.AreEqual(1, parameter.StepSize);
+            Assert.AreEqual(-1, parameter.StepSize);
         }
 
         [Test]
@@ -491,7 +491,7 @@ namespace Dope.DDXX.DemoFramework
             Assert.IsTrue(parameters.TryGetValue("floatparam", out parameter));
             Assert.AreEqual(TweakableType.Float, parameter.Type);
             Assert.AreEqual(4.3f, parameter.FloatValue);
-            Assert.AreEqual(1, parameter.StepSize);
+            Assert.AreEqual(-1, parameter.StepSize);
         }
 
         [Test]
