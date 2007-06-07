@@ -60,15 +60,27 @@ namespace Dope.DDXX.DemoFramework
                     inputs = new Dictionary<int, string>();
                 }
             }
+            class Texture
+            {
+                public string name;
+                public string generator;
+                public Texture(string name, string generator)
+                {
+                    this.name = name;
+                    this.generator = generator;
+                }
+            }
             private Queue<Effect> effects = new Queue<Effect>();
-            private Queue<Generator> generators = new Queue<Generator>();
             private Queue<Effect> postEffects = new Queue<Effect>();
             private Queue<Effect> transitions = new Queue<Effect>();
+            private Queue<Generator> generators = new Queue<Generator>();
+            private Queue<Texture> textures = new Queue<Texture>();
             private Asset lastAsset;
             private Effect currentEffect;
-            private Generator currentGenerator;
             private Effect currentPostEffect;
             private Effect currentTransition;
+            private Generator currentGenerator;
+            private Texture currentTexture;
             private string songName;
 
             #region IDemoEffectBuilder implementation
@@ -99,6 +111,11 @@ namespace Dope.DDXX.DemoFramework
                 Generator newGenerator = new Generator(name, className);
                 lastAsset = newGenerator;
                 generators.Enqueue(newGenerator);
+            }
+
+            public void AddTexture(string name, string generator)
+            {
+                textures.Enqueue(new Texture(name, generator));
             }
 
             private void AddParameter(string name, Parameter value)
@@ -184,20 +201,6 @@ namespace Dope.DDXX.DemoFramework
                 }
             }
 
-            public bool NextGenerator()
-            {
-                if (generators.Count > 0)
-                {
-                    currentGenerator = generators.Dequeue();
-                    return true;
-                }
-                else
-                {
-                    currentGenerator = null;
-                    return false;
-                }
-            }
-
             public bool NextPostEffect()
             {
                 if (postEffects.Count > 0)
@@ -222,6 +225,34 @@ namespace Dope.DDXX.DemoFramework
                 else
                 {
                     currentTransition = null;
+                    return false;
+                }
+            }
+
+            public bool NextGenerator()
+            {
+                if (generators.Count > 0)
+                {
+                    currentGenerator = generators.Dequeue();
+                    return true;
+                }
+                else
+                {
+                    currentGenerator = null;
+                    return false;
+                }
+            }
+
+            public bool NextTexture()
+            {
+                if (textures.Count > 0)
+                {
+                    currentTexture = textures.Dequeue();
+                    return true;
+                }
+                else
+                {
+                    currentTexture = null;
                     return false;
                 }
             }
@@ -267,27 +298,6 @@ namespace Dope.DDXX.DemoFramework
                 }
             }
 
-            public string GeneratorName
-            {
-                get
-                {
-                    if (currentGenerator != null)
-                        return currentGenerator.name;
-                    else
-                        throw new InvalidOperationException("No current generator");
-                }
-            }
-            public string GeneratorClass
-            {
-                get
-                {
-                    if (currentGenerator != null)
-                        return currentGenerator.className;
-                    else
-                        throw new InvalidOperationException("No current generator");
-                }
-            }
-
             public int PostEffectTrack
             {
                 get
@@ -329,6 +339,49 @@ namespace Dope.DDXX.DemoFramework
                         throw new InvalidOperationException("No current transition");
                 }
             }
+
+            public string GeneratorName
+            {
+                get
+                {
+                    if (currentGenerator != null)
+                        return currentGenerator.name;
+                    else
+                        throw new InvalidOperationException("No current generator");
+                }
+            }
+            public string GeneratorClass
+            {
+                get
+                {
+                    if (currentGenerator != null)
+                        return currentGenerator.className;
+                    else
+                        throw new InvalidOperationException("No current generator");
+                }
+            }
+
+            public string TextureName
+            {
+                get
+                {
+                    if (currentTexture != null)
+                        return currentTexture.name;
+                    else
+                        throw new InvalidOperationException("No current texture");
+                }
+            }
+            public string TextureGenerator
+            {
+                get
+                {
+                    if (currentTexture != null)
+                        return currentTexture.generator;
+                    else
+                        throw new InvalidOperationException("No current texture");
+                }
+            }
+
             public string SongName
             {
                 get { return songName; }
@@ -908,6 +961,36 @@ namespace Dope.DDXX.DemoFramework
     </Generator>
 </Effects>";
             ReadXML(textureXml);
+        }
+
+        [Test]
+        public void TestOneTexture()
+        {
+            string textureXml =
+                @"<Effects><Texture name=""tex1"" generator=""noiser""/></Effects>";
+            ReadXML(textureXml);
+            Assert.IsTrue(effectBuilder.NextTexture());
+            Assert.AreEqual("tex1", effectBuilder.TextureName);
+            Assert.AreEqual("noiser", effectBuilder.TextureGenerator);
+            Assert.IsFalse(effectBuilder.NextTexture());
+        }
+
+        [Test]
+        public void TestTwoTextures()
+        {
+            string textureXml =
+@"<Effects>
+    <Texture name=""tex2"" generator=""gen2""/>
+    <Texture name=""tex3"" generator=""gen3""/>
+  </Effects>";
+            ReadXML(textureXml);
+            Assert.IsTrue(effectBuilder.NextTexture());
+            Assert.AreEqual("tex2", effectBuilder.TextureName);
+            Assert.AreEqual("gen2", effectBuilder.TextureGenerator);
+            Assert.IsTrue(effectBuilder.NextTexture());
+            Assert.AreEqual("tex3", effectBuilder.TextureName);
+            Assert.AreEqual("gen3", effectBuilder.TextureGenerator);
+            Assert.IsFalse(effectBuilder.NextTexture());
         }
 
         private DemoXMLReader ReadXML(string contents)

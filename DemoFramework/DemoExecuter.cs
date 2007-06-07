@@ -309,6 +309,11 @@ namespace Dope.DDXX.DemoFramework
             throw new Exception("The method or operation is not implemented.");
         }
 
+        public void AddTexture(string textureName, string generatorName)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
         public void AddFloatParameter(string name, float value, float stepSize)
         {
             AddParameter(name, value, stepSize);

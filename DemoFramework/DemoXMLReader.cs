@@ -129,8 +129,17 @@ namespace Dope.DDXX.DemoFramework
                     case "Generator":
                         ReadGenerator(node);
                         break;
+                    case "Texture":
+                        ReadTexture(node);
+                        break;
                 }
             }
+        }
+
+        private void ReadTexture(XmlNode node)
+        {
+            effectBuilder.AddTexture(node.Attributes.GetNamedItem("name").Value,
+                node.Attributes.GetNamedItem("generator").Value);
         }
 
         private void HandleDemoAttributes(XmlDocument doc, XmlNode effectsNode)
@@ -163,9 +172,8 @@ namespace Dope.DDXX.DemoFramework
 
         private void ReadGenerator(XmlNode node)
         {
-            XmlAttribute name = (XmlAttribute)node.Attributes.GetNamedItem("name");
-            XmlAttribute className = (XmlAttribute)node.Attributes.GetNamedItem("class");
-            effectBuilder.AddGenerator(name.Value, className.Value);
+            effectBuilder.AddGenerator(node.Attributes.GetNamedItem("name").Value, 
+                node.Attributes.GetNamedItem("class").Value);
             ReadParameters(node, true);
         }
 
