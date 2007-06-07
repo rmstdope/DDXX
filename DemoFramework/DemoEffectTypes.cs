@@ -2,26 +2,36 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
+using Dope.DDXX.Utility;
+using Dope.DDXX.TextureBuilder;
 
 namespace Dope.DDXX.DemoFramework
 {
-    using TypeDict = Dictionary<string, Type>;
-    using Dope.DDXX.Utility;
-    public class DemoEffectTypes
+    public class DemoEffectTypes : IDemoEffectTypes
     {
-        private TypeDict types = new TypeDict();
+        private Dictionary<string, Type> iRegisterables = new Dictionary<string, Type>();
+        private Dictionary<string, Type> iGenerators = new Dictionary<string, Type>();
 
-        public IDictionary<string, Type> Types
+        public IDictionary<string, Type> IRegisterables
         {
             get
             {
-                return types;
+                return iRegisterables;
             }
         }
 
-        public void Initialize(Assembly[] assemblies)
+        public IDictionary<string, Type> IGenerators
         {
-            types.Clear();
+            get
+            {
+                return iGenerators;
+            }
+        }
+
+        public DemoEffectTypes(Assembly[] assemblies)
+        {
+            iRegisterables.Clear();
+            iGenerators.Clear();
             foreach (Assembly assembly in assemblies)
             {
                 if (assembly == null)
@@ -40,7 +50,12 @@ namespace Dope.DDXX.DemoFramework
                         Type[] interfaces = t.FindInterfaces(filter, "Dope.DDXX.DemoFramework.IRegisterable");
                         if (interfaces.Length > 0)
                         {
-                            types.Add(t.Name, t);
+                            iRegisterables.Add(t.Name, t);
+                        }
+                        interfaces = t.FindInterfaces(filter, "Dope.DDXX.TextureBuilder.IGenerator");
+                        if (interfaces.Length > 0)
+                        {
+                            iGenerators.Add(t.Name, t);
                         }
                     }
                 }
@@ -54,7 +69,7 @@ namespace Dope.DDXX.DemoFramework
         public IRegisterable CreateInstance(string effectName, float startTime, float endTime)
         {
             Type effect;
-            if (!types.TryGetValue(effectName, out effect))
+            if (!iRegisterables.TryGetValue(effectName, out effect))
                 throw new DDXXException("Could not find effect " + effectName + " among valid effects.");
             ConstructorInfo constrInfo = effect.GetConstructor(new Type[] {typeof(float), typeof(float)});
             if (constrInfo == null)
@@ -63,9 +78,21 @@ namespace Dope.DDXX.DemoFramework
             return demoEffect;
         }
 
-        public void SetProperty(IRegisterable ei, string name, object value)
+        public IGenerator CreateGenerator(string name)
         {
-            ei.GetType().InvokeMember(name, BindingFlags.SetProperty, null, ei, new object[] { value }, null, null, null);
+            Type type;
+            if (!iGenerators.TryGetValue(name, out type))
+                throw new DDXXException("Could not find generator " + name + " among valid generators.");
+            ConstructorInfo constrInfo = type.GetConstructor(new Type[] { });
+            if (constrInfo == null)
+                throw new DDXXException("Public constructor() not found in generator " + name);
+            IGenerator generator = (IGenerator)constrInfo.Invoke(new object[] { });
+            return generator;
+        }
+
+        public void SetProperty(object asset, string name, object value)
+        {
+            asset.GetType().InvokeMember(name, BindingFlags.SetProperty, null, asset, new object[] { value }, null, null, null);
         }
 
         public object GetProperty(IRegisterable ei, string name)
@@ -73,11 +100,11 @@ namespace Dope.DDXX.DemoFramework
             return ei.GetType().InvokeMember(name, BindingFlags.GetProperty, null, ei, null, null, null, null);
         }
 
-        public void CallSetup(IRegisterable ei, string method, List<object> parameters)
+        public void CallSetup(object asset, string method, List<object> parameters)
         {
             object[] arr = new object[parameters.Count];
             parameters.CopyTo(arr);
-            ei.GetType().InvokeMember(method, BindingFlags.InvokeMethod, null, ei, arr);
+            asset.GetType().InvokeMember(method, BindingFlags.InvokeMethod, null, asset, arr);
         }
     }
 }

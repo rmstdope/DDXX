@@ -106,5 +106,11 @@ namespace Dope.DDXX.Graphics
             texture.FillTexture(callbackFunction);
             return texture;
         }
+
+        public void RegisterTexture(string name, ITexture texture)
+        {
+            files.Add(new FileEntry(name, texture));
+        }
+
     }
 }

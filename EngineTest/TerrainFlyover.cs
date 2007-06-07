@@ -26,7 +26,10 @@ namespace EngineTest
         {
             CreateStandardSceneAndCamera(out scene, out camera, -3);
 
-            IGenerator generator = new PerlinNoise(10, 8, 0.5f);
+            PerlinNoise generator = new PerlinNoise();
+            generator.NumOctaves = 10;
+            generator.BaseFrequency = 8;
+            generator.Persistence = 0.5f;
             MeshBuilder builder = new MeshBuilder(GraphicsFactory, TextureFactory, Device);
             builder.CreateTerrain("Terrain", generator, 10.0f, 50.0f, 50.0f, 50, 50, true);
             builder.AssignMaterial("Terrain", "Default1");

@@ -103,5 +103,19 @@ namespace Dope.DDXX.Graphics
             ICubeTexture newTexture3 = textureFactory.CreateCubeFromFile("fileName2");
             Assert.AreSame(cubeTexture2, newTexture3);
         }
+
+        [Test]
+        public void RegisterTextureX()
+        {
+            textureFactory.RegisterTexture("x", texture1);
+            Assert.AreEqual(texture1, textureFactory.CreateFromFile("x"));
+        }
+
+        [Test]
+        public void RegisterTextureY()
+        {
+            textureFactory.RegisterTexture("y", texture2);
+            Assert.AreEqual(texture2, textureFactory.CreateFromFile("y"));
+        }
     }
 }

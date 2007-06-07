@@ -44,13 +44,13 @@ namespace ShortPuzzle
                     RegisterEffects(executer);
 
                     DevicePrerequisits prerequisits = new DevicePrerequisits();
-                    prerequisits.ShaderModel = 2;
+                    prerequisits.PixelShaderVersion = new Version(2, 0);
 
                     window.Initialize("Short Puzzle", desc, prerequisits);
+                    executer.SetSong("scanner_of_dope-woo-192.mp3");
                     executer.Initialize(D3DDriver.GetInstance().Device, 
                         D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
-                        new TextureBuilder(D3DDriver.TextureFactory),
-                        "scanner_of_dope-woo-192.mp3");//test.mp3");
+                        new TextureBuilder(D3DDriver.TextureFactory));//test.mp3");
                     executer.Run();
                     window.CleanUp();
                 }
@@ -105,11 +105,15 @@ namespace ShortPuzzle
 
         private static void SetupFramework(SetupLogic setup, out DemoWindow window, out DemoExecuter executer, out DeviceDescription desc)
         {
+            DemoEffectTypes effectTypes = new DemoEffectTypes(new Assembly[] { 
+                Assembly.GetExecutingAssembly(), 
+                Assembly.GetAssembly(typeof(GlowPostEffect)),
+                Assembly.GetAssembly(typeof(IGenerator))});
             desc = setup.DeviceDescription;
             window = new DemoWindow();
             executer = new DemoExecuter(new DemoFactory(),
                 SoundDriver.GetInstance(), InputDriver.GetInstance(),
-                new PostProcessor());
+                new PostProcessor(), effectTypes);
         }
     }
 }

@@ -2231,5 +2231,15 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         #endregion
+
+        #region ITextureFactory Members
+
+
+        public void RegisterTexture(string name, ITexture texture)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
     }
 }

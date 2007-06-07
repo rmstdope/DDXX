@@ -10,21 +10,25 @@
 	  <Parameter name="AddNoise" bool="false" />
 	  <Parameter name="Filename" string="" />
 	</PostEffect>
-	<!--Effect name="SpinningBackgroundEffect" track="0" startTime="0" endTime="9">
+	<Generator name="noise" class="PerlinNoise">
+		<Parameter name="BaseFrequency" int="64" />		   
+    </Generator>
+	<Texture name="noise" generator="noise"></Texture>
+	<Effect name="SpinningBackgroundEffect" track="0" startTime="0" endTime="9">
 		<SetupCall name="AddTextureLayer">
-			<Parameter string="BlurBackground.jpg"/>
+			<Parameter string="noise"/>
 			<Parameter float="35.0"/>
 			<Parameter Color="Beige"/>
-			<Parameter float="0.2"/>
+			<Parameter float="0.5"/>
 		</SetupCall>
 		<SetupCall name="AddTextureLayer">
-			<Parameter string="BlurBackground.jpg"/>
+			<Parameter string="noise"/>
 			<Parameter float="-44.0"/>
 			<Parameter Color="Coral"/>
-			<Parameter float="0.2"/>
+			<Parameter float="0.5"/>
 		</SetupCall>
 	</Effect>
-	<Effect name="TextFadingEffect" track="0" startTime="0.0" endTime="10.0">
+	<!--Effect name="TextFadingEffect" track="0" startTime="0.0" endTime="10.0">
 		<Parameter name="FadeInLength" float="5" />
 		<Parameter name="FadeOutLength" float="5" />
 		<Parameter name="TextColor" Color="White" />

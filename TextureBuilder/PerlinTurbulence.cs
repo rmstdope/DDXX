@@ -6,8 +6,8 @@ namespace Dope.DDXX.TextureBuilder
 {
     public class PerlinTurbulence : PerlinNoise
     {
-        public PerlinTurbulence(int numOctaves, float baseFrequency, float persistance)
-            : base(numOctaves, baseFrequency, persistance)
+        public PerlinTurbulence()
+            : base()
         {
             createTurbulence = true;
         }

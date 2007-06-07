@@ -7,7 +7,7 @@ namespace Dope.DDXX.TextureBuilder
 {
     public class Marble : Generator
     {
-        private IGenerator perlinGenerator;
+        private PerlinTurbulence perlinGenerator;
         private float veinPeriodX;
         private float veinPeriodY;
         private float turbSize;
@@ -20,7 +20,10 @@ namespace Dope.DDXX.TextureBuilder
             this.veinPeriodX = veinPeriodX;
             this.veinPeriodY = veinPeriodY;
             this.turbPower = turbulencePower;
-            perlinGenerator = new PerlinTurbulence(6, turbSize, 0.5f);
+            perlinGenerator = new PerlinTurbulence();
+            perlinGenerator.NumOctaves = 6;
+            perlinGenerator.BaseFrequency = turbSize;
+            perlinGenerator.Persistence = 0.5f;
         }
 
         public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)

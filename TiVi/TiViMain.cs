@@ -41,7 +41,7 @@ namespace TiVi
                     window.Initialize("Engine Test", desc, prerequisits);
                     executer.Initialize(D3DDriver.GetInstance().Device,
                         D3DDriver.GraphicsFactory, D3DDriver.TextureFactory, new TextureBuilder(D3DDriver.TextureFactory),
-                        new Assembly[] { Assembly.GetExecutingAssembly(), Assembly.GetAssembly(typeof(GlowPostEffect)) }, "TiVi.xml");
+                        "TiVi.xml");
 
                     executer.Run();
                     window.CleanUp();
@@ -64,11 +64,15 @@ namespace TiVi
 
         private static void SetupFramework(SetupLogic setup, out DemoWindow window, out DemoExecuter executer, out DeviceDescription desc)
         {
+            DemoEffectTypes effectTypes = new DemoEffectTypes(new Assembly[] { 
+                Assembly.GetExecutingAssembly(), 
+                Assembly.GetAssembly(typeof(GlowPostEffect)),
+                Assembly.GetAssembly(typeof(IGenerator))}); 
             desc = setup.DeviceDescription;
             window = new DemoWindow();
             executer = new DemoExecuter(new DemoFactory(), 
                 SoundDriver.GetInstance(), InputDriver.GetInstance(),
-                new PostProcessor());
+                new PostProcessor(), effectTypes);
         }
 
     }

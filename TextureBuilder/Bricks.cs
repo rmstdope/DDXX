@@ -32,7 +32,10 @@ namespace Dope.DDXX.TextureBuilder
 
         public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
         {
-            IGenerator g = new PerlinNoise(2, 8, 0.5f);
+            PerlinNoise g = new PerlinNoise();
+            g.NumOctaves = 2;
+            g.BaseFrequency = 8;
+            g.Persistence = 0.5f;
             textureCoordinate.X += 0.01f * g.GetPixel(textureCoordinate, texelSize).X;
             textureCoordinate.Y += 0.01f * g.GetPixel(textureCoordinate, texelSize).X;
             RowType row = GetRowType(textureCoordinate.Y);

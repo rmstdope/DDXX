@@ -107,7 +107,10 @@ namespace EngineTest
 
             InitializeTextures();
 
-            IGenerator generator = new PerlinNoise(5, 8, 0.5f);
+            PerlinNoise generator = new PerlinNoise();
+            generator.NumOctaves = 5;
+            generator.BaseFrequency = 8;
+            generator.Persistence = 0.5f;
             MeshBuilder builder = new MeshBuilder(GraphicsFactory, TextureFactory, Device);
             builder.CreateTerrain("Terrain", generator, 10.0f, 20.0f, 20.0f, 50, 50, true);
             builder.AssignMaterial("Terrain", "Default1");
@@ -224,8 +227,11 @@ namespace EngineTest
             //IGenerator generator1 = new MarbleGenerator(1, 2, 4.0f, 3.0f);
             //IGenerator generator1 = new PerlinNoise(6, 8, 0.5f);
             IGenerator bricks = new Bricks(4, 8, 0.025f);
-            IGenerator noise = new PerlinNoise(6, 32, 0.5f);
-            IGenerator noise2 = new PerlinNoise(4, 128, 0.5f);
+            PerlinNoise noise = new PerlinNoise();
+            noise.BaseFrequency = 32;
+            PerlinNoise noise2 = new PerlinNoise();
+            noise2.NumOctaves = 4;
+            noise2.BaseFrequency = 128;
             IGenerator madd = new Madd(0.5f, 0.5f);
             IGenerator madd2 = new Madd(1.0f, 0.6f);
             IGenerator modulate = new Modulate();

@@ -56,7 +56,6 @@ public class Dummy {}
         public void SetUp()
         {
             assembly = SetupAssembly(source);
-            effectTypes = new DemoEffectTypes();
         }
 
         [TearDown]
@@ -68,24 +67,24 @@ public class Dummy {}
         [Test]
         public void TestFindEffectsInAssembly1()
         {
-            effectTypes.Initialize(new Assembly[] { assembly, null });
-            Assert.AreEqual(2, effectTypes.Types.Count);
+            effectTypes = new DemoEffectTypes(new Assembly[] { assembly, null });
+            Assert.AreEqual(2, effectTypes.IRegisterables.Count);
             Type t;
-            Assert.IsTrue(effectTypes.Types.TryGetValue("FooEffect", out t));
+            Assert.IsTrue(effectTypes.IRegisterables.TryGetValue("FooEffect", out t));
             Assert.AreEqual(assembly.GetType("FooEffect"), t);
-            Assert.IsTrue(effectTypes.Types.TryGetValue("BarEffect", out t));
+            Assert.IsTrue(effectTypes.IRegisterables.TryGetValue("BarEffect", out t));
             Assert.AreEqual(assembly.GetType("BarEffect"), t);
         }
 
         [Test]
         public void TestFindEffectsInAssembly2()
         {
-            effectTypes.Initialize(new Assembly[] { assembly });
-            Assert.AreEqual(2, effectTypes.Types.Count);
+            effectTypes = new DemoEffectTypes(new Assembly[] { assembly });
+            Assert.AreEqual(2, effectTypes.IRegisterables.Count);
             Type t;
-            Assert.IsTrue(effectTypes.Types.TryGetValue("FooEffect", out t));
+            Assert.IsTrue(effectTypes.IRegisterables.TryGetValue("FooEffect", out t));
             Assert.AreEqual(assembly.GetType("FooEffect"), t);
-            Assert.IsTrue(effectTypes.Types.TryGetValue("BarEffect", out t));
+            Assert.IsTrue(effectTypes.IRegisterables.TryGetValue("BarEffect", out t));
             Assert.AreEqual(assembly.GetType("BarEffect"), t);
         }
 
@@ -93,7 +92,7 @@ public class Dummy {}
         [ExpectedException(typeof(DDXXException))]
         public void TestCreateInstanceFail()
         {
-            effectTypes.Initialize(new Assembly[] { assembly });
+            effectTypes = new DemoEffectTypes(new Assembly[] { assembly });
             IRegisterable ei = effectTypes.CreateInstance("fooeffect", 0, 1);
             Assert.IsNull(ei);
         }
@@ -101,7 +100,7 @@ public class Dummy {}
         [Test]
         public void TestCreateInstanceOK1()
         {
-            effectTypes.Initialize(new Assembly[] { assembly });
+            effectTypes = new DemoEffectTypes(new Assembly[] { assembly });
             IRegisterable ei = effectTypes.CreateInstance("FooEffect", 3, 7);
             Assert.IsNotNull(ei);
             Assert.IsInstanceOfType(assembly.GetType("FooEffect"), ei);
@@ -112,7 +111,7 @@ public class Dummy {}
         [Test]
         public void TestCreateInstanceOK2()
         {
-            effectTypes.Initialize(new Assembly[] { assembly });
+            effectTypes = new DemoEffectTypes(new Assembly[] { assembly });
             IRegisterable ei = effectTypes.CreateInstance("BarEffect", 3, 7);
             Assert.IsNotNull(ei);
             Assert.IsInstanceOfType(assembly.GetType("BarEffect"), ei);
@@ -123,7 +122,7 @@ public class Dummy {}
         [Test]
         public void TestSetIntParameter()
         {
-            effectTypes.Initialize(new Assembly[] { assembly });
+            effectTypes = new DemoEffectTypes(new Assembly[] { assembly });
             IRegisterable ei = effectTypes.CreateInstance("BarEffect", 0, 1);
             Assert.IsNotNull(ei);
             effectTypes.SetProperty(ei, "IntParam", 5);
@@ -134,7 +133,7 @@ public class Dummy {}
         [Test]
         public void TestSetFloatParameter()
         {
-            effectTypes.Initialize(new Assembly[] { assembly });
+            effectTypes = new DemoEffectTypes(new Assembly[] { assembly });
             IRegisterable ei = effectTypes.CreateInstance("BarEffect", 0, 1);
             Assert.IsNotNull(ei);
             effectTypes.SetProperty(ei, "FloatParam", 5.5F);

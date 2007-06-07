@@ -69,6 +69,7 @@
     <Compile Include="DemoWindowTest.cs" />
     <Compile Include="IDemoEffect.cs" />
     <Compile Include="IDemoEffectBuilder.cs" />
+    <Compile Include="IDemoEffectTypes.cs" />
     <Compile Include="IDemoFactory.cs" />
     <Compile Include="IDemoPostEffect.cs" />
     <Compile Include="IDemoRegistrator.cs" />

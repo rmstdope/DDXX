@@ -36,31 +36,7 @@ namespace Dope.DDXX.DemoFramework
         private FMOD.Channel channel;
         private List<ITrack> tracks;
         private int trackNum;
-
-        private string twoEffectContents =
-@"<Demo>
-<Effect name=""FooEffect"" track=""1"" endTime=""6.5"">
-<Parameter name=""FooParam"" int=""3"" />
-<Parameter name=""BarParam"" float=""4.3"" />
-<Parameter name=""StrParam"" string=""foostr"" />
-</Effect>
-<Effect name=""BarEffect"" startTime=""2.5"" endTime=""5.2"">
-<Parameter name=""Goo"" string=""string value"" />
-<Parameter name=""VecParam"" Vector3=""5.4, 4.3, 3.2"" />
-<Parameter name=""ColParam"" Color=""250, 101, 102, 103"" />
-<Parameter name=""ColParamNamed"" Color=""SlateBlue"" />
-<SetupCall name=""Setup"">
-<Parameter string=""MethodCalled"" />
-</SetupCall>
-</Effect>
-<PostEffect name=""FooGlow"" track=""2"" startTime=""3.4"" endTime=""4.5"">
-<Parameter name=""GlowParam"" float=""5.4"" />
-</PostEffect>
-</Demo>
-";
-        //<Transition name=""footrans"" destinationTrack=""1"">
-        //<Parameter name=""transparam"" string=""tranny"" />
-        //</Transition>
+        private IDemoEffectTypes effectTypes;
 
         [SetUp]
         public override void SetUp()
@@ -74,7 +50,8 @@ namespace Dope.DDXX.DemoFramework
 
             soundDriver = mockery.NewMock<ISoundDriver>();
             inputDriver = mockery.NewMock<IInputDriver>();
-            executer = new DemoExecuter(this, soundDriver, inputDriver, postProcessor);
+            effectTypes = mockery.NewMock<IDemoEffectTypes>();
+            executer = new DemoExecuter(this, soundDriver, inputDriver, postProcessor, effectTypes);
             tweaker = mockery.NewMock<IDemoTweaker>();
             executer.Tweaker = tweaker;
             textureBuilder = mockery.NewMock<ITextureBuilder>();
@@ -287,6 +264,32 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestInitializeFromFile()
         {
+            FooEffect fooEffect = new FooEffect(0, 0);
+            BarEffect barEffect = new BarEffect(0, 0);
+            FooGlow fooGlow = new FooGlow(0, 0);
+            List<object> param = new List<object>();
+
+            string twoEffectContents =
+@"<Demo>
+<Effect name=""FooEffect"" track=""1"" endTime=""6.5"">
+<Parameter name=""FooParam"" int=""3"" />
+<Parameter name=""BarParam"" float=""4.3"" />
+<Parameter name=""StrParam"" string=""foostr"" />
+</Effect>
+<Effect name=""BarEffect"" startTime=""2.5"" endTime=""5.2"">
+<Parameter name=""Goo"" string=""string value"" />
+<Parameter name=""VecParam"" Vector3=""5.4, 4.3, 3.2"" />
+<Parameter name=""ColParam"" Color=""250, 101, 102, 103"" />
+<Parameter name=""ColParamNamed"" Color=""SlateBlue"" />
+<SetupCall name=""Setup"">
+<Parameter string=""MethodCalled"" />
+</SetupCall>
+</Effect>
+<PostEffect name=""FooGlow"" track=""2"" startTime=""3.4"" endTime=""4.5"">
+<Parameter name=""GlowParam"" float=""5.4"" />
+</PostEffect>
+</Demo>
+";
             ExpectSoundInitialize();
             ExpectPostProcessorInitialize();
             ExpectTweakerInitialize();
@@ -294,11 +297,25 @@ namespace Dope.DDXX.DemoFramework
 
             DemoXMLReaderTest.TempFiles tempFiles = new DemoXMLReaderTest.TempFiles();
             FileUtility.SetLoadPaths(new string[] { "" });
-            Expect.Once.On(tracks[0]).Method("Register").WithAnyArguments();
+            Expect.Once.On(effectTypes).Method("CreateInstance").With("FooEffect", 0.0f, 6.5f).Will(Return.Value(fooEffect));
+            Expect.Once.On(effectTypes).Method("SetProperty").With(fooEffect, "FooParam", 3);
+            Expect.Once.On(effectTypes).Method("SetProperty").With(fooEffect, "BarParam", 4.3f);
+            Expect.Once.On(effectTypes).Method("SetProperty").With(fooEffect, "StrParam", "foostr");
+            Expect.Once.On(effectTypes).Method("CreateInstance").With("BarEffect", 2.5f, 5.2f).Will(Return.Value(barEffect));
+            Expect.Once.On(effectTypes).Method("SetProperty").With(barEffect, "Goo", "string value");
+            Expect.Once.On(effectTypes).Method("SetProperty").With(barEffect, "VecParam", new Vector3(5.4f, 4.3f, 3.2f));
+            Expect.Once.On(effectTypes).Method("SetProperty").With(barEffect, "ColParam", Color.FromArgb(250, 101, 102, 103));
+            Expect.Once.On(effectTypes).Method("SetProperty").With(barEffect, "ColParamNamed", Color.SlateBlue);
+            param.Add("MethodCalled");
+            Expect.Once.On(effectTypes).Method("CallSetup").With(barEffect, "Setup", param);
+            Expect.Once.On(effectTypes).Method("CreateInstance").With("FooGlow", 3.4f, 4.5f).Will(Return.Value(fooGlow));
+            Expect.Once.On(effectTypes).Method("SetProperty").With(fooGlow, "GlowParam", 5.4f);
+
+            Expect.Once.On(tracks[0]).Method("Register").With(barEffect);
+            Expect.Once.On(tracks[1]).Method("Register").With(fooEffect);
+            Expect.Once.On(tracks[2]).Method("Register").With(fooGlow);
             Expect.Once.On(tracks[0]).Method("Initialize").With(graphicsFactory, device, textureFactory, textureBuilder, postProcessor);
-            Expect.Once.On(tracks[1]).Method("Register").WithAnyArguments();
             Expect.Once.On(tracks[1]).Method("Initialize").With(graphicsFactory, device, textureFactory, textureBuilder, postProcessor);
-            Expect.Once.On(tracks[2]).Method("Register").WithAnyArguments();
             Expect.Once.On(tracks[2]).Method("Initialize").With(graphicsFactory, device, textureFactory, textureBuilder, postProcessor);
             executer.Initialize(device, graphicsFactory, textureFactory, textureBuilder, tempFiles.New(twoEffectContents));
             Assert.AreEqual(3, executer.NumTracks);
@@ -328,19 +345,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestXMLUpdate()
         {
-            ExpectSoundInitialize();
-            ExpectPostProcessorInitialize();
-            ExpectTweakerInitialize();
-            ExpectGraphicsInitialize();
-
-            DemoXMLReaderTest.TempFiles tempFiles = new DemoXMLReaderTest.TempFiles();
-            FileUtility.SetLoadPaths(new string[] { "" });
-            for (int i = 0; i < 3; i++)
-            {
-                Expect.Once.On(tracks[i]).Method("Register").WithAnyArguments();
-                Expect.Once.On(tracks[i]).Method("Initialize").With(graphicsFactory, device, textureFactory, textureBuilder, postProcessor);
-            }
-            executer.Initialize(device, graphicsFactory, textureFactory, textureBuilder, tempFiles.New(twoEffectContents));
+            TestInitializeFromFile();
 
             for (int i = 0; i < 3; i++)
                 Expect.Once.On(tracks[i]).Method("UpdateListener").With(effectChangeListener);
@@ -452,6 +457,69 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(soundDriver).Method("SetPosition");
             executer.JumpInTime(10.0f);
             Assert.AreEqual(10.0f, Time.CurrentTime, 0.00001f);
+        }
+
+        [Test]
+        public void TestAddGeneratorNoParameter()
+        {
+            TestInitializeOKSong();
+            TestGenerator generator1 = new TestGenerator();
+
+            Expect.Once.On(effectTypes).Method("CreateGenerator").With("className").Will(Return.Value(generator1));
+            executer.AddGenerator("name", "className");
+        }
+
+        [Test]
+        public void TestAddGeneratorWithParameter()
+        {
+            TestInitializeOKSong();
+            TestGenerator generator1 = new TestGenerator();
+
+            Expect.Once.On(effectTypes).Method("CreateGenerator").With("className2").Will(Return.Value(generator1));
+            executer.AddGenerator("gen1", "className2");
+            Expect.Once.On(effectTypes).Method("SetProperty").With(generator1, "paramName", 10.0f);
+            executer.AddFloatParameter("paramName", 10, -1);
+        }
+
+        [Test]
+        public void TestAddTwoGeneratorWithParameters()
+        {
+            TestInitializeOKSong();
+            TestGenerator generator1 = new TestGenerator();
+            TestGenerator generator2 = new TestGenerator();
+
+            Expect.Once.On(effectTypes).Method("CreateGenerator").With("className3").Will(Return.Value(generator1));
+            Expect.Once.On(effectTypes).Method("SetProperty").With(generator1, "paramName2", "hejsan");
+            Expect.Once.On(effectTypes).Method("CreateGenerator").With("className4").Will(Return.Value(generator2));
+            Expect.Once.On(effectTypes).Method("SetProperty").With(generator2, "paramName3", Color.Red);
+            executer.AddGenerator("gen1", "className3");
+            executer.AddStringParameter("paramName2", "hejsan");
+            executer.AddGenerator("gen2", "className4");
+            executer.AddColorParameter("paramName3", Color.Red);
+        }
+
+        [Test]
+        public void TestAddTexture()
+        {
+            TestInitializeOKSong();
+            TestGenerator generator1 = new TestGenerator();
+            ITexture texture = mockery.NewMock<ITexture>();
+
+            Expect.Once.On(effectTypes).Method("CreateGenerator").With("className").Will(Return.Value(generator1));
+            executer.AddGenerator("genName", "className");
+            Expect.Once.On(textureBuilder).Method("Generate").
+                With(generator1, 256, 256, 1, Format.A8R8G8B8).Will(Return.Value(texture));
+            Expect.Once.On(textureFactory).Method("RegisterTexture").
+                With("texName", texture);
+            executer.AddTexture("texName", "genName");
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestAddTextureNoGenerator()
+        {
+            TestInitializeOKSong();
+            executer.AddTexture("texName", "genName");
         }
 
         private IDemoEffect RegisterEffect(int track, float startTime, float endTime)
@@ -590,5 +658,16 @@ namespace Dope.DDXX.DemoFramework
         }
         public override void Render() { }
         protected override void Initialize() { }
+    }
+    public class TestGenerator : IGenerator
+    {
+        public Vector4  GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+        public void  ConnectToInput(int inputPin, IGenerator outputGenerator)
+        {
+ 	        throw new Exception("The method or operation is not implemented.");
+        }
     }
 }

@@ -36,10 +36,11 @@ namespace Dope.DDXX.DemoFramework
         private int activeTrack;
 
         private IDemoFactory demoFactory;
-        private DemoEffectTypes effectTypes = new DemoEffectTypes();
+        private IDemoEffectTypes effectTypes;
         private TweakerSettings settings = new TweakerSettings();
         private DemoXMLReader xmlReader;
         private Color backgroundColor = Color.DarkSlateBlue;
+        private Dictionary<string, IGenerator> generators = new Dictionary<string,IGenerator>();
 
         private string songFilename;
 
@@ -93,40 +94,32 @@ namespace Dope.DDXX.DemoFramework
             get { return backgroundColor; }
         }
 
-        public DemoExecuter(IDemoFactory demoFactory, ISoundDriver soundDriver, IInputDriver inputDriver, IPostProcessor postProcessor)
+        public DemoExecuter(IDemoFactory demoFactory, ISoundDriver soundDriver, IInputDriver inputDriver, IPostProcessor postProcessor, IDemoEffectTypes effectTypes)
         {
             activeTrack = 0;
             this.demoFactory = demoFactory;
             this.soundDriver = soundDriver;
             this.inputDriver = inputDriver;
             this.postProcessor = postProcessor;
+            this.effectTypes = effectTypes;
             tweaker = new DemoTweakerMain(this, new IDemoTweaker[] { new DemoTweakerDemo(settings), new DemoTweakerTrack(settings), new DemoTweakerEffect(settings) }, settings);
         }
 
         public void Initialize(IDevice device, IGraphicsFactory graphicsFactory,
             ITextureFactory textureFactory, ITextureBuilder textureBuilder)
         {
-            this.Initialize(device, graphicsFactory, textureFactory, textureBuilder,
-                new Assembly[] { Assembly.GetCallingAssembly() }, "");
-        }
-
-        public void Initialize(IDevice device, IGraphicsFactory graphicsFactory,
-            ITextureFactory textureFactory, ITextureBuilder textureBuilder, string xmlFile)
-        {
-            this.Initialize(device, graphicsFactory, textureFactory, textureBuilder,
-                new Assembly[] { Assembly.GetCallingAssembly() }, xmlFile);
+            this.Initialize(device, graphicsFactory, textureFactory, textureBuilder, "");
         }
 
         public void Initialize(IDevice device, IGraphicsFactory graphicsFactory, 
-            ITextureFactory textureFactory, ITextureBuilder textureBuilder, Assembly[] assemblies, 
-            string xmlFile)
+            ITextureFactory textureFactory, ITextureBuilder textureBuilder, string xmlFile)
         {
             this.device = device;
             this.graphicsFactory = graphicsFactory;
             this.textureFactory = textureFactory;
             this.textureBuilder = textureBuilder;
 
-            effectTypes.Initialize(assemblies);
+            //effectTypes.Initialize(assemblies);
 
             InitializeFromFile(xmlFile);
 
@@ -281,20 +274,20 @@ namespace Dope.DDXX.DemoFramework
         }
 
         #region IDemoEffectBuilder Members
-        private IRegisterable lastAddedEffect;
+        private object lastAddedAsset;
 
         public void AddEffect(string effectName, int effectTrack, float startTime, float endTime)
         {
             IDemoEffect effect = (IDemoEffect)effectTypes.CreateInstance(effectName, startTime, endTime);
             this.Register(effectTrack, effect);
-            lastAddedEffect = effect;
+            lastAddedAsset = effect;
         }
 
         public void AddPostEffect(string effectName, int effectTrack, float startTime, float endTime)
         {
             IDemoPostEffect effect = (IDemoPostEffect)effectTypes.CreateInstance(effectName, startTime, endTime);
             this.Register(effectTrack, effect);
-            lastAddedEffect = effect;
+            lastAddedAsset = effect;
         }
 
         public void AddTransition(string effectName, int destinationTrack)
@@ -305,13 +298,17 @@ namespace Dope.DDXX.DemoFramework
 
         public void AddGenerator(string generatorName, string className)
         {
-            // TODO Add generator support
-            throw new Exception("The method or operation is not implemented.");
+            IGenerator generator = effectTypes.CreateGenerator(className);
+            generators.Add(generatorName, generator);
+            lastAddedAsset = generator;
         }
 
         public void AddTexture(string textureName, string generatorName)
         {
-            throw new Exception("The method or operation is not implemented.");
+            if (!generators.ContainsKey(generatorName))
+                throw new DDXXException("Generator " + generatorName + " has never been registered.");
+            ITexture texture = textureBuilder.Generate(generators[generatorName], 256, 256, 1, Format.A8R8G8B8);
+            textureFactory.RegisterTexture(textureName, texture);
         }
 
         public void AddFloatParameter(string name, float value, float stepSize)
@@ -326,13 +323,14 @@ namespace Dope.DDXX.DemoFramework
 
         private void AddParameter(string name, object value, float stepSize)
         {
-            if (lastAddedEffect != null)
-            {
-                effectTypes.SetProperty(lastAddedEffect, name, value);
-                ITweakableContainer container = lastAddedEffect as ITweakableContainer;
+            // TODO: This is currently untested code, so I commented it!
+            //if (lastAddedEffect != null)
+            //{
+                effectTypes.SetProperty(lastAddedAsset, name, value);
+                ITweakableContainer container = lastAddedAsset as ITweakableContainer;
                 if (stepSize > 0)
                     container.SetStepSize(container.GetTweakableNumber(name), stepSize);
-            }
+            //}
         }
 
         public void AddStringParameter(string name, string value)
@@ -357,9 +355,9 @@ namespace Dope.DDXX.DemoFramework
 
         public void AddSetupCall(string name, List<object> parameters)
         {
-            if (lastAddedEffect != null)
+            if (lastAddedAsset != null)
             {
-                effectTypes.CallSetup(lastAddedEffect, name, parameters);
+                effectTypes.CallSetup(lastAddedAsset, name, parameters);
             }
         }
 
@@ -409,6 +407,7 @@ namespace Dope.DDXX.DemoFramework
         }
 
         #endregion
+
 
     }
 }

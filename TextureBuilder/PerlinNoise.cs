@@ -15,12 +15,30 @@ namespace Dope.DDXX.TextureBuilder
         private Vector4 colorDiff;
         protected bool createTurbulence = false;
 
-        public PerlinNoise(int numOctaves, float baseFrequency, float persistance)
+        public int NumOctaves
+        {
+            set { numOctaves = value; }
+            get { return numOctaves; }
+        }
+
+        public float BaseFrequency
+        {
+            set { baseFrequency= value; }
+            get { return baseFrequency; }
+        }
+
+        public float Persistence
+        {
+            set { persistence = value; }
+            get { return persistence; }
+        }
+
+        public PerlinNoise()
             : base(0)
         {
-            this.numOctaves = numOctaves;
-            this.baseFrequency = baseFrequency;
-            this.persistence = persistance;
+            this.numOctaves = 6;
+            this.baseFrequency = 4;
+            this.persistence = 0.5f;
             color = new Vector4(0, 0, 0, 0);
             colorDiff = new Vector4(1, 1, 1, 1);
         }
