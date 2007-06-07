@@ -300,6 +300,13 @@ namespace Dope.DDXX.DemoFramework
         public void AddTransition(string effectName, int destinationTrack)
         {
             // TODO Add transition support
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void AddGenerator(string generatorName, string className)
+        {
+            // TODO Add generator support
+            throw new Exception("The method or operation is not implemented.");
         }
 
         public void AddFloatParameter(string name, float value, float stepSize)
@@ -392,6 +399,7 @@ namespace Dope.DDXX.DemoFramework
         }
 
         #endregion
+
 
 
     }

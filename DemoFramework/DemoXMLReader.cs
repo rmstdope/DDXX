@@ -106,14 +106,35 @@ namespace Dope.DDXX.DemoFramework
 
         private void Parse(XmlDocument doc)
         {
-            XmlNode root = doc.DocumentElement;
-            XmlNode effectsNode = root;
-            while (effectsNode != null && effectsNode.Name != "Effects")
+            XmlNode demoNode = GetDemoNode(doc);
+            HandleDemoAttributes(doc, demoNode);
+            HandleDemoChildren(demoNode);
+        }
+
+        private void HandleDemoChildren(XmlNode effectsNode)
+        {
+            foreach (XmlNode node in effectsNode.ChildNodes)
             {
-                effectsNode = effectsNode.NextSibling;
+                switch (node.Name)
+                {
+                    case "Effect":
+                        ReadEffect(node);
+                        break;
+                    case "PostEffect":
+                        ReadPostEffect(node);
+                        break;
+                    case "Transition":
+                        ReadTransition(node);
+                        break;
+                    case "Generator":
+                        ReadGenerator(node);
+                        break;
+                }
             }
-            if (effectsNode == null)
-                throw new DDXXException("No effects found");
+        }
+
+        private void HandleDemoAttributes(XmlDocument doc, XmlNode effectsNode)
+        {
             foreach (XmlAttribute node in effectsNode.Attributes)
             {
                 switch (node.Name)
@@ -125,21 +146,27 @@ namespace Dope.DDXX.DemoFramework
                         throw new DDXXException("Unknown attribute '" + node.Name + "' in xml file " + doc.Name);
                 }
             }
-            foreach (XmlNode node in effectsNode.ChildNodes)
+        }
+
+        private static XmlNode GetDemoNode(XmlDocument doc)
+        {
+            XmlNode effectsNode = doc.DocumentElement;
+            // TODO: Rename "Effects" to "Demo"
+            while (effectsNode != null && effectsNode.Name != "Effects")
             {
-                if (node.NodeType == XmlNodeType.Element && node.Name == "Effect")
-                {
-                    ReadEffect(node);
-                }
-                else if (node.NodeType == XmlNodeType.Element && node.Name == "PostEffect")
-                {
-                    ReadPostEffect(node);
-                }
-                else if (node.NodeType == XmlNodeType.Element && node.Name == "Transition")
-                {
-                    ReadTransition(node);
-                }
+                effectsNode = effectsNode.NextSibling;
             }
+            if (effectsNode == null)
+                throw new DDXXException("No effects found");
+            return effectsNode;
+        }
+
+        private void ReadGenerator(XmlNode node)
+        {
+            XmlAttribute name = (XmlAttribute)node.Attributes.GetNamedItem("name");
+            XmlAttribute className = (XmlAttribute)node.Attributes.GetNamedItem("class");
+            effectBuilder.AddGenerator(name.Value, className.Value);
+            ReadParameters(node);
         }
 
         private void ReadEffect(XmlNode node)

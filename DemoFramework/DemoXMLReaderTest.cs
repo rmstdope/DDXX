@@ -19,33 +19,52 @@ namespace Dope.DDXX.DemoFramework
         #region Builder stub
         class BuilderStub : IDemoEffectBuilder
         {
-            class Effect
+            class Asset
+            {
+                public Dictionary<string, Parameter> parameters;
+                public Dictionary<string, List<object>> setups;
+                public Asset()
+                {
+                    parameters = new Dictionary<string, Parameter>();
+                    setups = new Dictionary<string, List<object>>();
+                }
+            }
+            class Effect : Asset
             {
                 public string name;
                 public int track;
                 public float startTime;
                 public float endTime;
-                public Dictionary<string, Parameter> parameters;
-                public Dictionary<string, List<object>> setups;
                 public Effect(string name, int track)
                     : this(name, track, 0, 0)
                 {
                 }
                 public Effect(string name, int track, float startTime, float endTime)
+                    : base()
                 {
                     this.name = name;
                     this.track = track;
                     this.startTime = startTime;
                     this.endTime = endTime;
-                    parameters = new Dictionary<string, Parameter>();
-                    setups = new Dictionary<string, List<object>>();
+                }
+            }
+            class Generator : Asset
+            {
+                public string name;
+                public string className;
+                public Generator(string name, string className)
+                {
+                    this.name = name;
+                    this.className = className;
                 }
             }
             private Queue<Effect> effects = new Queue<Effect>();
+            private Queue<Generator> generators = new Queue<Generator>();
             private Queue<Effect> postEffects = new Queue<Effect>();
             private Queue<Effect> transitions = new Queue<Effect>();
-            private Effect lastEffect;
+            private Asset lastAsset;
             private Effect currentEffect;
+            private Generator currentGenerator;
             private Effect currentPostEffect;
             private Effect currentTransition;
             private string songName;
@@ -54,27 +73,37 @@ namespace Dope.DDXX.DemoFramework
 
             public void AddTransition(string name, int destinationTrack)
             {
-                lastEffect = new Effect(name, destinationTrack);
-                transitions.Enqueue(lastEffect);
+                Effect newEffect = new Effect(name, destinationTrack);
+                lastAsset = newEffect;
+                transitions.Enqueue(newEffect);
             }
 
             public void AddPostEffect(string name, int track, float startTime, float endTime)
             {
-                lastEffect = new Effect(name, track, startTime, endTime);
-                postEffects.Enqueue(lastEffect);
+                Effect newEffect = new Effect(name, track, startTime, endTime);
+                lastAsset = newEffect;
+                postEffects.Enqueue(newEffect);
             }
 
             public void AddEffect(string name, int track, float startTime, float endTime)
             {
-                lastEffect = new Effect(name, track, startTime, endTime);
-                effects.Enqueue(lastEffect);
+                Effect newEffect = new Effect(name, track, startTime, endTime);
+                lastAsset = newEffect;
+                effects.Enqueue(newEffect);
+            }
+
+            public void AddGenerator(string name, string className)
+            {
+                Generator newGenerator = new Generator(name, className);
+                lastAsset = newGenerator;
+                generators.Enqueue(newGenerator);
             }
 
             private void AddParameter(string name, Parameter value)
             {
-                if (lastEffect != null)
+                if (lastAsset != null)
                 {
-                    lastEffect.parameters.Add(value.name, value);
+                    lastAsset.parameters.Add(value.name, value);
                 }
                 else
                 {
@@ -108,9 +137,9 @@ namespace Dope.DDXX.DemoFramework
             }
             public void AddSetupCall(string name, List<object> parameters)
             {
-                if (lastEffect != null)
+                if (lastAsset != null)
                 {
-                    lastEffect.setups.Add(name, parameters);
+                    lastAsset.setups.Add(name, parameters);
                 }
                 else
                 {
@@ -137,6 +166,20 @@ namespace Dope.DDXX.DemoFramework
                 else
                 {
                     currentEffect = null;
+                    return false;
+                }
+            }
+
+            public bool NextGenerator()
+            {
+                if (generators.Count > 0)
+                {
+                    currentGenerator = generators.Dequeue();
+                    return true;
+                }
+                else
+                {
+                    currentGenerator = null;
                     return false;
                 }
             }
@@ -207,6 +250,27 @@ namespace Dope.DDXX.DemoFramework
                         return currentEffect.name;
                     else
                         throw new InvalidOperationException("No current effect");
+                }
+            }
+
+            public string GeneratorName
+            {
+                get
+                {
+                    if (currentGenerator != null)
+                        return currentGenerator.name;
+                    else
+                        throw new InvalidOperationException("No current generator");
+                }
+            }
+            public string GeneratorClass
+            {
+                get
+                {
+                    if (currentGenerator != null)
+                        return currentGenerator.className;
+                    else
+                        throw new InvalidOperationException("No current generator");
                 }
             }
 
@@ -282,6 +346,14 @@ namespace Dope.DDXX.DemoFramework
                     throw new InvalidOperationException("No current transition");
             }
 
+            public Dictionary<string, Parameter> GetGeneratorParameters()
+            {
+                if (currentGenerator != null)
+                    return currentGenerator.parameters;
+                else
+                    throw new InvalidOperationException("No current generator");
+            }
+
             public Dictionary<string, List<object>> GetSetups()
             {
                 if (currentEffect != null)
@@ -289,6 +361,7 @@ namespace Dope.DDXX.DemoFramework
                 else
                     throw new InvalidOperationException("No current effect");
             }
+
 
         }
         #endregion
@@ -706,6 +779,51 @@ namespace Dope.DDXX.DemoFramework
             string songXml =
 @"<Effects unknown=""x""></Effects>";
             ReadXML(songXml);
+        }
+
+        [Test]
+        public void TestOneGenerator()
+        {
+            string textureXml =
+                @"<Effects><Generator name=""gen1"" class=""noiser""/></Effects>";
+            ReadXML(textureXml);
+            Assert.IsTrue(effectBuilder.NextGenerator());
+            Assert.AreEqual("gen1", effectBuilder.GeneratorName);
+            Assert.AreEqual("noiser", effectBuilder.GeneratorClass);
+            Assert.IsFalse(effectBuilder.NextGenerator());
+        }
+
+        [Test]
+        public void TestTwoGenerators()
+        {
+            string textureXml =
+                @"<Effects><Generator name=""gen1"" class=""noiser""/><Generator name=""gen2"" class=""noiser2""/></Effects>";
+            ReadXML(textureXml);
+            Assert.IsTrue(effectBuilder.NextGenerator());
+            Assert.AreEqual("gen1", effectBuilder.GeneratorName);
+            Assert.AreEqual("noiser", effectBuilder.GeneratorClass);
+            Assert.IsTrue(effectBuilder.NextGenerator());
+            Assert.AreEqual("gen2", effectBuilder.GeneratorName);
+            Assert.AreEqual("noiser2", effectBuilder.GeneratorClass);
+            Assert.IsFalse(effectBuilder.NextGenerator());
+        }
+
+        [Test]
+        public void TestOneGeneratorWithOneParameter()
+        {
+            string textureXml =
+@"<Effects>
+    <Generator name=""gen1"" class=""noiser"">
+        <Parameter name=""Para"" bool=""true""/>
+    </Generator>
+</Effects>";
+            ReadXML(textureXml);
+            Assert.IsTrue(effectBuilder.NextGenerator());
+            Dictionary<string, Parameter> parameters = effectBuilder.GetGeneratorParameters();
+            Parameter parameter;
+            Assert.IsTrue(parameters.TryGetValue("Para", out parameter));
+            Assert.AreEqual(TweakableType.Bool, parameter.Type);
+            Assert.AreEqual(true, parameter.BoolValue);
         }
 
         private DemoXMLReader ReadXML(string contents)

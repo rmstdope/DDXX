@@ -30,9 +30,10 @@
 		<Parameter name="TextColor" Color="White" />
 		<Parameter name="Text" string=".dope" />
 	</Effect-->
-  <Effect name="TestEffect" track="0" startTime="0" endTime="300">
+  <!--Effect name="TestEffect" track="0" startTime="0" endTime="300">
     <Parameter name="ReflectiveFactor" float="0" />
-  </Effect>
+  </Effect-->
+  <Effect name="TerrainFlyover" track="0" startTime="0" endTime="300" />
   <!--Effect name="TimeSyncEffect" track="0" startTime="0" endTime="300" /-->
   <!--Effect name="DofCubesEffect" track="0" startTime="0" endTime="300" /-->
   <!--PostEffect name="DepthOfFieldPostEffect" track="0" startTime="0.0" endTime="300.0" /-->
