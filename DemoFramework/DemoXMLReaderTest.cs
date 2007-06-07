@@ -52,10 +52,12 @@ namespace Dope.DDXX.DemoFramework
             {
                 public string name;
                 public string className;
+                public Dictionary<int, string> inputs;
                 public Generator(string name, string className)
                 {
                     this.name = name;
                     this.className = className;
+                    inputs = new Dictionary<int, string>();
                 }
             }
             private Queue<Effect> effects = new Queue<Effect>();
@@ -140,6 +142,18 @@ namespace Dope.DDXX.DemoFramework
                 if (lastAsset != null)
                 {
                     lastAsset.setups.Add(name, parameters);
+                }
+                else
+                {
+                    throw new InvalidOperationException("Adding parameters before any effects");
+                }
+            }
+
+            public void AddGeneratorInput(int num, string generatorName)
+            {
+                if (lastAsset != null && lastAsset is Generator)
+                {
+                    (lastAsset as Generator).inputs.Add(num, generatorName);
                 }
                 else
                 {
@@ -362,6 +376,13 @@ namespace Dope.DDXX.DemoFramework
                     throw new InvalidOperationException("No current effect");
             }
 
+            public Dictionary<int, string> GetGeneratorInputs()
+            {
+                if (currentGenerator != null)
+                    return currentGenerator.inputs;
+                else
+                    throw new InvalidOperationException("No current generator");
+            }
 
         }
         #endregion
@@ -824,6 +845,69 @@ namespace Dope.DDXX.DemoFramework
             Assert.IsTrue(parameters.TryGetValue("Para", out parameter));
             Assert.AreEqual(TweakableType.Bool, parameter.Type);
             Assert.AreEqual(true, parameter.BoolValue);
+        }
+
+        [Test]
+        public void TestOneGeneratorWithOneInput()
+        {
+            string textureXml =
+@"<Effects>
+    <Generator name=""gen1"" class=""noiser"">
+        <Input number=""0"" generator=""gen2""/>
+    </Generator>
+</Effects>";
+            ReadXML(textureXml);
+            Assert.IsTrue(effectBuilder.NextGenerator());
+            Dictionary<int, string> inputs = effectBuilder.GetGeneratorInputs();
+            string str;
+            Assert.IsTrue(inputs.TryGetValue(0, out str));
+            Assert.AreEqual("gen2", str);
+        }
+
+        [Test]
+        public void TestOneGeneratorWithTwoInputs()
+        {
+            string textureXml =
+@"<Effects>
+    <Generator name=""gen1"" class=""noiser"">
+        <Input number=""50"" generator=""x""/>
+        <Input number=""100"" generator=""y""/>
+    </Generator>
+</Effects>";
+            ReadXML(textureXml);
+            Assert.IsTrue(effectBuilder.NextGenerator());
+            Dictionary<int, string> inputs = effectBuilder.GetGeneratorInputs();
+            string str;
+            Assert.IsTrue(inputs.TryGetValue(50, out str));
+            Assert.AreEqual("x", str);
+            Assert.IsTrue(inputs.TryGetValue(100, out str));
+            Assert.AreEqual("y", str);
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestInputWithoutNumber()
+        {
+            string textureXml =
+@"<Effects>
+    <Generator name=""gen1"" class=""noiser"">
+        <Input generator=""gen2""/>
+    </Generator>
+</Effects>";
+            ReadXML(textureXml);
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestInputWithoutGenerator()
+        {
+            string textureXml =
+@"<Effects>
+    <Generator name=""gen1"" class=""noiser"">
+        <Input number=""2""/>
+    </Generator>
+</Effects>";
+            ReadXML(textureXml);
         }
 
         private DemoXMLReader ReadXML(string contents)

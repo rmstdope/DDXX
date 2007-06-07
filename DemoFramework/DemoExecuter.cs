@@ -358,6 +358,11 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
+        public void AddGeneratorInput(int num, string generatorName)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
         public void SetSong(string filename)
         {
             songFilename = filename;
@@ -399,8 +404,6 @@ namespace Dope.DDXX.DemoFramework
         }
 
         #endregion
-
-
 
     }
 }

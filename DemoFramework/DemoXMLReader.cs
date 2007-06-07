@@ -166,7 +166,7 @@ namespace Dope.DDXX.DemoFramework
             XmlAttribute name = (XmlAttribute)node.Attributes.GetNamedItem("name");
             XmlAttribute className = (XmlAttribute)node.Attributes.GetNamedItem("class");
             effectBuilder.AddGenerator(name.Value, className.Value);
-            ReadParameters(node);
+            ReadParameters(node, true);
         }
 
         private void ReadEffect(XmlNode node)
@@ -177,7 +177,7 @@ namespace Dope.DDXX.DemoFramework
             float endTime;
             ReadNameTrack(node, out effectName, out effectTrack, out startTime, out endTime);
             effectBuilder.AddEffect(effectName, effectTrack, startTime, endTime);
-            ReadParameters(node);
+            ReadParameters(node, false);
         }
 
         private void ReadPostEffect(XmlNode node)
@@ -188,7 +188,7 @@ namespace Dope.DDXX.DemoFramework
             float endTime;
             ReadNameTrack(node, out effectName, out effectTrack, out startTime, out endTime);
             effectBuilder.AddPostEffect(effectName, effectTrack, startTime, endTime);
-            ReadParameters(node);
+            ReadParameters(node, false);
         }
 
         private void ReadTransition(XmlNode node)
@@ -205,7 +205,7 @@ namespace Dope.DDXX.DemoFramework
                 destinationTrack = 0;
             }
             effectBuilder.AddTransition(effectName.Value, destinationTrack);
-            ReadParameters(node);
+            ReadParameters(node, false);
         }
 
         private void ReadNameTrack(XmlNode node,
@@ -239,7 +239,7 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        public void ReadParameters(XmlNode effectNode)
+        public void ReadParameters(XmlNode effectNode, bool readInputs)
         {
             foreach (XmlNode node in effectNode.ChildNodes)
             {
@@ -253,11 +253,38 @@ namespace Dope.DDXX.DemoFramework
                 {
                     ReadSetupCall(node);
                 }
+                else if (node.NodeType == XmlNodeType.Element && node.Name == "Input" && readInputs)
+                {
+                    ReadInput(node);
+                }
                 else
                 {
                     throw new DDXXException("Unknown tag in XML file.");
                 }
             }
+        }
+
+        private void ReadInput(XmlNode node)
+        {
+            int number = -1;
+            string generator = "";
+            foreach (XmlAttribute attr in node.Attributes)
+            {
+                switch (attr.Name)
+                {
+                    case "number":
+                        number = int.Parse(attr.Value);
+                        break;
+                    case "generator":
+                        generator = attr.Value;
+                        break;
+                }
+            }
+            if (number == -1)
+                throw new DDXXException("Found generator input without name in " + doc.Name);
+            if (generator == "")
+                throw new DDXXException("Found generator input without generator in " + doc.Name);
+            effectBuilder.AddGeneratorInput(number, generator);
         }
 
         private static bool CommentOrWhitespace(XmlNode node)

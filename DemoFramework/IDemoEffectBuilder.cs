@@ -23,6 +23,8 @@ namespace Dope.DDXX.DemoFramework
 
         void AddSetupCall(string name, List<object> parameters);
 
+        void AddGeneratorInput(int num, string generatorName);
+
         void SetSong(string filename);
     }
 }
