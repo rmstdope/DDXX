@@ -479,7 +479,7 @@ namespace Dope.DDXX.DemoFramework
 
         public string twoEffectContents =
 @"<?xml version=""1.0"" encoding=""utf-8""?>
-<Effects>
+<Demo>
 <!-- Here is a comment -->
 <Effect name=""fooeffect"" track=""1"" startTime=""3.5"" endTime=""7.5"">
 <Parameter name=""intparam"" int=""3"" />
@@ -511,7 +511,7 @@ namespace Dope.DDXX.DemoFramework
 <Transition name=""footrans"" destinationTrack=""1"">
 <Parameter name=""transparam"" string=""tranny"" />
 </Transition>
-</Effects>
+</Demo>
 ";
 
         [SetUp]
@@ -529,7 +529,7 @@ namespace Dope.DDXX.DemoFramework
 
         [Test]
         [ExpectedException(typeof(DDXXException))]
-        public void TestNoEffectsNode()
+        public void TestNoDemoNode()
         {
             ReadXML(@"<Foo></Foo>");
         }
@@ -719,7 +719,7 @@ namespace Dope.DDXX.DemoFramework
         public void TestWrongParams()
         {
             string wrongParamContents =
-@"<Effects><Effect><Parameter name=""foo"" /></Effect></Effects>";
+@"<Demo><Effect><Parameter name=""foo"" /></Effect></Demo>";
             ReadXML(wrongParamContents);
         }
 
@@ -728,7 +728,7 @@ namespace Dope.DDXX.DemoFramework
         public void TestWrongParamType()
         {
             string wrongParamTypeContents =
-@"<Effects><Effect><Parameter name=""foo"" sunktype=""44"" /></Effect></Effects>";
+@"<Demo><Effect><Parameter name=""foo"" sunktype=""44"" /></Effect></Demo>";
             ReadXML(wrongParamTypeContents);
         }
 
@@ -832,7 +832,7 @@ namespace Dope.DDXX.DemoFramework
         public void TestSong1()
         {
             string songXml =
-@"<Effects song=""song1.mp3""></Effects>";
+@"<Demo song=""song1.mp3""></Demo>";
             ReadXML(songXml);
             Assert.AreEqual("song1.mp3", effectBuilder.SongName);
         }
@@ -841,7 +841,7 @@ namespace Dope.DDXX.DemoFramework
         public void TestSong2()
         {
             string songXml =
-@"<Effects song=""song2.mp3""></Effects>";
+@"<Demo song=""song2.mp3""></Demo>";
             ReadXML(songXml);
             Assert.AreEqual("song2.mp3", effectBuilder.SongName);
         }
@@ -851,7 +851,7 @@ namespace Dope.DDXX.DemoFramework
         public void TestUnknownAttribute()
         {
             string songXml =
-@"<Effects unknown=""x""></Effects>";
+@"<Demo unknown=""x""></Demo>";
             ReadXML(songXml);
         }
 
@@ -859,7 +859,7 @@ namespace Dope.DDXX.DemoFramework
         public void TestOneGenerator()
         {
             string textureXml =
-                @"<Effects><Generator name=""gen1"" class=""noiser""/></Effects>";
+                @"<Demo><Generator name=""gen1"" class=""noiser""/></Demo>";
             ReadXML(textureXml);
             Assert.IsTrue(effectBuilder.NextGenerator());
             Assert.AreEqual("gen1", effectBuilder.GeneratorName);
@@ -871,7 +871,7 @@ namespace Dope.DDXX.DemoFramework
         public void TestTwoGenerators()
         {
             string textureXml =
-                @"<Effects><Generator name=""gen1"" class=""noiser""/><Generator name=""gen2"" class=""noiser2""/></Effects>";
+                @"<Demo><Generator name=""gen1"" class=""noiser""/><Generator name=""gen2"" class=""noiser2""/></Demo>";
             ReadXML(textureXml);
             Assert.IsTrue(effectBuilder.NextGenerator());
             Assert.AreEqual("gen1", effectBuilder.GeneratorName);
@@ -886,11 +886,11 @@ namespace Dope.DDXX.DemoFramework
         public void TestOneGeneratorWithOneParameter()
         {
             string textureXml =
-@"<Effects>
+@"<Demo>
     <Generator name=""gen1"" class=""noiser"">
         <Parameter name=""Para"" bool=""true""/>
     </Generator>
-</Effects>";
+</Demo>";
             ReadXML(textureXml);
             Assert.IsTrue(effectBuilder.NextGenerator());
             Dictionary<string, Parameter> parameters = effectBuilder.GetGeneratorParameters();
@@ -904,11 +904,11 @@ namespace Dope.DDXX.DemoFramework
         public void TestOneGeneratorWithOneInput()
         {
             string textureXml =
-@"<Effects>
+@"<Demo>
     <Generator name=""gen1"" class=""noiser"">
         <Input number=""0"" generator=""gen2""/>
     </Generator>
-</Effects>";
+</Demo>";
             ReadXML(textureXml);
             Assert.IsTrue(effectBuilder.NextGenerator());
             Dictionary<int, string> inputs = effectBuilder.GetGeneratorInputs();
@@ -921,12 +921,12 @@ namespace Dope.DDXX.DemoFramework
         public void TestOneGeneratorWithTwoInputs()
         {
             string textureXml =
-@"<Effects>
+@"<Demo>
     <Generator name=""gen1"" class=""noiser"">
         <Input number=""50"" generator=""x""/>
         <Input number=""100"" generator=""y""/>
     </Generator>
-</Effects>";
+</Demo>";
             ReadXML(textureXml);
             Assert.IsTrue(effectBuilder.NextGenerator());
             Dictionary<int, string> inputs = effectBuilder.GetGeneratorInputs();
@@ -942,11 +942,11 @@ namespace Dope.DDXX.DemoFramework
         public void TestInputWithoutNumber()
         {
             string textureXml =
-@"<Effects>
+@"<Demo>
     <Generator name=""gen1"" class=""noiser"">
         <Input generator=""gen2""/>
     </Generator>
-</Effects>";
+</Demo>";
             ReadXML(textureXml);
         }
 
@@ -955,11 +955,11 @@ namespace Dope.DDXX.DemoFramework
         public void TestInputWithoutGenerator()
         {
             string textureXml =
-@"<Effects>
+@"<Demo>
     <Generator name=""gen1"" class=""noiser"">
         <Input number=""2""/>
     </Generator>
-</Effects>";
+</Demo>";
             ReadXML(textureXml);
         }
 
@@ -967,7 +967,7 @@ namespace Dope.DDXX.DemoFramework
         public void TestOneTexture()
         {
             string textureXml =
-                @"<Effects><Texture name=""tex1"" generator=""noiser""/></Effects>";
+                @"<Demo><Texture name=""tex1"" generator=""noiser""/></Demo>";
             ReadXML(textureXml);
             Assert.IsTrue(effectBuilder.NextTexture());
             Assert.AreEqual("tex1", effectBuilder.TextureName);
@@ -979,10 +979,10 @@ namespace Dope.DDXX.DemoFramework
         public void TestTwoTextures()
         {
             string textureXml =
-@"<Effects>
+@"<Demo>
     <Texture name=""tex2"" generator=""gen2""/>
     <Texture name=""tex3"" generator=""gen3""/>
-  </Effects>";
+  </Demo>";
             ReadXML(textureXml);
             Assert.IsTrue(effectBuilder.NextTexture());
             Assert.AreEqual("tex2", effectBuilder.TextureName);

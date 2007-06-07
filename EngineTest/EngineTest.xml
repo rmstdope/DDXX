@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Effects>
+<Demo>
 <!--Effects song="dope-wanting_more-dhw2006-v2-320.mp3"-->
 	<PostEffect name="AspectilizerPostEffect" track="0" startTime="0" endTime="3000">
 	  <Parameter name="Width" float="16" />
@@ -87,4 +87,4 @@
 	</PostEffect>
 	<PostEffect name="MonochromePostEffect" track="2" startTime="1.4" endTime="40.0">
 	</PostEffect-->
-</Effects>
+</Demo>

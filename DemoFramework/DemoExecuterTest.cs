@@ -38,7 +38,7 @@ namespace Dope.DDXX.DemoFramework
         private int trackNum;
 
         private string twoEffectContents =
-@"<Effects>
+@"<Demo>
 <Effect name=""FooEffect"" track=""1"" endTime=""6.5"">
 <Parameter name=""FooParam"" int=""3"" />
 <Parameter name=""BarParam"" float=""4.3"" />
@@ -56,7 +56,7 @@ namespace Dope.DDXX.DemoFramework
 <PostEffect name=""FooGlow"" track=""2"" startTime=""3.4"" endTime=""4.5"">
 <Parameter name=""GlowParam"" float=""5.4"" />
 </PostEffect>
-</Effects>
+</Demo>
 ";
         //<Transition name=""footrans"" destinationTrack=""1"">
         //<Parameter name=""transparam"" string=""tranny"" />
@@ -308,7 +308,7 @@ namespace Dope.DDXX.DemoFramework
         public void TestInitializeSongFromFile()
         {
             string songXml =
-@"<Effects song=""Dope.DDXX.DemoFramework.dll""></Effects>";
+@"<Demo song=""Dope.DDXX.DemoFramework.dll""></Demo>";
             FileUtility.SetLoadPaths(new string[] { "./" });
             ExpectSoundInitialize();
             Expect.Once.On(soundDriver).

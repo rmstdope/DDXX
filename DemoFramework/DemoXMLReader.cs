@@ -111,9 +111,9 @@ namespace Dope.DDXX.DemoFramework
             HandleDemoChildren(demoNode);
         }
 
-        private void HandleDemoChildren(XmlNode effectsNode)
+        private void HandleDemoChildren(XmlNode demoNode)
         {
-            foreach (XmlNode node in effectsNode.ChildNodes)
+            foreach (XmlNode node in demoNode.ChildNodes)
             {
                 switch (node.Name)
                 {
@@ -142,9 +142,9 @@ namespace Dope.DDXX.DemoFramework
                 node.Attributes.GetNamedItem("generator").Value);
         }
 
-        private void HandleDemoAttributes(XmlDocument doc, XmlNode effectsNode)
+        private void HandleDemoAttributes(XmlDocument doc, XmlNode demoNode)
         {
-            foreach (XmlAttribute node in effectsNode.Attributes)
+            foreach (XmlAttribute node in demoNode.Attributes)
             {
                 switch (node.Name)
                 {
@@ -159,15 +159,14 @@ namespace Dope.DDXX.DemoFramework
 
         private static XmlNode GetDemoNode(XmlDocument doc)
         {
-            XmlNode effectsNode = doc.DocumentElement;
-            // TODO: Rename "Effects" to "Demo"
-            while (effectsNode != null && effectsNode.Name != "Effects")
+            XmlNode demoNode = doc.DocumentElement;
+            while (demoNode != null && demoNode.Name != "Demo")
             {
-                effectsNode = effectsNode.NextSibling;
+                demoNode = demoNode.NextSibling;
             }
-            if (effectsNode == null)
-                throw new DDXXException("No effects found");
-            return effectsNode;
+            if (demoNode == null)
+                throw new DDXXException("No <Demo> tag found");
+            return demoNode;
         }
 
         private void ReadGenerator(XmlNode node)
@@ -513,7 +512,7 @@ namespace Dope.DDXX.DemoFramework
         private XmlNode FindParameterContainer(string effectName)
         {
             XmlNode root = doc.DocumentElement;
-            while (root != null && root.Name != "Effects")
+            while (root != null && root.Name != "Demo")
                 root = root.NextSibling;
             if (root != null)
             {
