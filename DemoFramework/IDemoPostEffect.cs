@@ -8,6 +8,7 @@ namespace Dope.DDXX.DemoFramework
 {
     public interface IDemoPostEffect : IRegisterable, ITweakableContainer
     {
+        int DrawOrder { get; set; }
         void Initialize(IPostProcessor postProcessor, ITextureFactory textureFactory, ITextureBuilder textureBuilder, IDevice device);
         void Render();
     }

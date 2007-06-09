@@ -13,6 +13,7 @@ namespace Dope.DDXX.Graphics.Skinning
         private const int MAX_NUM_BONES = 60;
         private IFrame frame;
         private IMesh mesh;
+        private int numBones;
 
         public SkinnedModel(IAnimationRootFrame rootFrame, IFrame frame, ITextureFactory textureFactory)
         {
@@ -22,22 +23,25 @@ namespace Dope.DDXX.Graphics.Skinning
 
             if (frame.MeshContainer.SkinInformation != null)
             {
-                int numBones = Math.Min(MAX_NUM_BONES, frame.MeshContainer.SkinInformation.NumberBones);
+                numBones = Math.Min(MAX_NUM_BONES, frame.MeshContainer.SkinInformation.NumberBones);
                 int influences = 0;
                 BoneCombination[] bones = null;
                 mesh = frame.MeshContainer.SkinInformation.ConvertToIndexedBlendedMesh(
                     frame.MeshContainer.MeshData.Mesh, MeshFlags.Managed | MeshFlags.OptimizeVertexCache,
                     frame.MeshContainer.GetAdjacencyStream(), numBones, out influences,
                     out bones);
+                //MeshDataAdapter data = new MeshDataAdapter();
+                //data.Mesh = mesh;
+                //frame.MeshContainer.MeshData = data;
                 frame.MeshContainer.Bones = bones;
 
-                Matrix[] offsetMatrices = new Matrix[numBones];
-                for (int i = 0; i < numBones; i++)
+                Matrix[] offsetMatrices = new Matrix[frame.MeshContainer.SkinInformation.NumberBones];
+                for (int i = 0; i < frame.MeshContainer.SkinInformation.NumberBones; i++)
                     offsetMatrices[i] = frame.MeshContainer.SkinInformation.GetBoneOffsetMatrix(i);
                 frame.MeshContainer.RestMatrices = offsetMatrices;
 
-                IFrame[] frameMatrix = new IFrame[numBones];
-                for (int i = 0; i < numBones; i++)
+                IFrame[] frameMatrix = new IFrame[frame.MeshContainer.SkinInformation.NumberBones];
+                for (int i = 0; i < frame.MeshContainer.SkinInformation.NumberBones; i++)
                 {
                     IFrame foundFrame = frame.Find(rootFrame.FrameHierarchy,
                         frame.MeshContainer.SkinInformation.GetBoneName(i));
@@ -90,7 +94,7 @@ namespace Dope.DDXX.Graphics.Skinning
         {
             BoneCombination[] bones = frame.MeshContainer.Bones;
             Matrix[] skinMatrices = new Matrix[frame.MeshContainer.SkinInformation.NumberBones];
-            for (int i = 0; i < frame.MeshContainer.SkinInformation.NumberBones; i++)
+            for (int i = 0; i < numBones; i++)
             {
                 int index = bones[material].BoneId[i];
                 if (index != -1)

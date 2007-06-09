@@ -27,7 +27,7 @@ namespace ShortPuzzle
 
             try
             {
-                FileUtility.SetLoadPaths(new string[] { "../../../Effects/", "../../../../Short Puzzle Data/" });
+                FileUtility.SetLoadPaths(new string[] { "../../", "../../../Effects/", "../../../../Short Puzzle Data/" });
 
                 // Run setup form
                 SetupLogic setupLogic = new SetupLogic();
@@ -41,8 +41,6 @@ namespace ShortPuzzle
 
                     SetupFramework(setupLogic, out window, out executer, out desc);
 
-                    RegisterEffects(executer);
-
                     DevicePrerequisits prerequisits = new DevicePrerequisits();
                     prerequisits.PixelShaderVersion = new Version(2, 0);
 
@@ -50,7 +48,7 @@ namespace ShortPuzzle
                     executer.SetSong("scanner_of_dope-woo-192.mp3");
                     executer.Initialize(D3DDriver.GetInstance().Device, 
                         D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
-                        new TextureBuilder(D3DDriver.TextureFactory));//test.mp3");
+                        new TextureBuilder(D3DDriver.TextureFactory), "ShortPuzzle.xml");
                     executer.Run();
                     window.CleanUp();
                 }
@@ -64,43 +62,6 @@ namespace ShortPuzzle
                 MessageBox.Show(exception.ToString());
             }
 
-        }
-
-        private static void RegisterEffects(DemoExecuter executer)
-        {
-            float length = 65000.0f;
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            foreach (Type t in assembly.GetTypes())
-            {
-                TypeFilter filter = new TypeFilter(delegate(Type ty, object comp)
-                {
-                    if (ty.FullName == (string)comp)
-                        return true;
-                    else
-                        return false;
-                });
-                Type[] interfaces = t.FindInterfaces(filter, "Dope.DDXX.DemoFramework.IDemoEffect");
-                if (interfaces.Length > 0)
-                {
-                    Type effect = t;
-                    Type[] constrArgs = new Type[] { typeof(float), typeof(float) };
-                    ConstructorInfo constrInfo = effect.GetConstructor(constrArgs);
-                    if (constrInfo == null)
-                        throw new DDXXException("Couldn'maxTime find constructor (float,float) in " + effect.FullName);
-                    IDemoEffect demoEffect = (IDemoEffect)constrInfo.Invoke(new object[] { 0.0f, length });
-                    if (demoEffect == null)
-                        throw new DDXXException("Couldn'maxTime create instance of " + effect.FullName);
-                    executer.Register(0, demoEffect);
-                }
-            }
-            MonochromePostEffect monochrome = new MonochromePostEffect(0.0f, length);
-            //executer.Register(0, monochrome);
-            GlowPostEffect postEffect = new GlowPostEffect(0.0f, length);
-            postEffect.Luminance = 0.06f;
-            postEffect.Exposure = 0.1f;
-            postEffect.WhiteCutoff = 0.2f;
-            postEffect.BloomScale = 1.5f;
-            executer.Register(0, postEffect);
         }
 
         private static void SetupFramework(SetupLogic setup, out DemoWindow window, out DemoExecuter executer, out DeviceDescription desc)

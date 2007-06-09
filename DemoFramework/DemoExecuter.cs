@@ -39,7 +39,7 @@ namespace Dope.DDXX.DemoFramework
         private IDemoEffectTypes effectTypes;
         private TweakerSettings settings = new TweakerSettings();
         private DemoXMLReader xmlReader;
-        private Color backgroundColor = Color.DarkSlateBlue;
+        private Color backgroundColor = Color.FromArgb(0, 10, 10, 10);//.DarkGray;//.Black;//DarkSlateBlue;
         private Dictionary<string, IGenerator> generators = new Dictionary<string,IGenerator>();
 
         private string songFilename;

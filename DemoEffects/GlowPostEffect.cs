@@ -43,9 +43,13 @@ namespace Dope.DDXX.DemoEffects
             : base(startTime, endTime)
         {
             Luminance = 0.2f;
+            SetStepSize(GetTweakableNumber("Luminance"), 0.01f);
             Exposure = 0.1f;
+            SetStepSize(GetTweakableNumber("Exposure"), 0.01f);
             WhiteCutoff = 0.1f;
+            SetStepSize(GetTweakableNumber("WhiteCutoff"), 0.01f);
             BloomScale = 1.4f;
+            SetStepSize(GetTweakableNumber("BloomScale"), 0.1f);
         }
 
         public override void Render()
@@ -83,8 +87,6 @@ namespace Dope.DDXX.DemoEffects
             PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.One, Color.Black);
             PostProcessor.Process("UpSample4x", temp[1], startTexture);
             //PostProcessor.Process("Copy", temp[0], startTexture);
-
-
         }
 
         protected override void Initialize()

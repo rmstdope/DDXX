@@ -32,7 +32,6 @@ namespace EngineTest
         private ISprite sprite;
         private ITexture generatedTexture1;
         private ITexture generatedTexture2;
-        private ModelNode terrainModel;
 
         public float ReflectiveFactor
         {
@@ -107,24 +106,6 @@ namespace EngineTest
 
             InitializeTextures();
 
-            PerlinNoise generator = new PerlinNoise();
-            generator.NumOctaves = 5;
-            generator.BaseFrequency = 8;
-            generator.Persistence = 0.5f;
-            MeshBuilder builder = new MeshBuilder(GraphicsFactory, TextureFactory, Device);
-            builder.CreateTerrain("Terrain", generator, 10.0f, 20.0f, 20.0f, 50, 50, true);
-            builder.AssignMaterial("Terrain", "Default1");
-            builder.SetDiffuseTexture("Default1", "square.tga");
-            IModel model = builder.CreateModel("Terrain");
-            model.Mesh.ComputeNormals();
-            model.Materials[0].AmbientColor = new ColorValue(0.1f, 0.1f, 0.1f);
-            model.Materials[0].DiffuseColor = new ColorValue(0.6f, 0.6f, 0.6f);
-            terrainModel = new ModelNode("Terrain", model,
-                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
-                delegate(int material) { return "Terrain"; }, model));
-            scene.AddNode(terrainModel);
-            terrainModel.WorldState.MoveUp(-6);
-            
 
             //AddWantingMoreModel();
 
@@ -295,8 +276,6 @@ namespace EngineTest
             }
 
             spiralSystem1.WorldState.Turn(-Time.DeltaTime * 0.05f);
-            terrainModel.WorldState.Turn(Time.DeltaTime / 2);
-            //terrainModel.WorldState.Tilt(Time.DeltaTime / 1.2345f);
 
             scene.Step();
         }

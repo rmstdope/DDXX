@@ -9,6 +9,7 @@ namespace Dope.DDXX.DemoFramework
 {
     public abstract class BaseDemoPostEffect : TweakableContainer, IDemoPostEffect
     {
+        private int drawOrder;
         private float startTime;
         private float endTime;
         private IPostProcessor postProcessor;
@@ -36,10 +37,17 @@ namespace Dope.DDXX.DemoFramework
             get { return device; }
         }
 
+        public int DrawOrder
+        {
+            set { drawOrder = value; }
+            get { return drawOrder; }
+        }
+
         protected BaseDemoPostEffect(float startTime, float endTime)
         {
             StartTime = startTime;
             EndTime = endTime;
+            drawOrder = 0;
         }
 
         protected abstract void Initialize();

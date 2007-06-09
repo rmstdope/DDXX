@@ -11,7 +11,7 @@ using Dope.DDXX.Graphics.Skinning;
 using System.Drawing;
 using Dope.DDXX.ParticleSystems;
 
-namespace EngineTest
+namespace TiVi
 {
     public class CreationScene : BaseDemoEffect
     {
@@ -33,27 +33,15 @@ namespace EngineTest
         private List<int> flareIndices = new List<int>();
         private int startVertex = 8;
         private float flareSize = 20;
-        private float flashStart = 2;
-        private float flashMiddle = 2.3f;
-        private float flashEnd = 2.6f;
-
-        public float FlashEnd
-        {
-            get { return flashEnd; }
-            set { flashEnd = value; }
-        }
-
-        public float FlashMiddle
-        {
-            get { return flashMiddle; }
-            set { flashMiddle = value; }
-        }
-
-        public float FlashStart
-        {
-            get { return flashStart; }
-            set { flashStart = value; }
-        }
+        //private ColorFader fader;
+        private CameraNode headCamera;
+        private CameraNode bodyCamera1;
+        private CameraNode handCamera;
+        private CameraNode bodyCamera2;
+        private float bodyCameraStart1 = 6.0f;
+        private float handCameraStart = 12.0f;
+        private float bodyCameraStart2 = 19.0f;
+        private static float segmentLength = 0.45f;
 
         public float FlareSize
         {
@@ -67,7 +55,8 @@ namespace EngineTest
             set 
             { 
                 startVertex = value;
-                CreateLineMesh(startVertex);
+                if (lineTiViMesh != null)
+                    CreateLineMesh(startVertex);
             }
         }
 
@@ -97,8 +86,8 @@ namespace EngineTest
                 get
                 {
                     return VertexFormats.PositionBlend4 | VertexFormats.LastBetaUByte4 |
-                        VertexFormats.Normal;//| VertexFormats.Texture0 | 
-                        //(VertexFormats)(1 << (int)VertexFormats.TextureCountShift);
+                        VertexFormats.Normal | VertexFormats.Texture0 | 
+                        (VertexFormats)(1 << (int)VertexFormats.TextureCountShift);
                 }
             }
             public Vector3 Position;
@@ -132,19 +121,22 @@ namespace EngineTest
                 Format.A8R8G8B8, Pool.Managed,
                 delegate(Vector2 coord, Vector2 texel) { return new Vector4(1, 1, 1, 1); });
 
-            //FallingStarSystem system = new FallingStarSystem("FS");
-            //system.Initialize(100, Device, GraphicsFactory, EffectFactory, TextureFactory.CreateFromFile("red glass.jpg"));
-            //scene.AddNode(system);
+            //fader = new ColorFader(Device, sprite, whiteTexture);
         }
 
         private void SetUpCamera()
         {
-            //CameraNode camera = (CameraNode)scene.GetNodeByName("Camera01");
-            CameraNode camera = new CameraNode("Camera");
-            camera.WorldState.MoveForward(-3);
-            camera.WorldState.MoveUp(1);
-            scene.AddNode(camera);
-            scene.ActiveCamera = camera;
+            bodyCamera1 = new CameraNode("FullsizeCamera1");
+            scene.AddNode(bodyCamera1);
+
+            bodyCamera2 = new CameraNode("FullsizeCamera2");
+            scene.AddNode(bodyCamera2);
+
+            headCamera = new CameraNode("HeadCamera");
+            scene.AddNode(headCamera);
+
+            handCamera = new CameraNode("HandCamera");
+            scene.AddNode(handCamera);
         }
 
         private class TiViEdge
@@ -173,7 +165,7 @@ namespace EngineTest
             public void StartVertex(float startTime)
             {
                 StartTime = startTime;
-                Length = 0.2f + (float)(random.NextDouble() * 0.4f);
+                Length = segmentLength + (float)(random.NextDouble() * segmentLength);
             }
         }
 
@@ -342,6 +334,33 @@ namespace EngineTest
                 lineTiViMesh.NumberActiveVertices = i * 2;
             }
 
+            headCamera.WorldState.Reset();
+            headCamera.WorldState.MoveForward(-(1.0f + Time.StepTime / 8.0f));
+            headCamera.WorldState.MoveUp(1.5f);
+
+            bodyCamera1.WorldState.Reset();
+            bodyCamera1.WorldState.MoveForward(-(3.0f - Time.StepTime / 10.0f));
+            bodyCamera1.WorldState.MoveUp(1);
+
+            handCamera.WorldState.Reset();
+            handCamera.WorldState.Turn(1.0f - Time.StepTime / 7.0f);
+            handCamera.WorldState.MoveUp(1.0f);
+            handCamera.WorldState.MoveForward(-1.0f);//.Position = new Vector3(2, 2, 0);
+            handCamera.LookAt(new Vector3(0, 1.5f, 0), new Vector3(0, 1, 0));
+
+            bodyCamera2.WorldState.Reset();
+            bodyCamera2.WorldState.MoveForward(-(1.0f + Time.StepTime / 10.0f));
+            bodyCamera2.WorldState.MoveUp(1);
+
+            if (Time.StepTime < bodyCameraStart1)
+                scene.ActiveCamera = headCamera;
+            else if (Time.StepTime < handCameraStart)
+                scene.ActiveCamera = bodyCamera1;
+            else if (Time.StepTime < bodyCameraStart2)
+                scene.ActiveCamera = handCamera;
+            else
+                scene.ActiveCamera = bodyCamera2;
+
             scene.Step();
         }
 
@@ -374,21 +393,10 @@ namespace EngineTest
 
         private void DrawFlash()
         {
-            if (Time.CurrentTime < flashStart)
-                return;
-            if (Time.CurrentTime > flashEnd)
-                return;
-            int flashAlpha;
-            if (Time.CurrentTime > FlashMiddle)
-                flashAlpha = 255 - (int)(255 * (Time.CurrentTime - flashMiddle) / (flashEnd - flashMiddle));
-            else
-                flashAlpha = (int)(255 * (Time.CurrentTime - flashStart) / (flashMiddle - flashStart));
-            sprite.Begin(SpriteFlags.AlphaBlend);
-            sprite.Draw2D(whiteTexture, Rectangle.Empty,
-                new SizeF(Device.Viewport.Width, Device.Viewport.Height),
-                new PointF(0, 0),
-                Color.FromArgb(flashAlpha, Color.White));
-            sprite.End();
+            //fader.SetLengths(0.5f, 0.5f, 2.0f);
+            //fader.Draw(bodyCameraStart1 - 0.5f);
+            //fader.Draw(handCameraStart - 0.5f);
+            //fader.Draw(bodyCameraStart2 - 0.5f);
         }
 
         private void DrawFlares()

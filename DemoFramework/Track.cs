@@ -139,9 +139,25 @@ namespace Dope.DDXX.DemoFramework
             foreach (IDemoEffect effect in activeEffects)
                 effect.Render();
             device.EndScene();
+            RenderPostEffects();
+        }
+
+        private void RenderPostEffects()
+        {
             IDemoPostEffect[] activePostEffects = GetPostEffects(Time.StepTime);
+            int minOrder = 1000;
+            int maxOrder = -1000;
             foreach (IDemoPostEffect effect in activePostEffects)
-                effect.Render();
+            {
+                if (effect.DrawOrder > maxOrder)
+                    maxOrder = effect.DrawOrder;
+                if (effect.DrawOrder < minOrder)
+                    minOrder = effect.DrawOrder;
+            }
+            for (int i = minOrder; i <= maxOrder; i++)
+                foreach (IDemoPostEffect effect in activePostEffects)
+                    if (effect.DrawOrder == i)
+                        effect.Render();
         }
 
         public void UpdateListener(IEffectChangeListener effectChangeListener)

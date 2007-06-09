@@ -68,6 +68,7 @@
     <Compile Include="SunEffect.cs" />
     <Compile Include="TerrainFlyover.cs" />
     <Compile Include="TestEffect.cs" />
+    <Compile Include="TextWave.cs" />
     <Compile Include="TimeSyncEffect.cs" />
   </ItemGroup>
   <ItemGroup>

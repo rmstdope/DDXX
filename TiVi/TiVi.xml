@@ -1,21 +1,68 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<Effects>
-	<Effect name="ChessScene" track="0" startTime="0.0" endTime="300.0"/>
-	<!--Effect name="CreationScene" track="0" startTime="0.0" endTime="300.0">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Demo>
+	<!--This post effect will run the entire demo-->
+	<PostEffect name="AspectilizerPostEffect" track="0" startTime="0" endTime="3000">
+		<Parameter name="Width" float="16" />
+		<Parameter name="Height" float="9" />
+		<Parameter name="SubtractNoise" bool="true" />
+		<Parameter name="BlendFactor" float="1" />
+		<Parameter name="Rounding" float="0.02" />
+		<Parameter name="AddNoise" bool="false" />
+		<Parameter name="Filename" string="" />
+		<Parameter name="DrawOrder" int="4" />
+	</PostEffect>
+
+	<!--Creation scene and its post effects-->
+	<!--<Effect name="CreationScene" track="0" startTime="0" endTime="300">
 		<Parameter name="BaseMesh" string="Tivi-Creation.X" />
-	</Effect-->
-	<!--PostEffect name="RadialBlurPostEffect" track="0" startTime="0.0" endTime="300.0" /-->
-	<!--PostEffect name="GlowPostEffect" track="0" startTime="0.0" endTime="300.0">
-		<Parameter name="BloomScale" float="1.5" />
+		<Parameter name="FlareSize" float="35" />
+		<Parameter name="StartVertex" int="8" />
+	</Effect>
+	<PostEffect name="ColorFader" startTime="5.5" endTime="8.5">
+		<Parameter name="DrawOrder" int="3" />
+		<Parameter name="FadeInLength" float="0.5" />
+		<Parameter name="FadeOutLength" float="2" />
+		<Parameter name="FadeColor" Color="Black" />
+	</PostEffect>
+	<PostEffect name="ColorFader" startTime="11.5" endTime="14.5">
+		<Parameter name="DrawOrder" int="3" />
+		<Parameter name="FadeInLength" float="0.5" />
+		<Parameter name="FadeOutLength" float="2" />
+		<Parameter name="FadeColor" Color="Black" />
+	</PostEffect>
+	<PostEffect name="ColorFader" startTime="18.5" endTime="21.5">
+		<Parameter name="DrawOrder" int="3" />
+		<Parameter name="FadeInLength" float="0.5" />
+		<Parameter name="FadeOutLength" float="2" />
+		<Parameter name="FadeColor" Color="Black" />
+	</PostEffect>
+	<Effect name="WhiteFlare" startTime="20" endTime="25" />
+	<PostEffect name="RadialBlurPostEffect" startTime="0" endTime="25">
+		<Parameter name="DrawOrder" int="0" />   
+	</PostEffect>
+	<PostEffect name="ColorFader" startTime="24.5" endTime="27">
+		<Parameter name="DrawOrder" int="3" />
+		<Parameter name="FadeInLength" float="0.5" />
+		<Parameter name="FadeOutLength" float="2" />
+		<Parameter name="FadeColor" Color="White" />
+	</PostEffect>
+	<PostEffect name="GlowPostEffect" track="0" startTime="0" endTime="300">
+		<Parameter name="BloomScale" float="1.7" />
 		<Parameter name="Exposure" float="1" />
-	</PostEffect-->
-  <PostEffect name="OverlayPostEffect" track="0" startTime="0.0" endTime="300.0">
+		<Parameter name="DrawOrder" int="1" />
+		<Parameter name="WhiteCutoff" float="0.16" />
+		<Parameter name="Luminance" float="0.2" />
+	</PostEffect>-->
+	
+	<!--Chess scene and its post effects-->
+	<Effect name="ChessScene" track="0" startTime="0.0" endTime="300.0"/>
+	<!--PostEffect name="OverlayPostEffect" track="0" startTime="0.0" endTime="300.0">
     <Parameter name="AddNoise" bool="true" />
     <Parameter name="Filename" string="Noise2.jpg" />
     <Parameter name="BlendFactor" float="0.1" />
-  </PostEffect>
-  <PostEffect name="RingsPostEffect" track="0" startTime="10.0" endTime="300.0">
+  </PostEffect-->
+  <!--PostEffect name="RingsPostEffect" track="0" startTime="10.0" endTime="300.0">
     <Parameter name="Distance" float="50" />
     <Parameter name="Scale" float="10" />
-  </PostEffect>
-</Effects>
+  </PostEffect-->
+</Demo>

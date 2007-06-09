@@ -88,7 +88,7 @@ namespace Dope.DDXX.SceneGraph
 
         public void AssertVectors(Vector3 vec1, Vector3 vec2)
         {
-            float epsilon = 0.0001f;
+            float epsilon = 0.001f;
             float len = (vec1 - vec2).Length();
             Assert.AreEqual(0, len, epsilon);
         }
@@ -111,8 +111,8 @@ namespace Dope.DDXX.SceneGraph
             Assert.AreEqual(Matrix.Identity, node2.WorldMatrix);
 
             // 1, 0, 0, 0 means rotate 180 deg around y axis (turn)
-            node1.WorldState.Rotation = new Quaternion(0, 1, 0, 0);
-            node2.WorldState.Rotation = new Quaternion(0, 1, 0, 0);
+            node1.WorldState.Rotation = Matrix.RotationY((float)Math.PI);
+            node2.WorldState.Rotation = Matrix.RotationY((float)Math.PI);
             AssertVectors(vec, Vector3.TransformCoordinate(vec, node2.WorldMatrix));
 
             node1.WorldState.Reset();
@@ -122,10 +122,10 @@ namespace Dope.DDXX.SceneGraph
             AssertVectors(new Vector3(6, 24, 60), Vector3.TransformCoordinate(vec, node2.WorldMatrix));
 
             node1.WorldState.Position = new Vector3(100, 200, 300);
-            node1.WorldState.Rotation = new Quaternion(0, 1, 0, 0);
+            node1.WorldState.Rotation = Matrix.RotationY((float)Math.PI);
             node1.WorldState.Scaling = new Vector3(2, 3, 4);
             node2.WorldState.Position = new Vector3(100, 200, 300);
-            node2.WorldState.Rotation = new Quaternion(0, 1, 0, 0);
+            node2.WorldState.Rotation = Matrix.RotationY((float)Math.PI);
             node2.WorldState.Scaling = new Vector3(2, 3, 4);
             AssertVectors(new Vector3(100 - 98 * 2, 200 + 206 * 3, 300 - 288 * 4), Vector3.TransformCoordinate(vec, node2.WorldMatrix));
         }

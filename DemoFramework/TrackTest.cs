@@ -298,11 +298,79 @@ namespace Dope.DDXX.DemoFramework
             Time.CurrentTime = 8.0f;
             IDemoPostEffect pe1 = CreateMockPostEffect(4, 10);
             track.Register(pe1);
+            Stub.On(pe1).GetProperty("DrawOrder").Will(Return.Value(0));
             using (mockery.Ordered)
             {
                 Expect.Once.On(device).Method("BeginScene");
                 Expect.Once.On(device).Method("EndScene");
                 Expect.Once.On(pe1).Method("Render");
+            }
+            track.Render(device);
+        }
+
+        [Test]
+        public void TestRenderDrawOrder1()
+        {
+            Time.Pause();
+            Time.CurrentTime = 8.0f;
+            IDemoPostEffect pe1 = CreateMockPostEffect(4, 10);
+            track.Register(pe1);
+            Stub.On(pe1).GetProperty("DrawOrder").Will(Return.Value(0));
+            IDemoPostEffect pe2 = CreateMockPostEffect(5, 10);
+            track.Register(pe2);
+            Stub.On(pe2).GetProperty("DrawOrder").Will(Return.Value(1));
+            using (mockery.Ordered)
+            {
+                Expect.Once.On(device).Method("BeginScene");
+                Expect.Once.On(device).Method("EndScene");
+                Expect.Once.On(pe1).Method("Render");
+                Expect.Once.On(pe2).Method("Render");
+            }
+            track.Render(device);
+        }
+
+        [Test]
+        public void TestRenderDrawOrder2()
+        {
+            Time.Pause();
+            Time.CurrentTime = 8.0f;
+            IDemoPostEffect pe1 = CreateMockPostEffect(4, 10);
+            track.Register(pe1);
+            Stub.On(pe1).GetProperty("DrawOrder").Will(Return.Value(1));
+            IDemoPostEffect pe2 = CreateMockPostEffect(5, 10);
+            track.Register(pe2);
+            Stub.On(pe2).GetProperty("DrawOrder").Will(Return.Value(0));
+            using (mockery.Ordered)
+            {
+                Expect.Once.On(device).Method("BeginScene");
+                Expect.Once.On(device).Method("EndScene");
+                Expect.Once.On(pe2).Method("Render");
+                Expect.Once.On(pe1).Method("Render");
+            }
+            track.Render(device);
+        }
+
+        [Test]
+        public void TestRenderDrawOrderMulti()
+        {
+            Time.Pause();
+            Time.CurrentTime = 8.0f;
+            List<IDemoPostEffect> postEffects = new List<IDemoPostEffect>();
+            for (int i = 0; i < 10; i++)
+            {
+                IDemoPostEffect pe = CreateMockPostEffect(4, 10);
+                track.Register(pe);
+                Stub.On(pe).GetProperty("DrawOrder").Will(Return.Value(i));
+                postEffects.Add(pe);
+            }
+            using (mockery.Ordered)
+            {
+                Expect.Once.On(device).Method("BeginScene");
+                Expect.Once.On(device).Method("EndScene");
+                for (int i = 0; i < 10; i++)
+                {
+                    Expect.Once.On(postEffects[i]).Method("Render");
+                }
             }
             track.Render(device);
         }
@@ -318,8 +386,10 @@ namespace Dope.DDXX.DemoFramework
             track.Register(e2);
             IDemoPostEffect pe1 = CreateMockPostEffect(4, 10);
             track.Register(pe1);
+            Stub.On(pe1).GetProperty("DrawOrder").Will(Return.Value(0));
             IDemoPostEffect pe2 = CreateMockPostEffect(5, 10);
             track.Register(pe2);
+            Stub.On(pe2).GetProperty("DrawOrder").Will(Return.Value(0));
             using (mockery.Ordered)
             {
                 Expect.Once.On(device).Method("BeginScene");
@@ -343,8 +413,10 @@ namespace Dope.DDXX.DemoFramework
             track.Register(e2);
             IDemoPostEffect pe1 = CreateMockPostEffect(4, 10);
             track.Register(pe1);
+            Stub.On(pe1).GetProperty("DrawOrder").Will(Return.Value(0));
             IDemoPostEffect pe2 = CreateMockPostEffect(5, 10);
             track.Register(pe2);
+            Stub.On(pe2).GetProperty("DrawOrder").Will(Return.Value(0));
             using (mockery.Ordered)
             {
                 Expect.Once.On(device).Method("BeginScene");

@@ -65,8 +65,51 @@ namespace Dope.DDXX.SceneGraph
             AssertVectors(new Vector3(1, 2, 3), Vector3.TransformCoordinate(vec, c1.ViewMatrix));
 
             c1.WorldState.Position = new Vector3(100, 200, 300);
-            c1.WorldState.Rotation = new Quaternion(0, 1, 0, 0);
+            c1.WorldState.Rotation = Matrix.RotationY((float)Math.PI);
             AssertVectors(new Vector3(99, -198, 297), Vector3.TransformCoordinate(vec, c1.ViewMatrix));
+        }
+
+        [Test]
+        public void TestLookAtFromOrigo1()
+        {
+            const float epsilon = 0.0001f;
+            CameraNode camera = new CameraNode("");
+            camera.LookAt(new Vector3(0, 0, 1), new Vector3(0, 1, 0));
+            Assert.AreEqual(0, camera.WorldState.Forward.X, epsilon);
+            Assert.AreEqual(0, camera.WorldState.Forward.Y, epsilon);
+            Assert.AreEqual(1, camera.WorldState.Forward.Z, epsilon);
+            Assert.AreEqual(0, camera.WorldState.Up.X, epsilon);
+            Assert.AreEqual(1, camera.WorldState.Up.Y, epsilon);
+            Assert.AreEqual(0, camera.WorldState.Up.Z, epsilon);
+        }
+
+        [Test]
+        public void TestLookAtFromOrigo2()
+        {
+            const float epsilon = 0.0001f;
+            CameraNode camera = new CameraNode("");
+            camera.LookAt(new Vector3(0, 0, -1), new Vector3(0, 1, 0));
+            Assert.AreEqual(0, camera.WorldState.Forward.X, epsilon);
+            Assert.AreEqual(0, camera.WorldState.Forward.Y, epsilon);
+            Assert.AreEqual(-1, camera.WorldState.Forward.Z, epsilon);
+            Assert.AreEqual(0, camera.WorldState.Up.X, epsilon);
+            Assert.AreEqual(1, camera.WorldState.Up.Y, epsilon);
+            Assert.AreEqual(0, camera.WorldState.Up.Z, epsilon);
+        }
+
+        [Test]
+        public void TestLookAt1()
+        {
+            const float epsilon = 0.0001f;
+            CameraNode camera = new CameraNode("");
+            camera.Position = new Vector3(0, 0, -200);
+            camera.LookAt(new Vector3(0, 0, -1), new Vector3(0, -1, 0));
+            Assert.AreEqual(0, camera.WorldState.Forward.X, epsilon);
+            Assert.AreEqual(0, camera.WorldState.Forward.Y, epsilon);
+            Assert.AreEqual(1, camera.WorldState.Forward.Z, epsilon);
+            Assert.AreEqual(0, camera.WorldState.Up.X, epsilon);
+            Assert.AreEqual(-1, camera.WorldState.Up.Y, epsilon);
+            Assert.AreEqual(0, camera.WorldState.Up.Z, epsilon);
         }
     }
 }

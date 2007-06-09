@@ -4,6 +4,7 @@ using System.Text;
 using Dope.DDXX.DemoFramework;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.DemoEffects
 {
@@ -34,8 +35,13 @@ namespace Dope.DDXX.DemoEffects
                 temp[1] = TextureID.FULLSIZE_TEXTURE_2;
             }
             PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
+            //PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.SourceAlpha, Blend.Zero, Color.Black);
             PostProcessor.SetValue("ZoomFactor", 0.20f);
+            //if (Time.StepTime > 25.0f)
+            //    PostProcessor.GetTexture(PostProcessor.OutputTextureID).Save("before.dds", ImageFileFormat.Dds);
             PostProcessor.Process("ZoomAdd", PostProcessor.OutputTextureID, temp[0]);
+            //if (Time.StepTime > 25.0f)
+            //    PostProcessor.GetTexture(temp[0]).Save("after.dds", ImageFileFormat.Dds);
             float invZoomFactor = 0.8f;
             int source = 0;
             for (int i = 0; i < 6; i++)

@@ -9,13 +9,14 @@ namespace Dope.DDXX.Physics
     {
         private Vector3 position = new Vector3(0, 0, 0);
         private Vector3 scaling = new Vector3(1, 1, 1);
-        private Quaternion rotation = new Quaternion(0, 0, 0, 1);
+        private Matrix rotation = Matrix.Identity;
 
         public WorldState()
         {
+            Reset();
         }
 
-        public WorldState(Vector3 position, Quaternion rotation, Vector3 scaling)
+        public WorldState(Vector3 position, Matrix rotation, Vector3 scaling)
         {
             this.position = position;
             this.rotation = rotation;
@@ -24,29 +25,17 @@ namespace Dope.DDXX.Physics
 
         public Vector3 Forward
         {
-            get 
-            { 
-                Matrix m = Matrix.RotationQuaternion(rotation);
-                return new Vector3(m.M31, m.M32, m.M33);
-            }
+            get { return new Vector3(rotation.M31, rotation.M32, rotation.M33); }
         }
 
         public Vector3 Up
         {
-            get
-            {
-                Matrix m = Matrix.RotationQuaternion(rotation);
-                return new Vector3(m.M21, m.M22, m.M23);
-            }
+            get { return new Vector3(rotation.M21, rotation.M22, rotation.M23); }
         }
 
         public Vector3 Right
         {
-            get
-            {
-                Matrix m = Matrix.RotationQuaternion(rotation);
-                return new Vector3(m.M11, m.M12, m.M13);
-            }
+            get { return new Vector3(rotation.M11, rotation.M12, rotation.M13); }
         }
 
         public Vector3 Position
@@ -61,7 +50,7 @@ namespace Dope.DDXX.Physics
             set { scaling = value; }
         }
 
-        public Quaternion Rotation
+        public Matrix Rotation
         {
             get { return rotation; }
             set { rotation = value; }
@@ -101,35 +90,34 @@ namespace Dope.DDXX.Physics
 
         public virtual Matrix GetWorldMatrix()
         {
-            Matrix rot = Matrix.RotationQuaternion(Rotation);
-            Matrix scale = Matrix.Scaling(Scaling);
-            Matrix trans = Matrix.Translation(Position);
-            return scale * rot * trans;
+            Matrix scale = Matrix.Scaling(scaling);
+            Matrix trans = Matrix.Translation(position);
+            return scale * rotation * trans;
         }
 
         public void Reset()
         {
             position = new Vector3(0, 0, 0);
             scaling = new Vector3(1, 1, 1);
-            rotation = new Quaternion(0, 0, 0, 1);
+            rotation = Matrix.Identity;
         }
 
         public void Turn(float angle)
         {
-            Quaternion q = Quaternion.RotationAxis(new Vector3(0, 1, 0), angle);
-            rotation = Quaternion.Multiply(q, rotation);
+            Matrix m = Matrix.RotationY(angle);
+            rotation = Matrix.Multiply(m, rotation);
         }
 
         public void Tilt(float angle)
         {
-            Quaternion q = Quaternion.RotationAxis(new Vector3(1, 0, 0), angle);
-            rotation = Quaternion.Multiply(q, rotation);
+            Matrix m = Matrix.RotationX(angle);
+            rotation = Matrix.Multiply(m, rotation);
         }
 
         public void Roll(float angle)
         {
-            Quaternion q = Quaternion.RotationAxis(new Vector3(0, 0, 1), angle);
-            rotation = Quaternion.Multiply(q, rotation);
+            Matrix m = Matrix.RotationZ(angle);
+            rotation = Matrix.Multiply(m, rotation);
         }
     }
 }

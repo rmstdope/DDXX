@@ -326,7 +326,8 @@ ZoomAdd(float2 Tex : TEXCOORD0) : COLOR0
 	float4 originalColor = tex2D(LinearTextureSampler, Tex);
 	float4 zoomColor = tex2D(LinearTextureSampler, Tex * ZoomFactor + (1 - ZoomFactor) / 2);
 
-	return (originalColor + zoomColor * ZoomFactor) / (1 + ZoomFactor);
+	float4 color = (originalColor + zoomColor * ZoomFactor) / (1 + ZoomFactor);
+	return float4(color.rgb, max(originalColor.a, zoomColor.a));
 	//return lerp(zoomColor, originalColor, 0.25 / ZoomFactor);
 }
 
@@ -566,6 +567,21 @@ BrightenPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 	// 10 will isolate lights from illuminated scene 
 	// objects.
 	ColorOut /= (10.0f + ColorOut);
+
+	return float4(ColorOut, sample.a);
+}
+
+float4
+SimpleBrightenPixelShader(float2 Tex : TEXCOORD0) : COLOR0
+{
+	float4 sample = tex2D( PointTextureSampler, Tex );
+	float3 ColorOut = sample.rgb;
+
+	// Subtract out dark pixels
+	ColorOut -= WhiteCutoff;
+
+	// Clamp to 0
+	ColorOut = max(ColorOut, 0.0f);
 
 	return float4(ColorOut, sample.a);
 }
@@ -856,7 +872,7 @@ technique Brighten
 	>
 	{
 		VertexShader			= null;
-		PixelShader				= compile ps_2_0 BrightenPixelShader();
+		PixelShader				= compile ps_2_0 SimpleBrightenPixelShader();
 		ZEnable						= false;
 		//AlphaBlendEnable	= false;
 		//BlendOp						= Add;

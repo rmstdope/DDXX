@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Demo>
+  <Effect name="MainEffect" start="0" end="65000" />
+  <PostEffect name="GlowPostEffect" start="0" end="65000">
+    <Parameter name="Luminance" float="0.06" />
+    <Parameter name="Exposure" float="0.1" />
+    <Parameter name="WhiteCutoff" float="0.2" />
+    <Parameter name="BloomScale" float="1.5" />
+  </PostEffect>
+</Demo>

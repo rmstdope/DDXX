@@ -63,6 +63,7 @@ namespace Dope.DDXX.DemoEffects
         public override void Render()
         {
             sprite.Begin(SpriteFlags.AlphaBlend);
+            Device.RenderState.ZBufferEnable = false;
             foreach (TextureLayer layer in textureLayers)
             {
                 float angle;

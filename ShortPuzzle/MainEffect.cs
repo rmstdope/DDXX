@@ -371,26 +371,26 @@ namespace ShortPuzzle
             logoAlpha = GetAlpha(Cube.times[14] - 1.5f, logoAlpha, 0.0f, 0.8f);
             logoAlpha = GetAlpha(Cube.times[16] - 1.5f, logoAlpha, 0.8f, 0.0f);
             logoAlpha = GetAlpha(Cube.times[25] - 1.5f, logoAlpha, 0.0f, 0.8f);
-
-            IDevice device = D3DDriver.GetInstance().Device;
-            scene.Render();
             using (ISurface surface1 = texture.GetSurfaceLevel(0))
             {
                 using (ISurface surface2 = dopeTexture.GetSurfaceLevel(0))
                 {
-                    int sWidth = device.PresentationParameters.BackBufferWidth;
-                    int sHeight = device.PresentationParameters.BackBufferHeight;
+                    int sWidth = Device.PresentationParameters.BackBufferWidth;
+                    int sHeight = Device.PresentationParameters.BackBufferHeight;
                     int tWidth = surface1.Description.Width;
                     int tHeight = surface1.Description.Height;
                     int tWidth2 = surface2.Description.Width;
                     int tHeight2 = surface2.Description.Height;
+                    Device.RenderState.ZBufferEnable = false;
                     sprite.Begin(SpriteFlags.AlphaBlend);
                     sprite.Draw2D(texture, Rectangle.Empty, new SizeF(sWidth * 1.9f, sHeight * 1.9f), new PointF(tWidth / 2, tHeight / 2), Time.StepTime * 0.22f, new PointF(sWidth / 2, sHeight / 2), Color.FromArgb(30, 255, 150, 150));
                     sprite.Draw2D(texture, Rectangle.Empty, new SizeF(sWidth * 1.9f, sHeight * 1.9f), new PointF(tWidth / 2, tHeight / 2), -Time.StepTime * 0.15f, new PointF(sWidth / 2, sHeight / 2), Color.FromArgb(30, 150, 255, 150));
                     sprite.Draw2D(dopeTexture, Rectangle.Empty, new SizeF(tWidth2, tHeight2), new PointF(tWidth2 / 2, tHeight2 / 2), (float)Math.PI / 2, new PointF(sWidth - tHeight * 0.8f, sHeight / 2), Color.FromArgb((int)(logoAlpha * 255), 255, 255, 255));
                     sprite.End();
+                    Device.RenderState.ZBufferEnable = true;
                 }
             }
+            scene.Render();
         }
 
         private float GetAlpha(float time, float alpha, float alpha1, float alpha2)

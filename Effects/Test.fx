@@ -283,3 +283,28 @@ technique Terrain
 	}
 }
 
+
+float WaveTextTime;
+
+float4
+WaveTextPixelShader(float2 Tex : TEXCOORD0) : COLOR0
+{
+	float2 centered = Tex - 0.5;
+	centered = centered * (sin(WaveTextTime + length(centered.x + centered.y) * 0.5) + 2) / 3 * (5 / WaveTextTime);// + length(Tex));
+	centered += 0.5f;
+	//float2 sc;
+	//sincos(WaveTextTime, sc.x, sc.y);
+	return tex2D(BaseTextureSampler, centered);
+}
+
+technique WaveText
+{
+	pass BasePass
+	{
+		VertexShader			= null;
+		PixelShader				= compile ps_2_0 WaveTextPixelShader();
+		ZEnable						= false;
+		CullMode					= None;
+	}
+}
+

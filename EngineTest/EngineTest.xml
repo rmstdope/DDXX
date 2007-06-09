@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Demo>
 <!--Effects song="dope-wanting_more-dhw2006-v2-320.mp3"-->
-	<PostEffect name="AspectilizerPostEffect" track="0" startTime="0" endTime="3000">
+	<!--PostEffect name="AspectilizerPostEffect" track="0" startTime="0" endTime="3000">
 	  <Parameter name="Width" float="16" />
 	  <Parameter name="Height" float="9" />
 	  <Parameter name="SubtractNoise" bool="true" />
@@ -9,15 +9,15 @@
 	  <Parameter name="Rounding" float="0.02" />
 	  <Parameter name="AddNoise" bool="false" />
 	  <Parameter name="Filename" string="" />
-	</PostEffect>
+	</PostEffect-->
 	<Generator name="noise" class="PerlinNoise">
 		<Parameter name="BaseFrequency" int="64" />		   
     </Generator>
 	<Texture name="noise" generator="noise"></Texture>
-	<Effect name="SpinningBackgroundEffect" track="0" startTime="0" endTime="9">
+	<!--Effect name="SpinningBackgroundEffect" track="0" startTime="0" endTime="299">
 		<SetupCall name="AddTextureLayer">
 			<Parameter string="noise"/>
-			<Parameter float="35.0"/>
+			<Parameter float="55.0"/>
 			<Parameter Color="Beige"/>
 			<Parameter float="0.5"/>
 		</SetupCall>
@@ -27,17 +27,15 @@
 			<Parameter Color="Coral"/>
 			<Parameter float="0.5"/>
 		</SetupCall>
-	</Effect>
+	</Effect-->
 	<!--Effect name="TextFadingEffect" track="0" startTime="0.0" endTime="10.0">
 		<Parameter name="FadeInLength" float="5" />
 		<Parameter name="FadeOutLength" float="5" />
 		<Parameter name="TextColor" Color="White" />
 		<Parameter name="Text" string=".dope" />
 	</Effect-->
-  <!--Effect name="TestEffect" track="0" startTime="0" endTime="300">
-    <Parameter name="ReflectiveFactor" float="0" />
-  </Effect-->
-  <Effect name="TerrainFlyover" track="0" startTime="0" endTime="300" />
+  <Effect name="TextWave" track="0" startTime="0" endTime="300" />
+  <!--Effect name="TerrainFlyover" track="0" startTime="0" endTime="300" /-->
   <!--Effect name="TimeSyncEffect" track="0" startTime="0" endTime="300" /-->
   <!--Effect name="DofCubesEffect" track="0" startTime="0" endTime="300" /-->
   <!--PostEffect name="DepthOfFieldPostEffect" track="0" startTime="0.0" endTime="300.0" /-->

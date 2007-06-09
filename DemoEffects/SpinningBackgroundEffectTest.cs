@@ -69,6 +69,7 @@ namespace Dope.DDXX.DemoEffects
             ExpectSprite();
             spin.Initialize(graphicsFactory, device);
             Expect.Once.On(sprite).Method("Begin").With(SpriteFlags.AlphaBlend);
+            Expect.Once.On(renderStateManager).SetProperty("ZBufferEnable").To(false);
             Expect.Once.On(sprite).Method("End");
             spin.Render();
         }
@@ -79,6 +80,7 @@ namespace Dope.DDXX.DemoEffects
             Time.Pause();
             Time.CurrentTime = 0.5f;
             Expect.Once.On(sprite).Method("Begin").With(SpriteFlags.AlphaBlend);
+            Expect.Once.On(renderStateManager).SetProperty("ZBufferEnable").To(false);
             Expect.Once.On(sprite).Method("Draw2D").
                 With(Is.EqualTo(texture), Is.EqualTo(Rectangle.Empty), Is.Anything, Is.Anything, new FloatMatcher((float)(Math.PI / 2.0f)), Is.Anything, Is.EqualTo(Color.FromArgb((int)(0.2f * 255), Color.Aqua)));
             Expect.Once.On(sprite).Method("Draw2D").

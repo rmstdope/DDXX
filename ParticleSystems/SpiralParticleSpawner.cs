@@ -36,12 +36,12 @@ namespace Dope.DDXX.ParticleSystems
 
         public Blend SourceBlend
         {
-            get { return Blend.SourceAlpha; }
+            get { return Blend.One; }//.SourceAlpha; }
         }
 
         public Blend DestinationBlend
         {
-            get { return Blend.InvSourceAlpha; }
+            get { return Blend.InvSourceColor; }//.InvSourceAlpha; }
         }
 
         public ISystemParticle Spawn()
