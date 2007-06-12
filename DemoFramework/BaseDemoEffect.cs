@@ -5,6 +5,7 @@ using Dope.DDXX.Graphics;
 using Dope.DDXX.SceneGraph;
 using Dope.DDXX.Physics;
 using Dope.DDXX.MeshBuilder;
+using Dope.DDXX.TextureBuilder;
 using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.DemoFramework
@@ -16,7 +17,8 @@ namespace Dope.DDXX.DemoFramework
         private IGraphicsFactory graphicsFactory;
         private IDevice device;
         private IXLoader xLoader;
-        private Dope.DDXX.MeshBuilder.MeshBuilder meshBuilder;
+        private MeshBuilder.MeshBuilder meshBuilder;
+        private TextureBuilder.TextureBuilder textureBuilder;
 
         protected BaseDemoEffect(float startTime, float endTime)
         {
@@ -54,14 +56,25 @@ namespace Dope.DDXX.DemoFramework
             get { return xLoader; }
         }
 
-        protected Dope.DDXX.MeshBuilder.MeshBuilder MeshBuilder
+        protected MeshBuilder.MeshBuilder MeshBuilder
         {
             // Lazy creation
             get
             {
                 if (meshBuilder == null)
-                    meshBuilder = new Dope.DDXX.MeshBuilder.MeshBuilder(GraphicsFactory, TextureFactory, Device);
+                    meshBuilder = new MeshBuilder.MeshBuilder(GraphicsFactory, TextureFactory, Device);
                 return meshBuilder;
+            }
+        }
+
+        protected TextureBuilder.TextureBuilder TextureBuilder
+        {
+            // Lazy creation
+            get
+            {
+                if (textureBuilder == null)
+                    textureBuilder = new TextureBuilder.TextureBuilder(TextureFactory);
+                return textureBuilder;
             }
         }
 

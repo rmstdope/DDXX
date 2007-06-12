@@ -46,17 +46,16 @@ namespace EngineTest
             CreateStandardSceneAndCamera(out scene, out camera, 5.0f);
             celTexture = TextureFactory.CreateFromFunction(64, 1, 0, Usage.None, Format.A8R8G8B8, Pool.Managed, celMapCallback);
 
-            MeshBuilder.CreateChamferBox("Box", 0.40001f, 0.40001f, 0.40001f, 0.2f, 12);
-            MeshBuilder.AssignMaterial("Box", "Default1");
-            MeshBuilder.SetDiffuseTexture("Default1", "red glass.jpg");
-            IModel model = MeshBuilder.CreateModel("Box");
-            //model.Materials[0].DiffuseColor = new ColorValue(0.6f, 0.6f, 0.6f);
-            model.Materials[0].AmbientColor = new ColorValue(0.1f, 0.1f, 0.6f);
-            model.Materials[0].DiffuseTexture = celTexture;
-            boxEffect = EffectFactory.CreateFromFile("Test.fxo");
-            boxNode = new ModelNode("Box", model,
-                new EffectHandler(boxEffect,
-                delegate(int material) { return "CelWithDoF"; }, model));
+            //MeshBuilder.CreateChamferBox("Box", 0.40001f, 0.40001f, 0.40001f, 0.2f, 12);
+            //MeshBuilder.AssignMaterial("Box", "Default1");
+            //MeshBuilder.SetDiffuseTexture("Default1", "red glass.jpg");
+            //IModel model = MeshBuilder.CreateModel("Box");
+            //model.Materials[0].AmbientColor = new ColorValue(0.1f, 0.1f, 0.6f);
+            //model.Materials[0].DiffuseTexture = celTexture;
+            //boxEffect = EffectFactory.CreateFromFile("Test.fxo");
+            //boxNode = new ModelNode("Box", model,
+            //    new EffectHandler(boxEffect,
+            //    delegate(int material) { return "CelWithDoF"; }, model));
             scene.AddNode(boxNode);
 
             for (int i = 0; i < NUM_LIGHTS; i++)

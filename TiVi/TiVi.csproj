@@ -62,6 +62,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="TiViMain.cs" />
+    <Compile Include="TunnelFlight.cs" />
     <Compile Include="WhiteFlare.cs" />
   </ItemGroup>
   <ItemGroup>

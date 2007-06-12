@@ -119,46 +119,46 @@ namespace EngineTest
             scene.Validate();
         }
 
-        private void TestMeshBuilder()
-        {
-            MeshBuilder builder = new MeshBuilder(D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
-                D3DDriver.GetInstance().Device);
-            const int numSides = 10;
-            Body body = new Body();
-            //body.Gravity = new Vector3(0, -0.2f, 0);
+        //private void TestMeshBuilder()
+        //{
+        //    MeshBuilder builder = new MeshBuilder(D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
+        //        D3DDriver.GetInstance().Device);
+        //    const int numSides = 10;
+        //    Body body = new Body();
+        //    //body.Gravity = new Vector3(0, -0.2f, 0);
 
-            int[] pinned = new int[numSides + 1];
-            for (int i = 0; i < numSides + 1; i++)
-                pinned[i] = i;
-            builder.CreateCloth("Cloth", body, 2, 2, numSides, numSides,
-                pinned, true);
-            builder.AssignMaterial("Cloth", "Default1");
-            builder.SetDiffuseTexture("Default1", "red glass.jpg");
-            builder.SetReflectiveTexture("Default1", "rnl_cross.dds");
-            builder.SetReflectiveFactor("Default1", 0.2f);
+        //    int[] pinned = new int[numSides + 1];
+        //    for (int i = 0; i < numSides + 1; i++)
+        //        pinned[i] = i;
+        //    builder.CreateCloth("Cloth", body, 2, 2, numSides, numSides,
+        //        pinned, true);
+        //    builder.AssignMaterial("Cloth", "Default1");
+        //    builder.SetDiffuseTexture("Default1", "red glass.jpg");
+        //    builder.SetReflectiveTexture("Default1", "rnl_cross.dds");
+        //    builder.SetReflectiveFactor("Default1", 0.2f);
 
-            IModel model = builder.CreateModel("Cloth");
-            model.Materials[0].DiffuseColor = new ColorValue(0.6f, 0.6f, 0.6f);
-            clothModel = new ModelNode("Cloth", model,
-                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
-                delegate(int material) { return "Glass"; }, model));
-            scene.AddNode(clothModel);
+        //    IModel model = builder.CreateModel("Cloth");
+        //    model.Materials[0].DiffuseColor = new ColorValue(0.6f, 0.6f, 0.6f);
+        //    clothModel = new ModelNode("Cloth", model,
+        //        new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
+        //        delegate(int material) { return "Glass"; }, model));
+        //    scene.AddNode(clothModel);
 
-            // Fix sphere
-            sphere = new BoundingSphere(0.5f);
-            for (int i = 0; i < body.Particles.Count; i++)
-                body.AddConstraint(new BoundingConstraint(body.Particles[i], sphere));
+        //    // Fix sphere
+        //    sphere = new BoundingSphere(0.5f);
+        //    for (int i = 0; i < body.Particles.Count; i++)
+        //        body.AddConstraint(new BoundingConstraint(body.Particles[i], sphere));
 
-            model = builder.CreateSkyBoxModel("SkyBox", "rnl_cross.dds");
-            ModelNode skyBoxModel = new ModelNode("SkyBox", model,
-                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
-                delegate(int material) { return "SkyBox"; }, model));
-            scene.AddNode(skyBoxModel);
+        //    model = builder.CreateSkyBoxModel("SkyBox", "rnl_cross.dds");
+        //    ModelNode skyBoxModel = new ModelNode("SkyBox", model,
+        //        new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
+        //        delegate(int material) { return "SkyBox"; }, model));
+        //    scene.AddNode(skyBoxModel);
 
-            light = new PointLightNode("");
-            light.DiffuseColor = new ColorValue(1.0f, 1.0f, 1.0f);
-            scene.AddNode(light);
-        }
+        //    light = new PointLightNode("");
+        //    light.DiffuseColor = new ColorValue(1.0f, 1.0f, 1.0f);
+        //    scene.AddNode(light);
+        //}
 
         private void LoadFlyScene()
         {

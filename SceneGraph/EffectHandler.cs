@@ -24,8 +24,6 @@ namespace Dope.DDXX.SceneGraph
         }
     }
 
-
-
     public class EffectHandler : IEffectHandler
     {
         private IEffect effect;

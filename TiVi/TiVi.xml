@@ -55,7 +55,16 @@
 	</PostEffect>-->
 	
 	<!--Chess scene and its post effects-->
-	<Effect name="ChessScene" track="0" startTime="0.0" endTime="300.0"/>
+	<Effect name="TunnelFlight" track="0" startTime="0" endTime="300" />
+	<PostEffect name="GlowPostEffect" track="0" startTime="0" endTime="300">
+		<Parameter name="BloomScale" float="1.5" />
+		<Parameter name="Exposure" float="1" />
+		<Parameter name="DrawOrder" int="1" />
+		<Parameter name="WhiteCutoff" float="0.1" />
+		<Parameter name="Luminance" float="0.2" />
+	</PostEffect>
+
+	<!--<Effect name="ChessScene" track="0" startTime="0.0" endTime="300.0"/>-->
 	<!--PostEffect name="OverlayPostEffect" track="0" startTime="0.0" endTime="300.0">
     <Parameter name="AddNoise" bool="true" />
     <Parameter name="Filename" string="Noise2.jpg" />

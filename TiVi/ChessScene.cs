@@ -55,29 +55,28 @@ namespace EngineTest
             kingNode.WorldState.MoveRight(1.9f * 3);
             kingMirrorNode.WorldState.MoveRight(1.9f * 3);
 
-            XLoader.Load("ChessPieces.x", EffectFactory.CreateFromFile("Test.fxo"), 
-                TechniqueChooser.MeshPrefix("Glass"));
-            XLoader.AddToScene(scene);
+            //XLoader.Load("ChessPieces.x", EffectFactory.CreateFromFile("Test.fxo"), 
+            //    TechniqueChooser.MeshPrefix("Glass"));
+            //XLoader.AddToScene(scene);
         }
 
         private void CreatePlane()
         {
-            //builder.CreatePlane("Box", 3, 3, 6, 6, true);
-            builder.CreateChamferBox("Box", 2.0f, 2.0f, 0.5f, 0.2f, 6);
-            builder.AssignMaterial("Box", "Default1");
-            builder.SetDiffuseTexture("Default1", "red glass.jpg");
-            builder.SetReflectiveTexture("Default1", "rnl_cross.dds");
-            builder.SetReflectiveFactor("Default1", 0.02f);
-            IModel boxModel = builder.CreateModel("Box");
-            boxModel.Materials[0].Diffuse = Color.DarkGray;
-            planeNode = new ModelNode("Box", boxModel,
-                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
-                TechniqueChooser.MaterialPrefix("Glass"), boxModel));
-            scene.AddNode(planeNode);
-            mirrorNode = CreateMirrorNode(planeNode);
-            scene.AddNode(mirrorNode);
-            planeNode.WorldState.MoveUp(1f);
-            mirrorNode.WorldState.MoveUp(-1f);
+            //builder.CreateChamferBox("Box", 2.0f, 2.0f, 0.5f, 0.2f, 6);
+            //builder.AssignMaterial("Box", "Default1");
+            //builder.SetDiffuseTexture("Default1", "red glass.jpg");
+            //builder.SetReflectiveTexture("Default1", "rnl_cross.dds");
+            //builder.SetReflectiveFactor("Default1", 0.02f);
+            //IModel boxModel = builder.CreateModel("Box");
+            //boxModel.Materials[0].Diffuse = Color.DarkGray;
+            //planeNode = new ModelNode("Box", boxModel,
+            //    new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
+            //    TechniqueChooser.MaterialPrefix("Glass"), boxModel));
+            //scene.AddNode(planeNode);
+            //mirrorNode = CreateMirrorNode(planeNode);
+            //scene.AddNode(mirrorNode);
+            //planeNode.WorldState.MoveUp(1f);
+            //mirrorNode.WorldState.MoveUp(-1f);
         }
 
         private ModelNode CreateMirrorNode(ModelNode originalNode)

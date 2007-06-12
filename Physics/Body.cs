@@ -5,7 +5,7 @@ using Microsoft.DirectX;
 
 namespace Dope.DDXX.Physics
 {
-    public class Body : Dope.DDXX.Physics.IBody
+    public class Body : IBody
     {
         private const int NUM_ITERATIONS = 3;
         private Vector3 gravity = new Vector3(0, 0, 0);
@@ -15,6 +15,11 @@ namespace Dope.DDXX.Physics
         public List<IPhysicalParticle> Particles
         {
             get { return particles; }
+        }
+
+        public List<IConstraint> Constraints
+        {
+            get { return constraints; }
         }
 
         public Vector3 Gravity

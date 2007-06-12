@@ -737,5 +737,15 @@ namespace Dope.DDXX.Graphics
 
         #endregion
 
+
+        #region IBody Members
+
+
+        public List<Dope.DDXX.Physics.IConstraint> Constraints
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        #endregion
     }
 }

@@ -11,6 +11,7 @@ namespace Dope.DDXX.Physics
         Vector3 Gravity { get; set; }
         void Step();
         List<IPhysicalParticle> Particles { get; }
+        List<IConstraint> Constraints { get; }
         void ApplyForce(Vector3 vector3);
     }
 }

@@ -13,203 +13,80 @@ using Dope.DDXX.Physics;
 namespace Dope.DDXX.MeshBuilder
 {
     [TestFixture]
-    public class MeshBuilderTest : IGraphicsFactory, IModel, IPrimitive, IDevice, ITextureFactory, IPrimitiveFactory, IBody, ICubeTexture, IMesh, ITexture
+    public class MeshBuilderTest : IGraphicsFactory, IModel, IDevice, ITextureFactory, IBody, ICubeTexture, IMesh, ITexture, IPrimitive, IGraphicsStream
     {
         private MeshBuilder builder;
-        private float width;
-        private float height;
-        private float length;
-        private int widthSegments;
-        private int heightSegments;
-        private int lengthSegments;
-        private bool textured;
-        private int[] pinnedParticles;
-        private bool createPlaneCalled;
-        private bool createBoxCalled;
-        private bool createClothCalled;
-        private bool setMaterialCalled;
+        //private float width;
+        //private float height;
+        //private float length;
+        //private int widthSegments;
+        //private int heightSegments;
+        //private int lengthSegments;
+        //private bool textured;
+        //private int[] pinnedParticles;
+        //private bool createPlaneCalled;
+        //private bool createBoxCalled;
+        //private bool createClothCalled;
+        //private bool setMaterialCalled;
         private string fileName;
         private Viewport viewport;
-        private float weldDistance;
-        
+        //private float weldDistance;
+
+        private Vertex[] vertices;
+        private short[] indices;
+        private int numFaces;
+        private int numVertices;
+        private bool vbLocked;
+        private bool ibLocked;
+        private List<Vector3> positions;
+        private List<Vector3> normals;
+        private List<float> textureCoordinates;
+        private bool useTextureCoordinates;
+        private VertexPosition vertexPosition;
+        private bool body;
+
+        private enum VertexPosition
+        {
+            POSITION,
+            NORMAL,
+            TEX_U,
+            TEX_V,
+        }
+
         [SetUp]
         public void SetUp()
         {
+            vbLocked = false;
+            ibLocked = false;
+            positions = new List<Vector3>();
+            normals = new List<Vector3>();
+            textureCoordinates = new List<float>();
+            vertexPosition = VertexPosition.POSITION;
+            useTextureCoordinates = false;
+            body = false;
             builder = new MeshBuilder(this, this, this);
-            builder.PrimitiveFactory = this;
-            width = -1.0f;
-            height = -1.0f;
-            length = -1.0f;
-            widthSegments = -1;
-            heightSegments = -1;
-            lengthSegments = -1;
-            textured = false;
-            pinnedParticles = new int[0];
-            createPlaneCalled = false;
-            createBoxCalled = false;
-            createClothCalled = false;
-            setMaterialCalled = false;
+            //width = -1.0f;
+            //height = -1.0f;
+            //length = -1.0f;
+            //widthSegments = -1;
+            //heightSegments = -1;
+            //lengthSegments = -1;
+            //textured = false;
+            //pinnedParticles = new int[0];
+            //createPlaneCalled = false;
+            //createBoxCalled = false;
+            //createClothCalled = false;
+            //setMaterialCalled = false;
             fileName = null;
             viewport = new Viewport();
-            weldDistance = 1e6f;
+            //weldDistance = 1e6f;
         }
 
-        /// <summary>
-        /// Test creating a Model from a primitive
-        /// </summary>
         [Test]
-        public void TestCreateModel()
+        public void TestDefaultColors()
         {
-            builder.AddPrimitive(this, "Name1");
-            IModel model = builder.CreateModel("Name1");
-            Assert.AreSame(this, model, "This instance should be returned as IModel.");
-        }
-
-        /// <summary>
-        /// Test calling CreateMesh without having added the primitive first.
-        /// </summary>
-        [Test]
-        [ExpectedException(typeof(DDXXException))]
-        public void TestCreateWithoutAdd()
-        {
-            IModel model = builder.CreateModel("Name1");
-        }
-
-        /// <summary>
-        /// Test box creation using the graphicsFactory
-        /// </summary>
-        [Test]
-        public void TestBoxCreation()
-        {
-            width = 1;
-            height = 2;
-            length = 3;
-            widthSegments = 4;
-            heightSegments = 5;
-            lengthSegments = 6;
-            builder.CreateBox("Box", length, width, height, 
-                lengthSegments, widthSegments, heightSegments);
-            Assert.AreSame(this, builder.GetPrimitive("Box"));
-            Assert.IsTrue(createBoxCalled, "CreateBox should have been called.");
-        }
-
-        /// <summary>
-        /// Test box creation of duplicate name
-        /// </summary>
-        [Test]
-        [ExpectedException(typeof(DDXXException))]
-        public void TestBoxCreationFail()
-        {
-            TestBoxCreation();
-            builder.CreateBox("Box", length, width, height,
-                lengthSegments, widthSegments, heightSegments);
-        }
-
-        /// <summary>
-        /// Test sphere creation using the graphicsFactory
-        /// </summary>
-        [Test]
-        public void TestPlaneCreation()
-        {
-            width = 1;
-            height = 2;
-            widthSegments = 4;
-            heightSegments = 5;
-            textured = true;
-            builder.CreatePlane("Plane", width, height, widthSegments, heightSegments, textured);
-            Assert.AreSame(this, builder.GetPrimitive("Plane"));
-            Assert.IsTrue(createPlaneCalled, "CreatePlane should have been called.");
-        }
-
-        /// <summary>
-        /// Test sphere creation of duplicate name
-        /// </summary>
-        [Test]
-        [ExpectedException(typeof(DDXXException))]
-        public void TestPlaneCreationFail()
-        {
-            TestPlaneCreation();
-            builder.CreatePlane("Plane", width, height, widthSegments, heightSegments, textured);
-        }
-
-        /// <summary>
-        /// Test sphere and box creation of duplicate name
-        /// </summary>
-        [Test]
-        [ExpectedException(typeof(DDXXException))]
-        public void TestDuplicates()
-        {
-            TestBoxCreation();
-            builder.CreatePlane("Box", width, height, widthSegments, heightSegments, textured);
-        }
-
-        /// <summary>
-        /// Test cloth creation using the graphicsFactory
-        /// </summary>
-        [Test]
-        public void TestClothCreationNoPinned()
-        {
-            width = 1;
-            height = 2;
-            widthSegments = 4;
-            heightSegments = 5;
-            textured = true;
-            builder.CreateCloth("Cloth", this, width, height, widthSegments, heightSegments, textured);
-            Assert.AreSame(this, builder.GetPrimitive("Cloth"));
-            Assert.IsTrue(createClothCalled, "CreateCloth should have been called.");
-        }
-
-        /// <summary>
-        /// Test cloth creation using the graphicsFactory
-        /// </summary>
-        [Test]
-        public void TestClothCreationPinned()
-        {
-            width = 1;
-            height = 2;
-            widthSegments = 4;
-            heightSegments = 5;
-            textured = true;
-            pinnedParticles = new int[] { 3, 7, 6, 4, 8, 9, 65 };
-            builder.CreateCloth("Cloth", this, width, height, widthSegments, heightSegments, pinnedParticles, textured);
-            Assert.AreSame(this, builder.GetPrimitive("Cloth"));
-            Assert.IsTrue(createClothCalled, "CreateCloth should have been called.");
-        }
-
-        /// <summary>
-        /// Test material assignment with invalid material.
-        /// </summary>
-        [Test]
-        [ExpectedException(typeof(DDXXException))]
-        public void TestMaterialAssignmentFail1()
-        {
-            TestBoxCreation();
-            builder.AssignMaterial("Box", "InvalidMaterial");
-        }
-
-        /// <summary>
-        /// Test material assignment.
-        /// </summary>
-        [Test]
-        public void TestMaterialAssignmentOK()
-        {
-            TestBoxCreation();
-            for (int i = 0; i < 6; i++)
-            {
-                setMaterialCalled = false;
-                builder.AssignMaterial("Box", "Default" + (i + 1));
-                Assert.IsTrue(setMaterialCalled);
-            }
-        }
-
-        /// <summary>
-        /// Test material assignment with invalid primitive.
-        /// </summary>
-        [Test]
-        [ExpectedException(typeof(DDXXException))]
-        public void TestMaterialAssignmentFail2()
-        {
-            builder.AssignMaterial("InvalidPrimitive", "Default1");
+            Assert.AreEqual(new ColorValue(0.6f, 0.6f, 0.6f, 0.6f), builder.GetMaterial("Default1").DiffuseColor);
+            Assert.AreEqual(new ColorValue(0.3f, 0.3f, 0.3f, 0.3f), builder.GetMaterial("Default1").AmbientColor);
         }
 
         /// <summary>
@@ -296,6 +173,8 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestCreateSkyBox()
         {
+            numFaces = 2;
+            numVertices = 4;
             viewport.Width = 100;
             viewport.Height = 200;
             fileName = "SkyBoxTexture";
@@ -309,25 +188,104 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
-        /// Test welding of vertices in a primitive
+        /// Test the CreatePrimitive method on a generic mesh with texture coordinates.
         /// </summary>
         [Test]
-        public void TestWelding25()
+        public void TestCreateModelWithTexCoords()
         {
-            TestBoxCreation();
-            builder.Weld("Box", 2.5f);
-            Assert.AreEqual(2.5f, weldDistance);
+            useTextureCoordinates = true;
+            CreatePrimitive();
+            IModel model = builder.CreateModel(this, "");
+            CheckModel(model);
+            Assert.IsNotInstanceOfType(typeof(PhysicalModel), model, "Model shall not be PhysicalModel");
         }
 
         /// <summary>
-        /// Test welding of vertices in a primitive
+        /// Test the CreatePrimitive method on a generic mesh.
         /// </summary>
         [Test]
-        public void TestWelding0()
+        public void TestCreateModel()
         {
-            TestBoxCreation();
-            builder.Weld("Box", 0);
-            Assert.AreEqual(0, weldDistance);
+            CreatePrimitive();
+            IModel model = builder.CreateModel(this, "");
+            CheckModel(model);
+            Assert.IsNotInstanceOfType(typeof(PhysicalModel), model, "Model shall not be PhysicalModel");
+            Assert.IsNotNull(model.Materials[0]);
+        }
+
+        /// <summary>
+        /// Test that the created model is a physical model.
+        /// </summary>
+        [Test]
+        public void TestCreatePhysicalModel()
+        {
+            CreatePrimitive();
+            body = true;
+            IModel model = builder.CreateModel(this, "");
+            CheckModel(model);
+            Assert.IsInstanceOfType(typeof(PhysicalModel), model, "Model shall be PhysicalModel");
+        }
+
+        [Test]
+        public void TestDiffuseColor()
+        {
+            builder.SetDiffuseColor("Default1", new ColorValue(1, 2, 3, 4));
+            Assert.AreEqual(new ColorValue(1, 2, 3, 4), builder.GetMaterial("Default1").DiffuseColor);
+        }
+
+        [Test]
+        public void TestAmbientColor()
+        {
+            builder.SetAmbientColor("Default1", new ColorValue(5, 6, 7, 8));
+            Assert.AreEqual(new ColorValue(5, 6, 7, 8), builder.GetMaterial("Default1").AmbientColor);
+        }
+
+        [Test]
+        public void TestSpecularColor()
+        {
+            builder.SetSpecularColor("Default1", new ColorValue(3, 5, 7, 9));
+            Assert.AreEqual(new ColorValue(3, 5, 7, 9), builder.GetMaterial("Default1").SpecularColor);
+        }
+
+        private void CheckModel(IModel model)
+        {
+            Assert.AreSame(this, model.Mesh, "This should have been returned as Mesh.");
+            Assert.IsFalse(vbLocked, "Vertex buffer should not be locked.");
+            Assert.IsFalse(ibLocked, "Vertex buffer should not be locked.");
+            Assert.AreEqual(numVertices, positions.Count, "Vertices should be " + numVertices);
+            Assert.AreEqual(numFaces * 3, this.indices.Length, "Indices should be " + numFaces * 3);
+            for (int i = 0; i < numVertices; i++)
+            {
+                Assert.AreEqual(vertices[i].Position, positions[i]);
+                Assert.AreEqual(vertices[i].Normal, normals[i]);
+                if (useTextureCoordinates)
+                {
+                    Assert.AreEqual(vertices[i].U, textureCoordinates[i * 2 + 0]);
+                    Assert.AreEqual(vertices[i].V, textureCoordinates[i * 2 + 1]);
+                }
+            }
+            for (int i = 0; i < numFaces * 3; i++)
+                Assert.AreEqual(indices[i], this.indices[i]);
+        }
+
+        private void CreatePrimitive()
+        {
+            numFaces = 1;
+            numVertices = 2;
+            vertices = new Vertex[numVertices];
+            indices = new short[numFaces * 3];
+            for (int i = 0; i < numVertices; i++)
+            {
+                vertices[i].Position = new Vector3(i, i + 1, i + 2);
+                vertices[i].Normal = new Vector3(i + 2, i + 3, i + 4);
+                if (useTextureCoordinates)
+                {
+                    vertices[i].U = i * 2;
+                    vertices[i].V = i * 1;
+                }
+            }
+            for (int i = 0; i < numFaces * 3; i++)
+                indices[i] = (short)i;
         }
 
         #region IGraphicsFactory Members
@@ -369,11 +327,10 @@ namespace Dope.DDXX.MeshBuilder
 
         public IMesh CreateMesh(int numFaces, int numVertices, MeshFlags options, VertexElement[] declaration, IDevice device)
         {
-            // Ok for skybox only
-            Assert.AreEqual(numFaces, 2);
-            Assert.AreEqual(4, numVertices);
+            Assert.AreEqual(numFaces, this.numFaces);
+            Assert.AreEqual(this.numVertices, numVertices);
             Assert.AreEqual(MeshFlags.Managed, options);
-            Assert.AreEqual(declaration.Length, 2);
+            //Assert.AreEqual(declaration.Length, 2);
             Assert.AreEqual(DeclarationUsage.Position, declaration[0].DeclarationUsage);
             return this;
         }
@@ -465,32 +422,6 @@ namespace Dope.DDXX.MeshBuilder
 
         #endregion
 
-        #region IPrimitive Members
-
-        public Vertex[] Vertices
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public short[] Indices
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public IBody Body
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-            set { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public IModel CreateModel(IGraphicsFactory factory, 
-            IDevice device)
-        {
-            Assert.AreSame(this, factory, "Factory should be same as this.");
-            return this;
-        }
-
-        #endregion
 
         #region IDevice Members
 
@@ -1391,60 +1322,6 @@ namespace Dope.DDXX.MeshBuilder
         #endregion
 
 
-        #region IPrimitiveFactory Members
-
-        public IPrimitive CreateCloth(IBody body, float width, float height, 
-            int widthSegments, int heightSegments, int[] pinnedParticles, bool textured)
-        {
-            createClothCalled = true;
-            Assert.AreSame(this, body);
-            Assert.AreEqual(this.width, width);
-            Assert.AreEqual(this.height, height);
-            Assert.AreEqual(this.widthSegments, widthSegments);
-            Assert.AreEqual(this.heightSegments, heightSegments);
-            Assert.AreEqual(this.textured, textured);
-            Assert.AreSame(this.pinnedParticles, pinnedParticles);
-            return this;
-        }
-
-        public IPrimitive CreateCloth(IBody body, float width, float height, 
-            int widthSegments, int heightSegments, bool textured)
-        {
-            createClothCalled = true;
-            Assert.AreSame(this, body);
-            Assert.AreEqual(this.width, width);
-            Assert.AreEqual(this.height, height);
-            Assert.AreEqual(this.widthSegments, widthSegments);
-            Assert.AreEqual(this.heightSegments, heightSegments);
-            Assert.AreEqual(this.textured, textured);
-            return this;
-        }
-
-        public IPrimitive CreatePlane(float width, float height, int widthSegments, int heightSegments, bool textured)
-        {
-            createPlaneCalled = true;
-            Assert.AreEqual(this.width, width);
-            Assert.AreEqual(this.height, height);
-            Assert.AreEqual(this.widthSegments, widthSegments);
-            Assert.AreEqual(this.heightSegments, heightSegments);
-            Assert.AreEqual(this.textured, textured);
-            return this;
-        }
-
-        public IPrimitive CreateBox(float length, float width, float height, int lengthSegments, int widthSegments, int heightSegments)
-        {
-            createBoxCalled = true;
-            Assert.AreEqual(this.length, length);
-            Assert.AreEqual(this.width, width);
-            Assert.AreEqual(this.height, height);
-            Assert.AreEqual(this.lengthSegments, lengthSegments);
-            Assert.AreEqual(this.widthSegments, widthSegments);
-            Assert.AreEqual(this.heightSegments, heightSegments);
-            return this;
-        }
-
-        #endregion
-
         #region IBody Members
 
         public void AddConstraint(Dope.DDXX.Physics.IConstraint constraint)
@@ -1471,29 +1348,12 @@ namespace Dope.DDXX.MeshBuilder
 
         public List<IPhysicalParticle> Particles
         {
-            get { throw new Exception("The method or operation is not implemented."); }
+            get { return new List<IPhysicalParticle>(); }
         }
 
         public void ApplyForce(Vector3 vector3)
         {
             throw new Exception("The method or operation is not implemented.");
-        }
-
-        #endregion
-
-        #region IPrimitive Members
-
-
-        public ModelMaterial ModelMaterial
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                setMaterialCalled = true;
-            }
         }
 
         #endregion
@@ -1532,12 +1392,12 @@ namespace Dope.DDXX.MeshBuilder
 
         public int NumberFaces
         {
-            get { throw new Exception("The method or operation is not implemented."); }
+            get { return 0; }
         }
 
         public int NumberVertices
         {
-            get { throw new Exception("The method or operation is not implemented."); }
+            get { return 0; }
         }
 
         public MeshOptions Options
@@ -1642,7 +1502,8 @@ namespace Dope.DDXX.MeshBuilder
 
         public IGraphicsStream LockIndexBuffer(LockFlags flags)
         {
-            throw new Exception("The method or operation is not implemented.");
+            ibLocked = true;
+            return this;
         }
 
         public Array LockIndexBuffer(Type typeIndex, LockFlags flags, params int[] ranks)
@@ -1652,7 +1513,8 @@ namespace Dope.DDXX.MeshBuilder
 
         public IGraphicsStream LockVertexBuffer(LockFlags flags)
         {
-            throw new Exception("The method or operation is not implemented.");
+            vbLocked = true;
+            return this;
         }
 
         public Array LockVertexBuffer(Type typeVertex, LockFlags flags, params int[] ranks)
@@ -1683,12 +1545,12 @@ namespace Dope.DDXX.MeshBuilder
 
         public void UnlockIndexBuffer()
         {
-            throw new Exception("The method or operation is not implemented.");
+            ibLocked = false;
         }
 
         public void UnlockVertexBuffer()
         {
-            throw new Exception("The method or operation is not implemented.");
+            vbLocked = false;
         }
 
         public void UpdateSemantics(IGraphicsStream declaration)
@@ -2182,50 +2044,10 @@ namespace Dope.DDXX.MeshBuilder
 
         #endregion
 
-        #region IPrimitiveFactory Members
-
-
-        public IPrimitive CreateSphere2(float radius, int rings)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IPrimitive CreateSphere(float radius, short Nu, short Nv)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IPrimitive CreateChamferBox(float length, float width, float height, float fillet, int lengthSegments, int widthSegments, int heightSegments, int filletSegments)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        #endregion
-
-        #region IPrimitive Members
-
-
-        public void Weld(float distance)
-        {
-            weldDistance = distance;
-        }
-
-        #endregion
-
         #region IBaseTexture Members
 
 
         public void Save(string destFile, ImageFileFormat destFormat)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        #endregion
-
-        #region IPrimitiveFactory Members
-
-
-        public IPrimitive CreateTerrain(Dope.DDXX.TextureBuilder.IGenerator heightMapGenerator, float heightScale, float width, float height, int widthSegments, int heightSegments, bool textured)
         {
             throw new Exception("The method or operation is not implemented.");
         }
@@ -2241,5 +2063,152 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         #endregion
+
+        #region IBody Members
+
+
+        public List<Dope.DDXX.Physics.IConstraint> Constraints
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        #endregion
+
+        #region IGraphicsStream Members
+
+        public bool CanRead
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public bool CanSeek
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public bool CanWrite
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public long Length
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public long Position
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public void Close()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public string Read(bool unicode)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public ValueType Read(Type returnType)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Array Read(Type returnType, params int[] ranks)
+        {
+            // Used by PhysicalModel constructor
+            return new short[0];
+        }
+
+        public int Read(byte[] buffer, int offset, int count)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public long Seek(long newposition, System.IO.SeekOrigin origin)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetLength(long newLength)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Write(Array value)
+        {
+            Assert.IsTrue(ibLocked);
+            indices = (short[])value;
+        }
+
+        public void Write(string value)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Write(ValueType value)
+        {
+            Assert.IsTrue(vbLocked);
+            switch (vertexPosition)
+            {
+                case VertexPosition.POSITION:
+                    positions.Add((Vector3)value);
+                    vertexPosition++;
+                    break;
+                case VertexPosition.NORMAL:
+                    normals.Add((Vector3)value);
+                    if (useTextureCoordinates)
+                        vertexPosition++;
+                    else
+                        vertexPosition = VertexPosition.POSITION;
+                    break;
+                case VertexPosition.TEX_U:
+                    textureCoordinates.Add((float)value);
+                    vertexPosition++;
+                    break;
+                case VertexPosition.TEX_V:
+                    textureCoordinates.Add((float)value);
+                    vertexPosition = VertexPosition.POSITION;
+                    break;
+                default:
+                    throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public void Write(string value, bool isUnicodeString)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Write(byte[] buffer, int offset, int count)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
+
+        #region IPrimitive Members
+
+        public void Generate(out Vertex[] vertices, out short[] indices, out IBody body)
+        {
+            vertices = this.vertices;
+            indices = this.indices;
+            if (this.body)
+                body = this;
+            else
+                body = null;
+        }
+
+        #endregion
+
     }
 }

@@ -64,6 +64,11 @@ shared float LightRadius;
  */
 shared int LightDecayType;
 
+/**
+ * The number of lights used.
+ */
+shared int NumLights;
+
 /** 
  * Position of the camera in world space
  */

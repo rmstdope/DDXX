@@ -40,16 +40,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PrimitiveFactoryTest.cs" />
-    <Compile Include="IPrimitiveFactory.cs" />
-    <Compile Include="Primitive.cs" />
-    <Compile Include="PrimitiveFactory.cs" />
-    <Compile Include="PrimitiveTest.cs" />
-    <Compile Include="IPrimitive.cs" />
+    <Compile Include="BoxPrimitive.cs" />
+    <Compile Include="BoxPrimitiveTest.cs" />
+    <Compile Include="ChamferBoxPrimitive.cs" />
+    <Compile Include="ChamferBoxPrimitiveTest.cs" />
+    <Compile Include="ClothPrimitive.cs" />
+    <Compile Include="ClothPrimitiveTest.cs" />
+    <Compile Include="IPrimitive.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PlanePrimitive.cs" />
+    <Compile Include="PlanePrimitiveTest.cs" />
     <Compile Include="MeshBuilder.cs" />
     <Compile Include="MeshBuilderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SpherePrimitive.cs" />
+    <Compile Include="SpherePrimitiveTest.cs" />
+    <Compile Include="TerrainPrimitive.cs" />
+    <Compile Include="TerrainPrimitiveTest.cs" />
+    <Compile Include="UvMapPlane.cs" />
+    <Compile Include="UvMapPlaneTest.cs" />
     <Compile Include="Vertex.cs" />
+    <Compile Include="Weld.cs" />
+    <Compile Include="WeldTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Graphics\Graphics.csproj">

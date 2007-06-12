@@ -13,6 +13,7 @@ namespace Dope.DDXX.SceneGraph
     public class Scene : IScene
     {
         private IEffect effect;
+        private EffectHandle numLightsHandle;
         private EffectHandle lightDiffuseHandle;
         private EffectHandle lightSpecularHandle;
         private EffectHandle lightPositionHandle;
@@ -32,13 +33,14 @@ namespace Dope.DDXX.SceneGraph
             ambientColor = new ColorValue(0.5f, 0.5f, 0.5f, 0.5f);
             IEffectFactory effectFactory = D3DDriver.EffectFactory;
             effect = effectFactory.CreateFromFile("PoolEffect.fxo");
+            numLightsHandle = effect.GetParameter(null, "NumLights");
             lightDiffuseHandle = effect.GetParameter(null, "LightDiffuseColors");
             lightSpecularHandle = effect.GetParameter(null, "LightSpecularColors");
             lightPositionHandle = effect.GetParameter(null, "LightPositions");
             lightDirectionHandle = effect.GetParameter(null, "LightDirections");
             eyePositionHandle = effect.GetParameter(null, "EyePosition");
 
-            if (lightDiffuseHandle == null || lightSpecularHandle == null || lightPositionHandle == null || lightDirectionHandle == null || eyePositionHandle == null)
+            if (numLightsHandle == null || lightDiffuseHandle == null || lightSpecularHandle == null || lightPositionHandle == null || lightDirectionHandle == null || eyePositionHandle == null)
                 throw new DDXXException("Can't find mandatory handles in PoolEffect");
         }
 
@@ -67,6 +69,7 @@ namespace Dope.DDXX.SceneGraph
 
             LightState state = new LightState();
             rootNode.SetLightState(state);
+            effect.SetValue(numLightsHandle, state.NumLights);
             effect.SetValue(lightDiffuseHandle, state.DiffuseColor);
             effect.SetValue(lightSpecularHandle, state.SpecularColor);
             effect.SetValue(lightPositionHandle, state.Positions);

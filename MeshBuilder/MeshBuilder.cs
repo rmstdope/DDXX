@@ -14,9 +14,7 @@ namespace Dope.DDXX.MeshBuilder
     {
         private IGraphicsFactory graphicsFactory;
         private ITextureFactory textureFactory;
-        private IPrimitiveFactory primitiveFactory = new PrimitiveFactory();
         private IDevice device;
-        private Dictionary<string, IPrimitive> primitives = new Dictionary<string, IPrimitive>();
         private Dictionary<string, ModelMaterial> materials = new Dictionary<string, ModelMaterial>();
 
         public MeshBuilder(IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, 
@@ -25,25 +23,12 @@ namespace Dope.DDXX.MeshBuilder
             this.graphicsFactory = graphicsFactory;
             this.textureFactory = textureFactory;
             this.device = device;
-            materials["Default1"] = new ModelMaterial(new Material());
-            materials["Default2"] = new ModelMaterial(new Material());
-            materials["Default3"] = new ModelMaterial(new Material());
-            materials["Default4"] = new ModelMaterial(new Material());
-            materials["Default5"] = new ModelMaterial(new Material());
-            materials["Default6"] = new ModelMaterial(new Material());
-        }
-
-        internal IPrimitiveFactory PrimitiveFactory
-        {
-            set { primitiveFactory = value; }
-        }
-
-        internal IPrimitive GetPrimitive(string name)
-        {
-            if (primitives.ContainsKey(name))
-                return primitives[name];
-            else
-                throw new DDXXException("Can not find primitive " + name);
+            for (int i = 0; i < 6; i++)
+            {
+                materials["Default" + (i + 1)] = new ModelMaterial(new Material());
+                materials["Default" + (i + 1)].DiffuseColor = new ColorValue(0.6f, 0.6f, 0.6f, 0.6f);
+                materials["Default" + (i + 1)].AmbientColor = new ColorValue(0.3f, 0.3f, 0.3f, 0.3f);
+            }
         }
 
         internal ModelMaterial GetMaterial(string name)
@@ -52,77 +37,6 @@ namespace Dope.DDXX.MeshBuilder
                 return materials[name];
             else
                 throw new DDXXException("Can not find material " + name);
-        }
-
-        internal void AddPrimitive(IPrimitive primitive, string name)
-        {
-            if (primitives.ContainsKey(name))
-                throw new DDXXException("Can not add the two primitives with the same name.");
-            primitives[name] = primitive;
-        }
-
-        public IModel CreateModel(string name)
-        {
-            if (!primitives.ContainsKey(name))
-                throw new DDXXException("Can not create mesh from a primitive that does not exist.");
-            return primitives[name].CreateModel(graphicsFactory, device);
-        }
-
-        public void CreateBox(string name, float length, float width, float height,
-            int lengthSegments, int widthSegments, int heightSegments)
-        {
-            IPrimitive box = primitiveFactory.CreateBox(length, width, height, 
-                lengthSegments, widthSegments, heightSegments);
-            AddPrimitive(box, name);
-        }
-
-        public void CreatePlane(string name, float width, float height,
-            int widthSegments, int heightSegments, bool textured)
-        {
-            IPrimitive plane = primitiveFactory.CreatePlane(width, height, 
-                widthSegments, heightSegments, textured);
-            AddPrimitive(plane, name);
-        }
-
-        public void CreateCloth(string name, IBody body, float width, float height,
-           int widthSegments, int heightSegments, int[] pinnedParticles, bool textured)
-        {
-            IPrimitive plane = primitiveFactory.CreateCloth(body, width, height, 
-                widthSegments, heightSegments, pinnedParticles, textured);
-            AddPrimitive(plane, name);
-        }
-
-        public void CreateCloth(string name, IBody body, float width, float height,
-            int widthSegments, int heightSegments, bool textured)
-        {
-            IPrimitive plane = primitiveFactory.CreateCloth(body, width, height, 
-                widthSegments, heightSegments, textured);
-            AddPrimitive(plane, name);
-        }
-
-        public void CreateSphere(string name, float radius, short rings)
-        {
-            IPrimitive sphere = primitiveFactory.CreateSphere2(radius, rings);
-            AddPrimitive(sphere, name);
-        }
-
-        public void CreateChamferBox(string name, float length, float width, float height, float fillet, int filletSegments)
-        {
-            IPrimitive chamferBox = primitiveFactory.CreateChamferBox(length, width, height, fillet, 1, 1, 1, filletSegments);
-            AddPrimitive(chamferBox, name);
-        }
-
-        public void CreateTerrain(string name, IGenerator generator, float heightScale, float width, float depth, int widthSegments, int depthSegments, bool textured)
-        {
-            IPrimitive terrain = primitiveFactory.CreateTerrain(generator, heightScale, width, depth, widthSegments, depthSegments, textured);
-            AddPrimitive(terrain, name);
-        }
-
-        public void AssignMaterial(string primitiveName, string materialName)
-        {
-            IPrimitive primitive = GetPrimitive(primitiveName);
-            ModelMaterial material = GetMaterial(materialName);
-            primitive.ModelMaterial = material;
         }
 
         /// <summary>
@@ -206,10 +120,79 @@ namespace Dope.DDXX.MeshBuilder
             return model;
         }
 
-        public void Weld(string primitiveName, float distance)
+        public IModel CreateModel(IPrimitive primitive, string material)
         {
-            IPrimitive primitive = GetPrimitive(primitiveName);
-            primitive.Weld(distance);
+            Vertex[] vertices;
+            short[] indices;
+            IBody body;
+            IModel model;
+            primitive.Generate(out vertices, out indices, out body);
+            IMesh mesh = CreateMesh(graphicsFactory, device, vertices, indices);
+            ModelMaterial modelMaterial = null;
+            if (material != "")
+                modelMaterial = GetMaterial(material);
+            if (modelMaterial == null)
+                modelMaterial = new ModelMaterial(new Material());
+            if (body == null)
+                model = new Model(mesh, new ModelMaterial[] { modelMaterial });
+            else
+                model = new PhysicalModel(mesh, body, new ModelMaterial[] { modelMaterial });
+            return model;
+        }
+
+        private IMesh CreateMesh(IGraphicsFactory factory, IDevice device, Vertex[] vertices, short[] indices)
+        {
+            bool useTexCoords = false;
+            foreach (Vertex vertex in vertices)
+            {
+                if (vertex.TextureCoordinatesUsed)
+                    useTexCoords = true;
+            }
+            VertexElementArray declaration = new VertexElementArray();
+            declaration.AddPositions();
+            declaration.AddNormals();
+            if (useTexCoords)
+                declaration.AddTexCoords(0, 2);
+            IMesh mesh = factory.CreateMesh(indices.Length / 3, vertices.Length, MeshFlags.Managed,
+                declaration.VertexElements, device);
+            using (IGraphicsStream stream = mesh.LockVertexBuffer(LockFlags.None))
+            {
+                for (int i = 0; i < vertices.Length; i++)
+                {
+                    stream.Write(vertices[i].Position);
+                    stream.Write(vertices[i].Normal);
+                    if (useTexCoords)
+                    {
+                        stream.Write(vertices[i].U);
+                        stream.Write(vertices[i].V);
+                    }
+                }
+                mesh.UnlockVertexBuffer();
+            }
+            using (IGraphicsStream stream = mesh.LockIndexBuffer(LockFlags.None))
+            {
+                stream.Write(indices);
+                mesh.UnlockIndexBuffer();
+            }
+            return mesh;
+        }
+
+        public void SetDiffuseColor(string materialName, ColorValue colorValue)
+        {
+            ModelMaterial material = GetMaterial(materialName);
+            material.DiffuseColor = colorValue;
+        }
+
+        public void SetAmbientColor(string materialName, ColorValue colorValue)
+        {
+            ModelMaterial material = GetMaterial(materialName);
+            material.AmbientColor = colorValue;
+        }
+
+        public void SetSpecularColor(string materialName, ColorValue colorValue)
+        {
+            ModelMaterial material = GetMaterial(materialName);
+            material.SpecularColor = colorValue;
         }
 
     }
