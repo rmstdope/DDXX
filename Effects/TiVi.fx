@@ -175,7 +175,7 @@ TerrainVertexShader(InputVS input,
 	float4 diffuse = 0;
 	for (int i = 0; i < NumLights; i++) {
 		float3 dir = LightPositions[i] - worldPosition;
-		float att = 1 - min(1, length(dir) * length(dir) / 1000);
+		float att = 1 - min(1, length(dir) * length(dir) / 5000);
 		diffuse += att * LightDiffuseColors[i] * max(0, dot(normal, normalize(dir)));
 	}
 	output.Color = AmbientColor + MaterialDiffuseColor * diffuse;
@@ -202,6 +202,6 @@ technique Terrain
 		ZEnable						=	true;
 		ZFunc							= Less;
 		StencilEnable			= false;
-		CullMode						= None;
+		CullMode					= CCW;
 	}
 }

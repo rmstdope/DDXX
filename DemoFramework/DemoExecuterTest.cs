@@ -157,7 +157,7 @@ namespace Dope.DDXX.DemoFramework
 
             for (int i = 0; i < 50; i++)
                 Expect.Once.On(tracks[i]).
-                    Method("Initialize").With(graphicsFactory, device, textureFactory, textureBuilder, postProcessor);
+                    Method("Initialize").With(graphicsFactory, device, textureFactory, textureBuilder, executer, postProcessor);
 
             executer.Initialize(device, graphicsFactory, textureFactory, textureBuilder);
         }
@@ -314,9 +314,9 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(tracks[0]).Method("Register").With(barEffect);
             Expect.Once.On(tracks[1]).Method("Register").With(fooEffect);
             Expect.Once.On(tracks[2]).Method("Register").With(fooGlow);
-            Expect.Once.On(tracks[0]).Method("Initialize").With(graphicsFactory, device, textureFactory, textureBuilder, postProcessor);
-            Expect.Once.On(tracks[1]).Method("Initialize").With(graphicsFactory, device, textureFactory, textureBuilder, postProcessor);
-            Expect.Once.On(tracks[2]).Method("Initialize").With(graphicsFactory, device, textureFactory, textureBuilder, postProcessor);
+            Expect.Once.On(tracks[0]).Method("Initialize").With(graphicsFactory, device, textureFactory, textureBuilder, executer, postProcessor);
+            Expect.Once.On(tracks[1]).Method("Initialize").With(graphicsFactory, device, textureFactory, textureBuilder, executer, postProcessor);
+            Expect.Once.On(tracks[2]).Method("Initialize").With(graphicsFactory, device, textureFactory, textureBuilder, executer, postProcessor);
             executer.Initialize(device, graphicsFactory, textureFactory, textureBuilder, tempFiles.New(twoEffectContents));
             Assert.AreEqual(3, executer.NumTracks);
         }

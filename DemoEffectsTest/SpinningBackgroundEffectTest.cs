@@ -7,6 +7,7 @@ using NMock2;
 using Dope.DDXX.Utility;
 using System.Drawing;
 using Microsoft.DirectX.Direct3D;
+using Dope.DDXX.DemoFramework;
 
 namespace Dope.DDXX.DemoEffects
 {
@@ -15,6 +16,7 @@ namespace Dope.DDXX.DemoEffects
     {
         private SpinningBackgroundEffect spin;
         private ISprite sprite;
+        private IDemoMixer mixer;
 
         [SetUp]
         public override void SetUp()
@@ -24,6 +26,7 @@ namespace Dope.DDXX.DemoEffects
 
             spin = new SpinningBackgroundEffect(0, 10);
             sprite = mockery.NewMock<ISprite>();
+            mixer = mockery.NewMock<IDemoMixer>();
         }
 
         [TearDown]
@@ -36,7 +39,7 @@ namespace Dope.DDXX.DemoEffects
         public void TestInitialize()
         {
             ExpectSprite();
-            spin.Initialize(graphicsFactory, device);
+            spin.Initialize(graphicsFactory, device, mixer);
         }
 
         [Test]
@@ -46,7 +49,7 @@ namespace Dope.DDXX.DemoEffects
             spin.AddTextureLayer(new SpinningBackgroundEffect.TextureLayer("file", 2 * (float)Math.PI, Color.Aqua, 0.2f));
 
             ExpectSprite();
-            spin.Initialize(graphicsFactory, device);
+            spin.Initialize(graphicsFactory, device, mixer);
         }
 
         [Test]
@@ -60,14 +63,14 @@ namespace Dope.DDXX.DemoEffects
             spin.AddTextureLayer(new SpinningBackgroundEffect.TextureLayer("file2", -2, Color.Azure, 0.4f));
 
             ExpectSprite();
-            spin.Initialize(graphicsFactory, device);
+            spin.Initialize(graphicsFactory, device, mixer);
         }
 
         [Test]
         public void TestRender1()
         {
             ExpectSprite();
-            spin.Initialize(graphicsFactory, device);
+            spin.Initialize(graphicsFactory, device, mixer);
             Expect.Once.On(sprite).Method("Begin").With(SpriteFlags.AlphaBlend);
             Expect.Once.On(renderStateManager).SetProperty("ZBufferEnable").To(false);
             Expect.Once.On(sprite).Method("End");

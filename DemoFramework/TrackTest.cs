@@ -15,6 +15,7 @@ namespace Dope.DDXX.DemoFramework
         private Track track;
         private IEffectChangeListener effectChangeListener;
         private ITextureBuilder textureBuilder;
+        private IDemoMixer mixer;
 
         [SetUp]
         public override void SetUp()
@@ -24,6 +25,7 @@ namespace Dope.DDXX.DemoFramework
             Time.Initialize();
             effectChangeListener = mockery.NewMock<IEffectChangeListener>();
             textureBuilder = mockery.NewMock<ITextureBuilder>();
+            mixer = mockery.NewMock<IDemoMixer>();
         }
 
         [TearDown]
@@ -205,9 +207,9 @@ namespace Dope.DDXX.DemoFramework
             track.Register(e1);
             IDemoPostEffect pe1 = CreateMockPostEffect(5, 12);
             track.Register(pe1);
-            Expect.Once.On(e1).Method("Initialize").With(graphicsFactory, device);
+            Expect.Once.On(e1).Method("Initialize").With(graphicsFactory, device, mixer);
             Expect.Once.On(pe1).Method("Initialize").With(postProcessor, textureFactory, textureBuilder, device);
-            track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, postProcessor);
+            track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, mixer, postProcessor);
         }
 
         [Test]
@@ -217,12 +219,12 @@ namespace Dope.DDXX.DemoFramework
             {
                 IDemoEffect e1 = CreateMockEffect(5, 10);
                 track.Register(e1);
-                Expect.Once.On(e1).Method("Initialize").With(graphicsFactory, device);
+                Expect.Once.On(e1).Method("Initialize").With(graphicsFactory, device, mixer);
                 IDemoPostEffect pe1 = CreateMockPostEffect(5, 12);
                 track.Register(pe1);
                 Expect.Once.On(pe1).Method("Initialize").With(postProcessor, textureFactory, textureBuilder, device);
             }
-            track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, postProcessor);
+            track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, mixer, postProcessor);
         }
 
         [Test]

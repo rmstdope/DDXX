@@ -17,7 +17,7 @@ using Dope.DDXX.TextureBuilder;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public class DemoExecuter : IDemoEffectBuilder, IDemoRegistrator, IDemoTweakerContext
+    public class DemoExecuter : IDemoEffectBuilder, IDemoRegistrator, IDemoTweakerContext, IDemoMixer
     {
         private ISoundDriver soundDriver;
         private FMOD.Sound sound;
@@ -39,7 +39,7 @@ namespace Dope.DDXX.DemoFramework
         private IDemoEffectTypes effectTypes;
         private TweakerSettings settings = new TweakerSettings();
         private DemoXMLReader xmlReader;
-        private Color backgroundColor = Color.FromArgb(0, 10, 10, 10);//.DarkGray;//.Black;//DarkSlateBlue;
+        private Color clearColor = Color.FromArgb(0, 10, 10, 10);//.DarkGray;//.Black;//DarkSlateBlue;
         private Dictionary<string, IGenerator> generators = new Dictionary<string,IGenerator>();
 
         private string songFilename;
@@ -90,8 +90,8 @@ namespace Dope.DDXX.DemoFramework
 
         public Color BackgroundColor
         {
-            set { backgroundColor = value; }
-            get { return backgroundColor; }
+            set { clearColor = value; }
+            get { return clearColor; }
         }
 
         public DemoExecuter(IDemoFactory demoFactory, ISoundDriver soundDriver, IInputDriver inputDriver, IPostProcessor postProcessor, IDemoEffectTypes effectTypes)
@@ -131,7 +131,7 @@ namespace Dope.DDXX.DemoFramework
 
             foreach (ITrack track in tracks)
             {
-                track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, postProcessor);
+                track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, this, postProcessor);
             }
 
             tweaker.Initialize(this);
@@ -243,7 +243,7 @@ namespace Dope.DDXX.DemoFramework
                 using (ISurface currentRenderTarget = backBuffer.GetSurfaceLevel(0))
                     device.SetRenderTarget(0, currentRenderTarget);
 
-                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, backgroundColor, 1.0f, 0);
+                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, clearColor, 1.0f, 0);
                 postProcessor.StartFrame(backBuffer);
 
                 if (tracks.Count != 0)
@@ -409,5 +409,15 @@ namespace Dope.DDXX.DemoFramework
         #endregion
 
 
+
+        #region IDemoMixer Members
+
+        public Color ClearColor
+        {
+            get { return clearColor; }
+            set { clearColor = value; }
+        }
+
+        #endregion
     }
 }

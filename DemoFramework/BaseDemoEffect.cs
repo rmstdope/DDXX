@@ -19,6 +19,7 @@ namespace Dope.DDXX.DemoFramework
         private IXLoader xLoader;
         private MeshBuilder.MeshBuilder meshBuilder;
         private TextureBuilder.TextureBuilder textureBuilder;
+        private IDemoMixer mixer;
 
         protected BaseDemoEffect(float startTime, float endTime)
         {
@@ -54,6 +55,11 @@ namespace Dope.DDXX.DemoFramework
         protected IXLoader XLoader
         {
             get { return xLoader; }
+        }
+
+        protected IDemoMixer Mixer
+        {
+            get { return mixer; }
         }
 
         protected MeshBuilder.MeshBuilder MeshBuilder
@@ -116,10 +122,11 @@ namespace Dope.DDXX.DemoFramework
         {
         }
 
-        public void Initialize(IGraphicsFactory graphicsFactory, IDevice device)
+        public void Initialize(IGraphicsFactory graphicsFactory, IDevice device, IDemoMixer mixer)
         {
             this.graphicsFactory = graphicsFactory;
             this.device = device;
+            this.mixer = mixer;
 
             xLoader = new XLoader(GraphicsFactory, new NodeFactory(TextureFactory), Device);
             

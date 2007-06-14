@@ -8,9 +8,7 @@ namespace Dope.DDXX.DemoFramework
     public interface IDemoEffect : IRegisterable, ITweakableContainer
     {
         void Step();
-
         void Render();
-
-        void Initialize(IGraphicsFactory graphicsFactory, IDevice device);
+        void Initialize(IGraphicsFactory graphicsFactory, IDevice device, IDemoMixer mixer);
     }
 }

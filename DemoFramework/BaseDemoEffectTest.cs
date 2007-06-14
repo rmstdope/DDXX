@@ -50,6 +50,7 @@ namespace Dope.DDXX.DemoFramework
     public class BaseDemoEffectTest : D3DMockTest
     {
         private IEffect poolEffect;
+        private IDemoMixer mixer;
 
         [SetUp]
         public override void SetUp()
@@ -58,6 +59,7 @@ namespace Dope.DDXX.DemoFramework
 
             D3DDriver.EffectFactory = new EffectFactory(null, graphicsFactory);
             poolEffect = mockery.NewMock<IEffect>();
+            mixer = mockery.NewMock<IDemoMixer>();
         }
 
         [TearDown]
@@ -71,7 +73,7 @@ namespace Dope.DDXX.DemoFramework
         {
             TestEffect effect = new TestEffect(0.0f, 10.0f);
 
-            effect.Initialize(graphicsFactory, device);
+            effect.Initialize(graphicsFactory, device, mixer);
 
             Assert.IsTrue(effect.IsDeviceEqual(D3DDriver.GetInstance().Device));
         }

@@ -4,11 +4,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{971A8760-50EE-4932-99F3-D226081FBD53}</ProjectGuid>
+    <ProjectGuid>{99DE9411-D541-4A74-9E16-C522EC103507}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Dope.DDXX.DemoEffects</RootNamespace>
-    <AssemblyName>Dope.DDXX.DemoEffects</AssemblyName>
+    <RootNamespace>DemoEffects</RootNamespace>
+    <AssemblyName>DemoEffectsTest</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,25 +36,27 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AspectilizerPostEffect.cs" />
-    <Compile Include="BlurPostEffect.cs" />
-    <Compile Include="DepthOfFieldPostEffect.cs" />
-    <Compile Include="GlowPostEffect.cs" />
-    <Compile Include="MonochromePostEffect.cs" />
-    <Compile Include="OverlayPostEffect.cs" />
-    <Compile Include="RingsPostEffect.cs" />
-    <Compile Include="SinglePassPostEffect.cs" />
-    <Compile Include="TextFadingEffect.cs" />
-    <Compile Include="WavePostEffect.cs" />
+    <Compile Include="AspectilizerPostEffectTest.cs" />
+    <Compile Include="BlurPostEffectTest.cs" />
+    <Compile Include="DepthOfFieldPostEffectTest.cs" />
+    <Compile Include="GlowPostEffectTest.cs" />
+    <Compile Include="MonochromePostEffectTest.cs" />
+    <Compile Include="OverlayPostEffectTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RadialBlurPostEffect.cs" />
-    <Compile Include="SpinningBackgroundEffect.cs" />
+    <Compile Include="RadialBlurPostEffectTest.cs" />
+    <Compile Include="RingsPostEffectTest.cs" />
+    <Compile Include="SpinningBackgroundEffectTest.cs" />
+    <Compile Include="TextFadingEffectTest.cs" />
+    <Compile Include="WavePostEffectTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DemoEffects\DemoEffects.csproj">
+      <Project>{971A8760-50EE-4932-99F3-D226081FBD53}</Project>
+      <Name>DemoEffects</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DemoFramework\DemoFramework.csproj">
       <Project>{DBD3FD0B-0B65-4626-BABA-3C46457B1185}</Project>
       <Name>DemoFramework</Name>

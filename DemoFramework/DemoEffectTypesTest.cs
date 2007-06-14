@@ -21,7 +21,7 @@ public class FooEffect : TweakableContainer, IDemoEffect
 {
   protected float start; protected float end;
   public FooEffect(float f1, float f2) { start = f1; end = f2;}
-  public void Step() {} public void Render() {} public void Initialize(IGraphicsFactory graphicsFactory, IDevice device) {} 
+  public void Step() {} public void Render() {} public void Initialize(IGraphicsFactory graphicsFactory, IDevice device, IDemoMixer mixer) {} 
   public float StartTime { get { return start;} set { start = value;} }
   public float EndTime { get { return end;} set { end = value;} }
 }

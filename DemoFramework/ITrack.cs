@@ -13,7 +13,7 @@ namespace Dope.DDXX.DemoFramework
         IDemoPostEffect[] GetPostEffects(float startTime, float endTime);
         IDemoPostEffect[] GetPostEffects(float time);
         void Initialize(IGraphicsFactory graphicsFactory, IDevice device, ITextureFactory textureFactory, 
-            ITextureBuilder textureBuilder, IPostProcessor postProcessor);
+            ITextureBuilder textureBuilder, IDemoMixer mixer, IPostProcessor postProcessor);
         bool IsActive(float p);
         IDemoPostEffect[] PostEffects { get; }
         void Register(IDemoPostEffect postEffect);

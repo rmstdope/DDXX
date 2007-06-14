@@ -60,7 +60,7 @@
 		<Parameter name="BloomScale" float="1.5" />
 		<Parameter name="Exposure" float="1" />
 		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="WhiteCutoff" float="0.1" />
+		<Parameter name="WhiteCutoff" float="0.6799996" />
 		<Parameter name="Luminance" float="0.2" />
 	</PostEffect>
 

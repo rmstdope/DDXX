@@ -9,15 +9,30 @@ using Microsoft.DirectX;
 using Dope.DDXX.Utility;
 using Dope.DDXX.TextureBuilder;
 using Dope.DDXX.MeshBuilder;
+using System.Drawing;
 
 namespace TiVi
 {
     public class TunnelFlight : BaseDemoEffect
     {
+        private struct Brick
+        {
+            public ModelNode Model;
+            public float StartTime;
+            public Brick(ModelNode model, float startTime)
+            {
+                Model = model;
+                StartTime = startTime;
+            }
+        }
+
+        private const int NUM_RINGS = 6;
+        private const int NUM_LIGHTS = 2;
+        private const int NUM_BLOCKS = 24;
         private IScene scene;
         private CameraNode camera;
         private List<PointLightNode> lights = new List<PointLightNode>();
-        private List<ModelNode> boxes = new List<ModelNode>();
+        private List<Brick> bricks = new List<Brick>();
         private ModelNode terrainModel;
 
         public TunnelFlight(float startTime, float endTime)
@@ -36,9 +51,14 @@ namespace TiVi
             TextureFactory.RegisterTexture("noise", TextureBuilder.Generate(madd, 128, 128, 1, Format.A8R8G8B8));
 
             CreateCircles();
-
             CreateLights();
+            //CreateTerrain();
 
+            scene.AmbientColor = new ColorValue(0.4f, 0.4f, 0.4f, 0.4f);
+        }
+
+        private void CreateTerrain()
+        {
             PerlinNoise generator = new PerlinNoise();
             generator.NumOctaves = 10;
             generator.BaseFrequency = 8;
@@ -67,13 +87,11 @@ namespace TiVi
             scene.AddNode(terrainModel);
             terrainModel.WorldState.MoveUp(-8);
             terrainModel.WorldState.MoveForward(25);
-
-            scene.AmbientColor = new ColorValue(0.4f, 0.4f, 0.4f, 0.4f);
         }
 
         private void CreateLights()
         {
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < NUM_LIGHTS; i++)
             {
                 PointLightNode light = new PointLightNode("");
                 light.DiffuseColor = new ColorValue(0.3f + 0.7f * (1 - i), 0.3f + 0.7f * i, 1.0f, 1.0f);
@@ -86,11 +104,11 @@ namespace TiVi
         private void CreateCircles()
         {
             ChamferBoxPrimitive primitive = new ChamferBoxPrimitive();
-            primitive.Length = 2;
-            primitive.Width = 1;
-            primitive.Height = 0.2f;
-            primitive.Fillet = 0.1f;
-            primitive.FilletSegments = 8;
+            primitive.Length = 0.6f;
+            primitive.Width = 0.6f;
+            primitive.Height = 0.1f;
+            primitive.Fillet = 0.05f;
+            primitive.FilletSegments = 4;
             UvMapPlane uvMap = new UvMapPlane();
             uvMap.Input = primitive;
             uvMap.AlignToAxis = 1;
@@ -102,35 +120,53 @@ namespace TiVi
             IModel model = MeshBuilder.CreateModel(uvMap, "Default1");
             EffectHandler effectHandler = new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
                 delegate(int material) { return "Terrain"; }, model);
-            for (int j = 0; j < 8; j++)
+            float t = 0;
+            for (int j = 0; j < NUM_RINGS; j++)
             {
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < NUM_BLOCKS; i++)
                 {
-                    ModelNode box = new ModelNode("Box", model, effectHandler);
-                    scene.AddNode(box);
-                    boxes.Add(box);
+                    ModelNode modelNode = new ModelNode("Brick", model, effectHandler);
+                    scene.AddNode(modelNode);
+                    bricks.Add(new Brick(modelNode, t));
+                    t += 0.03f;
                 }
+                t += 0.08f;
             }
         }
 
 
         public override void Step()
         {
-            for (int i = 0; i < 2; i++)
+            //Mixer.ClearColor = Color.FromArgb(0, Color.White);
+            for (int i = 0; i < NUM_LIGHTS; i++)
                 lights[i].Position = new Vector3(
                     (float)Math.Sin(Time.StepTime * 0.5f + i) * 20,
                     (float)Math.Cos(Time.StepTime * 1.23f + i) * 10 + 10,
                     (float)Math.Sin(Time.StepTime + i) * 10 + 10);
-            for (int j = 0; j < 8; j++)
+
+            for (int j = 0; j < NUM_RINGS; j++)
             {
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < NUM_BLOCKS; i++)
                 {
-                    boxes[j * 10 + i].WorldState.Reset();
-                    boxes[j * 10 + i].WorldState.MoveForward(j * 2);
-                    boxes[j * 10 + i].WorldState.Turn((float)Math.PI / 2);
-                    //boxes[j * 10 + i].WorldState.Roll(Time.StepTime / 1); 
-                    boxes[j * 10 + i].WorldState.Tilt(Time.StepTime / 2 + (float)Math.PI * 2 * i / 10);
-                    boxes[j * 10 + i].WorldState.MoveUp(-4);
+                    ModelNode model = bricks[j * NUM_BLOCKS + i].Model;
+                    float startTime = bricks[j * NUM_BLOCKS + i].StartTime;
+                    const float FALL_TIME = 1.3f;
+                    const float FALL_HEIGHT = 10.0f;
+                    float time = Time.StepTime - StartTime - startTime;
+                    float upAdd = 0;
+                    if (time < FALL_TIME)
+                    {
+                        if (time < 0)
+                            time = 0;
+                        float zeroToOne = (float)Math.Sin(time / FALL_TIME * Math.PI / 2);
+                        upAdd = (1 - zeroToOne) * FALL_HEIGHT;
+                    }
+                    model.WorldState.Reset();
+                    //model.WorldState.MoveForward(2);
+                    model.WorldState.MoveUp(-2 + 0.8f * j + upAdd);
+                    model.WorldState.Tilt((float)Math.PI / 2);
+                    model.WorldState.Roll(Time.StepTime / 2 + (float)Math.PI * 2 * i / NUM_BLOCKS);
+                    model.WorldState.MoveUp(-3.0f);
                 }
             }
             scene.Step();

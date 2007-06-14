@@ -117,10 +117,10 @@ namespace Dope.DDXX.DemoFramework
         }
 
         public void Initialize(IGraphicsFactory graphicsFactory, IDevice device, ITextureFactory textureFactory, 
-            ITextureBuilder textureBuilder, IPostProcessor postProcessor)
+            ITextureBuilder textureBuilder, IDemoMixer mixer, IPostProcessor postProcessor)
         {
             foreach (IDemoEffect effect in effects)
-                effect.Initialize(graphicsFactory, device);
+                effect.Initialize(graphicsFactory, device, mixer);
             foreach (IDemoPostEffect effect in postEffects)
                 effect.Initialize(postProcessor, textureFactory, textureBuilder, device);
         }

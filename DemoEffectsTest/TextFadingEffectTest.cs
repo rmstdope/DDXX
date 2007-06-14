@@ -9,6 +9,7 @@ using System.IO;
 using System.Drawing;
 using Microsoft.DirectX;
 using Dope.DDXX.Utility;
+using Dope.DDXX.DemoFramework;
 
 namespace Dope.DDXX.DemoEffects
 {
@@ -25,6 +26,7 @@ namespace Dope.DDXX.DemoEffects
         private IDevice device;
         private ISprite sprite;
         private IFont font;
+        private IDemoMixer mixer;
 
         private Viewport viewport;
 
@@ -36,6 +38,7 @@ namespace Dope.DDXX.DemoEffects
             device = mockery.NewMock<IDevice>();
             sprite = mockery.NewMock<ISprite>();
             font = mockery.NewMock<IFont>();
+            mixer = mockery.NewMock<IDemoMixer>();
             viewport = new Viewport();
             viewport.Width = VIEWPORT_WIDTH;
             viewport.Height = VIEWPORT_HEIGHT;
@@ -259,7 +262,7 @@ namespace Dope.DDXX.DemoEffects
             textFadingEffect.FontHeight = fontHeight;
             ExpectSprite();
             ExpectFont(fontName, fontHeight);
-            textFadingEffect.Initialize(graphicsFactory, device);
+            textFadingEffect.Initialize(graphicsFactory, device, mixer);
         }
 
         private void ExpectFont(string fontName, int fontHeight)
