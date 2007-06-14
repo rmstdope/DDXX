@@ -23,7 +23,7 @@ namespace Dope.DDXX.Graphics
             device = new Device(adapter, deviceType, renderWindow, behaviorFlags, presentationParameters);
         }
 
-        internal Device DXDevice
+        public Device DXDevice
         {
             get { return device; }
         }

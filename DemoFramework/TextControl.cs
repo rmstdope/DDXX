@@ -70,7 +70,7 @@ namespace Dope.DDXX.DemoFramework
             rectangle = new RectangleF(x, y, width, height);
         }
 
-        internal override void Draw(ISprite sprite, ILine line, IFont font, ITexture whiteTexture)
+        public override void Draw(ISprite sprite, ILine line, IFont font, ITexture whiteTexture)
         {
             Rectangle rect1 = new Rectangle((int)(GetX1()), (int)(GetY1()), (int)(GetWidth()), (int)(GetHeight()));
             Rectangle rect2 = new Rectangle((int)(GetX1()) + ShadowOffset, (int)(GetY1()) + ShadowOffset, (int)(GetWidth()), (int)(GetHeight()));

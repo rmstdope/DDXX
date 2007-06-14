@@ -30,8 +30,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="NMock2, Version=1.0.2313.18049, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="nunit.framework, Version=2.4.1.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -39,24 +37,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Body.cs" />
-    <Compile Include="BodyTest.cs" />
     <Compile Include="BoundingConstraint.cs" />
-    <Compile Include="BoundingConstraintTest.cs" />
     <Compile Include="BoundingSphere.cs" />
-    <Compile Include="BoundingSphereTest.cs" />
     <Compile Include="IBody.cs" />
     <Compile Include="IBoundingObject.cs" />
     <Compile Include="IConstraint.cs" />
     <Compile Include="IPhysicalParticle.cs" />
     <Compile Include="PhysicalParticle.cs" />
-    <Compile Include="PhysicalParticleTest.cs" />
     <Compile Include="PositionConstraint.cs" />
-    <Compile Include="PositionConstraintTest.cs" />
     <Compile Include="StickConstraint.cs" />
-    <Compile Include="StickConstraintTest.cs" />
     <Compile Include="WorldState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WorldStateTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utility\Utility.csproj">

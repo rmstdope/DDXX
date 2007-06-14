@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using Dope.DDXX.Graphics.Skinning;
 using Dope.DDXX.Graphics;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX;

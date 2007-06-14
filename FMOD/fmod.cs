@@ -108,7 +108,7 @@ namespace FMOD
         ERR_HTTP_TIMEOUT,          /* The HTTP request timed out. */
         ERR_INITIALIZATION,        /* FMOD was not initialized correctly to support this function. */
         ERR_INITIALIZED,           /* Cannot call this command after System::init. */
-        ERR_INTERNAL,              /* An error occured that wasnt supposed to.  Contact support. */
+        ERR_public,              /* An error occured that wasnt supposed to.  Contact support. */
         ERR_INVALID_ADDRESS,       /* On Xbox 360, this memory address passed to FMOD must be physical, (ie allocated with XPhysicalAlloc.) */
         ERR_INVALID_FLOAT,         /* Value passed in was a NaN, Inf or denormalized float. */
         ERR_INVALID_HANDLE,        /* An invalid object handle was used. */
@@ -152,7 +152,7 @@ namespace FMOD
         ERR_VERSION,               /* The version number of this file format is not supported. */
         
         ERR_EVENT_FAILED,          /* An Event failed to be retrieved, most likely due to 'just fail' being specified as the max playbacks behaviour. */
-        ERR_EVENT_INTERNAL,        /* An error occured that wasn't supposed to.  See debug log for reason. */
+        ERR_EVENT_public,        /* An error occured that wasn't supposed to.  See debug log for reason. */
         ERR_EVENT_NAMECONFLICT,    /* A category with the same name already exists. */
         ERR_EVENT_NOTFOUND,        /* The requested event, event group, event category or event property could not be found. */
     }
@@ -516,7 +516,7 @@ namespace FMOD
     public enum INITFLAG
     {
         NORMAL                  = 0x00000000,   /* All platforms - Initialize normally */
-        STREAM_FROM_UPDATE      = 0x00000001,   /* All platforms - No stream thread is created internally.  Streams are driven from System::update.  Mainly used with non-realtime outputs. */
+        STREAM_FROM_UPDATE      = 0x00000001,   /* All platforms - No stream thread is created publicly.  Streams are driven from System::update.  Mainly used with non-realtime outputs. */
         _3D_RIGHTHANDED         = 0x00000002,   /* All platforms - FMOD will treat +X as left, +Y as up and +Z as forwards. */
         DISABLESOFTWARE         = 0x00000004,   /* All platforms - Disable software mixer to save memory.  Anything created with FMOD_SOFTWARE will fail and DSP will not work. */
         DSOUND_HRTFNONE         = 0x00000200,   /* Win32 only - for DirectSound output - FMOD_HARDWARE | FMOD_3D buffers use simple stereo panning/doppler/attenuation when 3D hardware acceleration is not present. */
@@ -1139,7 +1139,7 @@ namespace FMOD
         public float Density;           /* [in/out] 0.0   , 100.0 , 100.0  , Value that controls the modal density in the late reverberation decay (xbox only) */
         public uint  Flags;             /* [in/out] REVERB_FLAGS - modifies the behavior of above properties (win32/ps2) */
 
-        #region wrapperinternal
+        #region wrapperpublic
         public REVERB_PROPERTIES(int instance, uint environment, float envSize, float envDiffusion, int room, int roomHF, int roomLF,
                           float decayTime, float decayHFRatio, float decayLFRatio, int reflections, float reflectionsDelay,
                           float reflectionsPanx, float reflectionsPany, float reflectionsPanz, int reverb, float reverbDelay,
@@ -2573,7 +2573,7 @@ namespace FMOD
 
         #endregion
 
-        #region wrapperinternal
+        #region wrapperpublic
         
         private IntPtr systemraw;
 
@@ -2905,7 +2905,7 @@ namespace FMOD
 
         #endregion
 
-        #region wrapperinternal
+        #region wrapperpublic
 
         private IntPtr soundraw;
 
@@ -3424,7 +3424,7 @@ namespace FMOD
         private static extern RESULT FMOD_Channel_GetUserData           (IntPtr channel, ref IntPtr userdata);
         #endregion
         
-        #region wrapperinternal
+        #region wrapperpublic
 
         private IntPtr channelraw;
 
@@ -3748,7 +3748,7 @@ namespace FMOD
 
         #endregion
 
-        #region wrapperinternal
+        #region wrapperpublic
 
         private IntPtr channelgroupraw;
 
@@ -4065,7 +4065,7 @@ namespace FMOD
 
         #endregion
 
-        #region wrapperinternal
+        #region wrapperpublic
 
         private IntPtr dspraw;
 
@@ -4225,7 +4225,7 @@ namespace FMOD
 
         #endregion
 
-        #region wrapperinternal
+        #region wrapperpublic
 
         private IntPtr geometryraw;
 

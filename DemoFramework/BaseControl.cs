@@ -20,14 +20,14 @@ namespace Dope.DDXX.DemoFramework
                 parent.Children.Add(this);
         }
 
-        internal void DrawControl(ISprite sprite, ILine line, IFont font, ITexture whiteTexture)
+        public void DrawControl(ISprite sprite, ILine line, IFont font, ITexture whiteTexture)
         {
             Draw(sprite, line, font, whiteTexture);
             foreach (BaseControl child in Children)
                 child.DrawControl(sprite, line, font, whiteTexture);
         }
 
-        internal abstract void Draw(ISprite sprite, ILine line, IFont font, ITexture whiteTexture);
+        public abstract void Draw(ISprite sprite, ILine line, IFont font, ITexture whiteTexture);
 
         protected float GetParentHeight()
         {

@@ -46,7 +46,7 @@ namespace FMOD
                 case FMOD.RESULT.ERR_HTTP_TIMEOUT:           return "The HTTP request timed out. ";
                 case FMOD.RESULT.ERR_INITIALIZATION:         return "FMOD was not initialized correctly to support this function. ";
                 case FMOD.RESULT.ERR_INITIALIZED:            return "Cannot call this command after System::init. ";
-                case FMOD.RESULT.ERR_INTERNAL:               return "An error occured that wasnt supposed to.  Contact support. ";
+                case FMOD.RESULT.ERR_public:               return "An error occured that wasnt supposed to.  Contact support. ";
                 case FMOD.RESULT.ERR_INVALID_ADDRESS:        return "On Xbox 360, this memory address passed to FMOD must be physical, (ie allocated with XPhysicalAlloc.)";
                 case FMOD.RESULT.ERR_INVALID_FLOAT:          return "Value passed in was a NaN, Inf or denormalized float.";
                 case FMOD.RESULT.ERR_INVALID_HANDLE:         return "An invalid object handle was used. ";
@@ -90,7 +90,7 @@ namespace FMOD
                 case FMOD.RESULT.ERR_VERSION:                return "The version number of this file format is not supported. ";
 
                 case FMOD.RESULT.ERR_EVENT_FAILED:           return "An Event failed to be retrieved, most likely due to 'just fail' being specified as the max playbacks behaviour.";
-                case FMOD.RESULT.ERR_EVENT_INTERNAL:         return "An error occured that wasn't supposed to.  See debug log for reason.";
+                case FMOD.RESULT.ERR_EVENT_public:         return "An error occured that wasn't supposed to.  See debug log for reason.";
                 case FMOD.RESULT.ERR_EVENT_NAMECONFLICT:     return "A category with the same name already exists.";
                 case FMOD.RESULT.ERR_EVENT_NOTFOUND:         return "The requested event, event group, event category or event property could not be found.";
                 default :                                    return "Unknown error.";

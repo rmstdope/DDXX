@@ -20,7 +20,7 @@ namespace Dope.DDXX.DemoFramework
             Color = color;
         }
         
-        internal override void Draw(ISprite sprite, ILine line, IFont font, ITexture whiteTexture)
+        public override void Draw(ISprite sprite, ILine line, IFont font, ITexture whiteTexture)
         {
             if (Alpha == 0.0f)
                 return;

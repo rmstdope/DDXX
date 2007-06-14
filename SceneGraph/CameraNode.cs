@@ -17,23 +17,23 @@ namespace Dope.DDXX.SceneGraph
         {
         }
 
-        internal object GetFOV()
+        public object GetFOV()
         {
             return fov;
         }
 
-        internal void SetFOV(float f)
+        public void SetFOV(float f)
         {
             fov = f;
         }
 
-        internal void SetClippingPlanes(float near, float far)
+        public void SetClippingPlanes(float near, float far)
         {
             nearZ = near;
             farZ = far;
         }
 
-        internal void SetAspect(float aspect)
+        public void SetAspect(float aspect)
         {
             aspectRatio = aspect;
         }

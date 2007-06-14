@@ -5,9 +5,9 @@ using Microsoft.DirectX;
 
 namespace Dope.DDXX.ParticleSystems
 {
-    internal struct VertexColorPoint
+    public struct VertexColorPoint
     {
-        internal VertexColorPoint(Vector3 position, float size, int color)
+        public VertexColorPoint(Vector3 position, float size, int color)
         {
             Position = position;
             Size = size;

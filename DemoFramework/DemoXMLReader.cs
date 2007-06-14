@@ -375,7 +375,7 @@ namespace Dope.DDXX.DemoFramework
                             parameters.Add(ParseBool(attr.Value));
                             break;
                         default:
-                            throw new DDXXException("Unknown internal parameter type");
+                            throw new DDXXException("Unknown public parameter type");
                     }
                 }
                 else
@@ -440,7 +440,7 @@ namespace Dope.DDXX.DemoFramework
                     effectBuilder.AddBoolParameter(parameterName, ParseBool(parameterValue));
                     break;
                 default:
-                    throw new DDXXException("Unknown internal parameter type");
+                    throw new DDXXException("Unknown public parameter type");
             }
         }
 

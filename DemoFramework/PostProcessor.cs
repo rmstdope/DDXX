@@ -220,7 +220,7 @@ namespace Dope.DDXX.DemoFramework
                 return textures[(int)source].scale;
         }
 
-        internal void DebugWriteAllTextures()
+        public void DebugWriteAllTextures()
         {
             TextureLoader.Save("INPUT.jpg", ImageFileFormat.Jpg, ((TextureAdapter)inputTexture).TextureDX);
             TextureLoader.Save("FULLSCREEN_1.jpg", ImageFileFormat.Jpg, ((TextureAdapter)textures[(int)TextureID.FULLSIZE_TEXTURE_1].Texture).TextureDX);

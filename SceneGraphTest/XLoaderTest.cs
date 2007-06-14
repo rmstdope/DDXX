@@ -4,7 +4,6 @@ using System.Text;
 using NUnit.Framework;
 using Dope.DDXX.Graphics;
 using NMock2;
-using Dope.DDXX.Graphics.Skinning;
 using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.SceneGraph

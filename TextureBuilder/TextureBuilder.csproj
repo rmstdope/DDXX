@@ -44,7 +44,6 @@
     <Compile Include="ColorModulation.cs" />
     <Compile Include="FactorBlend.cs" />
     <Compile Include="Generator.cs" />
-    <Compile Include="GeneratorTest.cs" />
     <Compile Include="IGenerator.cs" />
     <Compile Include="ITextureBuilder.cs" />
     <Compile Include="Madd.cs" />
@@ -55,7 +54,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoundedRectangle.cs" />
     <Compile Include="TextureBuilder.cs" />
-    <Compile Include="TextureBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Graphics\Graphics.csproj">

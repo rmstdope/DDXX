@@ -5,7 +5,7 @@ using Dope.DDXX.Utility;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 
-namespace Dope.DDXX.Graphics.Skinning
+namespace Dope.DDXX.Graphics
 {
     public class SkinnedModel : ModelBase
     {

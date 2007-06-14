@@ -31,7 +31,7 @@ namespace Dope.DDXX.MeshBuilder
             }
         }
 
-        internal ModelMaterial GetMaterial(string name)
+        public ModelMaterial GetMaterial(string name)
         {
             if (materials.ContainsKey(name))
                 return materials[name];

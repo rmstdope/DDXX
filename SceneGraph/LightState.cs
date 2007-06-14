@@ -17,7 +17,7 @@ namespace Dope.DDXX.SceneGraph
         private ColorValue[] diffuseList;
         private ColorValue[] specularList;
 
-        internal LightState()
+        public LightState()
         {
             positionList = new Vector4[MaxNumLights];
             directionList = new Vector4[MaxNumLights];
@@ -25,12 +25,12 @@ namespace Dope.DDXX.SceneGraph
             specularList = new ColorValue[MaxNumLights];
         }
 
-        internal int NumLights
+        public int NumLights
         {
             get { return numLights; }
         }
 
-        internal Vector4[] Positions
+        public Vector4[] Positions
         {
             get 
             {
@@ -40,7 +40,7 @@ namespace Dope.DDXX.SceneGraph
             }
         }
 
-        internal Vector4[] Directions
+        public Vector4[] Directions
         {
             get
             {
@@ -50,7 +50,7 @@ namespace Dope.DDXX.SceneGraph
             }
         }
 
-        internal ColorValue[] DiffuseColor
+        public ColorValue[] DiffuseColor
         {
             get
             {
@@ -60,7 +60,7 @@ namespace Dope.DDXX.SceneGraph
             }
         }
 
-        internal ColorValue[] SpecularColor
+        public ColorValue[] SpecularColor
         {
             get
             {
@@ -70,7 +70,7 @@ namespace Dope.DDXX.SceneGraph
             }
         }
 
-        internal void NewState(Vector3 position, Vector3 direction, ColorValue diffuse, ColorValue specular)
+        public void NewState(Vector3 position, Vector3 direction, ColorValue diffuse, ColorValue specular)
         {
             if (numLights == MaxNumLights)
                 throw new DDXXException("Too many lights in the scene. Maximum number is " + MaxNumLights);

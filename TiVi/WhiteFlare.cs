@@ -10,7 +10,6 @@ using Dope.DDXX.Physics;
 using Dope.DDXX.SceneGraph;
 using Dope.DDXX.Utility;
 using Dope.DDXX.ParticleSystems;
-using Dope.DDXX.Graphics.Skinning;
 using Dope.DDXX.MeshBuilder;
 
 namespace EngineTest

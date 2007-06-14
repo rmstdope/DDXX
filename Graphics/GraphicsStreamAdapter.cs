@@ -15,7 +15,7 @@ namespace Dope.DDXX.Graphics
             this.graphicsStream = graphicsStream;
         }
 
-        internal GraphicsStream DXGraphicsStream
+        public GraphicsStream DXGraphicsStream
         { 
             get { return graphicsStream; } 
         }

@@ -10,7 +10,7 @@ using Dope.DDXX.Utility;
 using System.Drawing;
 using NMock2.Actions;
 
-namespace Dope.DDXX.Graphics.Skinning
+namespace Dope.DDXX.Graphics
 {
     [TestFixture]
     public class SkinnedModelTest

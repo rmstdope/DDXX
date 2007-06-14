@@ -5,7 +5,7 @@ using NUnit.Framework;
 using Dope.DDXX.SceneGraph;
 using Dope.DDXX.Utility;
 using Microsoft.DirectX;
-using Dope.DDXX.Graphics.Skinning;
+using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.SceneGraph
 {

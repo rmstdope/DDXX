@@ -7,8 +7,8 @@
     <ProjectGuid>{1B05E2AD-B994-4988-81D5-9AB91ECEF67E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DemoFramework</RootNamespace>
-    <AssemblyName>DemoFrameworkTest</AssemblyName>
+    <RootNamespace>Dope.DDXX.DemoFramework</RootNamespace>
+    <AssemblyName>Dope.DDXX.DemoFrameworkTest</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -28,12 +28,70 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2911.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="Microsoft.DirectX.DirectInput, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="NMock2, Version=1.0.2313.18049, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="nunit.framework, Version=2.4.1.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseDemoEffectTest.cs" />
+    <Compile Include="BaseDemoPostEffectTest.cs" />
+    <Compile Include="DemoEffectTypesTest.cs" />
+    <Compile Include="DemoExecuterTest.cs" />
+    <Compile Include="DemoMockTest.cs" />
+    <Compile Include="DemoTweakerDemoTest.cs" />
+    <Compile Include="DemoTweakerEffectTest.cs" />
+    <Compile Include="DemoTweakerMainTest.cs" />
+    <Compile Include="DemoTweakerTrackTest.cs" />
+    <Compile Include="DemoWindowTest.cs" />
+    <Compile Include="DemoXMLReaderTest.cs" />
+    <Compile Include="PostProcessorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SetupLogicTest.cs" />
+    <Compile Include="TrackTest.cs" />
+    <Compile Include="TweakableContainerTest.cs" />
+    <Compile Include="UserInterfaceTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DemoFramework\DemoFramework.csproj">
+      <Project>{DBD3FD0B-0B65-4626-BABA-3C46457B1185}</Project>
+      <Name>DemoFramework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FMOD\FMOD.csproj">
+      <Project>{1A7A1C62-87D6-4798-BBBD-8472DC2D755B}</Project>
+      <Name>FMOD</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GraphicsTest\GraphicsTest.csproj">
+      <Project>{72977C86-9996-46A8-B6F4-468133639BE9}</Project>
+      <Name>GraphicsTest</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Graphics\Graphics.csproj">
+      <Project>{B64087ED-595E-4597-84D8-D273FF00B2DA}</Project>
+      <Name>Graphics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Input\Input.csproj">
+      <Project>{E2280509-C330-4684-90FD-336B8CD4D7EF}</Project>
+      <Name>Input</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sound\Sound.csproj">
+      <Project>{FFA67C42-A1E3-4C9F-887A-E5DEB52DDEB4}</Project>
+      <Name>Sound</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TextureBuilder\TextureBuilder.csproj">
+      <Project>{712F1F16-E7BC-4D96-8B1A-AEA31365FD95}</Project>
+      <Name>TextureBuilder</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utility\Utility.csproj">
+      <Project>{31D76405-2DD3-436A-BE65-963DE822511E}</Project>
+      <Name>Utility</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

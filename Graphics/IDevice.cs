@@ -1355,7 +1355,7 @@ namespace Dope.DDXX.Graphics
         //   cursorBitmap:
         //     A Microsoft.DirectX.Direct3D.Surface object. This parameter must be an 8888
         //     ARGB surface (format Microsoft.DirectX.Direct3D.Format.A8R8G8B8). The contents
-        //     of this surface are copied and potentially converted into an internal buffer
+        //     of this surface are copied and potentially converted into an public buffer
         //     from which the cursor is displayed. The dimensions of this surface must be
         //     less than the dimensions of the display mode, and must be a power of two
         //     in each direction, although not necessarily the same power of two. The alpha

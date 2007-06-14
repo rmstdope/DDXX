@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
-using Dope.DDXX.Graphics.Skinning;
 using Microsoft.DirectX;
 
 namespace Dope.DDXX.SceneGraph

@@ -7,7 +7,6 @@ using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX;
 using Dope.DDXX.SceneGraph;
 using Dope.DDXX.Utility;
-using Dope.DDXX.Graphics.Skinning;
 using System.Drawing;
 using Dope.DDXX.ParticleSystems;
 

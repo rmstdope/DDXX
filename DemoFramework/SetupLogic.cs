@@ -145,7 +145,7 @@ namespace Dope.DDXX.DemoFramework
         }
 
 
-        internal void ResolutionChanged()
+        public void ResolutionChanged()
         {
             string[] t = dialog.SelectedResolution.Split('x');
             DisplayMode[] modes = driver.GetDisplayModes(0, delegate(DisplayMode mode) { if (mode.Width.ToString() == t[0] && mode.Height.ToString() == t[1]) return true; else return false; });
@@ -177,7 +177,7 @@ namespace Dope.DDXX.DemoFramework
                 dialog.Checked16Bit = true;
         }
 
-        internal void Initialize()
+        public void Initialize()
         {
             DisplayMode[] modes;
 

@@ -33,8 +33,6 @@
     <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2911.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.DirectX.DirectInput, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="NMock2, Version=1.0.2313.18049, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="nunit.framework, Version=2.4.1.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -44,29 +42,19 @@
   <ItemGroup>
     <Compile Include="BaseControl.cs" />
     <Compile Include="BaseDemoEffect.cs" />
-    <Compile Include="BaseDemoEffectTest.cs" />
     <Compile Include="BaseDemoPostEffect.cs" />
-    <Compile Include="BaseDemoPostEffectTest.cs" />
     <Compile Include="BoxControl.cs" />
     <Compile Include="DemoEffectTypes.cs" />
-    <Compile Include="DemoEffectTypesTest.cs" />
     <Compile Include="DemoExecuter.cs" />
-    <Compile Include="DemoExecuterTest.cs" />
     <Compile Include="DemoFactory.cs" />
-    <Compile Include="DemoMockTest.cs" />
     <Compile Include="DemoTweakerBase.cs" />
     <Compile Include="DemoTweakerDemo.cs" />
-    <Compile Include="DemoTweakerDemoTest.cs" />
     <Compile Include="DemoTweakerEffect.cs" />
-    <Compile Include="DemoTweakerEffectTest.cs" />
     <Compile Include="DemoTweakerMain.cs" />
-    <Compile Include="DemoTweakerMainTest.cs" />
     <Compile Include="DemoTweakerTrack.cs" />
-    <Compile Include="DemoTweakerTrackTest.cs" />
     <Compile Include="DemoWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DemoWindowTest.cs" />
     <Compile Include="IDemoEffect.cs" />
     <Compile Include="IDemoEffectBuilder.cs" />
     <Compile Include="IDemoEffectTypes.cs" />
@@ -86,7 +74,6 @@
     <Compile Include="IUserInterface.cs" />
     <Compile Include="LineControl.cs" />
     <Compile Include="PostProcessor.cs" />
-    <Compile Include="PostProcessorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -100,17 +87,12 @@
       <DependentUpon>SetupForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SetupLogic.cs" />
-    <Compile Include="SetupLogicTest.cs" />
     <Compile Include="TextControl.cs" />
     <Compile Include="Track.cs" />
-    <Compile Include="TrackTest.cs" />
     <Compile Include="DemoXMLReader.cs" />
-    <Compile Include="DemoXMLReaderTest.cs" />
     <Compile Include="TweakableContainer.cs" />
-    <Compile Include="TweakableContainerTest.cs" />
     <Compile Include="TweakerSettings.cs" />
     <Compile Include="UserInterface.cs" />
-    <Compile Include="UserInterfaceTest.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>

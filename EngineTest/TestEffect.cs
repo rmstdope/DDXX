@@ -10,7 +10,7 @@ using Dope.DDXX.Physics;
 using Dope.DDXX.SceneGraph;
 using Dope.DDXX.Utility;
 using Dope.DDXX.ParticleSystems;
-using Dope.DDXX.Graphics.Skinning;
+using Dope.DDXX.Graphics;
 using Dope.DDXX.MeshBuilder;
 using Dope.DDXX.TextureBuilder;
 

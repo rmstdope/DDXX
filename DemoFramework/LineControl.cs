@@ -19,7 +19,7 @@ namespace Dope.DDXX.DemoFramework
             Color = color;
         }
         
-        internal override void Draw(ISprite sprite, ILine line, IFont font, ITexture whiteTexture)
+        public override void Draw(ISprite sprite, ILine line, IFont font, ITexture whiteTexture)
         {
             line.Begin();
             line.Draw(new Vector2[] { new Vector2(GetX1() + 1, GetY1() + 1), 

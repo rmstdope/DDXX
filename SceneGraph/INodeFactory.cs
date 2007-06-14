@@ -1,5 +1,4 @@
 ﻿using System;
-using Dope.DDXX.Graphics.Skinning;
 using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.SceneGraph

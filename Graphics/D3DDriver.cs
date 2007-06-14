@@ -7,7 +7,7 @@ using System.Data;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Utility;
-using Dope.DDXX.Graphics.Skinning;
+using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.Graphics
 {

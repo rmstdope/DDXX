@@ -31,7 +31,7 @@ namespace Dope.DDXX.Sound
             return system.init(maxchannels, flags, extradata);
         }
 
-        internal FMOD.System GetSystem()
+        public FMOD.System GetSystem()
         {
             return system;
         }

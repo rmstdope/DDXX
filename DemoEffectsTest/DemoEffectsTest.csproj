@@ -7,8 +7,8 @@
     <ProjectGuid>{99DE9411-D541-4A74-9E16-C522EC103507}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DemoEffects</RootNamespace>
-    <AssemblyName>DemoEffectsTest</AssemblyName>
+    <RootNamespace>Dope.DDXX.DemoEffects</RootNamespace>
+    <AssemblyName>Dope.DDXX.DemoEffectsTest</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -60,6 +60,10 @@
     <ProjectReference Include="..\DemoFramework\DemoFramework.csproj">
       <Project>{DBD3FD0B-0B65-4626-BABA-3C46457B1185}</Project>
       <Name>DemoFramework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GraphicsTest\GraphicsTest.csproj">
+      <Project>{72977C86-9996-46A8-B6F4-468133639BE9}</Project>
+      <Name>GraphicsTest</Name>
     </ProjectReference>
     <ProjectReference Include="..\Graphics\Graphics.csproj">
       <Project>{B64087ED-595E-4597-84D8-D273FF00B2DA}</Project>

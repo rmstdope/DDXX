@@ -43,7 +43,6 @@
     </Compile>
     <Compile Include="IInputFactory.cs" />
     <Compile Include="InputDriver.cs" />
-    <Compile Include="InputDriverTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -205,12 +205,12 @@ namespace Dope.DDXX.Graphics
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public Dope.DDXX.Graphics.Skinning.IAnimationRootFrame SkinnedMeshFromFile(IDevice device, string fileName, Microsoft.DirectX.Direct3D.AllocateHierarchy allocHierarchy)
+        public Dope.DDXX.Graphics.IAnimationRootFrame SkinnedMeshFromFile(IDevice device, string fileName, Microsoft.DirectX.Direct3D.AllocateHierarchy allocHierarchy)
         {
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public Dope.DDXX.Graphics.Skinning.IAnimationRootFrame LoadHierarchy(string fileName, IDevice device, Microsoft.DirectX.Direct3D.AllocateHierarchy allocHierarchy, Microsoft.DirectX.Direct3D.LoadUserData loadUserData)
+        public Dope.DDXX.Graphics.IAnimationRootFrame LoadHierarchy(string fileName, IDevice device, Microsoft.DirectX.Direct3D.AllocateHierarchy allocHierarchy, Microsoft.DirectX.Direct3D.LoadUserData loadUserData)
         {
             throw new Exception("The method or operation is not implemented.");
         }

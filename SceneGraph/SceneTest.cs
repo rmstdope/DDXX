@@ -8,7 +8,6 @@ using NUnit.Framework;
 using NMock2;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
-using Dope.DDXX.Graphics.Skinning;
 
 namespace Dope.DDXX.SceneGraph
 {

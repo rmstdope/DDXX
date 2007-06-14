@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX;
 
-namespace Dope.DDXX.Graphics.Skinning
+namespace Dope.DDXX.Graphics
 {
     public interface ISkinInformation : IDisposable
     {

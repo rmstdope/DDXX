@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX;
 using Dope.DDXX.Physics;
-using Dope.DDXX.Graphics.Skinning;
+using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.SceneGraph
 {

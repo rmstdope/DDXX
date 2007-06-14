@@ -167,7 +167,7 @@ namespace Dope.DDXX.DemoFramework
             tracks[track].Register(postEffect);
         }
 
-        internal void Step()
+        public void Step()
         {
             Time.Step();
 
@@ -217,7 +217,7 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        internal void Render()
+        public void Render()
         {
             RenderActiveTrack();
 

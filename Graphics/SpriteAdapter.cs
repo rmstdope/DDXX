@@ -11,7 +11,7 @@ namespace Dope.DDXX.Graphics
     {
         private Sprite sprite;
 
-        internal SpriteAdapter(Device device)
+        public SpriteAdapter(Device device)
         {
             this.sprite = new Sprite(device);
         }

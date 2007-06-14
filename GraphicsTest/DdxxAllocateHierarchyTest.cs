@@ -4,7 +4,7 @@ using System.Text;
 using NUnit.Framework;
 using Microsoft.DirectX.Direct3D;
 
-namespace Dope.DDXX.Graphics.Skinning
+namespace Dope.DDXX.Graphics
 {
     [TestFixture]
     public class DdxxAllocateHierarchyTest
