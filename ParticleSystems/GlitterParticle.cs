@@ -1,28 +1,29 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Dope.DDXX.SceneGraph;
+using Microsoft.DirectX.Direct3D;
+using Dope.DDXX.Graphics;
 using Microsoft.DirectX;
 using System.Drawing;
-using Dope.DDXX.SceneGraph;
-using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
-using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.ParticleSystems
 {
-    public class FallingStarParticleSpawner : ISystemParticleSpawner
+    public class GlitterParticleSpawner : ISystemParticleSpawner
     {
         private VertexDeclaration vertexDeclaration;
         private int maxNumParticles;
 
-        public FallingStarParticleSpawner(IGraphicsFactory graphicsFactory, IDevice device, int maxNumParticles)
+        public GlitterParticleSpawner(IGraphicsFactory graphicsFactory, IDevice device, int maxNumParticles)
         {
             this.maxNumParticles = maxNumParticles;
             VertexElement[] elements = new VertexElement[]
             {
                 new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
-                new VertexElement(0, 12, DeclarationType.Float1, DeclarationMethod.Default, DeclarationUsage.PointSize, 0),
-                new VertexElement(0, 16, DeclarationType.Color, DeclarationMethod.Default, DeclarationUsage.Color, 0),
+                new VertexElement(0, 12, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Normal, 0),
+                new VertexElement(0, 24, DeclarationType.Float1, DeclarationMethod.Default, DeclarationUsage.PointSize, 0),
+                new VertexElement(0, 28, DeclarationType.Color, DeclarationMethod.Default, DeclarationUsage.Color, 0),
                 VertexElement.VertexDeclarationEnd 
             };
             vertexDeclaration = graphicsFactory.CreateVertexDeclaration(device, elements);
@@ -45,12 +46,13 @@ namespace Dope.DDXX.ParticleSystems
 
         public ISystemParticle Spawn()
         {
-            return new FallingStarParticle(100.0f);
+            GlitterParticle particle = new GlitterParticle();
+            return particle;
         }
 
         public Type VertexType
         {
-            get { return typeof(VertexColorPoint); }
+            get { return typeof(VertexNormalColorPoint); }
         }
 
         public VertexDeclaration VertexDeclaration
@@ -75,23 +77,20 @@ namespace Dope.DDXX.ParticleSystems
 
         public string GetTechniqueName(bool textured)
         {
-            if (textured)
-                return "PointSprite";
-            return "PointSpriteNoTexture";
+            return "Glitter";
         }
     }
 
-    public class FallingStarParticle : SystemParticle
+    public class GlitterParticle : SystemParticle
     {
-        private float radius;
-        public Vector3 Velocity;
-        public FallingStarParticle(float radius)
-            : base(FallingStarParticle.RandomPositionInSphere(radius), Color.Red, Rand.Float(5) + 5)
+        private Vector3 velocity;
+        private float rotationSpeed;
+        private const float Radius = 5;
+
+        public GlitterParticle()
+            : base(new Vector3(), Color.FromArgb(255, Color.White), 1)
         {
-            this.radius = radius;
-            Velocity = new Vector3(Rand.Float(0, 0.3), -1, Rand.Float(0, 0.3));
-            Velocity.Normalize();
-            Velocity *= 50;
+            Spawn();
         }
 
         private static Vector3 RandomPositionInSphere(float radius)
@@ -106,27 +105,32 @@ namespace Dope.DDXX.ParticleSystems
             return pos;
         }
 
-        private void Respawn()
-        {
-            Position = FallingStarParticle.RandomPositionInSphere(radius);
-            Color = Color.Red;
-            Size = Rand.Float(5) + 5;
-            Velocity = new Vector3(Rand.Float(0, 0.3), -1, Rand.Float(0, 0.3));
-            Velocity.Normalize();
-            Velocity *= 50;
-        }
-
         public override void StepAndWrite(IGraphicsStream stream)
         {
-            VertexColorPoint vertex;
+            VertexNormalColorPoint vertex;
 
-            Position += Velocity * Time.DeltaTime;
-            if (Position.Length() > radius)
-                Respawn();
+            Step(Time.DeltaTime);
             vertex.Position = Position;
+            vertex.Normal = new Vector3();
             vertex.Size = Size;
             vertex.Color = Color.ToArgb();
+            vertex.Normal = new Vector3(0, 0, (float)Math.Cos(rotationSpeed * (Time.StepTime + 10)));
             stream.Write(vertex);
+        }
+
+        public void Step(float time)
+        {
+            Position += velocity * time;
+            if (Position.Length() > Radius)
+                Spawn();
+        }
+
+        private void Spawn()
+        {
+            Position = RandomPositionInSphere(Radius);
+            velocity = new Vector3(0, -Rand.Float(0, 0.5) - 0.5f, 0);
+            Size = Rand.Float(0.01, 0.01) * 6;
+            rotationSpeed = Rand.Float(5, 10);
         }
     }
 }

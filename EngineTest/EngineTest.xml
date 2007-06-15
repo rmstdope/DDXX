@@ -11,7 +11,7 @@
 	  <Parameter name="Filename" string="" />
 	</PostEffect-->
 	<Generator name="noise" class="PerlinNoise">
-		<Parameter name="BaseFrequency" int="64" />		   
+		<Parameter name="BaseFrequency" int="64" />
     </Generator>
 	<Texture name="noise" generator="noise"></Texture>
 	<!--Effect name="SpinningBackgroundEffect" track="0" startTime="0" endTime="299">

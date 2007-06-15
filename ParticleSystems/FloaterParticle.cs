@@ -87,6 +87,13 @@ namespace Dope.DDXX.ParticleSystems
         {
             return false;
         }
+
+        public string GetTechniqueName(bool textured)
+        {
+            if (textured)
+                return "PointSprite";
+            return "PointSpriteNoTexture";
+        }
     }
 
     public class FloaterParticle : SystemParticle

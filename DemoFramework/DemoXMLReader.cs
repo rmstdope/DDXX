@@ -138,8 +138,18 @@ namespace Dope.DDXX.DemoFramework
 
         private void ReadTexture(XmlNode node)
         {
+            int width = 128;
+            int height = 128;
+            int mipLevels = 0;
+            if (node.Attributes.GetNamedItem("width") != null)
+                width = int.Parse(node.Attributes.GetNamedItem("width").Value);
+            if (node.Attributes.GetNamedItem("height") != null)
+                height = int.Parse(node.Attributes.GetNamedItem("height").Value);
+            if (node.Attributes.GetNamedItem("miplevels") != null)
+                mipLevels = int.Parse(node.Attributes.GetNamedItem("miplevels").Value);
+
             effectBuilder.AddTexture(node.Attributes.GetNamedItem("name").Value,
-                node.Attributes.GetNamedItem("generator").Value);
+                node.Attributes.GetNamedItem("generator").Value, width, height, mipLevels);
         }
 
         private void HandleDemoAttributes(XmlDocument doc, XmlNode demoNode)

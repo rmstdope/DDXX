@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="FallingSystemParticle.cs" />
     <Compile Include="FloaterParticle.cs" />
+    <Compile Include="GlitterParticle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpiralParticle.cs" />
     <Compile Include="Vertex.cs" />

@@ -16,5 +16,6 @@ namespace Dope.DDXX.SceneGraph
         int NumInitialSpawns { get; }
         int MaxNumParticles { get; }
         bool ShouldSpawn();
+        string GetTechniqueName(bool textured);
     }
 }

@@ -55,6 +55,8 @@ namespace Dope.DDXX.SceneGraph
             ExpectEffect();
             ExpectVertexBuffer(5, typeof(float));
             ExpectSpawner(2, 5, typeof(float));
+            Expect.Once.On(spawner).Method("GetTechniqueName").
+                With(false).Will(Return.Value("WithoutTexture"));
             system.Initialize(spawner, device, graphicsFactory, effectFactory, null);
         }
 
@@ -64,6 +66,8 @@ namespace Dope.DDXX.SceneGraph
             ExpectEffect();
             ExpectVertexBuffer(20, typeof(int));
             ExpectSpawner(20, 20, typeof(int));
+            Expect.Once.On(spawner).Method("GetTechniqueName").
+                With(true).Will(Return.Value("WithTexture"));
             system.Initialize(spawner, device, graphicsFactory, effectFactory, texture);
         }
 

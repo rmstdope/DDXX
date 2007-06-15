@@ -33,7 +33,7 @@ namespace Dope.DDXX.SceneGraph
             : base(name)
         {
             Material dxMaterial = new Material();
-            dxMaterial.Ambient = Color.White;
+            dxMaterial.Ambient = Color.Black;
             material = new ModelMaterial(dxMaterial);
         }
 
@@ -62,13 +62,8 @@ namespace Dope.DDXX.SceneGraph
 
             vertexBuffer = graphicsFactory.CreateVertexBuffer(particleSpawner.VertexType, particleSpawner.MaxNumParticles, device, Usage.WriteOnly | Usage.Dynamic, VertexFormats.None, Pool.Default);
 
-            if (texture == null)
-                effectHandler.Techniques = new EffectHandle[] { EffectHandle.FromString("PointSpriteNoTexture") };
-            else
-            {
-                material.DiffuseTexture = texture;
-                effectHandler.Techniques = new EffectHandle[] { EffectHandle.FromString("PointSprite") };
-            }
+            material.DiffuseTexture = texture;
+            effectHandler.Techniques = new EffectHandle[] { EffectHandle.FromString(spawner.GetTechniqueName(texture != null)) };
 
             for (int i = 0; i < particleSpawner.NumInitialSpawns; i++)
                 particles.Add(particleSpawner.Spawn());

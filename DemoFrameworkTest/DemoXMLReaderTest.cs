@@ -64,10 +64,16 @@ namespace Dope.DDXX.DemoFramework
             {
                 public string name;
                 public string generator;
-                public Texture(string name, string generator)
+                public int width;
+                public int height;
+                public int mipLevels;
+                public Texture(string name, string generator, int width, int height, int mipLevels)
                 {
                     this.name = name;
                     this.generator = generator;
+                    this.width = width;
+                    this.height = height;
+                    this.mipLevels = mipLevels;
                 }
             }
             private Queue<Effect> effects = new Queue<Effect>();
@@ -113,9 +119,9 @@ namespace Dope.DDXX.DemoFramework
                 generators.Enqueue(newGenerator);
             }
 
-            public void AddTexture(string name, string generator)
+            public void AddTexture(string name, string generator, int width, int height, int mipLevels)
             {
-                textures.Enqueue(new Texture(name, generator));
+                textures.Enqueue(new Texture(name, generator, width, height, mipLevels));
             }
 
             private void AddParameter(string name, Parameter value)
@@ -377,6 +383,37 @@ namespace Dope.DDXX.DemoFramework
                 {
                     if (currentTexture != null)
                         return currentTexture.generator;
+                    else
+                        throw new InvalidOperationException("No current texture");
+                }
+            }
+
+            public int TextureWidth
+            {
+                get
+                {
+                    if (currentTexture != null)
+                        return currentTexture.width;
+                    else
+                        throw new InvalidOperationException("No current texture");
+                }
+            }
+            public int TextureHeight
+            {
+                get
+                {
+                    if (currentTexture != null)
+                        return currentTexture.height;
+                    else
+                        throw new InvalidOperationException("No current texture");
+                }
+            }
+            public int TextureMipLevels
+            {
+                get
+                {
+                    if (currentTexture != null)
+                        return currentTexture.mipLevels;
                     else
                         throw new InvalidOperationException("No current texture");
                 }
@@ -964,7 +1001,7 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
-        public void TestOneTexture()
+        public void TestOneTextureDefaultValues()
         {
             string textureXml =
                 @"<Demo><Texture name=""tex1"" generator=""noiser""/></Demo>";
@@ -972,6 +1009,24 @@ namespace Dope.DDXX.DemoFramework
             Assert.IsTrue(effectBuilder.NextTexture());
             Assert.AreEqual("tex1", effectBuilder.TextureName);
             Assert.AreEqual("noiser", effectBuilder.TextureGenerator);
+            Assert.AreEqual(128, effectBuilder.TextureWidth);
+            Assert.AreEqual(128, effectBuilder.TextureHeight);
+            Assert.AreEqual(0, effectBuilder.TextureMipLevels);
+            Assert.IsFalse(effectBuilder.NextTexture());
+        }
+
+        [Test]
+        public void TestOneTextureNotDefaultValues()
+        {
+            string textureXml =
+                @"<Demo><Texture name=""tex1"" generator=""noiser"" width=""1"" height=""666"" miplevels=""7""/></Demo>";
+            ReadXML(textureXml);
+            Assert.IsTrue(effectBuilder.NextTexture());
+            Assert.AreEqual("tex1", effectBuilder.TextureName);
+            Assert.AreEqual("noiser", effectBuilder.TextureGenerator);
+            Assert.AreEqual(1, effectBuilder.TextureWidth);
+            Assert.AreEqual(666, effectBuilder.TextureHeight);
+            Assert.AreEqual(7, effectBuilder.TextureMipLevels);
             Assert.IsFalse(effectBuilder.NextTexture());
         }
 

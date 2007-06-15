@@ -508,10 +508,10 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(effectTypes).Method("CreateGenerator").With("className").Will(Return.Value(generator1));
             executer.AddGenerator("genName", "className");
             Expect.Once.On(textureBuilder).Method("Generate").
-                With(generator1, 256, 256, 1, Format.A8R8G8B8).Will(Return.Value(texture));
+                With(generator1, 1, 2, 3, Format.A8R8G8B8).Will(Return.Value(texture));
             Expect.Once.On(textureFactory).Method("RegisterTexture").
                 With("texName", texture);
-            executer.AddTexture("texName", "genName");
+            executer.AddTexture("texName", "genName", 1, 2, 3);
         }
 
         [Test]
@@ -519,7 +519,58 @@ namespace Dope.DDXX.DemoFramework
         public void TestAddTextureNoGenerator()
         {
             TestInitializeOKSong();
-            executer.AddTexture("texName", "genName");
+            executer.AddTexture("texName", "genName", 0, 0, 0);
+        }
+
+        [Test]
+        public void TestAddGeneratorOneInput()
+        {
+            TestInitializeOKSong();
+            TestGenerator generator1 = new TestGenerator();
+
+            Expect.Once.On(effectTypes).Method("CreateGenerator").
+                With("className2").Will(Return.Value(generator1));
+            executer.AddGenerator("gen1", "className2");
+            executer.AddGeneratorInput(0, "gen1");
+            Assert.AreSame(generator1, generator1.Inputs[0]);
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestInputWithoutGenerator()
+        {
+            TestInitializeOKSong();
+            executer.AddGeneratorInput(0, "gen1");
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestInputWithUnknownGenerator()
+        {
+            TestInitializeOKSong();
+            TestGenerator generator1 = new TestGenerator();
+            Expect.Once.On(effectTypes).Method("CreateGenerator").
+                With("className1").Will(Return.Value(generator1));
+            executer.AddGenerator("gen1", "className1");
+            executer.AddGeneratorInput(0, "nogen");
+        }
+
+        [Test]
+        public void TestAddGeneratorAnotherInput()
+        {
+            TestInitializeOKSong();
+            TestGenerator generator1 = new TestGenerator();
+            TestGenerator generator2 = new TestGenerator();
+            Expect.Once.On(effectTypes).Method("CreateGenerator").
+                With("className1").Will(Return.Value(generator1));
+            executer.AddGenerator("gen1", "className1");
+
+            Expect.Once.On(effectTypes).Method("CreateGenerator").
+                With("className2").Will(Return.Value(generator2));
+            executer.AddGenerator("gen2", "className2");
+            
+            executer.AddGeneratorInput(1, "gen1");
+            Assert.AreSame(generator1, generator2.Inputs[1]);
         }
 
         private IDemoEffect RegisterEffect(int track, float startTime, float endTime)
@@ -661,13 +712,15 @@ namespace Dope.DDXX.DemoFramework
     }
     public class TestGenerator : IGenerator
     {
+        public IGenerator[] Inputs = new IGenerator[100];
+
         public Vector4  GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
         {
             throw new Exception("The method or operation is not implemented.");
         }
         public void  ConnectToInput(int inputPin, IGenerator outputGenerator)
         {
- 	        throw new Exception("The method or operation is not implemented.");
+            Inputs[inputPin] = outputGenerator;
         }
     }
 }

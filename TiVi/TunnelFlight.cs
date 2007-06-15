@@ -10,6 +10,7 @@ using Dope.DDXX.Utility;
 using Dope.DDXX.TextureBuilder;
 using Dope.DDXX.MeshBuilder;
 using System.Drawing;
+using Dope.DDXX.ParticleSystems;
 
 namespace TiVi
 {
@@ -40,6 +41,20 @@ namespace TiVi
         {
         }
 
+        private Vector4 circleCallback(Vector2 texCoord, Vector2 texelSize)
+        {
+            Vector2 centered = texCoord - new Vector2(0.5f, 0.5f);
+            float distance = centered.Length();
+            if (distance < 0.1f)
+                return new Vector4(1, 1, 1, 1);
+            else if (distance < 0.5f)
+            {
+                float scaled = (0.5f - distance) / 0.4f;
+                return new Vector4(scaled, scaled, scaled, 1);
+            }
+            return new Vector4(0, 0, 0, 0);
+        }
+
         protected override void Initialize()
         {
             CreateStandardSceneAndCamera(out scene, out camera, 10);
@@ -48,11 +63,17 @@ namespace TiVi
             noise.BaseFrequency = 30;
             Madd madd = new Madd(0.6f, 0.4f);
             madd.ConnectToInput(0, noise);
-            TextureFactory.RegisterTexture("noise", TextureBuilder.Generate(madd, 128, 128, 1, Format.A8R8G8B8));
+            TextureFactory.RegisterTexture("noise", TextureBuilder.Generate(madd, 32, 32, 1, Format.A8R8G8B8));
 
             CreateCircles();
             CreateLights();
             //CreateTerrain();
+
+            GlitterParticleSpawner spawner = new GlitterParticleSpawner(GraphicsFactory, Device, 500);
+            ParticleSystemNode system = new ParticleSystemNode("");
+            system.Initialize(spawner, Device, GraphicsFactory, EffectFactory, 
+                TextureFactory.CreateFromFunction(128, 128, 1, Usage.None, Format.A8R8G8B8, Pool.Managed, circleCallback));//.CreateFromFile("noise"));
+            scene.AddNode(system);
 
             scene.AmbientColor = new ColorValue(0.4f, 0.4f, 0.4f, 0.4f);
         }

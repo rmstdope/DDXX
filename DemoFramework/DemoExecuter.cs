@@ -303,11 +303,11 @@ namespace Dope.DDXX.DemoFramework
             lastAddedAsset = generator;
         }
 
-        public void AddTexture(string textureName, string generatorName)
+        public void AddTexture(string textureName, string generatorName, int width, int height, int mipLevels)
         {
             if (!generators.ContainsKey(generatorName))
                 throw new DDXXException("Generator " + generatorName + " has never been registered.");
-            ITexture texture = textureBuilder.Generate(generators[generatorName], 256, 256, 1, Format.A8R8G8B8);
+            ITexture texture = textureBuilder.Generate(generators[generatorName], width, height, mipLevels, Format.A8R8G8B8);
             textureFactory.RegisterTexture(textureName, texture);
         }
 
@@ -323,14 +323,10 @@ namespace Dope.DDXX.DemoFramework
 
         private void AddParameter(string name, object value, float stepSize)
         {
-            // TODO: This is currently untested code, so I commented it!
-            //if (lastAddedEffect != null)
-            //{
-                effectTypes.SetProperty(lastAddedAsset, name, value);
-                ITweakableContainer container = lastAddedAsset as ITweakableContainer;
-                if (stepSize > 0)
-                    container.SetStepSize(container.GetTweakableNumber(name), stepSize);
-            //}
+            effectTypes.SetProperty(lastAddedAsset, name, value);
+            ITweakableContainer container = lastAddedAsset as ITweakableContainer;
+            if (stepSize > 0)
+                container.SetStepSize(container.GetTweakableNumber(name), stepSize);
         }
 
         public void AddStringParameter(string name, string value)
@@ -363,7 +359,13 @@ namespace Dope.DDXX.DemoFramework
 
         public void AddGeneratorInput(int num, string generatorName)
         {
-            throw new Exception("The method or operation is not implemented.");
+            if (!generators.ContainsKey(generatorName))
+                throw new DDXXException("Generator " + generatorName + " has never been registered.");
+            if (!(lastAddedAsset is IGenerator))
+                throw new DDXXException("Can not call AddGeneratorInput if no Generator was just added.");
+
+            IGenerator generator = lastAddedAsset as IGenerator;
+            generator.ConnectToInput(num, generators[generatorName]);
         }
 
         public void SetSong(string filename)

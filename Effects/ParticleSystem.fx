@@ -82,6 +82,37 @@ PointSizeVertexShader(float4 Position	:	POSITION,
 	return output;
 }
 
+VertexOutputStream
+GlitterVertexShader(float4 Position		:	POSITION,
+										float Size				:	PSIZE,
+										float3 Normal			: NORMAL,
+										float4 Color			:	COLOR0)
+{
+	VertexOutputStream output;
+
+	// Transform particle to view space
+	float4 pos = mul(Position, WorldViewT);
+
+	// Use 600 temporary. This should probably be a function of FOV?!?
+	// This is taken from DX docs but does not feel good...
+	// Anyway, it should not be 600 but height of viewport (which is not window height!)
+	output.Size = 600 * Size / length(pos.xyz / pos.w);
+	
+	// Transform particle to Projection space
+	output.Position = mul(pos, ProjectionT);
+
+	// Strange, this seems to be needed...
+	output.TextureUV = float2(0,0);
+
+	// Copy color
+	float3 normal = mul(Normal, (float4x3)WorldViewT);
+	float d = max(0, dot(normal, float3(0, 0, -1)));
+	float p = pow(d, 8);
+	output.Color = Color * p;
+	
+	return output;
+}
+
 /**
  * Vertex shader for particle systems with no point sizes and pre transformated vertices.
  * @param Position The transformated 3D position of the particle.
@@ -145,9 +176,9 @@ SimplePixelShader(const PixelInputStream input, uniform bool useTexture) : COLOR
 { 
 	// Lookup texture
 	if (useTexture)
-		return AmbientColor * input.Color * tex2D(TextureSampler, input.TextureUV);
+		return (AmbientColor + input.Color) * tex2D(TextureSampler, input.TextureUV);
 	else
-		return AmbientColor * input.Color;
+		return (AmbientColor + input.Color);
 }
 
 technique PointSpriteNoTexture
@@ -168,6 +199,19 @@ technique PointSprite
 	pass BasePass
 	{
 		VertexShader			= compile vs_2_0 PointSizeVertexShader();
+		PixelShader				= compile ps_2_0 SimplePixelShader(true);
+		CullMode					= None;
+		PointSpriteEnable = true;
+		ZFunc							= Less;
+		ZWriteEnable			= false;
+  }
+}
+
+technique Glitter
+{
+	pass BasePass
+	{
+		VertexShader			= compile vs_2_0 GlitterVertexShader();
 		PixelShader				= compile ps_2_0 SimplePixelShader(true);
 		CullMode					= None;
 		PointSpriteEnable = true;
