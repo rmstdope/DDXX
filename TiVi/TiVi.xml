@@ -17,12 +17,13 @@
 		<Parameter name="BaseMesh" string="Tivi-Creation.X" />
 		<Parameter name="FlareSize" float="35" />
 		<Parameter name="StartVertex" int="8" />
+	  <Parameter name="SegmentLength" float="0.30" />
 	</Effect>
-	<PostEffect name="ColorFader" startTime="5.5" endTime="8.5">
+	<PostEffect name="ColorFader" startTime="24,5" endTime="27">
 		<Parameter name="DrawOrder" int="3" />
 		<Parameter name="FadeInLength" float="0.5" />
 		<Parameter name="FadeOutLength" float="2" />
-		<Parameter name="FadeColor" Color="Black" />
+		<Parameter name="FadeColor" Color="White" />
 	</PostEffect>
 	<PostEffect name="ColorFader" startTime="11.5" endTime="14.5">
 		<Parameter name="DrawOrder" int="3" />

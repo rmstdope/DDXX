@@ -48,6 +48,12 @@ namespace TiVi
             set { flareSize = value; }
         }
 
+        public float SegmentLength
+        {
+            get { return segmentLength; }
+            set { segmentLength = value; }
+        }
+
         public int StartVertex
         {
             get { return startVertex; }
