@@ -10,7 +10,6 @@ using Dope.DDXX.Physics;
 using Dope.DDXX.SceneGraph;
 using Dope.DDXX.Utility;
 using Dope.DDXX.ParticleSystems;
-using Dope.DDXX.Graphics;
 using Dope.DDXX.MeshBuilder;
 using Dope.DDXX.TextureBuilder;
 
@@ -32,6 +31,9 @@ namespace EngineTest
         private ISprite sprite;
         private ITexture generatedTexture1;
         private ITexture generatedTexture2;
+        private ILine line;
+        private List<float> yPos = new List<float>();
+        private ModelNode terrainModel;
 
         public float ReflectiveFactor
         {
@@ -106,6 +108,21 @@ namespace EngineTest
 
             InitializeTextures();
 
+            //IGenerator generator = new PerlinNoise(5, 16, 0.5f);
+            //MeshBuilder builder = new MeshBuilder(GraphicsFactory, TextureFactory, Device);
+            //builder.CreateTerrain("Terrain", generator, 10.0f, 100.0f, 100.0f, 50, 50, true);
+            //builder.AssignMaterial("Terrain", "Default1");
+            //builder.SetDiffuseTexture("Default1", "square.tga");
+            //IModel model = builder.CreateModel("Terrain");
+            //model.Mesh.ComputeNormals();
+            //model.Materials[0].AmbientColor = new ColorValue(0.1f, 0.1f, 0.1f);
+            //model.Materials[0].DiffuseColor = new ColorValue(0.6f, 0.6f, 0.6f);
+            //terrainModel = new ModelNode("Terrain", model,
+            //    new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
+            //    delegate(int material) { return "Terrain"; }, model));
+            //scene.AddNode(terrainModel);
+            //terrainModel.WorldState.MoveUp(-6);
+            
 
             //AddWantingMoreModel();
 
@@ -114,6 +131,10 @@ namespace EngineTest
             //LoadFlyScene();
 
             //TestMeshBuilder();
+
+            line = GraphicsFactory.CreateLine(Device);
+            for (int i = 0; i < 10; i++)
+                yPos.Add(Rand.Int(0, 400));
 
             //scene.DebugPrintGraph();
             scene.Validate();
@@ -314,6 +335,34 @@ namespace EngineTest
             //        Color.FromArgb(255, Color.White));
             //}
             //sprite.End();
+
+            Vector2[] points = new Vector2[9 * 10];
+            float xPos = 0;
+            int p = 0;
+            for (int i = 0; i < 9; i++)
+            {
+                float v0;
+                float v1;
+                float v2;
+                float v3;
+                v0 = yPos[i == 0 ? i : i - 1];
+                v1 = yPos[i];
+                v2 = yPos[i + 1];
+                v3 = yPos[i < 8 ? i + 2: i + 1];
+                for (int x = 0; x < 10; x++)
+                {
+                    float d = x / 10.0f;
+                    float P = (v3 - v2) - (v0 - v1);
+                    float Q = (v0 - v1) - P;
+                    float R = v2 - v0;
+                    float S = v1;
+                    xPos += 8.0f;
+                    points[p++] = new Vector2(xPos, P * d * d * d + Q * d * d + R * d + S); 
+                }
+            }
+            line.Begin();
+            line.Draw(points, Color.White);
+            line.End();
         }
 
     }

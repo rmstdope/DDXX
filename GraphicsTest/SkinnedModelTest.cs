@@ -202,7 +202,7 @@ namespace Dope.DDXX.Graphics
             using (mockery.Ordered)
             {
                 // Mesh 1
-                Expect.Once.On(effectHandler).Method("SetNodeConstants").With(Matrix.Identity, view, projection);
+                Expect.Once.On(effectHandler).Method("SetNodeConstants").With(world, view, projection);
                 Expect.Once.On(meshContainer).GetProperty("Bones").Will(Return.Value(boneCombo));
 
                 //Subset 1

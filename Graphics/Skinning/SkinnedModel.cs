@@ -70,7 +70,7 @@ namespace Dope.DDXX.Graphics
 
         public override void Draw(IEffectHandler effectHandler, ColorValue ambient, Matrix world, Matrix view, Matrix projection)
         {
-            effectHandler.SetNodeConstants(Matrix.Identity/*frame.TransformationMatrix * world*/, view, projection);
+            effectHandler.SetNodeConstants(world, view, projection);
             for (int j = 0; j < frame.MeshContainer.GetMaterials().Length; j++)
             {
                 if (frame.MeshContainer.SkinInformation != null)

@@ -555,7 +555,7 @@ BrightenPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 	float3 ColorOut = sample.rgb;
 
 	// Map to LDR
-	ColorOut *= Exposure/ (Luminance + 0.001f);
+	//ColorOut *= Exposure/ (Luminance + 0.001f);
 
 	// Subtract out dark pixels
 	ColorOut -= WhiteCutoff;
@@ -566,7 +566,7 @@ BrightenPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 	// Map the resulting value into the 0 to 1 range. Higher values than
 	// 10 will isolate lights from illuminated scene 
 	// objects.
-	ColorOut /= (10.0f + ColorOut);
+	//ColorOut /= (10.0f + ColorOut);
 
 	return float4(ColorOut, sample.a);
 }

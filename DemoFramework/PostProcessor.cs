@@ -248,5 +248,11 @@ namespace Dope.DDXX.DemoFramework
         {
             effect.SetValue(name, value);
         }
+
+        public void WriteToFile(TextureID textureID, string filename)
+        {
+            textures[(int)textureID].Texture.Save(filename, ImageFileFormat.Jpg);
+        }
+
     }
 }

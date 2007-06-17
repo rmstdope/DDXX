@@ -242,12 +242,14 @@ float3 lightDir = normalize(float3(1, 1, 0));
 
 TerrainPixelInput
 TerrainVertexShader(InputVS input,
-									 uniform int numWeights)
+										uniform float yAdd,
+										uniform int numWeights)
 {
 	TerrainPixelInput output;
 
 	// Calculate new position, normal and tangent depending on animation
 	AnimatedVertex_PN animated = AnimateVertex(input.Position, input.Normal, input.BlendIndices, input.BlendWeights, numWeights);
+	animated.Position.y += yAdd;
 	float3 normal = normalize(mul(animated.Normal, WorldT));
 	//normal = float3(0, -1, 0);
 
@@ -266,6 +268,12 @@ TerrainPixelShader(TerrainPixelInput input) : COLOR0
 	return input.Color * tex2D(BaseTextureSampler, input.TextureCoord.xy);
 }
 
+float4
+ColorOutput(uniform float4 color) : COLOR0
+{
+	return color;
+}
+
 technique Terrain
 <
 	bool NormalMapping = false;
@@ -273,13 +281,24 @@ technique Terrain
 {
 	pass BasePass
 	{
-		VertexShader			= compile vs_2_0 TerrainVertexShader(0);
+		VertexShader			= compile vs_2_0 TerrainVertexShader(0, 0);
 		PixelShader				= compile ps_2_0 TerrainPixelShader();
 		AlphaBlendEnable	= false;
 		ZEnable						=	true;
 		ZFunc							= Less;
 		StencilEnable			= false;
 		CullMode						= None;
+	}
+	pass WireframePass
+	{
+		VertexShader			= compile vs_2_0 TerrainVertexShader(0.01, 0);
+		PixelShader				= compile ps_2_0 ColorOutput(float4(1.0, 1.0, 1.0, 1));
+		AlphaBlendEnable	= false;
+		ZEnable						=	true;
+		ZFunc							= LessEqual;
+		StencilEnable			= false;
+		CullMode					= None;
+		FillMode					= Wireframe;
 	}
 }
 

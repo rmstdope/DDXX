@@ -101,5 +101,6 @@ namespace Dope.DDXX.DemoFramework
         /// <param name="value">The value to set it to.</param>
         void SetValue(string parameter, Vector4 value);
 
+        void WriteToFile(TextureID textureID, string filename);
     }
 }

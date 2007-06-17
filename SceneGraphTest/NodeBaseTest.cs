@@ -143,38 +143,38 @@ namespace Dope.DDXX.SceneGraph
             Assert.IsTrue(node2.setLightStateCalled);
         }
 
-        [Test]
-        [ExpectedException(typeof(DDXXException))]
-        public void TestFrameWorldStateConflict()
-        {
-            IFrame frame = new FrameAdapter(new SkinnedFrame("Test"));
-            DerivedNode node1 = new DerivedNode("NewNewNodeName1");
-            node1.EnableFrameHandling(frame);
-            Vector3 vec = node1.WorldState.Position;
-        }
+        //[Test]
+        //[ExpectedException(typeof(DDXXException))]
+        //public void TestFrameWorldStateConflict()
+        //{
+        //    IFrame frame = new FrameAdapter(new SkinnedFrame("Test"));
+        //    DerivedNode node1 = new DerivedNode("NewNewNodeName1");
+        //    node1.EnableFrameHandling(frame);
+        //    Vector3 vec = node1.WorldState.Position;
+        //}
 
-        [Test]
-        public void TestFramePosition()
-        {
-            IFrame frame = new FrameAdapter(new SkinnedFrame("Test"));
-            frame.TransformationMatrix = Matrix.Translation(3, 5, 7);
-            DerivedNode node1 = new DerivedNode("NewNewNodeName1");
-            node1.WorldState.Position = new Vector3(1, 2, 3);
-            node1.EnableFrameHandling(frame);
-            Matrix m = node1.WorldMatrix;
-            Assert.AreEqual(new Vector3(3, 5, 7), new Vector3(m.M41, m.M42, m.M43), "Position should be (3, 5, 7)");
-        }
+        //[Test]
+        //public void TestFramePosition()
+        //{
+        //    IFrame frame = new FrameAdapter(new SkinnedFrame("Test"));
+        //    frame.TransformationMatrix = Matrix.Translation(3, 5, 7);
+        //    DerivedNode node1 = new DerivedNode("NewNewNodeName1");
+        //    node1.WorldState.Position = new Vector3(1, 2, 3);
+        //    node1.EnableFrameHandling(frame);
+        //    Matrix m = node1.WorldMatrix;
+        //    Assert.AreEqual(new Vector3(3, 5, 7), new Vector3(m.M41, m.M42, m.M43), "Position should be (3, 5, 7)");
+        //}
 
-        [Test]
-        public void TestFrameTransformation()
-        {
-            IFrame frame = new FrameAdapter(new SkinnedFrame("Test"));
-            frame.TransformationMatrix = Matrix.PerspectiveRH(1, 2, 3, 4);
-            DerivedNode node1 = new DerivedNode("NewNewNodeName1");
-            node1.EnableFrameHandling(frame);
-            Assert.AreEqual(Matrix.PerspectiveRH(1, 2, 3, 4), node1.WorldMatrix, 
-                "Transformation matrix should match frame.");
-        }
+        //[Test]
+        //public void TestFrameTransformation()
+        //{
+        //    IFrame frame = new FrameAdapter(new SkinnedFrame("Test"));
+        //    frame.TransformationMatrix = Matrix.PerspectiveRH(1, 2, 3, 4);
+        //    DerivedNode node1 = new DerivedNode("NewNewNodeName1");
+        //    node1.EnableFrameHandling(frame);
+        //    Assert.AreEqual(Matrix.PerspectiveRH(1, 2, 3, 4), node1.WorldMatrix, 
+        //        "Transformation matrix should match frame.");
+        //}
 
     }
 }

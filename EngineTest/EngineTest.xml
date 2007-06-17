@@ -41,12 +41,12 @@
   <!--PostEffect name="DepthOfFieldPostEffect" track="0" startTime="0.0" endTime="300.0" /-->
   <!--Effect name="SunEffect" track="0" startTime="0" endTime="300" /-->
   <!--PostEffect name="RadialBlurPostEffect" track="0" startTime="0" endTime="300" /-->
-  <!--PostEffect name="GlowPostEffect" track="0" startTime="0" endTime="300">
-    <Parameter name="BloomScale" float="1.700001" step="0.01" />
+  <PostEffect name="GlowPostEffect" track="0" startTime="0" endTime="300">
+    <Parameter name="BloomScale" float="1.500001" step="0.01" />
     <Parameter name="Exposure" float="0.7000004" step="0.01" />
-    <Parameter name="WhiteCutoff" float="0.5999998" step="0.01" />
+    <Parameter name="WhiteCutoff" float="0.6" step="0.01" />
     <Parameter name="Luminance" float="0.24" step="0.01" />
-  </PostEffect-->
+  </PostEffect>
   <!--Effect name="ChessScene" track="0" startTime="0.0" endTime="300.0" /-->
   <!--Effect name="CreationScene" track="0" startTime="0.0" endTime="300.0">
 		<Parameter name="BaseMesh" string="King.X" />

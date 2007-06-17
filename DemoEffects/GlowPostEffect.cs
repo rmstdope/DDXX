@@ -79,6 +79,7 @@ namespace Dope.DDXX.DemoEffects
             PostProcessor.Process("DownSample4x", PostProcessor.OutputTextureID, temp[0]);
             PostProcessor.Process("DownSample4x", temp[0], temp[1]);
             PostProcessor.Process("Brighten", temp[1], temp[0]);
+            //PostProcessor.WriteToFile(temp[1], "test.jpg");
             PostProcessor.Process("HorizontalBloom", temp[0], temp[1]);
             PostProcessor.Process("VerticalBloom", temp[1], temp[0]);
             PostProcessor.Process("HorizontalBloom", temp[0], temp[1]);

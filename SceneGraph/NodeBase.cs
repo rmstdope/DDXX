@@ -134,7 +134,7 @@ namespace Dope.DDXX.SceneGraph
 
         public void EnableFrameHandling(IFrame frame)
         {
-            this.frame = frame;
+            //this.frame = frame;
         }
 
         public Vector3 Position 
