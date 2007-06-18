@@ -38,6 +38,7 @@ namespace TiVi
         private ModelNode discModel2;
         private ModelNode tiviNode;
         private MeshDirector director;
+        private List<ModelNode> diamonds = new List<ModelNode>();
 
         public TunnelFlight(float startTime, float endTime)
             : base(startTime, endTime)
@@ -64,25 +65,25 @@ namespace TiVi
 
             CreateStandardSceneAndCamera(out scene, out camera, 10);
 
-            PerlinTurbulence noise = new PerlinTurbulence();
-            noise.BaseFrequency = 30;
-            Madd madd = new Madd(0.6f, 0.4f);
-            madd.ConnectToInput(0, noise);
-            TextureFactory.RegisterTexture("noise", TextureBuilder.Generate(madd, 32, 32, 1, Format.A8R8G8B8));
-
-            CreateCircles();
+            CreateNoiseTexture();
+            CreateBricks();
             CreateLights();
             //CreateTerrain();
+            CreateDiamonds();
+            CreateDiscs();
+            CreateTiVi();
 
-            const float outerRadius = 2.5f;
-            const float innerRadius = 2.0f;
-            const float torusRadius = 0.07f;
-            discModel = CreateDisc(outerRadius, innerRadius, "AlphaTest");
-            discModel.AddChild(CreateTorus(outerRadius, torusRadius, "Terrain"));
-            discModel.AddChild(CreateTorus(innerRadius, torusRadius, "Terrain"));
-            discModel2 = CreateDisc(outerRadius * 0.95f, 0, "AlphaTest");
-            discModel2.AddChild(CreateTorus(outerRadius * 0.95f, torusRadius, "Terrain"));
+            //GlitterParticleSpawner spawner = new GlitterParticleSpawner(GraphicsFactory, Device, 500);
+            //ParticleSystemNode system = new ParticleSystemNode("");
+            //system.Initialize(spawner, Device, GraphicsFactory, EffectFactory, 
+            //    TextureFactory.CreateFromFunction(128, 128, 1, Usage.None, Format.A8R8G8B8, Pool.Managed, circleCallback));//.CreateFromFile("noise"));
+            //scene.AddNode(system);
 
+            scene.AmbientColor = new ColorValue(0.4f, 0.4f, 0.4f, 0.4f);
+        }
+
+        private void CreateTiVi()
+        {
             XLoader.Load("Tivi-Dance.X", EffectFactory.CreateFromFile("TiVi.fxo"),
                 delegate(string name)
                 {
@@ -97,14 +98,54 @@ namespace TiVi
             XLoader.AddToScene(scene);
             tiviNode = (ModelNode)scene.GetNodeByName("TiVi");
             tiviNode.WorldState.Turn(-(float)Math.PI / 2);
+        }
 
-            GlitterParticleSpawner spawner = new GlitterParticleSpawner(GraphicsFactory, Device, 500);
-            ParticleSystemNode system = new ParticleSystemNode("");
-            system.Initialize(spawner, Device, GraphicsFactory, EffectFactory, 
-                TextureFactory.CreateFromFunction(128, 128, 1, Usage.None, Format.A8R8G8B8, Pool.Managed, circleCallback));//.CreateFromFile("noise"));
-            scene.AddNode(system);
+        private void CreateDiscs()
+        {
+            const float outerRadius = 2.5f;
+            const float innerRadius = 2.0f;
+            const float torusRadius = 0.07f;
+            discModel = CreateDisc(outerRadius, innerRadius, "AlphaTest");
+            discModel.AddChild(CreateTorus(outerRadius, torusRadius, "Terrain"));
+            discModel.AddChild(CreateTorus(innerRadius, torusRadius, "Terrain"));
+            discModel2 = CreateDisc(outerRadius * 0.95f, 0, "AlphaTest");
+            discModel2.AddChild(CreateTorus(outerRadius * 0.95f, torusRadius, "Terrain"));
+        }
 
-            scene.AmbientColor = new ColorValue(0.4f, 0.4f, 0.4f, 0.4f);
+        private void CreateNoiseTexture()
+        {
+            PerlinTurbulence noise = new PerlinTurbulence();
+            noise.BaseFrequency = 30;
+            Madd madd = new Madd(0.6f, 0.4f);
+            madd.ConnectToInput(0, noise);
+            TextureFactory.RegisterTexture("noise", TextureBuilder.Generate(madd, 32, 32, 1, Format.A8R8G8B8));
+        }
+
+        private void CreateDiamonds()
+        {
+            const int NUM_DIAMONDS = 20;
+            //MeshBuilder.SetAmbientColor("Default3", new ColorValue(1.0f, 1.0f, 1.0f, 1.0f));
+            MeshBuilder.SetDiffuseColor("Default3", new ColorValue(1.0f, 1.0f, 1.0f, 1.0f));
+            MeshBuilder.SetDiffuseTexture("Default3", "square.tga");
+            director.CreateChamferBox(1, 1, 0.4f, 0.2f, 4);
+            director.Scale(0.4f);
+            director.UvMapPlane(1, 1, 1);
+            director.Rotate((float)Math.PI / 2, 0, 0);
+            director.Rotate(0, 0, (float)Math.PI / 4);
+            IModel model = director.Generate("Default3");
+            model.Mesh.ComputeNormals();
+            EffectHandler handler = new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
+                delegate(int material) { return "Diamond"; }, model);
+            for (int i = 0; i < NUM_DIAMONDS; i++)
+            {
+                ModelNode node = new ModelNode("", model, handler);
+                node.WorldState.MoveUp(Rand.Float(-4, 4));
+                node.WorldState.MoveRight(Rand.Float(-4, 4));
+                node.WorldState.MoveForward(Rand.Float(-4, 4));
+                node.WorldState.Turn(Rand.Float(Math.PI));
+                scene.AddNode(node);
+                diamonds.Add(node);
+            }
         }
 
         private ModelNode CreateDisc(float outerRadius, float innerRadius, string technique)
@@ -175,7 +216,7 @@ namespace TiVi
             }
         }
 
-        private void CreateCircles()
+        private void CreateBricks()
         {
             MeshBuilder.SetDiffuseTexture("Default1", "square.tga");
             MeshBuilder.SetDiffuseColor("Default1", new ColorValue(0.8f, 0.8f, 0.8f, 0.8f));
@@ -202,6 +243,14 @@ namespace TiVi
 
         public override void Step()
         {
+            StepDiamonds();
+            StepDiscs();
+            StepBricks();
+            scene.Step();
+        }
+
+        private void StepDiscs()
+        {
             discModel.WorldState.Reset();
             discModel2.WorldState.Reset();
             discModel.WorldState.MoveUp(0.85f);
@@ -215,33 +264,49 @@ namespace TiVi
                     (float)Math.Sin(Time.StepTime * 0.5f + i) * 20,
                     (float)Math.Cos(Time.StepTime * 1.23f + i) * 10 + 10,
                     (float)Math.Sin(Time.StepTime + i) * 10 + 10);
+        }
 
-            for (int j = 0; j < NUM_RINGS; j++)
+        private void StepBricks()
+        {
+            if (bricks.Count > 0)
             {
-                for (int i = 0; i < NUM_BLOCKS; i++)
+                for (int j = 0; j < NUM_RINGS; j++)
                 {
-                    ModelNode model = bricks[j * NUM_BLOCKS + i].Model;
-                    float startTime = bricks[j * NUM_BLOCKS + i].StartTime;
-                    const float FALL_TIME = 1.3f;
-                    const float FALL_HEIGHT = 10.0f;
-                    float time = Time.StepTime - StartTime - startTime;
-                    float upAdd = 0;
-                    if (time < FALL_TIME)
+                    for (int i = 0; i < NUM_BLOCKS; i++)
                     {
-                        if (time < 0)
-                            time = 0;
-                        float zeroToOne = (float)Math.Sin(time / FALL_TIME * Math.PI / 2);
-                        upAdd = (1 - zeroToOne) * FALL_HEIGHT;
+                        ModelNode model = bricks[j * NUM_BLOCKS + i].Model;
+                        float startTime = bricks[j * NUM_BLOCKS + i].StartTime;
+                        const float FALL_TIME = 1.3f;
+                        const float FALL_HEIGHT = 10.0f;
+                        float time = Time.StepTime - StartTime - startTime;
+                        float upAdd = 0;
+                        if (time < FALL_TIME)
+                        {
+                            if (time < 0)
+                                time = 0;
+                            float zeroToOne = (float)Math.Sin(time / FALL_TIME * Math.PI / 2);
+                            upAdd = (1 - zeroToOne) * FALL_HEIGHT;
+                        }
+                        model.WorldState.Reset();
+                        //model.WorldState.MoveForward(2);
+                        model.WorldState.MoveUp(-2 + 0.8f * j + upAdd);
+                        model.WorldState.Tilt((float)Math.PI / 2);
+                        model.WorldState.Roll(Time.StepTime / 2 + (float)Math.PI * 2 * i / NUM_BLOCKS);
+                        model.WorldState.MoveUp(-3.0f);
                     }
-                    model.WorldState.Reset();
-                    //model.WorldState.MoveForward(2);
-                    model.WorldState.MoveUp(-2 + 0.8f * j + upAdd);
-                    model.WorldState.Tilt((float)Math.PI / 2);
-                    model.WorldState.Roll(Time.StepTime / 2 + (float)Math.PI * 2 * i / NUM_BLOCKS);
-                    model.WorldState.MoveUp(-3.0f);
                 }
             }
-            scene.Step();
+        }
+
+        private void StepDiamonds()
+        {
+            foreach (ModelNode node in diamonds)
+            {
+                node.WorldState.Turn(Time.DeltaTime * 3);
+                node.WorldState.MoveUp(-Time.DeltaTime * 2.5f);
+                if (node.WorldState.Position.Y < -4)
+                    node.WorldState.Position += new Vector3(0, 8, 0);
+            }
         }
 
         public override void Render()

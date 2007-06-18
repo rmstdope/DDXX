@@ -55,6 +55,12 @@ namespace Dope.DDXX.MeshBuilder
             primitive = map;
         }
 
+        /// <summary>
+        /// Rotates around: 1)z-axis 2)x-axis 3)y-axis
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
         public void Rotate(float x, float y, float z)
         {
             Rotate rotate = new Rotate();
@@ -75,6 +81,11 @@ namespace Dope.DDXX.MeshBuilder
             primitive = translate;
         }
 
+        public void Scale(float factor)
+        {
+            Scale(factor, factor, factor);
+        }
+
         public void Scale(float x, float y, float z)
         {
             Scale scale = new Scale();
@@ -89,6 +100,6 @@ namespace Dope.DDXX.MeshBuilder
         {
             return builder.CreateModel(primitive, materialName);
         }
- 
+
     }
 }

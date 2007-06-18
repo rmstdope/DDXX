@@ -142,6 +142,14 @@ struct TerrainPixelInput
 	float2 TextureCoord		:	TEXCOORD0;		// Vertex texture coords 
 };
 
+struct DiamondPixelInput
+{
+	float4 Position				:	POSITION;			// Vertex position 
+	float4 DiffuseColor		: COLOR0;				// Vertex diffuse color
+	float4 SpecularColor	: COLOR1;				// Vertex specular color
+	float2 TextureCoord		:	TEXCOORD0;		// Vertex texture coords 
+};
+
 struct InputVS
 {
 	float4	Position			: POSITION;			// Vertex Position
@@ -181,6 +189,37 @@ TerrainVertexShader(InputVS input,
 	output.Color = AmbientColor + MaterialDiffuseColor * diffuse;
 	
 	return output;    
+}
+
+DiamondPixelInput
+DiamondVertexShader(InputVS input,
+									 uniform int numWeights)
+{
+	DiamondPixelInput output;
+
+	// Calculate new position, normal and tangent depending on animation
+	AnimatedVertex_PN animated = AnimateVertex(input.Position, input.Normal, input.BlendIndices, input.BlendWeights, numWeights);
+	float3 normal = normalize(mul(animated.Normal, WorldT));
+
+	// Transform the position from object space to world space
+	float3 worldPosition = mul(animated.Position, WorldT);
+
+	// Transform the position from object space to homogeneous projection space
+	output.Position = mul(animated.Position, WorldViewProjectionT);
+
+	output.TextureCoord = input.TextureCoord;
+	float diffuse = max(0, dot(normal, float3(0, 0, -1)));
+	float specular = pow(diffuse, 8);
+	output.DiffuseColor = AmbientColor + MaterialDiffuseColor * diffuse;
+	output.SpecularColor = specular;
+	
+	return output;    
+}
+
+float4
+DiamondPixelShader(DiamondPixelInput input) : COLOR0
+{
+	return input.SpecularColor + input.DiffuseColor * tex2D(BaseTextureSampler, input.TextureCoord.xy);
 }
 
 float4
@@ -223,10 +262,27 @@ technique AlphaTest
 		PixelShader				= compile ps_2_0 TestPixelShader();
 		AlphaBlendEnable	= true;
 		SrcBlend					= One;
-		DestBlend					= InvSrcColor;
+		DestBlend					= One;
 		ZEnable						=	true;
 		ZFunc							= Less;
 		StencilEnable			= false;
 		CullMode					= None;
+	}
+}
+
+technique Diamond
+<
+	bool NormalMapping = false;
+>
+{
+	pass BasePass
+	{
+		VertexShader			= compile vs_2_0 DiamondVertexShader(0);
+		PixelShader				= compile ps_2_0 DiamondPixelShader();
+		AlphaBlendEnable	= false;
+		ZEnable						=	true;
+		ZFunc							= Less;
+		StencilEnable			= false;
+		CullMode					= CCW;
 	}
 }
