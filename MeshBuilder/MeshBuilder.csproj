@@ -41,14 +41,20 @@
     <Compile Include="BoxPrimitive.cs" />
     <Compile Include="ChamferBoxPrimitive.cs" />
     <Compile Include="ClothPrimitive.cs" />
+    <Compile Include="DiscPrimitive.cs" />
     <Compile Include="IPrimitive.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MeshDirector.cs" />
     <Compile Include="PlanePrimitive.cs" />
     <Compile Include="MeshBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rotate.cs" />
+    <Compile Include="Scale.cs" />
     <Compile Include="SpherePrimitive.cs" />
     <Compile Include="TerrainPrimitive.cs" />
+    <Compile Include="TorusPrimitive.cs" />
+    <Compile Include="Translate.cs" />
     <Compile Include="UvMapPlane.cs" />
     <Compile Include="Vertex.cs" />
     <Compile Include="Weld.cs" />

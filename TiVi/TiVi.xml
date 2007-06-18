@@ -13,17 +13,16 @@
 	</PostEffect>
 
 	<!--Creation scene and its post effects-->
-	<Effect name="CreationScene" track="0" startTime="0" endTime="300">
+	<!--<Effect name="CreationScene" track="0" startTime="0" endTime="300">
 		<Parameter name="BaseMesh" string="Tivi-Creation.X" />
 		<Parameter name="FlareSize" float="35" />
 		<Parameter name="StartVertex" int="8" />
-	  <Parameter name="SegmentLength" float="0.30" />
 	</Effect>
-	<PostEffect name="ColorFader" startTime="24,5" endTime="27">
+	<PostEffect name="ColorFader" startTime="5.5" endTime="8.5">
 		<Parameter name="DrawOrder" int="3" />
 		<Parameter name="FadeInLength" float="0.5" />
 		<Parameter name="FadeOutLength" float="2" />
-		<Parameter name="FadeColor" Color="White" />
+		<Parameter name="FadeColor" Color="Black" />
 	</PostEffect>
 	<PostEffect name="ColorFader" startTime="11.5" endTime="14.5">
 		<Parameter name="DrawOrder" int="3" />
@@ -53,17 +52,35 @@
 		<Parameter name="DrawOrder" int="1" />
 		<Parameter name="WhiteCutoff" float="0.16" />
 		<Parameter name="Luminance" float="0.2" />
-	</PostEffect>
+	</PostEffect>-->
 	
 	<!--Chess scene and its post effects-->
-	<!--<Effect name="TunnelFlight" track="0" startTime="0" endTime="300" />
+	<Generator name="noise" class="PerlinNoise">
+		<Parameter name="BaseFrequency" int="64" />
+	</Generator>
+	<Texture name="noise" generator="noise"></Texture>
+	<Effect name="SpinningBackgroundEffect" track="0" startTime="0" endTime="299">
+		<SetupCall name="AddTextureLayer">
+			<Parameter string="noise" />
+			<Parameter float="55.0" />
+			<Parameter Color="Beige" />
+			<Parameter float="0.1" />
+		</SetupCall>
+		<SetupCall name="AddTextureLayer">
+			<Parameter string="noise" />
+			<Parameter float="-44.0" />
+			<Parameter Color="Coral" />
+			<Parameter float="0.1" />
+		</SetupCall>
+	</Effect>
+	<Effect name="TunnelFlight" track="0" startTime="0" endTime="300" />
 	<PostEffect name="GlowPostEffect" track="0" startTime="0" endTime="300">
-		<Parameter name="BloomScale" float="1.5" />
+		<Parameter name="BloomScale" float="1.7" />
 		<Parameter name="Exposure" float="1" />
 		<Parameter name="DrawOrder" int="1" />
 		<Parameter name="WhiteCutoff" float="0.2" />
 		<Parameter name="Luminance" float="0.2" />
-	</PostEffect>-->
+	</PostEffect>
 
 	<!--<Effect name="ChessScene" track="0" startTime="0.0" endTime="300.0"/>-->
 	<!--PostEffect name="OverlayPostEffect" track="0" startTime="0.0" endTime="300.0">

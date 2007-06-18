@@ -34,7 +34,10 @@ namespace TiVi
         private CameraNode camera;
         private List<PointLightNode> lights = new List<PointLightNode>();
         private List<Brick> bricks = new List<Brick>();
-        private ModelNode terrainModel;
+        private ModelNode discModel;
+        private ModelNode discModel2;
+        private ModelNode tiviNode;
+        private MeshDirector director;
 
         public TunnelFlight(float startTime, float endTime)
             : base(startTime, endTime)
@@ -57,6 +60,8 @@ namespace TiVi
 
         protected override void Initialize()
         {
+            director = new MeshDirector(MeshBuilder);
+
             CreateStandardSceneAndCamera(out scene, out camera, 10);
 
             PerlinTurbulence noise = new PerlinTurbulence();
@@ -69,6 +74,30 @@ namespace TiVi
             CreateLights();
             //CreateTerrain();
 
+            const float outerRadius = 2.5f;
+            const float innerRadius = 2.0f;
+            const float torusRadius = 0.07f;
+            discModel = CreateDisc(outerRadius, innerRadius, "AlphaTest");
+            discModel.AddChild(CreateTorus(outerRadius, torusRadius, "Terrain"));
+            discModel.AddChild(CreateTorus(innerRadius, torusRadius, "Terrain"));
+            discModel2 = CreateDisc(outerRadius * 0.95f, 0, "AlphaTest");
+            discModel2.AddChild(CreateTorus(outerRadius * 0.95f, torusRadius, "Terrain"));
+
+            XLoader.Load("Tivi-Dance.X", EffectFactory.CreateFromFile("TiVi.fxo"),
+                delegate(string name)
+                {
+                    return delegate(int material)
+                    {
+                        if (material == 1)
+                            return "TvScreen";
+                        else
+                            return "Solid";
+                    };
+                });
+            XLoader.AddToScene(scene);
+            tiviNode = (ModelNode)scene.GetNodeByName("TiVi");
+            tiviNode.WorldState.Turn(-(float)Math.PI / 2);
+
             GlitterParticleSpawner spawner = new GlitterParticleSpawner(GraphicsFactory, Device, 500);
             ParticleSystemNode system = new ParticleSystemNode("");
             system.Initialize(spawner, Device, GraphicsFactory, EffectFactory, 
@@ -76,6 +105,30 @@ namespace TiVi
             scene.AddNode(system);
 
             scene.AmbientColor = new ColorValue(0.4f, 0.4f, 0.4f, 0.4f);
+        }
+
+        private ModelNode CreateDisc(float outerRadius, float innerRadius, string technique)
+        {
+            MeshBuilder.SetDiffuseTexture("Default2", "noise");
+            director.CreateDisc(outerRadius, innerRadius, 32);
+            IModel model = director.Generate("Default2");
+            model.Materials[0].AmbientColor = new ColorValue(0.1f, 0.1f, 0.1f);
+            model.Materials[0].DiffuseColor = new ColorValue(0.9f, 0.9f, 0.9f);
+            return new ModelNode("Terrain", model,
+                new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
+                delegate(int material) { return technique; }, model));
+        }
+
+        private ModelNode CreateTorus(float outerRadius, float torusRadius, string technique)
+        {
+            MeshBuilder.SetDiffuseTexture("Default2", "noise");
+            director.CreateTorus(torusRadius, outerRadius, 32, 32);
+            IModel model = director.Generate("Default2");
+            model.Materials[0].AmbientColor = new ColorValue(0.1f, 0.1f, 0.1f);
+            model.Materials[0].DiffuseColor = new ColorValue(0.9f, 0.9f, 0.9f);
+            return new ModelNode("Torus", model,
+                new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
+                delegate(int material) { return technique; }, model));
         }
 
         private void CreateTerrain()
@@ -102,12 +155,12 @@ namespace TiVi
             model.Mesh.ComputeNormals();
             model.Materials[0].AmbientColor = new ColorValue(0.1f, 0.1f, 0.1f);
             model.Materials[0].DiffuseColor = new ColorValue(0.6f, 0.6f, 0.6f);
-            terrainModel = new ModelNode("Terrain", model,
+            discModel = new ModelNode("Terrain", model,
                 new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
                 delegate(int material) { return "Terrain"; }, model));
-            scene.AddNode(terrainModel);
-            terrainModel.WorldState.MoveUp(-8);
-            terrainModel.WorldState.MoveForward(25);
+            scene.AddNode(discModel);
+            discModel.WorldState.MoveUp(-8);
+            discModel.WorldState.MoveForward(25);
         }
 
         private void CreateLights()
@@ -124,21 +177,12 @@ namespace TiVi
 
         private void CreateCircles()
         {
-            ChamferBoxPrimitive primitive = new ChamferBoxPrimitive();
-            primitive.Length = 0.6f;
-            primitive.Width = 0.6f;
-            primitive.Height = 0.1f;
-            primitive.Fillet = 0.05f;
-            primitive.FilletSegments = 4;
-            UvMapPlane uvMap = new UvMapPlane();
-            uvMap.Input = primitive;
-            uvMap.AlignToAxis = 1;
-            //uvMap.TileV = 2;
-
             MeshBuilder.SetDiffuseTexture("Default1", "square.tga");
             MeshBuilder.SetDiffuseColor("Default1", new ColorValue(0.8f, 0.8f, 0.8f, 0.8f));
-            //MeshBuilder.SetAmbientColor("Default1", new ColorValue(0.5f, 0.5f, 0.5f, 0.8f));
-            IModel model = MeshBuilder.CreateModel(uvMap, "Default1");
+            director.CreateChamferBox(0.6f, 0.6f, 0.1f, 0.05f, 4);
+            director.UvMapPlane(1, 1, 1);
+            //director.Rotate(0, (float)Math.PI / 4, 0);
+            IModel model = director.Generate("Default1");
             EffectHandler effectHandler = new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
                 delegate(int material) { return "Terrain"; }, model);
             float t = 0;
@@ -158,6 +202,13 @@ namespace TiVi
 
         public override void Step()
         {
+            discModel.WorldState.Reset();
+            discModel2.WorldState.Reset();
+            discModel.WorldState.MoveUp(0.85f);
+            //discModel2.WorldState.MoveUp(-1.35f);
+
+            discModel.WorldState.Turn(Time.StepTime * 2);
+            discModel.WorldState.Tilt(0.3f);
             //Mixer.ClearColor = Color.FromArgb(0, Color.White);
             for (int i = 0; i < NUM_LIGHTS; i++)
                 lights[i].Position = new Vector3(
@@ -196,6 +247,8 @@ namespace TiVi
         public override void Render()
         {
             scene.Render();
+            discModel.Render(scene);
+            discModel2.Render(scene);
         }
     }
 }
