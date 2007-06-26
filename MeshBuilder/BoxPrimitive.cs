@@ -45,65 +45,71 @@ namespace Dope.DDXX.MeshBuilder
             short i = 0;
             // Front
             i = BoxAddIndicesForSide(v, i, indices, 1, 1);
-            vertices[v].Normal = new Vector3(0, 0, -1);
+            AddBoxNormalsForSide(vertices, v, new Vector3(0, 0, -1));
+            AddBoxUvForSide(vertices, v);
             vertices[v++].Position = new Vector3(-width / 2, height / 2, -length / 2);
-            vertices[v].Normal = new Vector3(0, 0, -1);
             vertices[v++].Position = new Vector3(width / 2, height / 2, -length / 2);
-            vertices[v].Normal = new Vector3(0, 0, -1);
             vertices[v++].Position = new Vector3(-width / 2, -height / 2, -length / 2);
-            vertices[v].Normal = new Vector3(0, 0, -1);
             vertices[v++].Position = new Vector3(width / 2, -height / 2, -length / 2);
             // Back
             i = BoxAddIndicesForSide(v, i, indices, 1, 1);
-            vertices[v].Normal = new Vector3(0, 0, 1);
+            AddBoxNormalsForSide(vertices, v, new Vector3(0, 0, 1));
+            AddBoxUvForSide(vertices, v);
             vertices[v++].Position = new Vector3(width / 2, height / 2, length / 2);
-            vertices[v].Normal = new Vector3(0, 0, 1);
             vertices[v++].Position = new Vector3(-width / 2, height / 2, length / 2);
-            vertices[v].Normal = new Vector3(0, 0, 1);
             vertices[v++].Position = new Vector3(width / 2, -height / 2, length / 2);
-            vertices[v].Normal = new Vector3(0, 0, 1);
             vertices[v++].Position = new Vector3(-width / 2, -height / 2, length / 2);
             // Top
             i = BoxAddIndicesForSide(v, i, indices, 1, 1);
-            vertices[v].Normal = new Vector3(0, 1, 0);
+            AddBoxNormalsForSide(vertices, v, new Vector3(0, 1, 0));
+            AddBoxUvForSide(vertices, v);
             vertices[v++].Position = new Vector3(-width / 2, height / 2, length / 2);
-            vertices[v].Normal = new Vector3(0, 1, 0);
             vertices[v++].Position = new Vector3(width / 2, height / 2, length / 2);
-            vertices[v].Normal = new Vector3(0, 1, 0);
             vertices[v++].Position = new Vector3(-width / 2, height / 2, -length / 2);
-            vertices[v].Normal = new Vector3(0, 1, 0);
             vertices[v++].Position = new Vector3(width / 2, height / 2, -length / 2);
             // Bottom
             i = BoxAddIndicesForSide(v, i, indices, 1, 1);
-            vertices[v].Normal = new Vector3(0, -1, 0);
+            AddBoxNormalsForSide(vertices, v, new Vector3(0, -1, 0));
+            AddBoxUvForSide(vertices, v);
             vertices[v++].Position = new Vector3(-width / 2, -height / 2, -length / 2);
-            vertices[v].Normal = new Vector3(0, -1, 0);
             vertices[v++].Position = new Vector3(width / 2, -height / 2, -length / 2);
-            vertices[v].Normal = new Vector3(0, -1, 0);
             vertices[v++].Position = new Vector3(-width / 2, -height / 2, length / 2);
-            vertices[v].Normal = new Vector3(0, -1, 0);
             vertices[v++].Position = new Vector3(width / 2, -height / 2, length / 2);
             // Left
             i = BoxAddIndicesForSide(v, i, indices, 1, 1);
-            vertices[v].Normal = new Vector3(-1, 0, 0);
+            AddBoxNormalsForSide(vertices, v, new Vector3(-1, 0, 0));
+            AddBoxUvForSide(vertices, v);
             vertices[v++].Position = new Vector3(-width / 2, height / 2, length / 2);
-            vertices[v].Normal = new Vector3(-1, 0, 0);
             vertices[v++].Position = new Vector3(-width / 2, height / 2, -length / 2);
-            vertices[v].Normal = new Vector3(-1, 0, 0);
             vertices[v++].Position = new Vector3(-width / 2, -height / 2, length / 2);
-            vertices[v].Normal = new Vector3(-1, 0, 0);
             vertices[v++].Position = new Vector3(-width / 2, -height / 2, -length / 2);
             // Right
             i = BoxAddIndicesForSide(v, i, indices, 1, 1);
-            vertices[v].Normal = new Vector3(1, 0, 0);
+            AddBoxNormalsForSide(vertices, v, new Vector3(1, 0, 0));
+            AddBoxUvForSide(vertices, v);
             vertices[v++].Position = new Vector3(width / 2, height / 2, -length / 2);
-            vertices[v].Normal = new Vector3(1, 0, 0);
             vertices[v++].Position = new Vector3(width / 2, height / 2, length / 2);
-            vertices[v].Normal = new Vector3(1, 0, 0);
             vertices[v++].Position = new Vector3(width / 2, -height / 2, -length / 2);
-            vertices[v].Normal = new Vector3(1, 0, 0);
             vertices[v++].Position = new Vector3(width / 2, -height / 2, length / 2);
             body = null;
+        }
+
+        private static void AddBoxUvForSide(Vertex[] vertices, short v)
+        {
+            vertices[v].U = 0;
+            vertices[v].V = 0;
+            vertices[v + 1].U = 1;
+            vertices[v + 1].V = 0;
+            vertices[v + 2].U = 0;
+            vertices[v + 2].V = 1;
+            vertices[v + 3].U = 1;
+            vertices[v + 3].V = 1;
+        }
+
+        private void AddBoxNormalsForSide(Vertex[] vertices, short v, Vector3 normal)
+        {
+            for (int i = 0; i < 4; i++)
+                vertices[v + i].Normal = normal;
         }
 
         internal static short BoxAddIndicesForSide(short v, short i,

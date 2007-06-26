@@ -73,12 +73,13 @@
 			<Parameter float="0.1" />
 		</SetupCall>
 	</Effect>
-	<Effect name="TunnelFlight" track="0" startTime="0" endTime="300" />
+  <Effect name="FlipSign" track="0" startTime="0" endTime="300" />
+  <!--<Effect name="TunnelFlight" track="0" startTime="0" endTime="300" />-->
 	<PostEffect name="GlowPostEffect" track="0" startTime="0" endTime="300">
 		<Parameter name="BloomScale" float="1.6" />
 		<Parameter name="Exposure" float="1" />
 		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="WhiteCutoff" float="0.3" />
+		<Parameter name="WhiteCutoff" float="0.5999997" />
 		<Parameter name="Luminance" float="0.2" />
 	</PostEffect>
 

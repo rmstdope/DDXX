@@ -212,7 +212,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Reflective.hlsl"
+				>
+			</File>
+			<File
 				RelativePath=".\SharedVariables.hlsl"
+				>
+			</File>
+			<File
+				RelativePath=".\Simple.hlsl"
 				>
 			</File>
 			<File

@@ -111,4 +111,16 @@ struct ShadowVertexOutputStream_1_1
 	float4 Position   : POSITION;   // vertex position 
 };
 
+/// Common struct for ordinary vertex shaders
+struct VertexShaderInput
+{
+	float4	Position			: POSITION;			// Vertex Position
+	float3	BlendWeights	: BLENDWEIGHT;	// Blend weight
+	int4		BlendIndices	: BLENDINDICES;	// Bland indices
+	float3	Normal				: NORMAL;				// Vertex Normal
+	float3	Tangent				: TANGENT;			// Vertex Tangent
+	float2	TexCoords			: TEXCOORD0;		// Vertex Texture Coordinate
+};
+
+
 #endif

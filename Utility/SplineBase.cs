@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Dope.DDXX.Utility
 {
-    public abstract class SplineBase<Type>
+    public abstract class SplineBase<Type> : ISpline<Type>
         where Type : IArithmetic
     {
         protected List<KeyFrame<Type>> keyFrames;

@@ -15,6 +15,26 @@ namespace Dope.DDXX.MeshBuilder
             this.builder = builder;
         }
 
+        public void CreatePlane(float width, float height, int widthSegments, int heightSegments, bool textured)
+        {
+            PlanePrimitive plane = new PlanePrimitive();
+            plane.Width = width;
+            plane.Height = height;
+            plane.WidthSegments = widthSegments;
+            plane.HeightSegments = heightSegments;
+            plane.Textured = textured;
+            primitive = plane;
+        }
+
+        public void CreateBox(float width, float length, float height)
+        {
+            BoxPrimitive box = new BoxPrimitive();
+            box.Height = height;
+            box.Length = length;
+            box.Width = width;
+            primitive = box;
+        }
+
         public void CreateChamferBox(float width, float length, float height, float fillet, int filletSegments)
         {
             ChamferBoxPrimitive chamferBox = new ChamferBoxPrimitive();

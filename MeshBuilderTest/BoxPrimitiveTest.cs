@@ -108,6 +108,8 @@ namespace Dope.DDXX.MeshBuilder
             CheckRectangleClockwise(i, 2, normal);
             // Check normals
             CheckRectangleNormals(v, v + 4, normal);
+            // Check UV
+            CheckUv(v);
         }
 
         private int GetBoxStartVertex(Side side, int lengthSegments, int widthSegments, int heightSegments)
@@ -118,6 +120,18 @@ namespace Dope.DDXX.MeshBuilder
         private int GetBoxStartIndex(Side side, int lengthSegments, int widthSegments, int heightSegments)
         {
             return 6 * (int)side;
+        }
+
+        private void CheckUv(int v)
+        {
+            Assert.AreEqual(0, vertices[v + 0].U);
+            Assert.AreEqual(0, vertices[v + 0].V);
+            Assert.AreEqual(1, vertices[v + 1].U);
+            Assert.AreEqual(0, vertices[v + 1].V);
+            Assert.AreEqual(0, vertices[v + 2].U);
+            Assert.AreEqual(1, vertices[v + 2].V);
+            Assert.AreEqual(1, vertices[v + 3].U);
+            Assert.AreEqual(1, vertices[v + 3].V);
         }
 
         private void CheckRectangleInPlane(int startIndex, int endIndex, Plane plane)

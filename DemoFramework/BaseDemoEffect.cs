@@ -94,6 +94,13 @@ namespace Dope.DDXX.DemoFramework
             scene.ActiveCamera = camera;
         }
 
+        protected ModelNode CreateSimpleModelNode(IModel model, string effectFileName, string techniqueName)
+        {
+            IEffectHandler effectHandler = new EffectHandler(EffectFactory.CreateFromFile(effectFileName),
+                delegate(int material) { return techniqueName; }, model);
+            return new ModelNode("", model, effectHandler);
+        }
+
         protected abstract void Initialize();
 
         #region IDemoEffect Members
