@@ -148,6 +148,8 @@ namespace Dope.DDXX.Graphics
                 present.BackBufferHeight = desc.height;
                 present.BackBufferFormat = desc.colorFormat;
             }
+            //present.MultiSample = MultiSampleType.NonMaskable;
+            //present.MultiSampleQuality = 1;
 
             SetDepthStencil(desc, present);
 

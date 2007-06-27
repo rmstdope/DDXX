@@ -76,7 +76,7 @@
   <Effect name="FlipSign" track="0" startTime="0" endTime="300" />
   <!--<Effect name="TunnelFlight" track="0" startTime="0" endTime="300" />-->
 	<PostEffect name="GlowPostEffect" track="0" startTime="0" endTime="300">
-		<Parameter name="BloomScale" float="1.6" />
+		<Parameter name="BloomScale" float="3.099999" />
 		<Parameter name="Exposure" float="1" />
 		<Parameter name="DrawOrder" int="1" />
 		<Parameter name="WhiteCutoff" float="0.5999997" />

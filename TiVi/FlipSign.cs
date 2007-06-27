@@ -32,16 +32,48 @@ namespace TiVi
             CreateBoard();
             CreatePieces();
             CreateCameraInterpolator();
+
+            PointLightNode light = new PointLightNode("");
+            light.Position = new Vector3(0, 4, 0);
+            light.DiffuseColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
+            scene.AddNode(light);
+        }
+
+        enum Pieces
+        {
+            Pawn = 0,
+            Rook,
+            Bishop,
+            Queen,
+            King,
+            Knight,
+            NumPieces
         }
 
         private void CreatePieces()
         {
             XLoader.Load("ChessPieces2.X", EffectFactory.CreateFromFile("TiVi.fxo"), TechniqueChooser.MeshPrefix("Reflective"));
-            //List<INode> nodes = XLoader.GetNodeHierarchy();
             XLoader.AddToScene(scene);
-            ModelNode node = scene.GetNodeByName("Pawn") as ModelNode;
-            node.Model.Materials[0].ReflectiveTexture = TextureFactory.CreateCubeFromFile("rnl_cross.dds");
-            node.Model.Materials[0].ReflectiveFactor = 0.02f;
+            ModelNode[] models = new ModelNode[(int)Pieces.NumPieces];
+            models[(int)Pieces.Pawn] = scene.GetNodeByName("Pawn") as ModelNode;
+            models[(int)Pieces.Rook] = scene.GetNodeByName("Rook") as ModelNode;
+            models[(int)Pieces.Bishop] = scene.GetNodeByName("Bishop") as ModelNode;
+            models[(int)Pieces.Queen] = scene.GetNodeByName("Queen") as ModelNode;
+            models[(int)Pieces.King] = scene.GetNodeByName("King") as ModelNode;
+            models[(int)Pieces.Knight] = scene.GetNodeByName("Knight") as ModelNode;
+            for (int i = 0; i < (int)Pieces.NumPieces; i++)
+            {
+                if (i == (int)Pieces.Knight)
+                    models[(int)Pieces.Knight].WorldState.Scale(0.00007f);
+                else
+                    models[i].WorldState.Scale(0.0003f);
+                models[i].WorldState.Tilt((float)Math.PI / 2);
+                models[i].WorldState.MoveRight(-2 + i);
+                models[i].Model.Materials[0].ReflectiveTexture = TextureFactory.CreateCubeFromFile("rnl_cross.dds");
+                models[i].Model.Materials[0].ReflectiveFactor = 0.015f;
+                models[i].Model.Materials[0].AmbientColor = new ColorValue(0.05f, 0.05f, 0.05f, 0.05f);
+                models[i].Model.Materials[0].DiffuseColor = new ColorValue(0.6f, 0.6f, 0.6f, 0.6f);
+            }
         }
 
         private void CreateCameraInterpolator()
@@ -61,7 +93,7 @@ namespace TiVi
         {
             MeshBuilder.SetDiffuseTexture("Default1", "Square.tga");
             MeshBuilder.SetReflectiveTexture("Default1", "rnl_cross.dds");
-            MeshBuilder.SetReflectiveFactor("Default1", 0.2f);
+            MeshBuilder.SetReflectiveFactor("Default1", 0.4f);
             meshDirector = new MeshDirector(MeshBuilder);
             meshDirector.CreatePlane(1, 1, 1, 1, true);
             meshDirector.Rotate((float)Math.PI / 2, 0, 0);
@@ -74,7 +106,13 @@ namespace TiVi
                     ModelNode node = CreateSimpleModelNode(model, "TiVi.fxo", "Reflective");
                     node.WorldState.MoveForward(-1.05f * (y - NUM_SIGNS_Y / 2));
                     node.WorldState.MoveRight(-1.05f * (x - NUM_SIGNS_X / 2));
-                    node.Model.Materials[0].AmbientColor = new ColorValue(c, c, c, c);
+                    float color = 0.1f + c * 0.2f;
+                    node.Model.Materials[0].AmbientColor = new ColorValue(0.05f, 0.05f, 0.05f, 0.05f);
+                    node.Model.Materials[0].DiffuseColor = new ColorValue(color, color, color, color);
+                    if (c == 0)
+                        node.Model.Materials[0].ReflectiveFactor = 0.1f;
+                    else
+                        node.Model.Materials[0].ReflectiveFactor = 0.04f;
                     c = 1 - c;
                     signs[y * NUM_SIGNS_X + x] = node;
                     scene.AddNode(node);
