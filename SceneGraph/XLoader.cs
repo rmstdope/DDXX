@@ -73,5 +73,30 @@ namespace Dope.DDXX.SceneGraph
                 node = nodeFactory.CreateDummyNode(frame);
             return node;
         }
+
+        public List<INode> GetNodeHierarchy()
+        {
+            List<INode> nodes = new List<INode>();
+            GetNodeHierarchy(rootFrame.FrameHierarchy, null, nodes);
+            return nodes;
+        }
+
+        private INode GetNodeHierarchy(IFrame frame, INode parentNode, List<INode> nodes)
+        {
+            INode node = CreateNode(frame);
+            if (parentNode == null)
+                nodes.Add(node);
+            else
+                parentNode.AddChild(node);
+            if (frame.FrameFirstChild != null)
+            {
+                node.AddChild(AddToScene(frame.FrameFirstChild, node));
+            }
+            if (frame.FrameSibling != null)
+            {
+                parentNode.AddChild(AddToScene(frame.FrameSibling, parentNode));
+            }
+            return node;
+        }
     }
 }

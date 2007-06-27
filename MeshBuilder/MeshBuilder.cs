@@ -130,7 +130,7 @@ namespace Dope.DDXX.MeshBuilder
             IMesh mesh = CreateMesh(graphicsFactory, device, vertices, indices);
             ModelMaterial modelMaterial = null;
             if (material != "")
-                modelMaterial = GetMaterial(material);
+                modelMaterial = GetMaterial(material).Clone();
             if (modelMaterial == null)
                 modelMaterial = new ModelMaterial(new Material());
             if (body == null)

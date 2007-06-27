@@ -97,9 +97,24 @@ namespace Dope.DDXX.Physics
 
         public void Reset()
         {
-            position = new Vector3(0, 0, 0);
-            scaling = new Vector3(1, 1, 1);
+            ResetPosition();
+            ResetScaling();
+            ResetRotation();
+        }
+
+        public void ResetRotation()
+        {
             rotation = Matrix.Identity;
+        }
+
+        public void ResetScaling()
+        {
+            scaling = new Vector3(1, 1, 1);
+        }
+
+        public void ResetPosition()
+        {
+            position = new Vector3(0, 0, 0);
         }
 
         public void Turn(float angle)

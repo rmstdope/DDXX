@@ -67,8 +67,7 @@ namespace Dope.DDXX.SceneGraph
         {
             get 
             {
-                if (frame != null)
-                    throw new DDXXException("NodeBase.WorldState can not be used for a node which is in frame mode.");
+                EnableFrameHandling(null);
                 return worldState; 
             }
         }
@@ -134,7 +133,7 @@ namespace Dope.DDXX.SceneGraph
 
         public void EnableFrameHandling(IFrame frame)
         {
-            //this.frame = frame;
+            this.frame = frame;
         }
 
         public Vector3 Position 

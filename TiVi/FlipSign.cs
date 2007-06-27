@@ -13,8 +13,8 @@ namespace TiVi
 {
     public class FlipSign : BaseDemoEffect
     {
-        private const int NUM_SIGNS_X = 32;
-        private const int NUM_SIGNS_Y = 18;
+        private const int NUM_SIGNS_X = 8;
+        private const int NUM_SIGNS_Y = 8;
         private IScene scene;
         private CameraNode camera;
         private MeshDirector meshDirector;
@@ -29,35 +29,57 @@ namespace TiVi
         protected override void Initialize()
         {
             CreateStandardSceneAndCamera(out scene, out camera, 10);
-            CreateSigns();
+            CreateBoard();
+            CreatePieces();
+            CreateCameraInterpolator();
+        }
 
+        private void CreatePieces()
+        {
+            XLoader.Load("ChessPieces2.X", EffectFactory.CreateFromFile("TiVi.fxo"), TechniqueChooser.MeshPrefix("Reflective"));
+            //List<INode> nodes = XLoader.GetNodeHierarchy();
+            XLoader.AddToScene(scene);
+            ModelNode node = scene.GetNodeByName("Pawn") as ModelNode;
+            node.Model.Materials[0].ReflectiveTexture = TextureFactory.CreateCubeFromFile("rnl_cross.dds");
+            node.Model.Materials[0].ReflectiveFactor = 0.02f;
+        }
+
+        private void CreateCameraInterpolator()
+        {
             ClampedCubicSpline<InterpolatedVector3> spline = new ClampedCubicSpline<InterpolatedVector3>(new InterpolatedVector3(), new InterpolatedVector3());
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(0, new InterpolatedVector3(new Vector3(0, 0, -10))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(2, new InterpolatedVector3(new Vector3(5, 3, -8))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(4, new InterpolatedVector3(new Vector3(-3, 5, -8))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(6, new InterpolatedVector3(new Vector3(2, -3, -12))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(9, new InterpolatedVector3(new Vector3(0, 0, -10))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(0, new InterpolatedVector3(new Vector3(0, 2, -6))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(2, new InterpolatedVector3(new Vector3(3, 3, -8))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(4, new InterpolatedVector3(new Vector3(-2, 3, 8))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(6, new InterpolatedVector3(new Vector3(2, 4, 12))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(9, new InterpolatedVector3(new Vector3(0, 2, -6))));
             spline.Calculate();
             interpolator = new Interpolator<InterpolatedVector3>();
             interpolator.AddSpline(spline);
         }
 
-        private void CreateSigns()
+        private void CreateBoard()
         {
             MeshBuilder.SetDiffuseTexture("Default1", "Square.tga");
             MeshBuilder.SetReflectiveTexture("Default1", "rnl_cross.dds");
             MeshBuilder.SetReflectiveFactor("Default1", 0.2f);
             meshDirector = new MeshDirector(MeshBuilder);
             meshDirector.CreatePlane(1, 1, 1, 1, true);
-            IModel model = meshDirector.Generate("Default1");
+            meshDirector.Rotate((float)Math.PI / 2, 0, 0);
+            float c = 0;
             for (int y = 0; y < NUM_SIGNS_Y; y++)
             {
                 for (int x = 0; x < NUM_SIGNS_X; x++)
                 {
+                    IModel model = meshDirector.Generate("Default1");
                     ModelNode node = CreateSimpleModelNode(model, "TiVi.fxo", "Reflective");
+                    node.WorldState.MoveForward(-1.05f * (y - NUM_SIGNS_Y / 2));
+                    node.WorldState.MoveRight(-1.05f * (x - NUM_SIGNS_X / 2));
+                    node.Model.Materials[0].AmbientColor = new ColorValue(c, c, c, c);
+                    c = 1 - c;
                     signs[y * NUM_SIGNS_X + x] = node;
                     scene.AddNode(node);
                 }
+                c = 1 - c;
             }
         }
 
@@ -69,21 +91,19 @@ namespace TiVi
             {
                 for (int x = 0; x < NUM_SIGNS_X; x++)
                 {
-                    ModelNode node = signs[y * NUM_SIGNS_X + x];
-                    node.WorldState.Reset();
-                    node.WorldState.MoveUp(-1.05f * (y - NUM_SIGNS_Y / 2));
-                    node.WorldState.MoveRight(-1.05f * (x - NUM_SIGNS_X / 2));
-                    float t = (Time.StepTime + (x - y) / 40.0f) % 3;
-                    const float period = 1.2f;
-                    if (t < period)
-                    {
-                        float d = (float)Math.Sin(t / period * Math.PI);
-                        node.WorldState.MoveForward(-d * 0.5f);
+                    //ModelNode node = signs[y * NUM_SIGNS_X + x];
+                    //node.WorldState.ResetRotation();
+                    //float t = (Time.StepTime + (x - y) / 20.0f) % 3;
+                    //const float period = 0.5f;
+                    //if (t < period)
+                    //{
+                    //    float d = (float)Math.Sin(t / period * Math.PI);
+                        //node.WorldState.MoveForward(-d * 0.5f);
                         //node.WorldState.Turn(d * 1.0f);
                         //node.WorldState.Tilt(d * 1.0f);
-                        node.WorldState.Roll(d * 2);
-                        node.Model.Materials[0].AmbientColor = new ColorValue(0.8f, 0.6f, d);
-                    }
+                        //node.WorldState.Roll(d * 0.5f);
+                        //node.Model.Materials[0].AmbientColor = new ColorValue(0.8f, 0.6f, d);
+                    //}
                 }
             }
             scene.Step();

@@ -131,6 +131,22 @@ namespace Dope.DDXX.SceneGraph
         }
 
         /// <summary>
+        /// Test loading of a root frame only
+        /// </summary>
+        [Test]
+        public void TestNodeHierarchyOneNode()
+        {
+            TestLoad();
+
+            Expect.Once.On(rootFrame).GetProperty("FrameFirstChild").Will(Return.Value(null));
+            Expect.Once.On(rootFrame).GetProperty("FrameSibling").Will(Return.Value(null));
+            nodes = loader.GetNodeHierarchy();
+            Assert.AreEqual(1, nodes.Count, "One node should have been added.");
+            Assert.AreEqual(typeof(DummyNode), nodes[0].GetType(), "Root node shall be a dummy node.");
+            Assert.AreEqual(0, nodes[0].Children.Count, "Added node should have no children.");
+        }
+
+        /// <summary>
         /// Test loading of a Camera 
         /// </summary>
         [Test]
@@ -150,6 +166,26 @@ namespace Dope.DDXX.SceneGraph
             Assert.AreEqual(typeof(CameraNode), nodes[0].Children[0].GetType(), "Child node shall be a camera node.");
             Assert.AreEqual(0, nodes[0].Children[0].Children.Count, "Child node should have no children.");
             Assert.AreSame(hierarchy, addedHierarchy, "hierarchy should have been added to the scene.");
+        }
+
+        /// <summary>
+        /// Test loading of a Camera 
+        /// </summary>
+        [Test]
+        public void TestGetHierarchyTwoNodes()
+        {
+            TestLoad();
+
+            Stub.On(rootFrame).GetProperty("FrameFirstChild").Will(Return.Value(rootChild1));
+            Stub.On(rootFrame).GetProperty("FrameSibling").Will(Return.Value(null));
+            Stub.On(rootChild1).GetProperty("FrameFirstChild").Will(Return.Value(null));
+            Stub.On(rootChild1).GetProperty("FrameSibling").Will(Return.Value(null));
+            nodes = loader.GetNodeHierarchy();
+            Assert.AreEqual(1, nodes.Count, "One node should have been added.");
+            Assert.AreEqual(typeof(DummyNode), nodes[0].GetType(), "Root node shall be a dummy node.");
+            Assert.AreEqual(1, nodes[0].Children.Count, "Added node should have one child.");
+            Assert.AreEqual(typeof(CameraNode), nodes[0].Children[0].GetType(), "Child node shall be a camera node.");
+            Assert.AreEqual(0, nodes[0].Children[0].Children.Count, "Child node should have no children.");
         }
 
         /// <summary>
