@@ -140,17 +140,3 @@ namespace Dope.DDXX.MeshBuilder
         #endregion
     }
 }
-
-
-
-            //// Remap uv
-            //for (int i = 0; i < vertexList.Count; i++)
-            //{
-            //    Vertex vertex = vertexList[i];
-            //    Vector3 normal = vertex.Position;
-            //    normal.Normalize();
-            //    // http://www.mvps.org/directx/articles/spheremap.htm
-            //    vertex.U = (float)(Math.Asin(normal.X) / Math.PI) + 0.5f;
-            //    vertex.V = (float)(Math.Asin(normal.Y) / Math.PI) + 0.5f;
-            //    vertexList[i] = vertex;
-            //}

@@ -192,7 +192,7 @@ namespace Dope.DDXX.DemoFramework
             while (Time.StepTime <= EndTime + 2.0f && !tweaker.Quit)
             {
                 Step();
-
+                
                 Render();
             }
 

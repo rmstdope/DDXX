@@ -190,8 +190,9 @@ namespace Dope.DDXX.DemoFramework
             TestInitializeOKSong();
 
             executer.BackgroundColor = Color.CornflowerBlue;
-            Expect.Once.On(tweaker).
-                Method("HandleInput").Will(Return.Value(true));
+
+            ExpectStepCalled(new int[] { });
+
             Expect.Once.On(soundDriver).
                 Method("PlaySound").Will(Return.Value(channel));
             Expect.Once.On(soundDriver).
@@ -232,33 +233,45 @@ namespace Dope.DDXX.DemoFramework
             Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(1000.0f));
 
             executer.BackgroundColor = Color.DarkSlateBlue;
+
+            // Expect Step()
+            ExpectStepCalled(new int[] { 0 });
+
+            // Expect Render()
+            Expect.Exactly(2).On(device).
+                Method("GetRenderTarget").With(0).Will(Return.Value(surface));
+            Expect.Exactly(2).On(device).
+                Method("SetRenderTarget").With(0, surface);
             Expect.Once.On(device).
                 Method("Clear").
                 With(ClearFlags.Target | ClearFlags.ZBuffer, System.Drawing.Color.DarkSlateBlue, 1.0f, 0);
             Expect.Once.On(postProcessor).
                 Method("StartFrame").With(texture);
-            Expect.Exactly(2).On(device).
-                Method("GetRenderTarget").With(0).Will(Return.Value(surface));
-            Expect.Exactly(2).On(device).
-                Method("SetRenderTarget").With(0, surface);
+            Expect.Once.On(tracks[0]).
+                Method("Render").With(device);
+            Expect.Once.On(tweaker).
+                Method("Draw");
             Expect.Once.On(postProcessor).
                 GetProperty("OutputTexture").Will(Return.Value(texture));
             Expect.Once.On(device).
                 Method("StretchRectangle");
             Expect.Once.On(device).
                 Method("Present");
-            Expect.Once.On(tracks[0]).
-                Method("Step");
-            Expect.Once.On(tweaker).
-                Method("HandleInput").Will(Return.Value(true));
-            Expect.Once.On(tracks[0]).
-                Method("Render").With(device);
-            Expect.Once.On(tweaker).
-                Method("Draw");
 
             LimitRunLoop(1);
 
             executer.Run();
+        }
+
+        private void ExpectStepCalled(int[] trackNum)
+        {
+            foreach (int track in trackNum)
+            {
+                Expect.Once.On(tracks[track]).
+                    Method("Step");
+            }
+            Expect.Once.On(tweaker).
+                Method("HandleInput").Will(Return.Value(true));
         }
 
         [Test]
