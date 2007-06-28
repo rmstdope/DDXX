@@ -54,6 +54,7 @@
     <Compile Include="TorusPrimitiveTest.cs" />
     <Compile Include="TranslateTest.cs" />
     <Compile Include="UvMapPlaneTest.cs" />
+    <Compile Include="UvMapSphereTest.cs" />
     <Compile Include="UvRemapTest.cs" />
     <Compile Include="WeldTest.cs" />
   </ItemGroup>

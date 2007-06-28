@@ -57,6 +57,7 @@
     <Compile Include="TorusPrimitive.cs" />
     <Compile Include="Translate.cs" />
     <Compile Include="UvMapPlane.cs" />
+    <Compile Include="UvMapSphere.cs" />
     <Compile Include="UvRemap.cs" />
     <Compile Include="Vertex.cs" />
     <Compile Include="Weld.cs" />

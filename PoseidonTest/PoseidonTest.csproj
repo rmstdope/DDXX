@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ModelEffect.cs" />
     <Compile Include="PoseidonTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -78,6 +79,10 @@
     <ProjectReference Include="..\Input\Input.csproj">
       <Project>{E2280509-C330-4684-90FD-336B8CD4D7EF}</Project>
       <Name>Input</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MeshBuilder\MeshBuilder.csproj">
+      <Project>{CF2AB575-856D-4160-8DCD-7A5729579892}</Project>
+      <Name>MeshBuilder</Name>
     </ProjectReference>
     <ProjectReference Include="..\ParticleSystems\ParticleSystems.csproj">
       <Project>{AA378577-B1F3-4C03-A968-C990445C7AC1}</Project>

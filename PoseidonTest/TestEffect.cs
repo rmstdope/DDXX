@@ -204,8 +204,8 @@ namespace PoseidonTest
         {
             ModelMaterial material = new ModelMaterial(new Material());
             material.DiffuseTexture = TextureFactory.CreateFromFile("wings.bmp");
-            material.DiffuseColor = ColorValue.FromColor(Color.Blue);
-            material.Ambient = Color.White;
+            material.DiffuseColor = ColorValue.FromColor(Color.Gray);
+            material.Ambient = Color.MediumAquamarine;
             SourceTexture = material.DiffuseTexture;
             ModelMaterial[] modelMaterials = new ModelMaterial[] { material };
             IModel model = TexturedBox(ModelFactory.CreateBox(100, 100, 1), modelMaterials);
@@ -230,7 +230,7 @@ namespace PoseidonTest
 
             DummyNode pinBoardNode = new DummyNode("PinBoard");
             int boxWidth = 2;
-            int boxSpace = 4;
+            float boxSpace = 2.2f;
             float zSize = 1.0f;
             IModel pinModel = TexturedBox(ModelFactory.CreateBox(boxWidth, boxWidth, zSize), modelMaterials, zSize/2.0f);
             for (int x = 0; x < xmax; x++)
@@ -238,8 +238,8 @@ namespace PoseidonTest
                 for (int y = 0; y < ymax; y++)
                 {
                     ModelNode node = new ModelNode("PinModelNode", pinModel, effectHandler);
-                    float posx = x * boxSpace - xmax * boxSpace / 2;
-                    float posy = y * boxSpace - ymax * boxSpace / 2;
+                    float posx = x * boxSpace - xmax * boxSpace / 2.0f;
+                    float posy = y * boxSpace - ymax * boxSpace / 2.0f;
                     heightMap[y * xmax + x] = 0;
                     node.WorldState.Position = new Vector3(posx, posy, 0);
                     modelNodes[x, y] = node;
@@ -266,9 +266,19 @@ namespace PoseidonTest
                 {
                     Vector3 scaling = modelNodes[x, y].WorldState.Scaling;
                     scaling.Z = ZScale * heightMap[y * xmax + x];
+                    if (scaling.Z < 0)
+                        scaling.Z = 0;
                     modelNodes[x, y].WorldState.Scaling = scaling;
                 }
             }
+            for (int x=0; x<xmax; x++)
+                for (int y = 0; y < ymax; y++)
+                {
+                    Vector3 scaling = modelNodes[x, y].WorldState.Scaling;
+                    scaling.Z = 15.0f + 15.0f * (float)Math.Sin(Time.StepTime*0.8 + 0.2f * x) + 
+                        15.0f + 15.0f * (float)Math.Cos(Time.StepTime + 0.3f * y);
+                    modelNodes[x, y].WorldState.Scaling = scaling;
+                }
         }
 
         private IMesh CreateBox()

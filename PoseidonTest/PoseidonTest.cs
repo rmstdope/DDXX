@@ -48,14 +48,13 @@ namespace PoseidonTest
                     DevicePrerequisits prerequisits = new DevicePrerequisits();
 
                     window.Initialize("PoseidonTest", desc, prerequisits);
-                    //executer.Initialize("" /* "dope-wanting_more-dhw2006-v2-320.mp3" */, 
-                    //    new Assembly[] { Assembly.GetExecutingAssembly() }, 
-                    //    "PoseidonTest.xml");
-                    RegisterEffects(executer);
                     executer.Initialize(D3DDriver.GetInstance().Device,
                         D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
                         new TextureBuilder(D3DDriver.TextureFactory),
-                        "");
+                        "PoseidonTest.xml");
+                    /* "dope-wanting_more-dhw2006-v2-320.mp3" */
+                    //    new Assembly[] { Assembly.GetExecutingAssembly() }, 
+                    //    "PoseidonTest.xml");
                     executer.Run();
                     window.CleanUp();
                 }
@@ -64,7 +63,7 @@ namespace PoseidonTest
             {
                 if (DialogResult.Yes == MessageBox.Show(exception.ToString(), "It seems you are having problems...", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2))
                 {
-                    MessageBox.Show(exception.Callstack(), "Callstack"); 
+                    MessageBox.Show(exception.Callstack(), "Callstack");
                 }
             }
             catch (Exception exception)
