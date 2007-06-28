@@ -38,6 +38,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BooleanUnion.cs" />
     <Compile Include="BoxPrimitive.cs" />
     <Compile Include="ChamferBoxPrimitive.cs" />
     <Compile Include="ClothPrimitive.cs" />

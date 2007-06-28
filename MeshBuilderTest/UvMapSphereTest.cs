@@ -38,6 +38,7 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestBodyAndIndices()
         {
+            this.vertices = new Vertex[] { };
             map.Generate(out outputVertices, out outputIndices, out outputBody);
             Assert.AreSame(this, body);
             Assert.AreSame(indices, outputIndices);

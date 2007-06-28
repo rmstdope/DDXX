@@ -43,6 +43,7 @@
     <Compile Include="BoxPrimitiveTest.cs" />
     <Compile Include="ChamferBoxPrimitiveTest.cs" />
     <Compile Include="ClothPrimitiveTest.cs" />
+    <Compile Include="BooleanUnionTest.cs" />
     <Compile Include="CylinderPrimitiveTest.cs" />
     <Compile Include="MeshBuilderTest.cs" />
     <Compile Include="PlanePrimitiveTest.cs" />
