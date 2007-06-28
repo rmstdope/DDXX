@@ -555,10 +555,11 @@ BrightenPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 	float3 ColorOut = sample.rgb;
 
 	// Map to LDR
-	//ColorOut *= Exposure/ (Luminance + 0.001f);
+	ColorOut *= Exposure/ (Luminance + 0.001f);
 
 	// Subtract out dark pixels
-	ColorOut -= WhiteCutoff;
+	ColorOut *= (1.0f + (ColorOut / (WhiteCutoff * WhiteCutoff)));
+	ColorOut -= 5.0f;
 
 	// Clamp to 0
 	ColorOut = max(ColorOut, 0.0f);
@@ -566,7 +567,7 @@ BrightenPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 	// Map the resulting value into the 0 to 1 range. Higher values than
 	// 10 will isolate lights from illuminated scene 
 	// objects.
-	//ColorOut /= (10.0f + ColorOut);
+	ColorOut /= (10.0f + ColorOut);
 
 	return float4(ColorOut, sample.a);
 }
@@ -874,11 +875,19 @@ technique Brighten
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 SimpleBrightenPixelShader();
 		ZEnable						= false;
-		//AlphaBlendEnable	= false;
-		//BlendOp						= Add;
-		//SrcBlend					= <SourceBlend>;
-		//DestBlend					= <DestBlend>;
-		//BlendFactor				= <BlendFactor>;
+	}
+}
+
+technique AdvancedBrighten
+{
+	pass BasePass
+	<
+		float Scale = 1.0f;
+	>
+	{
+		VertexShader			= null;
+		PixelShader				= compile ps_2_0 BrightenPixelShader();
+		ZEnable						= false;
 	}
 }
 

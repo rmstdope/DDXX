@@ -62,7 +62,10 @@ namespace Dope.DDXX.SceneGraph
             {
                 IAnimationController controller = hierarchy.AnimationController;
                 if (controller != null)
-                    controller.AdvanceTime(Time.DeltaTime);
+                {
+                    controller.AdvanceTime(controller.GetAnimationSet(0).Period - (controller.Time % controller.GetAnimationSet(0).Period));
+                    controller.AdvanceTime(Time.StepTime);
+                }
             }
             rootNode.Step();
 

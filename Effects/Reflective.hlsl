@@ -53,7 +53,7 @@ ReflectivePixelShader(ReflectivePixelInput input) : COLOR0
 	float4 reflection = texCUBE(ReflectiveTextureSampler, input.Reflection);
 	reflection *= reflection.a * reflection.a * 2;
 	float4 color = tex2D(BaseTextureSampler, input.TexCoords) * (input.Diffuse + AmbientColor);
-	float factor = ReflectiveFactor * reflection.a;
+	float factor = ReflectiveFactor;// * reflection.a;
 	return lerp(color, reflection, factor);
 }
 

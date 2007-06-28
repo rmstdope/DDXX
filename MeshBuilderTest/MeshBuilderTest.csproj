@@ -43,6 +43,7 @@
     <Compile Include="BoxPrimitiveTest.cs" />
     <Compile Include="ChamferBoxPrimitiveTest.cs" />
     <Compile Include="ClothPrimitiveTest.cs" />
+    <Compile Include="CylinderPrimitiveTest.cs" />
     <Compile Include="MeshBuilderTest.cs" />
     <Compile Include="PlanePrimitiveTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="TorusPrimitiveTest.cs" />
     <Compile Include="TranslateTest.cs" />
     <Compile Include="UvMapPlaneTest.cs" />
+    <Compile Include="UvRemapTest.cs" />
     <Compile Include="WeldTest.cs" />
   </ItemGroup>
   <ItemGroup>

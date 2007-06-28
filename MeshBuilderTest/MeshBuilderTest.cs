@@ -16,21 +16,8 @@ namespace Dope.DDXX.MeshBuilder
     public class MeshBuilderTest : IGraphicsFactory, IModel, IDevice, ITextureFactory, IBody, ICubeTexture, IMesh, ITexture, IPrimitive, IGraphicsStream
     {
         private MeshBuilder builder;
-        //private float width;
-        //private float height;
-        //private float length;
-        //private int widthSegments;
-        //private int heightSegments;
-        //private int lengthSegments;
-        //private bool textured;
-        //private int[] pinnedParticles;
-        //private bool createPlaneCalled;
-        //private bool createBoxCalled;
-        //private bool createClothCalled;
-        //private bool setMaterialCalled;
         private string fileName;
         private Viewport viewport;
-        //private float weldDistance;
 
         private Vertex[] vertices;
         private short[] indices;
@@ -65,21 +52,8 @@ namespace Dope.DDXX.MeshBuilder
             useTextureCoordinates = false;
             body = false;
             builder = new MeshBuilder(this, this, this);
-            //width = -1.0f;
-            //height = -1.0f;
-            //length = -1.0f;
-            //widthSegments = -1;
-            //heightSegments = -1;
-            //lengthSegments = -1;
-            //textured = false;
-            //pinnedParticles = new int[0];
-            //createPlaneCalled = false;
-            //createBoxCalled = false;
-            //createClothCalled = false;
-            //setMaterialCalled = false;
             fileName = null;
             viewport = new Viewport();
-            //weldDistance = 1e6f;
         }
 
         [Test]
@@ -224,6 +198,31 @@ namespace Dope.DDXX.MeshBuilder
             IModel model = builder.CreateModel(this, "");
             CheckModel(model);
             Assert.IsInstanceOfType(typeof(PhysicalModel), model, "Model shall be PhysicalModel");
+        }
+
+        [Test]
+        public void TestCreateMaterial()
+        {
+            CreatePrimitive();
+            builder.SetAmbientColor("Default1", ColorValue.FromColor(Color.AliceBlue));
+            builder.SetDiffuseColor("Default1", ColorValue.FromColor(Color.AntiqueWhite));
+            fileName = "DiffuseTexture";
+            builder.SetDiffuseTexture("Default1", fileName);
+            fileName = "NormalTexture";
+            builder.SetNormalTexture("Default1", fileName);
+            fileName = "ReflectiveTexture";
+            builder.SetReflectiveTexture("Default1", fileName);
+            builder.SetReflectiveFactor("Default1", 0.3f);
+            builder.SetSpecularColor("Default1", ColorValue.FromColor(Color.Aqua));
+            IModel model = builder.CreateModel(this, "Default1");
+            Assert.AreEqual(model.Materials[0].AmbientColor, ColorValue.FromColor(Color.AliceBlue));
+            Assert.AreEqual(model.Materials[0].DiffuseColor, ColorValue.FromColor(Color.AntiqueWhite));
+            Assert.AreEqual(model.Materials[0].DiffuseTexture, this);
+            Assert.AreEqual(model.Materials[0].NormalTexture, this);
+            Assert.AreEqual(model.Materials[0].ReflectiveFactor, 0.3f);
+            Assert.AreEqual(model.Materials[0].ReflectiveTexture, this);
+            Assert.AreEqual(model.Materials[0].SpecularColor, ColorValue.FromColor(Color.Aqua));
+            Assert.AreNotSame(model.Materials[0], builder.GetMaterial("Default1"));
         }
 
         [Test]

@@ -39,7 +39,7 @@ namespace TiVi
             scene.AddNode(light);
         }
 
-        enum Pieces
+        enum PieceType
         {
             Pawn = 0,
             Rook,
@@ -50,29 +50,89 @@ namespace TiVi
             NumPieces
         }
 
+        private struct PieceInfo
+        {
+            public bool White;
+            public PieceType Type;
+            public string Position;
+            public PieceInfo(bool white, PieceType type, string position)
+            {
+                White = white;
+                Type = type;
+                Position = position;
+            }
+        }
+        private PieceInfo[] pieces = new PieceInfo[] {
+            new PieceInfo(true, PieceType.Pawn, "g6"),
+            new PieceInfo(true, PieceType.Pawn, "f5"),
+            new PieceInfo(true, PieceType.Pawn, "b4"),
+            new PieceInfo(true, PieceType.Pawn, "a3"),
+            new PieceInfo(true, PieceType.Pawn, "c2"),
+            new PieceInfo(true, PieceType.Bishop, "c3"),
+            new PieceInfo(true, PieceType.Bishop, "h3"),
+            new PieceInfo(true, PieceType.King, "f2"),
+            new PieceInfo(true, PieceType.Rook, "g1"),
+            new PieceInfo(true, PieceType.Knight, "e3"),
+
+            //new PieceInfo(false, PieceType.Rook, "d8"),
+            //new PieceInfo(false, PieceType.Rook, "e8"),
+            //new PieceInfo(false, PieceType.Pawn, "a4"),
+            //new PieceInfo(false, PieceType.Pawn, "b5"),
+            //new PieceInfo(false, PieceType.Pawn, "c6"),
+            //new PieceInfo(false, PieceType.Pawn, "a4"),
+            //new PieceInfo(false, PieceType.Pawn, "e4"),
+            //new PieceInfo(false, PieceType.Pawn, "g4"),
+            //new PieceInfo(false, PieceType.Knight, "e5"),
+            //new PieceInfo(false, PieceType.Bishop, "f3"),
+            //new PieceInfo(false, PieceType.King, "h6"),
+        };
+
         private void CreatePieces()
         {
+            IScene tempScene = new Scene();
             XLoader.Load("ChessPieces2.X", EffectFactory.CreateFromFile("TiVi.fxo"), TechniqueChooser.MeshPrefix("Reflective"));
-            XLoader.AddToScene(scene);
-            ModelNode[] models = new ModelNode[(int)Pieces.NumPieces];
-            models[(int)Pieces.Pawn] = scene.GetNodeByName("Pawn") as ModelNode;
-            models[(int)Pieces.Rook] = scene.GetNodeByName("Rook") as ModelNode;
-            models[(int)Pieces.Bishop] = scene.GetNodeByName("Bishop") as ModelNode;
-            models[(int)Pieces.Queen] = scene.GetNodeByName("Queen") as ModelNode;
-            models[(int)Pieces.King] = scene.GetNodeByName("King") as ModelNode;
-            models[(int)Pieces.Knight] = scene.GetNodeByName("Knight") as ModelNode;
-            for (int i = 0; i < (int)Pieces.NumPieces; i++)
+            XLoader.AddToScene(tempScene);
+            IEffectHandler effectHandler = (tempScene.GetNodeByName("Pawn") as ModelNode).EffectHandler;
+            IModel[] whiteModels = new IModel[(int)PieceType.NumPieces];
+            whiteModels[(int)PieceType.Pawn] = (tempScene.GetNodeByName("Pawn") as ModelNode).Model;
+            whiteModels[(int)PieceType.Rook] = (tempScene.GetNodeByName("Rook") as ModelNode).Model;
+            whiteModels[(int)PieceType.Bishop] = (tempScene.GetNodeByName("Bishop") as ModelNode).Model;
+            whiteModels[(int)PieceType.Queen] = (tempScene.GetNodeByName("Queen") as ModelNode).Model;
+            whiteModels[(int)PieceType.King] = (tempScene.GetNodeByName("King") as ModelNode).Model;
+            whiteModels[(int)PieceType.Knight] = (tempScene.GetNodeByName("Knight") as ModelNode).Model;
+            for (int i = 0; i < (int)PieceType.NumPieces; i++)
             {
-                if (i == (int)Pieces.Knight)
-                    models[(int)Pieces.Knight].WorldState.Scale(0.00007f);
+                whiteModels[i].Materials[0].ReflectiveTexture = TextureFactory.CreateCubeFromFile("rnl_cross.dds");
+                whiteModels[i].Materials[0].ReflectiveFactor = 0.05f;
+                whiteModels[i].Materials[0].AmbientColor = new ColorValue(0.3f, 0.3f, 0.3f, 0.3f);
+                whiteModels[i].Materials[0].DiffuseColor = new ColorValue(0.8f, 0.8f, 0.8f, 0.8f);
+            }
+            IModel[] blackModels = new IModel[(int)PieceType.NumPieces];
+            for (int i = 0; i < whiteModels.Length; i++)
+            {
+                blackModels[i] = whiteModels[i].Clone();
+                blackModels[i].Materials[0].ReflectiveFactor = 0.05f;
+                blackModels[i].Materials[0].AmbientColor = new ColorValue(0.01f, 0.01f, 0.01f, 0.01f);
+                blackModels[i].Materials[0].DiffuseColor = new ColorValue(0.6f, 0.6f, 0.6f, 0.6f);
+            }
+
+
+            foreach (PieceInfo info in pieces)
+            {
+                IModel originalModel;
+                if (info.White)
+                    originalModel = whiteModels[(int)info.Type];
                 else
-                    models[i].WorldState.Scale(0.0003f);
-                models[i].WorldState.Tilt((float)Math.PI / 2);
-                models[i].WorldState.MoveRight(-2 + i);
-                models[i].Model.Materials[0].ReflectiveTexture = TextureFactory.CreateCubeFromFile("rnl_cross.dds");
-                models[i].Model.Materials[0].ReflectiveFactor = 0.015f;
-                models[i].Model.Materials[0].AmbientColor = new ColorValue(0.05f, 0.05f, 0.05f, 0.05f);
-                models[i].Model.Materials[0].DiffuseColor = new ColorValue(0.6f, 0.6f, 0.6f, 0.6f);
+                    originalModel = blackModels[(int)info.Type];
+                ModelNode newNode = new ModelNode("", originalModel, effectHandler);
+                if (info.Type == PieceType.Knight)
+                    newNode.WorldState.Scale(0.00007f);
+                else
+                    newNode.WorldState.Scale(0.0003f);
+                newNode.WorldState.Tilt((float)Math.PI / 2);
+                newNode.WorldState.MoveUp(int.Parse(info.Position.Substring(1)) - 4);
+                newNode.WorldState.MoveRight((info.Position[0] - 'a' + 1) - 4);
+                scene.AddNode(newNode);
             }
         }
 
@@ -104,15 +164,15 @@ namespace TiVi
                 {
                     IModel model = meshDirector.Generate("Default1");
                     ModelNode node = CreateSimpleModelNode(model, "TiVi.fxo", "Reflective");
-                    node.WorldState.MoveForward(-1.05f * (y - NUM_SIGNS_Y / 2));
-                    node.WorldState.MoveRight(-1.05f * (x - NUM_SIGNS_X / 2));
+                    node.WorldState.MoveForward(-1.0f * (y - NUM_SIGNS_Y / 2));
+                    node.WorldState.MoveRight(-1.0f * (x - NUM_SIGNS_X / 2));
                     float color = 0.1f + c * 0.2f;
                     node.Model.Materials[0].AmbientColor = new ColorValue(0.05f, 0.05f, 0.05f, 0.05f);
                     node.Model.Materials[0].DiffuseColor = new ColorValue(color, color, color, color);
                     if (c == 0)
-                        node.Model.Materials[0].ReflectiveFactor = 0.1f;
+                        node.Model.Materials[0].ReflectiveFactor = 0.2f;
                     else
-                        node.Model.Materials[0].ReflectiveFactor = 0.04f;
+                        node.Model.Materials[0].ReflectiveFactor = 0.1f;
                     c = 1 - c;
                     signs[y * NUM_SIGNS_X + x] = node;
                     scene.AddNode(node);

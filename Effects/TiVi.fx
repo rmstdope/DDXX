@@ -1,4 +1,5 @@
 #include <CommonFunctions.hlsl>
+#include <AtmosphereShader.hlsl>
 #include <Simple.hlsl>
 #include <Reflective.hlsl>
  
@@ -85,6 +86,27 @@ technique SolidSkinning
 	}
 }
 
+technique SolidReflectedSkinning
+<
+	bool NormalMapping = false;
+	bool Skinning = true;
+>
+{
+	pass BasePass
+	{
+		VertexShader			= compile vs_2_0 SolidVertexShader(2);
+		PixelShader				= compile ps_2_0 SolidPixelShader(BaseTextureSampler);
+		AlphaTestEnable		= false;
+		AlphaBlendEnable	= false;
+		FillMode					= Solid;
+		ZEnable						=	true;
+		ZWriteEnable			= true;
+		ZFunc							= Less;
+		StencilEnable			= false;
+		CullMode					= CW;
+	}
+}
+
 technique TvScreenSkinning
 <
 	bool NormalMapping = false;
@@ -103,6 +125,27 @@ technique TvScreenSkinning
 		ZFunc							= Less;
 		StencilEnable			= false;
 		CullMode					= CCW;
+	}
+}
+
+technique TvScreenReflectedSkinning
+<
+	bool NormalMapping = false;
+	bool Skinning = true;
+>
+{
+	pass BasePass
+	{
+		VertexShader			= compile vs_2_0 SolidVertexShader(2);
+		PixelShader				= compile ps_2_0 SolidPixelShader(BaseTextureSamplerBordered);
+		AlphaTestEnable		= false;
+		AlphaBlendEnable	= false;
+		FillMode					= Solid;
+		ZEnable						=	true;
+		ZWriteEnable			= true;
+		ZFunc							= Less;
+		StencilEnable			= false;
+		CullMode					= CW;
 	}
 }
 
@@ -191,17 +234,17 @@ DiamondVertexShader(InputVS input,
 
 	// Calculate new position, normal and tangent depending on animation
 	AnimatedVertex_PN animated = AnimateVertex(input.Position, input.Normal, input.BlendIndices, input.BlendWeights, numWeights);
-	float3 normal = normalize(mul(animated.Normal, WorldT));
 
 	// Transform the position from object space to world space
-	float3 worldPosition = mul(animated.Position, WorldT);
+	float3 viewNormal = mul(animated.Normal, WorldViewT);
 
 	// Transform the position from object space to homogeneous projection space
 	output.Position = mul(animated.Position, WorldViewProjectionT);
 
 	output.TextureCoord = input.TextureCoord;
-	float diffuse = max(0, dot(normal, float3(0, 0, -1)));
-	float specular = pow(diffuse, 8);
+
+	float diffuse = max(0, dot(viewNormal, float3(0, 0, -1)));
+	float specular = 20 * pow(diffuse, 64);
 	output.DiffuseColor = AmbientColor + MaterialDiffuseColor * diffuse;
 	output.SpecularColor = specular;
 	

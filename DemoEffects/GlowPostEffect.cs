@@ -14,6 +14,8 @@ namespace Dope.DDXX.DemoEffects
         private float exposure;
         private float whiteCutoff;
         private float bloomScale;
+        private int downSamples;
+        private bool advancedGlow;
 
         public float BloomScale
         {
@@ -39,6 +41,18 @@ namespace Dope.DDXX.DemoEffects
             set { luminance = value; }
         }
 
+        public int DownSamples
+        {
+            get { return downSamples; }
+            set { downSamples = value; }
+        }
+
+        public bool AdvancedGlow
+        {
+            get { return advancedGlow; }
+            set { advancedGlow = value; }
+        }
+
         public GlowPostEffect(float startTime, float endTime)
             : base(startTime, endTime)
         {
@@ -50,6 +64,7 @@ namespace Dope.DDXX.DemoEffects
             SetStepSize(GetTweakableNumber("WhiteCutoff"), 0.01f);
             BloomScale = 1.4f;
             SetStepSize(GetTweakableNumber("BloomScale"), 0.1f);
+            DownSamples = 1;
         }
 
         public override void Render()
@@ -76,17 +91,32 @@ namespace Dope.DDXX.DemoEffects
             PostProcessor.SetValue("WhiteCutoff", whiteCutoff);
             PostProcessor.SetValue("BloomScale", bloomScale);
             PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
-            PostProcessor.Process("DownSample4x", PostProcessor.OutputTextureID, temp[0]);
-            PostProcessor.Process("DownSample4x", temp[0], temp[1]);
-            PostProcessor.Process("Brighten", temp[1], temp[0]);
-            //PostProcessor.WriteToFile(temp[1], "test.jpg");
+            if (downSamples == 1)
+                PostProcessor.Process("DownSample4x", PostProcessor.OutputTextureID, temp[1]);
+            else
+            {
+                PostProcessor.Process("DownSample4x", PostProcessor.OutputTextureID, temp[0]);
+                PostProcessor.Process("DownSample4x", temp[0], temp[1]);
+            }
+            if (advancedGlow)
+                PostProcessor.Process("AdvancedBrighten", temp[1], temp[0]);
+            else
+                PostProcessor.Process("Brighten", temp[1], temp[0]);
             PostProcessor.Process("HorizontalBloom", temp[0], temp[1]);
             PostProcessor.Process("VerticalBloom", temp[1], temp[0]);
             PostProcessor.Process("HorizontalBloom", temp[0], temp[1]);
             PostProcessor.Process("VerticalBloom", temp[1], temp[0]);
-            PostProcessor.Process("UpSample4x", temp[0], temp[1]);
-            PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.One, Color.Black);
-            PostProcessor.Process("UpSample4x", temp[1], startTexture);
+            if (downSamples == 1)
+            {
+                PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.One, Color.Black);
+                PostProcessor.Process("UpSample4x", temp[0], startTexture);
+            }
+            else
+            {
+                PostProcessor.Process("UpSample4x", temp[0], temp[1]);
+                PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.One, Color.Black);
+                PostProcessor.Process("UpSample4x", temp[1  ], startTexture);
+            }
             //PostProcessor.Process("Copy", temp[0], startTexture);
         }
 

@@ -41,6 +41,7 @@
     <Compile Include="BoxPrimitive.cs" />
     <Compile Include="ChamferBoxPrimitive.cs" />
     <Compile Include="ClothPrimitive.cs" />
+    <Compile Include="CylinderPrimitive.cs" />
     <Compile Include="DiscPrimitive.cs" />
     <Compile Include="IPrimitive.cs">
       <SubType>Code</SubType>
@@ -56,6 +57,7 @@
     <Compile Include="TorusPrimitive.cs" />
     <Compile Include="Translate.cs" />
     <Compile Include="UvMapPlane.cs" />
+    <Compile Include="UvRemap.cs" />
     <Compile Include="Vertex.cs" />
     <Compile Include="Weld.cs" />
   </ItemGroup>

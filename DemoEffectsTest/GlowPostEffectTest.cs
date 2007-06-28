@@ -35,24 +35,36 @@ namespace Dope.DDXX.DemoEffects
         public void TestRenderInputIsInput()
         {
             // Starting with INPUT
-            TestRender(TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_2);
+            TestRenderOneDownsample(TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_2);
         }
 
         [Test]
         public void TestRenderFs1IsInput()
         {
             // Starting with FULLSCREEN_1
-            TestRender(TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_2, TextureID.FULLSIZE_TEXTURE_3);
+            TestRenderOneDownsample(TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_2, TextureID.FULLSIZE_TEXTURE_3);
         }
 
         [Test]
         public void TestRenderFs2IsInput()
         {
             // Starting with FULLSCREEN_2
-            TestRender(TextureID.FULLSIZE_TEXTURE_2, TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_3);
+            TestRenderOneDownsample(TextureID.FULLSIZE_TEXTURE_2, TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_3);
         }
 
-        private void TestRender(TextureID startTexture, TextureID tempTexture1, TextureID tempTexture2)
+        [Test]
+        public void TestTwoDownSamples()
+        {
+            TestRenderTwoDownsamples(TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_2, false);
+        }
+
+        [Test]
+        public void TestAdvancedBrighten()
+        {
+            TestRenderTwoDownsamples(TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_2, true);
+        }
+
+        private void TestRenderOneDownsample(TextureID startTexture, TextureID tempTexture1, TextureID tempTexture2)
         {
             Stub.On(postProcessor).
                 GetProperty("OutputTextureID").
@@ -63,6 +75,60 @@ namespace Dope.DDXX.DemoEffects
                 effect.Exposure = 0.18f;
                 effect.WhiteCutoff = 0.1f;
                 effect.BloomScale = 1.5f;
+                effect.DownSamples = 1;
+                Expect.Once.On(postProcessor).
+                    Method("SetValue").
+                    With("Luminance", 0.06f);
+                Expect.Once.On(postProcessor).
+                    Method("SetValue").
+                    With("Exposure", 0.18f);
+                Expect.Once.On(postProcessor).
+                    Method("SetValue").
+                    With("WhiteCutoff", 0.1f);
+                Expect.Once.On(postProcessor).
+                    Method("SetValue").
+                    With("BloomScale", 1.5f);
+                Expect.Once.On(postProcessor).
+                    Method("SetBlendParameters").
+                    With(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
+                Expect.Once.On(postProcessor).
+                    Method("Process").
+                    With("DownSample4x", startTexture, tempTexture2);
+                Expect.Once.On(postProcessor).
+                    Method("Process").
+                    With("Brighten", tempTexture2, tempTexture1);
+                for (int i = 0; i < 2; i++)
+                {
+                    Expect.Once.On(postProcessor).
+                        Method("Process").
+                        With("HorizontalBloom", tempTexture1, tempTexture2);
+                    Expect.Once.On(postProcessor).
+                        Method("Process").
+                        With("VerticalBloom", tempTexture2, tempTexture1);
+                }
+                Expect.Once.On(postProcessor).
+                    Method("SetBlendParameters").
+                    With(BlendOperation.Add, Blend.One, Blend.One, Color.Black);
+                Expect.Once.On(postProcessor).
+                    Method("Process").
+                    With("UpSample4x", tempTexture1, startTexture);
+            }
+            effect.Render();
+        }
+
+        private void TestRenderTwoDownsamples(TextureID startTexture, TextureID tempTexture1, TextureID tempTexture2, bool advancedBrighten)
+        {
+            Stub.On(postProcessor).
+                GetProperty("OutputTextureID").
+                Will(Return.Value(startTexture));
+            using (mockery.Ordered)
+            {
+                effect.Luminance = 0.06f;
+                effect.Exposure = 0.18f;
+                effect.WhiteCutoff = 0.1f;
+                effect.BloomScale = 1.5f;
+                effect.DownSamples = 2;
+                effect.AdvancedGlow = advancedBrighten;
                 Expect.Once.On(postProcessor).
                     Method("SetValue").
                     With("Luminance", 0.06f);
@@ -84,9 +150,14 @@ namespace Dope.DDXX.DemoEffects
                 Expect.Once.On(postProcessor).
                     Method("Process").
                     With("DownSample4x", tempTexture1, tempTexture2);
-                Expect.Once.On(postProcessor).
-                    Method("Process").
-                    With("Brighten", tempTexture2, tempTexture1);
+                if (advancedBrighten)
+                    Expect.Once.On(postProcessor).
+                        Method("Process").
+                        With("AdvancedBrighten", tempTexture2, tempTexture1);
+                else
+                    Expect.Once.On(postProcessor).
+                        Method("Process").
+                        With("Brighten", tempTexture2, tempTexture1);
                 for (int i = 0; i < 2; i++)
                 {
                     Expect.Once.On(postProcessor).

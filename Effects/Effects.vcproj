@@ -192,6 +192,10 @@
 			Filter="hlsl"
 			>
 			<File
+				RelativePath=".\AtmosphereShader.hlsl"
+				>
+			</File>
+			<File
 				RelativePath=".\ChessBoard.hlsl"
 				>
 			</File>

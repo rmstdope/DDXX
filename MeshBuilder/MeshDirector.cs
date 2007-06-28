@@ -65,13 +65,35 @@ namespace Dope.DDXX.MeshBuilder
             primitive = torus;
         }
 
-        public void UvMapPlane(int alignToAxis, int tileU, int tileV)
+        public void CreateCylinder(float radius, float height, int segments, int heightSegments, bool textured)
+        {
+            CylinderPrimitive cylinder = new CylinderPrimitive();
+            cylinder.Radius = radius;
+            cylinder.Height = height;
+            cylinder.Segments = segments;
+            cylinder.HeightSegments = heightSegments;
+            //cylinder.Textured = textured;
+            primitive = cylinder;
+        }
+
+        public void UvMapPlane(int alignToAxis, float tileU, float tileV)
         {
             UvMapPlane map = new UvMapPlane();
             map.AlignToAxis = alignToAxis;
             map.Input = primitive;
             map.TileU = tileU;
             map.TileV = tileV;
+            primitive = map;
+        }
+
+        public void UvRemap(float translateU, float scaleU, float translateV, float scaleV)
+        {
+            UvRemap map = new UvRemap();
+            map.Input = primitive;
+            map.TranslateU = translateU;
+            map.TranslateV = translateV;
+            map.ScaleU = scaleU;
+            map.ScaleV = scaleV;
             primitive = map;
         }
 

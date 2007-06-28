@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Demo>
 	<!--This post effect will run the entire demo-->
-	<PostEffect name="AspectilizerPostEffect" track="0" startTime="0" endTime="3000">
+	<!--<PostEffect name="AspectilizerPostEffect" track="0" startTime="0" endTime="3000">
 		<Parameter name="Width" float="16" />
 		<Parameter name="Height" float="9" />
 		<Parameter name="SubtractNoise" bool="true" />
@@ -10,7 +10,7 @@
 		<Parameter name="AddNoise" bool="false" />
 		<Parameter name="Filename" string="" />
 		<Parameter name="DrawOrder" int="4" />
-	</PostEffect>
+	</PostEffect>-->
 
 	<!--Creation scene and its post effects-->
 	<!--<Effect name="CreationScene" track="0" startTime="0" endTime="300">
@@ -59,7 +59,7 @@
 		<Parameter name="BaseFrequency" int="64" />
 	</Generator>
 	<Texture name="noise" generator="noise"></Texture>
-	<Effect name="SpinningBackgroundEffect" track="0" startTime="0" endTime="299">
+	<!--<Effect name="SpinningBackgroundEffect" track="0" startTime="0" endTime="299">
 		<SetupCall name="AddTextureLayer">
 			<Parameter string="noise" />
 			<Parameter float="55.0" />
@@ -72,15 +72,17 @@
 			<Parameter Color="Coral" />
 			<Parameter float="0.1" />
 		</SetupCall>
-	</Effect>
+	</Effect>-->
   <Effect name="FlipSign" track="0" startTime="0" endTime="300" />
+  <!--<Effect name="PhysicalCubes" track="0" startTime="0" endTime="300" />-->
   <!--<Effect name="TunnelFlight" track="0" startTime="0" endTime="300" />-->
 	<PostEffect name="GlowPostEffect" track="0" startTime="0" endTime="300">
-		<Parameter name="BloomScale" float="3.099999" />
+		<Parameter name="BloomScale" float="1.5" />
 		<Parameter name="Exposure" float="1" />
 		<Parameter name="DrawOrder" int="1" />
 		<Parameter name="WhiteCutoff" float="0.5999997" />
 		<Parameter name="Luminance" float="0.2" />
+	  <Parameter name="DownSamples" int="1" />
 	</PostEffect>
 
 	<!--<Effect name="ChessScene" track="0" startTime="0.0" endTime="300.0"/>-->

@@ -19,6 +19,11 @@ namespace Dope.DDXX.SceneGraph
             set { model = value; }
         }
 
+        public IEffectHandler EffectHandler
+        {
+            get { return effectHandler; }
+        }
+
         public ModelNode(string name, IModel model, IEffectHandler effectHandler) 
             : base(name)
         {

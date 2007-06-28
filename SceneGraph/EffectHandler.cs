@@ -153,6 +153,7 @@ namespace Dope.DDXX.SceneGraph
             Matrix worldView = worldMatrix * viewMatrix;
             Matrix worldViewProjection = worldView * projectionMatrix;
             Matrix worldViewProjectionInv = worldViewProjection;
+            Matrix viewProjection = viewMatrix * projectionMatrix;
             worldViewProjectionInv.Invert();
             if (worldT != null)
                 effect.SetValueTranspose(worldT, worldMatrix);
