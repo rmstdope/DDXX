@@ -14,7 +14,7 @@ namespace Dope.DDXX.DemoFramework
     [TestFixture]
     public class PostProcessorTest : D3DMockTest
     {
-        private PostProcessor postProcessor;
+        private IPostProcessor postProcessor;
         private ITexture startTexture;
         private ITexture fullsizeTexture1;
 
@@ -30,8 +30,6 @@ namespace Dope.DDXX.DemoFramework
             startTexture = mockery.NewMock<ITexture>();
             fullsizeTexture1 = mockery.NewMock<ITexture>();
 
-            D3DDriver.TextureFactory = new TextureFactory(device, graphicsFactory, presentParameters);
-            D3DDriver.EffectFactory = new EffectFactory(device, graphicsFactory);
             postProcessor = new PostProcessor();
 
             sourceTextureParameter = EffectHandle.FromString("A");
@@ -45,23 +43,6 @@ namespace Dope.DDXX.DemoFramework
             base.TearDown();
         }
 
-        public void InitializeSetup()
-        {
-            effect = mockery.NewMock<IEffect>();
-            Expect.Once.On(graphicsFactory).
-                Method("EffectFromFile").
-                With(Is.EqualTo(device), Is.EqualTo("PostEffects.fxo"), Is.Null, Is.EqualTo(""), Is.Anything, Is.Anything).
-                Will(Return.Value(effect));
-            Expect.Once.On(effect).
-                Method("GetParameter").
-                With(null, "SourceTexture").
-                Will(Return.Value(sourceTextureParameter));
-            Stub.On(graphicsFactory).
-                Method("CreateTexture").
-                With(device, presentParameters.BackBufferWidth, presentParameters.BackBufferHeight, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default).
-                Will(Return.Value(fullsizeTexture1));
-        }
-
         [Test]
         public void TestInitializeOK()
         {
@@ -69,8 +50,19 @@ namespace Dope.DDXX.DemoFramework
             Stub.On(effect).
                 GetProperty("Description_Parameters").
                 Will(Return.Value(0));
-            postProcessor.Initialize(device);
+            postProcessor.Initialize(device, textureFactory, effectFactory);
         }
+
+        //[Test]
+        //public void TestOneTemporaryTexture()
+        //{
+        //    Expect.Once.On(graphicsFactory).
+        //        Method("CreateTexture").
+        //        With(device, presentParameters.BackBufferWidth, presentParameters.BackBufferHeight, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default).
+        //        Will(Return.Value(fullsizeTexture1));
+
+        //    postProcessor.GetTemporaryTextures(2);
+        //}
 
         [Test]
         public void TestAnnotations()
@@ -158,7 +150,7 @@ namespace Dope.DDXX.DemoFramework
                                                  5.0f / device.PresentationParameters.BackBufferWidth, 
                                                  6.0f / device.PresentationParameters.BackBufferHeight});
 
-            postProcessor.Initialize(device);
+            postProcessor.Initialize(device, textureFactory, effectFactory);
         }
 
         [Test]
@@ -281,6 +273,23 @@ namespace Dope.DDXX.DemoFramework
             SetupPostEffect(startTexture, "UpSample4x", vertices, 2.0f, false);
             SetupBlend(BlendOperation.RevSubtract, Blend.DestinationColor, Blend.BothInvSourceAlpha, Color.DimGray);
             postProcessor.Process("UpSample4x", TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1);
+        }
+
+        public void InitializeSetup()
+        {
+            effect = mockery.NewMock<IEffect>();
+            Expect.Once.On(effectFactory).
+                Method("CreateFromFile").
+                With("PostEffects.fxo").
+                Will(Return.Value(effect));
+            Expect.Once.On(effect).
+                Method("GetParameter").
+                With(null, "SourceTexture").
+                Will(Return.Value(sourceTextureParameter));
+            Stub.On(textureFactory).
+                Method("CreateFullsizeRenderTarget").
+                With(Format.A8R8G8B8).
+                Will(Return.Value(fullsizeTexture1));
         }
 
         private void SetupBlend(BlendOperation operation, Blend source, Blend destination, Color factor)

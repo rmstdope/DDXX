@@ -23,7 +23,7 @@ namespace Dope.DDXX.DemoFramework
         /// Initializes the post processor by getting the needed DX objects.
         /// </summary>
         /// <param name="device"></param>
-        void Initialize(IDevice device);
+        void Initialize(IDevice device, ITextureFactory textureFactory, IEffectFactory effectFactory);
 
         /// <summary>
         /// Get the ITexture of the texture that was last rendered.
@@ -101,6 +101,12 @@ namespace Dope.DDXX.DemoFramework
         /// <param name="value">The value to set it to.</param>
         void SetValue(string parameter, Vector4 value);
 
-        void WriteToFile(TextureID textureID, string filename);
+        /// <summary>
+        /// Get a number of textures that are currently allocated.
+        /// These textures are for temporary use.
+        /// </summary>
+        /// <param name="num">The number of textures to retrieve.</param>
+        /// <returns>A list containing the textures</returns>
+        List<ITexture> GetTemporaryTextures(int num);
     }
 }

@@ -100,13 +100,15 @@ namespace Dope.DDXX.DemoFramework
         }
 
         public void Initialize(IDevice device, IGraphicsFactory graphicsFactory,
-            ITextureFactory textureFactory, ITextureBuilder textureBuilder)
+            ITextureFactory textureFactory, IEffectFactory effectFactory,
+            ITextureBuilder textureBuilder)
         {
-            this.Initialize(device, graphicsFactory, textureFactory, textureBuilder, "");
+            this.Initialize(device, graphicsFactory, textureFactory, effectFactory, textureBuilder, "");
         }
 
         public void Initialize(IDevice device, IGraphicsFactory graphicsFactory, 
-            ITextureFactory textureFactory, ITextureBuilder textureBuilder, string xmlFile)
+            ITextureFactory textureFactory, IEffectFactory effectFactory, 
+            ITextureBuilder textureBuilder, string xmlFile)
         {
             this.device = device;
             this.graphicsFactory = graphicsFactory;
@@ -121,11 +123,11 @@ namespace Dope.DDXX.DemoFramework
 
             InitializeSound();
 
-            postProcessor.Initialize(device);
+            postProcessor.Initialize(device, textureFactory, effectFactory);
 
             foreach (ITrack track in tracks)
             {
-                track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, this, postProcessor);
+                track.Initialize(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, this, postProcessor);
             }
             foreach (IDemoTransition transition in transitions)
             {

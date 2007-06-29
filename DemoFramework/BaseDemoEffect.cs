@@ -15,6 +15,7 @@ namespace Dope.DDXX.DemoFramework
         private float startTime;
         private float endTime;
         private IGraphicsFactory graphicsFactory;
+        private IEffectFactory effectFactory;
         private IDevice device;
         private IXLoader xLoader;
         private MeshBuilder.MeshBuilder meshBuilder;
@@ -39,7 +40,7 @@ namespace Dope.DDXX.DemoFramework
 
         protected IEffectFactory EffectFactory
         {
-            get { return D3DDriver.EffectFactory; }
+            get { return effectFactory; }
         }
 
         protected IModelFactory ModelFactory
@@ -129,9 +130,10 @@ namespace Dope.DDXX.DemoFramework
         {
         }
 
-        public void Initialize(IGraphicsFactory graphicsFactory, IDevice device, IDemoMixer mixer)
+        public void Initialize(IGraphicsFactory graphicsFactory, IEffectFactory effectFactory, IDevice device, IDemoMixer mixer)
         {
             this.graphicsFactory = graphicsFactory;
+            this.effectFactory = effectFactory;
             this.device = device;
             this.mixer = mixer;
 

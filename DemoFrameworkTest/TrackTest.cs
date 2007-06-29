@@ -211,9 +211,9 @@ namespace Dope.DDXX.DemoFramework
             track.Register(e1);
             IDemoPostEffect pe1 = CreateMockPostEffect(5, 12);
             track.Register(pe1);
-            Expect.Once.On(e1).Method("Initialize").With(graphicsFactory, device, mixer);
+            Expect.Once.On(e1).Method("Initialize").With(graphicsFactory, effectFactory, device, mixer);
             Expect.Once.On(pe1).Method("Initialize").With(postProcessor, textureFactory, textureBuilder, device);
-            track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, mixer, postProcessor);
+            track.Initialize(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, mixer, postProcessor);
         }
 
         [Test]
@@ -223,12 +223,12 @@ namespace Dope.DDXX.DemoFramework
             {
                 IDemoEffect e1 = CreateMockEffect(5, 10);
                 track.Register(e1);
-                Expect.Once.On(e1).Method("Initialize").With(graphicsFactory, device, mixer);
+                Expect.Once.On(e1).Method("Initialize").With(graphicsFactory, effectFactory, device, mixer);
                 IDemoPostEffect pe1 = CreateMockPostEffect(5, 12);
                 track.Register(pe1);
                 Expect.Once.On(pe1).Method("Initialize").With(postProcessor, textureFactory, textureBuilder, device);
             }
-            track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, mixer, postProcessor);
+            track.Initialize(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, mixer, postProcessor);
         }
 
         [Test]
@@ -273,7 +273,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestRenderNoEffects()
         {
-            track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, mixer, postProcessor);
+            track.Initialize(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, mixer, postProcessor);
             using (mockery.Ordered)
             {
                 ExpectRenderStart(Color.Aquamarine);
@@ -288,7 +288,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestRenderOneEffect()
         {
-            track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, mixer, postProcessor);
+            track.Initialize(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, mixer, postProcessor);
             Time.Pause();
             Time.CurrentTime = 8.0f;
             IDemoEffect e1 = CreateMockEffect(4, 10);
@@ -308,7 +308,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestRenderOnePostEffect()
         {
-            track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, mixer, postProcessor);
+            track.Initialize(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, mixer, postProcessor);
             Time.Pause();
             Time.CurrentTime = 8.0f;
             IDemoPostEffect pe1 = CreateMockPostEffect(4, 10);
@@ -329,7 +329,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestRenderDrawOrder1()
         {
-            track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, mixer, postProcessor);
+            track.Initialize(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, mixer, postProcessor);
             Time.Pause();
             Time.CurrentTime = 8.0f;
             IDemoPostEffect pe1 = CreateMockPostEffect(4, 10);
@@ -354,7 +354,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestRenderDrawOrder2()
         {
-            track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, mixer, postProcessor);
+            track.Initialize(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, mixer, postProcessor);
             Time.Pause();
             Time.CurrentTime = 8.0f;
             IDemoPostEffect pe1 = CreateMockPostEffect(4, 10);
@@ -379,7 +379,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestRenderDrawOrderMulti()
         {
-            track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, mixer, postProcessor);
+            track.Initialize(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, mixer, postProcessor);
             Time.Pause();
             Time.CurrentTime = 8.0f;
             List<IDemoPostEffect> postEffects = new List<IDemoPostEffect>();
@@ -408,7 +408,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestRenderMoreEffects()
         {
-            track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, mixer, postProcessor);
+            track.Initialize(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, mixer, postProcessor);
             Time.Pause();
             Time.CurrentTime = 8.0f;
             IDemoEffect e1 = CreateMockEffect(4, 10);
@@ -439,7 +439,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestRenderOnlyWithinTime()
         {
-            track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, mixer, postProcessor);
+            track.Initialize(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, mixer, postProcessor);
             Time.Pause();
             Time.CurrentTime = 4.0f;
             IDemoEffect e1 = CreateMockEffect(4, 10);

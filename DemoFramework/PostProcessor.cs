@@ -42,10 +42,10 @@ namespace Dope.DDXX.DemoFramework
         {
         }
 
-        public void Initialize(IDevice device)
+        public void Initialize(IDevice device, ITextureFactory textureFactory, IEffectFactory effectFactory)
         {
             this.device = device;
-            effect = D3DDriver.EffectFactory.CreateFromFile("PostEffects.fxo");
+            effect = effectFactory.CreateFromFile("PostEffects.fxo");
 
             sourceTextureParameter = effect.GetParameter(null, "SourceTexture");
 
@@ -55,7 +55,7 @@ namespace Dope.DDXX.DemoFramework
                 if (i == (int)TextureID.INPUT_TEXTURE)
                     textures[i] = new TextureContainer(null);
                 else
-                    textures[i] = new TextureContainer(D3DDriver.TextureFactory.CreateFullsizeRenderTarget(Format.A8R8G8B8));
+                    textures[i] = new TextureContainer(textureFactory.CreateFullsizeRenderTarget(Format.A8R8G8B8));
             }
 
             HandleAnnotations();
@@ -249,10 +249,9 @@ namespace Dope.DDXX.DemoFramework
             effect.SetValue(name, value);
         }
 
-        public void WriteToFile(TextureID textureID, string filename)
+        public List<ITexture> GetTemporaryTextures(int num)
         {
-            textures[(int)textureID].Texture.Save(filename, ImageFileFormat.Jpg);
+            throw new Exception("The method or operation is not implemented.");
         }
-
     }
 }

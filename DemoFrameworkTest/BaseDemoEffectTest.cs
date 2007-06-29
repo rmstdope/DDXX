@@ -73,7 +73,7 @@ namespace Dope.DDXX.DemoFramework
         {
             TestEffect effect = new TestEffect(0.0f, 10.0f);
 
-            effect.Initialize(graphicsFactory, device, mixer);
+            effect.Initialize(graphicsFactory, null, device, mixer);
 
             Assert.IsTrue(effect.IsDeviceEqual(D3DDriver.GetInstance().Device));
         }

@@ -59,7 +59,7 @@ namespace EngineTest
 
                     executer.Initialize(D3DDriver.GetInstance().Device,
                         D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
-                        new TextureBuilder(D3DDriver.TextureFactory),
+                        D3DDriver.EffectFactory, new TextureBuilder(D3DDriver.TextureFactory),
                         "EngineTest.xml");
 //new Assembly[] { Assembly.GetExecutingAssembly(), 
 //                            Assembly.GetAssembly(typeof(GlowPostEffect))},

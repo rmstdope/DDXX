@@ -9,6 +9,6 @@ namespace Dope.DDXX.DemoFramework
     {
         void Step();
         void Render();
-        void Initialize(IGraphicsFactory graphicsFactory, IDevice device, IDemoMixer mixer);
+        void Initialize(IGraphicsFactory graphicsFactory, IEffectFactory effectFactory, IDevice device, IDemoMixer mixer);
     }
 }

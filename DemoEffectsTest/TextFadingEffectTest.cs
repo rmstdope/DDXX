@@ -262,7 +262,7 @@ namespace Dope.DDXX.DemoEffects
             textFadingEffect.FontHeight = fontHeight;
             ExpectSprite();
             ExpectFont(fontName, fontHeight);
-            textFadingEffect.Initialize(graphicsFactory, device, mixer);
+            textFadingEffect.Initialize(graphicsFactory, null, device, mixer);
         }
 
         private void ExpectFont(string fontName, int fontHeight)

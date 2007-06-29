@@ -50,7 +50,7 @@ namespace PoseidonTest
                     window.Initialize("PoseidonTest", desc, prerequisits);
                     executer.Initialize(D3DDriver.GetInstance().Device,
                         D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
-                        new TextureBuilder(D3DDriver.TextureFactory),
+                        D3DDriver.EffectFactory, new TextureBuilder(D3DDriver.TextureFactory),
                         "PoseidonTest.xml");
                     /* "dope-wanting_more-dhw2006-v2-320.mp3" */
                     //    new Assembly[] { Assembly.GetExecutingAssembly() }, 

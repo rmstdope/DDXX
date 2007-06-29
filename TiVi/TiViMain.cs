@@ -40,7 +40,8 @@ namespace TiVi
                     DevicePrerequisits prerequisits = new DevicePrerequisits();
                     window.Initialize("Engine Test", desc, prerequisits);
                     executer.Initialize(D3DDriver.GetInstance().Device,
-                        D3DDriver.GraphicsFactory, D3DDriver.TextureFactory, new TextureBuilder(D3DDriver.TextureFactory),
+                        D3DDriver.GraphicsFactory, D3DDriver.TextureFactory, D3DDriver.EffectFactory, 
+                        new TextureBuilder(D3DDriver.TextureFactory),
                         "TiVi.xml");
 
                     executer.Run();
