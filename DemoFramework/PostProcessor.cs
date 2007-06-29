@@ -20,6 +20,7 @@ namespace Dope.DDXX.DemoFramework
                 set { texture = value; }
             }
             public float scale;
+            public bool allocated;
             public TextureContainer(ITexture texture)
             {
                 this.texture = texture;
@@ -27,9 +28,9 @@ namespace Dope.DDXX.DemoFramework
             }
         }
         private IDevice device;
-        private TextureID lastUsedTexture;
-        private ITexture inputTexture;
-        private TextureContainer[] textures;
+        private ITextureFactory textureFactory;
+        private ITexture lastUsedTexture;
+        private TextureContainer inputTextureContainer = new TextureContainer(null);
         private IEffect effect;
         private EffectHandle sourceTextureParameter;
         private BlendOperation blendOperation = BlendOperation.Add;
@@ -37,6 +38,7 @@ namespace Dope.DDXX.DemoFramework
         private Blend destinatonBlend = Blend.Zero;
         private Color blendFactor = Color.Black;
         private bool shouldClear;
+        private List<TextureContainer> textures = new List<TextureContainer>();
 
         public PostProcessor()
         {
@@ -46,17 +48,9 @@ namespace Dope.DDXX.DemoFramework
         {
             this.device = device;
             effect = effectFactory.CreateFromFile("PostEffects.fxo");
+            this.textureFactory = textureFactory;
 
             sourceTextureParameter = effect.GetParameter(null, "SourceTexture");
-
-            textures = new TextureContainer[(int)TextureID.NUM_TEXTURES];
-            for (int i = 0; i < (int)TextureID.NUM_TEXTURES; i++)
-            {
-                if (i == (int)TextureID.INPUT_TEXTURE)
-                    textures[i] = new TextureContainer(null);
-                else
-                    textures[i] = new TextureContainer(textureFactory.CreateFullsizeRenderTarget(Format.A8R8G8B8));
-            }
 
             HandleAnnotations();
         }
@@ -84,30 +78,14 @@ namespace Dope.DDXX.DemoFramework
 
         public ITexture OutputTexture
         {
-            get
-            {
-                return textures[(int)lastUsedTexture].Texture;
-            }
-        }
-
-        public TextureID OutputTextureID
-        {
             get { return lastUsedTexture; }
         }
 
         public void StartFrame(ITexture startTexture)
         {
-            inputTexture = startTexture;
-            textures[(int)TextureID.INPUT_TEXTURE].Texture = startTexture;
-            SetScale(TextureID.INPUT_TEXTURE, 1.0f);
-            lastUsedTexture = TextureID.INPUT_TEXTURE;
-        }
-
-        public ITexture GetTexture(TextureID texture)
-        {
-            if (texture == TextureID.INPUT_TEXTURE)
-                return inputTexture;
-            return textures[(int)texture].Texture;
+            inputTextureContainer.Texture = startTexture;
+            inputTextureContainer.scale = 1.0f;
+            lastUsedTexture = startTexture;
         }
 
         public void SetBlendParameters(BlendOperation blendOperation, Blend sourceBlend, Blend destinatonBlend, Color blendFactor)
@@ -118,40 +96,41 @@ namespace Dope.DDXX.DemoFramework
             this.blendFactor = blendFactor;
         }
 
-        public void Process(string technique, TextureID source, TextureID destination)
+        public void Process(string technique, ITexture source, ITexture destination)
         {
-            SetupProcessParameters(technique, GetTexture(source), destination);
+            TextureContainer sourceContainer = GetContainer(source);
+            TextureContainer destinationContainer = GetContainer(destination);
+            SetupProcessParameters(technique, sourceContainer, destinationContainer);
 
             device.BeginScene();
-            ProcessPasses(technique, source, destination);
+            ProcessPasses(technique, sourceContainer, destinationContainer);
             device.EndScene();
 
             lastUsedTexture = destination;
         }
 
-        public void Process(string technique, ITexture source, TextureID destination)
+        private TextureContainer GetContainer(ITexture source)
         {
-            SetupProcessParameters(technique, source, destination);
-
-            device.BeginScene();
-            ProcessPasses(technique, TextureID.INPUT_TEXTURE, destination);
-            device.EndScene();
-
-            lastUsedTexture = destination;
+            if (source == inputTextureContainer.Texture)
+                return inputTextureContainer;
+            foreach (TextureContainer container in textures)
+                if (container.Texture == source)
+                    return container;
+            throw new DDXXException("Unknown texture");
         }
 
-        private void SetupProcessParameters(string technique, ITexture source, TextureID destination)
+        private void SetupProcessParameters(string technique, TextureContainer source, TextureContainer destination)
         {
-            using (ISurface renderTarget = GetTexture(destination).GetSurfaceLevel(0))
+            using (ISurface renderTarget = destination.Texture.GetSurfaceLevel(0))
             {
                 device.SetRenderTarget(0, renderTarget);
-                effect.SetValue(sourceTextureParameter, source);
+                effect.SetValue(sourceTextureParameter, source.Texture);
                 effect.Technique = technique;
                 device.VertexFormat = CustomVertex.TransformedTextured.Format;
             }
         }
 
-        private void ProcessPasses(string technique, TextureID source, TextureID destination)
+        private void ProcessPasses(string technique, TextureContainer source, TextureContainer destination)
         {
             int passes = effect.Begin(FX.None);
             SetupRenderState();
@@ -185,10 +164,10 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        private CustomVertex.TransformedTextured[] CreateVertexStruct(string technique, TextureID source, TextureID destination, int pass)
+        private CustomVertex.TransformedTextured[] CreateVertexStruct(string technique, TextureContainer source, TextureContainer destination, int pass)
         {
             CustomVertex.TransformedTextured[] vertices = new CustomVertex.TransformedTextured[4];
-            float fromScale = GetScale(source);
+            float fromScale = source.scale;
             float toScale = fromScale * effect.GetValueFloat(effect.GetAnnotation(effect.GetPass(technique, pass), "Scale"));
             if (toScale > 1.0f)
                 throw new DDXXException("Can not scale larger than back buffer size");
@@ -199,33 +178,18 @@ namespace Dope.DDXX.DemoFramework
             vertices[1] = new CustomVertex.TransformedTextured(new Vector4(width * toScale - 0.5f, -0.5f, 1.0f, 1.0f), fromScale, 0);
             vertices[2] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, height * toScale - 0.5f, 1.0f, 1.0f), 0, fromScale);
             vertices[3] = new CustomVertex.TransformedTextured(new Vector4(width * toScale - 0.5f, height * toScale - 0.5f, 1.0f, 1.0f), fromScale, fromScale);
-            if (GetScale(destination) > toScale)
+            if (destination.scale > toScale)
                 shouldClear = true;
             else
                 shouldClear = false;
-            SetScale(destination, toScale);
+            destination.scale = toScale;
             return vertices;
-        }
-
-        private void SetScale(TextureID destination, float toScale)
-        {
-            textures[(int)destination].scale = toScale;
-        }
-
-        private float GetScale(TextureID source)
-        {
-            if (source == TextureID.INPUT_TEXTURE)
-                return 1.0f;
-            else
-                return textures[(int)source].scale;
         }
 
         public void DebugWriteAllTextures()
         {
-            TextureLoader.Save("INPUT.jpg", ImageFileFormat.Jpg, ((TextureAdapter)inputTexture).TextureDX);
-            TextureLoader.Save("FULLSCREEN_1.jpg", ImageFileFormat.Jpg, ((TextureAdapter)textures[(int)TextureID.FULLSIZE_TEXTURE_1].Texture).TextureDX);
-            TextureLoader.Save("FULLSCREEN_2.jpg", ImageFileFormat.Jpg, ((TextureAdapter)textures[(int)TextureID.FULLSIZE_TEXTURE_2].Texture).TextureDX);
-            TextureLoader.Save("FULLSCREEN_3.jpg", ImageFileFormat.Jpg, ((TextureAdapter)textures[(int)TextureID.FULLSIZE_TEXTURE_3].Texture).TextureDX);
+            for (int i = 0; i < textures.Count; i++)
+                textures[i].Texture.Save("Container" + i + ".jpg", ImageFileFormat.Jpg);
         }
 
         public void SetValue(string name, float value)
@@ -249,9 +213,55 @@ namespace Dope.DDXX.DemoFramework
             effect.SetValue(name, value);
         }
 
-        public List<ITexture> GetTemporaryTextures(int num)
+        public List<ITexture> GetTemporaryTextures(int num, bool skipOutput)
         {
-            throw new Exception("The method or operation is not implemented.");
+            List<ITexture> tempTextures = new List<ITexture>();
+            foreach (TextureContainer container in textures)
+            {
+                if (!container.allocated)
+                {
+                    if (container.Texture == lastUsedTexture)
+                    {
+                        if (num != 1 && !skipOutput)
+                        {
+                            tempTextures.Add(container.Texture);
+                        }
+                    }
+                    else
+                    {
+                        tempTextures.Add(container.Texture);
+                    }
+                }
+            }
+            int numToAdd = num - tempTextures.Count;
+            for (int i = 0; i < numToAdd; i++)
+            {
+                ITexture newTexture = textureFactory.CreateFullsizeRenderTarget(Format.A8R8G8B8);
+                textures.Add(new TextureContainer(newTexture));
+                tempTextures.Add(newTexture);
+            }
+            if (tempTextures[0] == lastUsedTexture)
+            {
+                ITexture temp = tempTextures[0];
+                tempTextures[0] = tempTextures[1];
+                tempTextures[1] = temp;
+            }
+            return tempTextures;
+        }
+
+        public void AllocateTexture(ITexture texture)
+        {
+            foreach (TextureContainer container in textures)
+            {
+                if (container.Texture == texture)
+                {
+                    if (container.allocated)
+                        throw new DDXXException("Same texture allocated twice.");
+                    container.allocated = true;
+                    return;
+                }
+            }
+            throw new DDXXException("Texture not found.");
         }
     }
 }

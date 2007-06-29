@@ -5,6 +5,7 @@ using Dope.DDXX.DemoFramework;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using Dope.DDXX.Utility;
+using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.DemoEffects
 {
@@ -17,42 +18,22 @@ namespace Dope.DDXX.DemoEffects
 
         public override void Render()
         {
-            TextureID[] temp = new TextureID[2];
-            TextureID startTexture = PostProcessor.OutputTextureID;
-            if (PostProcessor.OutputTextureID == TextureID.FULLSIZE_TEXTURE_1)
-            {
-                temp[0] = TextureID.FULLSIZE_TEXTURE_2;
-                temp[1] = TextureID.FULLSIZE_TEXTURE_3;
-            }
-            else if (PostProcessor.OutputTextureID == TextureID.FULLSIZE_TEXTURE_2)
-            {
-                temp[0] = TextureID.FULLSIZE_TEXTURE_1;
-                temp[1] = TextureID.FULLSIZE_TEXTURE_3;
-            }
-            else
-            {
-                temp[0] = TextureID.FULLSIZE_TEXTURE_1;
-                temp[1] = TextureID.FULLSIZE_TEXTURE_2;
-            }
+            List<ITexture> textures = PostProcessor.GetTemporaryTextures(2, true);
+            ITexture startTexture = PostProcessor.OutputTexture;
             PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
-            //PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.SourceAlpha, Blend.Zero, Color.Black);
             PostProcessor.SetValue("ZoomFactor", 0.20f);
-            //if (Time.StepTime > 25.0f)
-            //    PostProcessor.GetTexture(PostProcessor.OutputTextureID).Save("before.dds", ImageFileFormat.Dds);
-            PostProcessor.Process("ZoomAdd", PostProcessor.OutputTextureID, temp[0]);
-            //if (Time.StepTime > 25.0f)
-            //    PostProcessor.GetTexture(temp[0]).Save("after.dds", ImageFileFormat.Dds);
+            PostProcessor.Process("ZoomAdd", startTexture, textures[0]);
             float invZoomFactor = 0.8f;
             int source = 0;
             for (int i = 0; i < 6; i++)
             {
                 invZoomFactor /= 2;
                 PostProcessor.SetValue("ZoomFactor", 1 - invZoomFactor);
-                PostProcessor.Process("ZoomAdd", temp[source], temp[1 - source]);
+                PostProcessor.Process("ZoomAdd", textures[source], textures[1 - source]);
                 source = 1 - source;
             }
             PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.One, Color.Black);
-            PostProcessor.Process("Copy", temp[source], startTexture);
+            PostProcessor.Process("Copy", textures[source], startTexture);
         }
 
         protected override void Initialize()

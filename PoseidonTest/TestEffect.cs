@@ -29,69 +29,70 @@ namespace PoseidonTest
 
         public override void Render()
         {
-            TextureID tempTextureID = TextureID.FULLSIZE_TEXTURE_1;
-            TextureID tempTextureID2 = TextureID.FULLSIZE_TEXTURE_2;
-            if (PostProcessor.OutputTextureID == TextureID.FULLSIZE_TEXTURE_1)
-            {
-                tempTextureID = TextureID.FULLSIZE_TEXTURE_3;
-            }
-            else if (PostProcessor.OutputTextureID == TextureID.FULLSIZE_TEXTURE_2)
-            {
-                tempTextureID2 = TextureID.FULLSIZE_TEXTURE_3;
-            }
+            /// TODO: I have redesigned the PostProcessor interface and have not updated this code.
+            //TextureID tempTextureID = TextureID.FULLSIZE_TEXTURE_1;
+            //TextureID tempTextureID2 = TextureID.FULLSIZE_TEXTURE_2;
+            //if (PostProcessor.OutputTextureID == TextureID.FULLSIZE_TEXTURE_1)
+            //{
+            //    tempTextureID = TextureID.FULLSIZE_TEXTURE_3;
+            //}
+            //else if (PostProcessor.OutputTextureID == TextureID.FULLSIZE_TEXTURE_2)
+            //{
+            //    tempTextureID2 = TextureID.FULLSIZE_TEXTURE_3;
+            //}
 
-            //surfaceloader.fromsurface(temptexture.getsurfacelevel(0).dxsurface,
-            //    postprocessor.outputtexture.getsurfacelevel(0).dxsurface,
-            //    filter.none, 0);
+            ////surfaceloader.fromsurface(temptexture.getsurfacelevel(0).dxsurface,
+            ////    postprocessor.outputtexture.getsurfacelevel(0).dxsurface,
+            ////    filter.none, 0);
 
-            //demoEffect.SourceTexture = tempTexture;
+            ////demoEffect.SourceTexture = tempTexture;
 
-            PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
-            PostProcessor.Process("DownSample4x", PostProcessor.OutputTextureID, tempTextureID);
-            PostProcessor.Process("DownSample4x", tempTextureID, tempTextureID2);
+            //PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
+            //PostProcessor.Process("DownSample4x", PostProcessor.OutputTextureID, tempTextureID);
+            //PostProcessor.Process("DownSample4x", tempTextureID, tempTextureID2);
 
-            PostProcessor.Process("DownSample4x", tempTextureID2, tempTextureID);
+            //PostProcessor.Process("DownSample4x", tempTextureID2, tempTextureID);
 
-            demoEffect.SourceTexture = PostProcessor.GetTexture(tempTextureID2);
+            //demoEffect.SourceTexture = PostProcessor.GetTexture(tempTextureID2);
 
-            //((PostProcessor)PostProcessor).DebugWriteAllTextures();
+            ////((PostProcessor)PostProcessor).DebugWriteAllTextures();
             
-            ISurface sourceSurface = PostProcessor.GetTexture(tempTextureID2).GetSurfaceLevel(0);
-            SurfaceDescription description = sourceSurface.Description;
-            using (ISurface offscreenTarget = demoEffect.GetDevice().CreateOffscreenPlainSurface(
-                description.Width, description.Height, description.Format, Pool.SystemMemory))
-            {
-                demoEffect.GetDevice().GetRenderTargetData(sourceSurface, offscreenTarget);
+            //ISurface sourceSurface = PostProcessor.GetTexture(tempTextureID2).GetSurfaceLevel(0);
+            //SurfaceDescription description = sourceSurface.Description;
+            //using (ISurface offscreenTarget = demoEffect.GetDevice().CreateOffscreenPlainSurface(
+            //    description.Width, description.Height, description.Format, Pool.SystemMemory))
+            //{
+            //    demoEffect.GetDevice().GetRenderTargetData(sourceSurface, offscreenTarget);
 
-                int pitch;
-                GraphicsStream stream = offscreenTarget.LockRectangle(LockFlags.ReadOnly, out pitch);
-                byte[] buffer = new byte[description.Width * description.Height * 4];
-                stream.Read(buffer, 0, buffer.Length);
-                stream.Close();
-                offscreenTarget.UnlockRectangle();
-                for (int i = 0; i < demoEffect.HeightMapX; i++)
-                {
-                    for (int j = 0; j < demoEffect.HeightMapY; j++)
-                    {
-                        int sourceIndex = j*pitch + i*4;
-                        int destIndex = j*demoEffect.HeightMapX + i;
-                        demoEffect.HeightMap[destIndex] = buffer[sourceIndex + 2];
-                    }
-                }
-            }
+            //    int pitch;
+            //    GraphicsStream stream = offscreenTarget.LockRectangle(LockFlags.ReadOnly, out pitch);
+            //    byte[] buffer = new byte[description.Width * description.Height * 4];
+            //    stream.Read(buffer, 0, buffer.Length);
+            //    stream.Close();
+            //    offscreenTarget.UnlockRectangle();
+            //    for (int i = 0; i < demoEffect.HeightMapX; i++)
+            //    {
+            //        for (int j = 0; j < demoEffect.HeightMapY; j++)
+            //        {
+            //            int sourceIndex = j*pitch + i*4;
+            //            int destIndex = j*demoEffect.HeightMapX + i;
+            //            demoEffect.HeightMap[destIndex] = buffer[sourceIndex + 2];
+            //        }
+            //    }
+            //}
 
-            using (ISurface oldTarget = demoEffect.GetDevice().GetRenderTarget(0))
-            {
-                using (ISurface newTarget = PostProcessor.OutputTexture.GetSurfaceLevel(0))
-                {
-                    demoEffect.GetDevice().SetRenderTarget(0, newTarget);
-                    demoEffect.GetDevice().Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Blue, 1000, 0);
-                    demoEffect.GetDevice().BeginScene();
-                    demoEffect.RealRender();
-                    demoEffect.GetDevice().EndScene();
-                    demoEffect.GetDevice().SetRenderTarget(0, oldTarget);
-                }
-            }
+            //using (ISurface oldTarget = demoEffect.GetDevice().GetRenderTarget(0))
+            //{
+            //    using (ISurface newTarget = PostProcessor.OutputTexture.GetSurfaceLevel(0))
+            //    {
+            //        demoEffect.GetDevice().SetRenderTarget(0, newTarget);
+            //        demoEffect.GetDevice().Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Blue, 1000, 0);
+            //        demoEffect.GetDevice().BeginScene();
+            //        demoEffect.RealRender();
+            //        demoEffect.GetDevice().EndScene();
+            //        demoEffect.GetDevice().SetRenderTarget(0, oldTarget);
+            //    }
+            //}
         }
 
         protected override void Initialize()

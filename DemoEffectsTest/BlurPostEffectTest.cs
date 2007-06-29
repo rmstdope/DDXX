@@ -6,6 +6,7 @@ using Dope.DDXX.DemoFramework;
 using NMock2;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.DemoEffects
 {
@@ -15,12 +16,16 @@ namespace Dope.DDXX.DemoEffects
         private Mockery mockery;
         private BlurPostEffect effect;
         private IPostProcessor postProcessor;
+        private ITexture outputTexture;
+        private ITexture texture1;
 
         [SetUp]
         public void SetUp()
         {
             mockery = new Mockery();
             postProcessor = mockery.NewMock<IPostProcessor>();
+            outputTexture = mockery.NewMock<ITexture>();
+            texture1 = mockery.NewMock<ITexture>();
             effect = new BlurPostEffect(1.0f, 2.0f);
             effect.Initialize(postProcessor, null, null, null);
         }
@@ -37,25 +42,7 @@ namespace Dope.DDXX.DemoEffects
         [Test]
         public void TestInput()
         {
-            TestRender(TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_2);
-        }
-
-        /// <summary>
-        /// Test running the post effect with FULLSIZE_TEXTURE_1 as input.
-        /// </summary>
-        [Test]
-        public void TestFullsize1()
-        {
-            TestRender(TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_2, TextureID.FULLSIZE_TEXTURE_1);
-        }
-
-        /// <summary>
-        /// Test running the post effect with FULLSIZE_TEXTURE_2 as input.
-        /// </summary>
-        [Test]
-        public void TestFullsize2()
-        {
-            TestRender(TextureID.FULLSIZE_TEXTURE_2, TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_2);
+            TestRender(outputTexture, texture1);
         }
 
         /// <summary>
@@ -64,55 +51,55 @@ namespace Dope.DDXX.DemoEffects
         [Test]
         public void TestThreePasses()
         {
+            List<ITexture> textures = new List<ITexture>();
+            textures.Add(texture1);
+            textures.Add(outputTexture);
             effect.NumPasses = 3;
             Stub.On(postProcessor).
-                GetProperty("OutputTextureID").
-                Will(Return.Value(TextureID.INPUT_TEXTURE));
+                GetProperty("OutputTexture").
+                Will(Return.Value(outputTexture));
             // Due to some strange bug in NMock we can not put all Process calls in the same Ordered block.
             using (mockery.Ordered)
             {
+                Expect.Once.On(postProcessor).
+                    Method("GetTemporaryTextures").
+                    With(2, false).Will(Return.Value(textures));
                 Expect.Once.On(postProcessor).
                     Method("SetValue").
                     With("BloomScale", 1.0f);
                 Expect.Once.On(postProcessor).
                     Method("SetBlendParameters").
                     With(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
-                Expect.Once.On(postProcessor).
-                    Method("Process").
-                    With("HorizontalBloom", TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1);
-                Expect.Once.On(postProcessor).
-                    Method("Process").
-                    With("VerticalBloom", TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_2);
             }
-            using (mockery.Ordered)
+            for (int i = 0; i < 3; i++)
             {
-                Expect.Once.On(postProcessor).
-                    Method("Process").
-                    With("HorizontalBloom", TextureID.FULLSIZE_TEXTURE_2, TextureID.FULLSIZE_TEXTURE_1);
-                Expect.Once.On(postProcessor).
-                    Method("Process").
-                    With("VerticalBloom", TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_2);
-            }
-            using (mockery.Ordered)
-            {
-                Expect.Once.On(postProcessor).
-                    Method("Process").
-                    With("HorizontalBloom", TextureID.FULLSIZE_TEXTURE_2, TextureID.FULLSIZE_TEXTURE_1);
-                Expect.Once.On(postProcessor).
-                    Method("Process").
-                    With("VerticalBloom", TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_2);
+                using (mockery.Ordered)
+                {
+                    Expect.Once.On(postProcessor).
+                        Method("Process").
+                        With("HorizontalBloom", outputTexture, texture1);
+                    Expect.Once.On(postProcessor).
+                        Method("Process").
+                        With("VerticalBloom", texture1, outputTexture);
+                }
             }
             effect.Render();
         }
 
 
-        private void TestRender(TextureID startTexture, TextureID tempTexture1, TextureID tempTexture2)
+        private void TestRender(ITexture startTexture, ITexture tempTexture1)
         {
+            List<ITexture> textures = new List<ITexture>();
+            textures.Add(tempTexture1);
+            textures.Add(startTexture);
             Stub.On(postProcessor).
-                GetProperty("OutputTextureID").
+                GetProperty("OutputTexture").
                 Will(Return.Value(startTexture));
             using (mockery.Ordered)
             {
+                Expect.Once.On(postProcessor).
+                    Method("GetTemporaryTextures").
+                    With(2, false).Will(Return.Value(textures));
                 Expect.Once.On(postProcessor).
                     Method("SetValue").
                     With("BloomScale", 1.0f);
@@ -124,7 +111,7 @@ namespace Dope.DDXX.DemoEffects
                     With("HorizontalBloom", startTexture, tempTexture1);
                 Expect.Once.On(postProcessor).
                     Method("Process").
-                    With("VerticalBloom", tempTexture1, tempTexture2);
+                    With("VerticalBloom", tempTexture1, startTexture);
             }
             effect.Render();
         }

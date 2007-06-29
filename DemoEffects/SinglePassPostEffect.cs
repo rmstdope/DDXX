@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.DemoFramework;
+using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.DemoEffects
 {
@@ -17,13 +18,10 @@ namespace Dope.DDXX.DemoEffects
 
         public override void Render()
         {
-            TextureID startTexture = PostProcessor.OutputTextureID;
-            TextureID endTexture = TextureID.FULLSIZE_TEXTURE_1;
-            if (startTexture == endTexture)
-                endTexture = TextureID.FULLSIZE_TEXTURE_2;
+            List<ITexture> textures = PostProcessor.GetTemporaryTextures(1, false);
 
             SetParameters();
-            PostProcessor.Process(TechniqueName, startTexture, endTexture);
+            PostProcessor.Process(TechniqueName, PostProcessor.OutputTexture, textures[0]);
         }
     }
 }

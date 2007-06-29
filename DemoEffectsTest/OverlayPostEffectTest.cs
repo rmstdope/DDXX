@@ -19,6 +19,7 @@ namespace Dope.DDXX.DemoEffects
         private IPostProcessor postProcessor;
         private ITextureFactory textureFactory;
         private ITexture texture;
+        private ITexture outputTexture;
 
         [SetUp]
         public void SetUp()
@@ -28,6 +29,7 @@ namespace Dope.DDXX.DemoEffects
             postProcessor = mockery.NewMock<IPostProcessor>();
             textureFactory = mockery.NewMock<ITextureFactory>();
             texture = mockery.NewMock<ITexture>();
+            outputTexture = mockery.NewMock<ITexture>();
         }
 
         [TearDown]
@@ -105,14 +107,14 @@ namespace Dope.DDXX.DemoEffects
             TestInitialize1();
 
             Stub.On(postProcessor).
-                GetProperty("OutputTextureID").
-                Will(Return.Value(TextureID.INPUT_TEXTURE));
+                GetProperty("OutputTexture").
+                Will(Return.Value(outputTexture));
             Expect.Once.On(postProcessor).Method("SetBlendParameters").
                 With(BlendOperation.Add, Blend.One, Blend.InvSourceColor, Color.White);
             Expect.Once.On(postProcessor).Method("SetValue").
                 With("Color", new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
             Expect.Once.On(postProcessor).Method("Process").
-                With("Blend", texture, TextureID.INPUT_TEXTURE);
+                With("Blend", texture, outputTexture);
 
             overlay.Render();
         }
@@ -126,14 +128,14 @@ namespace Dope.DDXX.DemoEffects
             TestInitialize1();
 
             Stub.On(postProcessor).
-                GetProperty("OutputTextureID").
-                Will(Return.Value(TextureID.INPUT_TEXTURE));
+                GetProperty("OutputTexture").
+                Will(Return.Value(outputTexture));
             Expect.Once.On(postProcessor).Method("SetBlendParameters").
                 With(BlendOperation.RevSubtract, Blend.One, Blend.One, Color.White);
             Expect.Once.On(postProcessor).Method("SetValue").
                 With("Color", new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
             Expect.Once.On(postProcessor).Method("Process").
-                With("Blend", texture, TextureID.INPUT_TEXTURE);
+                With("Blend", texture, outputTexture);
 
             overlay.AddNoise = false;
             overlay.SubtractNoise = true;
@@ -150,14 +152,14 @@ namespace Dope.DDXX.DemoEffects
             overlay.BlendFactor = 0.5f;
 
             Stub.On(postProcessor).
-                GetProperty("OutputTextureID").
-                Will(Return.Value(TextureID.FULLSIZE_TEXTURE_1));
+                GetProperty("OutputTexture").
+                Will(Return.Value(outputTexture));
             Expect.Once.On(postProcessor).Method("SetBlendParameters").
                 With(BlendOperation.Add, Blend.One, Blend.InvSourceColor, Color.White);
             Expect.Once.On(postProcessor).Method("SetValue").
                 With("Color", new float[] { 0.5f, 0.5f, 0.5f, 0.5f });
             Expect.Once.On(postProcessor).Method("Process").
-                With("Blend", texture, TextureID.FULLSIZE_TEXTURE_1);
+                With("Blend", texture, outputTexture);
 
             overlay.Render();
         }

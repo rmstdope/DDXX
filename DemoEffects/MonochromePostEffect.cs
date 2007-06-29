@@ -4,6 +4,7 @@ using System.Text;
 using Dope.DDXX.DemoFramework;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.DemoEffects
 {
@@ -16,11 +17,10 @@ namespace Dope.DDXX.DemoEffects
 
         public override void Render()
         {
+            List<ITexture> textures = PostProcessor.GetTemporaryTextures(1, false);
+
             PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
-            if (PostProcessor.OutputTextureID != TextureID.FULLSIZE_TEXTURE_1)
-                PostProcessor.Process("Monochrome", PostProcessor.OutputTextureID, TextureID.FULLSIZE_TEXTURE_1);
-            else
-                PostProcessor.Process("Monochrome", PostProcessor.OutputTextureID, TextureID.FULLSIZE_TEXTURE_2);
+            PostProcessor.Process("Monochrome", PostProcessor.OutputTexture, textures[0]);
         }
 
         protected override void Initialize()

@@ -6,6 +6,7 @@ using NMock2;
 using Dope.DDXX.DemoFramework;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.DemoEffects
 {
@@ -15,12 +16,16 @@ namespace Dope.DDXX.DemoEffects
         private Mockery mockery;
         private DepthOfFieldPostEffect effect;
         private IPostProcessor postProcessor;
+        private ITexture texture1;
+        private ITexture outputTexture;
 
         [SetUp]
         public void SetUp()
         {
             mockery = new Mockery();
             postProcessor = mockery.NewMock<IPostProcessor>();
+            texture1 = mockery.NewMock<ITexture>();
+            outputTexture = mockery.NewMock<ITexture>();
             effect = new DepthOfFieldPostEffect(1.0f, 2.0f);
             effect.Initialize(postProcessor, null, null, null);
         }
@@ -34,30 +39,20 @@ namespace Dope.DDXX.DemoEffects
         [Test]
         public void TestRender1()
         {
+            List<ITexture> textures = new List<ITexture>();
+            textures.Add(texture1);
+            Expect.Once.On(postProcessor).
+                Method("GetTemporaryTextures").
+                With(1, false).Will(Return.Value(textures));
             Stub.On(postProcessor).
-                GetProperty("OutputTextureID").
-                Will(Return.Value(TextureID.INPUT_TEXTURE));
+                GetProperty("OutputTexture").
+                Will(Return.Value(outputTexture));
             Expect.Once.On(postProcessor).
                 Method("SetBlendParameters").
                 With(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
             Expect.Once.On(postProcessor).
                 Method("Process").
-                With("DepthOfField", TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1);
-            effect.Render();
-        }
-
-        [Test]
-        public void TestRender2()
-        {
-            Stub.On(postProcessor).
-                GetProperty("OutputTextureID").
-                Will(Return.Value(TextureID.FULLSIZE_TEXTURE_1));
-            Expect.Once.On(postProcessor).
-                Method("SetBlendParameters").
-                With(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
-            Expect.Once.On(postProcessor).
-                Method("Process").
-                With("DepthOfField", TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_2);
+                With("DepthOfField", outputTexture, texture1);
             effect.Render();
         }
     }

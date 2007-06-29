@@ -8,6 +8,7 @@ using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
 using System.Drawing;
+using NUnit.Framework.SyntaxHelpers;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -17,6 +18,8 @@ namespace Dope.DDXX.DemoFramework
         private IPostProcessor postProcessor;
         private ITexture startTexture;
         private ITexture fullsizeTexture1;
+        private ITexture fullsizeTexture2;
+        private ITexture fullsizeTexture3;
 
         private EffectHandle sourceTextureParameter;
         private EffectHandle passHandle;
@@ -29,6 +32,8 @@ namespace Dope.DDXX.DemoFramework
 
             startTexture = mockery.NewMock<ITexture>();
             fullsizeTexture1 = mockery.NewMock<ITexture>();
+            fullsizeTexture2 = mockery.NewMock<ITexture>();
+            fullsizeTexture3 = mockery.NewMock<ITexture>();
 
             postProcessor = new PostProcessor();
 
@@ -53,16 +58,163 @@ namespace Dope.DDXX.DemoFramework
             postProcessor.Initialize(device, textureFactory, effectFactory);
         }
 
-        //[Test]
-        //public void TestOneTemporaryTexture()
-        //{
-        //    Expect.Once.On(graphicsFactory).
-        //        Method("CreateTexture").
-        //        With(device, presentParameters.BackBufferWidth, presentParameters.BackBufferHeight, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default).
-        //        Will(Return.Value(fullsizeTexture1));
+        [Test]
+        public void TestOneTemporaryTexture()
+        {
+            TestInitializeOK();
+            List<ITexture> textures = new List<ITexture>();
+            textures.Add(fullsizeTexture1);
+            Expect.Once.On(textureFactory).
+                Method("CreateFullsizeRenderTarget").
+                With(Format.A8R8G8B8).
+                Will(Return.Value(fullsizeTexture1));
 
-        //    postProcessor.GetTemporaryTextures(2);
-        //}
+            Assert.AreEqual(textures, postProcessor.GetTemporaryTextures(1, false));
+        }
+
+        [Test]
+        public void TestTwoTemporaryTextures()
+        {
+            TestInitializeOK();
+            List<ITexture> textures = new List<ITexture>();
+            textures.Add(fullsizeTexture1);
+            textures.Add(fullsizeTexture2);
+            Expect.Once.On(textureFactory).
+                Method("CreateFullsizeRenderTarget").
+                With(Format.A8R8G8B8).
+                Will(Return.Value(fullsizeTexture1));
+            Expect.Once.On(textureFactory).
+                Method("CreateFullsizeRenderTarget").
+                With(Format.A8R8G8B8).
+                Will(Return.Value(fullsizeTexture2));
+
+            Assert.AreEqual(textures, postProcessor.GetTemporaryTextures(2, false));
+        }
+
+        [Test]
+        public void TestTemporaryTexturesMultipleCalls()
+        {
+            TestInitializeOK();
+            List<ITexture> textures = new List<ITexture>();
+            textures.Add(fullsizeTexture1);
+            Expect.Once.On(textureFactory).
+                Method("CreateFullsizeRenderTarget").
+                With(Format.A8R8G8B8).
+                Will(Return.Value(fullsizeTexture1));
+            Assert.AreEqual(textures, postProcessor.GetTemporaryTextures(1, false));
+
+            textures.Add(fullsizeTexture2);
+            Expect.Once.On(textureFactory).
+                Method("CreateFullsizeRenderTarget").
+                With(Format.A8R8G8B8).
+                Will(Return.Value(fullsizeTexture2));
+            Assert.AreEqual(textures, postProcessor.GetTemporaryTextures(2, false));
+        }
+
+        [Test]
+        public void TestOneTemporaryTextureSameAsOutput()
+        {
+            TestInitializeOK();
+            Expect.Once.On(textureFactory).
+                Method("CreateFullsizeRenderTarget").
+                With(Format.A8R8G8B8).
+                Will(Return.Value(fullsizeTexture1));
+            postProcessor.GetTemporaryTextures(1, false);
+            postProcessor.StartFrame(fullsizeTexture1);
+            Expect.Once.On(textureFactory).
+                Method("CreateFullsizeRenderTarget").
+                With(Format.A8R8G8B8).
+                Will(Return.Value(fullsizeTexture2));
+            Assert.AreSame(fullsizeTexture2, postProcessor.GetTemporaryTextures(1, false)[0]);
+        }
+
+        [Test]
+        public void TestTwoTemporaryTexturesFirstSameAsOutput()
+        {
+            TestInitializeOK();
+            Expect.Once.On(textureFactory).
+                Method("CreateFullsizeRenderTarget").
+                With(Format.A8R8G8B8).
+                Will(Return.Value(fullsizeTexture1));
+            Expect.Once.On(textureFactory).
+                Method("CreateFullsizeRenderTarget").
+                With(Format.A8R8G8B8).
+                Will(Return.Value(fullsizeTexture2));
+            postProcessor.GetTemporaryTextures(2, false);
+            postProcessor.StartFrame(fullsizeTexture1);
+            List<ITexture> textures = postProcessor.GetTemporaryTextures(2, false);
+            Assert.AreSame(fullsizeTexture2, textures[0]);
+            Assert.AreSame(fullsizeTexture1, textures[1]);
+        }
+
+        [Test]
+        public void TestTwoTemporaryTexturesSkipOutput()
+        {
+            TestInitializeOK();
+            Expect.Once.On(textureFactory).
+                Method("CreateFullsizeRenderTarget").
+                With(Format.A8R8G8B8).
+                Will(Return.Value(fullsizeTexture1));
+            Expect.Once.On(textureFactory).
+                Method("CreateFullsizeRenderTarget").
+                With(Format.A8R8G8B8).
+                Will(Return.Value(fullsizeTexture2));
+            postProcessor.GetTemporaryTextures(2, false);
+            postProcessor.StartFrame(fullsizeTexture1);
+            Expect.Once.On(textureFactory).
+                Method("CreateFullsizeRenderTarget").
+                With(Format.A8R8G8B8).
+                Will(Return.Value(fullsizeTexture3));
+            List<ITexture> textures = postProcessor.GetTemporaryTextures(2, true);
+            Assert.AreSame(fullsizeTexture2, textures[0]);
+            Assert.AreSame(fullsizeTexture3, textures[1]);
+        }
+
+        [Test]
+        public void TestAllocateTexture()
+        {
+            TestInitializeOK();
+            List<ITexture> textures = new List<ITexture>();
+            textures.Add(fullsizeTexture1);
+            Expect.Once.On(textureFactory).
+                Method("CreateFullsizeRenderTarget").
+                With(Format.A8R8G8B8).
+                Will(Return.Value(fullsizeTexture1));
+            Assert.AreEqual(textures, postProcessor.GetTemporaryTextures(1, false));
+
+            postProcessor.AllocateTexture(fullsizeTexture1);
+
+            textures.Clear();
+            textures.Add(fullsizeTexture2);
+            textures.Add(fullsizeTexture2);
+            Expect.Exactly(2).On(textureFactory).
+                Method("CreateFullsizeRenderTarget").
+                With(Format.A8R8G8B8).
+                Will(Return.Value(fullsizeTexture2));
+            Assert.AreEqual(textures, postProcessor.GetTemporaryTextures(2, false));
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestAllocateTextureTwice()
+        {
+            TestInitializeOK();
+            Expect.Once.On(textureFactory).
+                Method("CreateFullsizeRenderTarget").
+                With(Format.A8R8G8B8).
+                Will(Return.Value(fullsizeTexture1));
+            postProcessor.GetTemporaryTextures(1, false);
+            postProcessor.AllocateTexture(fullsizeTexture1);
+            postProcessor.AllocateTexture(fullsizeTexture1);
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestAllocateUnknownTexture()
+        {
+            TestInitializeOK();
+            postProcessor.AllocateTexture(fullsizeTexture1);
+        }
 
         [Test]
         public void TestAnnotations()
@@ -79,7 +231,7 @@ namespace Dope.DDXX.DemoFramework
             ParameterDescription pDescription2 = new ParameterDescription();
 
             InitializeSetup();
-            
+
             Stub.On(effect).
                 GetProperty("Description_Parameters").
                 Will(Return.Value(3));
@@ -159,7 +311,6 @@ namespace Dope.DDXX.DemoFramework
             TestInitializeOK();
             postProcessor.StartFrame(startTexture);
             Assert.AreSame(startTexture, postProcessor.OutputTexture);
-            Assert.AreEqual(TextureID.INPUT_TEXTURE, postProcessor.OutputTextureID);
         }
 
         [Test]
@@ -173,32 +324,19 @@ namespace Dope.DDXX.DemoFramework
 
             TestInitializeOK();
             postProcessor.StartFrame(startTexture);
-            SetupPostEffect(startTexture, "Monochrome", vertices, 1.0f, false);
+            CreateFullsize(new ITexture[] { fullsizeTexture1 });
+
+            SetupPostEffect(startTexture, fullsizeTexture1, "Monochrome", vertices, 1.0f, false);
             SetupBlend(BlendOperation.Max, Blend.SourceAlpha, Blend.SourceAlphaSat, Color.Fuchsia);
-            postProcessor.Process("Monochrome", TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1);
+            postProcessor.Process("Monochrome", startTexture, fullsizeTexture1);
             Assert.AreSame(fullsizeTexture1, postProcessor.OutputTexture);
-            Assert.AreEqual(TextureID.FULLSIZE_TEXTURE_1, postProcessor.OutputTextureID);
         }
 
-        /// <summary>
-        /// Test to use an external texture as input.
-        /// </summary>
         [Test]
-        public void TestProcessExternalTexture()
+        [ExpectedException(typeof(DDXXException))]
+        public void TestProcessUnknownTexture()
         {
-            CustomVertex.TransformedTextured[] vertices = new CustomVertex.TransformedTextured[4];
-            vertices[0] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, -0.5f, 1.0f, 1.0f), 0, 0);
-            vertices[1] = new CustomVertex.TransformedTextured(new Vector4(400 - 0.5f, -0.5f, 1.0f, 1.0f), 1, 0);
-            vertices[2] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, 200 - 0.5f, 1.0f, 1.0f), 0, 1);
-            vertices[3] = new CustomVertex.TransformedTextured(new Vector4(400 - 0.5f, 200 - 0.5f, 1.0f, 1.0f), 1, 1);
-
-            TestInitializeOK();
-            postProcessor.StartFrame(startTexture);
-            SetupPostEffect(texture, "Monochrome", vertices, 1.0f, false);
-            SetupBlend(BlendOperation.Max, Blend.SourceAlpha, Blend.SourceAlphaSat, Color.Fuchsia);
-            postProcessor.Process("Monochrome", texture, TextureID.FULLSIZE_TEXTURE_1);
-            Assert.AreSame(fullsizeTexture1, postProcessor.OutputTexture);
-            Assert.AreEqual(TextureID.FULLSIZE_TEXTURE_1, postProcessor.OutputTextureID);
+            postProcessor.Process("Monochrome", startTexture, startTexture);
         }
 
         [Test]
@@ -212,28 +350,30 @@ namespace Dope.DDXX.DemoFramework
 
             TestInitializeOK();
             postProcessor.StartFrame(startTexture);
-            SetupPostEffect(startTexture, "DownSample4x", vertices, 0.5f, true);
+            CreateFullsize(new ITexture[] { fullsizeTexture1, fullsizeTexture2 });
+
+            SetupPostEffect(startTexture, fullsizeTexture1, "DownSample4x", vertices, 0.5f, true);
             SetupBlend(BlendOperation.RevSubtract, Blend.DestinationColor, Blend.BothInvSourceAlpha, Color.DodgerBlue);
-            postProcessor.Process("DownSample4x", TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1);
+            postProcessor.Process("DownSample4x", startTexture, fullsizeTexture1);
             Assert.AreSame(fullsizeTexture1, postProcessor.OutputTexture);
-            Assert.AreEqual(TextureID.FULLSIZE_TEXTURE_1, postProcessor.OutputTextureID);
 
             vertices[0] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, -0.5f, 1.0f, 1.0f), 0, 0);
             vertices[1] = new CustomVertex.TransformedTextured(new Vector4(100 - 0.5f, -0.5f, 1.0f, 1.0f), 0.5f, 0);
             vertices[2] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, 50 - 0.5f, 1.0f, 1.0f), 0, 0.5f);
             vertices[3] = new CustomVertex.TransformedTextured(new Vector4(100 - 0.5f, 50 - 0.5f, 1.0f, 1.0f), 0.5f, 0.5f);
-            SetupPostEffect(fullsizeTexture1, "DownSample4x", vertices, 0.5f, true);
+            SetupPostEffect(fullsizeTexture1, fullsizeTexture2, "DownSample4x", vertices, 0.5f, true);
             SetupBlend(BlendOperation.Add, Blend.One, Blend.Zero, Color.DodgerBlue);
-            postProcessor.Process("DownSample4x", TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_2);
+            postProcessor.Process("DownSample4x", fullsizeTexture1, fullsizeTexture2);
+            Assert.AreSame(fullsizeTexture2, postProcessor.OutputTexture);
 
             vertices[0] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, -0.5f, 1.0f, 1.0f), 0, 0);
             vertices[1] = new CustomVertex.TransformedTextured(new Vector4(200 - 0.5f, -0.5f, 1.0f, 1.0f), 1, 0);
             vertices[2] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, 100 - 0.5f, 1.0f, 1.0f), 0, 1);
             vertices[3] = new CustomVertex.TransformedTextured(new Vector4(200 - 0.5f, 100 - 0.5f, 1.0f, 1.0f), 1, 1);
             postProcessor.StartFrame(startTexture);
-            SetupPostEffect(startTexture, "DownSample4x", vertices, 0.5f, false);
+            SetupPostEffect(startTexture, fullsizeTexture1, "DownSample4x", vertices, 0.5f, false);
             SetupBlend(BlendOperation.Subtract, Blend.DestinationColor, Blend.BothInvSourceAlpha, Color.DimGray);
-            postProcessor.Process("DownSample4x", TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1);
+            postProcessor.Process("DownSample4x", startTexture, fullsizeTexture1);
         }
 
         [Test]
@@ -247,19 +387,19 @@ namespace Dope.DDXX.DemoFramework
             vertices[1] = new CustomVertex.TransformedTextured(new Vector4(400 - 0.5f, -0.5f, 1.0f, 1.0f), 0.5f, 0);
             vertices[2] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, 200 - 0.5f, 1.0f, 1.0f), 0, 0.5f);
             vertices[3] = new CustomVertex.TransformedTextured(new Vector4(400 - 0.5f, 200 - 0.5f, 1.0f, 1.0f), 0.5f, 0.5f);
-            SetupPostEffect(fullsizeTexture1, "UpSample4x", vertices, 2.0f, false);
+            SetupPostEffect(fullsizeTexture1, fullsizeTexture2, "UpSample4x", vertices, 2.0f, false);
             SetupBlend(BlendOperation.Subtract, Blend.DestinationColor, Blend.BothInvSourceAlpha, Color.DimGray);
-            postProcessor.Process("UpSample4x", TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_2);
-            Assert.AreEqual(TextureID.FULLSIZE_TEXTURE_2, postProcessor.OutputTextureID);
+            postProcessor.Process("UpSample4x", fullsizeTexture1, fullsizeTexture2);
+            Assert.AreEqual(fullsizeTexture2, postProcessor.OutputTexture);
 
             vertices[0] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, -0.5f, 1.0f, 1.0f), 0, 0);
             vertices[1] = new CustomVertex.TransformedTextured(new Vector4(400 - 0.5f, -0.5f, 1.0f, 1.0f), 1, 0);
             vertices[2] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, 200 - 0.5f, 1.0f, 1.0f), 0, 1);
             vertices[3] = new CustomVertex.TransformedTextured(new Vector4(400 - 0.5f, 200 - 0.5f, 1.0f, 1.0f), 1, 1);
-            SetupPostEffect(fullsizeTexture1, "Monochrome", vertices, 1.0f, false);
+            SetupPostEffect(fullsizeTexture2, fullsizeTexture1, "Monochrome", vertices, 1.0f, false);
             SetupBlend(BlendOperation.RevSubtract, Blend.DestinationColor, Blend.BothInvSourceAlpha, Color.DimGray);
-            postProcessor.Process("Monochrome", TextureID.FULLSIZE_TEXTURE_2, TextureID.FULLSIZE_TEXTURE_1);
-            Assert.AreEqual(TextureID.FULLSIZE_TEXTURE_1, postProcessor.OutputTextureID);
+            postProcessor.Process("Monochrome", fullsizeTexture2, fullsizeTexture1);
+            Assert.AreEqual(fullsizeTexture1, postProcessor.OutputTexture);
         }
 
         [Test]
@@ -270,9 +410,18 @@ namespace Dope.DDXX.DemoFramework
 
             TestInitializeOK();
             postProcessor.StartFrame(startTexture);
-            SetupPostEffect(startTexture, "UpSample4x", vertices, 2.0f, false);
+            CreateFullsize(new ITexture[] { fullsizeTexture1 });
+            SetupPostEffect(startTexture, fullsizeTexture1, "UpSample4x", vertices, 2.0f, false);
             SetupBlend(BlendOperation.RevSubtract, Blend.DestinationColor, Blend.BothInvSourceAlpha, Color.DimGray);
-            postProcessor.Process("UpSample4x", TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1);
+            postProcessor.Process("UpSample4x", startTexture, fullsizeTexture1);
+        }
+
+        private void CreateFullsize(ITexture[] textures)
+        {
+            foreach (ITexture texture in textures)
+                Expect.Once.On(textureFactory).Method("CreateFullsizeRenderTarget").
+                    With(Format.A8R8G8B8).Will(Return.Value(texture));
+            postProcessor.GetTemporaryTextures(textures.Length, false);
         }
 
         public void InitializeSetup()
@@ -286,10 +435,6 @@ namespace Dope.DDXX.DemoFramework
                 Method("GetParameter").
                 With(null, "SourceTexture").
                 Will(Return.Value(sourceTextureParameter));
-            Stub.On(textureFactory).
-                Method("CreateFullsizeRenderTarget").
-                With(Format.A8R8G8B8).
-                Will(Return.Value(fullsizeTexture1));
         }
 
         private void SetupBlend(BlendOperation operation, Blend source, Blend destination, Color factor)
@@ -323,17 +468,21 @@ namespace Dope.DDXX.DemoFramework
             postProcessor.SetBlendParameters(operation, source, destination, factor);
         }
 
-        private void SetupPostEffect(ITexture startTexture, string technique, CustomVertex.TransformedTextured[] vertices, float scale, bool clear)
+        private void SetupPostEffect(ITexture startTexture, ITexture destTexture, string technique, CustomVertex.TransformedTextured[] vertices, float scale, bool clear)
         {
             SetupStub(technique, scale);
 
-            SetupExpect(startTexture, technique, vertices, clear);
+            SetupExpect(startTexture, destTexture, technique, vertices, clear);
         }
 
-        private void SetupExpect(ITexture startTexture, string technique, CustomVertex.TransformedTextured[] vertices, bool clear)
+        private void SetupExpect(ITexture startTexture, ITexture destTexture, string technique, CustomVertex.TransformedTextured[] vertices, bool clear)
         {
             using (mockery.Ordered)
             {
+                Expect.Once.On(destTexture).
+                    Method("GetSurfaceLevel").
+                    With(0).
+                    Will(Return.Value(surface));
                 Expect.Once.On(device).
                     Method("SetRenderTarget").
                     With(0, surface);
@@ -342,7 +491,7 @@ namespace Dope.DDXX.DemoFramework
                     With(sourceTextureParameter, startTexture);
                 Expect.Once.On(effect).
                     SetProperty("Technique").
-                    To(Is.Anything);//(EffectHandle)technique);
+                    To(NMock2.Is.Anything);//(EffectHandle)technique);
                 Expect.Once.On(device).
                     SetProperty("VertexFormat").
                     To(CustomVertex.TransformedTextured.Format);
@@ -361,7 +510,7 @@ namespace Dope.DDXX.DemoFramework
                 }
                 Expect.Once.On(device).
                     Method("DrawUserPrimitives").
-                    With(Is.EqualTo(PrimitiveType.TriangleStrip), Is.EqualTo(2), new VertexMatcher(vertices));
+                    With(NMock2.Is.EqualTo(PrimitiveType.TriangleStrip), NMock2.Is.EqualTo(2), new VertexMatcher(vertices));
                 Expect.Once.On(effect).
                     Method("EndPass");
                 Expect.Once.On(effect).
@@ -375,16 +524,12 @@ namespace Dope.DDXX.DemoFramework
         {
             Stub.On(effect).
                 Method("GetPass").
-                With(Is.Anything /*technique*/, Is.EqualTo(0)).
+                With(NMock2.Is.Anything /*technique*/, NMock2.Is.EqualTo(0)).
                 Will(Return.Value(passHandle));
             Stub.On(effect).
                 Method("GetAnnotation").
                 With(passHandle, "Scale").
                 Will(Return.Value(scaleHandle));
-            Stub.On(fullsizeTexture1).
-                Method("GetSurfaceLevel").
-                With(0).
-                Will(Return.Value(surface));
             Expect.Once.On(effect).
                 Method("GetValueFloat").
                 With(scaleHandle).

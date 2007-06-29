@@ -77,7 +77,7 @@ namespace Dope.DDXX.DemoEffects
                 PostProcessor.SetBlendParameters(BlendOperation.RevSubtract, Blend.One, Blend.One, Color.White);
             PostProcessor.SetValue("Color", new float[] { BlendFactor, BlendFactor, BlendFactor, BlendFactor });
 
-            PostProcessor.Process("Blend", texture, PostProcessor.OutputTextureID);
+            PostProcessor.Process("Blend", texture, PostProcessor.OutputTexture);
         }
     }
 }

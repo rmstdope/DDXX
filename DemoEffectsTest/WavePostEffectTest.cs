@@ -8,6 +8,7 @@ using System.Drawing;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX;
 using Dope.DDXX.Utility;
+using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.DemoEffects
 {
@@ -17,6 +18,8 @@ namespace Dope.DDXX.DemoEffects
         private Mockery mockery;
         private WavePostEffect effect;
         private IPostProcessor postProcessor;
+        private ITexture outputTexture;
+        private ITexture texture1;
         private Vector4 strength;
         private Vector2 time;
         private float scale;
@@ -26,6 +29,8 @@ namespace Dope.DDXX.DemoEffects
         {
             mockery = new Mockery();
             postProcessor = mockery.NewMock<IPostProcessor>();
+            outputTexture = mockery.NewMock<ITexture>();
+            texture1 = mockery.NewMock<ITexture>();
             effect = new WavePostEffect(1.0f, 2.0f);
             effect.Initialize(postProcessor, null, null, null);
             Time.Initialize();
@@ -41,34 +46,37 @@ namespace Dope.DDXX.DemoEffects
         [Test]
         public void TestRenderInputIsInput()
         {
-            // Starting with INPUT
             Time.CurrentTime = 11.25f;
             strength = new Vector4(1, 2, 3, 4);
             time = new Vector2(0.25f, 0.7827875f);
             scale = 15.0f;
-            TestRender(TextureID.INPUT_TEXTURE, TextureID.FULLSIZE_TEXTURE_1);
+            TestRender(outputTexture, texture1);
         }
 
         [Test]
         public void TestRenderFs1IsInput()
         {
-            // Starting with FULLSCREEN_1
             Time.CurrentTime = 1.33f; // 2,3387651
             strength = new Vector4(4, 3, 2, 1);
             time = new Vector2(0.33f, 0.3387651f);
             scale = 1.0f;
-            TestRender(TextureID.FULLSIZE_TEXTURE_1, TextureID.FULLSIZE_TEXTURE_2);
+            TestRender(outputTexture, texture1);
         }
 
-        private void TestRender(TextureID startTexture, TextureID endTexture)
+        private void TestRender(ITexture startTexture, ITexture endTexture)
         {
+            List<ITexture> textures = new List<ITexture>();
+            textures.Add(endTexture);
             Stub.On(postProcessor).
-                GetProperty("OutputTextureID").
+                GetProperty("OutputTexture").
                 Will(Return.Value(startTexture));
             effect.Strength = strength;
             effect.Scale = scale;
             using (mockery.Ordered)
             {
+                Expect.Once.On(postProcessor).
+                    Method("GetTemporaryTextures").
+                    With(1, false).Will(Return.Value(textures));
                 Expect.Once.On(postProcessor).
                     Method("SetBlendParameters").
                     With(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);

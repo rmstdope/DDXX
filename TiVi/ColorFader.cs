@@ -62,7 +62,7 @@ namespace TiVi
             flashAlpha = (float)(Math.Max(0, Math.Min(1, flashAlpha)));
             PostProcessor.SetValue("Color", new Vector4(fadeColor.R / 255.0f, fadeColor.G / 255.0f, fadeColor.B / 255.0f, flashAlpha));
             PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.SourceAlpha, Blend.InvSourceAlpha, Color.Empty);
-            PostProcessor.Process("Color", PostProcessor.OutputTextureID, PostProcessor.OutputTextureID);
+            PostProcessor.Process("Color", PostProcessor.OutputTexture, PostProcessor.OutputTexture);
         }
     }
 }
