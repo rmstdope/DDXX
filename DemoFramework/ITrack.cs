@@ -1,6 +1,7 @@
 ﻿using System;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.TextureBuilder;
+using System.Drawing;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -18,7 +19,7 @@ namespace Dope.DDXX.DemoFramework
         IDemoPostEffect[] PostEffects { get; }
         void Register(IDemoPostEffect postEffect);
         void Register(IDemoEffect effect);
-        void Render(IDevice device);
+        ITexture Render(IDevice device, ITexture renderTarget, Color backgroundColor);
         void Step();
         void UpdateListener(IEffectChangeListener effectChangeListener);
     }

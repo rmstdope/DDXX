@@ -19,8 +19,8 @@ namespace EngineTest
         LightNode[] lightNodes = new LightNode[2];
         MeshBuilder builder;
         List<ModelNode> chessNodes = new List<ModelNode>();
-        ModelNode planeNode;
-        ModelNode mirrorNode;
+        ModelNode planeNode = null;
+        ModelNode mirrorNode = null;
 
         public ChessScene(float startTime, float endTime)
             : base(startTime, endTime)

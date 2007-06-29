@@ -6,6 +6,8 @@ using NUnit.Framework;
 using NMock2;
 using Dope.DDXX.Utility;
 using Dope.DDXX.TextureBuilder;
+using System.Drawing;
+using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -16,6 +18,7 @@ namespace Dope.DDXX.DemoFramework
         private IEffectChangeListener effectChangeListener;
         private ITextureBuilder textureBuilder;
         private IDemoMixer mixer;
+        private ISurface originalSurface;
 
         [SetUp]
         public override void SetUp()
@@ -26,6 +29,7 @@ namespace Dope.DDXX.DemoFramework
             effectChangeListener = mockery.NewMock<IEffectChangeListener>();
             textureBuilder = mockery.NewMock<ITextureBuilder>();
             mixer = mockery.NewMock<IDemoMixer>();
+            originalSurface = mockery.NewMock<ISurface>();
         }
 
         [TearDown]
@@ -269,33 +273,42 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestRenderNoEffects()
         {
+            track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, mixer, postProcessor);
             using (mockery.Ordered)
             {
+                ExpectRenderStart(Color.Aquamarine);
                 Expect.Once.On(device).Method("BeginScene");
                 Expect.Once.On(device).Method("EndScene");
+                Expect.Once.On(postProcessor).Method("StartFrame").With(texture);
+                ExpectRenderEnd();
             }
-            track.Render(device);
+            Assert.AreSame(texture, track.Render(device, texture, Color.Aquamarine));
         }
 
         [Test]
         public void TestRenderOneEffect()
         {
+            track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, mixer, postProcessor);
             Time.Pause();
             Time.CurrentTime = 8.0f;
             IDemoEffect e1 = CreateMockEffect(4, 10);
             track.Register(e1);
             using (mockery.Ordered)
             {
+                ExpectRenderStart(Color.DarkSlateBlue);
                 Expect.Once.On(device).Method("BeginScene");
                 Expect.Once.On(e1).Method("Render");
                 Expect.Once.On(device).Method("EndScene");
+                Expect.Once.On(postProcessor).Method("StartFrame").With(texture);
+                ExpectRenderEnd();
             }
-            track.Render(device);
+            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
         }
 
         [Test]
         public void TestRenderOnePostEffect()
         {
+            track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, mixer, postProcessor);
             Time.Pause();
             Time.CurrentTime = 8.0f;
             IDemoPostEffect pe1 = CreateMockPostEffect(4, 10);
@@ -303,16 +316,20 @@ namespace Dope.DDXX.DemoFramework
             Stub.On(pe1).GetProperty("DrawOrder").Will(Return.Value(0));
             using (mockery.Ordered)
             {
+                ExpectRenderStart(Color.DarkSlateBlue);
                 Expect.Once.On(device).Method("BeginScene");
                 Expect.Once.On(device).Method("EndScene");
+                Expect.Once.On(postProcessor).Method("StartFrame").With(texture);
                 Expect.Once.On(pe1).Method("Render");
+                ExpectRenderEnd();
             }
-            track.Render(device);
+            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
         }
 
         [Test]
         public void TestRenderDrawOrder1()
         {
+            track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, mixer, postProcessor);
             Time.Pause();
             Time.CurrentTime = 8.0f;
             IDemoPostEffect pe1 = CreateMockPostEffect(4, 10);
@@ -323,17 +340,21 @@ namespace Dope.DDXX.DemoFramework
             Stub.On(pe2).GetProperty("DrawOrder").Will(Return.Value(1));
             using (mockery.Ordered)
             {
+                ExpectRenderStart(Color.DarkSlateBlue);
                 Expect.Once.On(device).Method("BeginScene");
                 Expect.Once.On(device).Method("EndScene");
+                Expect.Once.On(postProcessor).Method("StartFrame").With(texture);
                 Expect.Once.On(pe1).Method("Render");
                 Expect.Once.On(pe2).Method("Render");
+                ExpectRenderEnd();
             }
-            track.Render(device);
+            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
         }
 
         [Test]
         public void TestRenderDrawOrder2()
         {
+            track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, mixer, postProcessor);
             Time.Pause();
             Time.CurrentTime = 8.0f;
             IDemoPostEffect pe1 = CreateMockPostEffect(4, 10);
@@ -344,17 +365,21 @@ namespace Dope.DDXX.DemoFramework
             Stub.On(pe2).GetProperty("DrawOrder").Will(Return.Value(0));
             using (mockery.Ordered)
             {
+                ExpectRenderStart(Color.DarkSlateBlue);
                 Expect.Once.On(device).Method("BeginScene");
                 Expect.Once.On(device).Method("EndScene");
+                Expect.Once.On(postProcessor).Method("StartFrame").With(texture);
                 Expect.Once.On(pe2).Method("Render");
                 Expect.Once.On(pe1).Method("Render");
+                ExpectRenderEnd();
             }
-            track.Render(device);
+            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
         }
 
         [Test]
         public void TestRenderDrawOrderMulti()
         {
+            track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, mixer, postProcessor);
             Time.Pause();
             Time.CurrentTime = 8.0f;
             List<IDemoPostEffect> postEffects = new List<IDemoPostEffect>();
@@ -367,19 +392,23 @@ namespace Dope.DDXX.DemoFramework
             }
             using (mockery.Ordered)
             {
+                ExpectRenderStart(Color.DarkSlateBlue);
                 Expect.Once.On(device).Method("BeginScene");
                 Expect.Once.On(device).Method("EndScene");
+                Expect.Once.On(postProcessor).Method("StartFrame").With(texture);
                 for (int i = 0; i < 10; i++)
                 {
                     Expect.Once.On(postEffects[i]).Method("Render");
                 }
+                ExpectRenderEnd();
             }
-            track.Render(device);
+            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
         }
 
         [Test]
         public void TestRenderMoreEffects()
         {
+            track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, mixer, postProcessor);
             Time.Pause();
             Time.CurrentTime = 8.0f;
             IDemoEffect e1 = CreateMockEffect(4, 10);
@@ -394,19 +423,23 @@ namespace Dope.DDXX.DemoFramework
             Stub.On(pe2).GetProperty("DrawOrder").Will(Return.Value(0));
             using (mockery.Ordered)
             {
+                ExpectRenderStart(Color.DarkSlateBlue);
                 Expect.Once.On(device).Method("BeginScene");
                 Expect.Once.On(e1).Method("Render");
                 Expect.Once.On(e2).Method("Render");
                 Expect.Once.On(device).Method("EndScene");
+                Expect.Once.On(postProcessor).Method("StartFrame").With(texture);
                 Expect.Once.On(pe1).Method("Render");
                 Expect.Once.On(pe2).Method("Render");
+                ExpectRenderEnd();
             }
-            track.Render(device);
+            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
         }
 
         [Test]
         public void TestRenderOnlyWithinTime()
         {
+            track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, mixer, postProcessor);
             Time.Pause();
             Time.CurrentTime = 4.0f;
             IDemoEffect e1 = CreateMockEffect(4, 10);
@@ -421,12 +454,15 @@ namespace Dope.DDXX.DemoFramework
             Stub.On(pe2).GetProperty("DrawOrder").Will(Return.Value(0));
             using (mockery.Ordered)
             {
+                ExpectRenderStart(Color.DarkSlateBlue);
                 Expect.Once.On(device).Method("BeginScene");
                 Expect.Once.On(e1).Method("Render");
                 Expect.Once.On(device).Method("EndScene");
+                Expect.Once.On(postProcessor).Method("StartFrame").With(texture);
                 Expect.Once.On(pe1).Method("Render");
+                ExpectRenderEnd();
             }
-            track.Render(device);
+            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
         }
 
         [Test]
@@ -461,5 +497,21 @@ namespace Dope.DDXX.DemoFramework
             }
             track.UpdateListener(effectChangeListener);
         }
+
+        private void ExpectRenderEnd()
+        {
+            Expect.Once.On(device).Method("SetRenderTarget").With(0, originalSurface);
+            Expect.Once.On(originalSurface).Method("Dispose");
+            Expect.Once.On(postProcessor).GetProperty("OutputTexture").Will(Return.Value(texture));
+        }
+
+        private void ExpectRenderStart(Color color)
+        {
+            Expect.Once.On(device).Method("GetRenderTarget").With(0).Will(Return.Value(originalSurface));
+            Expect.Once.On(device).Method("SetRenderTarget").With(0, surface);
+            Expect.Once.On(device).Method("Clear").
+                With(ClearFlags.Target | ClearFlags.ZBuffer, color, 1.0f, 0);
+        }
+
     }
 }

@@ -4,11 +4,15 @@ using System.Text;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
 using Dope.DDXX.TextureBuilder;
+using System.Drawing;
+using Microsoft.DirectX.Direct3D;
 
 namespace Dope.DDXX.DemoFramework
 {
     public class Track : ITrack
     {
+        private IPostProcessor postProcessor;
+
         List<IDemoEffect> effects = new List<IDemoEffect>();
         List<IDemoPostEffect> postEffects = new List<IDemoPostEffect>();
 
@@ -47,6 +51,7 @@ namespace Dope.DDXX.DemoFramework
             effects.Add(effect);
             effects.Sort(CompareRegisterableByTime);
         }
+
         public void Register(IDemoPostEffect postEffect)
         {
             postEffects.Add(postEffect);
@@ -119,6 +124,7 @@ namespace Dope.DDXX.DemoFramework
         public void Initialize(IGraphicsFactory graphicsFactory, IDevice device, ITextureFactory textureFactory, 
             ITextureBuilder textureBuilder, IDemoMixer mixer, IPostProcessor postProcessor)
         {
+            this.postProcessor = postProcessor;
             foreach (IDemoEffect effect in effects)
                 effect.Initialize(graphicsFactory, device, mixer);
             foreach (IDemoPostEffect effect in postEffects)
@@ -132,14 +138,31 @@ namespace Dope.DDXX.DemoFramework
                     effect.Step();
         }
 
-        public void Render(IDevice device)
+        public ITexture Render(IDevice device, ITexture renderTarget, Color backgroundColor)
         {
-            device.BeginScene();
-            IDemoEffect[] activeEffects = GetEffects(Time.StepTime);
-            foreach (IDemoEffect effect in activeEffects)
-                effect.Render();
-            device.EndScene();
-            RenderPostEffects();
+            using (ISurface originalTarget = device.GetRenderTarget(0))
+            {
+                using (ISurface currentRenderTarget = renderTarget.GetSurfaceLevel(0))
+                {
+                    device.SetRenderTarget(0, currentRenderTarget);
+                }
+                
+                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, backgroundColor, 1.0f, 0);
+
+                device.BeginScene();
+
+                IDemoEffect[] activeEffects = GetEffects(Time.StepTime);
+                foreach (IDemoEffect effect in activeEffects)
+                    effect.Render();
+
+                device.EndScene();
+
+                postProcessor.StartFrame(renderTarget);
+                RenderPostEffects();
+
+                device.SetRenderTarget(0, originalTarget);
+            }
+            return postProcessor.OutputTexture;
         }
 
         private void RenderPostEffects()

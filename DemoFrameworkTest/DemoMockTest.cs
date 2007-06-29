@@ -48,5 +48,20 @@ namespace Dope.DDXX.DemoFramework
             return e;
         }
 
+        protected IDemoTransition CreateMockTransition(int destinationTrack, float start, float end)
+        {
+            IDemoTransition t = mockery.NewMock<IDemoTransition>();
+            Stub.On(t).
+                GetProperty("StartTime").
+                Will(Return.Value(start));
+            Stub.On(t).
+                GetProperty("EndTime").
+                Will(Return.Value(end));
+            Stub.On(t).
+                GetProperty("DestinationTrack").
+                Will(Return.Value(destinationTrack));
+            return t;
+        }
+
     }
 }

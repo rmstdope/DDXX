@@ -53,6 +53,13 @@ namespace Dope.DDXX.SceneGraph
         private EffectHandle lightDirection;
         private EffectHandle eyePosition;
 
+        private ColorValue diffuse1 = new ColorValue(0.11f, 0.21f, 0.31f, 0.41f);
+        private ColorValue specular1 = new ColorValue(0.12f, 0.22f, 0.32f, 0.42f);
+        private Vector3 position1 = new Vector3(0.13f, 0.23f, 0.33f);
+        private ColorValue diffuse2 = new ColorValue(0.111f, 0.211f, 0.311f, 0.411f);
+        private ColorValue specular2 = new ColorValue(0.121f, 0.221f, 0.321f, 0.421f);
+        private Vector3 direction2 = new Vector3(0.131f, 0.231f, 0.331f);
+
         [SetUp]
         public override void SetUp()
         {
@@ -286,16 +293,10 @@ namespace Dope.DDXX.SceneGraph
         }
 
         [Test]
-        public void TestStep()
+        public void TestStepWithLights()
         {
             TestConstructorOK();
 
-            ColorValue diffuse1 = new ColorValue(0.11f, 0.21f, 0.31f, 0.41f);
-            ColorValue specular1 = new ColorValue(0.12f, 0.22f, 0.32f, 0.42f);
-            Vector3 position1 = new Vector3(0.13f, 0.23f, 0.33f);
-            ColorValue diffuse2 = new ColorValue(0.111f, 0.211f, 0.311f, 0.411f);
-            ColorValue specular2 = new ColorValue(0.121f, 0.221f, 0.321f, 0.421f);
-            Vector3 direction2 = new Vector3(0.131f, 0.231f, 0.331f);
             light1.DiffuseColor = diffuse1;
             light1.SpecularColor = specular1;
             light1.Position = position1;
@@ -316,6 +317,90 @@ namespace Dope.DDXX.SceneGraph
             light1.AddChild(light2);
             Assert.AreEqual(6, graph.NumNodes);
 
+            graph.Step();
+            Assert.IsTrue(node1.stepCalled, "Step() should have been called.");
+            Assert.IsTrue(node2.stepCalled, "Step() should have been called.");
+            Assert.IsTrue(node1.lightStateCalled, "SetLightState() should have been called.");
+            Assert.IsTrue(node2.lightStateCalled, "SetLightState() should have been called.");
+        }
+
+        [Test]
+        public void TestHierarchyStep()
+        {
+            IAnimationRootFrame hierarchy1 = mockery.NewMock<IAnimationRootFrame>();
+            IAnimationController controller1 = mockery.NewMock<IAnimationController>();
+            IAnimationSet animationSet1 = mockery.NewMock<IAnimationSet>();
+            IAnimationRootFrame hierarchy2 = mockery.NewMock<IAnimationRootFrame>();
+            IAnimationController controller2 = mockery.NewMock<IAnimationController>();
+            IAnimationSet animationSet2 = mockery.NewMock<IAnimationSet>();
+            IAnimationRootFrame hierarchy3 = mockery.NewMock<IAnimationRootFrame>();
+            CameraNode camera = new CameraNode("Camera");
+
+            TestConstructorOK();
+
+            Time.Initialize();
+            Time.Step();
+            graph.AddNode(camera);
+            graph.ActiveCamera = camera;
+            graph.HandleHierarchy(hierarchy1);
+            graph.HandleHierarchy(hierarchy2);
+            graph.HandleHierarchy(hierarchy3);
+
+            Stub.On(effect).Method("SetValue");
+            Stub.On(hierarchy1).GetProperty("AnimationController").Will(Return.Value(controller1));
+            Stub.On(hierarchy2).GetProperty("AnimationController").Will(Return.Value(controller2));
+            Stub.On(hierarchy3).GetProperty("AnimationController").Will(Return.Value(null));
+            Stub.On(controller1).GetProperty("Time").Will(Return.Value(2.5));
+            Stub.On(controller2).GetProperty("Time").Will(Return.Value(3.0));
+            Stub.On(animationSet1).GetProperty("Period").Will(Return.Value(2.0));
+            Stub.On(animationSet1).GetProperty("Period").Will(Return.Value(4.0));
+            Stub.On(controller1).Method("GetAnimationSet").With(0).Will(Return.Value(animationSet1));
+            Stub.On(controller2).Method("GetAnimationSet").With(0).Will(Return.Value(animationSet1));
+            Expect.Once.On(controller1).Method("AdvanceTime").With(1.5);
+            Expect.Once.On(controller1).Method("AdvanceTime").With((double)Time.StepTime);
+            Expect.Once.On(controller2).Method("AdvanceTime").With(1.0);
+            Expect.Once.On(controller2).Method("AdvanceTime").With((double)Time.StepTime);
+            graph.Step();
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestRenderNoCamera()
+        {
+            TestConstructorOK();
+
+            graph.AddNode(node1);
+            graph.AddNode(node2);
+            graph.Render();
+        }
+
+        public void ExpectNoLights(Vector4 eyePos)
+        {
+            Expect.Once.On(effect).
+                Method("SetValue").
+                With(numLights, 0);
+            Expect.Once.On(effect).
+                Method("SetValue").
+                With(lightDiffuse, new ColorValue[] { });
+            Expect.Once.On(effect).
+                Method("SetValue").
+                With(lightSpecular, new ColorValue[] { });
+            Expect.Once.On(effect).
+                Method("SetValue").
+                With(lightPosition, new Vector3[] { });
+            Expect.Once.On(effect).
+                Method("SetValue").
+                With(lightDirection, new Vector3[] { });
+            Expect.Once.On(effect).
+                Method("SetValue").
+                With(eyePosition, eyePos);
+        }
+
+        [Test]
+        public void TestRenderWithLights()
+        {
+            TestStepWithLights();
+
             Expect.Once.On(effect).
                 Method("SetValue").
                 With(numLights, 2);
@@ -335,50 +420,6 @@ namespace Dope.DDXX.SceneGraph
                 Method("SetValue").
                 With(eyePosition, new Vector4(1, 2, 3, 1));
 
-            graph.Step();
-            Assert.IsTrue(node1.stepCalled, "Step() should have been called.");
-            Assert.IsTrue(node2.stepCalled, "Step() should have been called.");
-            Assert.IsTrue(node1.lightStateCalled, "SetLightState() should have been called.");
-            Assert.IsTrue(node2.lightStateCalled, "SetLightState() should have been called.");
-        }
-
-        [Test]
-        public void TestHierarchyStep()
-        {
-            IAnimationRootFrame hierarchy1 = mockery.NewMock<IAnimationRootFrame>();
-            IAnimationController controller1 = mockery.NewMock<IAnimationController>();
-            IAnimationRootFrame hierarchy2 = mockery.NewMock<IAnimationRootFrame>();
-            IAnimationController controller2 = mockery.NewMock<IAnimationController>();
-            IAnimationRootFrame hierarchy3 = mockery.NewMock<IAnimationRootFrame>();
-            CameraNode camera = new CameraNode("Camera");
-
-            TestConstructorOK();
-
-            Time.Initialize();
-            Time.Step();
-            graph.AddNode(camera);
-            graph.ActiveCamera = camera;
-            graph.HandleHierarchy(hierarchy1);
-            graph.HandleHierarchy(hierarchy2);
-            graph.HandleHierarchy(hierarchy3);
-
-            Stub.On(effect).Method("SetValue");
-            Stub.On(hierarchy1).GetProperty("AnimationController").Will(Return.Value(controller1));
-            Stub.On(hierarchy2).GetProperty("AnimationController").Will(Return.Value(controller2));
-            Stub.On(hierarchy3).GetProperty("AnimationController").Will(Return.Value(null));
-            Expect.Once.On(controller1).Method("AdvanceTime").With((double)Time.DeltaTime);
-            Expect.Once.On(controller2).Method("AdvanceTime").With((double)Time.DeltaTime);
-            graph.Step();
-        }
-
-        [Test]
-        [ExpectedException(typeof(DDXXException))]
-        public void TestRenderNoCamera()
-        {
-            TestConstructorOK();
-
-            graph.AddNode(node1);
-            graph.AddNode(node2);
             graph.Render();
         }
 
@@ -393,6 +434,8 @@ namespace Dope.DDXX.SceneGraph
             graph.AddNode(camera);
             graph.AddNode(light1);
             graph.ActiveCamera = camera;
+
+            ExpectNoLights(new Vector4(0, 0, 0, 1));
 
             graph.Render();
             Assert.IsTrue(node1.renderCalled, "Render() should have been called.");

@@ -91,9 +91,9 @@ namespace Dope.DDXX.DemoFramework
 
             #region IDemoEffectBuilder implementation
 
-            public void AddTransition(string name, int destinationTrack)
+            public void AddTransition(string name, int destinationTrack, float startTime, float endTime)
             {
-                Effect newEffect = new Effect(name, destinationTrack);
+                Effect newEffect = new Effect(name, destinationTrack, startTime, endTime);
                 lastAsset = newEffect;
                 transitions.Enqueue(newEffect);
             }
@@ -263,7 +263,7 @@ namespace Dope.DDXX.DemoFramework
                 }
             }
 
-            public float StartTime
+            public float EffectStartTime
             {
                 get
                 {
@@ -273,7 +273,7 @@ namespace Dope.DDXX.DemoFramework
                         throw new InvalidOperationException("No current effect");
                 }
             }
-            public float EndTime
+            public float EffectEndTime
             {
                 get
                 {
@@ -324,6 +324,26 @@ namespace Dope.DDXX.DemoFramework
                         throw new InvalidOperationException("No current post effect");
                 }
             }
+            public float PostEffectStartTime
+            {
+                get
+                {
+                    if (currentPostEffect != null)
+                        return currentPostEffect.startTime;
+                    else
+                        throw new InvalidOperationException("No current effect");
+                }
+            }
+            public float PostEffectEndTime
+            {
+                get
+                {
+                    if (currentPostEffect != null)
+                        return currentPostEffect.endTime;
+                    else
+                        throw new InvalidOperationException("No current effect");
+                }
+            }
 
             public int TransitionDestinationTrack
             {
@@ -343,6 +363,26 @@ namespace Dope.DDXX.DemoFramework
                         return currentTransition.name;
                     else
                         throw new InvalidOperationException("No current transition");
+                }
+            }
+            public float TransitionStartTime
+            {
+                get
+                {
+                    if (currentTransition != null)
+                        return currentTransition.startTime;
+                    else
+                        throw new InvalidOperationException("No current effect");
+                }
+            }
+            public float TransitionEndTime
+            {
+                get
+                {
+                    if (currentTransition != null)
+                        return currentTransition.endTime;
+                    else
+                        throw new InvalidOperationException("No current effect");
                 }
             }
 
@@ -540,12 +580,12 @@ namespace Dope.DDXX.DemoFramework
 <Parameter name=""vecparam"" Vector3=""5.4, 4.3, 3.2"" />
 </Effect>
 <!-- <PostEffect name=""fooglow"" track=""2""> -->
-<PostEffect name=""fooglow"" track=""2"">
+<PostEffect name=""fooglow"" track=""2"" startTime=""2"" endTime=""5"">
 <Parameter name=""glowparam"" float=""5.4"" />
 <Parameter name=""glowdir"" Vector3=""1.1, 2.2, 3.3"" />
 <!-- <Parameter name=""glowparam"" float=""5.4"" /> -->
 </PostEffect>
-<Transition name=""footrans"" destinationTrack=""1"">
+<Transition name=""footrans"" track=""1"" startTime=""8"" endTime=""9"">
 <Parameter name=""transparam"" string=""tranny"" />
 </Transition>
 </Demo>
@@ -627,18 +667,43 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
-        public void TestStartEndTime()
+        public void TestStartEndTimeOfEffects()
         {
             ReadXML(twoEffectContents);
             Assert.IsTrue(effectBuilder.NextEffect());
             Assert.AreEqual("fooeffect", effectBuilder.EffectName);
-            Assert.AreEqual(3.5, effectBuilder.StartTime);
-            Assert.AreEqual(7.5, effectBuilder.EndTime);
+            Assert.AreEqual(3.5, effectBuilder.EffectStartTime);
+            Assert.AreEqual(7.5, effectBuilder.EffectEndTime);
             Assert.IsTrue(effectBuilder.NextEffect());
             Assert.AreEqual("bareffect", effectBuilder.EffectName);
-            Assert.AreEqual(0.0, effectBuilder.StartTime);
-            Assert.AreEqual(8.5, effectBuilder.EndTime);
+            Assert.AreEqual(0.0, effectBuilder.EffectStartTime);
+            Assert.AreEqual(8.5, effectBuilder.EffectEndTime);
             Assert.AreEqual(0, effectBuilder.EffectTrack);
+            Assert.IsFalse(effectBuilder.NextEffect());
+        }
+
+        [Test]
+        public void TestStartEndTimeOfPostEffects()
+        {
+            ReadXML(twoEffectContents);
+            Assert.IsTrue(effectBuilder.NextPostEffect());
+            Assert.AreEqual("fooglow", effectBuilder.PostEffectName);
+            Assert.AreEqual(2, effectBuilder.PostEffectStartTime);
+            Assert.AreEqual(5, effectBuilder.PostEffectEndTime);
+            Assert.AreEqual(2, effectBuilder.PostEffectTrack);
+            Assert.IsFalse(effectBuilder.NextPostEffect());
+        }
+
+        [Test]
+        public void TestStartEndTimeOfTransitions()
+        {
+            ReadXML(twoEffectContents);
+            Assert.IsTrue(effectBuilder.NextTransition());
+            Assert.AreEqual("footrans", effectBuilder.TransitionName);
+            Assert.AreEqual(8, effectBuilder.TransitionStartTime);
+            Assert.AreEqual(9, effectBuilder.TransitionEndTime);
+            Assert.AreEqual(1, effectBuilder.TransitionDestinationTrack);
+            Assert.IsFalse(effectBuilder.NextTransition());
         }
 
         private Dictionary<string, Parameter> GetFooEffectParameters()
@@ -791,7 +856,7 @@ namespace Dope.DDXX.DemoFramework
             reader = ReadXML(written);
             effectBuilder.NextEffect();
             Assert.AreEqual("fooeffect", effectBuilder.EffectName);
-            Assert.AreEqual(15, effectBuilder.StartTime);
+            Assert.AreEqual(15, effectBuilder.EffectStartTime);
             Dictionary<string, Parameter> parameters = effectBuilder.GetParameters();
             Parameter parameter;
             Assert.IsTrue(parameters.TryGetValue("colparamnamed", out parameter));
@@ -812,8 +877,8 @@ namespace Dope.DDXX.DemoFramework
             effectBuilder.NextEffect();
             parameters = effectBuilder.GetParameters();
             Assert.AreEqual("bareffect", effectBuilder.EffectName);
-            Assert.AreEqual(4, effectBuilder.StartTime);
-            Assert.AreEqual(19, effectBuilder.EndTime);
+            Assert.AreEqual(4, effectBuilder.EffectStartTime);
+            Assert.AreEqual(19, effectBuilder.EffectEndTime);
             Assert.IsTrue(parameters.TryGetValue("goo", out parameter));
             Assert.AreEqual(TweakableType.String, parameter.Type);
             Assert.AreEqual("goovalue", parameter.StringValue);

@@ -24,16 +24,16 @@ namespace EngineTest
         private CameraNode camera;
         private IScene scene;
         private ModelNode modelNode;
-        private ModelNode clothModel;
-        private IBoundingObject sphere;
+        private ModelNode clothModel = null;
+        private IBoundingObject sphere = null;
         private float reflectiveFactor;
-        private PointLightNode light;
+        private PointLightNode light = null;
         private ISprite sprite;
         private ITexture generatedTexture1;
         private ITexture generatedTexture2;
         private ILine line;
         private List<float> yPos = new List<float>();
-        private ModelNode terrainModel;
+        private ModelNode terrainModel = null;
 
         public float ReflectiveFactor
         {

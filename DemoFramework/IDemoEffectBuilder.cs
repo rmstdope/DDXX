@@ -11,7 +11,7 @@ namespace Dope.DDXX.DemoFramework
 
         void AddEffect(string effectName, int effectTrack, float startTime, float endTime);
         void AddPostEffect(string effectName, int effectTrack, float startTime, float endTime);
-        void AddTransition(string effectName, int destinationTrack);
+        void AddTransition(string effectName, int destinationTrack, float startTime, float endTime);
         void AddGenerator(string generatorName, string className);
         void AddTexture(string textureName, string generatorName, int width, int height, int mipLevels);
 

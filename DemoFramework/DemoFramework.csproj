@@ -43,6 +43,7 @@
     <Compile Include="BaseControl.cs" />
     <Compile Include="BaseDemoEffect.cs" />
     <Compile Include="BaseDemoPostEffect.cs" />
+    <Compile Include="BaseDemoTransition.cs" />
     <Compile Include="BoxControl.cs" />
     <Compile Include="DemoEffectTypes.cs" />
     <Compile Include="DemoExecuter.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="IDemoMixer.cs" />
     <Compile Include="IDemoPostEffect.cs" />
     <Compile Include="IDemoRegistrator.cs" />
+    <Compile Include="IDemoTransition.cs" />
     <Compile Include="IDemoTweaker.cs" />
     <Compile Include="IDemoTweakerContext.cs" />
     <Compile Include="IEffectChangeListener.cs" />

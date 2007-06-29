@@ -24,6 +24,7 @@ namespace Dope.DDXX.SceneGraph
         private IDevice device;
         private ColorValue ambientColor;
         private List<IAnimationRootFrame> hierarchies = new List<IAnimationRootFrame>();
+        private LightState lightState = new LightState();
 
         public Scene()
         {
@@ -69,16 +70,8 @@ namespace Dope.DDXX.SceneGraph
             }
             rootNode.Step();
 
-            LightState state = new LightState();
-            rootNode.SetLightState(state);
-            effect.SetValue(numLightsHandle, state.NumLights);
-            effect.SetValue(lightDiffuseHandle, state.DiffuseColor);
-            effect.SetValue(lightSpecularHandle, state.SpecularColor);
-            effect.SetValue(lightPositionHandle, state.Positions);
-            effect.SetValue(lightDirectionHandle, state.Directions);
-
-            Vector3 eyePos = ActiveCamera.Position;
-            effect.SetValue(eyePositionHandle, new Vector4(eyePos.X, eyePos.Y, eyePos.Z, 1.0f));
+            lightState = new LightState();
+            rootNode.SetLightState(lightState);
         }
 
         public void Render()
@@ -86,7 +79,21 @@ namespace Dope.DDXX.SceneGraph
             if (ActiveCamera == null)
                 throw new DDXXException("Must have an active camera set before a scene can be rendered.");
 
+            SetEffectParameters();
+
             rootNode.Render(this);
+        }
+
+        private void SetEffectParameters()
+        {
+            effect.SetValue(numLightsHandle, lightState.NumLights);
+            effect.SetValue(lightDiffuseHandle, lightState.DiffuseColor);
+            effect.SetValue(lightSpecularHandle, lightState.SpecularColor);
+            effect.SetValue(lightPositionHandle, lightState.Positions);
+            effect.SetValue(lightDirectionHandle, lightState.Directions);
+
+            Vector3 eyePos = ActiveCamera.Position;
+            effect.SetValue(eyePositionHandle, new Vector4(eyePos.X, eyePos.Y, eyePos.Z, 1.0f));
         }
 
         public IRenderableCamera ActiveCamera

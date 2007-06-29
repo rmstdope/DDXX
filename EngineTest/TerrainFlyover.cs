@@ -13,7 +13,7 @@ namespace EngineTest
 {
     public class TerrainFlyover : BaseDemoEffect
     {
-        private ModelNode terrainModel;
+        private ModelNode terrainModel = null;
         private CameraNode camera;
         private IScene scene;
 

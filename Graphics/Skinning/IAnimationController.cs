@@ -90,7 +90,7 @@ namespace Dope.DDXX.Graphics
         //
         // Returns:
         //     An Microsoft.DirectX.Direct3D.AnimationSet object at the given Microsoft.DirectX.Direct3D.AnimationController.GetAnimationSet().
-        AnimationSet GetAnimationSet(int index);
+        IAnimationSet GetAnimationSet(int index);
         //
         // Summary:
         //     Retrieves the animation set.
@@ -101,7 +101,7 @@ namespace Dope.DDXX.Graphics
         //
         // Returns:
         //     An Microsoft.DirectX.Direct3D.AnimationSet object at the given Microsoft.DirectX.Direct3D.AnimationController.GetAnimationSet().
-        AnimationSet GetAnimationSet(string animationName);
+        IAnimationSet GetAnimationSet(string animationName);
         //
         // Summary:
         //     Returns an event handle to a priority blend event that is currently running.
@@ -136,7 +136,7 @@ namespace Dope.DDXX.Graphics
         //
         // Returns:
         //     An Microsoft.DirectX.Direct3D.AnimationSet class for the given track.
-        AnimationSet GetTrackAnimationSet(int track);
+        IAnimationSet GetTrackAnimationSet(int track);
         //
         // Summary:
         //     Retrieves the description for a track.
@@ -344,7 +344,7 @@ namespace Dope.DDXX.Graphics
         // Parameters:
         //   animationSet:
         //     The Microsoft.DirectX.Direct3D.AnimationSet to add.
-        void RegisterAnimationSet(AnimationSet animationSet);
+        void RegisterAnimationSet(IAnimationSet animationSet);
         //
         // Summary:
         //     Resets the global animation time to zero. Any pending events retain their
@@ -360,7 +360,7 @@ namespace Dope.DDXX.Graphics
         //
         //   animationSet:
         //     The Microsoft.DirectX.Direct3D.AnimationSet to add to the track.
-        void SetTrackAnimationSet(int track, AnimationSet animationSet);
+        void SetTrackAnimationSet(int track, IAnimationSet animationSet);
         //
         // Summary:
         //     Sets the track description.
@@ -482,6 +482,6 @@ namespace Dope.DDXX.Graphics
         // Parameters:
         //   animationSet:
         //     The Microsoft.DirectX.Direct3D.AnimationSet to remove.
-        void UnregisterAnimationSet(AnimationSet animationSet);
+        void UnregisterAnimationSet(IAnimationSet animationSet);
     }
 }

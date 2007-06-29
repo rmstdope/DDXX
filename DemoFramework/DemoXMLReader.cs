@@ -210,18 +210,12 @@ namespace Dope.DDXX.DemoFramework
 
         private void ReadTransition(XmlNode node)
         {
-            XmlAttribute effectName = (XmlAttribute)node.Attributes.GetNamedItem("name");
-            XmlAttribute track = (XmlAttribute)node.Attributes.GetNamedItem("destinationTrack");
-            int destinationTrack;
-            if (track != null)
-            {
-                destinationTrack = int.Parse(track.Value);
-            }
-            else
-            {
-                destinationTrack = 0;
-            }
-            effectBuilder.AddTransition(effectName.Value, destinationTrack);
+            string effectName;
+            int effectTrack;
+            float startTime;
+            float endTime;
+            ReadNameTrack(node, out effectName, out effectTrack, out startTime, out endTime);
+            effectBuilder.AddTransition(effectName, effectTrack , startTime, endTime);
             ReadParameters(node, false);
         }
 

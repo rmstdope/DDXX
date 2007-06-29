@@ -78,14 +78,14 @@ namespace Dope.DDXX.Graphics
             return controller.Clone(maxNumberAnimationOutputs, maxNumberAnimationSets, maxNumberTracks, maxNumberEvents);
         }
 
-        public AnimationSet GetAnimationSet(int index)
+        public IAnimationSet GetAnimationSet(int index)
         {
-            return controller.GetAnimationSet(index);
+            return new AnimationSetAdapter(controller.GetAnimationSet(index));
         }
 
-        public AnimationSet GetAnimationSet(string animationName)
+        public IAnimationSet GetAnimationSet(string animationName)
         {
-            return controller.GetAnimationSet(animationName);
+            return new AnimationSetAdapter(controller.GetAnimationSet(animationName));
         }
 
         public int GetCurrentPriorityBlend()
@@ -98,9 +98,9 @@ namespace Dope.DDXX.Graphics
             return controller.GetCurrentTrackEvent(track, eventType);
         }
 
-        public AnimationSet GetTrackAnimationSet(int track)
+        public IAnimationSet GetTrackAnimationSet(int track)
         {
-            return controller.GetTrackAnimationSet(track);
+            return new AnimationSetAdapter(controller.GetTrackAnimationSet(track));
         }
 
         public TrackDescription GetTrackDescription(int trackNumber)
@@ -163,9 +163,9 @@ namespace Dope.DDXX.Graphics
             controller.RegisterAnimationOutput(animationFrame);
         }
 
-        public void RegisterAnimationSet(AnimationSet animationSet)
+        public void RegisterAnimationSet(IAnimationSet animationSet)
         {
-            controller.RegisterAnimationSet(animationSet);
+            controller.RegisterAnimationSet((animationSet as AnimationSetAdapter).DxAnimationSet);
         }
 
         public void ResetTime()
@@ -173,9 +173,9 @@ namespace Dope.DDXX.Graphics
             controller.ResetTime();
         }
 
-        public void SetTrackAnimationSet(int track, AnimationSet animationSet)
+        public void SetTrackAnimationSet(int track, IAnimationSet animationSet)
         {
-            controller.SetTrackAnimationSet(track, animationSet);
+            controller.SetTrackAnimationSet(track, (animationSet as AnimationSetAdapter).DxAnimationSet);
         }
 
         public void SetTrackDescription(int trackNumber, TrackDescription value)
@@ -238,9 +238,9 @@ namespace Dope.DDXX.Graphics
             controller.UnregisterAnimationOutput(name);
         }
 
-        public void UnregisterAnimationSet(AnimationSet animationSet)
+        public void UnregisterAnimationSet(IAnimationSet animationSet)
         {
-            controller.UnregisterAnimationSet(animationSet);
+            controller.UnregisterAnimationSet((animationSet as AnimationSetAdapter).DxAnimationSet);
         }
 
         #endregion

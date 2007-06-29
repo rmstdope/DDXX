@@ -45,6 +45,7 @@
     <Compile Include="ColorFader.cs" />
     <Compile Include="CreationScene.cs" />
     <Compile Include="EmptyEffect.cs" />
+    <Compile Include="FadeTransition.cs" />
     <Compile Include="PhysicalCubes.cs" />
     <Compile Include="FlipSign.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -19,10 +19,10 @@ namespace EngineTest
         private const int NUM_LIGHTS = 2;
         private IScene scene;
         private CameraNode camera;
-        private ModelNode boxNode;
+        private ModelNode boxNode = null;
         private ITexture celTexture;
         private List<DirectionalLightNode> lights = new List<DirectionalLightNode>();
-        private IEffect boxEffect;
+        private IEffect boxEffect = null;
 
         public DofCubesEffect(float startTime, float endTime)
             : base(startTime, endTime)

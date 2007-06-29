@@ -27,19 +27,20 @@ namespace Dope.DDXX.DemoFramework
         private IGraphicsFactory graphicsFactory;
         private ITextureFactory textureFactory;
         private ITextureBuilder textureBuilder;
-        private ITexture backBuffer;
+        private ITexture backBuffer1;
+        private ITexture backBuffer2;
         private IPostProcessor postProcessor;
         private IDemoTweaker tweaker;
 
         private IInputDriver inputDriver;
         private List<ITrack> tracks = new List<ITrack>();
-        private int activeTrack;
+        private List<IDemoTransition> transitions = new List<IDemoTransition>();
 
         private IDemoFactory demoFactory;
         private IDemoEffectTypes effectTypes;
         private TweakerSettings settings = new TweakerSettings();
         private DemoXMLReader xmlReader;
-        private Color clearColor = Color.FromArgb(0, 10, 10, 10);//.DarkGray;//.Black;//DarkSlateBlue;
+        private Color clearColor = Color.FromArgb(0, 10, 10, 10);
         private Dictionary<string, IGenerator> generators = new Dictionary<string,IGenerator>();
 
         private string songFilename;
@@ -88,15 +89,8 @@ namespace Dope.DDXX.DemoFramework
             set { tweaker = value; }
         }
 
-        public Color BackgroundColor
-        {
-            set { clearColor = value; }
-            get { return clearColor; }
-        }
-
         public DemoExecuter(IDemoFactory demoFactory, ISoundDriver soundDriver, IInputDriver inputDriver, IPostProcessor postProcessor, IDemoEffectTypes effectTypes)
         {
-            activeTrack = 0;
             this.demoFactory = demoFactory;
             this.soundDriver = soundDriver;
             this.inputDriver = inputDriver;
@@ -133,13 +127,18 @@ namespace Dope.DDXX.DemoFramework
             {
                 track.Initialize(graphicsFactory, device, textureFactory, textureBuilder, this, postProcessor);
             }
+            foreach (IDemoTransition transition in transitions)
+            {
+                transition.Initialize(postProcessor);
+            }
 
             tweaker.Initialize(this);
         }
 
         private void InitializeGraphics()
         {
-            backBuffer = textureFactory.CreateFullsizeRenderTarget(Format.A8R8G8B8);
+            backBuffer1 = textureFactory.CreateFullsizeRenderTarget(Format.A8R8G8B8);
+            backBuffer2 = textureFactory.CreateFullsizeRenderTarget(Format.A8R8G8B8);
         }
 
         private void InitializeSound()
@@ -165,6 +164,17 @@ namespace Dope.DDXX.DemoFramework
                 tracks.Add(demoFactory.CreateTrack());
             }
             tracks[track].Register(postEffect);
+        }
+
+        public void Register(IDemoTransition transition)
+        {
+            foreach (IDemoTransition compare in transitions)
+            {
+                if (compare.StartTime < transition.EndTime &&
+                    compare.EndTime > transition.StartTime)
+                    throw new DDXXException("Can not have operlapping transitions.");
+            }
+            transitions.Add(transition);
         }
 
         public void Step()
@@ -219,40 +229,62 @@ namespace Dope.DDXX.DemoFramework
 
         public void Render()
         {
-            RenderActiveTrack();
+            ITexture renderedTexture = RenderTracks();
 
-            //postProcessor.DebugWriteAllTextures();
-
-            using (ISurface source = postProcessor.OutputTexture.GetSurfaceLevel(0))
+            if (renderedTexture != null)
             {
-                using (ISurface destination = device.GetRenderTarget(0))
+                using (ISurface source = renderedTexture.GetSurfaceLevel(0))
                 {
-                    device.StretchRectangle(source, new Rectangle(0, 0, source.Description.Width, source.Description.Height),
-                                            destination, new Rectangle(0, 0, destination.Description.Width, destination.Description.Height),
-                                            TextureFilter.None);
+                    using (ISurface destination = device.GetRenderTarget(0))
+                    {
+                        device.StretchRectangle(source, new Rectangle(0, 0, source.Description.Width, source.Description.Height),
+                                                destination, new Rectangle(0, 0, destination.Description.Width, destination.Description.Height),
+                                                TextureFilter.None);
+                    }
                 }
             }
+
+            tweaker.Draw();
 
             device.Present();
         }
 
-        private void RenderActiveTrack()
+        private ITexture RenderTracks()
         {
-            using (ISurface originalTarget = device.GetRenderTarget(0))
+            ITexture finalTexture = null;
+            if (tracks.Count != 0)
             {
-                using (ISurface currentRenderTarget = backBuffer.GetSurfaceLevel(0))
-                    device.SetRenderTarget(0, currentRenderTarget);
-
-                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, clearColor, 1.0f, 0);
-                postProcessor.StartFrame(backBuffer);
-
-                if (tracks.Count != 0)
-                    tracks[activeTrack].Render(device);
-
-                tweaker.Draw();
-
-                device.SetRenderTarget(0, originalTarget);
+                finalTexture = GetActiveTrack().Render(device, backBuffer1, clearColor);
+                IDemoTransition transition = GetActiveTransition();
+                if (transition != null)
+                {
+                    ITexture finalTexture2 = tracks[1].Render(device, backBuffer2, clearColor);
+                    finalTexture = transition.Combine(finalTexture, finalTexture2);
+                }
             }
+            return finalTexture;
+        }
+
+        private IDemoTransition GetActiveTransition()
+        {
+            foreach (IDemoTransition transition in transitions)
+            {
+                if (transition.StartTime <= Time.StepTime &&
+                    transition.EndTime > Time.StepTime)
+                    return transition;
+            }
+            return null;
+        }
+
+        private ITrack GetActiveTrack()
+        {
+            int trackNum = 0;
+            foreach (IDemoTransition transition in transitions)
+            {
+                if (transition.EndTime <= Time.StepTime)
+                    trackNum = transition.DestinationTrack;
+            }
+            return tracks[trackNum];
         }
 
 
@@ -285,15 +317,16 @@ namespace Dope.DDXX.DemoFramework
 
         public void AddPostEffect(string effectName, int effectTrack, float startTime, float endTime)
         {
-            IDemoPostEffect effect = (IDemoPostEffect)effectTypes.CreateInstance(effectName, startTime, endTime);
-            this.Register(effectTrack, effect);
-            lastAddedAsset = effect;
+            IDemoPostEffect postEffect = (IDemoPostEffect)effectTypes.CreateInstance(effectName, startTime, endTime);
+            this.Register(effectTrack, postEffect);
+            lastAddedAsset = postEffect;
         }
 
-        public void AddTransition(string effectName, int destinationTrack)
+        public void AddTransition(string effectName, int destinationTrack, float startTime, float endTime)
         {
-            // TODO Add transition support
-            throw new Exception("The method or operation is not implemented.");
+            IDemoTransition transition = (IDemoTransition)effectTypes.CreateInstance(effectName, startTime, endTime);
+            this.Register(transition);
+            lastAddedAsset = transition;
         }
 
         public void AddGenerator(string generatorName, string className)
@@ -421,5 +454,6 @@ namespace Dope.DDXX.DemoFramework
         }
 
         #endregion
+
     }
 }

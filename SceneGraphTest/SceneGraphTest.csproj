@@ -51,6 +51,7 @@
     <Compile Include="ParticleSystemNodeTest.cs" />
     <Compile Include="PointLightNodeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SceneTest.cs" />
     <Compile Include="XLoaderTest.cs" />
   </ItemGroup>
   <ItemGroup>
