@@ -137,7 +137,6 @@ namespace Dope.DDXX.DemoFramework
             ExpectSoundInitialize();
             ExpectPostProcessorInitialize();
             ExpectTweakerInitialize();
-            ExpectGraphicsInitialize();
 
             executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, textureBuilder);
         }
@@ -148,7 +147,6 @@ namespace Dope.DDXX.DemoFramework
             ExpectSoundInitialize();
             ExpectPostProcessorInitialize();
             ExpectTweakerInitialize();
-            ExpectGraphicsInitialize();
 
             executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, textureBuilder);
         }
@@ -165,7 +163,6 @@ namespace Dope.DDXX.DemoFramework
                 Will(Return.Value(sound));
             ExpectPostProcessorInitialize();
             ExpectTweakerInitialize();
-            ExpectGraphicsInitialize();
 
             executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, textureBuilder);
         }
@@ -180,7 +177,6 @@ namespace Dope.DDXX.DemoFramework
             ExpectSoundInitialize();
             ExpectPostProcessorInitialize();
             ExpectTweakerInitialize();
-            ExpectGraphicsInitialize();
 
             for (int i = 0; i < 50; i++)
                 Expect.Once.On(tracks[i]).
@@ -199,12 +195,11 @@ namespace Dope.DDXX.DemoFramework
             ExpectSoundInitialize();
             ExpectPostProcessorInitialize();
             ExpectTweakerInitialize();
-            ExpectGraphicsInitialize();
 
             Expect.Once.On(t1).
-                Method("Initialize").With(postProcessor);
+                Method("Initialize").With(device, postProcessor);
             Expect.Once.On(t2).
-                Method("Initialize").With(postProcessor);
+                Method("Initialize").With(device, postProcessor);
 
             executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, textureBuilder);
         }
@@ -281,6 +276,10 @@ namespace Dope.DDXX.DemoFramework
             executer.ClearColor = Color.DarkSlateBlue;
             ExpectStepCalled(new int[] { 0 });
 
+            List<ITexture> textures = new List<ITexture>();
+            textures.Add(backBuffer1);
+            Expect.Once.On(postProcessor).Method("GetTemporaryTextures").
+                With(1, false).Will(Return.Value(textures));
             Expect.Once.On(tracks[0]).Method("Render").
                 With(device, backBuffer1, Color.DarkSlateBlue).Will(Return.Value(backBuffer1));
             ExpectCopyToBackBuffer(backBuffer1);
@@ -307,6 +306,10 @@ namespace Dope.DDXX.DemoFramework
             executer.ClearColor = Color.DarkSlateBlue;
             ExpectStepCalled(new int[] { 0, 1 });
 
+            List<ITexture> textures = new List<ITexture>();
+            textures.Add(backBuffer1);
+            Expect.Once.On(postProcessor).Method("GetTemporaryTextures").
+                With(1, false).Will(Return.Value(textures));
             Expect.Once.On(tracks[0]).Method("Render").
                 With(device, backBuffer1, Color.DarkSlateBlue).Will(Return.Value(backBuffer2));
             ExpectCopyToBackBuffer(backBuffer2);
@@ -335,12 +338,24 @@ namespace Dope.DDXX.DemoFramework
             executer.ClearColor = Color.DarkSlateBlue;
             ExpectStepCalled(new int[] { 0, 1 });
 
+            List<ITexture> textures = new List<ITexture>();
+            textures.Add(backBuffer1);
+            Expect.Once.On(postProcessor).Method("GetTemporaryTextures").
+                With(1, false).Will(Return.Value(textures));
             Expect.Once.On(tracks[0]).Method("Render").
                 With(device, backBuffer1, Color.DarkSlateBlue).Will(Return.Value(backBuffer2));
+            textures = new List<ITexture>();
+            textures.Add(backBuffer2);
+            Expect.Once.On(postProcessor).Method("GetTemporaryTextures").
+                With(1, false).Will(Return.Value(textures));
+            Expect.Once.On(postProcessor).Method("AllocateTexture").With(backBuffer2);
             Expect.Once.On(tracks[1]).Method("Render").
                 With(device, backBuffer2, Color.DarkSlateBlue).Will(Return.Value(backBuffer1));
-            Expect.Once.On(transition).Method("Combine").With(backBuffer2, backBuffer1).
+            Expect.Once.On(postProcessor).Method("AllocateTexture").With(backBuffer1);
+            Expect.Once.On(transition).Method("Render").With(backBuffer2, backBuffer1).
                 Will(Return.Value(newTexture));
+            Expect.Once.On(postProcessor).Method("FreeTexture").With(backBuffer1);
+            Expect.Once.On(postProcessor).Method("FreeTexture").With(backBuffer2);
             ExpectCopyToBackBuffer(newTexture);
             Expect.Once.On(tweaker).
                 Method("Draw");
@@ -367,6 +382,10 @@ namespace Dope.DDXX.DemoFramework
             executer.ClearColor = Color.DarkSlateBlue;
             ExpectStepCalled(new int[] { 0, 1 });
 
+            List<ITexture> textures = new List<ITexture>();
+            textures.Add(backBuffer1);
+            Expect.Once.On(postProcessor).Method("GetTemporaryTextures").
+                With(1, false).Will(Return.Value(textures));
             Expect.Once.On(tracks[1]).Method("Render").
                 With(device, backBuffer1, Color.DarkSlateBlue).Will(Return.Value(backBuffer2));
             ExpectCopyToBackBuffer(backBuffer2);
@@ -427,7 +446,6 @@ namespace Dope.DDXX.DemoFramework
             ExpectSoundInitialize();
             ExpectPostProcessorInitialize();
             ExpectTweakerInitialize();
-            ExpectGraphicsInitialize();
 
             DemoXMLReaderTest.TempFiles tempFiles = new DemoXMLReaderTest.TempFiles();
             FileUtility.SetLoadPaths(new string[] { "" });
@@ -470,7 +488,6 @@ namespace Dope.DDXX.DemoFramework
                 Will(Return.Value(sound));
             ExpectPostProcessorInitialize();
             ExpectTweakerInitialize();
-            ExpectGraphicsInitialize();
 
             DemoXMLReaderTest.TempFiles tempFiles = new DemoXMLReaderTest.TempFiles();
             FileUtility.SetLoadPaths(new string[] { "" });
@@ -756,16 +773,6 @@ namespace Dope.DDXX.DemoFramework
         {
             Expect.Once.On(tweaker).
                 Method("Initialize");
-        }
-
-        private void ExpectGraphicsInitialize()
-        {
-            Expect.Once.On(textureFactory).
-                Method("CreateFullsizeRenderTarget").
-                Will(Return.Value(backBuffer1));
-            Expect.Once.On(textureFactory).
-                Method("CreateFullsizeRenderTarget").
-                Will(Return.Value(backBuffer2));
         }
 
 

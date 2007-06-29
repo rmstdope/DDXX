@@ -263,5 +263,18 @@ namespace Dope.DDXX.DemoFramework
             }
             throw new DDXXException("Texture not found.");
         }
+
+        public void FreeTexture(ITexture texture)
+        {
+            foreach (TextureContainer container in textures)
+            {
+                if (container.Texture == texture)
+                {
+                    container.allocated = false;
+                    return;
+                }
+            }
+            throw new DDXXException("Unknown texture");
+        }
     }
 }

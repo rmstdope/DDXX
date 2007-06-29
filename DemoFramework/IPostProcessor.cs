@@ -86,5 +86,11 @@ namespace Dope.DDXX.DemoFramework
         /// </summary>
         /// <returns>The allocated texture.</returns>
         void AllocateTexture(ITexture texture);
+
+        /// <summary>
+        /// Free an allocated texture for use.
+        /// </summary>
+        /// <param name="texture"></param>
+        void FreeTexture(ITexture texture);
     }
 }

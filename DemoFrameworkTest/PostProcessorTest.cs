@@ -196,6 +196,27 @@ namespace Dope.DDXX.DemoFramework
 
         [Test]
         [ExpectedException(typeof(DDXXException))]
+        public void TestFreeUnknownTexture()
+        {
+            postProcessor.FreeTexture(fullsizeTexture1);
+        }
+
+        [Test]
+        public void TestFreeAllocatedTexture()
+        {
+            TestInitializeOK();
+            Expect.Once.On(textureFactory).
+                Method("CreateFullsizeRenderTarget").
+                With(Format.A8R8G8B8).
+                Will(Return.Value(fullsizeTexture1));
+            postProcessor.GetTemporaryTextures(1, false);
+            postProcessor.AllocateTexture(fullsizeTexture1);
+            postProcessor.FreeTexture(fullsizeTexture1);
+            Assert.AreSame(fullsizeTexture1, postProcessor.GetTemporaryTextures(1, false)[0]);
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
         public void TestAllocateTextureTwice()
         {
             TestInitializeOK();

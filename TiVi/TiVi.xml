@@ -75,7 +75,7 @@
 	</Effect>-->
   <Effect name="FlipSign" track="0" startTime="0" endTime="300" />
   <Effect name="EmptyEffect" track="1" startTime="0" endTime="300" />
-  <Transition name="FadeTransition" destinationTrack="1" startTime="5" endTime="10" />
+  <Transition name="FadeTransition" track="1" startTime="5" endTime="10" />
   <!--<Effect name="PhysicalCubes" track="0" startTime="0" endTime="300" />-->
   <!--<Effect name="TunnelFlight" track="0" startTime="0" endTime="300" />-->
 	<PostEffect name="GlowPostEffect" track="0" startTime="0" endTime="300">

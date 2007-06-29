@@ -27,8 +27,6 @@ namespace Dope.DDXX.DemoFramework
         private IGraphicsFactory graphicsFactory;
         private ITextureFactory textureFactory;
         private ITextureBuilder textureBuilder;
-        private ITexture backBuffer1;
-        private ITexture backBuffer2;
         private IPostProcessor postProcessor;
         private IDemoTweaker tweaker;
 
@@ -119,8 +117,6 @@ namespace Dope.DDXX.DemoFramework
 
             InitializeFromFile(xmlFile);
 
-            InitializeGraphics();
-
             InitializeSound();
 
             postProcessor.Initialize(device, textureFactory, effectFactory);
@@ -131,16 +127,10 @@ namespace Dope.DDXX.DemoFramework
             }
             foreach (IDemoTransition transition in transitions)
             {
-                transition.Initialize(postProcessor);
+                transition.Initialize(device, postProcessor);
             }
 
             tweaker.Initialize(this);
-        }
-
-        private void InitializeGraphics()
-        {
-            backBuffer1 = textureFactory.CreateFullsizeRenderTarget(Format.A8R8G8B8);
-            backBuffer2 = textureFactory.CreateFullsizeRenderTarget(Format.A8R8G8B8);
         }
 
         private void InitializeSound()
@@ -256,12 +246,17 @@ namespace Dope.DDXX.DemoFramework
             ITexture finalTexture = null;
             if (tracks.Count != 0)
             {
-                finalTexture = GetActiveTrack().Render(device, backBuffer1, clearColor);
+                finalTexture = GetActiveTrack().Render(device, postProcessor.GetTemporaryTextures(1, false)[0], clearColor);
                 IDemoTransition transition = GetActiveTransition();
                 if (transition != null)
                 {
-                    ITexture finalTexture2 = tracks[1].Render(device, backBuffer2, clearColor);
-                    finalTexture = transition.Combine(finalTexture, finalTexture2);
+                    postProcessor.AllocateTexture(finalTexture);
+                    ITexture finalTexture2 = tracks[transition.DestinationTrack].Render(device, postProcessor.GetTemporaryTextures(1, false)[0], clearColor);
+                    postProcessor.AllocateTexture(finalTexture2);
+                    ITexture newFinalTexture = transition.Render(finalTexture, finalTexture2);
+                    postProcessor.FreeTexture(finalTexture);
+                    postProcessor.FreeTexture(finalTexture2);
+                    finalTexture = newFinalTexture;
                 }
             }
             return finalTexture;
@@ -327,6 +322,7 @@ namespace Dope.DDXX.DemoFramework
         public void AddTransition(string effectName, int destinationTrack, float startTime, float endTime)
         {
             IDemoTransition transition = (IDemoTransition)effectTypes.CreateInstance(effectName, startTime, endTime);
+            transition.DestinationTrack = destinationTrack;
             this.Register(transition);
             lastAddedAsset = transition;
         }
