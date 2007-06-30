@@ -87,7 +87,7 @@ namespace Dope.DDXX.DemoFramework
 
         protected void CreateStandardSceneAndCamera(out IScene scene, out CameraNode camera, float distance)
         {
-            scene = new Scene();
+            scene = new Scene(EffectFactory);
             scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f);
             camera = new CameraNode("Standard Camera");
             camera.WorldState.MoveForward(-distance);

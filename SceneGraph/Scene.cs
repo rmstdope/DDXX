@@ -27,11 +27,15 @@ namespace Dope.DDXX.SceneGraph
         private LightState lightState = new LightState();
 
         public Scene()
+            : this(D3DDriver.EffectFactory)
+        {
+        }
+
+        public Scene(IEffectFactory effectFactory)
         {
             rootNode = new DummyNode("Scene Root Node");
             device = D3DDriver.GetInstance().Device;
             ambientColor = new ColorValue(0.5f, 0.5f, 0.5f, 0.5f);
-            IEffectFactory effectFactory = D3DDriver.EffectFactory;
             effect = effectFactory.CreateFromFile("PoolEffect.fxo");
             numLightsHandle = effect.GetParameter(null, "NumLights");
             lightDiffuseHandle = effect.GetParameter(null, "LightDiffuseColors");
