@@ -57,7 +57,7 @@ namespace EngineTest
             boxModel.Materials[0].AmbientColor = ColorValue.FromColor(Color.MediumAquamarine);
             node = new ModelNode("Box", boxModel,
                 new EffectHandler(EffectFactory.CreateFromFile("../../Effects/PosseTest.fxo"),
-                TechniqueChooser.MaterialPrefix("Tex"), boxModel));
+                TechniqueChooser.MaterialPrefix("Tex"), boxModel), Device);
             scene.AddNode(node);
             node.WorldState.MoveUp(1f);
         }

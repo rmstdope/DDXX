@@ -44,6 +44,8 @@ namespace Dope.DDXX.Graphics
         private ColorValue sceneAmbient = new ColorValue(0.1f, 0.2f, 0.3f);
         private IAnimationController animationController;
         private ISkinInformation skinInformation;
+        private IDevice device;
+        private IRenderStateManager renderState;
 
         [SetUp]
         public void SetUp()
@@ -68,6 +70,8 @@ namespace Dope.DDXX.Graphics
             effectHandler = mockery.NewMock<IEffectHandler>();
             animationController = mockery.NewMock<IAnimationController>();
             skinInformation = mockery.NewMock<ISkinInformation>();
+            device = mockery.NewMock<IDevice>();
+            renderState = mockery.NewMock<IRenderStateManager>();
 
             Stub.On(rootFrame).GetProperty("FrameHierarchy").Will(Return.Value(firstFrame));
             Stub.On(frame).Method("Find").With(firstFrame, "NameOfBone").Will(Return.Value(firstFrame));
@@ -80,6 +84,7 @@ namespace Dope.DDXX.Graphics
             Stub.On(skinInformation).Method("GetBoneOffsetMatrix").Will(Return.Value(Matrix.Identity));
             Stub.On(skinInformation).Method("GetBoneName").Will(Return.Value("NameOfBone"));
 
+            Stub.On(device).GetProperty("RenderState").Will(Return.Value(renderState));
         }
 
         [TearDown]
@@ -203,9 +208,10 @@ namespace Dope.DDXX.Graphics
             {
                 // Mesh 1
                 Expect.Once.On(effectHandler).Method("SetNodeConstants").With(world, view, projection);
-                Expect.Once.On(meshContainer).GetProperty("Bones").Will(Return.Value(boneCombo));
+                Expect.Once.On(renderState).SetProperty("CullMode").To(Cull.CounterClockwise);
 
                 //Subset 1
+                Expect.Once.On(meshContainer).GetProperty("Bones").Will(Return.Value(boneCombo));
                 Expect.Once.On(effectHandler).Method("SetBones").With(bonesMatrices);
                 Expect.Once.On(effectHandler).Method("SetMaterialConstants").With(Is.EqualTo(sceneAmbient), new MaterialMatcher(materials2[0]), Is.EqualTo(0));
                 Expect.Once.On(effect).Method("Begin").With(FX.None).Will(Return.Value(1));
@@ -215,11 +221,12 @@ namespace Dope.DDXX.Graphics
                 Expect.Once.On(effect).Method("End");
 
                 // Subset 2
+                Expect.Once.On(meshContainer).GetProperty("Bones").Will(Return.Value(boneCombo));
                 Expect.Once.On(effectHandler).Method("SetBones").With(bonesMatrices);
                 Expect.Once.On(effectHandler).Method("SetMaterialConstants").With(Is.EqualTo(sceneAmbient), new MaterialMatcher(materials2[1]), Is.EqualTo(1));
                 Expect.Once.On(effect).Method("Begin").With(FX.None).Will(Return.Value(2));
                 Expect.Once.On(effect).Method("BeginPass").With(0);
-                Expect.Once.On(mesh).Method("DrawSubset").With(1);
+                Expect.Once.On(newMesh).Method("DrawSubset").With(1);
                 Expect.Once.On(effect).Method("EndPass");
                 Expect.Once.On(effect).Method("BeginPass").With(1);
                 Expect.Once.On(newMesh).Method("DrawSubset").With(1);
@@ -228,7 +235,7 @@ namespace Dope.DDXX.Graphics
 
             }
 
-            model.Draw(effectHandler, sceneAmbient, world, view, projection);
+            model.Render(device, effectHandler, sceneAmbient, world, view, projection);
         }
 
         /// <summary>

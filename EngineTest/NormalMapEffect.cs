@@ -35,7 +35,7 @@ namespace EngineTest
             IEffect effect = EffectFactory.CreateFromFile("Test.fxo");
             EffectHandler effectHandler = new EffectHandler(effect,
                 delegate(int material) { return ""; }, model);
-            node = new ModelNode("Test Model", model, effectHandler);
+            node = new ModelNode("Test Model", model, effectHandler, Device);
             scene.AddNode(node);
 
             // Create camera

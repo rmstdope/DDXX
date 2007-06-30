@@ -44,9 +44,9 @@ namespace Dope.DDXX.Graphics
             get {  throw new Exception("The method or operation is not implemented."); }
         }
 
-        public Device Device
+        public IDevice Device
         {
-            get { throw new Exception("The method or operation is not implemented."); }
+            get { return device; }
         }
 
         public bool Disposed

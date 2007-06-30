@@ -175,7 +175,7 @@ namespace Dope.DDXX.Graphics
             }
         }
 
-        public Microsoft.DirectX.Direct3D.Device Device
+        public IDevice Device
         {
             get { throw new Exception("The method or operation is not implemented."); }
         }

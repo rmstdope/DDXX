@@ -24,9 +24,9 @@ namespace Dope.DDXX.Graphics
 
         #region IBaseTexture Members
 
-        public Device Device
+        public IDevice Device
         {
-            get { return baseTexture.Device; }
+            get { return new DeviceAdapter(baseTexture.Device); }
         }
 
         public int Priority

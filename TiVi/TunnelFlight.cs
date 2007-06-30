@@ -104,7 +104,7 @@ namespace TiVi
             ModelNode modelNode;
             for (int j = 0; j < 30; j++)
             {
-                modelNode = new ModelNode("", model, effectHandler);
+                modelNode = new ModelNode("", model, effectHandler, Device);
                 //scene.AddNode(modelNode);
                 walkway.Add(new Brick(modelNode, t));
                 modelNode.WorldState.MoveForward(-0.6f * j);
@@ -119,7 +119,7 @@ namespace TiVi
             model = director.Generate("Default1");
             effectHandler = new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
                 delegate(int material) { return "Atmosphere"; }, model);
-            plane = new ModelNode("", model, effectHandler);
+            plane = new ModelNode("", model, effectHandler, Device);
             plane.WorldState.MoveForward(-2);
             plane.WorldState.MoveUp(-0.1f);
             GraphicsStream stream = ShaderLoader.CompileShaderFromFile("Imaginations.psh", "CreateCloudTexture", null, "tx_1_0", ShaderFlags.None);
@@ -138,10 +138,10 @@ namespace TiVi
             model = director.Generate("Default1");
             effectHandler = new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
                 delegate(int material) { return "Terrain"; }, model);
-            cylinder = new ModelNode("", model, effectHandler);
+            cylinder = new ModelNode("", model, effectHandler, Device);
             plane.AddChild(cylinder);
             cylinder.WorldState.MoveRight(1);
-            ModelNode cylinder2 = new ModelNode("", model, effectHandler);
+            ModelNode cylinder2 = new ModelNode("", model, effectHandler, Device);
             plane.AddChild(cylinder2);
             cylinder2.WorldState.MoveRight(-1);
         }
@@ -161,10 +161,11 @@ namespace TiVi
                 });
             XLoader.AddToScene(scene);
             tiviNode = (ModelNode)scene.GetNodeByName("TiVi");
+            /// TODO: Framehandling is buggy!
+            Vector3 pos = tiviNode.WorldState.Position;
             tiviNode.Model.Materials[0].Ambient = Color.White;
 
             mirrorNode = CreateMirrorNode(tiviNode);
-            //scene.AddNode(mirrorNode);
 
             MeshBuilder.SetAmbientColor("Default1", ColorValue.FromArgb(0));
             MeshBuilder.SetDiffuseColor("Default1", ColorValue.FromArgb(0));
@@ -174,22 +175,15 @@ namespace TiVi
             IModel model = director.Generate("Default1");
             IEffectHandler effectHandler = new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
                 delegate(int material) { return "Terrain"; }, model);
-            blackPlane = new ModelNode("", model, effectHandler);
+            blackPlane = new ModelNode("", model, effectHandler, Device);
 
         }
 
         private ModelNode CreateMirrorNode(ModelNode originalNode)
         {
-            IModel mirrorModel = originalNode.Model;
-            ModelNode mirrorNode = new ModelNode("Box", mirrorModel, 
-                new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
-                delegate(int material)
-                {
-                    if (material == 1)
-                        return "TvScreenReflected";
-                    else
-                        return "SolidReflected";
-                }, mirrorModel));
+            IModel mirrorModel = originalNode.Model.Clone();
+            mirrorModel.CullMode = Cull.Clockwise;
+            ModelNode mirrorNode = new ModelNode("Box", mirrorModel, originalNode.EffectHandler, Device);
             mirrorNode.WorldState.Scale(new Vector3(1, -1, 1));
             return mirrorNode;
         }
@@ -232,8 +226,8 @@ namespace TiVi
                 delegate(int material) { return "Diamond"; }, model);
             for (int i = 0; i < NUM_DIAMONDS; i++)
             {
-                ModelNode node1 = new ModelNode("", model, handler);
-                ModelNode node2 = new ModelNode("", model, handler);
+                ModelNode node1 = new ModelNode("", model, handler, Device);
+                ModelNode node2 = new ModelNode("", model, handler, Device);
                 node1.WorldState.MoveUp(Rand.Float(0, 4));
                 node1.WorldState.MoveRight(Rand.Float(-5, 5));
                 node1.WorldState.MoveForward(Rand.Float(-10, 10));
@@ -258,7 +252,7 @@ namespace TiVi
             model.Materials[0].DiffuseColor = new ColorValue(0.9f, 0.9f, 0.9f);
             return new ModelNode("Terrain", model,
                 new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
-                delegate(int material) { return technique; }, model));
+                delegate(int material) { return technique; }, model), Device);
         }
 
         private ModelNode CreateTorus(float outerRadius, float torusRadius, string technique)
@@ -270,7 +264,7 @@ namespace TiVi
             model.Materials[0].DiffuseColor = new ColorValue(0.9f, 0.9f, 0.9f);
             return new ModelNode("Torus", model,
                 new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
-                delegate(int material) { return technique; }, model));
+                delegate(int material) { return technique; }, model), Device);
         }
 
         private void CreateTerrain()
@@ -299,7 +293,7 @@ namespace TiVi
             model.Materials[0].DiffuseColor = new ColorValue(0.6f, 0.6f, 0.6f);
             discModel = new ModelNode("Terrain", model,
                 new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
-                delegate(int material) { return "Terrain"; }, model));
+                delegate(int material) { return "Terrain"; }, model), Device);
             scene.AddNode(discModel);
             discModel.WorldState.MoveUp(-8);
             discModel.WorldState.MoveForward(25);
@@ -331,7 +325,7 @@ namespace TiVi
             {
                 for (int i = 0; i < NUM_BLOCKS; i++)
                 {
-                    ModelNode modelNode = new ModelNode("Brick", model, effectHandler);
+                    ModelNode modelNode = new ModelNode("Brick", model, effectHandler, Device);
                     scene.AddNode(modelNode);
                     bricks.Add(new Brick(modelNode, t));
                     t += 0.03f;
@@ -358,7 +352,7 @@ namespace TiVi
 
         private void StepWalkway()
         {
-            float[] f = new float[] { Time.StepTime * 0.015f, Time.StepTime * 0.010f};
+            float[] f = new float[] { Time.StepTime * 0.075f, Time.StepTime * 0.063f};
             EffectFactory.CreateFromFile("TiVi.fxo").SetValue(EffectHandle.FromString("AtmosphereTime"), f);
 
             //cylinder.WorldState.Roll(Time.DeltaTime);

@@ -35,21 +35,8 @@ namespace Dope.DDXX.Graphics
             Materials = CreateModelMaterials(textureFactory, extendedMaterials);
         }
 
-        public override void Draw(IEffectHandler effectHandler, ColorValue ambient, Matrix world, Matrix view, Matrix projection)
+        protected override void HandleSkin(IEffectHandler effectHandler, int j)
         {
-            effectHandler.SetNodeConstants(world, view, projection);
-            for (int j = 0; j < Materials.Length; j++)
-            {
-                effectHandler.SetMaterialConstants(ambient, Materials[j], j);
-                int passes = effectHandler.Effect.Begin(FX.None);
-                for (int i = 0; i < passes; i++)
-                {
-                    effectHandler.Effect.BeginPass(i);
-                    Mesh.DrawSubset(j);
-                    effectHandler.Effect.EndPass();
-                }
-                effectHandler.Effect.End();
-            }
         }
 
         public override void Step() { }

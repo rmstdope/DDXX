@@ -28,6 +28,7 @@ namespace TiVi
 
         protected override void Initialize()
         {
+            IDevice device = Device;
             CreateStandardSceneAndCamera(out scene, out camera, 10);
             CreateBoard();
             CreatePieces();
@@ -124,7 +125,7 @@ namespace TiVi
                     originalModel = whiteModels[(int)info.Type];
                 else
                     originalModel = blackModels[(int)info.Type];
-                ModelNode newNode = new ModelNode("", originalModel, effectHandler);
+                ModelNode newNode = new ModelNode("", originalModel, effectHandler, Device);
                 if (info.Type == PieceType.Knight)
                     newNode.WorldState.Scale(0.00007f);
                 else

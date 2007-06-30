@@ -20,6 +20,8 @@ namespace Dope.DDXX.Graphics
         private ITexture texture;
         private IEffectHandler effectHandler;
         private IEffect effect;
+        private IDevice device;
+        private IRenderStateManager renderState;
         private ExtendedMaterial[] materials;
         private Model model;
         private Matrix world = Matrix.RotationX(1);
@@ -37,7 +39,45 @@ namespace Dope.DDXX.Graphics
             texture = mockery.NewMock<ITexture>();
             effect = mockery.NewMock<IEffect>();
             effectHandler = mockery.NewMock<IEffectHandler>();
+            device = mockery.NewMock<IDevice>();
+            renderState = mockery.NewMock<IRenderStateManager>();
 
+            Stub.On(effectHandler).GetProperty("Effect").Will(Return.Value(effect));
+            Stub.On(device).GetProperty("RenderState").Will(Return.Value(renderState));
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            mockery.VerifyAllExpectationsHaveBeenMet();
+        }
+
+        [Test]
+        public void TestConstructorOneMaterial()
+        {
+            Material material;
+            materials = new ExtendedMaterial[1];
+            materials[0] = new ExtendedMaterial();
+            material = new Material();
+            material.Ambient = Color.AliceBlue;
+            material.Diffuse = Color.Aquamarine;
+            materials[0].Material3D = material;
+            materials[0].TextureFilename = "TextureFileName2";
+
+            Expect.Once.On(textureFactory).Method("CreateFromFile").With("TextureFileName2").Will(Return.Value(texture));
+            model = new Model(mesh, textureFactory, materials);
+            Assert.AreEqual(materials.Length, model.Materials.Length);
+            // Check that ambient is set to diffuse
+            material = materials[0].Material3D;
+            material.Ambient = material.Diffuse;
+            Assert.AreEqual(materials[0].Material3D.Diffuse, model.Materials[0].Ambient);
+            Assert.AreEqual(materials[0].Material3D.Diffuse, model.Materials[0].Diffuse);
+            Assert.AreEqual(texture, model.Materials[0].DiffuseTexture);
+        }
+
+        [Test]
+        public void TestConstructorTwoMaterials()
+        {
             Material material;
             materials = new ExtendedMaterial[2];
             materials[0] = new ExtendedMaterial();
@@ -48,23 +88,11 @@ namespace Dope.DDXX.Graphics
             materials[1] = new ExtendedMaterial();
             materials[1].TextureFilename = "TextureFileName";
 
-            Stub.On(effectHandler).GetProperty("Effect").Will(Return.Value(effect));
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            mockery.VerifyAllExpectationsHaveBeenMet();
-        }
-
-        [Test]
-        public void ConstructorTest()
-        {
             Expect.Once.On(textureFactory).Method("CreateFromFile").With("TextureFileName").Will(Return.Value(texture));
             model = new Model(mesh, textureFactory, materials);
             Assert.AreEqual(materials.Length, model.Materials.Length);
             // Check that ambient is set to diffuse
-            Material material = materials[0].Material3D;
+            material = materials[0].Material3D;
             material.Ambient = material.Diffuse;
             Assert.AreEqual(materials[0].Material3D.Diffuse, model.Materials[0].Ambient);
             Assert.AreEqual(materials[0].Material3D.Diffuse, model.Materials[0].Diffuse);
@@ -80,7 +108,7 @@ namespace Dope.DDXX.Graphics
         [Test]
         public void CloneTest()
         {
-            ConstructorTest();
+            TestConstructorTwoMaterials();
 
             IModel newModel = model.Clone();
             Assert.AreNotSame(model, newModel);
@@ -133,14 +161,40 @@ namespace Dope.DDXX.Graphics
         }
 
         [Test]
-        public void TestDraw()
+        public void TestRenderOneMaterial()
         {
-            ConstructorTest();
+            TestConstructorOneMaterial();
 
             using (mockery.Ordered)
             {
                 // Node
                 Expect.Once.On(effectHandler).Method("SetNodeConstants").With(world, view, projection);
+                Expect.Once.On(renderState).SetProperty("CullMode").To(Cull.CounterClockwise);
+
+                //Subset 1
+                Expect.Once.On(effectHandler).Method("SetMaterialConstants").With(Is.EqualTo(sceneAmbient), new MaterialMatcher(materials[0]), Is.EqualTo(0));
+                Expect.Once.On(effect).Method("Begin").With(FX.None).Will(Return.Value(1));
+                Expect.Once.On(effect).Method("BeginPass").With(0);
+                Expect.Once.On(mesh).Method("DrawSubset").With(0);
+                Expect.Once.On(effect).Method("EndPass");
+                Expect.Once.On(effect).Method("End");
+            }
+
+            model.Render(device, effectHandler, sceneAmbient, world, view, projection);
+        }
+
+        [Test]
+        public void TestRenderTwoMaterials()
+        {
+            TestConstructorTwoMaterials();
+
+            model.CullMode = Cull.None;
+
+            using (mockery.Ordered)
+            {
+                // Node
+                Expect.Once.On(effectHandler).Method("SetNodeConstants").With(world, view, projection);
+                Expect.Once.On(renderState).SetProperty("CullMode").To(Cull.None);
 
                 //Subset 1
                 Expect.Once.On(effectHandler).Method("SetMaterialConstants").With(Is.EqualTo(sceneAmbient), new MaterialMatcher(materials[0]), Is.EqualTo(0));
@@ -162,7 +216,7 @@ namespace Dope.DDXX.Graphics
                 Expect.Once.On(effect).Method("End");
             }
 
-            model.Draw(effectHandler, sceneAmbient, world, view, projection);
+            model.Render(device, effectHandler, sceneAmbient, world, view, projection);
         }
     }
 }

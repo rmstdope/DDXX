@@ -55,9 +55,9 @@ namespace Dope.DDXX.Graphics
         
         #region IEffect Members
 
-        public Device Device
+        public IDevice Device
         {
-            get { return effect.Device; }
+            get { return new DeviceAdapter(effect.Device); }
         }
 
         public bool Disposed

@@ -1287,7 +1287,7 @@ namespace Dope.DDXX.MeshBuilder
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public void Draw(IEffectHandler effectHandler, ColorValue ambient, Matrix world, Matrix view, Matrix projection)
+        public void Render(IDevice device, IEffectHandler effectHandler, ColorValue ambient, Matrix world, Matrix view, Matrix projection)
         {
             throw new Exception("The method or operation is not implemented.");
         }
@@ -1840,7 +1840,7 @@ namespace Dope.DDXX.MeshBuilder
 
         #region IBaseTexture Members
 
-        public Device Device
+        public IDevice Device
         {
             get { throw new Exception("The method or operation is not implemented."); }
         }
@@ -2209,5 +2209,22 @@ namespace Dope.DDXX.MeshBuilder
 
         #endregion
 
+
+        #region IModel Members
+
+
+        public Cull CullMode
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        #endregion
     }
 }

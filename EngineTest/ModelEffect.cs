@@ -27,7 +27,7 @@ namespace EngineTest
             IEffect effect = EffectFactory.CreateFromFile("Test.fxo");
             EffectHandler effectHandler = new EffectHandler(effect, 
                 delegate(int material) { return "Transparent"; }, model);
-            node = new ModelNode("Test Model", model, effectHandler);
+            node = new ModelNode("Test Model", model, effectHandler, Device);
             scene.AddNode(node);
 
             // Create camera

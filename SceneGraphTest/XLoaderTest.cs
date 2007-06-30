@@ -50,8 +50,8 @@ namespace Dope.DDXX.SceneGraph
             nodes = new List<INode>();
             rootNode = new DummyNode("dummyNode");
             rootChild1Node = new CameraNode("cameraNode");
-            rootChild2Node = new ModelNode("modelNode", null, null);
-            rootChild2Child1Node = new ModelNode("modelNode", null, null);
+            rootChild2Node = new ModelNode("modelNode", null, null, null);
+            rootChild2Child1Node = new ModelNode("modelNode", null, null, null);
             rootChild2Child2Node = new CameraNode("cameraNode");
 
             Stub.On(hierarchy).GetProperty("FrameHierarchy").

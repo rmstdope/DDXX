@@ -82,28 +82,6 @@ technique SolidSkinning
 		ZWriteEnable			= true;
 		ZFunc							= Less;
 		StencilEnable			= false;
-		CullMode					= CCW;
-	}
-}
-
-technique SolidReflectedSkinning
-<
-	bool NormalMapping = false;
-	bool Skinning = true;
->
-{
-	pass BasePass
-	{
-		VertexShader			= compile vs_2_0 SolidVertexShader(2);
-		PixelShader				= compile ps_2_0 SolidPixelShader(BaseTextureSampler);
-		AlphaTestEnable		= false;
-		AlphaBlendEnable	= false;
-		FillMode					= Solid;
-		ZEnable						=	true;
-		ZWriteEnable			= true;
-		ZFunc							= Less;
-		StencilEnable			= false;
-		CullMode					= CW;
 	}
 }
 
@@ -124,28 +102,6 @@ technique TvScreenSkinning
 		ZWriteEnable			= true;
 		ZFunc							= Less;
 		StencilEnable			= false;
-		CullMode					= CCW;
-	}
-}
-
-technique TvScreenReflectedSkinning
-<
-	bool NormalMapping = false;
-	bool Skinning = true;
->
-{
-	pass BasePass
-	{
-		VertexShader			= compile vs_2_0 SolidVertexShader(2);
-		PixelShader				= compile ps_2_0 SolidPixelShader(BaseTextureSamplerBordered);
-		AlphaTestEnable		= false;
-		AlphaBlendEnable	= false;
-		FillMode					= Solid;
-		ZEnable						=	true;
-		ZWriteEnable			= true;
-		ZFunc							= Less;
-		StencilEnable			= false;
-		CullMode					= CW;
 	}
 }
 

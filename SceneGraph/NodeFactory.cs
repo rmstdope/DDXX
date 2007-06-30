@@ -9,10 +9,12 @@ namespace Dope.DDXX.SceneGraph
     public class NodeFactory : INodeFactory
     {
         private ITextureFactory textureFactory;
+        private IDevice device;
 
-        public NodeFactory(ITextureFactory textureFactory)
+        public NodeFactory(IDevice device, ITextureFactory textureFactory)
         {
             this.textureFactory = textureFactory;
+            this.device = device;
         }
 
         public ModelNode CreateModelNode(IFrame frame, IEffect effect, MeshTechniqueChooser prefix)
@@ -27,11 +29,11 @@ namespace Dope.DDXX.SceneGraph
             return CommonCreateModelNode(frame, effect, prefix, model);
         }
 
-        private static ModelNode CommonCreateModelNode(IFrame frame, IEffect effect, MeshTechniqueChooser prefix, IModel model)
+        private ModelNode CommonCreateModelNode(IFrame frame, IEffect effect, MeshTechniqueChooser prefix, IModel model)
         {
             IEffectHandler effectHandler = new EffectHandler(effect, 
                 prefix(frame.Name), model);
-            ModelNode node = new ModelNode(frame.Name, model, effectHandler);
+            ModelNode node = new ModelNode(frame.Name, model, effectHandler, device);
             node.EnableFrameHandling(frame);
             return node;
         }

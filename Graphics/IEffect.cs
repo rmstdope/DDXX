@@ -16,7 +16,7 @@ namespace Dope.DDXX.Graphics
         EffectDescription Description { get; }
         // Summary:
         //     Retrieves the device associated with an effect.
-        Device Device { get; }
+        IDevice Device { get; }
         //
         // Summary:
         //     Gets a value that indicates whether the object is disposed.

@@ -9,7 +9,7 @@ namespace Dope.DDXX.Graphics
     {
         // Summary:
         //     Retrieves the device associated with a resource.
-        Device Device { get; }
+        IDevice Device { get; }
         //
         // Summary:
         //     Retrieves or sets the priority for the current resource.

@@ -73,11 +73,11 @@
 			<Parameter float="0.1" />
 		</SetupCall>
 	</Effect>-->
-  <Effect name="FlipSign" track="0" startTime="0" endTime="300" />
+  <!--<Effect name="FlipSign" track="0" startTime="0" endTime="300" />-->
   <Effect name="EmptyEffect" track="1" startTime="0" endTime="300" />
   <Transition name="FadeTransition" track="1" startTime="5" endTime="10" />
   <!--<Effect name="PhysicalCubes" track="0" startTime="0" endTime="300" />-->
-  <!--<Effect name="TunnelFlight" track="0" startTime="0" endTime="300" />-->
+  <Effect name="TunnelFlight" track="0" startTime="0" endTime="300" />
 	<PostEffect name="GlowPostEffect" track="0" startTime="0" endTime="300">
 		<Parameter name="BloomScale" float="1.5" />
 		<Parameter name="Exposure" float="1" />

@@ -16,7 +16,7 @@ namespace Dope.DDXX.Graphics
         //
         // Summary:
         //     Retrieves the device associated with a mesh.
-        Device Device { get; }
+        IDevice Device { get; }
         //
         // Summary:
         //     Gets a value that indicates whether the object is disposed.

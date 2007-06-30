@@ -186,7 +186,7 @@ namespace PoseidonTest
             effect = EffectFactory.CreateFromFile("../../Effects/PosseTest.fxo");
             EffectHandler effectHandler = new EffectHandler(effect,
                 TechniqueChooser.MaterialPrefix("NoTex"), model);
-            virtualModelNode = new ModelNode("Mesh", model, effectHandler);
+            virtualModelNode = new ModelNode("Mesh", model, effectHandler, Device);
             virtualScene.AddNode(virtualModelNode);
             virtualScene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
             //Light dxLight = new Light();
@@ -213,7 +213,7 @@ namespace PoseidonTest
             IEffect effect = EffectFactory.CreateFromFile("../../Effects/PosseTest.fxo");
             EffectHandler effectHandler = new EffectHandler(effect,
                 TechniqueChooser.MaterialPrefix("Tex"), model);
-            modelNode = new ModelNode("Mesh", model, effectHandler);
+            modelNode = new ModelNode("Mesh", model, effectHandler, Device);
             modelNode.WorldState.Tilt(4.0f);
             //scene.AddNode(modelNode);
             scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
@@ -238,7 +238,7 @@ namespace PoseidonTest
             {
                 for (int y = 0; y < ymax; y++)
                 {
-                    ModelNode node = new ModelNode("PinModelNode", pinModel, effectHandler);
+                    ModelNode node = new ModelNode("PinModelNode", pinModel, effectHandler, Device);
                     float posx = x * boxSpace - xmax * boxSpace / 2.0f;
                     float posy = y * boxSpace - ymax * boxSpace / 2.0f;
                     heightMap[y * xmax + x] = 0;
@@ -336,7 +336,7 @@ namespace PoseidonTest
             IMesh texturedMesh = mesh.Clone(mesh.Options.Value,
                 VertexFormats.Position | VertexFormats.Normal |
                 VertexFormats.Texture0 | VertexFormats.Texture1,
-                new DeviceAdapter(mesh.Device));
+                mesh.Device);
             SetBoxCoordinates(texturedMesh, zOffset);
             return new Model(texturedMesh, materials);
         }

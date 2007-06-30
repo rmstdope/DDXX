@@ -99,7 +99,7 @@ namespace Dope.DDXX.DemoFramework
         {
             IEffectHandler effectHandler = new EffectHandler(EffectFactory.CreateFromFile(effectFileName),
                 delegate(int material) { return techniqueName; }, model);
-            return new ModelNode("", model, effectHandler);
+            return new ModelNode("", model, effectHandler, Device);
         }
 
         protected abstract void Initialize();
@@ -137,7 +137,7 @@ namespace Dope.DDXX.DemoFramework
             this.device = device;
             this.mixer = mixer;
 
-            xLoader = new XLoader(GraphicsFactory, new NodeFactory(TextureFactory), Device);
+            xLoader = new XLoader(GraphicsFactory, new NodeFactory(Device, TextureFactory), Device);
             
             Initialize();
         }

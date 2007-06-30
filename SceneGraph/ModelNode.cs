@@ -12,6 +12,7 @@ namespace Dope.DDXX.SceneGraph
     {
         private IModel model;
         private IEffectHandler effectHandler;
+        private IDevice device;
 
         public IModel Model
         {
@@ -24,11 +25,12 @@ namespace Dope.DDXX.SceneGraph
             get { return effectHandler; }
         }
 
-        public ModelNode(string name, IModel model, IEffectHandler effectHandler) 
+        public ModelNode(string name, IModel model, IEffectHandler effectHandler, IDevice device) 
             : base(name)
         {
             this.model = model;
             this.effectHandler = effectHandler;
+            this.device = device;
         }
 
         protected override void StepNode()
@@ -38,7 +40,7 @@ namespace Dope.DDXX.SceneGraph
 
         protected override void RenderNode(IScene scene)
         {
-            model.Draw(effectHandler, scene.AmbientColor, WorldMatrix,
+            model.Render(device, effectHandler, scene.AmbientColor, WorldMatrix,
                 scene.ActiveCamera.ViewMatrix, scene.ActiveCamera.ProjectionMatrix);
         }
     }

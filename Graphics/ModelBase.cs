@@ -9,6 +9,12 @@ namespace Dope.DDXX.Graphics
     public abstract class ModelBase : IModel
     {
         private ModelMaterial[] materials;
+        private Cull cullMode;
+
+        protected ModelBase()
+        {
+            cullMode = Cull.CounterClockwise;
+        }
 
         protected ModelMaterial[] CreateModelMaterials(ITextureFactory textureFactory, ExtendedMaterial[] extendedMaterials)
         {
@@ -27,6 +33,12 @@ namespace Dope.DDXX.Graphics
 
         #region IModel Members
 
+        public Cull CullMode
+        {
+            get { return cullMode; }
+            set { cullMode = value; }
+        }
+
         public abstract IMesh Mesh
         { get; set; }
 
@@ -41,14 +53,30 @@ namespace Dope.DDXX.Graphics
             return false; 
         }
 
-        public abstract void Draw(IEffectHandler effectHandler, ColorValue ambient, Matrix world, Matrix view, Matrix projection);
+        public void Render(IDevice device, IEffectHandler effectHandler, ColorValue ambient, Matrix world, Matrix view, Matrix projection)
+        {
+            effectHandler.SetNodeConstants(world, view, projection);
+            device.RenderState.CullMode = cullMode;
+            for (int j = 0; j < Materials.Length; j++)
+            {
+                HandleSkin(effectHandler, j);
+                effectHandler.SetMaterialConstants(ambient, Materials[j], j);
+                int passes = effectHandler.Effect.Begin(FX.None);
+                for (int i = 0; i < passes; i++)
+                {
+                    effectHandler.Effect.BeginPass(i);
+                    Mesh.DrawSubset(j);
+                    effectHandler.Effect.EndPass();
+                }
+                effectHandler.Effect.End();
+            }
+        }
+
+        protected abstract void HandleSkin(IEffectHandler effectHandler, int materialNum);
 
         public abstract void Step();
 
-        public virtual IModel Clone()
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
+        public abstract IModel Clone();
 
         #endregion
     }

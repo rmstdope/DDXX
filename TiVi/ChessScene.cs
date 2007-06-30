@@ -48,7 +48,7 @@ namespace EngineTest
             kingModel.Materials[0].DiffuseColor = new ColorValue(0.3f, 0.3f, 0.3f);
             ModelNode kingNode = new ModelNode("King", kingModel,
                 new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
-                TechniqueChooser.MaterialPrefix("Glass"), kingModel));
+                TechniqueChooser.MaterialPrefix("Glass"), kingModel), Device);
             scene.AddNode(kingNode);
             ModelNode kingMirrorNode = CreateMirrorNode(kingNode);
             scene.AddNode(kingMirrorNode);
@@ -86,7 +86,7 @@ namespace EngineTest
             mirrorModel.Materials[0].ReflectiveFactor = 0.0f;
             ModelNode mirrorNode = new ModelNode("Box", mirrorModel,
                 new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
-                TechniqueChooser.MaterialPrefix("Glass"), mirrorModel));
+                TechniqueChooser.MaterialPrefix("Glass"), mirrorModel), Device);
             mirrorNode.WorldState.Scale(new Vector3(1, -1, 1));
             return mirrorNode;
         }
@@ -130,7 +130,7 @@ namespace EngineTest
                         model = whiteModel;
                     ModelNode node = new ModelNode("FloorTile" + x + y, model,
                         new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
-                        TechniqueChooser.MaterialPrefix("Chess"), model));
+                        TechniqueChooser.MaterialPrefix("Chess"), model), Device);
                     node.WorldState.Tilt((float)Math.PI / 2);
                     node.WorldState.Position = new Vector3((x - 4) * 1.90f, 0, (y - 4) * 1.90f);
                     chessNodes.Add(node);

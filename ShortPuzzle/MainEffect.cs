@@ -259,8 +259,8 @@ namespace ShortPuzzle
                     else
                         start.Y = 200;
                     cubes[c] = new Cube(x, y,
-                                        new ModelNode("Mesh", new Model(model1.Mesh, model1.Materials), handler),
-                                        new ModelNode("Mesh", new Model(model2.Mesh, model2.Materials), handler), 
+                                        new ModelNode("Mesh", new Model(model1.Mesh, model1.Materials), handler, Device),
+                                        new ModelNode("Mesh", new Model(model2.Mesh, model2.Materials), handler, Device), 
                                         start,
                                         new Vector3((x - CubesInRow / 2) * distance, (y - CubesInRow / 2) * distance, 0));
                     cubes[c].AddToScene(scene);

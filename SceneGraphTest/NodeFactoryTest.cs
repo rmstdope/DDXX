@@ -9,7 +9,7 @@ using Microsoft.DirectX;
 namespace Dope.DDXX.SceneGraph
 {
     [TestFixture]
-    public class NodeFactoryTest : IFrame, IMesh, ITextureFactory, IEffect, IAnimationRootFrame, IMeshContainer
+    public class NodeFactoryTest : IFrame, IMesh, ITextureFactory, IEffect, IAnimationRootFrame, IMeshContainer, IDevice
     {
         private NodeFactory nodeFactory;
         private string name;
@@ -20,7 +20,7 @@ namespace Dope.DDXX.SceneGraph
         public void SetUp()
         {
             transformationMatrix = Matrix.Identity;
-            nodeFactory = new NodeFactory(this);
+            nodeFactory = new NodeFactory(this, this);
         }
 
         [Test]
@@ -158,7 +158,7 @@ namespace Dope.DDXX.SceneGraph
             get { throw new Exception("The method or operation is not implemented."); }
         }
 
-        public Device Device
+        public IDevice Device
         {
             get { throw new Exception("The method or operation is not implemented."); }
         }
@@ -1135,6 +1135,831 @@ namespace Dope.DDXX.SceneGraph
 
 
         public void RegisterTexture(string name, ITexture texture)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
+
+        #region IDevice Members
+
+        public int AvailableTextureMemory
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public ClipPlanes ClipPlanes
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public ClipStatus ClipStatus
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public DeviceCreationParameters CreationParameters
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public int CurrentTexturePalette
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public ISurface DepthStencilSurface
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public Caps DeviceCaps
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public DisplayMode DisplayMode
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public IndexBuffer Indices
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public LightsCollection Lights
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public Material Material
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public float NPatchMode
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public int NumberOfSwapChains
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public PixelShader PixelShader
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public PresentParameters PresentationParameters
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public RasterStatus RasterStatus
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public IRenderStateManager RenderState
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public SamplerStateManagerCollection SamplerState
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public System.Drawing.Rectangle ScissorRectangle
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public bool SoftwareVertexProcessing
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public TextureStateManagerCollection TextureState
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public Transforms Transform
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public VertexDeclaration VertexDeclaration
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        VertexFormats IDevice.VertexFormat
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public VertexShader VertexShader
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public Viewport Viewport
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public void BeginScene()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void BeginStateBlock()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public bool CheckCooperativeLevel()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public bool CheckCooperativeLevel(out int result)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Clear(ClearFlags flags, System.Drawing.Color color, float zdepth, int stencil)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Clear(ClearFlags flags, int color, float zdepth, int stencil)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Clear(ClearFlags flags, System.Drawing.Color color, float zdepth, int stencil, System.Drawing.Rectangle[] rect)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Clear(ClearFlags flags, int color, float zdepth, int stencil, System.Drawing.Rectangle[] regions)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void ColorFill(ISurface surface, System.Drawing.Rectangle rect, System.Drawing.Color color)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void ColorFill(ISurface surface, System.Drawing.Rectangle rect, int color)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public ISurface CreateDepthStencilSurface(int width, int height, DepthFormat format, MultiSampleType multiSample, int multiSampleQuality, bool discard)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public ISurface CreateOffscreenPlainSurface(int width, int height, Format format, Pool pool)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public ISurface CreateRenderTarget(int width, int height, Format format, MultiSampleType multiSample, int multiSampleQuality, bool lockable)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void DeletePatch(int handle)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void DrawIndexedPrimitives(PrimitiveType primitiveType, int baseVertex, int minVertexIndex, int numVertices, int startIndex, int primCount)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void DrawIndexedUserPrimitives(PrimitiveType primitiveType, int minVertexIndex, int numVertexIndices, int primitiveCount, object indexData, bool sixteenBitIndices, object vertexStreamZeroData)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void DrawPrimitives(PrimitiveType primitiveType, int startVertex, int primitiveCount)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void DrawRectanglePatch(int handle, float[] numSegs)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void DrawRectanglePatch(int handle, Plane numSegs)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void DrawRectanglePatch(int handle, float[] numSegs, RectanglePatchInformation rectPatchInformation)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void DrawRectanglePatch(int handle, Plane numSegs, RectanglePatchInformation rectPatchInformation)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void DrawTrianglePatch(int handle, float[] numSegs)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void DrawTrianglePatch(int handle, Plane numSegs)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void DrawTrianglePatch(int handle, float[] numSegs, TrianglePatchInformation triPatchInformation)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void DrawTrianglePatch(int handle, Plane numSegs, TrianglePatchInformation triPatchInformation)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void DrawUserPrimitives(PrimitiveType primitiveType, int primitiveCount, object vertexStreamZeroData)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void EndScene()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public StateBlock EndStateBlock()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void EvictManagedResources()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public ISurface GetBackBuffer(int swapChain, int backBuffer, BackBufferType backBufferType)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public CubeTexture GetCubeTexture(int stage)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void GetFrontBufferData(int swapChain, ISurface buffer)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public GammaRamp GetGammaRamp(int swapChain)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public PaletteEntry[] GetPaletteEntries(int paletteNumber)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public bool[] GetPixelShaderBooleanConstant(int startRegister, int constantCount)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public int[] GetPixelShaderInt32Constant(int startRegister, int constantCount)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public float[] GetPixelShaderSingleConstant(int startRegister, int constantCount)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public RasterStatus GetRasterStatus(int swapChain)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public bool GetRenderStateBoolean(RenderStates state)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public int GetRenderStateInt32(RenderStates state)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public float GetRenderStateSingle(RenderStates state)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public ISurface GetRenderTarget(int renderTargetIndex)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void GetRenderTargetData(ISurface renderTarget, ISurface destSurface)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public bool GetSamplerStageStateBoolean(int stage, SamplerStageStates state)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public int GetSamplerStageStateInt32(int stage, SamplerStageStates state)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public float GetSamplerStageStateSingle(int stage, SamplerStageStates state)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public IVertexBuffer GetStreamSource(int streamNumber, out int offsetInBytes, out int stride)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public int GetStreamSourceFrequency(int streamNumber)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public SwapChain GetSwapChain(int swapChain)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Texture GetTexture(int stage)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public bool GetTextureStageStateBoolean(int stage, TextureStageStates state)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public int GetTextureStageStateInt32(int stage, TextureStageStates state)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public float GetTextureStageStateSingle(int stage, TextureStageStates state)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public Matrix GetTransform(TransformType state)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public bool[] GetVertexShaderBooleanConstant(int startRegister, int constantCount)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public int[] GetVertexShaderInt32Constant(int startRegister, int constantCount)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public float[] GetVertexShaderSingleConstant(int startRegister, int constantCount)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public VolumeTexture GetVolumeTexture(int stage)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void MultiplyTransform(TransformType state, Matrix matrix)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Present()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Present(System.Windows.Forms.Control overrideWindow)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Present(IntPtr overrideWindowHandle)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Present(System.Drawing.Rectangle rectPresent, bool sourceRectangle)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Present(System.Drawing.Rectangle rectPresent, System.Windows.Forms.Control overrideWindow, bool sourceRectangle)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Present(System.Drawing.Rectangle rectPresent, IntPtr overrideWindowHandle, bool sourceRectangle)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Present(System.Drawing.Rectangle sourceRectangle, System.Drawing.Rectangle destRectangle, System.Windows.Forms.Control overrideWindow)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Present(System.Drawing.Rectangle sourceRectangle, System.Drawing.Rectangle destRectangle, IntPtr overrideWindowHandle)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void ProcessVertices(int srcStartIndex, int destIndex, int vertexCount, VertexBuffer destBuffer, VertexDeclaration vertexDeclaration)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void ProcessVertices(int srcStartIndex, int destIndex, int vertexCount, VertexBuffer destBuffer, VertexDeclaration vertexDeclaration, bool copyData)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Reset(params PresentParameters[] presentationParameters)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetCursor(System.Windows.Forms.Cursor cursor, bool addWaterMark)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetCursorPosition(int positionX, int positionY, bool updateImmediate)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetCursorProperties(int hotSpotX, int hotSpotY, ISurface cursorBitmap)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetDialogBoxesEnabled(bool value)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetGammaRamp(int swapChain, bool calibrate, GammaRamp ramp)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetPaletteEntries(int paletteNumber, PaletteEntry[] entries)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetPixelShaderConstant(int startRegister, bool[] constantData)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetPixelShaderConstant(int startRegister, float[] constantData)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetPixelShaderConstant(int startRegister, int[] constantData)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetPixelShaderConstant(int startRegister, Matrix constantData)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetPixelShaderConstant(int startRegister, Matrix[] constantData)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetPixelShaderConstant(int startRegister, Vector4 constantData)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetPixelShaderConstant(int startRegister, Vector4[] constantData)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetPixelShaderConstantBoolean(int startRegister, GraphicsStream constantData, int numberRegisters)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetPixelShaderConstantInt32(int startRegister, GraphicsStream constantData, int numberRegisters)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetPixelShaderConstantSingle(int startRegister, GraphicsStream constantData, int numberRegisters)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetRenderState(RenderStates state, bool value)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetRenderState(RenderStates state, float value)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetRenderState(RenderStates state, int value)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetRenderTarget(int renderTargetIndex, ISurface renderTarget)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetSamplerState(int stage, SamplerStageStates state, bool value)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetSamplerState(int stage, SamplerStageStates state, float value)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetSamplerState(int stage, SamplerStageStates state, int value)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetStreamSource(int streamNumber, IVertexBuffer streamData, int offsetInBytes)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetStreamSource(int streamNumber, IVertexBuffer streamData, int offsetInBytes, int stride)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetStreamSourceFrequency(int streamNumber, int divider)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetTexture(int stage, BaseTexture texture)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetTextureStageState(int stage, TextureStageStates state, bool value)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetTextureStageState(int stage, TextureStageStates state, float value)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetTextureStageState(int stage, TextureStageStates state, int value)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetTransform(TransformType state, Matrix matrix)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetVertexShaderConstant(int startRegister, bool[] constantData)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetVertexShaderConstant(int startRegister, float[] constantData)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetVertexShaderConstant(int startRegister, int[] constantData)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetVertexShaderConstant(int startRegister, Matrix constantData)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetVertexShaderConstant(int startRegister, Matrix[] constantData)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetVertexShaderConstant(int startRegister, Vector4 constantData)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetVertexShaderConstant(int startRegister, Vector4[] constantData)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetVertexShaderConstantBoolean(int startRegister, GraphicsStream constantData, int numberRegisters)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetVertexShaderConstantInt32(int startRegister, GraphicsStream constantData, int numberRegisters)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetVertexShaderConstantSingle(int startRegister, GraphicsStream constantData, int numberRegisters)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public bool ShowCursor(bool canShow)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void StretchRectangle(ISurface sourceSurface, System.Drawing.Rectangle sourceRectangle, ISurface destSurface, System.Drawing.Rectangle destRectangle, TextureFilter filter)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void TestCooperativeLevel()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void UpdateSurface(ISurface sourceSurface, ISurface destinationSurface)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void UpdateSurface(ISurface sourceSurface, System.Drawing.Rectangle sourceRect, ISurface destinationSurface)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void UpdateSurface(ISurface sourceSurface, ISurface destinationSurface, System.Drawing.Point destPoint)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void UpdateSurface(ISurface sourceSurface, System.Drawing.Rectangle sourceRect, ISurface destinationSurface, System.Drawing.Point destPoint)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void UpdateTexture(BaseTexture sourceTexture, BaseTexture destinationTexture)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public ValidateDeviceParams ValidateDevice()
         {
             throw new Exception("The method or operation is not implemented.");
         }

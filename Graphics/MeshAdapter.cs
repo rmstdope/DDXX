@@ -484,9 +484,9 @@ namespace Dope.DDXX.Graphics
             get { return mesh.Declaration; }
         }
 
-        public Device Device
+        public IDevice Device
         {
-            get { return mesh.Device; }
+            get { return new DeviceAdapter(mesh.Device); }
         }
 
         public bool Disposed

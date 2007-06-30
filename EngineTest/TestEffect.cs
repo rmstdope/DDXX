@@ -195,7 +195,7 @@ namespace EngineTest
             IModel model = D3DDriver.ModelFactory.FromFile("Wanting More.x", ModelOptions.None);
             EffectHandler effectHandler = new EffectHandler(effect,
                 delegate(int material) { return "TransparentText"; }, model);
-            modelNode = new ModelNode("Text1", model, effectHandler);
+            modelNode = new ModelNode("Text1", model, effectHandler, Device);
             scene.AddNode(modelNode);
         }
 
@@ -205,7 +205,7 @@ namespace EngineTest
             modelNoSkinning = new ModelNode("No Skinning",
                 model,
                 new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
-                delegate(int material) { return "Skinning"; }, model));
+                delegate(int material) { return "Skinning"; }, model), Device);
             modelNoSkinning.WorldState.Scale(100.0f);
             modelNoSkinning.WorldState.MoveRight(-50);
             modelNoSkinning.WorldState.Roll((float)Math.PI);

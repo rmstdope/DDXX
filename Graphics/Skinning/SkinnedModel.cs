@@ -15,6 +15,10 @@ namespace Dope.DDXX.Graphics
         private IMesh mesh;
         private int numBones;
 
+        private SkinnedModel()
+        {
+        }
+
         public SkinnedModel(IAnimationRootFrame rootFrame, IFrame frame, ITextureFactory textureFactory)
         {
             this.rootFrame = rootFrame;
@@ -68,25 +72,12 @@ namespace Dope.DDXX.Graphics
             return true;
         }
 
-        public override void Draw(IEffectHandler effectHandler, ColorValue ambient, Matrix world, Matrix view, Matrix projection)
+        protected override void HandleSkin(IEffectHandler effectHandler, int j)
         {
-            effectHandler.SetNodeConstants(world, view, projection);
-            for (int j = 0; j < frame.MeshContainer.GetMaterials().Length; j++)
+            if (frame.MeshContainer.SkinInformation != null)
             {
-                if (frame.MeshContainer.SkinInformation != null)
-                {
-                    Matrix[] skinMatrices = GetBoneMatrices(j);
-                    effectHandler.SetBones(skinMatrices);
-                }
-                effectHandler.SetMaterialConstants(ambient, Materials[j], j);
-                int passes = effectHandler.Effect.Begin(FX.None);
-                for (int i = 0; i < passes; i++)
-                {
-                    effectHandler.Effect.BeginPass(i);
-                    mesh.DrawSubset(j);
-                    effectHandler.Effect.EndPass();
-                }
-                effectHandler.Effect.End();
+                Matrix[] skinMatrices = GetBoneMatrices(j);
+                effectHandler.SetBones(skinMatrices);
             }
         }
 
@@ -129,6 +120,20 @@ namespace Dope.DDXX.Graphics
         public IFrame GetFrame(string name)
         {
             return rootFrame.FrameHierarchy.Find(rootFrame.FrameHierarchy, name);
+        }
+
+        public override IModel Clone()
+        {
+            SkinnedModel newModel = new SkinnedModel();
+            newModel.rootFrame = rootFrame;
+            newModel.frame = frame;
+            newModel.mesh = mesh;
+            newModel.numBones = numBones;
+            newModel.CullMode = CullMode;
+            newModel.Materials = new ModelMaterial[Materials.Length];
+            for (int i = 0; i < Materials.Length; i++)
+                newModel.Materials[i] = Materials[i].Clone();
+            return newModel;
         }
     }
 }

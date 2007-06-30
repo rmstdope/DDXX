@@ -21,6 +21,7 @@ namespace Dope.DDXX.SceneGraph
         private IScene scene;
         private IRenderableCamera camera;
         private IModel model;
+        private IDevice device;
         private ModelMaterial[] materials;
         private Matrix worldMatrix = Matrix.Identity;
         private Matrix viewMatrix = Matrix.RotationX(4.0f);
@@ -39,6 +40,7 @@ namespace Dope.DDXX.SceneGraph
             scene = mockery.NewMock<IScene>();
             camera = mockery.NewMock<IRenderableCamera>();
             model = mockery.NewMock<IModel>();
+            device = mockery.NewMock<IDevice>();
             Material m = new Material();
             m.AmbientColor = new ColorValue(1, 1, 1);
             materials = new ModelMaterial[2];
@@ -53,7 +55,7 @@ namespace Dope.DDXX.SceneGraph
             Stub.On(model).GetProperty("Mesh").Will(Return.Value(mesh));
             Stub.On(model).GetProperty("Materials").Will(Return.Value(materials));
 
-            node = new ModelNode("Name", model, effectHandler);
+            node = new ModelNode("Name", model, effectHandler, device);
         }
 
         [TearDown]
@@ -94,7 +96,7 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void RenderTestOK()
         {
-            Expect.Once.On(model).Method("Draw").With(effectHandler, sceneAmbient, worldMatrix, viewMatrix, projectionMatrix);
+            Expect.Once.On(model).Method("Render").With(device, effectHandler, sceneAmbient, worldMatrix, viewMatrix, projectionMatrix);
             node.Render(scene);
         }
 
