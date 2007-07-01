@@ -20,6 +20,7 @@ namespace TiVi
         private MeshDirector meshDirector;
         private ModelNode[] signs = new ModelNode[NUM_SIGNS_X * NUM_SIGNS_Y];
         private Interpolator<InterpolatedVector3> interpolator;
+        private List<ChessPiece> chessPieces = new List<ChessPiece>();
 
         public FlipSign(float startTime, float endTime)
             : base(startTime, endTime)
@@ -29,112 +30,95 @@ namespace TiVi
         protected override void Initialize()
         {
             IDevice device = Device;
-            CreateStandardSceneAndCamera(out scene, out camera, 10);
+            CreateStandardSceneAndCamera(out scene, out camera, 15);
             CreateBoard();
             CreatePieces();
             CreateCameraInterpolator();
 
-            PointLightNode light = new PointLightNode("");
-            light.Position = new Vector3(0, 4, 0);
-            light.DiffuseColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
-            scene.AddNode(light);
+            PointLightNode[] lights = new PointLightNode[2];
+            lights[0] = new PointLightNode("");
+            lights[0].Position = new Vector3(-5, 4, 0);
+            lights[0].DiffuseColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
+            scene.AddNode(lights[0]);
+            lights[1] = new PointLightNode("");
+            lights[1].Position = new Vector3(5, 4, 0);
+            lights[1].DiffuseColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
+            scene.AddNode(lights[1]);
         }
-
-        enum PieceType
-        {
-            Pawn = 0,
-            Rook,
-            Bishop,
-            Queen,
-            King,
-            Knight,
-            NumPieces
-        }
-
-        private struct PieceInfo
-        {
-            public bool White;
-            public PieceType Type;
-            public string Position;
-            public PieceInfo(bool white, PieceType type, string position)
-            {
-                White = white;
-                Type = type;
-                Position = position;
-            }
-        }
-        private PieceInfo[] pieces = new PieceInfo[] {
-            new PieceInfo(true, PieceType.Pawn, "g6"),
-            new PieceInfo(true, PieceType.Pawn, "f5"),
-            new PieceInfo(true, PieceType.Pawn, "b4"),
-            new PieceInfo(true, PieceType.Pawn, "a3"),
-            new PieceInfo(true, PieceType.Pawn, "c2"),
-            new PieceInfo(true, PieceType.Bishop, "c3"),
-            new PieceInfo(true, PieceType.Bishop, "h3"),
-            new PieceInfo(true, PieceType.King, "f2"),
-            new PieceInfo(true, PieceType.Rook, "g1"),
-            new PieceInfo(true, PieceType.Knight, "e3"),
-
-            //new PieceInfo(false, PieceType.Rook, "d8"),
-            //new PieceInfo(false, PieceType.Rook, "e8"),
-            //new PieceInfo(false, PieceType.Pawn, "a4"),
-            //new PieceInfo(false, PieceType.Pawn, "b5"),
-            //new PieceInfo(false, PieceType.Pawn, "c6"),
-            //new PieceInfo(false, PieceType.Pawn, "a4"),
-            //new PieceInfo(false, PieceType.Pawn, "e4"),
-            //new PieceInfo(false, PieceType.Pawn, "g4"),
-            //new PieceInfo(false, PieceType.Knight, "e5"),
-            //new PieceInfo(false, PieceType.Bishop, "f3"),
-            //new PieceInfo(false, PieceType.King, "h6"),
-        };
 
         private void CreatePieces()
         {
             IScene tempScene = new Scene();
             XLoader.Load("ChessPieces2.X", EffectFactory.CreateFromFile("TiVi.fxo"), TechniqueChooser.MeshPrefix("Reflective"));
             XLoader.AddToScene(tempScene);
-            IEffectHandler effectHandler = (tempScene.GetNodeByName("Pawn") as ModelNode).EffectHandler;
-            IModel[] whiteModels = new IModel[(int)PieceType.NumPieces];
-            whiteModels[(int)PieceType.Pawn] = (tempScene.GetNodeByName("Pawn") as ModelNode).Model;
-            whiteModels[(int)PieceType.Rook] = (tempScene.GetNodeByName("Rook") as ModelNode).Model;
-            whiteModels[(int)PieceType.Bishop] = (tempScene.GetNodeByName("Bishop") as ModelNode).Model;
-            whiteModels[(int)PieceType.Queen] = (tempScene.GetNodeByName("Queen") as ModelNode).Model;
-            whiteModels[(int)PieceType.King] = (tempScene.GetNodeByName("King") as ModelNode).Model;
-            whiteModels[(int)PieceType.Knight] = (tempScene.GetNodeByName("Knight") as ModelNode).Model;
-            for (int i = 0; i < (int)PieceType.NumPieces; i++)
-            {
-                whiteModels[i].Materials[0].ReflectiveTexture = TextureFactory.CreateCubeFromFile("rnl_cross.dds");
-                whiteModels[i].Materials[0].ReflectiveFactor = 0.05f;
-                whiteModels[i].Materials[0].AmbientColor = new ColorValue(0.3f, 0.3f, 0.3f, 0.3f);
-                whiteModels[i].Materials[0].DiffuseColor = new ColorValue(0.8f, 0.8f, 0.8f, 0.8f);
-            }
-            IModel[] blackModels = new IModel[(int)PieceType.NumPieces];
-            for (int i = 0; i < whiteModels.Length; i++)
-            {
-                blackModels[i] = whiteModels[i].Clone();
-                blackModels[i].Materials[0].ReflectiveFactor = 0.05f;
-                blackModels[i].Materials[0].AmbientColor = new ColorValue(0.01f, 0.01f, 0.01f, 0.01f);
-                blackModels[i].Materials[0].DiffuseColor = new ColorValue(0.6f, 0.6f, 0.6f, 0.6f);
-            }
+            ChessPiece piece;
 
+            piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device, 
+                ChessPiece.PieceType.Pawn, ChessPiece.PieceColor.White, "g6");
+            chessPieces.Add(piece);
+            piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device, 
+                ChessPiece.PieceType.Pawn, ChessPiece.PieceColor.White, "f5");
+            chessPieces.Add(piece);
+            piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device, 
+                ChessPiece.PieceType.Pawn, ChessPiece.PieceColor.White, "b4");
+            chessPieces.Add(piece);
+            piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device, 
+                ChessPiece.PieceType.Pawn, ChessPiece.PieceColor.White, "a3");
+            chessPieces.Add(piece);
+            piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device, 
+                ChessPiece.PieceType.Pawn, ChessPiece.PieceColor.White, "c2");
+            chessPieces.Add(piece);
+            piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
+                ChessPiece.PieceType.Bishop, ChessPiece.PieceColor.White, "c3");
+            chessPieces.Add(piece);
+            piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
+                ChessPiece.PieceType.Bishop, ChessPiece.PieceColor.White, "h3");
+            piece.AddPosition(1, 3, "g4", 1);
+            piece.AddPosition(5.2f, 6, "g4-", 1);
+            chessPieces.Add(piece);
+            piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
+                ChessPiece.PieceType.King, ChessPiece.PieceColor.White, "f2");
+            chessPieces.Add(piece);
+            piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
+                ChessPiece.PieceType.Rook, ChessPiece.PieceColor.White, "g1");
+            chessPieces.Add(piece);
+            piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
+                ChessPiece.PieceType.Knight, ChessPiece.PieceColor.White, "e3");
+            chessPieces.Add(piece);
 
-            foreach (PieceInfo info in pieces)
-            {
-                IModel originalModel;
-                if (info.White)
-                    originalModel = whiteModels[(int)info.Type];
-                else
-                    originalModel = blackModels[(int)info.Type];
-                ModelNode newNode = new ModelNode("", originalModel, effectHandler, Device);
-                if (info.Type == PieceType.Knight)
-                    newNode.WorldState.Scale(0.00007f);
-                else
-                    newNode.WorldState.Scale(0.0003f);
-                newNode.WorldState.Tilt((float)Math.PI / 2);
-                newNode.WorldState.MoveUp(int.Parse(info.Position.Substring(1)) - 4);
-                newNode.WorldState.MoveRight((info.Position[0] - 'a' + 1) - 4);
-                scene.AddNode(newNode);
-            }
+            // Black
+            piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
+                ChessPiece.PieceType.Rook, ChessPiece.PieceColor.Black, "d8");
+            chessPieces.Add(piece);
+            piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
+                ChessPiece.PieceType.Rook, ChessPiece.PieceColor.Black, "e8");
+            chessPieces.Add(piece);
+            piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
+                ChessPiece.PieceType.Pawn, ChessPiece.PieceColor.Black, "a4");
+            chessPieces.Add(piece);
+            piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
+                ChessPiece.PieceType.Pawn, ChessPiece.PieceColor.Black, "b5");
+            chessPieces.Add(piece);
+            piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
+                ChessPiece.PieceType.Pawn, ChessPiece.PieceColor.Black, "c6");
+            chessPieces.Add(piece);
+            piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
+                ChessPiece.PieceType.Pawn, ChessPiece.PieceColor.Black, "e4");
+            chessPieces.Add(piece);
+            piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
+                ChessPiece.PieceType.Pawn, ChessPiece.PieceColor.Black, "g4");
+            piece.AddPosition(1.5F, 4, "g4-", 1);
+            chessPieces.Add(piece);
+            piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
+                ChessPiece.PieceType.Knight, ChessPiece.PieceColor.Black, "e5");
+            chessPieces.Add(piece);
+            piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
+                ChessPiece.PieceType.Bishop, ChessPiece.PieceColor.Black, "f3");
+            piece.AddPosition(5.0f, 3, "g4", 0.2f);
+            chessPieces.Add(piece);
+            piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
+                ChessPiece.PieceType.King, ChessPiece.PieceColor.Black, "h6");
+            chessPieces.Add(piece);
         }
 
         private void CreateCameraInterpolator()
@@ -184,7 +168,9 @@ namespace TiVi
 
         public override void Step()
         {
-            camera.WorldState.Position = interpolator.GetValue(Time.StepTime % 10);
+            //camera.WorldState.Position = new Vector3(0, 3, -10);
+            //camera.WorldState.Position = interpolator.GetValue(Time.StepTime % 10);
+            camera.WorldState.Position = new Vector3((float)Math.Sin(Time.StepTime * 0.2f), 0.2f, (float)Math.Cos(Time.StepTime * 0.2f)) * 10;
             camera.LookAt(new Vector3(0, 0, 0), new Vector3(0, 1, 0));
             for (int y = 0; y < NUM_SIGNS_Y; y++)
             {
@@ -205,11 +191,15 @@ namespace TiVi
                     //}
                 }
             }
+            foreach (ChessPiece piece in chessPieces)
+                piece.Step(Time.StepTime - StartTime);
             scene.Step();
         }
 
         public override void Render()
         {
+            foreach (ChessPiece piece in chessPieces)
+                piece.Render(scene);
             scene.Render();
         }
     }

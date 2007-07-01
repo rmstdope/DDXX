@@ -45,6 +45,7 @@
     <Compile Include="DirectionalLightNodeTest.cs" />
     <Compile Include="EffectHandlerTest.cs" />
     <Compile Include="LightStateTest.cs" />
+    <Compile Include="LineNodeTest.cs" />
     <Compile Include="ModelNodeTest.cs" />
     <Compile Include="NodeBaseTest.cs" />
     <Compile Include="NodeFactoryTest.cs" />

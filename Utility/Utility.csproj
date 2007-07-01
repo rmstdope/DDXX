@@ -51,6 +51,7 @@
     <Compile Include="LinearSpline.cs" />
     <Compile Include="NaturalCubicSpline.cs" />
     <Compile Include="Rand.cs" />
+    <Compile Include="SmoothInterval.cs" />
     <Compile Include="SplineBase.cs" />
     <Compile Include="Time.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
