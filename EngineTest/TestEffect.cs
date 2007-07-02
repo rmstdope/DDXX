@@ -69,6 +69,7 @@ namespace EngineTest
             scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f);
 
             camera = new CameraNode("MyCamera");
+            camera.SetClippingPlanes(1, 10000);
             //camera.WorldState.Tilt(2.0f);
             camera.WorldState.MoveForward(-3.0f);
             scene.AddNode(camera);
@@ -91,15 +92,15 @@ namespace EngineTest
             //scene.AddNode(starSystem);
 
             spiralSystem1 = new ParticleSystemNode("SpiralSystem1");
-            spiralSystem2 = new ParticleSystemNode("SpiralSystem2");
-            spawner = new SpiralParticleSpawner(GraphicsFactory, Device, 5000);
+            //spiralSystem2 = new ParticleSystemNode("SpiralSystem2");
+            spawner = new SpiralParticleSpawner(GraphicsFactory, Device, 50000);
             spiralSystem1.Initialize(spawner, Device, GraphicsFactory, EffectFactory, circleTexture);
-            spawner = new SpiralParticleSpawner(GraphicsFactory, Device, 5000);
-            spiralSystem2.Initialize(spawner, Device, GraphicsFactory, EffectFactory, null);
+            spawner = new SpiralParticleSpawner(GraphicsFactory, Device, 50000);
+            //spiralSystem2.Initialize(spawner, Device, GraphicsFactory, EffectFactory, null);
             spiralSystem1.WorldState.MoveForward(500.0f);
-            spiralSystem2.WorldState.MoveForward(500.0f);
+            //spiralSystem2.WorldState.MoveForward(500.0f);
             spiralSystem1.WorldState.MoveUp(100.0f);
-            spiralSystem2.WorldState.MoveUp(100.0f);
+            //spiralSystem2.WorldState.MoveUp(100.0f);
             scene.AddNode(spiralSystem1);
             //scene.AddNode(spiralSystem2);
 

@@ -202,7 +202,6 @@ namespace TiVi
             //    new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"), 
             //    TechniqueChooser.MaterialPrefix("Line"), model));
             //scene.AddNode(node);
-
         }
 
         private void LoadAnimation()

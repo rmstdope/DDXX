@@ -68,6 +68,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="SpaceTravel.cs" />
     <Compile Include="TiViMain.cs" />
     <Compile Include="TunnelFlight.cs" />
     <Compile Include="WhiteFlare.cs" />

@@ -62,7 +62,7 @@ LineVertexShader(VertexShaderInput input,
 float4
 LinePixelShader(LinePixelInput input) : COLOR0
 {
-	return float4(input.Light, 0);
+	return 1;//float4(input.Light, 0);
 }
 
 technique SolidSkinning

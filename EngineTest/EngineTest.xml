@@ -34,8 +34,9 @@
 		<Parameter name="TextColor" Color="White" />
 		<Parameter name="Text" string=".dope" />
 	</Effect-->
-  <Effect name="TextWave" track="0" startTime="0" endTime="300" />
-  <!--Effect name="TerrainFlyover" track="0" startTime="0" endTime="300" /-->
+	<!--<Effect name="TextWave" track="0" startTime="0" endTime="300" />-->
+	<Effect name="TestEffect" track="0" startTime="0" endTime="300" />
+	<!--Effect name="TerrainFlyover" track="0" startTime="0" endTime="300" /-->
   <!--Effect name="TimeSyncEffect" track="0" startTime="0" endTime="300" /-->
   <!--Effect name="DofCubesEffect" track="0" startTime="0" endTime="300" /-->
   <!--PostEffect name="DepthOfFieldPostEffect" track="0" startTime="0.0" endTime="300.0" /-->
@@ -47,10 +48,6 @@
     <Parameter name="WhiteCutoff" float="0.6" step="0.01" />
     <Parameter name="Luminance" float="0.24" step="0.01" />
   </PostEffect>
-  <!--Effect name="ChessScene" track="0" startTime="0.0" endTime="300.0" /-->
-  <!--Effect name="CreationScene" track="0" startTime="0.0" endTime="300.0">
-		<Parameter name="BaseMesh" string="King.X" />
-	</Effect-->
   <!--PostEffect name="WavePostEffect" track="0" startTime="0.0" endTime="300.0">
     <Parameter name="Scale" float="1" step="0.01"/>
   </PostEffect-->

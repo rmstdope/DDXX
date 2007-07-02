@@ -14,7 +14,10 @@ namespace Dope.DDXX.ParticleSystems
     {
         private VertexDeclaration vertexDeclaration;
         private int maxNumParticles;
-        private float nextTime = -20;
+        private float nextTime = -10;
+        private BlendOperation blendOperation = BlendOperation.Add;
+        private Color color = Color.FromArgb(200, Color.White);
+        private int colorDistortion;
 
         public SpiralParticleSpawner(IGraphicsFactory graphicsFactory, IDevice device, int maxNumParticles)
         {
@@ -31,7 +34,8 @@ namespace Dope.DDXX.ParticleSystems
 
         public BlendOperation BlendOperation
         {
-            get { return BlendOperation.Add; }
+            get { return blendOperation; }
+            set { blendOperation = value; }
         }
 
         public Blend SourceBlend
@@ -44,16 +48,35 @@ namespace Dope.DDXX.ParticleSystems
             get { return Blend.InvSourceColor; }//.InvSourceAlpha; }
         }
 
+        public Color Color
+        {
+            set { color = value; }
+        }
+
+        public int ColorDistortion
+        {
+            set { colorDistortion = value; } 
+        }
+
+        public float NextTime
+        {
+            set { nextTime = value; }
+        }
+
         public ISystemParticle Spawn()
         {
             Vector3 position = new Vector3(Rand.Float(-1, 1), Rand.Float(-1, 1), Rand.Float(-1, 1));
-            Vector3 velocity = new Vector3((float)Math.Sin(nextTime * 0.8f), -0.6f, (float)Math.Cos(nextTime * 0.8f));
+            Vector3 velocity = new Vector3((float)Math.Sin(nextTime * 1.2f), -0.6f, (float)Math.Cos(nextTime * 1.2f));
             position *= 10;
             velocity *= 20;
             velocity += new Vector3(Rand.Float(-1, 1), Rand.Float(-1, 1), Rand.Float(-1, 1)) * 1.4f;
-            SpiralParticle particle = new SpiralParticle(position, velocity, Rand.Float(5, 10));
+            Color createColor = Color.FromArgb(
+                color.R + Rand.Int(-colorDistortion, colorDistortion),
+                color.G + Rand.Int(-colorDistortion, colorDistortion),
+                color.B + Rand.Int(-colorDistortion, colorDistortion));
+            SpiralParticle particle = new SpiralParticle(position, velocity, Rand.Float(5, 10), createColor);
             particle.Step(Time.StepTime - nextTime);
-            nextTime += 0.02f;
+            nextTime += 0.003f;
             return particle;
         }
 
@@ -95,11 +118,11 @@ namespace Dope.DDXX.ParticleSystems
         private Vector3 velocity;
         private float stopTime;
 
-        public SpiralParticle(Vector3 position, Vector3 velocity, float size)
-            : base(position, Color.FromArgb(200, Color.White), size)
+        public SpiralParticle(Vector3 position, Vector3 velocity, float size, Color color)
+            : base(position, color, size)
         {
             this.velocity = velocity;
-            stopTime = 7;
+            stopTime = 50;
         }
 
         public override void StepAndWrite(IGraphicsStream stream)
