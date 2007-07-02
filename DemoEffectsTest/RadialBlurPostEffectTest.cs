@@ -39,13 +39,20 @@ namespace Dope.DDXX.DemoEffects
         }
 
         [Test]
-        public void TestRenderInputIsInput()
+        public void TestRenderGray()
         {
-            TestRender(outputTexture, texture1, texture2);
+            TestRender(outputTexture, texture1, texture2, Color.Gray);
         }
 
-        private void TestRender(ITexture startTexture, ITexture tempTexture1, ITexture tempTexture2)
+        [Test]
+        public void TestRenderBlue()
         {
+            TestRender(outputTexture, texture1, texture2, Color.Blue);
+        }
+
+        private void TestRender(ITexture startTexture, ITexture tempTexture1, ITexture tempTexture2, Color color)
+        {
+            effect.BlurColor = color;
             List<ITexture> textures = new List<ITexture>();
             textures.Add(texture1);
             textures.Add(texture2);
@@ -90,7 +97,7 @@ namespace Dope.DDXX.DemoEffects
                     Method("Process").With("ZoomAdd", tempTexture2, tempTexture1);
                 Expect.Once.On(postProcessor).
                     Method("SetBlendParameters").
-                    With(BlendOperation.Add, Blend.One, Blend.One, Color.Black);
+                    With(BlendOperation.Add, Blend.BlendFactor, Blend.One, color);
                 Expect.Once.On(postProcessor).
                     Method("Process").With("Copy", tempTexture1, startTexture);
                 effect.Render();

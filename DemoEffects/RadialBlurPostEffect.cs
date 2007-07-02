@@ -11,6 +11,14 @@ namespace Dope.DDXX.DemoEffects
 {
     public class RadialBlurPostEffect : BaseDemoPostEffect
     {
+        private Color blurColor = Color.White;
+
+        public Color BlurColor
+        {
+            get { return blurColor; }
+            set { blurColor = value; }
+        }
+
         public RadialBlurPostEffect(float startTime, float endTime)
             : base(startTime, endTime)
         {
@@ -32,7 +40,7 @@ namespace Dope.DDXX.DemoEffects
                 PostProcessor.Process("ZoomAdd", textures[source], textures[1 - source]);
                 source = 1 - source;
             }
-            PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.One, Color.Black);
+            PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.BlendFactor, Blend.One, blurColor);
             PostProcessor.Process("Copy", textures[source], startTexture);
         }
 

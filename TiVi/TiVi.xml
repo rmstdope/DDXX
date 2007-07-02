@@ -86,6 +86,10 @@
 	  <Parameter name="DownSamples" int="1" />
 	  <Parameter name="AdvancedGlow" bool="false" />
 	</PostEffect>
+	<PostEffect name="RadialBlurPostEffect" startTime="0" endTime="25">
+		<Parameter name="DrawOrder" int="0" />
+	  <Parameter name="BlurColor" Color="100, 100, 100, 200" />
+	</PostEffect>
 
 	<!--<Effect name="FlipSign" track="0" startTime="0" endTime="300" />-->
 	<!--<Effect name="EmptyEffect" track="1" startTime="0" endTime="300" />
