@@ -19,5 +19,6 @@ namespace Dope.DDXX.SceneGraph
         void Validate();
         void DebugPrintGraph();
         void HandleHierarchy(IAnimationRootFrame hierarchy);
+        void SetEffectParameters();
     }
 }

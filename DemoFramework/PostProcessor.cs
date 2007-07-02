@@ -31,6 +31,7 @@ namespace Dope.DDXX.DemoFramework
         private ITextureFactory textureFactory;
         private ITexture lastUsedTexture;
         private TextureContainer inputTextureContainer = new TextureContainer(null);
+        private TextureContainer sourceTextureContainer = new TextureContainer(null);
         private IEffect effect;
         private EffectHandle sourceTextureParameter;
         private BlendOperation blendOperation = BlendOperation.Add;
@@ -98,8 +99,8 @@ namespace Dope.DDXX.DemoFramework
 
         public void Process(string technique, ITexture source, ITexture destination)
         {
-            TextureContainer sourceContainer = GetContainer(source);
-            TextureContainer destinationContainer = GetContainer(destination);
+            TextureContainer sourceContainer = GetContainer(source, true);
+            TextureContainer destinationContainer = GetContainer(destination, false);
             SetupProcessParameters(technique, sourceContainer, destinationContainer);
 
             device.BeginScene();
@@ -109,13 +110,18 @@ namespace Dope.DDXX.DemoFramework
             lastUsedTexture = destination;
         }
 
-        private TextureContainer GetContainer(ITexture source)
+        private TextureContainer GetContainer(ITexture source, bool useSourceIfNotFound)
         {
             if (source == inputTextureContainer.Texture)
                 return inputTextureContainer;
             foreach (TextureContainer container in textures)
                 if (container.Texture == source)
                     return container;
+            if (useSourceIfNotFound)
+            {
+                sourceTextureContainer.Texture = source;
+                return sourceTextureContainer;
+            }
             throw new DDXXException("Unknown texture");
         }
 

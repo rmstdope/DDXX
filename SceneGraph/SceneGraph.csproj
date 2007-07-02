@@ -57,6 +57,7 @@
     <Compile Include="LightNode.cs" />
     <Compile Include="LightState.cs" />
     <Compile Include="LineNode.cs" />
+    <Compile Include="MirrorNode.cs" />
     <Compile Include="ModelNode.cs" />
     <Compile Include="NodeBase.cs" />
     <Compile Include="NodeFactory.cs" />

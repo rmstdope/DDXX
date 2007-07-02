@@ -13,39 +13,6 @@ namespace TiVi
 {
     public class FlipSign : BaseDemoEffect
     {
-        private const int NUM_SIGNS_X = 8;
-        private const int NUM_SIGNS_Y = 8;
-        private IScene scene;
-        private CameraNode camera;
-        private MeshDirector meshDirector;
-        private ModelNode[] signs = new ModelNode[NUM_SIGNS_X * NUM_SIGNS_Y];
-        private Interpolator<InterpolatedVector3> interpolator;
-        private List<ChessPiece> chessPieces = new List<ChessPiece>();
-
-        public FlipSign(float startTime, float endTime)
-            : base(startTime, endTime)
-        {
-        }
-
-        protected override void Initialize()
-        {
-            IDevice device = Device;
-            CreateStandardSceneAndCamera(out scene, out camera, 15);
-            CreateBoard();
-            CreatePieces();
-            CreateCameraInterpolator();
-
-            PointLightNode[] lights = new PointLightNode[2];
-            lights[0] = new PointLightNode("");
-            lights[0].Position = new Vector3(-5, 4, 0);
-            lights[0].DiffuseColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
-            scene.AddNode(lights[0]);
-            lights[1] = new PointLightNode("");
-            lights[1].Position = new Vector3(5, 4, 0);
-            lights[1].DiffuseColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
-            scene.AddNode(lights[1]);
-        }
-
         private class PieceInfo
         {
             public ChessPiece.PieceColor Color;
@@ -106,6 +73,56 @@ namespace TiVi
             new PieceMovement("g6", "g7"),
         };
 
+        private const int NUM_SIGNS_X = 8;
+        private const int NUM_SIGNS_Y = 8;
+        private IScene scene;
+        private CameraNode camera;
+        private MeshDirector meshDirector;
+        private ModelNode[] signs = new ModelNode[NUM_SIGNS_X * NUM_SIGNS_Y];
+        private Interpolator<InterpolatedVector3> interpolator;
+        private List<ChessPiece> chessPieces = new List<ChessPiece>();
+
+        public FlipSign(float startTime, float endTime)
+            : base(startTime, endTime)
+        {
+        }
+
+        protected override void Initialize()
+        {
+            IDevice device = Device;
+            CreateStandardSceneAndCamera(out scene, out camera, 15);
+            CreateBoard();
+            CreatePieces();
+            CreateCameraInterpolator();
+            CreateLights();
+            CreateRoom();
+        }
+
+        private void CreateRoom()
+        {
+            MeshDirector director = new MeshDirector(MeshBuilder);
+            director.CreatePlane(50, 50, 50, 50, false);
+            director.Rotate((float)Math.PI / 2, 0, 0);
+            director.Translate(0, -0.1f, 0);
+            MeshBuilder.SetDiffuseColor("Default1", new ColorValue(0.1f, 0.1f, 0.1f));
+            IModel model = director.Generate("Default1");
+            ModelNode node = CreateSimpleModelNode(model, "TiVi.fxo", "Room");
+            scene.AddNode(node);
+        }
+
+        private void CreateLights()
+        {
+            PointLightNode[] lights = new PointLightNode[2];
+            lights[0] = new PointLightNode("");
+            lights[0].Position = new Vector3(-5, 4, 0);
+            lights[0].DiffuseColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
+            scene.AddNode(lights[0]);
+            lights[1] = new PointLightNode("");
+            lights[1].Position = new Vector3(5, 4, 0);
+            lights[1].DiffuseColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
+            scene.AddNode(lights[1]);
+        }
+
         private void CreatePieces()
         {
             IScene tempScene = new Scene();
@@ -142,73 +159,6 @@ namespace TiVi
                 }
                 time += 4;
             }
-
-            //piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device, 
-            //    ChessPiece.PieceType.Pawn, ChessPiece.PieceColor.White, "g6");
-            //chessPieces.Add(piece);
-            //piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device, 
-            //    ChessPiece.PieceType.Pawn, ChessPiece.PieceColor.White, "f5");
-            //chessPieces.Add(piece);
-            //piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device, 
-            //    ChessPiece.PieceType.Pawn, ChessPiece.PieceColor.White, "b4");
-            //chessPieces.Add(piece);
-            //piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device, 
-            //    ChessPiece.PieceType.Pawn, ChessPiece.PieceColor.White, "a3");
-            //chessPieces.Add(piece);
-            //piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device, 
-            //    ChessPiece.PieceType.Pawn, ChessPiece.PieceColor.White, "c2");
-            //chessPieces.Add(piece);
-            //piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
-            //    ChessPiece.PieceType.Bishop, ChessPiece.PieceColor.White, "c3");
-            //chessPieces.Add(piece);
-            //piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
-            //    ChessPiece.PieceType.Bishop, ChessPiece.PieceColor.White, "h3");
-            //piece.AddPosition(1, 3, "g4", 1);
-            //piece.AddPosition(5.2f, 6, "g4-", 1);
-            //chessPieces.Add(piece);
-            //piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
-            //    ChessPiece.PieceType.King, ChessPiece.PieceColor.White, "f2");
-            //chessPieces.Add(piece);
-            //piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
-            //    ChessPiece.PieceType.Rook, ChessPiece.PieceColor.White, "g1");
-            //chessPieces.Add(piece);
-            //piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
-            //    ChessPiece.PieceType.Knight, ChessPiece.PieceColor.White, "e3");
-            //chessPieces.Add(piece);
-
-            // Black
-            //piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
-            //    ChessPiece.PieceType.Rook, ChessPiece.PieceColor.Black, "d8");
-            //chessPieces.Add(piece);
-            //piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
-            //    ChessPiece.PieceType.Rook, ChessPiece.PieceColor.Black, "e8");
-            //chessPieces.Add(piece);
-            //piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
-            //    ChessPiece.PieceType.Pawn, ChessPiece.PieceColor.Black, "a4");
-            //chessPieces.Add(piece);
-            //piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
-            //    ChessPiece.PieceType.Pawn, ChessPiece.PieceColor.Black, "b5");
-            //chessPieces.Add(piece);
-            //piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
-            //    ChessPiece.PieceType.Pawn, ChessPiece.PieceColor.Black, "c6");
-            //chessPieces.Add(piece);
-            //piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
-            //    ChessPiece.PieceType.Pawn, ChessPiece.PieceColor.Black, "e4");
-            //chessPieces.Add(piece);
-            //piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
-            //    ChessPiece.PieceType.Pawn, ChessPiece.PieceColor.Black, "g4");
-            //piece.AddPosition(1.5F, 4, "g4-", 1);
-            //chessPieces.Add(piece);
-            //piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
-            //    ChessPiece.PieceType.Knight, ChessPiece.PieceColor.Black, "e5");
-            //chessPieces.Add(piece);
-            //piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
-            //    ChessPiece.PieceType.Bishop, ChessPiece.PieceColor.Black, "f3");
-            //piece.AddPosition(5.0f, 3, "g4", 0.2f);
-            //chessPieces.Add(piece);
-            //piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
-            //    ChessPiece.PieceType.King, ChessPiece.PieceColor.Black, "h6");
-            //chessPieces.Add(piece);
         }
 
         private void CreateCameraInterpolator()
@@ -238,14 +188,14 @@ namespace TiVi
                 for (int x = 0; x < NUM_SIGNS_X; x++)
                 {
                     IModel model = meshDirector.Generate("Default1");
-                    ModelNode node = CreateSimpleModelNode(model, "TiVi.fxo", "Reflective");
+                    ModelNode node = CreateSimpleModelNode(model, "TiVi.fxo", "ReflectiveTransparent");
                     node.WorldState.MoveForward(-1.0f * (y - NUM_SIGNS_Y / 2));
                     node.WorldState.MoveRight(-1.0f * (x - NUM_SIGNS_X / 2));
-                    float color = 0.1f + c * 0.2f;
-                    node.Model.Materials[0].AmbientColor = new ColorValue(0.05f, 0.05f, 0.05f, 0.05f);
+                    float color = 0.0f + c * 0.5f;
+                    node.Model.Materials[0].AmbientColor = new ColorValue(0.02f, 0.02f, 0.02f, 0.02f);
                     node.Model.Materials[0].DiffuseColor = new ColorValue(color, color, color, color);
                     if (c == 0)
-                        node.Model.Materials[0].ReflectiveFactor = 0.2f;
+                        node.Model.Materials[0].ReflectiveFactor = 0.7f;
                     else
                         node.Model.Materials[0].ReflectiveFactor = 0.1f;
                     c = 1 - c;
@@ -260,7 +210,7 @@ namespace TiVi
         {
             //camera.WorldState.Position = new Vector3(0, 3, -10);
             //camera.WorldState.Position = interpolator.GetValue(Time.StepTime % 10);
-            camera.WorldState.Position = new Vector3((float)Math.Sin(Time.StepTime * 0.2f), 0.2f, (float)Math.Cos(Time.StepTime * 0.2f)) * 10;
+            camera.WorldState.Position = new Vector3((float)Math.Sin(Time.StepTime * 0.2f), 0.2f, (float)Math.Cos(Time.StepTime * 0.2f)) * 8;
             camera.LookAt(new Vector3(0, 0, 0), new Vector3(0, 1, 0));
             for (int y = 0; y < NUM_SIGNS_Y; y++)
             {
@@ -288,6 +238,9 @@ namespace TiVi
 
         public override void Render()
         {
+            scene.SetEffectParameters();
+            foreach (ChessPiece piece in chessPieces)
+                piece.RenderMirror(scene);
             foreach (ChessPiece piece in chessPieces)
                 piece.Render(scene);
             scene.Render();

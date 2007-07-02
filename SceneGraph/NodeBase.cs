@@ -83,6 +83,17 @@ namespace Dope.DDXX.SceneGraph
             }
         }
 
+        public void RemoveChild(INode child)
+        {
+            children.Remove(child);
+
+            if (child is NodeBase)
+            {
+                NodeBase dummyChild = (NodeBase)child;
+                dummyChild.parent = null;
+            }
+        }
+
         public bool HasChild(INode node)
         {
             if (children.Exists(delegate(INode node2) { return node == node2; }))
@@ -105,10 +116,20 @@ namespace Dope.DDXX.SceneGraph
         {
             RenderNode(scene);
 
+            BeforeRenderingChildren();
             foreach (INode node in children)
             {
                 node.Render(scene);
             }
+            AfterRenderingChildren();
+        }
+
+        protected virtual void AfterRenderingChildren()
+        {
+        }
+
+        protected virtual void BeforeRenderingChildren()
+        {
         }
 
         public void SetLightState(LightState state)

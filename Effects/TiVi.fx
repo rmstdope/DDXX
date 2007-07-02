@@ -277,3 +277,66 @@ technique Diamond
 		CullMode					= CCW;
 	}
 }
+
+
+struct RoomPixelInput
+{
+	float4	Position			:	POSITION;
+	float4	Diffuse				:	COLOR0;
+};
+
+RoomPixelInput
+RoomVertexShader(VertexShaderInput input,
+									uniform int numWeights)
+{
+	RoomPixelInput output;
+
+	// Transform the position from object space to homogeneous projection space
+	AnimatedVertex_PN animated = AnimateVertex(input.Position, input.Normal, input.BlendIndices, input.BlendWeights, numWeights);
+
+	// Transform position and normal to world space
+	float3 worldPosition = mul(animated.Position, WorldT);
+	float3 worldNormal = normalize(mul(animated.Normal, (float3x3)WorldT));
+
+	// Transform to screen space
+	output.Position = mul(animated.Position, WorldViewProjectionT);
+
+	float4 diffuse = 0;
+	for (int i = 0; i < NumLights; i++) {
+		float3 dir = LightPositions[i] - worldPosition;
+		float d = length(dir);
+		float att = 1 / (d * d * 0.02f);
+		diffuse += att * LightDiffuseColors[i] * max(0, dot(worldNormal, normalize(dir)));
+	}
+	output.Diffuse = diffuse * MaterialDiffuseColor;
+
+	return output;
+}
+
+float4
+RoomPixelShader(RoomPixelInput input) : COLOR0
+{
+	float4 color = (input.Diffuse + AmbientColor);
+	return color;
+}
+
+technique Room
+<
+	bool NormalMapping = false;
+	bool Skinning = false;
+>
+{
+	pass BasePass
+	{
+		VertexShader			= compile vs_2_0 RoomVertexShader(0);
+		PixelShader				= compile ps_2_0 RoomPixelShader();
+		AlphaTestEnable		= false;
+		AlphaBlendEnable	= false;
+		FillMode					= Solid;
+		ZEnable						=	true;
+		ZWriteEnable			= true;
+		ZFunc							= Less;
+		StencilEnable			= false;
+		CullMode					= CCW;
+	}
+}

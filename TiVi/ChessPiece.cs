@@ -47,9 +47,10 @@ namespace TiVi
         }
 
         private ModelNode modelNode;
+        private MirrorNode mirrorNode;
         private LineNode lineNode;
         private List<PositionInfo> positions = new List<PositionInfo>();
-        private const float ROPE_LENGTH = 10.0f;
+        private const float ROPE_LENGTH = 2.0f;
 
         public ChessPiece(IScene scene, IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, 
             IDevice device, PieceType type, PieceColor color, string startPosition)
@@ -60,11 +61,22 @@ namespace TiVi
             modelNode = new ModelNode("", model, originalNode.EffectHandler, device);
             SetRotationAndScaling(type);
             AddPosition(0, 0, startPosition, 0);
+            CreateLineNode(graphicsFactory, device);
+            CreateMirrorNode();
+        }
+
+        private void CreateLineNode(IGraphicsFactory graphicsFactory, IDevice device)
+        {
             ILine line = graphicsFactory.CreateLine(device);
             line.Antialias = true;
             lineNode = new LineNode("", line, new Vector3(0, 0, 0), new Vector3(0, -ROPE_LENGTH, 0), Color.Gray);
             modelNode.Position = new Vector3(0, -ROPE_LENGTH, 0);
             lineNode.AddChild(modelNode);
+        }
+
+        private void CreateMirrorNode()
+        {
+            mirrorNode = new MirrorNode(lineNode);
         }
 
         public void AddPosition(float startTime, float duration, string position, float maxY)
@@ -93,16 +105,18 @@ namespace TiVi
         private static void ModifyMaterial(ITextureFactory textureFactory, PieceColor color, IModel model)
         {
             model.Materials[0].ReflectiveTexture = textureFactory.CreateCubeFromFile("rnl_cross.dds");
-            model.Materials[0].ReflectiveFactor = 0.05f;
+            model.Materials[0].ReflectiveFactor = 0.3f;// 0.8f;
             if (color == PieceColor.Black)
             {
                 model.Materials[0].DiffuseTexture = textureFactory.CreateFromFile("marble2.jpg");
+                //model.Materials[0].AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
                 model.Materials[0].AmbientColor = new ColorValue(0.3f, 0.3f, 0.3f, 0.3f);
                 model.Materials[0].DiffuseColor = new ColorValue(0.8f, 0.8f, 0.8f, 0.8f);
             }
             else
             {
                 model.Materials[0].DiffuseTexture = textureFactory.CreateFromFile("marble.jpg");
+                //model.Materials[0].AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
                 model.Materials[0].AmbientColor = new ColorValue(0.3f, 0.3f, 0.3f, 0.3f);
                 model.Materials[0].DiffuseColor = new ColorValue(0.8f, 0.8f, 0.8f, 0.8f);
             }
@@ -154,13 +168,13 @@ namespace TiVi
             lineNode.Position += new Vector3(0, ROPE_LENGTH, 0);
         }
 
-        public void RenderMirror()
+        public void RenderMirror(IScene scene)
         {
+            mirrorNode.Render(scene);
         }
 
         public void Render(IScene scene)
         {
-            //modelNode.Render(scene);
             lineNode.Render(scene);
         }
     }

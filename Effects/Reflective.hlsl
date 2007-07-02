@@ -5,6 +5,7 @@ struct ReflectivePixelInput
 	float4	Position			:	POSITION;
 	float2	TexCoords			:	TEXCOORD0;
 	float3	Reflection		:	TEXCOORD1;
+	float		VdN						: TEXCOORD2;
 	float4	Diffuse				:	COLOR0;
 };
 
@@ -20,8 +21,8 @@ ReflectiveVertexShader(VertexShaderInput input,
 	AnimatedVertex_PN animated = AnimateVertex(input.Position, input.Normal, input.BlendIndices, input.BlendWeights, numWeights);
 
 	// Transform position and normal to world space
-	float3 worldPosition = mul(animated.Position, WorldT);
-	float3 worldNormal = normalize(mul(animated.Normal, (float3x3)WorldT));
+	float4 worldPosition = mul(animated.Position, WorldT);
+	float3 worldNormal = normalize(mul(animated.Normal, WorldT));
 
 	// Transform to screen space
 	output.Position = mul(animated.Position, WorldViewProjectionT);
@@ -40,9 +41,15 @@ ReflectiveVertexShader(VertexShaderInput input,
 	output.Diffuse = diffuse * MaterialDiffuseColor;
 
 	// Get eye vector
-	float3 eyeVector = EyePosition - worldPosition;
+	float3 eyeVector = normalize(EyePosition - worldPosition);
 	// Reflect eye vector around normal
-	output.Reflection = reflect(eyeVector, worldNormal);
+	output.Reflection = reflect(worldNormal, eyeVector);
+	output.VdN = dot(eyeVector, worldNormal);
+
+	// Reflection vector is R = (2V.N)N - V
+	//float3 viewVector = normalize(eyeVector);
+	//float normal = worldNormal;
+	//output.Reflection = dot(viewVector * 2, normal) * normal - viewVector;
 
 	return output;
 }
@@ -50,12 +57,16 @@ ReflectiveVertexShader(VertexShaderInput input,
 float4
 ReflectivePixelShader(ReflectivePixelInput input) : COLOR0
 {
-	//float4 reflection = texCUBE(ReflectiveTextureSampler, input.Reflection);
-	//reflection *= reflection.a * reflection.a * 2;
-	float4 color = tex2D(BaseTextureSampler, input.TexCoords) * (input.Diffuse + AmbientColor);
+	float3 reflection = texCUBE(ReflectiveTextureSampler, input.Reflection);
+	//float m = min(min(reflection.r, reflection.g), reflection.b);
+	//m = pow(m , 8);
+	//reflection = reflection * m;
+	//reflection *= 2;//reflection.a * reflection.a * 2;
+	float3 color = tex2D(BaseTextureSampler, input.TexCoords) * (input.Diffuse + AmbientColor);
 	//float factor = ReflectiveFactor;// * reflection.a;
-	//return lerp(color, reflection, factor);
-	return color;
+	float factor = saturate((input.VdN * input.VdN) * ReflectiveFactor);
+	return float4(lerp(color, reflection, factor), ReflectiveFactor);
+	//return color;
 }
 
 technique Reflective
@@ -75,6 +86,28 @@ technique Reflective
 		ZWriteEnable			= true;
 		ZFunc							= Less;
 		StencilEnable			= false;
-		CullMode					= CCW;
+	}
+}
+
+technique ReflectiveTransparent
+<
+	bool NormalMapping = false;
+	bool Skinning = false;
+>
+{
+	pass BasePass
+	{
+		VertexShader			= compile vs_2_0 ReflectiveVertexShader(0);
+		PixelShader				= compile ps_2_0 ReflectivePixelShader();
+		AlphaTestEnable		= false;
+		AlphaBlendEnable	= true;
+		FillMode					= Solid;
+		ZEnable						=	true;
+		ZWriteEnable			= true;
+		ZFunc							= Less;
+		StencilEnable			= false;
+		BlendOp						= Add;
+		SrcBlend					= One;
+		DestBlend					= SrcAlpha;
 	}
 }

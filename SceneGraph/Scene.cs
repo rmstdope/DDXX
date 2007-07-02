@@ -88,7 +88,7 @@ namespace Dope.DDXX.SceneGraph
             rootNode.Render(this);
         }
 
-        private void SetEffectParameters()
+        public void SetEffectParameters()
         {
             effect.SetValue(numLightsHandle, lightState.NumLights);
             effect.SetValue(lightDiffuseHandle, lightState.DiffuseColor);

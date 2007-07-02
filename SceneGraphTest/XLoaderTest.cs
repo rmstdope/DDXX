@@ -286,5 +286,15 @@ namespace Dope.DDXX.SceneGraph
         }
 
         #endregion
+
+        #region IScene Members
+
+
+        public void SetEffectParameters()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
     }
 }
