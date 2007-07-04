@@ -9,13 +9,11 @@ using Dope.DDXX.Utility;
 namespace Dope.DDXX.MeshBuilder
 {
     [TestFixture]
-    public class UvMapPlaneTest : IPrimitive
+    public class UvMapPlaneTest : IModifier
     {
         private const float epsilon = 0.00001f;
-        private Vertex[] vertices;
-        private Vertex[] mappedVertices;
-        private short[] mappedIndices;
-        private IBody mappedBody;
+        private Primitive primitive;
+        private Primitive mappedPrimitive;
         private UvMapPlane map;
 
         [SetUp]
@@ -33,10 +31,10 @@ namespace Dope.DDXX.MeshBuilder
             CreateVertices(new Vector3[] { new Vector3(0, 0, 0) });
             map.AlignToAxis = 0;
             map.Input = this;
-            map.Generate(out mappedVertices, out mappedIndices, out mappedBody);
-            Assert.AreEqual(1, mappedVertices.Length);
-            Assert.AreEqual(0, mappedVertices[0].U);
-            Assert.AreEqual(0, mappedVertices[0].V);
+            mappedPrimitive = map.Generate();
+            Assert.AreEqual(1, mappedPrimitive.Vertices.Length);
+            Assert.AreEqual(0, mappedPrimitive.Vertices[0].U);
+            Assert.AreEqual(0, mappedPrimitive.Vertices[0].V);
         }
 
         [Test]
@@ -45,12 +43,12 @@ namespace Dope.DDXX.MeshBuilder
             CreateVertices(new Vector3[] { new Vector3(0, 0, 0), new Vector3(0, 10, 5) });
             map.AlignToAxis = 0;
             map.Input = this;
-            map.Generate(out mappedVertices, out mappedIndices, out mappedBody);
-            Assert.AreEqual(2, mappedVertices.Length);
-            Assert.AreEqual(0, mappedVertices[0].U);
-            Assert.AreEqual(0, mappedVertices[0].V);
-            Assert.AreEqual(1, mappedVertices[1].U);
-            Assert.AreEqual(1, mappedVertices[1].V);
+            mappedPrimitive = map.Generate();
+            Assert.AreEqual(2, mappedPrimitive.Vertices.Length);
+            Assert.AreEqual(0, mappedPrimitive.Vertices[0].U);
+            Assert.AreEqual(0, mappedPrimitive.Vertices[0].V);
+            Assert.AreEqual(1, mappedPrimitive.Vertices[1].U);
+            Assert.AreEqual(1, mappedPrimitive.Vertices[1].V);
         }
 
         [Test]
@@ -59,14 +57,14 @@ namespace Dope.DDXX.MeshBuilder
             CreateVertices(new Vector3[] { new Vector3(0, 9, 1), new Vector3(0, 0, 0), new Vector3(0, 10, 5) });
             map.AlignToAxis = 0;
             map.Input = this;
-            map.Generate(out mappedVertices, out mappedIndices, out mappedBody);
-            Assert.AreEqual(3, mappedVertices.Length);
-            Assert.AreEqual(0.9f, mappedVertices[0].U);
-            Assert.AreEqual(0.2f, mappedVertices[0].V);
-            Assert.AreEqual(0, mappedVertices[1].U);
-            Assert.AreEqual(0, mappedVertices[1].V);
-            Assert.AreEqual(1, mappedVertices[2].U);
-            Assert.AreEqual(1, mappedVertices[2].V);
+            mappedPrimitive = map.Generate();
+            Assert.AreEqual(3, mappedPrimitive.Vertices.Length);
+            Assert.AreEqual(0.9f, mappedPrimitive.Vertices[0].U);
+            Assert.AreEqual(0.2f, mappedPrimitive.Vertices[0].V);
+            Assert.AreEqual(0, mappedPrimitive.Vertices[1].U);
+            Assert.AreEqual(0, mappedPrimitive.Vertices[1].V);
+            Assert.AreEqual(1, mappedPrimitive.Vertices[2].U);
+            Assert.AreEqual(1, mappedPrimitive.Vertices[2].V);
         }
 
         [Test]
@@ -75,14 +73,14 @@ namespace Dope.DDXX.MeshBuilder
             CreateVertices(new Vector3[] { new Vector3(9, 0, 1), new Vector3(0, 0, 0), new Vector3(10, 0, 5) });
             map.AlignToAxis = 1;
             map.Input = this;
-            map.Generate(out mappedVertices, out mappedIndices, out mappedBody);
-            Assert.AreEqual(3, mappedVertices.Length);
-            Assert.AreEqual(0.9f, mappedVertices[0].U);
-            Assert.AreEqual(0.2f, mappedVertices[0].V);
-            Assert.AreEqual(0, mappedVertices[1].U);
-            Assert.AreEqual(0, mappedVertices[1].V);
-            Assert.AreEqual(1, mappedVertices[2].U);
-            Assert.AreEqual(1, mappedVertices[2].V);
+            mappedPrimitive = map.Generate();
+            Assert.AreEqual(3, mappedPrimitive.Vertices.Length);
+            Assert.AreEqual(0.9f, mappedPrimitive.Vertices[0].U);
+            Assert.AreEqual(0.2f, mappedPrimitive.Vertices[0].V);
+            Assert.AreEqual(0, mappedPrimitive.Vertices[1].U);
+            Assert.AreEqual(0, mappedPrimitive.Vertices[1].V);
+            Assert.AreEqual(1, mappedPrimitive.Vertices[2].U);
+            Assert.AreEqual(1, mappedPrimitive.Vertices[2].V);
         }
 
         [Test]
@@ -91,14 +89,14 @@ namespace Dope.DDXX.MeshBuilder
             CreateVertices(new Vector3[] { new Vector3(9, 1, 0), new Vector3(0, 0, 0), new Vector3(10, 5, 0) });
             map.AlignToAxis = 2;
             map.Input = this;
-            map.Generate(out mappedVertices, out mappedIndices, out mappedBody);
-            Assert.AreEqual(3, mappedVertices.Length);
-            Assert.AreEqual(0.9f, mappedVertices[0].U);
-            Assert.AreEqual(0.2f, mappedVertices[0].V);
-            Assert.AreEqual(0, mappedVertices[1].U);
-            Assert.AreEqual(0, mappedVertices[1].V);
-            Assert.AreEqual(1, mappedVertices[2].U);
-            Assert.AreEqual(1, mappedVertices[2].V);
+            mappedPrimitive = map.Generate();
+            Assert.AreEqual(3, mappedPrimitive.Vertices.Length);
+            Assert.AreEqual(0.9f, mappedPrimitive.Vertices[0].U);
+            Assert.AreEqual(0.2f, mappedPrimitive.Vertices[0].V);
+            Assert.AreEqual(0, mappedPrimitive.Vertices[1].U);
+            Assert.AreEqual(0, mappedPrimitive.Vertices[1].V);
+            Assert.AreEqual(1, mappedPrimitive.Vertices[2].U);
+            Assert.AreEqual(1, mappedPrimitive.Vertices[2].V);
         }
 
         [Test]
@@ -109,14 +107,14 @@ namespace Dope.DDXX.MeshBuilder
             map.Input = this;
             map.TileU = 2;
             map.TileV = 3;
-            map.Generate(out mappedVertices, out mappedIndices, out mappedBody);
-            Assert.AreEqual(3, mappedVertices.Length);
-            Assert.AreEqual(1.8f, mappedVertices[0].U);
-            Assert.AreEqual(0.6f, mappedVertices[0].V);
-            Assert.AreEqual(0, mappedVertices[1].U);
-            Assert.AreEqual(0, mappedVertices[1].V);
-            Assert.AreEqual(2, mappedVertices[2].U);
-            Assert.AreEqual(3, mappedVertices[2].V);
+            mappedPrimitive = map.Generate();
+            Assert.AreEqual(3, mappedPrimitive.Vertices.Length);
+            Assert.AreEqual(1.8f, mappedPrimitive.Vertices[0].U);
+            Assert.AreEqual(0.6f, mappedPrimitive.Vertices[0].V);
+            Assert.AreEqual(0, mappedPrimitive.Vertices[1].U);
+            Assert.AreEqual(0, mappedPrimitive.Vertices[1].V);
+            Assert.AreEqual(2, mappedPrimitive.Vertices[2].U);
+            Assert.AreEqual(3, mappedPrimitive.Vertices[2].V);
         }
 
         [Test]
@@ -127,14 +125,14 @@ namespace Dope.DDXX.MeshBuilder
             map.Input = this;
             map.TileU = 3;
             map.TileV = 2;
-            map.Generate(out mappedVertices, out mappedIndices, out mappedBody);
-            Assert.AreEqual(3, mappedVertices.Length);
-            Assert.AreEqual(2.7f, mappedVertices[0].U, epsilon);
-            Assert.AreEqual(0.4f, mappedVertices[0].V);
-            Assert.AreEqual(0, mappedVertices[1].U);
-            Assert.AreEqual(0, mappedVertices[1].V);
-            Assert.AreEqual(3, mappedVertices[2].U);
-            Assert.AreEqual(2, mappedVertices[2].V);
+            mappedPrimitive = map.Generate();
+            Assert.AreEqual(3, mappedPrimitive.Vertices.Length);
+            Assert.AreEqual(2.7f, mappedPrimitive.Vertices[0].U, epsilon);
+            Assert.AreEqual(0.4f, mappedPrimitive.Vertices[0].V);
+            Assert.AreEqual(0, mappedPrimitive.Vertices[1].U);
+            Assert.AreEqual(0, mappedPrimitive.Vertices[1].V);
+            Assert.AreEqual(3, mappedPrimitive.Vertices[2].U);
+            Assert.AreEqual(2, mappedPrimitive.Vertices[2].V);
         }
 
         [Test]
@@ -145,14 +143,14 @@ namespace Dope.DDXX.MeshBuilder
             map.Input = this;
             map.TileU = 0.5f;
             map.TileV = 0.5f;
-            map.Generate(out mappedVertices, out mappedIndices, out mappedBody);
-            Assert.AreEqual(3, mappedVertices.Length);
-            Assert.AreEqual(0.45f, mappedVertices[0].U);
-            Assert.AreEqual(0.1f, mappedVertices[0].V);
-            Assert.AreEqual(0, mappedVertices[1].U);
-            Assert.AreEqual(0, mappedVertices[1].V);
-            Assert.AreEqual(0.5f, mappedVertices[2].U);
-            Assert.AreEqual(0.5f, mappedVertices[2].V);
+            mappedPrimitive = map.Generate();
+            Assert.AreEqual(3, mappedPrimitive.Vertices.Length);
+            Assert.AreEqual(0.45f, mappedPrimitive.Vertices[0].U);
+            Assert.AreEqual(0.1f, mappedPrimitive.Vertices[0].V);
+            Assert.AreEqual(0, mappedPrimitive.Vertices[1].U);
+            Assert.AreEqual(0, mappedPrimitive.Vertices[1].V);
+            Assert.AreEqual(0.5f, mappedPrimitive.Vertices[2].U);
+            Assert.AreEqual(0.5f, mappedPrimitive.Vertices[2].V);
         }
 
         [Test]
@@ -173,23 +171,22 @@ namespace Dope.DDXX.MeshBuilder
         [ExpectedException(typeof(DDXXException))]
         public void TestInputNotSet()
         {
-            map.Generate(out mappedVertices, out mappedIndices, out mappedBody);
+            mappedPrimitive = map.Generate();
         }
 
         private void CreateVertices(Vector3[] position)
         {
-            vertices = new Vertex[position.Length];
+            Vertex[] vertices = new Vertex[position.Length];
             for (int i = 0; i < position.Length; i++)
                 vertices[i].Position = position[i];
+            primitive = new Primitive(vertices, null);
         }
 
-        #region IPrimitive Members
+        #region IModifier Members
 
-        public void Generate(out Vertex[] vertices, out short[] indices, out Dope.DDXX.Physics.IBody body)
+        public Primitive Generate()
         {
-            vertices = this.vertices;
-            indices = null;
-            body = null;
+            return primitive;
         }
 
         #endregion

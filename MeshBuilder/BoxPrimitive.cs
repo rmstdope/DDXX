@@ -6,7 +6,7 @@ using Dope.DDXX.Physics;
 
 namespace Dope.DDXX.MeshBuilder
 {
-    public class BoxPrimitive : IPrimitive
+    public class BoxPrimitive : IModifier
     {
         private float width;
         private float height;
@@ -37,10 +37,10 @@ namespace Dope.DDXX.MeshBuilder
             length = 1;
         }
 
-        public void Generate(out Vertex[] vertices, out short[] indices, out IBody body)
+        public Primitive Generate()
         {
-            vertices = new Vertex[24];
-            indices = new short[36];
+            Vertex[] vertices = new Vertex[24];
+            short[] indices = new short[36];
             short v = 0;
             short i = 0;
             // Front
@@ -91,7 +91,7 @@ namespace Dope.DDXX.MeshBuilder
             vertices[v++].Position = new Vector3(width / 2, height / 2, length / 2);
             vertices[v++].Position = new Vector3(width / 2, -height / 2, -length / 2);
             vertices[v++].Position = new Vector3(width / 2, -height / 2, length / 2);
-            body = null;
+            return new Primitive(vertices, indices);
         }
 
         private static void AddBoxUvForSide(Vertex[] vertices, short v)

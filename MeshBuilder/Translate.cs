@@ -6,9 +6,9 @@ using Microsoft.DirectX;
 
 namespace Dope.DDXX.MeshBuilder
 {
-    public class Translate : IPrimitive
+    public class Translate : IModifier
     {
-        private IPrimitive input;
+        private IModifier input;
         private float x;
         private float y;
         private float z;
@@ -31,19 +31,24 @@ namespace Dope.DDXX.MeshBuilder
             set { z = value; }
         }
 
-        public IPrimitive Input
+        public IModifier Input
         {
             get { return input; }
             set { input = value; }
         }
 
-        public void Generate(out Vertex[] vertices, out short[] indices, out IBody body)
+        #region IModifier Members
+
+        public Primitive Generate()
         {
-            input.Generate(out vertices, out indices, out body);
-            for (int i = 0; i < vertices.Length; i++)
+            Primitive primitive = input.Generate();
+            for (int i = 0; i < primitive.Vertices.Length; i++)
             {
-                vertices[i].Position = vertices[i].Position + new Vector3(x, y, z);
+                primitive.Vertices[i].Position = primitive.Vertices[i].Position + new Vector3(x, y, z);
             }
+            return primitive;
         }
+
+        #endregion
     }
 }

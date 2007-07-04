@@ -8,7 +8,7 @@ namespace Dope.DDXX.MeshBuilder
     public class MeshDirector
     {
         private MeshBuilder builder;
-        private IPrimitive primitive;
+        private IModifier primitive;
 
         public MeshDirector(MeshBuilder builder)
         {

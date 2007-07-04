@@ -6,7 +6,7 @@ using Microsoft.DirectX;
 
 namespace Dope.DDXX.MeshBuilder
 {
-    public class DiscPrimitive : IPrimitive
+    public class DiscPrimitive : IModifier
     {
         private float radius;
         private float innerRadius;
@@ -30,16 +30,16 @@ namespace Dope.DDXX.MeshBuilder
             set { segments = value; }
         }
 
-        public void Generate(out Vertex[] vertices, out short[] indices, out IBody body)
+        public Primitive Generate()
         {
             int innerSegments = 0;
             if (innerRadius > 0)
                 innerSegments = segments;
-            vertices = new Vertex[segments + innerSegments + 1];
-            indices = new short[3 * (segments + innerSegments)];
-            body = null;
+            Vertex[] vertices = new Vertex[segments + innerSegments + 1];
+            short[] indices = new short[3 * (segments + innerSegments)];
             FillVertices(vertices);
             FillIndices(indices);
+            return new Primitive(vertices, indices);
         }
 
         private void FillIndices(short[] indices)

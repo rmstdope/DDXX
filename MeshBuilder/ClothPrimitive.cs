@@ -18,7 +18,7 @@ namespace Dope.DDXX.MeshBuilder
             pinned.Add(index);
         }
 
-        public override void Generate(out Vertex[] vertices, out short[] indices, out IBody body)
+        public override Primitive Generate()
         {
             IPhysicalParticle p1;
             IPhysicalParticle p2;
@@ -27,11 +27,11 @@ namespace Dope.DDXX.MeshBuilder
             int x;
             int y;
 
-            base.Generate(out vertices, out indices, out body);
+            Primitive primitive = base.Generate();
 
-            body = new Body();
-            for (int i = 0; i < vertices.Length; i++)
-                body.AddParticle(new PhysicalParticle(vertices[i].Position, 1, 0.01f));
+            IBody body = new Body();
+            for (int i = 0; i < primitive.Vertices.Length; i++)
+                body.AddParticle(new PhysicalParticle(primitive.Vertices[i].Position, 1, 0.01f));
             for (y = 0; y < HeightSegments; y++)
             {
                 for (x = 0; x < WidthSegments; x++)
@@ -69,6 +69,8 @@ namespace Dope.DDXX.MeshBuilder
                 body.AddConstraint(new PositionConstraint(body.Particles[index],
                     body.Particles[index].Position));
             }
+            primitive.Body = body;
+            return primitive;
         }
 
         private void AddStickConstraint(IBody body, IPhysicalParticle p1, IPhysicalParticle p2, float stiffness)

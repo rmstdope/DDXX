@@ -8,10 +8,10 @@ using Dope.DDXX.Physics;
 namespace Dope.DDXX.MeshBuilder
 {
     [TestFixture]
-    public class RotateTest : IPrimitive
+    public class RotateTest : IModifier
     {
         private const float epsilon = 0.00001f;
-        private Vertex[] vertices;
+        private Primitive primitive;
 
         [Test]
         public void TestRotateOrigo()
@@ -71,59 +71,57 @@ namespace Dope.DDXX.MeshBuilder
 
         private void VerifyPositions(Vector3[] positions)
         {
-            Assert.AreEqual(positions.Length, vertices.Length);
+            Assert.IsNull(primitive.Indices);
+            Assert.IsNull(primitive.Body);
+            Assert.AreEqual(positions.Length, primitive.Vertices.Length);
             for (int i = 0; i < positions.Length; i++)
             {
-                Assert.AreEqual(positions[i].X, vertices[i].Position.X, epsilon);
-                Assert.AreEqual(positions[i].Y, vertices[i].Position.Y, epsilon);
-                Assert.AreEqual(positions[i].Z, vertices[i].Position.Z, epsilon);
+                Assert.AreEqual(positions[i].X, primitive.Vertices[i].Position.X, epsilon);
+                Assert.AreEqual(positions[i].Y, primitive.Vertices[i].Position.Y, epsilon);
+                Assert.AreEqual(positions[i].Z, primitive.Vertices[i].Position.Z, epsilon);
             }
         }
 
         private void VerifyNormals(Vector3[] normals)
         {
-            Assert.AreEqual(normals.Length, vertices.Length);
+            Assert.AreEqual(normals.Length, primitive.Vertices.Length);
             for (int i = 0; i < normals.Length; i++)
             {
-                Assert.AreEqual(normals[i].X, vertices[i].Normal.X, epsilon);
-                Assert.AreEqual(normals[i].Y, vertices[i].Normal.Y, epsilon);
-                Assert.AreEqual(normals[i].Z, vertices[i].Normal.Z, epsilon);
+                Assert.AreEqual(normals[i].X, primitive.Vertices[i].Normal.X, epsilon);
+                Assert.AreEqual(normals[i].Y, primitive.Vertices[i].Normal.Y, epsilon);
+                Assert.AreEqual(normals[i].Z, primitive.Vertices[i].Normal.Z, epsilon);
             }
         }
 
         private void Rotate(float x, float y, float z)
         {
-            short[] indices;
-            IBody body;
             Rotate Rotate = new Rotate();
             Rotate.X = x;
             Rotate.Y = y;
             Rotate.Z = z;
             Rotate.Input = this;
-            Rotate.Generate(out vertices, out indices, out body);
-            Assert.IsNull(indices);
-            Assert.IsNull(body);
+            primitive = Rotate.Generate();
         }
 
         private void CreatePositions(Vector3[] positions)
         {
-            vertices = new Vertex[positions.Length];
+            Vertex[] vertices = new Vertex[positions.Length];
             for (int i = 0; i < positions.Length; i++)
                 vertices[i].Position = positions[i];
+            primitive = new Primitive(vertices, null);
         }
 
         private void CreateNormals(Vector3[] normals)
         {
-            vertices = new Vertex[normals.Length];
+            Vertex[] vertices = new Vertex[normals.Length];
             for (int i = 0; i < normals.Length; i++)
                 vertices[i].Normal = normals[i];
+            primitive = new Primitive(vertices, null);
         }
 
-        public void Generate(out Vertex[] vertices, out short[] indices, out Dope.DDXX.Physics.IBody body)
+        public Primitive Generate()
         {
-            vertices = this.vertices;
-            indices = null;
-            body = null;
+            return primitive;
         }
     }
 }

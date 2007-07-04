@@ -6,12 +6,12 @@ using Microsoft.DirectX;
 
 namespace Dope.DDXX.MeshBuilder
 {
-    public class Weld : IPrimitive
+    public class Weld : IModifier
     {
-        private IPrimitive input;
+        private IModifier input;
         private float distance;
 
-        public IPrimitive Input
+        public IModifier Input
         {
             get { return input; }
             set { input = value; }
@@ -28,10 +28,11 @@ namespace Dope.DDXX.MeshBuilder
         {
         }
 
-        public void Generate(out Vertex[] vertices, out short[] indices, out IBody body)
+        public Primitive Generate()
         {
-            input.Generate(out vertices, out indices, out body);
-            DoWeld(ref vertices, ref indices);
+            Primitive primitive = input.Generate();
+            DoWeld(ref primitive.Vertices, ref primitive.Indices);
+            return primitive;
         }
 
         private void DoWeld(ref Vertex[] vertices, ref short[] indices)

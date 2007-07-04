@@ -11,45 +11,44 @@ namespace Dope.DDXX.MeshBuilder
     [TestFixture]
     public class CylinderPrimitiveTest
     {
-        private Vertex[] vertices;
-        private short[] indices;
-
+        private Primitive primitive;
+ 
         [Test]
         public void TestNumVertices1()
         {
             CreateCylinder(2, 4, 3, 1);
-            Assert.AreEqual(3 * 2 + 2, vertices.Length);
+            Assert.AreEqual(3 * 2 + 2, primitive.Vertices.Length);
         }
 
         [Test]
         public void TestNumVertices2()
         {
             CreateCylinder(2, 4, 4, 5);
-            Assert.AreEqual(4 + 4 + 4 + 4 + 4 + 4 + 2, vertices.Length);
+            Assert.AreEqual(4 + 4 + 4 + 4 + 4 + 4 + 2, primitive.Vertices.Length);
         }
 
         [Test]
         public void TestNumIndices1()
         {
             CreateCylinder(2, 4, 3, 1);
-            Assert.AreEqual(3 * 3 * 2 + 6 * 3 * 1, indices.Length);
+            Assert.AreEqual(3 * 3 * 2 + 6 * 3 * 1, primitive.Indices.Length);
         }
 
         [Test]
         public void TestNumIndices2()
         {
             CreateCylinder(2, 4, 4, 5);
-            Assert.AreEqual(3 * 4 * 2 + 6 * 4 * 5, indices.Length);
+            Assert.AreEqual(3 * 4 * 2 + 6 * 4 * 5, primitive.Indices.Length);
         }
 
         [Test]
         public void TestRadius()
         {
             CreateCylinder(4, 0, 10, 10);
-            for (int i = 1; i < vertices.Length - 1; i++)
-                Assert.AreEqual(4, vertices[i].Position.Length());
-            Assert.AreEqual(new Vector3(), vertices[0].Position);
-            Assert.AreEqual(new Vector3(), vertices[vertices.Length - 1].Position);
+            for (int i = 1; i < primitive.Vertices.Length - 1; i++)
+                Assert.AreEqual(4, primitive.Vertices[i].Position.Length());
+            Assert.AreEqual(new Vector3(), primitive.Vertices[0].Position);
+            Assert.AreEqual(new Vector3(), primitive.Vertices[primitive.Vertices.Length - 1].Position);
         }
 
         [Test]
@@ -57,11 +56,11 @@ namespace Dope.DDXX.MeshBuilder
         {
             CreateCylinder(0, 3, 3, 2);
             for (int i = 0; i < 4; i++)
-                Assert.AreEqual(new Vector3(0, 1.5f, 0), vertices[i].Position);
+                Assert.AreEqual(new Vector3(0, 1.5f, 0), primitive.Vertices[i].Position);
             for (int i = 4; i < 7; i++)
-                Assert.AreEqual(new Vector3(0, 0, 0), vertices[i].Position);
+                Assert.AreEqual(new Vector3(0, 0, 0), primitive.Vertices[i].Position);
             for (int i = 7; i < 11; i++)
-                Assert.AreEqual(new Vector3(0, -1.5f, 0), vertices[i].Position);
+                Assert.AreEqual(new Vector3(0, -1.5f, 0), primitive.Vertices[i].Position);
         }
 
         [Test]
@@ -96,8 +95,8 @@ namespace Dope.DDXX.MeshBuilder
                 10, 7, 9,
             };
             CreateCylinder(2, 2, 3, 2);
-            for (int i = 0; i < indices.Length; i++)
-                Assert.AreEqual(correctIndices[i], indices[i], "Index " + i);
+            for (int i = 0; i < primitive.Indices.Length; i++)
+                Assert.AreEqual(correctIndices[i], primitive.Indices[i], "Index " + i);
         }
 
         [Test]
@@ -116,14 +115,13 @@ namespace Dope.DDXX.MeshBuilder
 
         private void CreateCylinder(float radius, float height, int segments, int heightSegments)
         {
-            IBody body;
             CylinderPrimitive cylinder = new CylinderPrimitive();
             cylinder.Radius = radius;
             cylinder.Height = height;
             cylinder.Segments = segments;
             cylinder.HeightSegments = heightSegments;
-            cylinder.Generate(out vertices, out indices, out body);
-            Assert.IsNull(body);
+            primitive = cylinder.Generate();
+            Assert.IsNull(primitive.Body);
         }
     }
 }

@@ -120,23 +120,20 @@ namespace Dope.DDXX.MeshBuilder
             return model;
         }
 
-        public IModel CreateModel(IPrimitive primitive, string material)
+        public IModel CreateModel(IModifier primitive, string material)
         {
-            Vertex[] vertices;
-            short[] indices;
-            IBody body;
             IModel model;
-            primitive.Generate(out vertices, out indices, out body);
-            IMesh mesh = CreateMesh(graphicsFactory, device, vertices, indices);
+            Primitive outputPrimitive = primitive.Generate();
+            IMesh mesh = CreateMesh(graphicsFactory, device, outputPrimitive.Vertices, outputPrimitive.Indices);
             ModelMaterial modelMaterial = null;
             if (material != "")
                 modelMaterial = GetMaterial(material).Clone();
             if (modelMaterial == null)
                 modelMaterial = new ModelMaterial(new Material());
-            if (body == null)
+            if (outputPrimitive.Body == null)
                 model = new Model(mesh, new ModelMaterial[] { modelMaterial });
             else
-                model = new PhysicalModel(mesh, body, new ModelMaterial[] { modelMaterial });
+                model = new PhysicalModel(mesh, outputPrimitive.Body, new ModelMaterial[] { modelMaterial });
             return model;
         }
 

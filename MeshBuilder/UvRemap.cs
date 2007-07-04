@@ -6,9 +6,9 @@ using Microsoft.DirectX;
 
 namespace Dope.DDXX.MeshBuilder
 {
-    public class UvRemap : IPrimitive
+    public class UvRemap : IModifier
     {
-        private IPrimitive input;
+        private IModifier input;
         private float translateU;
         private float scaleU;
         private float translateV;
@@ -38,20 +38,21 @@ namespace Dope.DDXX.MeshBuilder
             set { scaleV = value; }
         }
 
-        public IPrimitive Input
+        public IModifier Input
         {
             get { return input; }
             set { input = value; }
         }
 
-        public void Generate(out Vertex[] vertices, out short[] indices, out IBody body)
+        public Primitive Generate()
         {
-            input.Generate(out vertices, out indices, out body);
-            for (int i = 0; i < vertices.Length; i++)
+            Primitive primitive = input.Generate();
+            for (int i = 0; i < primitive.Vertices.Length; i++)
             {
-                vertices[i].U = vertices[i].U * scaleU + translateU;
-                vertices[i].V = vertices[i].V * scaleV + translateV;
+                primitive.Vertices[i].U = primitive.Vertices[i].U * scaleU + translateU;
+                primitive.Vertices[i].V = primitive.Vertices[i].V * scaleV + translateV;
             }
+            return primitive;
         }
     }
 }

@@ -6,9 +6,9 @@ using Microsoft.DirectX;
 
 namespace Dope.DDXX.MeshBuilder
 {
-    public class SpherePrimitive : IPrimitive
+    public class SpherePrimitive : IModifier
     {
-        protected class DummyPrimitive : IPrimitive
+        protected class DummyPrimitive : IModifier
         {
             private Vertex[] vertices;
             private short[] indices;
@@ -19,11 +19,9 @@ namespace Dope.DDXX.MeshBuilder
                 this.indices = indices;
             }
 
-            public void Generate(out Vertex[] vertices, out short[] indices, out IBody body)
+            public Primitive Generate()
             {
-                vertices = this.vertices;
-                indices = this.indices;
-                body = null;
+                return new Primitive(vertices, indices);
             }
         }
 
@@ -42,7 +40,7 @@ namespace Dope.DDXX.MeshBuilder
             set { rings = value; }
         }
 
-        public virtual void Generate(out Vertex[] vertices, out short[] indices, out IBody body)
+        public virtual Primitive Generate()
         {
             if ((rings % 4) != 0)
                 throw new ArgumentException("Must be multiple of four", "rings");
@@ -54,7 +52,7 @@ namespace Dope.DDXX.MeshBuilder
             Weld welder = new Weld();
             welder.Distance = 0.0f;
             welder.Input = new DummyPrimitive(vertexList.ToArray(), indexList.ToArray());
-            welder.Generate(out vertices, out indices, out body);
+            return welder.Generate();
         }
 
         protected void CreateSphereLists(float radius, int rings, out List<Vertex> vertexList, out List<short> indexList)

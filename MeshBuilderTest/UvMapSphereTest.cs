@@ -8,21 +8,16 @@ using Microsoft.DirectX;
 namespace Dope.DDXX.MeshBuilder
 {
     [TestFixture]
-    public class UvMapSphereTest : IPrimitive, IBody
+    public class UvMapSphereTest : IModifier, IBody
     {
-        private Vertex[] vertices;
-        private short[] indices = new short[] { };
-        private IBody body;
+        private Primitive primitive;
         private UvMapSphere map;
-        private Vertex[] outputVertices;
-        private short[] outputIndices;
-        private IBody outputBody;
+        private Primitive outputPrimitive;
         private const float epsilon = 0.001f;
 
         [SetUp]
         public void SetUp()
         {
-            body = this;
             map = new UvMapSphere();
             map.Input = this;
         }
@@ -30,68 +25,67 @@ namespace Dope.DDXX.MeshBuilder
         [Test]
         public void TestEmptyPrimitive()
         {
-            this.vertices = new Vertex[] {};
-            map.Generate(out outputVertices, out outputIndices, out outputBody);
-            Assert.AreEqual(0, outputVertices.Length);
+            primitive = new Primitive(new Vertex[] {}, null);
+            outputPrimitive = map.Generate();
+            Assert.AreEqual(0, outputPrimitive.Vertices.Length);
         }
 
         [Test]
         public void TestBodyAndIndices()
         {
-            this.vertices = new Vertex[] { };
-            map.Generate(out outputVertices, out outputIndices, out outputBody);
-            Assert.AreSame(this, body);
-            Assert.AreSame(indices, outputIndices);
+            primitive = new Primitive(new Vertex[] { }, null);
+            primitive.Body = this;
+            outputPrimitive = map.Generate();
+            Assert.AreSame(this, outputPrimitive.Body);
+            Assert.AreSame(primitive.Indices, outputPrimitive.Indices);
         }
 
         [Test]
         public void TestMapOrio()
         {
-            this.vertices = new Vertex[] { new Vertex() };
-            map.Generate(out outputVertices, out outputIndices, out outputBody);
-            Assert.AreEqual(1, outputVertices.Length);
-            Assert.AreEqual(0 + 0.5f, outputVertices[0].U);
-            Assert.AreEqual(0 + 0.5f, outputVertices[0].V);
+            primitive = new Primitive(new Vertex[] { new Vertex() }, null);
+            outputPrimitive = map.Generate();
+            Assert.AreEqual(1, outputPrimitive.Vertices.Length);
+            Assert.AreEqual(0 + 0.5f, outputPrimitive.Vertices[0].U);
+            Assert.AreEqual(0 + 0.5f, outputPrimitive.Vertices[0].V);
         }
 
         [Test]
         public void TestMapXisOne()
         {
-            this.vertices = new Vertex[] { new Vertex() };
-            this.vertices[0].Position = new Vector3(1.0f, 0.0f, 0.0f);
-            map.Generate(out outputVertices, out outputIndices, out outputBody);
-            Assert.AreEqual(1, outputVertices.Length);
-            Assert.AreEqual(0.5f + 0.5f, outputVertices[0].U, epsilon);
-            Assert.AreEqual(0.0f + 0.5f, outputVertices[0].V, epsilon);
+            primitive = new Primitive(new Vertex[] { new Vertex() }, null);
+            primitive.Vertices[0].Position = new Vector3(1.0f, 0.0f, 0.0f);
+            outputPrimitive = map.Generate();
+            Assert.AreEqual(1, outputPrimitive.Vertices.Length);
+            Assert.AreEqual(0.5f + 0.5f, outputPrimitive.Vertices[0].U, epsilon);
+            Assert.AreEqual(0.0f + 0.5f, outputPrimitive.Vertices[0].V, epsilon);
         }
 
         [Test]
         public void TestMapXisTwo()
         {
-            this.vertices = new Vertex[] { new Vertex() };
-            this.vertices[0].Position = new Vector3(2.0f, 0.0f, 0.0f);
-            map.Generate(out outputVertices, out outputIndices, out outputBody);
-            Assert.AreEqual(1, outputVertices.Length);
-            Assert.AreEqual(0.5f + 0.5f, outputVertices[0].U, epsilon);
-            Assert.AreEqual(0.0f + 0.5f, outputVertices[0].V, epsilon);
+            primitive = new Primitive(new Vertex[] { new Vertex() }, null);
+            primitive.Vertices[0].Position = new Vector3(2.0f, 0.0f, 0.0f);
+            outputPrimitive = map.Generate();
+            Assert.AreEqual(1, outputPrimitive.Vertices.Length);
+            Assert.AreEqual(0.5f + 0.5f, outputPrimitive.Vertices[0].U, epsilon);
+            Assert.AreEqual(0.0f + 0.5f, outputPrimitive.Vertices[0].V, epsilon);
         }
 
         [Test]
         public void TestMapYisOne()
         {
-            this.vertices = new Vertex[] { new Vertex() };
-            this.vertices[0].Position = new Vector3(0.0f, 1.0f, 0.0f);
-            map.Generate(out outputVertices, out outputIndices, out outputBody);
-            Assert.AreEqual(1, outputVertices.Length);
-            Assert.AreEqual(0.0f + 0.5f, outputVertices[0].U, epsilon);
-            Assert.AreEqual(0.5f + 0.5f, outputVertices[0].V, epsilon);
+            primitive = new Primitive(new Vertex[] { new Vertex() }, null);
+            primitive.Vertices[0].Position = new Vector3(0.0f, 1.0f, 0.0f);
+            outputPrimitive = map.Generate();
+            Assert.AreEqual(1, outputPrimitive.Vertices.Length);
+            Assert.AreEqual(0.0f + 0.5f, outputPrimitive.Vertices[0].U, epsilon);
+            Assert.AreEqual(0.5f + 0.5f, outputPrimitive.Vertices[0].V, epsilon);
         }
 
-        public void Generate(out Vertex[] vertices, out short[] indices, out IBody body)
+        public Primitive Generate()
         {
-            vertices = this.vertices;
-            indices = this.indices;
-            body = this.body;
+            return primitive;
         }
 
         #region IBody Members

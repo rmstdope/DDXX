@@ -7,7 +7,7 @@ using Microsoft.DirectX;
 
 namespace Dope.DDXX.MeshBuilder
 {
-    public class TorusPrimitive : IPrimitive
+    public class TorusPrimitive : IModifier
     {
         private float smallRadius;
         private float largeRadius;
@@ -38,20 +38,20 @@ namespace Dope.DDXX.MeshBuilder
             set { sides = value; }
         }
 
-        public void Generate(out Vertex[] vertices, out short[] indices, out IBody body)
+        public Primitive Generate()
         {
             if (segments < 3)
                 throw new DDXXException("Torus must have at least three segments.");
             if (sides < 3)
                 throw new DDXXException("Torus must have at least three segments.");
 
-            vertices = new Vertex[segments * sides];
-            indices = new short[6 * segments * sides];
-            body = null;
+            Vertex[] vertices = new Vertex[segments * sides];
+            short[] indices = new short[6 * segments * sides];
 
             FillVertices(vertices);
-
             FillIndices(indices);
+
+            return new Primitive(vertices, indices);
         }
 
         private void FillIndices(short[] indices)

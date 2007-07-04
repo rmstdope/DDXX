@@ -70,6 +70,7 @@
     </Compile>
     <Compile Include="SpaceTravel.cs" />
     <Compile Include="TiViMain.cs" />
+    <Compile Include="TiViMeshDirector.cs" />
     <Compile Include="TunnelFlight.cs" />
     <Compile Include="WhiteFlare.cs" />
   </ItemGroup>

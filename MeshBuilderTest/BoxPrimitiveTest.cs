@@ -11,8 +11,8 @@ namespace Dope.DDXX.MeshBuilder
     public class BoxPrimitiveTest
     {
         private const float epsilon = 0.0001f;
-        private Vertex[] vertices;
-        private short[] indices;
+        private Primitive primitive;
+
         protected enum Side
         {
             FRONT = 0,
@@ -24,14 +24,14 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         /// <summary>
-        /// Check number of vertices for a box.
+        /// Check number of primitive.Vertices for a box.
         /// </summary>
         [Test]
         public void TestNumVerticesSingleSegment()
         {
             CreateBox(10, 20, 30);
-            Assert.AreEqual(24, vertices.Length, "The box should have 24 vertices.");
-            Assert.AreEqual(36, indices.Length, "The box should have 36 indices.");
+            Assert.AreEqual(24, primitive.Vertices.Length, "The box should have 24 primitive.Vertices.");
+            Assert.AreEqual(36, primitive.Indices.Length, "The box should have 36 primitive.Indices.");
         }
 
         /// <summary>
@@ -100,11 +100,11 @@ namespace Dope.DDXX.MeshBuilder
             CreateBox(10, 20, 30);
             int v = GetBoxStartVertex(side, 1, 1, 1);
             int i = GetBoxStartIndex(side, 1, 1, 1);
-            // Check vertices against sphere (0, 0, -1, -sideLength)
+            // Check primitive.Vertices against sphere (0, 0, -1, -sideLength)
             CheckRectangleInPlane(v, v + 4, new Plane(normal.X, normal.Y, normal.Z, -sideLength));
-            // Check that indices points to the correct vertices
+            // Check that primitive.Indices points to the correct primitive.Vertices
             CheckRectangleIndices(v, v + 4, i, i + 6);
-            // Check that the indices create clockwise triangles
+            // Check that the primitive.Indices create clockwise triangles
             CheckRectangleClockwise(i, 2, normal);
             // Check normals
             CheckRectangleNormals(v, v + 4, normal);
@@ -124,21 +124,21 @@ namespace Dope.DDXX.MeshBuilder
 
         private void CheckUv(int v)
         {
-            Assert.AreEqual(0, vertices[v + 0].U);
-            Assert.AreEqual(0, vertices[v + 0].V);
-            Assert.AreEqual(1, vertices[v + 1].U);
-            Assert.AreEqual(0, vertices[v + 1].V);
-            Assert.AreEqual(0, vertices[v + 2].U);
-            Assert.AreEqual(1, vertices[v + 2].V);
-            Assert.AreEqual(1, vertices[v + 3].U);
-            Assert.AreEqual(1, vertices[v + 3].V);
+            Assert.AreEqual(0, primitive.Vertices[v + 0].U);
+            Assert.AreEqual(0, primitive.Vertices[v + 0].V);
+            Assert.AreEqual(1, primitive.Vertices[v + 1].U);
+            Assert.AreEqual(0, primitive.Vertices[v + 1].V);
+            Assert.AreEqual(0, primitive.Vertices[v + 2].U);
+            Assert.AreEqual(1, primitive.Vertices[v + 2].V);
+            Assert.AreEqual(1, primitive.Vertices[v + 3].U);
+            Assert.AreEqual(1, primitive.Vertices[v + 3].V);
         }
 
         private void CheckRectangleInPlane(int startIndex, int endIndex, Plane plane)
         {
             for (int i = startIndex; i < endIndex; i++)
             {
-                Assert.AreEqual(0.0f, plane.Dot(vertices[i].Position), epsilon,
+                Assert.AreEqual(0.0f, plane.Dot(primitive.Vertices[i].Position), epsilon,
                     "All points should be in sphere (" + startIndex + ", " + endIndex + ")");
             }
         }
@@ -146,16 +146,16 @@ namespace Dope.DDXX.MeshBuilder
         private void CheckRectangleNormals(int startIndex, int endIndex, Vector3 normal)
         {
             for (int i = startIndex; i < endIndex; i++)
-                Assert.AreEqual(normal, vertices[i].Normal);
+                Assert.AreEqual(normal, primitive.Vertices[i].Normal);
         }
 
         private void CheckRectangleClockwise(int startI, int numTriangles, Vector3 normal)
         {
             for (int i = 0; i < numTriangles; i++)
             {
-                Vector3 v1 = vertices[indices[startI + i * 3 + 0]].Position;
-                Vector3 v2 = vertices[indices[startI + i * 3 + 1]].Position;
-                Vector3 v3 = vertices[indices[startI + i * 3 + 2]].Position;
+                Vector3 v1 = primitive.Vertices[primitive.Indices[startI + i * 3 + 0]].Position;
+                Vector3 v2 = primitive.Vertices[primitive.Indices[startI + i * 3 + 1]].Position;
+                Vector3 v3 = primitive.Vertices[primitive.Indices[startI + i * 3 + 2]].Position;
                 Vector3 testNormal = Vector3.Cross(v2 - v1, v3 - v1);
                 testNormal.Normalize();
                 Assert.AreEqual(normal.X, testNormal.X, epsilon, "Normals should be equal.");
@@ -168,20 +168,19 @@ namespace Dope.DDXX.MeshBuilder
         {
             for (int i = startI; i < endI; i++)
             {
-                Assert.IsTrue(indices[i] >= startV, "Indices must not point to vertex smaller than " + startV);
-                Assert.IsTrue(indices[i] < endV, "Indices must not point to vertex larger or equal to " + endV);
+                Assert.IsTrue(primitive.Indices[i] >= startV, "Indices must not point to vertex smaller than " + startV);
+                Assert.IsTrue(primitive.Indices[i] < endV, "Indices must not point to vertex larger or equal to " + endV);
             }
         }
 
         private void CreateBox(float length, float width, float height)
         {
-            IBody body;
             BoxPrimitive box = new BoxPrimitive();
             box.Length = length;
             box.Width = width;
             box.Height = height;
-            box.Generate(out vertices, out indices, out body);
-            Assert.IsNull(body);
+            primitive = box.Generate();
+            Assert.IsNull(primitive.Body);
         }
 
     }

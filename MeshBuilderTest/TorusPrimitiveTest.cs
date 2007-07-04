@@ -10,51 +10,50 @@ namespace Dope.DDXX.MeshBuilder
     [TestFixture]
     public class TorusPrimitiveTest
     {
-        private Vertex[] vertices;
-        private short[] indices;
+        private Primitive primitive;
 
         [Test]
         public void TestNumVertices1()
         {
             CreateTorus(2, 4, 3, 3);
-            Assert.AreEqual(3 * 3, vertices.Length);
+            Assert.AreEqual(3 * 3, primitive.Vertices.Length);
         }
 
         [Test]
         public void TestNumVertices2()
         {
             CreateTorus(2, 4, 4, 5);
-            Assert.AreEqual(4 * 5, vertices.Length);
+            Assert.AreEqual(4 * 5, primitive.Vertices.Length);
         }
 
         [Test]
         public void TestNumIndices1()
         {
             CreateTorus(2, 4, 3, 3);
-            Assert.AreEqual(6 * 3 * 3, indices.Length);
+            Assert.AreEqual(6 * 3 * 3, primitive.Indices.Length);
         }
 
         [Test]
         public void TestNumIndices2()
         {
             CreateTorus(2, 4, 4, 5);
-            Assert.AreEqual(6 * 4 * 5, indices.Length);
+            Assert.AreEqual(6 * 4 * 5, primitive.Indices.Length);
         }
 
         [Test]
         public void TestSmallRadius()
         {
             CreateTorus(0, 4, 3, 3);
-            for (int i = 0; i < vertices.Length; i++)
-                Assert.AreEqual(4, vertices[i].Position.Length());
+            for (int i = 0; i < primitive.Vertices.Length; i++)
+                Assert.AreEqual(4, primitive.Vertices[i].Position.Length());
         }
 
         [Test]
         public void TestLargeRadius()
         {
             CreateTorus(2, 0, 3, 3);
-            for (int i = 0; i < vertices.Length; i++)
-                Assert.AreEqual(2, vertices[i].Position.Length());
+            for (int i = 0; i < primitive.Vertices.Length; i++)
+                Assert.AreEqual(2, primitive.Vertices[i].Position.Length());
         }
 
         [Test]
@@ -84,8 +83,8 @@ namespace Dope.DDXX.MeshBuilder
                 8, 0, 2,
             };
             CreateTorus(2, 2, 3, 3);
-            for (int i = 0; i < indices.Length; i++)
-                Assert.AreEqual(correctIndices[i], indices[i]);
+            for (int i = 0; i < primitive.Indices.Length; i++)
+                Assert.AreEqual(correctIndices[i], primitive.Indices[i]);
         }
 
         [Test]
@@ -104,14 +103,13 @@ namespace Dope.DDXX.MeshBuilder
 
         private void CreateTorus(int largeRadius, int smallRadius, int segments, int sides)
         {
-            IBody body;
             TorusPrimitive torus = new TorusPrimitive();
             torus.LargeRadius = largeRadius;
             torus.SmallRadius = smallRadius;
             torus.Segments = segments;
             torus.Sides = sides;
-            torus.Generate(out vertices, out indices, out body);
-            Assert.IsNull(body);
+            primitive = torus.Generate();
+            Assert.IsNull(primitive.Body);
         }
     }
 }

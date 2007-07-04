@@ -6,7 +6,7 @@ using Microsoft.DirectX;
 
 namespace Dope.DDXX.MeshBuilder
 {
-    public class PlanePrimitive : IPrimitive
+    public class PlanePrimitive : IModifier
     {
         private float width;
         private float height;
@@ -44,12 +44,11 @@ namespace Dope.DDXX.MeshBuilder
             set { textured = value; }
         }
 
-        public virtual void Generate(out Vertex[] vertices, out short[] indices, out IBody body)
+        public virtual Primitive Generate()
         {
             short v = 0;
-            body = null;
-            vertices = new Vertex[(widthSegments + 1) * (heightSegments + 1)];
-            indices = new short[widthSegments * heightSegments * 6];
+            Vertex[] vertices = new Vertex[(widthSegments + 1) * (heightSegments + 1)];
+            short[] indices = new short[widthSegments * heightSegments * 6];
 
             BoxPrimitive.BoxAddIndicesForSide(0, 0, indices, widthSegments, heightSegments);
             for (int y = 0; y < heightSegments + 1; y++)
@@ -68,6 +67,7 @@ namespace Dope.DDXX.MeshBuilder
                     v++;
                 }
             }
+            return new Primitive(vertices, indices);
         }
     }
 }

@@ -6,11 +6,11 @@ using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.MeshBuilder
 {
-    public class UvMapPlane : IPrimitive
+    public class UvMapPlane : IModifier
     {
         // 0=x, 1=y, 2=z
         private int alignToAxis;
-        private IPrimitive input;
+        private IModifier input;
         private float tileU;
         private float tileV;
 
@@ -33,7 +33,7 @@ namespace Dope.DDXX.MeshBuilder
             }
         }
 
-        public IPrimitive Input
+        public IModifier Input
         {
             get { return input; }
             set { input = value; }
@@ -58,39 +58,40 @@ namespace Dope.DDXX.MeshBuilder
             tileV = 1;
         }
 
-        public void Generate(out Vertex[] vertices, out short[] indices, out IBody body)
+        public Primitive Generate()
         {
             if (input == null)
                 throw new DDXXException("Input not set for UvMapPlane.");
 
-            input.Generate(out vertices, out indices, out body);
+            Primitive primitive = input.Generate();
 
-            CalculateMinMax(vertices);
-            for (int i = 0; i < vertices.Length; i++)
+            CalculateMinMax(primitive.Vertices);
+            for (int i = 0; i < primitive.Vertices.Length; i++)
             {
                 Vertex vertex;
                 switch (alignToAxis)
                 {
                     case 0:
-                        vertex = vertices[i];
-                        vertex.U = tileU * CalculateCoordinate(minY, maxY, vertices[i].Position.Y);
-                        vertex.V = tileV * CalculateCoordinate(minZ, maxZ, vertices[i].Position.Z);
-                        vertices[i] = vertex;
+                        vertex = primitive.Vertices[i];
+                        vertex.U = tileU * CalculateCoordinate(minY, maxY, primitive.Vertices[i].Position.Y);
+                        vertex.V = tileV * CalculateCoordinate(minZ, maxZ, primitive.Vertices[i].Position.Z);
+                        primitive.Vertices[i] = vertex;
                         break;
                     case 1:
-                        vertex = vertices[i];
-                        vertex.U = tileU * CalculateCoordinate(minX, maxX, vertices[i].Position.X);
-                        vertex.V = tileV * CalculateCoordinate(minZ, maxZ, vertices[i].Position.Z);
-                        vertices[i] = vertex;
+                        vertex = primitive.Vertices[i];
+                        vertex.U = tileU * CalculateCoordinate(minX, maxX, primitive.Vertices[i].Position.X);
+                        vertex.V = tileV * CalculateCoordinate(minZ, maxZ, primitive.Vertices[i].Position.Z);
+                        primitive.Vertices[i] = vertex;
                         break;
                     case 2:
-                        vertex = vertices[i];
-                        vertex.U = tileU * CalculateCoordinate(minX, maxX, vertices[i].Position.X);
-                        vertex.V = tileV * CalculateCoordinate(minY, maxY, vertices[i].Position.Y);
-                        vertices[i] = vertex;
+                        vertex = primitive.Vertices[i];
+                        vertex.U = tileU * CalculateCoordinate(minX, maxX, primitive.Vertices[i].Position.X);
+                        vertex.V = tileV * CalculateCoordinate(minY, maxY, primitive.Vertices[i].Position.Y);
+                        primitive.Vertices[i] = vertex;
                         break;
                 }
             }
+            return primitive;
         }
 
         private float CalculateCoordinate(float min, float max, float value)

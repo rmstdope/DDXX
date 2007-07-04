@@ -11,9 +11,6 @@ namespace Dope.DDXX.MeshBuilder
     public class BooleanUnionTest
     {
         private BooleanUnion union;
-        private Vertex[] vertices;
-        private short[] indices;
-        IBody notUsed;
 
         [SetUp]
         public void SetUp()
@@ -21,42 +18,38 @@ namespace Dope.DDXX.MeshBuilder
             union = new BooleanUnion();
         }
 
-        private class EmptyPrimitive : IPrimitive
+        private class EmptyPrimitive : IModifier
         {
-            public void Generate(out Vertex[] vertices, out short[] indices, out IBody body)
+            public Primitive Generate()
             {
-                vertices = new Vertex[0];
-                indices = new short[0];
-                body = null;
+                return new Primitive(new Vertex[0], new short[0]);
             }
         }
 
-        private class SimplePrimitive : IPrimitive
+        private class SimplePrimitive : IModifier
         {
-            public void Generate(out Vertex[] vertices, out short[] indices, out IBody body)
+            public Primitive Generate()
             {
-                vertices = new Vertex[1];
-                indices = new short[0];
-                body = null;
+                return new Primitive(new Vertex[1], new short[0]);
             }
         }
 
         [Test]
         public void TwoEmptyPrimitives()
         {
-            IPrimitive p = new EmptyPrimitive();
+            IModifier p = new EmptyPrimitive();
             union.A = p;
             union.B = p;
-            union.Generate(out vertices, out indices, out notUsed);
-            Assert.AreEqual(0, vertices.Length);
-            Assert.AreEqual(0, indices.Length);
+            Primitive primitive = union.Generate();
+            Assert.AreEqual(0, primitive.Vertices.Length);
+            Assert.AreEqual(0, primitive.Indices.Length);
         }
 
         [Test]
         public void EmptyAndSimple()
         {
-            IPrimitive e = new EmptyPrimitive();
-            IPrimitive s = new SimplePrimitive();
+            IModifier e = new EmptyPrimitive();
+            IModifier s = new SimplePrimitive();
             union.A = e;
             union.B = s;
             Assert.AreEqual(Vertices(s).Length + Vertices(e).Length, Vertices(union).Length);
@@ -66,20 +59,14 @@ namespace Dope.DDXX.MeshBuilder
         }
 
 
-        private Vertex[] Vertices(IPrimitive p)
+        private Vertex[] Vertices(IModifier p)
         {
-            Vertex[] vertices;
-            short[] indices;
-            p.Generate(out vertices, out indices, out notUsed);
-            return vertices;
+            return p.Generate().Vertices;
         }
 
-        private short[] Indices(IPrimitive p)
+        private short[] Indices(IModifier p)
         {
-            Vertex[] vertices;
-            short[] indices;
-            p.Generate(out vertices, out indices, out notUsed);
-            return indices;
+            return p.Generate().Indices;
         }
     }
 }

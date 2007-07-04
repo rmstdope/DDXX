@@ -8,10 +8,10 @@ using Dope.DDXX.Physics;
 namespace Dope.DDXX.MeshBuilder
 {
     [TestFixture]
-    public class UvRemapTest : IPrimitive
+    public class UvRemapTest : IModifier
     {
         private const float epsilon = 0.00001f;
-        private Vertex[] vertices;
+        private Primitive primitive;
 
         [Test]
         public void TestScale()
@@ -39,44 +39,41 @@ namespace Dope.DDXX.MeshBuilder
 
         private void VerifyVertices(Vector2[] uv)
         {
-            Assert.AreEqual(uv.Length, vertices.Length);
+            Assert.AreEqual(uv.Length, primitive.Vertices.Length);
             for (int i = 0; i < uv.Length; i++)
             {
-                Assert.AreEqual(uv[i].X, vertices[i].U, epsilon);
-                Assert.AreEqual(uv[i].Y, vertices[i].V, epsilon);
+                Assert.AreEqual(uv[i].X, primitive.Vertices[i].U, epsilon);
+                Assert.AreEqual(uv[i].Y, primitive.Vertices[i].V, epsilon);
             }
         }
 
         private void UvRemap(float translateU, float scaleU, float translateV, float scaleV)
         {
-            short[] indices;
-            IBody body;
             UvRemap UvRemap = new UvRemap();
             UvRemap.TranslateU = translateU;
             UvRemap.TranslateV = translateV;
             UvRemap.ScaleU = scaleU;
             UvRemap.ScaleV = scaleV;
             UvRemap.Input = this;
-            UvRemap.Generate(out vertices, out indices, out body);
-            Assert.IsNull(indices);
-            Assert.IsNull(body);
+            primitive = UvRemap.Generate();
+            Assert.IsNull(primitive.Indices);
+            Assert.IsNull(primitive.Body);
         }
 
         private void CreateVertices(Vector2[] uv)
         {
-            vertices = new Vertex[uv.Length];
+            Vertex[] vertices = new Vertex[uv.Length];
             for (int i = 0; i < uv.Length; i++)
             {
                 vertices[i].U = uv[i].X;
                 vertices[i].V = uv[i].Y;
             }
+            primitive = new Primitive(vertices, null);
         }
 
-        public void Generate(out Vertex[] vertices, out short[] indices, out IBody body)
+        public Primitive Generate()
         {
-            vertices = this.vertices;
-            indices = null;
-            body = null;
+            return primitive;
         }
     }
 }

@@ -6,9 +6,9 @@ using Microsoft.DirectX;
 
 namespace Dope.DDXX.MeshBuilder
 {
-    public class Rotate : IPrimitive
+    public class Rotate : IModifier
     {
-        private IPrimitive input;
+        private IModifier input;
         private float y;
         private float x;
         private float z;
@@ -31,25 +31,26 @@ namespace Dope.DDXX.MeshBuilder
             set { z = value; }
         }
 
-        public IPrimitive Input
+        public IModifier Input
         {
             get { return input; }
             set { input = value; }
         }
 
-        public void Generate(out Vertex[] vertices, out short[] indices, out IBody body)
+        public Primitive Generate()
         {
-            input.Generate(out vertices, out indices, out body);
+            Primitive primitive = input.Generate();
             Matrix rotation = Matrix.RotationYawPitchRoll(y, x, z);
-            for (int i = 0; i < vertices.Length; i++)
+            for (int i = 0; i < primitive.Vertices.Length; i++)
             {
-                Vector3 position = vertices[i].Position;
-                Vector3 normal = vertices[i].Normal;
+                Vector3 position = primitive.Vertices[i].Position;
+                Vector3 normal = primitive.Vertices[i].Normal;
                 position.TransformCoordinate(rotation);
                 normal.TransformNormal(rotation);
-                vertices[i].Position = position;
-                vertices[i].Normal = normal;
+                primitive.Vertices[i].Position = position;
+                primitive.Vertices[i].Normal = normal;
             }
+            return primitive;
         }
     }
 }

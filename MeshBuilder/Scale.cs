@@ -6,9 +6,9 @@ using Microsoft.DirectX;
 
 namespace Dope.DDXX.MeshBuilder
 {
-    public class Scale : IPrimitive
+    public class Scale : IModifier
     {
-        private IPrimitive input;
+        private IModifier input;
         private float x;
         private float y;
         private float z;
@@ -31,20 +31,22 @@ namespace Dope.DDXX.MeshBuilder
             set { z = value; }
         }
 
-        public IPrimitive Input
+        public IModifier Input
         {
             get { return input; }
             set { input = value; }
         }
 
-        public void Generate(out Vertex[] vertices, out short[] indices, out IBody body)
+        public Primitive Generate()
         {
-            input.Generate(out vertices, out indices, out body);
+            Primitive primitive = input.Generate();
             // TODO: This should affect normals as well
-            for (int i = 0; i < vertices.Length; i++)
+            for (int i = 0; i < primitive.Vertices.Length; i++)
             {
-                vertices[i].Position = new Vector3(vertices[i].Position.X * x, vertices[i].Position.Y * y, vertices[i].Position.Z * z);
+                primitive.Vertices[i].Position = new Vector3(primitive.Vertices[i].Position.X * x,
+                    primitive.Vertices[i].Position.Y * y, primitive.Vertices[i].Position.Z * z);
             }
+            return primitive;
         }
     }
 }

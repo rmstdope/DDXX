@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Demo>
 	<!--This post effect will run the entire demo-->
-	<!--<PostEffect name="AspectilizerPostEffect" track="0" startTime="0" endTime="3000">
+	<PostEffect name="AspectilizerPostEffect" track="0" startTime="0" endTime="3000">
 		<Parameter name="Width" float="16" />
 		<Parameter name="Height" float="9" />
 		<Parameter name="SubtractNoise" bool="true" />
@@ -10,7 +10,7 @@
 		<Parameter name="AddNoise" bool="false" />
 		<Parameter name="Filename" string="" />
 		<Parameter name="DrawOrder" int="4" />
-	</PostEffect>-->
+	</PostEffect>
 
 	<!--Creation scene and its post effects-->
 	<!--<Effect name="CreationScene" track="0" startTime="0" endTime="300">
@@ -67,13 +67,13 @@
 			<Parameter string="noise" />
 			<Parameter float="55.0" />
 			<Parameter Color="DarkGray" />
-			<Parameter float="0.05" />
+			<Parameter float="0.02" />
 		</SetupCall>
 		<SetupCall name="AddTextureLayer">
 			<Parameter string="noise" />
 			<Parameter float="-44.0" />
 			<Parameter Color="50,50,120,255" />
-			<Parameter float="0.1" />
+			<Parameter float="0.05" />
 		</SetupCall>
 	</Effect>
 	<Effect name="SpaceTravel" track="0" startTime="0" endTime="60" />

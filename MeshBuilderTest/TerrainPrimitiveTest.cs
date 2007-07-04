@@ -11,12 +11,8 @@ namespace Dope.DDXX.MeshBuilder
     [TestFixture]
     public class TerrainPrimitiveTest : IGenerator
     {
-        private Vertex[] terrainVertices;
-        private Vertex[] planeVertices;
-        private short[] terrainIndices;
-        private short[] planeIndices;
-        private IBody terrainBody;
-        private IBody planeBody;
+        private Primitive terrainPrimitive;
+        private Primitive planePrimitive;
         private Vector4 pixelValue;
 
         [Test]
@@ -25,15 +21,15 @@ namespace Dope.DDXX.MeshBuilder
             pixelValue = new Vector4(1, 1, 1, 1);
             CreateTerrain(this, 1.0f, 2.0f, 2.0f, 2, 2, false);
             CreatePlane(2.0f, 2.0f, 2, 2, false);
-            Assert.AreEqual(terrainIndices.Length, planeIndices.Length);
-            Assert.AreEqual(terrainVertices.Length, planeVertices.Length);
-            for (int i = 0; i < terrainIndices.Length; i++)
-                Assert.AreEqual(terrainIndices[i], planeIndices[i]);
-            for (int i = 0; i < terrainVertices.Length; i++)
+            Assert.AreEqual(terrainPrimitive.Indices.Length, planePrimitive.Indices.Length);
+            Assert.AreEqual(terrainPrimitive.Vertices.Length, planePrimitive.Vertices.Length);
+            for (int i = 0; i < terrainPrimitive.Indices.Length; i++)
+                Assert.AreEqual(terrainPrimitive.Indices[i], planePrimitive.Indices[i]);
+            for (int i = 0; i < terrainPrimitive.Vertices.Length; i++)
             {
-                Assert.AreEqual(terrainVertices[i].Position.X, planeVertices[i].Position.X);
-                Assert.AreEqual(terrainVertices[i].Position.Y, 1.0f);
-                Assert.AreEqual(terrainVertices[i].Position.Z, planeVertices[i].Position.Y);
+                Assert.AreEqual(terrainPrimitive.Vertices[i].Position.X, planePrimitive.Vertices[i].Position.X);
+                Assert.AreEqual(terrainPrimitive.Vertices[i].Position.Y, 1.0f);
+                Assert.AreEqual(terrainPrimitive.Vertices[i].Position.Z, planePrimitive.Vertices[i].Position.Y);
             }
         }
 
@@ -43,17 +39,17 @@ namespace Dope.DDXX.MeshBuilder
             pixelValue = new Vector4(0, 1, 1, 1);
             CreateTerrain(this, 1.0f, 4.0f, 4.0f, 4, 4, true);
             CreatePlane(4.0f, 4.0f, 4, 4, true);
-            Assert.AreEqual(terrainIndices.Length, planeIndices.Length);
-            Assert.AreEqual(terrainVertices.Length, planeVertices.Length);
-            for (int i = 0; i < terrainIndices.Length; i++)
-                Assert.AreEqual(terrainIndices[i], planeIndices[i]);
+            Assert.AreEqual(terrainPrimitive.Indices.Length, planePrimitive.Indices.Length);
+            Assert.AreEqual(terrainPrimitive.Vertices.Length, planePrimitive.Vertices.Length);
+            for (int i = 0; i < terrainPrimitive.Indices.Length; i++)
+                Assert.AreEqual(terrainPrimitive.Indices[i], planePrimitive.Indices[i]);
             for (int y = 0; y < 5; y++)
             {
                 for (int x = 0; x < 5; x++)
                 {
-                    Assert.AreEqual(terrainVertices[y * 5 + x].Position.X, planeVertices[y * 5 + x].Position.X);
-                    Assert.AreEqual(terrainVertices[y * 5 + x].Position.Y, x * (1.0f / 4.0f));
-                    Assert.AreEqual(terrainVertices[y * 5 + x].Position.Z, planeVertices[y * 5 + x].Position.Y);
+                    Assert.AreEqual(terrainPrimitive.Vertices[y * 5 + x].Position.X, planePrimitive.Vertices[y * 5 + x].Position.X);
+                    Assert.AreEqual(terrainPrimitive.Vertices[y * 5 + x].Position.Y, x * (1.0f / 4.0f));
+                    Assert.AreEqual(terrainPrimitive.Vertices[y * 5 + x].Position.Z, planePrimitive.Vertices[y * 5 + x].Position.Y);
                 }
             }
         }
@@ -64,17 +60,17 @@ namespace Dope.DDXX.MeshBuilder
             pixelValue = new Vector4(1, 0, 1, 1);
             CreateTerrain(this, 2.0f, 4.0f, 4.0f, 4, 4, true);
             CreatePlane(4.0f, 4.0f, 4, 4, true);
-            Assert.AreEqual(terrainIndices.Length, planeIndices.Length);
-            Assert.AreEqual(terrainVertices.Length, planeVertices.Length);
-            for (int i = 0; i < terrainIndices.Length; i++)
-                Assert.AreEqual(terrainIndices[i], planeIndices[i]);
+            Assert.AreEqual(terrainPrimitive.Indices.Length, planePrimitive.Indices.Length);
+            Assert.AreEqual(terrainPrimitive.Vertices.Length, planePrimitive.Vertices.Length);
+            for (int i = 0; i < terrainPrimitive.Indices.Length; i++)
+                Assert.AreEqual(terrainPrimitive.Indices[i], planePrimitive.Indices[i]);
             for (int y = 0; y < 5; y++)
             {
                 for (int x = 0; x < 5; x++)
                 {
-                    Assert.AreEqual(terrainVertices[y * 5 + x].Position.X, planeVertices[y * 5 + x].Position.X);
-                    Assert.AreEqual(terrainVertices[y * 5 + x].Position.Y, 2.0f * y * (1.0f / 4.0f));
-                    Assert.AreEqual(terrainVertices[y * 5 + x].Position.Z, planeVertices[y * 5 + x].Position.Y);
+                    Assert.AreEqual(terrainPrimitive.Vertices[y * 5 + x].Position.X, planePrimitive.Vertices[y * 5 + x].Position.X);
+                    Assert.AreEqual(terrainPrimitive.Vertices[y * 5 + x].Position.Y, 2.0f * y * (1.0f / 4.0f));
+                    Assert.AreEqual(terrainPrimitive.Vertices[y * 5 + x].Position.Z, planePrimitive.Vertices[y * 5 + x].Position.Y);
                 }
             }
         }
@@ -89,7 +85,7 @@ namespace Dope.DDXX.MeshBuilder
             terrain.HeightSegments = heightSegments;
             terrain.HeightScale = heightScale;
             terrain.Textured = textured;
-            terrain.Generate(out terrainVertices, out terrainIndices, out terrainBody);
+            terrainPrimitive = terrain.Generate();
         }
 
         private void CreatePlane(float width, float height, int widthSegments, int heightSegments, bool textured)
@@ -100,7 +96,7 @@ namespace Dope.DDXX.MeshBuilder
             plane.WidthSegments = widthSegments;
             plane.HeightSegments = heightSegments;
             plane.Textured = textured;
-            plane.Generate(out planeVertices, out planeIndices, out planeBody);
+            planePrimitive = plane.Generate();
         }
 
         #region IGenerator Members

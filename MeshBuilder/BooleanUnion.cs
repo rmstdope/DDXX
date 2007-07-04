@@ -4,39 +4,34 @@ using System.Text;
 
 namespace Dope.DDXX.MeshBuilder
 {
-    public class BooleanUnion : IPrimitive
+    public class BooleanUnion : IModifier
     {
-        private IPrimitive a;
-        private IPrimitive b;
+        private IModifier a;
+        private IModifier b;
 
-        public IPrimitive A
+        public IModifier A
         {
             get { return a; }
             set { a = value; }
         }
 
-        public IPrimitive B
+        public IModifier B
         {
             get { return b; }
             set { b = value; }
         }
 
-        public void Generate(out Vertex[] vertices, out short[] indices, out Dope.DDXX.Physics.IBody body)
+        public Primitive Generate()
         {
-            Dope.DDXX.Physics.IBody unused;
-            Vertex[] aVertices;
-            short[] aIndices;
-            a.Generate(out aVertices, out aIndices, out unused);
-            Vertex[] bVertices;
-            short[] bIndices;
-            b.Generate(out bVertices, out bIndices, out unused);
-            vertices = new Vertex[aVertices.Length + bVertices.Length];
-            indices = new short[aIndices.Length + bIndices.Length];
-            aVertices.CopyTo(vertices, 0);
-            aIndices.CopyTo(indices, 0);
-            bVertices.CopyTo(vertices, aVertices.Length);
-            bIndices.CopyTo(indices, aIndices.Length);
-            body = null;
+            Primitive aPrimitive = a.Generate();
+            Primitive bPrimitive = b.Generate();
+            Vertex[] vertices = new Vertex[aPrimitive.Vertices.Length + bPrimitive.Vertices.Length];
+            short[] indices = new short[aPrimitive.Indices.Length + bPrimitive.Indices.Length];
+            aPrimitive.Vertices.CopyTo(vertices, 0);
+            aPrimitive.Indices.CopyTo(indices, 0);
+            bPrimitive.Vertices.CopyTo(vertices, aPrimitive.Vertices.Length);
+            bPrimitive.Indices.CopyTo(indices, aPrimitive.Indices.Length);
+            return new Primitive(vertices, indices);
         }
     }
 }

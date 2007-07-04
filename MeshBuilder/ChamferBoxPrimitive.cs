@@ -53,9 +53,8 @@ namespace Dope.DDXX.MeshBuilder
             filletSegments = 4;
         }
 
-        public override void Generate(out Vertex[] vertices, out short[] indices, out IBody body)
+        public override Primitive Generate()
         {
-            body = null;
             if (fillet > length / 2 || fillet > width / 2 || fillet > height / 2)
                 throw new ArgumentException("Must not be larger than max(length, width, height)",
                     "fillet");
@@ -131,7 +130,7 @@ namespace Dope.DDXX.MeshBuilder
             Weld welder = new Weld();
             welder.Distance = 0.0f;
             welder.Input = new DummyPrimitive(vertexList.ToArray(), indexList.ToArray());
-            welder.Generate(out vertices, out indices, out body);
+            return welder.Generate();
         }
     }
 }

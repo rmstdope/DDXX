@@ -8,13 +8,11 @@ using Dope.DDXX.Physics;
 namespace Dope.DDXX.MeshBuilder
 {
     [TestFixture]
-    public class WeldTest : IPrimitive
+    public class WeldTest : IModifier
     {
         private Weld weld;
-        private Vertex[] vertices;
-        private short[] indices;
-        private Vertex[] weldedVertices;
-        private short[] weldedIndices;
+        private Primitive primitive;
+        private Primitive weldedPrimitive;
 
         [SetUp]
         public void SetUp()
@@ -190,16 +188,15 @@ namespace Dope.DDXX.MeshBuilder
 
         private void Weld(float distance)
         {
-            IBody body;
             weld.Distance = distance;
-            weld.Generate(out weldedVertices, out weldedIndices, out body);
-            Assert.IsNull(body);
+            weldedPrimitive = weld.Generate();
+            Assert.IsNull(weldedPrimitive.Body);
         }
 
         private void CreatePrimitiveFromLists(Vector3[] positions,
             Vector3[] normals, Vector2[] uv, short[] indices)
         {
-            vertices = new Vertex[positions.Length];
+            Vertex[] vertices = new Vertex[positions.Length];
             for (int i = 0; i < positions.Length; i++)
             {
                 vertices[i].Position = positions[i];
@@ -216,42 +213,40 @@ namespace Dope.DDXX.MeshBuilder
             }
             if (indices == null)
                 indices = new short[] { };
-            this.indices = indices;
+            primitive = new Primitive(vertices, indices);
         }
 
         private void CompareVertices(Vector3[] newPositions, Vector3[] newNormals, Vector2[] newUV)
         {
-            Assert.AreEqual(newPositions.Length, weldedVertices.Length);
+            Assert.AreEqual(newPositions.Length, weldedPrimitive.Vertices.Length);
             for (int i = 0; i < newPositions.Length; i++)
             {
-                Assert.AreEqual(newPositions[i], weldedVertices[i].Position);
+                Assert.AreEqual(newPositions[i], weldedPrimitive.Vertices[i].Position);
                 if (newNormals != null)
                 {
                     newNormals[i].Normalize();
-                    Assert.AreEqual(newNormals[i], weldedVertices[i].Normal);
+                    Assert.AreEqual(newNormals[i], weldedPrimitive.Vertices[i].Normal);
                 }
                 if (newUV != null)
                 {
-                    Assert.AreEqual(newUV[i].X, weldedVertices[i].U);
-                    Assert.AreEqual(newUV[i].Y, weldedVertices[i].V);
+                    Assert.AreEqual(newUV[i].X, weldedPrimitive.Vertices[i].U);
+                    Assert.AreEqual(newUV[i].Y, weldedPrimitive.Vertices[i].V);
                 }
             }
         }
 
         private void CompareIndices(short[] newIndices)
         {
-            Assert.AreEqual(newIndices.Length, weldedIndices.Length);
+            Assert.AreEqual(newIndices.Length, weldedPrimitive.Indices.Length);
             for (int i = 0; i < newIndices.Length; i++)
-                Assert.AreEqual(newIndices[i], weldedIndices[i]);
+                Assert.AreEqual(newIndices[i], weldedPrimitive.Indices[i]);
         }
 
-        #region IPrimitive Members
+        #region IModifier Members
 
-        public void Generate(out Vertex[] vertices, out short[] indices, out IBody body)
+        public Primitive Generate()
         {
-            vertices = this.vertices;
-            indices = this.indices;
-            body = null;
+            return primitive;
         }
 
         #endregion

@@ -8,9 +8,9 @@ using Dope.DDXX.Physics;
 namespace Dope.DDXX.MeshBuilder
 {
     [TestFixture]
-    public class ScaleTest : IPrimitive
+    public class ScaleTest : IModifier
     {
-        private Vertex[] vertices;
+        private Primitive primitive;
 
         [Test]
         public void TestScaleOrigo()
@@ -38,37 +38,34 @@ namespace Dope.DDXX.MeshBuilder
 
         private void VerifyVertices(Vector3[] positions)
         {
-            Assert.AreEqual(positions.Length, vertices.Length);
+            Assert.IsNull(primitive.Indices);
+            Assert.IsNull(primitive.Body);
+            Assert.AreEqual(positions.Length, primitive.Vertices.Length);
             for (int i = 0; i < positions.Length; i++)
-                Assert.AreEqual(positions[i], vertices[i].Position);
+                Assert.AreEqual(positions[i], primitive.Vertices[i].Position);
         }
 
         private void Scale(float x, float y, float z)
         {
-            short[] indices;
-            IBody body;
             Scale scale = new Scale();
             scale.X = x;
             scale.Y = y;
             scale.Z = z;
             scale.Input = this;
-            scale.Generate(out vertices, out indices, out body);
-            Assert.IsNull(indices);
-            Assert.IsNull(body);
+            primitive = scale.Generate();
         }
 
         private void CreateVertices(Vector3[] positions)
         {
-            vertices = new Vertex[positions.Length];
+            Vertex[] vertices = new Vertex[positions.Length];
             for (int i = 0; i < positions.Length; i++)
                 vertices[i].Position = positions[i];
+            primitive = new Primitive(vertices, null);
         }
 
-        public void Generate(out Vertex[] vertices, out short[] indices, out Dope.DDXX.Physics.IBody body)
+        public Primitive Generate()
         {
-            vertices = this.vertices;
-            indices = null;
-            body = null;
+            return primitive;
         }
     }
 }

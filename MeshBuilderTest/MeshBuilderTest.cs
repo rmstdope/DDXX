@@ -13,7 +13,7 @@ using Dope.DDXX.Physics;
 namespace Dope.DDXX.MeshBuilder
 {
     [TestFixture]
-    public class MeshBuilderTest : IGraphicsFactory, IModel, IDevice, ITextureFactory, IBody, ICubeTexture, IMesh, ITexture, IPrimitive, IGraphicsStream
+    public class MeshBuilderTest : IGraphicsFactory, IModel, IDevice, ITextureFactory, IBody, ICubeTexture, IMesh, ITexture, IModifier, IGraphicsStream
     {
         private MeshBuilder builder;
         private string fileName;
@@ -2197,14 +2197,12 @@ namespace Dope.DDXX.MeshBuilder
 
         #region IPrimitive Members
 
-        public void Generate(out Vertex[] vertices, out short[] indices, out IBody body)
+        public Primitive Generate()
         {
-            vertices = this.vertices;
-            indices = this.indices;
+            Primitive primitive = new Primitive(this.vertices, this.indices);
             if (this.body)
-                body = this;
-            else
-                body = null;
+                primitive.Body = this;
+            return primitive;
         }
 
         #endregion

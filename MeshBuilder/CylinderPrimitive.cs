@@ -7,7 +7,7 @@ using Microsoft.DirectX;
 
 namespace Dope.DDXX.MeshBuilder
 {
-    public class CylinderPrimitive : IPrimitive
+    public class CylinderPrimitive : IModifier
     {
         private float height;
         private float radius;
@@ -38,20 +38,20 @@ namespace Dope.DDXX.MeshBuilder
             set { heightSegments = value; }
         }
 
-        public void Generate(out Vertex[] vertices, out short[] indices, out IBody body)
+        public Primitive Generate()
         {
             if (segments < 3)
                 throw new DDXXException("Cylinder must have at least three segments.");
             if (heightSegments < 1)
                 throw new DDXXException("Cylinder must have at least three segments.");
 
-            vertices = new Vertex[segments * (heightSegments + 1) + 2];
-            indices = new short[3 * 2 * segments + 6 * segments * heightSegments];
-            body = null;
+            Vertex[] vertices = new Vertex[segments * (heightSegments + 1) + 2];
+            short[] indices = new short[3 * 2 * segments + 6 * segments * heightSegments];
 
             FillVertices(vertices);
 
             FillIndices(vertices, indices);
+            return new Primitive(vertices, indices);
         }
 
         private void FillIndices(Vertex[] vertices, short[] indices)

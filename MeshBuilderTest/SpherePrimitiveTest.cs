@@ -11,8 +11,7 @@ namespace Dope.DDXX.MeshBuilder
     public class SpherePrimitiveTest
     {
         private const float epsilon = 0.000001f;
-        private Vertex[] vertices;
-        private short[] indices;
+        private Primitive primitive;
 
         [Test]
         [ExpectedException(typeof(ArgumentException))]
@@ -25,9 +24,9 @@ namespace Dope.DDXX.MeshBuilder
         public void TestSphereVertexCount1()
         {
             CreateSphere(1.0f, 4);
-            Assert.AreEqual(4 + 2, vertices.Length);
+            Assert.AreEqual(4 + 2, primitive.Vertices.Length);
             CreateSphere(1.0f, 8);
-            Assert.AreEqual(8 * 3 + 2, vertices.Length);
+            Assert.AreEqual(8 * 3 + 2, primitive.Vertices.Length);
         }
 
         [Test]
@@ -35,7 +34,7 @@ namespace Dope.DDXX.MeshBuilder
         {
             float radius = 10.0f;
             CreateSphere(radius, 4);
-            foreach (Vertex v in vertices)
+            foreach (Vertex v in primitive.Vertices)
             {
                 Assert.AreEqual(radius, v.Position.Length(), epsilon);
             }
@@ -46,7 +45,7 @@ namespace Dope.DDXX.MeshBuilder
         {
             float radius = 5.0f;
             CreateSphere(radius, 32);
-            foreach (Vertex v in vertices)
+            foreach (Vertex v in primitive.Vertices)
             {
                 Assert.AreEqual(radius, v.Position.Length(), epsilon);
             }
@@ -56,9 +55,9 @@ namespace Dope.DDXX.MeshBuilder
         public void TestSphereIndexCount()
         {
             CreateSphere(1.0f, 4);
-            Assert.AreEqual(4 * 3 + 4 * 3, indices.Length);
+            Assert.AreEqual(4 * 3 + 4 * 3, primitive.Indices.Length);
             CreateSphere(1.0f, 8);
-            Assert.AreEqual(8 * 3 + 6 * 8 * 2 + 8 * 3, indices.Length);
+            Assert.AreEqual(8 * 3 + 6 * 8 * 2 + 8 * 3, primitive.Indices.Length);
         }
 
         [Test]
@@ -77,9 +76,9 @@ namespace Dope.DDXX.MeshBuilder
                 3,4,5,
                 4,1,5,
             };
-            for (int sourceIndex = 0; sourceIndex < indices.Length; sourceIndex++)
+            for (int sourceIndex = 0; sourceIndex < primitive.Indices.Length; sourceIndex++)
             {
-                Assert.AreEqual(indices[sourceIndex], indices[sourceIndex]);
+                Assert.AreEqual(primitive.Indices[sourceIndex], primitive.Indices[sourceIndex]);
             }
         }
 
@@ -141,9 +140,9 @@ namespace Dope.DDXX.MeshBuilder
                 23,24,25,
                 24,17,25,
             };
-            for (int sourceIndex = 0; sourceIndex < indices.Length; sourceIndex++)
+            for (int sourceIndex = 0; sourceIndex < primitive.Indices.Length; sourceIndex++)
             {
-                Assert.AreEqual(indices[sourceIndex], indices[sourceIndex], "Index " + sourceIndex);
+                Assert.AreEqual(primitive.Indices[sourceIndex], primitive.Indices[sourceIndex], "Index " + sourceIndex);
             }
         }
 
@@ -151,7 +150,7 @@ namespace Dope.DDXX.MeshBuilder
         public void TestSphereVertexNormalsR1()
         {
             CreateSphere(1.0f, 32);
-            foreach (Vertex v in vertices)
+            foreach (Vertex v in primitive.Vertices)
             {
                 Assert.AreEqual(v.Position.X, v.Normal.X, epsilon);
                 Assert.AreEqual(v.Position.Y, v.Normal.Y, epsilon);
@@ -163,7 +162,7 @@ namespace Dope.DDXX.MeshBuilder
         public void TestSphereVertexNormalsR10()
         {
             CreateSphere(10.0f, 32);
-            foreach (Vertex v in vertices)
+            foreach (Vertex v in primitive.Vertices)
             {
                 Vector3 expected = v.Position;
                 expected.Normalize();
@@ -175,12 +174,11 @@ namespace Dope.DDXX.MeshBuilder
 
         private void CreateSphere(float radius, int rings)
         {
-            IBody body;
             SpherePrimitive sphere = new SpherePrimitive();
             sphere.Radius = radius;
             sphere.Rings = rings;
-            sphere.Generate(out vertices, out indices, out body);
-            Assert.IsNull(body);
+            primitive = sphere.Generate();
+            Assert.IsNull(primitive.Body);
         }
     }
 }
