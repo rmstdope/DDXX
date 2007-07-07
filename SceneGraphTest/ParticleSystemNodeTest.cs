@@ -72,6 +72,34 @@ namespace Dope.DDXX.SceneGraph
         }
 
         [Test]
+        public void TestKillParticles()
+        {
+            TestInitializeWithTexture();
+
+            Expect.Once.On(vertexBuffer).
+                Method("Lock").
+                With(0, 0, LockFlags.Discard).
+                Will(Return.Value(graphicsStream));
+            int i = 0;
+            Stub.On(spawner).Method("ShouldSpawn").Will(Return.Value(false));
+            foreach (ISystemParticle particle in particles)
+            {
+                if (i > 3)
+                    Stub.On(particle).Method("IsDead").Will(Return.Value(true));
+                else
+                {
+                    Stub.On(particle).Method("IsDead").Will(Return.Value(false));
+                    Expect.Once.On(particle).Method("StepAndWrite").With(graphicsStream);
+                }
+                i++;
+            }
+            Expect.Once.On(vertexBuffer).
+                Method("Unlock");
+            system.Step();
+            Assert.AreEqual(4, system.ActiveParticles);
+        }
+
+        [Test]
         public void TestStepNoCreate()
         {
             TestInitializeNoTexture();
@@ -83,7 +111,10 @@ namespace Dope.DDXX.SceneGraph
                 With(0, 0, LockFlags.Discard).
                 Will(Return.Value(graphicsStream));
             foreach (ISystemParticle particle in particles)
+            {
+                Stub.On(particle).Method("IsDead").Will(Return.Value(false));
                 Expect.Once.On(particle).Method("StepAndWrite").With(graphicsStream);
+            }
             Expect.Once.On(vertexBuffer).
                 Method("Unlock");
             system.Step();
@@ -99,7 +130,10 @@ namespace Dope.DDXX.SceneGraph
                 With(0, 0, LockFlags.Discard).
                 Will(Return.Value(graphicsStream));
             foreach (ISystemParticle particle in particles)
+            {
+                Stub.On(particle).Method("IsDead").Will(Return.Value(false));
                 Expect.Once.On(particle).Method("StepAndWrite").With(graphicsStream);
+            }
             Expect.Once.On(vertexBuffer).
                 Method("Unlock");
             system.Step();
@@ -119,7 +153,10 @@ namespace Dope.DDXX.SceneGraph
                 With(0, 0, LockFlags.Discard).
                 Will(Return.Value(graphicsStream));
             foreach (ISystemParticle particle in particles)
+            {
+                Stub.On(particle).Method("IsDead").Will(Return.Value(false));
                 Expect.Once.On(particle).Method("StepAndWrite").With(graphicsStream);
+            }
             Expect.Once.On(vertexBuffer).
                 Method("Unlock");
             system.Step();
@@ -141,7 +178,10 @@ namespace Dope.DDXX.SceneGraph
                 With(0, 0, LockFlags.Discard).
                 Will(Return.Value(graphicsStream));
             foreach (ISystemParticle particle in particles)
+            {
                 Expect.Once.On(particle).Method("StepAndWrite").With(graphicsStream);
+                Stub.On(particle).Method("IsDead").Will(Return.Value(false));
+            }
             Expect.Once.On(vertexBuffer).
                 Method("Unlock");
             system.Step();

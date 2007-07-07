@@ -19,29 +19,29 @@ struct OutlinePixelInput
 	float4	Diffuse						: COLOR0;
 };
 
-float4 FocalPlane = float4(0.0f, 0.0f, 1.0f, -5.0f);
-float  HyperfocalDistance = 2.0f;
+float4 FocalPlane = float4(0.0f, 0.0f, 1.0f, -50.0f);
+float  HyperfocalDistance = 0.1f;
 //float  MaxBlurFactor = 3.0f / 4.0f;
 float  MaxBlurFactor = 12.0f / 13.0f;
-float ChamferAdd = 0.2;
+float ChamferAdd = 0.1;
 
 DoFPixelInput
 DoFVertexShader(DoFVertexInput input)
 {
 	DoFPixelInput output;
 
-	if (input.Position.x > 0)
-		input.Position.x += ChamferAdd;
-	else
-		input.Position.x -= ChamferAdd;
-	if (input.Position.y > 0)
-		input.Position.y += ChamferAdd;
-	else
-		input.Position.y -= ChamferAdd;
-	if (input.Position.z > 0)
-		input.Position.z += ChamferAdd;
-	else
-		input.Position.z -= ChamferAdd;
+	//if (input.Position.x > 0)
+	//	input.Position.x += ChamferAdd;
+	//else
+	//	input.Position.x -= ChamferAdd;
+	//if (input.Position.y > 0)
+	//	input.Position.y += ChamferAdd;
+	//else
+	//	input.Position.y -= ChamferAdd;
+	//if (input.Position.z > 0)
+	//	input.Position.z += ChamferAdd;
+	//else
+	//	input.Position.z -= ChamferAdd;
 	float3 positionWS = mul(input.Position, WorldT);
 	output.Position = mul(input.Position, WorldViewProjectionT);
 	output.Normal = mul(input.Normal, (float3x3)WorldT);
@@ -146,6 +146,36 @@ technique CelWithDoF
 		ZFunc							= Less;
 		StencilEnable			= false;
 		CullMode					= CCW;
+	}
+}
+
+technique CelWithDoFMirrored
+<
+	bool NormalMapping = false;
+	bool Skinning = false;
+>
+{
+	pass Outline
+	{
+		VertexShader			= compile vs_2_0 OutlineVertexShader();
+		PixelShader				= compile ps_2_0 OutlinePixelShader();
+		AlphaBlendEnable	= false;
+		FillMode					= Solid;
+		ZEnable						=	true;
+		ZFunc							= Less;
+		StencilEnable			= false;
+		CullMode					= CCW;
+	}
+	pass BasePass
+	{
+		VertexShader			= compile vs_2_0 DoFVertexShader();
+		PixelShader				= compile ps_2_0 DoFPixelShader();
+		AlphaBlendEnable	= false;
+		FillMode					= Solid;
+		ZEnable						=	true;
+		ZFunc							= Less;
+		StencilEnable			= false;
+		CullMode					= CW;
 	}
 }
 

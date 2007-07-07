@@ -19,8 +19,9 @@ using Dope.DDXX.Graphics;
 using Microsoft.DirectX;
 public class FooEffect : TweakableContainer, IDemoEffect 
 {
-  protected float start; protected float end;
+  protected float start; protected float end; protected int drawOrder;
   public FooEffect(float f1, float f2) { start = f1; end = f2;}
+  public int DrawOrder { get { return drawOrder;} set { drawOrder = value; } }
   public void Step() {} public void Render() {} public void Initialize(IGraphicsFactory graphicsFactory, IEffectFactory effectFactory, IDevice device, IDemoMixer mixer) {} 
   public float StartTime { get { return start;} set { start = value;} }
   public float EndTime { get { return end;} set { end = value;} }

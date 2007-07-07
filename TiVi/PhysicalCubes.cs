@@ -7,6 +7,9 @@ using Microsoft.DirectX;
 using Dope.DDXX.Graphics;
 using System.Drawing;
 using Dope.DDXX.SceneGraph;
+using Dope.DDXX.MeshBuilder;
+using Dope.DDXX.Utility;
+using Microsoft.DirectX.Direct3D;
 
 namespace TiVi
 {
@@ -14,7 +17,7 @@ namespace TiVi
     {
         private class YPosConstraint : IConstraint
         {
-            private const float epsilon = 0.001f;
+            private const float epsilon = 0.005f;
             private float yPos;
             private IPhysicalParticle particle;
             
@@ -32,35 +35,126 @@ namespace TiVi
             public void Satisfy()
             {
                 if (particle.Position.Y < yPos - epsilon)
+                {
+                    Vector3 oldPos = particle.OldPosition;
+                    float yDiff = particle.Position.Y - particle.OldPosition.Y;
+                    oldPos.Y = particle.Position.Y;
+                    //particle.OldPosition = oldPos;
+                    //particle.Position = new Vector3(particle.Position.X, oldPos.Y - yDiff, particle.Position.Z);
                     particle.Position = new Vector3(particle.Position.X, yPos, particle.Position.Z);
+                }
             }
         }
 
-        private Body body;
+        private class PhysicalCube
+        {
+            public ModelNode model;
+            public MirrorNode mirror;
+            public IBody body;
+            public bool floorContact;
+            public Vector3 up;
+            public Vector3 forward;
+            public Vector3 right;
+        }
+
         private ILine line;
         private IScene scene;
         private CameraNode camera;
+        private List<PhysicalCube> cubes = new List<PhysicalCube>();
 
         public PhysicalCubes(float start, float end)
             : base(start, end)
         {
         }
 
+        private Vector4 celMapCallback(Vector2 texCoord, Vector2 texelSize)
+        {
+            if (texCoord.X < 0.3f)
+                return new Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+            else if (texCoord.X < 0.6f)
+                return new Vector4(0.0f, 0.0f, 0.2f, 1.0f);
+            //else if (texCoord.X < 0.9f)
+            return new Vector4(0.1f, 0.1f, 0.4f, 1.0f);
+            //return new Vector4(0.1f, 0.3f, 0.4f, 1);
+        }
+
         protected override void Initialize()
         {
-            const float stiffness = 0.7f;
-            CreateStandardSceneAndCamera(out scene, out camera, 15);
+            ITexture celTexture = TextureFactory.CreateFromFunction(64, 1, 0, Usage.None, Format.A8R8G8B8, Pool.Managed, celMapCallback);
+
+            cubes.Clear();
+
+            string[] text1 = new string[] {
+                "***** ***** *****",
+                "*       *   *    ",
+                "*****   *   *****",
+                "    *   *       *",
+                "*****   *   *****",
+            };
+            string[] text2 = new string[] {
+                "**   **  ***  ***  *",
+                "* * *  * *  * *    * ",
+                "* * *  * ***  ***  * ",
+                "* * *  * *    *      ",
+                "**   **  *    ***  * ",
+            };
+            string[] text;
+            if (Rand.Int(-1, 1) == 0)
+                text = text1;
+            else
+                text = text2;
+
+            const float epsilon = 0.01f;
+            CreateStandardSceneAndCamera(out scene, out camera, 40);
+            camera.WorldState.MoveUp(20);
             line = GraphicsFactory.CreateLine(Device);
 
-            body = new Body();
-            body.AddParticle(new PhysicalParticle(new Vector3(-1, 1, 1), 1, 0));
-            body.AddParticle(new PhysicalParticle(new Vector3(1, 1, 1), 1, 0));
-            body.AddParticle(new PhysicalParticle(new Vector3(1, -1, 1), 1, 0));
-            body.AddParticle(new PhysicalParticle(new Vector3(-1, -1, 1), 1, 0));
-            body.AddParticle(new PhysicalParticle(new Vector3(-1, 1, -1), 1, 0));
-            body.AddParticle(new PhysicalParticle(new Vector3(1, 1, -1), 1, 0));
-            body.AddParticle(new PhysicalParticle(new Vector3(1, -1, -1), 1, 0));
-            body.AddParticle(new PhysicalParticle(new Vector3(-1, -1, -1), 1, 0));
+            int yLength = text.Length;
+            for (int y = 0; y < yLength; y++)
+            {
+                int xLength = text[y].Length;
+                for (int x = 0; x < xLength; x++)
+                {
+                    if (text[y][x] == '*')
+                    {
+                        Vector3 pos = new Vector3((x - xLength / 2) * 2.4f, 20 - y * 2.4f, 0);
+                        cubes.Add(CreateBox(pos, celTexture));
+                        foreach (IPhysicalParticle particle in cubes[cubes.Count - 1].body.Particles)
+                        {
+                            particle.Position += new Vector3(
+                                0, 0, Rand.Float(0, epsilon));
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < 2; i++)
+            {
+                DirectionalLightNode light = new DirectionalLightNode("Light" + i);
+                scene.AddNode(light);
+                float x = i - 0.5f;
+                float y = Rand.Float(-1, 1);
+                float z = Rand.Float(-1, 0);
+                light.Direction = new Vector3(x, y, z);
+            }
+
+            //cubes.Add(CreateBox(new Vector3(0, -4, 0)));
+        }
+
+        private PhysicalCube CreateBox(Vector3 pos, ITexture texture)
+        {
+            PhysicalCube cube = new PhysicalCube();
+            const float stiffness = 0.9f;
+            const float dragCoefficient = 0.1f;
+            IBody body = new Body();
+            body.AddParticle(new PhysicalParticle(new Vector3(-1, 1, 1) + pos, 1, dragCoefficient));
+            body.AddParticle(new PhysicalParticle(new Vector3(1, 1, 1) + pos, 1, dragCoefficient));
+            body.AddParticle(new PhysicalParticle(new Vector3(1, -1, 1) + pos, 1, dragCoefficient));
+            body.AddParticle(new PhysicalParticle(new Vector3(-1, -1, 1) + pos, 1, dragCoefficient)); // forward
+            body.AddParticle(new PhysicalParticle(new Vector3(-1, 1, -1) + pos, 1, dragCoefficient)); // up
+            body.AddParticle(new PhysicalParticle(new Vector3(1, 1, -1) + pos, 1, dragCoefficient));
+            body.AddParticle(new PhysicalParticle(new Vector3(1, -1, -1) + pos, 1, dragCoefficient)); // right
+            body.AddParticle(new PhysicalParticle(new Vector3(-1, -1, -1) + pos, 1, dragCoefficient)); // origo
 
             body.AddConstraint(new StickConstraint(body.Particles[0], body.Particles[1], 2, stiffness));
             body.AddConstraint(new StickConstraint(body.Particles[1], body.Particles[2], 2, stiffness));
@@ -83,50 +177,183 @@ namespace TiVi
             body.AddConstraint(new StickConstraint(body.Particles[3], body.Particles[5], (float)Math.Sqrt(12)));
 
             foreach (IPhysicalParticle particle in body.Particles)
-                body.AddConstraint(new YPosConstraint(-5, particle));
+                body.AddConstraint(new YPosConstraint(0, particle));
 
-            body.Particles[0].Position += new Vector3(0.02f, 0.02f, 0.02f);
-            //body.AddConstraint(new PositionConstraint(body.Particles[0], body.Particles[0].Position));
-            body.Gravity = new Vector3(0, -4.0f, 0);
+            body.Gravity = new Vector3(0, -30.0f, 0);
+
+            MeshDirector director = new MeshDirector(MeshBuilder);
+            director.CreateChamferBox(2, 2, 2, 0.5f, 4);
+            IModel model = director.Generate("Default1");
+            model.Materials[0].DiffuseTexture = texture;
+            model.Materials[0].AmbientColor = new ColorValue(0.1f, 0.1f, 0.6f);
+            //model.Mesh.ComputeNormals();
+            cube.model = CreateSimpleModelNode(model, "TiVi.fxo", "CelWithDoF");
+            cube.model.Position = pos;
+            cube.body = body;
+            cube.floorContact = false;
+            cube.mirror = new MirrorNode(cube.model);
+            return cube;
         }
 
         public override void Step()
         {
-            body.Step();
+            Vector3 origo;
+            float t = Time.StepTime * 0.1f;
+            //camera.Position = new Vector3((float)Math.Sin(t), 0.3f, (float)Math.Cos(t)) * 60;
+            camera.LookAt(new Vector3(), new Vector3(0, 1, 0));
+
+            if (Time.StepTime < 0.2f)
+                Initialize();
+            else
+            {
+                foreach (PhysicalCube cube in cubes)
+                {
+                    cube.body.Step();
+                    GetBodyBase(cube, out origo);
+                    UpdateNode(cube, origo);
+                }
+                foreach (PhysicalCube cube in cubes)
+                {
+                    LimitNodeToFloor(cube);
+                    CheckColidingCubes(cube);
+                    UpdateBody(cube);
+                }
+                scene.Step();
+            }
+        }
+
+        private void CheckColidingCubes(PhysicalCube cube)
+        {
+            foreach (PhysicalCube secondCube in cubes)
+            {
+                if (cube != secondCube)
+                {
+                    Vector3 deltaVector = cube.model.Position - secondCube.model.Position;
+                    float originalDistance = deltaVector.Length();
+                    float deltaDistance = (2.4f - originalDistance);
+                    if (deltaDistance > 0)
+                    {
+                        if (cube.floorContact || !secondCube.floorContact)
+                        {
+                            float delta = deltaDistance / (originalDistance * 2);
+                            cube.model.Position += delta * deltaVector * 0.6f;
+                            secondCube.model.Position -= delta * deltaVector * 1.4f;
+                        }
+                        else if (!cube.floorContact || secondCube.floorContact)
+                        {
+                            float delta = deltaDistance / (originalDistance * 2);
+                            cube.model.Position += delta * deltaVector * 1.4f;
+                            secondCube.model.Position -= delta * deltaVector * 0.6f;
+                        }
+                        else
+                        {
+                            float delta = deltaDistance / (originalDistance * 2);
+                            cube.model.Position += delta * deltaVector;
+                            secondCube.model.Position -= delta * deltaVector;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void LimitNodeToFloor(PhysicalCube cube)
+        {
+            Vector3 origo = cube.model.Position;
+            float y = 0;
+            y = Math.Min(y, (origo - cube.right + cube.up + cube.forward).Y);
+            y = Math.Min(y, (origo + cube.right + cube.up + cube.forward).Y);
+            y = Math.Min(y, (origo + cube.right - cube.up + cube.forward).Y);
+            y = Math.Min(y, (origo - cube.right - cube.up + cube.forward).Y);
+            y = Math.Min(y, (origo - cube.right + cube.up - cube.forward).Y);
+            y = Math.Min(y, (origo + cube.right + cube.up - cube.forward).Y);
+            y = Math.Min(y, (origo + cube.right - cube.up - cube.forward).Y);
+            y = Math.Min(y, (origo - cube.right - cube.up - cube.forward).Y);
+            if (y < 0)
+            {
+                cube.floorContact = true;
+                foreach (IPhysicalParticle particle in cube.body.Particles)
+                    particle.DragCoefficient = 0.3f;
+                origo.Y -= (y + 0);
+            }
+            cube.model.Position = origo;
+        }
+
+        private void UpdateBody(PhysicalCube cube)
+        {
+            Vector3 origo = cube.model.Position;
+            cube.body.Particles[0].Position = origo - cube.right + cube.up + cube.forward;
+            cube.body.Particles[1].Position = origo + cube.right + cube.up + cube.forward;
+            cube.body.Particles[2].Position = origo + cube.right - cube.up + cube.forward;
+            cube.body.Particles[3].Position = origo - cube.right - cube.up + cube.forward;
+            cube.body.Particles[4].Position = origo - cube.right + cube.up - cube.forward;
+            cube.body.Particles[5].Position = origo + cube.right + cube.up - cube.forward;
+            cube.body.Particles[6].Position = origo + cube.right - cube.up - cube.forward;
+            cube.body.Particles[7].Position = origo - cube.right - cube.up - cube.forward;
+        }
+
+        private static void GetBodyBase(PhysicalCube cube, out Vector3 origo)
+        {
+            origo = cube.body.Particles[7].Position;
+            IPhysicalParticle upParticle = cube.body.Particles[4];
+            IPhysicalParticle rightParticle = cube.body.Particles[6];
+            cube.right = rightParticle.Position - origo;
+            cube.up = upParticle.Position - origo;
+            cube.forward = Vector3.Cross(cube.right, cube.up);
+            cube.up = Vector3.Cross(cube.forward, cube.right);
+            cube.forward.Normalize();
+            cube.up.Normalize();
+            cube.right.Normalize();
+
+            //origo = new Vector3();
+            //foreach (IPhysicalParticle particle in body.Particles)
+            //    origo += particle.Position;
+            //origo.Scale(1/8.0f);
+        }
+
+        private static void UpdateNode(PhysicalCube cube, Vector3 origo)
+        {
+            Matrix rot = new Matrix();
+            rot.M11 = cube.right.X;
+            rot.M12 = cube.right.Y;
+            rot.M13 = cube.right.Z;
+            rot.M21 = cube.up.X;
+            rot.M22 = cube.up.Y;
+            rot.M23 = cube.up.Z;
+            rot.M31 = cube.forward.X;
+            rot.M32 = cube.forward.Y;
+            rot.M33 = cube.forward.Z;
+            rot.M44 = 1;
+            cube.model.WorldState.Rotation = rot;
+            cube.model.WorldState.Position = origo + cube.up + cube.forward + cube.right;
         }
 
         public override void Render()
         {
-            Matrix transform = camera.ViewMatrix * camera.ProjectionMatrix;
-            Vector3[] vecs = new Vector3[] { new Vector3(0, 0, 0), new Vector3(10, 0, 0) };
-            Vector3[] vertices = new Vector3[body.Particles.Count];
-            for (int i = 0; i < vertices.Length; i++)
-                vertices[i] = body.Particles[i].Position;
-            //line.Width = 20;
-            //line.Antialias = false;
-            line.Begin();
-            //line.DrawTransform(vecs, transform, Color.White);
-            foreach (IConstraint constraint in body.Constraints)
+            foreach (PhysicalCube cube in cubes)
             {
-                if (constraint is StickConstraint)
-                {
-                    StickConstraint stick = constraint as StickConstraint;
-                    line.DrawTransform(new Vector3[] { stick.Particle1.Position, stick.Particle2.Position }, transform, Color.White);
-                }
+                //Matrix transform = camera.ViewMatrix * camera.ProjectionMatrix;
+                //Vector3[] vecs = new Vector3[] { new Vector3(0, 0, 0), new Vector3(10, 0, 0) };
+                //Vector3[] vertices = new Vector3[cube.body.Particles.Count];
+                //for (int i = 0; i < vertices.Length; i++)
+                //    vertices[i] = cube.body.Particles[i].Position;
+                //line.Width = 1;
+                //line.Begin();
+                //foreach (IConstraint constraint in cube.body.Constraints)
+                //{
+                //    if (constraint is StickConstraint)
+                //    {
+                //        StickConstraint stick = constraint as StickConstraint;
+                //        line.DrawTransform(new Vector3[] { stick.Particle1.Position, stick.Particle2.Position }, transform, Color.White);
+                //    }
+                //}
+                //line.End();
+                scene.SetEffectParameters();
+                cube.model.EffectHandler.Techniques[0] = EffectHandle.FromString("CelWithDoF");
+                cube.model.Render(scene);
+                cube.model.EffectHandler.Techniques[0] = EffectHandle.FromString("CelWithDoFMirrored");
+                cube.mirror.Render(scene);
             }
-            //line.DrawTransform(new Vector3[] { body.Particles[0].Position, body.Particles[1].Position }, transform, Color.White);
-            //line.DrawTransform(new Vector3[] { body.Particles[1].Position, body.Particles[2].Position }, transform, Color.White);
-            //line.DrawTransform(new Vector3[] { body.Particles[2].Position, body.Particles[3].Position }, transform, Color.White);
-            //line.DrawTransform(new Vector3[] { body.Particles[3].Position, body.Particles[0].Position }, transform, Color.White);
-            //line.DrawTransform(new Vector3[] { body.Particles[4].Position, body.Particles[5].Position }, transform, Color.White);
-            //line.DrawTransform(new Vector3[] { body.Particles[5].Position, body.Particles[6].Position }, transform, Color.White);
-            //line.DrawTransform(new Vector3[] { body.Particles[6].Position, body.Particles[7].Position }, transform, Color.White);
-            //line.DrawTransform(new Vector3[] { body.Particles[7].Position, body.Particles[4].Position }, transform, Color.White);
-            //line.DrawTransform(new Vector3[] { body.Particles[0].Position, body.Particles[4].Position }, transform, Color.White);
-            //line.DrawTransform(new Vector3[] { body.Particles[1].Position, body.Particles[5].Position }, transform, Color.White);
-            //line.DrawTransform(new Vector3[] { body.Particles[2].Position, body.Particles[6].Position }, transform, Color.White);
-            //line.DrawTransform(new Vector3[] { body.Particles[3].Position, body.Particles[7].Position }, transform, Color.White);
-            line.End();
+            scene.Render();
         }
     }
 }

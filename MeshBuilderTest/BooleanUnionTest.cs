@@ -4,6 +4,7 @@ using System.Text;
 using NUnit.Framework;
 using Dope.DDXX.Physics;
 using Microsoft.DirectX;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.MeshBuilder
 {
@@ -18,26 +19,26 @@ namespace Dope.DDXX.MeshBuilder
             union = new BooleanUnion();
         }
 
-        private class EmptyPrimitive : IModifier
-        {
-            public Primitive Generate()
-            {
-                return new Primitive(new Vertex[0], new short[0]);
-            }
-        }
-
         private class SimplePrimitive : IModifier
         {
+            private Vertex[] vertices;
+            private short[] indices;
+            public SimplePrimitive(Vertex[] vertices, short[] indices)
+            {
+                this.vertices = vertices;
+                this.indices = indices;
+            }
+
             public Primitive Generate()
             {
-                return new Primitive(new Vertex[1], new short[0]);
+                return new Primitive(vertices, indices);
             }
         }
 
         [Test]
         public void TwoEmptyPrimitives()
         {
-            IModifier p = new EmptyPrimitive();
+            IModifier p = EmptyPrimitive();
             union.A = p;
             union.B = p;
             Primitive primitive = union.Generate();
@@ -45,28 +46,39 @@ namespace Dope.DDXX.MeshBuilder
             Assert.AreEqual(0, primitive.Indices.Length);
         }
 
+        private IModifier EmptyPrimitive()
+        {
+            return new SimplePrimitive(new Vertex[] { }, new short[] { });
+        }
+
         [Test]
         public void EmptyAndSimple()
         {
-            IModifier e = new EmptyPrimitive();
-            IModifier s = new SimplePrimitive();
+            IModifier e = EmptyPrimitive();
+            IModifier s = new SimplePrimitive(new Vertex[] { RandomVertex() }, new short[] { RandomIndex() });
             union.A = e;
             union.B = s;
-            Assert.AreEqual(Vertices(s).Length + Vertices(e).Length, Vertices(union).Length);
-            Assert.AreEqual(Indices(s).Length + Indices(e).Length, Indices(union).Length);
-            Assert.AreEqual(Indices(s), Indices(union));
-
+            Assert.AreEqual(s.Generate().Vertices.Length + e.Generate().Vertices.Length,
+                union.Generate().Vertices.Length);
+            Assert.AreEqual(s.Generate().Indices.Length + e.Generate().Indices.Length,
+                union.Generate().Indices.Length);
+            Assert.AreEqual(s.Generate().Indices, union.Generate().Indices);
+            Assert.AreEqual(s.Generate().Vertices, union.Generate().Vertices);
         }
 
-
-        private Vertex[] Vertices(IModifier p)
+        private Vertex RandomVertex()
         {
-            return p.Generate().Vertices;
+            Vertex vertex = new Vertex();
+            vertex.Position = new Vector3(Rand.Float(1), Rand.Float(1), Rand.Float(1));
+            vertex.Normal= new Vector3(Rand.Float(1), Rand.Float(1), Rand.Float(1));
+            vertex.U = Rand.Float(1);
+            vertex.V = Rand.Float(1);
+            return vertex;
         }
 
-        private short[] Indices(IModifier p)
+        private short RandomIndex()
         {
-            return p.Generate().Indices;
+            return (short)Rand.Int(0, short.MaxValue);
         }
     }
 }

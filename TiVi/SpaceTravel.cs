@@ -13,13 +13,15 @@ using Dope.DDXX.ParticleSystems;
 using Dope.DDXX.MeshBuilder;
 using Dope.DDXX.TextureBuilder;
 
-namespace EngineTest
+namespace TiVi
 {
     public class SpaceTravel : BaseDemoEffect
     {
-        private List<ParticleSystemNode> spiralSystems = new List<ParticleSystemNode>();
+        private List<INode> spiralSystems = new List<INode>();
         private CameraNode camera;
         private IScene scene;
+        private TiViMeshDirector tiviMeshDirector;
+        private Interpolator<InterpolatedVector3> interpolator;
 
         public SpaceTravel(float startTime, float endTime)
             : base(startTime, endTime)
@@ -42,10 +44,18 @@ namespace EngineTest
 
         protected override void Initialize()
         {
-            CreateStandardSceneAndCamera(out scene, out camera, 10);
+            CreateStandardSceneAndCamera(out scene, out camera, 1000);
             camera.SetClippingPlanes(1, 10000);
+            tiviMeshDirector = new TiViMeshDirector(MeshBuilder, new MeshDirector(MeshBuilder), EffectFactory, Device);
 
             CreateSpiralSystems();
+
+            ClampedCubicSpline<InterpolatedVector3> spline = new ClampedCubicSpline<InterpolatedVector3>(new InterpolatedVector3(), new InterpolatedVector3());
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(10, new InterpolatedVector3(new Vector3(0, 0, 0))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(15, new InterpolatedVector3(new Vector3(0, 200, -200))));
+            spline.Calculate();
+            interpolator = new Interpolator<InterpolatedVector3>();
+            interpolator.AddSpline(spline);
 
             scene.Validate();
         }
@@ -55,10 +65,10 @@ namespace EngineTest
             ITexture circleTexture = TextureFactory.CreateFromFunction(64, 64, 0, Usage.None, Format.A8R8G8B8, Pool.Managed, circleCallback);
             spiralSystems.Add(CreateSpiralSystem("1", circleTexture, Color.FromArgb(100, 70, 70), -5));
             spiralSystems.Add(CreateSpiralSystem("2", circleTexture, Color.FromArgb(20, 20, 50), -5));
-            spiralSystems.Add(CreateSpiralSystem("3", circleTexture, Color.FromArgb(100, 70, 70), 5));
-            spiralSystems.Add(CreateSpiralSystem("4", circleTexture, Color.FromArgb(20, 20, 50), 5));
-            spiralSystems[2].WorldState.Scaling = new Vector3(-1, -1, -1);
-            spiralSystems[3].WorldState.Scaling = new Vector3(-1, -1, -1);
+            spiralSystems.Add(new MirrorNode(spiralSystems[0]));// CreateSpiralSystem("3", circleTexture, Color.FromArgb(100, 70, 70), 5));
+            spiralSystems.Add(new MirrorNode(spiralSystems[1]));// CreateSpiralSystem("4", circleTexture, Color.FromArgb(20, 20, 50), 5));
+            scene.AddNode(spiralSystems[2]);
+            scene.AddNode(spiralSystems[3]);
         }
 
         private ParticleSystemNode CreateSpiralSystem(string name, ITexture circleTexture, Color color, float startTime)
@@ -68,6 +78,10 @@ namespace EngineTest
             spawner.Color = color;
             spawner.ColorDistortion = 10;
             spawner.NextTime = startTime;
+            spawner.VelocityY = 10;
+            spawner.VelocityXZ = 30;
+            spawner.PositionDistortion = 20;
+            spawner.TimeBetweenSpawns = 0.004f;
             system.Initialize(spawner, Device, GraphicsFactory, EffectFactory, circleTexture);
             scene.AddNode(system);
             return system;
@@ -77,7 +91,7 @@ namespace EngineTest
         {
             StepCamera();
 
-            StepSpiralSystems();           
+            StepSpiralSystems();
 
             scene.Step();
         }
@@ -87,16 +101,18 @@ namespace EngineTest
             float d = (Time.StepTime - StartTime) / (EndTime - StartTime);
             d = Math.Max(0, (d - 0.5f)) * 2;
             float deltaMul = 0.02f + (float)Math.Sin(Math.PI / 2 * d) * 0.5f;
-            foreach (ParticleSystemNode system in spiralSystems)
-                system.WorldState.Turn(-Time.DeltaTime * deltaMul);
+            for (int i = 0; i <2; i++)
+                if (spiralSystems.Count > i)
+                    spiralSystems[i].WorldState.Turn(-Time.DeltaTime * deltaMul);
 
         }
 
         private void StepCamera()
         {
             float t = Time.StepTime / 4;
-            camera.Position = new Vector3((float)Math.Sin(t), (float)Math.Cos(t), (float)Math.Cos(t)) * 500;
-            camera.LookAt(new Vector3(0, 0, 0), new Vector3(0, 1, 0));
+            camera.Position = new Vector3((float)Math.Sin(t), (float)Math.Cos(t), (float)Math.Cos(t)) * 1000;
+            camera.LookAt(interpolator.GetValue(Time.StepTime - StartTime), new Vector3(0, 1, 0));
+
         }
 
         public override void Render()

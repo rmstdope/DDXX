@@ -21,6 +21,6 @@ namespace Dope.DDXX.SceneGraph
         void Render(IScene scene);
         int CountNodes();
         void EnableFrameHandling(IFrame frame);
-        Vector3 Position { get; }
+        Vector3 Position { get; set; }
     }
 }

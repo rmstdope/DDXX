@@ -287,6 +287,7 @@ namespace Dope.DDXX.SceneGraph
         public Microsoft.DirectX.Vector3 Position
         {
             get { throw new Exception("The method or operation is not implemented."); }
+            set { throw new Exception("The method or operation is not implemented."); }
         }
 
         #endregion

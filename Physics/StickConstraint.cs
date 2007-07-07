@@ -7,7 +7,7 @@ namespace Dope.DDXX.Physics
 {
     public class StickConstraint : IConstraint
     {
-        private const float epsilon = 0.00f;
+        private const float epsilon = 0.000f;
         private IPhysicalParticle particle1;
         private IPhysicalParticle particle2;
         private float distance;

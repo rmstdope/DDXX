@@ -12,6 +12,7 @@ namespace Dope.DDXX.DemoFramework
 {
     public abstract class BaseDemoEffect : TweakableContainer, IDemoEffect
     {
+        private int drawOrder;
         private float startTime;
         private float endTime;
         private IGraphicsFactory graphicsFactory;
@@ -26,6 +27,7 @@ namespace Dope.DDXX.DemoFramework
         {
             StartTime = startTime;
             EndTime = endTime;
+            drawOrder = 0;
         }
 
         protected IDevice Device
@@ -83,6 +85,12 @@ namespace Dope.DDXX.DemoFramework
                     textureBuilder = new TextureBuilder.TextureBuilder(TextureFactory);
                 return textureBuilder;
             }
+        }
+
+        public int DrawOrder
+        {
+            set { drawOrder = value; }
+            get { return drawOrder; }
         }
 
         protected void CreateStandardSceneAndCamera(out IScene scene, out CameraNode camera, float distance)

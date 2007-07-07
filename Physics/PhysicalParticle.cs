@@ -6,7 +6,7 @@ using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.Physics
 {
-    public class PhysicalParticle : Dope.DDXX.Physics.IPhysicalParticle
+    public class PhysicalParticle : IPhysicalParticle
     {
         private Vector3 position;
         private Vector3 oldPosition;
@@ -40,7 +40,7 @@ namespace Dope.DDXX.Physics
             this.invMass = 1 / mass;
             this.lastVelocity = new Vector3(0, 0, 0);
             this.dragCoefficient = dragCoefficient;
-            lastDeltaTime = 1.0f;
+            lastDeltaTime = 0.002f;
             externalForces = new Vector3(0, 0, 0);
         }
 
@@ -50,10 +50,22 @@ namespace Dope.DDXX.Physics
             set { position = value; }
         }
 
+        public Vector3 OldPosition
+        {
+            get { return oldPosition; }
+            set { oldPosition = value; }
+        }
+
         public float InvMass
         {
             get { return invMass; }
             set { invMass = value; }
+        }
+
+        public float DragCoefficient
+        {
+            get { return dragCoefficient; }
+            set { dragCoefficient = value; }
         }
 
         public void Step(Vector3 gravity)
@@ -88,7 +100,11 @@ namespace Dope.DDXX.Physics
         private Vector3 GetVelocity()
         {
             // Calculate the average velocity last update
-            Vector3 velocity = (position - oldPosition) * (1 / lastDeltaTime);
+            Vector3 velocity;
+            if (lastDeltaTime > 0)
+                velocity = (position - oldPosition) * (1 / lastDeltaTime);
+            else
+                velocity = new Vector3();
             // Add drag coefficient
             return velocity * (1 - dragCoefficient);
         }

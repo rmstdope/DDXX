@@ -2,6 +2,7 @@
 #include <AtmosphereShader.hlsl>
 #include <Simple.hlsl>
 #include <Reflective.hlsl>
+#include <DepthOfField.hlsl>
  
 struct SolidPixelInput
 {
@@ -192,7 +193,7 @@ DiamondVertexShader(InputVS input,
 	AnimatedVertex_PN animated = AnimateVertex(input.Position, input.Normal, input.BlendIndices, input.BlendWeights, numWeights);
 
 	// Transform the position from object space to world space
-	float3 viewNormal = mul(animated.Normal, WorldViewT);
+	float3 viewNormal = normalize(mul(animated.Normal, WorldViewT));
 
 	// Transform the position from object space to homogeneous projection space
 	output.Position = mul(animated.Position, WorldViewProjectionT);
@@ -200,7 +201,7 @@ DiamondVertexShader(InputVS input,
 	output.TextureCoord = input.TextureCoord;
 
 	float diffuse = max(0, dot(viewNormal, float3(0, 0, -1)));
-	float specular = 20 * pow(diffuse, 64);
+	float specular = 0;//20 * pow(diffuse, 64);
 	output.DiffuseColor = AmbientColor + MaterialDiffuseColor * diffuse;
 	output.SpecularColor = specular;
 	

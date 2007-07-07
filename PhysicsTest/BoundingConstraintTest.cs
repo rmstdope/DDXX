@@ -108,5 +108,39 @@ namespace Dope.DDXX.Physics
         }
 
         #endregion
+
+        #region IPhysicalParticle Members
+
+
+        public Vector3 OldPosition
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        #endregion
+
+        #region IPhysicalParticle Members
+
+
+        public float DragCoefficient
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        #endregion
     }
 }

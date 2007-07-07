@@ -71,6 +71,7 @@ namespace Dope.DDXX.SceneGraph
 
         protected override void StepNode()
         {
+            particles.RemoveAll(delegate(ISystemParticle particle) { if (particle.IsDead()) return true; else return false; });
             while (particleSpawner.MaxNumParticles != particles.Count && particleSpawner.ShouldSpawn())
                 particles.Add(particleSpawner.Spawn());
             using (IGraphicsStream stream = vertexBuffer.Lock(0, 0, LockFlags.Discard))

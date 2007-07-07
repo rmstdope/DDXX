@@ -150,13 +150,7 @@ namespace Dope.DDXX.DemoFramework
                 
                 device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, backgroundColor, 1.0f, 0);
 
-                device.BeginScene();
-
-                IDemoEffect[] activeEffects = GetEffects(Time.StepTime);
-                foreach (IDemoEffect effect in activeEffects)
-                    effect.Render();
-
-                device.EndScene();
+                RenderEffects(device);
 
                 postProcessor.StartFrame(renderTarget);
                 RenderPostEffects();
@@ -164,6 +158,26 @@ namespace Dope.DDXX.DemoFramework
                 device.SetRenderTarget(0, originalTarget);
             }
             return postProcessor.OutputTexture;
+        }
+
+        private void RenderEffects(IDevice device)
+        {
+            device.BeginScene();
+            IDemoEffect[] activeEffects = GetEffects(Time.StepTime);
+            int minOrder = 1000;
+            int maxOrder = -1000;
+            foreach (IDemoEffect effect in activeEffects)
+            {
+                if (effect.DrawOrder > maxOrder)
+                    maxOrder = effect.DrawOrder;
+                if (effect.DrawOrder < minOrder)
+                    minOrder = effect.DrawOrder;
+            }
+            for (int i = minOrder; i <= maxOrder; i++)
+                foreach (IDemoEffect effect in activeEffects)
+                    if (effect.DrawOrder == i)
+                        effect.Render();
+            device.EndScene();
         }
 
         private void RenderPostEffects()

@@ -20,7 +20,6 @@ namespace EngineTest
         private ParticleSystemNode floaterSystem;
         private ParticleSystemNode starSystem;
         private ParticleSystemNode spiralSystem1;
-        private ParticleSystemNode spiralSystem2;
         private CameraNode camera;
         private IScene scene;
         private ModelNode modelNode;
@@ -33,7 +32,7 @@ namespace EngineTest
         private ITexture generatedTexture2;
         private ILine line;
         private List<float> yPos = new List<float>();
-        private ModelNode terrainModel = null;
+        //private ModelNode terrainModel = null;
 
         public float ReflectiveFactor
         {

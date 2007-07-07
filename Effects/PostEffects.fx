@@ -474,7 +474,8 @@ DoFPixelShader(float2 Tex					: TEXCOORD0,
 		blurred += lerp(original, current, saturate(original.a * current.a));
 	}
 
-	return blurred / numSamples;//float4(blurred / numSamples, 0.0f);
+	return blurred / numSamples;
+	//return original.a;
 }
 
 //-----------------------------------------------------------------------------

@@ -14,8 +14,9 @@ namespace TiVi
         private MeshBuilder builder;
         private IEffectFactory effectFactory;
         private IDevice device;
+        private int diamondNum;
 
-        void Initialize(MeshBuilder builder, MeshDirector director, IEffectFactory effectFactory, IDevice device)
+        public TiViMeshDirector(MeshBuilder builder, MeshDirector director, IEffectFactory effectFactory, IDevice device)
         {
             this.builder = builder;
             this.director = director;
@@ -23,21 +24,22 @@ namespace TiVi
             this.device = device;
         }
 
-        ModelNode CreateDiamondNode()
+        public ModelNode CreateDiamondNode(float scaling)
         {
-            builder.SetAmbientColor("Default1", new ColorValue(0.3f, 0.3f, 0.3f, 1.0f));
-            builder.SetDiffuseColor("Default1", new ColorValue(0.3f, 0.3f, 0.3f, 1.0f));
+            builder.SetAmbientColor("Default1", new ColorValue(0.1f, 0.1f, 0.1f, 1.0f));
+            builder.SetDiffuseColor("Default1", new ColorValue(0.8f, 0.8f, 0.8f, 1.0f));
             builder.SetDiffuseTexture("Default1", "square.tga");
             director.CreateChamferBox(1, 1, 0.4f, 0.2f, 4);
             director.UvMapPlane(1, 1, 1);
             director.Rotate((float)Math.PI / 2, 0, 0);
             director.Rotate(0, 0, (float)Math.PI / 4);
-            director.Scale(0.2f, 0.3f, 0.3f);
+            director.Scale(scaling * 0.7f, scaling, scaling);
             IModel model = director.Generate("Default1");
             model.Mesh.ComputeNormals();
             EffectHandler handler = new EffectHandler(effectFactory.CreateFromFile("TiVi.fxo"),
                 delegate(int material) { return "Diamond"; }, model);
-            ModelNode node = new ModelNode("", model, handler, device);
+            ModelNode node = new ModelNode("Diamond" + diamondNum, model, handler, device);
+            diamondNum++;
             return node;
         }
     }

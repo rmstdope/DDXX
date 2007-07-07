@@ -20,9 +20,9 @@ namespace Dope.DDXX.SceneGraph
             this.Size = size;
         }
 
-        public virtual bool Alive 
+        public virtual bool IsDead()
         {
-            get { return true; } 
+            return false;
         }
 
         public abstract void StepAndWrite(IGraphicsStream stream);

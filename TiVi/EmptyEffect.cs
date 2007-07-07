@@ -31,7 +31,8 @@ namespace TiVi
             IModel model = meshDirector.Generate("Default1");
             box = CreateSimpleModelNode(model, "TiVi.fxo", "Simple");
             scene.AddNode(box);
-           
+
+            scene.Validate();
         }
 
         public override void Step()
