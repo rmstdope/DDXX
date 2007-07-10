@@ -171,6 +171,8 @@ namespace TiVi
             {
                 StartTime = startTime;
                 Length = segmentLength + (float)(random.NextDouble() * segmentLength);
+                if (startTime < 3)
+                    Length += 0.2f;
             }
         }
 
@@ -316,6 +318,7 @@ namespace TiVi
 
         public override void Step()
         {
+            Mixer.ClearColor = Color.FromArgb(0, 0, 0, 0);
             if (nodeTiVi != null)
             {
                 int i;

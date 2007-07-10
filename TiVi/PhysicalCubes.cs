@@ -179,7 +179,7 @@ namespace TiVi
             foreach (IPhysicalParticle particle in body.Particles)
                 body.AddConstraint(new YPosConstraint(0, particle));
 
-            body.Gravity = new Vector3(0, -30.0f, 0);
+            body.Gravity = new Vector3(0, -100.0f, 0);
 
             MeshDirector director = new MeshDirector(MeshBuilder);
             director.CreateChamferBox(2, 2, 2, 0.5f, 4);

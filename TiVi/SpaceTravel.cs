@@ -78,8 +78,8 @@ namespace TiVi
             spawner.Color = color;
             spawner.ColorDistortion = 10;
             spawner.NextTime = startTime;
-            spawner.VelocityY = 10;
-            spawner.VelocityXZ = 30;
+            spawner.VelocityY = 15;
+            spawner.VelocityXZ = 40;
             spawner.PositionDistortion = 20;
             spawner.TimeBetweenSpawns = 0.004f;
             system.Initialize(spawner, Device, GraphicsFactory, EffectFactory, circleTexture);

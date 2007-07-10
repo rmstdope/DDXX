@@ -168,11 +168,11 @@ namespace Dope.DDXX.ParticleSystems
         public void Step(float time)
         {
             float newTime = time;
-            if (stopTime <= 0)
-                newTime = 0;
-            else if (stopTime - newTime <= 0)
-                newTime = stopTime;
-            stopTime -= newTime;
+            //if (stopTime <= 0)
+            //    newTime = 0;
+            //else if (stopTime - newTime <= 0)
+            //    newTime = stopTime;
+            //stopTime -= newTime;
             Position += velocity * newTime;
             //Position.Y += velocity.Y * (time - newTime);
                 //Vector2 xz = new Vector2(Position.X, Position.Z);

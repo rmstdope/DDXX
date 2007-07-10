@@ -2,25 +2,85 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.DemoFramework;
-using Dope.DDXX.Graphics;
 using Dope.DDXX.SceneGraph;
-using Microsoft.DirectX;
-using Dope.DDXX.Utility;
-using System.Drawing;
-using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.MeshBuilder;
+using Dope.DDXX.Graphics;
+using Dope.DDXX.Utility;
+using Microsoft.DirectX.Direct3D;
+using Microsoft.DirectX;
 
-namespace EngineTest
+namespace TiVi
 {
     public class ChessScene : BaseDemoEffect
     {
-        Scene scene;
-        CameraNode camera;
-        LightNode[] lightNodes = new LightNode[2];
-        MeshBuilder builder;
-        List<ModelNode> chessNodes = new List<ModelNode>();
-        ModelNode planeNode = null;
-        ModelNode mirrorNode = null;
+        private class PieceInfo
+        {
+            public ChessPiece.PieceColor Color;
+            public ChessPiece.PieceType Type;
+            public string Position;
+            public ChessPiece Piece;
+            public PieceInfo(ChessPiece.PieceColor color, ChessPiece.PieceType type, string position)
+            {
+                Color = color;
+                Type = type;
+                Position = position;
+            }
+        }
+
+        private class PieceMovement
+        {
+            public string StartPos;
+            public string EndPos;
+            public PieceMovement(string startPos, string endPos)
+            {
+                StartPos = startPos;
+                EndPos = endPos;
+            }
+        }
+
+        PieceInfo[] pieceInfo = new PieceInfo[] {
+            new PieceInfo(ChessPiece.PieceColor.White, ChessPiece.PieceType.Pawn, "g6"),
+            new PieceInfo(ChessPiece.PieceColor.White, ChessPiece.PieceType.Pawn, "f5"),
+            new PieceInfo(ChessPiece.PieceColor.White, ChessPiece.PieceType.Pawn, "b4"),
+            new PieceInfo(ChessPiece.PieceColor.White, ChessPiece.PieceType.Pawn, "a3"),
+            new PieceInfo(ChessPiece.PieceColor.White, ChessPiece.PieceType.Pawn, "c2"),
+            new PieceInfo(ChessPiece.PieceColor.White, ChessPiece.PieceType.Bishop, "c3"),
+            new PieceInfo(ChessPiece.PieceColor.White, ChessPiece.PieceType.Bishop, "h3"),
+            new PieceInfo(ChessPiece.PieceColor.White, ChessPiece.PieceType.King, "f2"),
+            new PieceInfo(ChessPiece.PieceColor.White, ChessPiece.PieceType.Rook, "g1"),
+            new PieceInfo(ChessPiece.PieceColor.White, ChessPiece.PieceType.Knight, "e3"),
+            new PieceInfo(ChessPiece.PieceColor.Black, ChessPiece.PieceType.Rook, "d8"),
+            new PieceInfo(ChessPiece.PieceColor.Black, ChessPiece.PieceType.Rook, "e8"),
+            new PieceInfo(ChessPiece.PieceColor.Black, ChessPiece.PieceType.Pawn, "a4"),
+            new PieceInfo(ChessPiece.PieceColor.Black, ChessPiece.PieceType.Pawn, "b5"),
+            new PieceInfo(ChessPiece.PieceColor.Black, ChessPiece.PieceType.Pawn, "c6"),
+            new PieceInfo(ChessPiece.PieceColor.Black, ChessPiece.PieceType.Pawn, "e4"),
+            new PieceInfo(ChessPiece.PieceColor.Black, ChessPiece.PieceType.Pawn, "g4"),
+            new PieceInfo(ChessPiece.PieceColor.Black, ChessPiece.PieceType.Knight, "e5"),
+            new PieceInfo(ChessPiece.PieceColor.Black, ChessPiece.PieceType.Bishop, "f3"),
+            new PieceInfo(ChessPiece.PieceColor.Black, ChessPiece.PieceType.King, "h6"),
+        };
+
+        PieceMovement[] pieceMovement = new PieceMovement[] {
+            new PieceMovement("h3", "g4"),
+            new PieceMovement("f3", "g4"),
+            new PieceMovement("e3", "g4"),
+            new PieceMovement("e5", "g4"),
+            new PieceMovement("g1", "g4"),
+            new PieceMovement("d8", "d5"),
+            new PieceMovement("f5", "f6"),
+            new PieceMovement("d5", "d1"),
+            new PieceMovement("g6", "g7"),
+        };
+
+        private const int NUM_SIGNS_X = 8;
+        private const int NUM_SIGNS_Y = 8;
+        private IScene scene;
+        private CameraNode camera;
+        private MeshDirector meshDirector;
+        private ModelNode[] signs = new ModelNode[NUM_SIGNS_X * NUM_SIGNS_Y];
+        private Interpolator<InterpolatedVector3> interpolator;
+        private List<ChessPiece> chessPieces = new List<ChessPiece>();
 
         public ChessScene(float startTime, float endTime)
             : base(startTime, endTime)
@@ -29,162 +89,161 @@ namespace EngineTest
 
         protected override void Initialize()
         {
-            builder = new MeshBuilder(D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
-                D3DDriver.GetInstance().Device);
-            scene = new Scene();
-
-            CreatePlane();
-            CreateChessBoard();
+            IDevice device = Device;
+            CreateStandardSceneAndCamera(out scene, out camera, 15);
+            CreateBoard();
             CreatePieces();
-            CreateCamera();
+            CreateCameraInterpolator();
             CreateLights();
+            CreateRoom();
         }
 
-        private void CreatePieces()
+        private void CreateRoom()
         {
-            IModel kingModel = ModelFactory.FromFile("King.X", ModelOptions.None);
-            kingModel.Materials[0].ReflectiveTexture = TextureFactory.CreateCubeFromFile("rnl_cross.dds");
-            kingModel.Materials[0].ReflectiveFactor = 0.02f;
-            kingModel.Materials[0].DiffuseColor = new ColorValue(0.3f, 0.3f, 0.3f);
-            ModelNode kingNode = new ModelNode("King", kingModel,
-                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
-                TechniqueChooser.MaterialPrefix("Glass"), kingModel), Device);
-            scene.AddNode(kingNode);
-            ModelNode kingMirrorNode = CreateMirrorNode(kingNode);
-            scene.AddNode(kingMirrorNode);
-            kingNode.WorldState.MoveRight(1.9f * 3);
-            kingMirrorNode.WorldState.MoveRight(1.9f * 3);
-
-            //XLoader.Load("ChessPieces.x", EffectFactory.CreateFromFile("Test.fxo"), 
-            //    TechniqueChooser.MeshPrefix("Glass"));
-            //XLoader.AddToScene(scene);
-        }
-
-        private void CreatePlane()
-        {
-            //builder.CreateChamferBox("Box", 2.0f, 2.0f, 0.5f, 0.2f, 6);
-            //builder.AssignMaterial("Box", "Default1");
-            //builder.SetDiffuseTexture("Default1", "red glass.jpg");
-            //builder.SetReflectiveTexture("Default1", "rnl_cross.dds");
-            //builder.SetReflectiveFactor("Default1", 0.02f);
-            //IModel boxModel = builder.CreateModel("Box");
-            //boxModel.Materials[0].Diffuse = Color.DarkGray;
-            //planeNode = new ModelNode("Box", boxModel,
-            //    new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
-            //    TechniqueChooser.MaterialPrefix("Glass"), boxModel));
-            //scene.AddNode(planeNode);
-            //mirrorNode = CreateMirrorNode(planeNode);
-            //scene.AddNode(mirrorNode);
-            //planeNode.WorldState.MoveUp(1f);
-            //mirrorNode.WorldState.MoveUp(-1f);
-        }
-
-        private ModelNode CreateMirrorNode(ModelNode originalNode)
-        {
-            IModel mirrorModel = originalNode.Model.Clone();
-            mirrorModel.Materials[0].Diffuse = Color.DarkGray;
-            mirrorModel.Materials[0].ReflectiveFactor = 0.0f;
-            ModelNode mirrorNode = new ModelNode("Box", mirrorModel,
-                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
-                TechniqueChooser.MaterialPrefix("Glass"), mirrorModel), Device);
-            mirrorNode.WorldState.Scale(new Vector3(1, -1, 1));
-            return mirrorNode;
+            MeshDirector director = new MeshDirector(MeshBuilder);
+            director.CreatePlane(50, 50, 50, 50, false);
+            director.Rotate((float)Math.PI / 2, 0, 0);
+            director.Translate(0, -0.1f, 0);
+            MeshBuilder.SetDiffuseColor("Default1", new ColorValue(0.1f, 0.1f, 0.1f));
+            IModel model = director.Generate("Default1");
+            ModelNode node = CreateSimpleModelNode(model, "TiVi.fxo", "Room");
+            scene.AddNode(node);
         }
 
         private void CreateLights()
         {
-            lightNodes[0] = new PointLightNode("Light0");
-            lightNodes[0].DiffuseColor = new ColorValue(0.8f, 0.6f, 0.2f, 1.0f);
-            scene.AddNode(lightNodes[0]);
-            lightNodes[1] = new PointLightNode("Light1");
-            lightNodes[1].DiffuseColor = new ColorValue(0.8f, 0.8f, 0.4f, 1.0f);
-            scene.AddNode(lightNodes[1]);
+            PointLightNode[] lights = new PointLightNode[2];
+            lights[0] = new PointLightNode("");
+            lights[0].Position = new Vector3(-5, 4, 0);
+            lights[0].DiffuseColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
+            scene.AddNode(lights[0]);
+            lights[1] = new PointLightNode("");
+            lights[1].Position = new Vector3(5, 4, 0);
+            lights[1].DiffuseColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
+            scene.AddNode(lights[1]);
         }
 
-        private void CreateCamera()
+        private void CreatePieces()
         {
-            camera = new CameraNode("Camera");
-            camera.WorldState.MoveForward(-10);
-            camera.WorldState.MoveUp(2);
-            scene.AddNode(camera);
-            scene.ActiveCamera = camera;
-        }
+            IScene tempScene = new Scene();
+            XLoader.Load("ChessPieces2.X", EffectFactory.CreateFromFile("TiVi.fxo"), TechniqueChooser.MeshPrefix("Reflective"));
+            XLoader.AddToScene(tempScene);
+            ChessPiece piece;
 
-        private void CreateChessBoard()
-        {
-            IModel whiteModel = ModelFactory.FromFile("ChamferBox.X", ModelOptions.None);
-            whiteModel.Materials[0].ReflectiveTexture = TextureFactory.CreateCubeFromFile("rnl_cross.dds");
-            IModel blackModel = whiteModel.Clone();
-            whiteModel.Materials[0].ReflectiveFactor = 0.02f;
-            whiteModel.Materials[0].DiffuseColor = ColorValue.FromColor(Color.White);
-            blackModel.Materials[0].ReflectiveFactor = 0.002f;
-            blackModel.Materials[0].DiffuseColor = ColorValue.FromColor(Color.Black);
-            for (int y = 0; y < 8; y++)
+            foreach (PieceInfo info in pieceInfo)
             {
-                for (int x = 0; x < 8; x++)
+                piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
+                    info.Type, info.Color, info.Position);
+                info.Piece = piece;
+                chessPieces.Add(piece);
+            }
+
+            float time = 1;
+            foreach (PieceMovement movement in pieceMovement)
+            {
+                PieceInfo movePiece = null;
+                PieceInfo removePiece = null;
+                foreach (PieceInfo info in pieceInfo)
                 {
-                    IModel model = blackModel;
-                    if ((y & 1) == 1 && (x & 1) == 0)
-                        model = whiteModel;
-                    if ((y & 1) == 0 && (x & 1) == 1)
-                        model = whiteModel;
-                    ModelNode node = new ModelNode("FloorTile" + x + y, model,
-                        new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
-                        TechniqueChooser.MaterialPrefix("Chess"), model), Device);
-                    node.WorldState.Tilt((float)Math.PI / 2);
-                    node.WorldState.Position = new Vector3((x - 4) * 1.90f, 0, (y - 4) * 1.90f);
-                    chessNodes.Add(node);
-                    //scene.AddNode(nodeTiVi);
+                    if (info.Position == movement.StartPos)
+                        movePiece = info;
+                    if (info.Position == movement.EndPos)
+                        removePiece = info;
                 }
+                movePiece.Piece.AddPosition(time, 3, movement.EndPos, 1);
+                movePiece.Position = movement.EndPos;
+                if (removePiece != null)
+                {
+                    removePiece.Piece.AddPosition(time, 4, movement.EndPos + "-", 1);
+                    removePiece.Position = "--";
+                }
+                time += 4;
+            }
+        }
+
+        private void CreateCameraInterpolator()
+        {
+            ClampedCubicSpline<InterpolatedVector3> spline = new ClampedCubicSpline<InterpolatedVector3>(new InterpolatedVector3(), new InterpolatedVector3());
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(0, new InterpolatedVector3(new Vector3(0, 2, -6))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(2, new InterpolatedVector3(new Vector3(3, 3, -8))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(4, new InterpolatedVector3(new Vector3(-2, 3, 8))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(6, new InterpolatedVector3(new Vector3(2, 4, 12))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(9, new InterpolatedVector3(new Vector3(0, 2, -6))));
+            spline.Calculate();
+            interpolator = new Interpolator<InterpolatedVector3>();
+            interpolator.AddSpline(spline);
+        }
+
+        private void CreateBoard()
+        {
+            MeshBuilder.SetDiffuseTexture("Default1", "Square.tga");
+            MeshBuilder.SetReflectiveTexture("Default1", "rnl_cross.dds");
+            MeshBuilder.SetReflectiveFactor("Default1", 0.4f);
+            meshDirector = new MeshDirector(MeshBuilder);
+            meshDirector.CreatePlane(1, 1, 1, 1, true);
+            meshDirector.Rotate((float)Math.PI / 2, 0, 0);
+            float c = 0;
+            for (int y = 0; y < NUM_SIGNS_Y; y++)
+            {
+                for (int x = 0; x < NUM_SIGNS_X; x++)
+                {
+                    IModel model = meshDirector.Generate("Default1");
+                    ModelNode node = CreateSimpleModelNode(model, "TiVi.fxo", "ReflectiveTransparent");
+                    node.WorldState.MoveForward(-1.0f * (y - NUM_SIGNS_Y / 2));
+                    node.WorldState.MoveRight(-1.0f * (x - NUM_SIGNS_X / 2));
+                    float color = 0.0f + c * 0.5f;
+                    node.Model.Materials[0].AmbientColor = new ColorValue(0.02f, 0.02f, 0.02f, 0.02f);
+                    node.Model.Materials[0].DiffuseColor = new ColorValue(color, color, color, color);
+                    if (c == 0)
+                        node.Model.Materials[0].ReflectiveFactor = 0.7f;
+                    else
+                        node.Model.Materials[0].ReflectiveFactor = 0.1f;
+                    c = 1 - c;
+                    signs[y * NUM_SIGNS_X + x] = node;
+                    scene.AddNode(node);
+                }
+                c = 1 - c;
             }
         }
 
         public override void Step()
         {
-            MoveCamera();
-            MoveLights();
-
-            planeNode.WorldState.Tilt(Time.DeltaTime * 2);
-            mirrorNode.WorldState.Tilt(Time.DeltaTime * 2);
-
+            //camera.WorldState.Position = new Vector3(0, 3, -10);
+            //camera.WorldState.Position = interpolator.GetValue(Time.StepTime % 10);
+            camera.WorldState.Position = new Vector3((float)Math.Sin(Time.StepTime * 0.2f), 0.2f, (float)Math.Cos(Time.StepTime * 0.2f)) * 8;
+            camera.LookAt(new Vector3(0, 0, 0), new Vector3(0, 1, 0));
+            for (int y = 0; y < NUM_SIGNS_Y; y++)
+            {
+                for (int x = 0; x < NUM_SIGNS_X; x++)
+                {
+                    //ModelNode node = signs[y * NUM_SIGNS_X + x];
+                    //node.WorldState.ResetRotation();
+                    //float t = (Time.StepTime + (x - y) / 20.0f) % 3;
+                    //const float period = 0.5f;
+                    //if (t < period)
+                    //{
+                    //    float d = (float)Math.Sin(t / period * Math.PI);
+                    //node.WorldState.MoveForward(-d * 0.5f);
+                    //node.WorldState.Turn(d * 1.0f);
+                    //node.WorldState.Tilt(d * 1.0f);
+                    //node.WorldState.Roll(d * 0.5f);
+                    //node.Model.Materials[0].AmbientColor = new ColorValue(0.8f, 0.6f, d);
+                    //}
+                }
+            }
+            foreach (ChessPiece piece in chessPieces)
+                piece.Step(Time.StepTime - StartTime);
             scene.Step();
-        }
-
-        private void MoveLights()
-        {
-            lightNodes[0].Position = new Vector3(
-                7 * (float)Math.Cos(Time.CurrentTime / 2), 2.0f,
-                7 * (float)Math.Sin(Time.CurrentTime / 2));
-
-            lightNodes[1].Position = new Vector3(
-                3 * (float)Math.Cos(Time.CurrentTime / 1.2f), 2.0f,
-                3 * (float)Math.Sin(Time.CurrentTime / 1.2f));
-        }
-
-        private void MoveCamera()
-        {
-            float t = Time.CurrentTime;
-            camera.WorldState.Position =
-                new Vector3(10 * (float)Math.Sin(t),
-                3, 10 * (float)Math.Cos(t));
-            camera.WorldState.Rotation = Matrix.RotationYawPitchRoll((float)Math.PI + t, 0, 0);
         }
 
         public override void Render()
         {
+            scene.SetEffectParameters();
+            foreach (ChessPiece piece in chessPieces)
+                piece.RenderMirror(scene);
+            foreach (ChessPiece piece in chessPieces)
+                piece.Render(scene);
             scene.Render();
-            Vector3 cameraPosition = scene.ActiveCamera.Position;
-            chessNodes.Sort(delegate(ModelNode node1, ModelNode node2)
-            {
-                float length1 = (node1.Position - cameraPosition).Length();
-                float length2 = (node2.Position - cameraPosition).Length();
-                if (length1 < length2)
-                    return -1;
-                if (length1 > length2)
-                    return 1;
-                return 0;
-            });
-            chessNodes.ForEach(delegate (ModelNode node) { node.Render(scene); });
         }
     }
 }
