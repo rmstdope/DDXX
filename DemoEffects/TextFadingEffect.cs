@@ -80,8 +80,8 @@ namespace Dope.DDXX.DemoEffects
             }
         }
 
-        public TextFadingEffect(float startTime, float endTime)
-            : base(startTime, endTime)
+        public TextFadingEffect(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
             TextPosition = new Vector2(0.5f, 0.5f);
             Text = "Default";

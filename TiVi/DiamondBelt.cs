@@ -28,8 +28,8 @@ namespace TiVi
         private CameraNode camera;
         private IScene scene;
 
-        public DiamondBelt(float start, float end)
-            : base(start, end)
+        public DiamondBelt(string name, float start, float end)
+            : base(name, start, end)
         {
         }
 

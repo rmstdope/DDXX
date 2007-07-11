@@ -9,5 +9,6 @@ namespace Dope.DDXX.SceneGraph
         void Load(string filename, IEffect effect, MeshTechniqueChooser techniquePrefix);
         void AddToScene(IScene scene);
         List<INode> GetNodeHierarchy();
+        IAnimationRootFrame RootFrame { get; }
     }
 }

@@ -20,8 +20,8 @@ namespace EngineTest
         private float yAngle;
         private float zAngle;
 
-        public ModelEffect(float start, float end)
-            : base(start, end)
+        public ModelEffect(string name, float start, float end)
+            : base(name, start, end)
         {
         }
 

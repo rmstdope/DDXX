@@ -47,8 +47,8 @@ namespace Dope.DDXX.DemoEffects
             set { texture = value; }
         }
 
-        public OverlayPostEffect(float start, float end)
-            : base(start, end)
+        public OverlayPostEffect(string name, float start, float end)
+            : base(name, start, end)
         {
             SetStepSize(GetTweakableNumber("BlendFactor"), 0.01f);
         }

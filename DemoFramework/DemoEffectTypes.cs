@@ -66,15 +66,15 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        public IRegisterable CreateInstance(string effectName, float startTime, float endTime)
+        public IRegisterable CreateInstance(string className, string effectName, float startTime, float endTime)
         {
             Type effect;
-            if (!iRegisterables.TryGetValue(effectName, out effect))
+            if (!iRegisterables.TryGetValue(className, out effect))
                 throw new DDXXException("Could not find effect " + effectName + " among valid effects.");
-            ConstructorInfo constrInfo = effect.GetConstructor(new Type[] {typeof(float), typeof(float)});
+            ConstructorInfo constrInfo = effect.GetConstructor(new Type[] {typeof(string), typeof(float), typeof(float)});
             if (constrInfo == null)
-                throw new DDXXException("Public constructor(float, float) not found in Effect " + effectName);
-            IRegisterable demoEffect = (IRegisterable)constrInfo.Invoke(new object[] { startTime, endTime });
+                throw new DDXXException("Public constructor(string, float, float) not found in Effect " + effectName);
+            IRegisterable demoEffect = (IRegisterable)constrInfo.Invoke(new object[] { effectName, startTime, endTime });
             return demoEffect;
         }
 

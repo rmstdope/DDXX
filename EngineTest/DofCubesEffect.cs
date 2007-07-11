@@ -24,8 +24,8 @@ namespace EngineTest
         private List<DirectionalLightNode> lights = new List<DirectionalLightNode>();
         private IEffect boxEffect = null;
 
-        public DofCubesEffect(float startTime, float endTime)
-            : base(startTime, endTime)
+        public DofCubesEffect(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
         }
 

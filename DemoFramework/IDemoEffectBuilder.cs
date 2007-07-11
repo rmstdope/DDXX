@@ -9,9 +9,9 @@ namespace Dope.DDXX.DemoFramework
     public interface IDemoEffectBuilder
     {
 
-        void AddEffect(string effectName, int effectTrack, float startTime, float endTime);
-        void AddPostEffect(string effectName, int effectTrack, float startTime, float endTime);
-        void AddTransition(string effectName, int destinationTrack, float startTime, float endTime);
+        void AddEffect(string className, string effectName, int effectTrack, float startTime, float endTime);
+        void AddPostEffect(string className, string postEffectName, int effectTrack, float startTime, float endTime);
+        void AddTransition(string className, string transitionName, int destinationTrack, float startTime, float endTime);
         void AddGenerator(string generatorName, string className);
         void AddTexture(string textureName, string generatorName, int width, int height, int mipLevels);
 

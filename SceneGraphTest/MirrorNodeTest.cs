@@ -167,7 +167,7 @@ namespace Dope.DDXX.SceneGraph
         {
             get
             {
-                throw new Exception("The method or operation is not implemented.");
+                return new ModelMaterial[0];
             }
             set
             {

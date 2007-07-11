@@ -23,8 +23,8 @@ namespace TiVi
         private TiViMeshDirector tiviMeshDirector;
         private Interpolator<InterpolatedVector3> interpolator;
 
-        public SpaceTravel(float startTime, float endTime)
-            : base(startTime, endTime)
+        public SpaceTravel(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
         }
 

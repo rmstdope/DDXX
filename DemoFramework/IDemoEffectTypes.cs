@@ -10,7 +10,7 @@ namespace Dope.DDXX.DemoFramework
     {
         IDictionary<string, Type> IRegisterables { get; }
         IDictionary<string, Type> IGenerators { get; }
-        IRegisterable CreateInstance(string effectName, float startTime, float endTime);
+        IRegisterable CreateInstance(string className, string effectName, float startTime, float endTime);
         IGenerator CreateGenerator(string name);
         void SetProperty(object asset, string name, object value);
         object GetProperty(IRegisterable ei, string name);

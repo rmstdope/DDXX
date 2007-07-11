@@ -18,8 +18,8 @@ namespace EngineTest
         private Rectangle size;
         private IEffect effect;
 
-        public TextWave(float startTime, float endTime)
-            : base(startTime, endTime)
+        public TextWave(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
         }
 

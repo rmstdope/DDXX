@@ -28,6 +28,7 @@ namespace Dope.DDXX.MeshBuilder
                 materials["Default" + (i + 1)] = new ModelMaterial(new Material());
                 materials["Default" + (i + 1)].DiffuseColor = new ColorValue(0.6f, 0.6f, 0.6f, 0.6f);
                 materials["Default" + (i + 1)].AmbientColor = new ColorValue(0.3f, 0.3f, 0.3f, 0.3f);
+                materials["Default" + (i + 1)].SpecularColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
             }
         }
 

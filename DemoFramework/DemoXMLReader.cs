@@ -188,66 +188,102 @@ namespace Dope.DDXX.DemoFramework
 
         private void ReadEffect(XmlNode node)
         {
+            string className;
             string effectName;
             int effectTrack;
             float startTime;
             float endTime;
-            ReadNameTrack(node, out effectName, out effectTrack, out startTime, out endTime);
-            effectBuilder.AddEffect(effectName, effectTrack, startTime, endTime);
+            ReadNameTrack(node, out className, out effectName, out effectTrack, out startTime, out endTime);
+            effectBuilder.AddEffect(className, effectName, effectTrack, startTime, endTime);
             ReadParameters(node, false);
         }
 
         private void ReadPostEffect(XmlNode node)
         {
+            string className;
             string effectName;
             int effectTrack;
             float startTime;
             float endTime;
-            ReadNameTrack(node, out effectName, out effectTrack, out startTime, out endTime);
-            effectBuilder.AddPostEffect(effectName, effectTrack, startTime, endTime);
+            ReadNameTrack(node, out className, out effectName, out effectTrack, out startTime, out endTime);
+            effectBuilder.AddPostEffect(className, effectName, effectTrack, startTime, endTime);
             ReadParameters(node, false);
         }
 
         private void ReadTransition(XmlNode node)
         {
+            string className;
             string effectName;
             int effectTrack;
             float startTime;
             float endTime;
-            ReadNameTrack(node, out effectName, out effectTrack, out startTime, out endTime);
-            effectBuilder.AddTransition(effectName, effectTrack , startTime, endTime);
+            ReadNameTrack(node, out className, out effectName, out effectTrack, out startTime, out endTime);
+            effectBuilder.AddTransition(className, effectName, effectTrack, startTime, endTime);
             ReadParameters(node, false);
         }
 
         private void ReadNameTrack(XmlNode node,
+            out string className,
             out string effectName,
             out int effectTrack, out 
             float startTime,
             out float endTime)
         {
             XmlAttributeCollection attrs = node.Attributes;
-            XmlAttribute attr = (XmlAttribute)attrs.GetNamedItem("name");
-            if (attr == null)
-                throw new DDXXException("name attr not found");
-            effectName = attr.Value;
-            XmlAttribute track = (XmlAttribute)attrs.GetNamedItem("track");
-            XmlAttribute start = (XmlAttribute)attrs.GetNamedItem("startTime");
-            XmlAttribute end = (XmlAttribute)attrs.GetNamedItem("endTime");
-            effectTrack = 0;
-            startTime = 0.0F;
-            endTime = 0.0F;
-            if (track != null)
-            {
-                effectTrack = int.Parse(track.Value);
-            }
-            if (start != null)
-            {
-                startTime = ParseFloat(start.Value);
-            }
-            if (end != null)
-            {
-                endTime = ParseFloat(end.Value);
-            }
+            className = GetClassName(attrs);
+            effectName = GetEffectName(className, attrs);
+            effectTrack = GetTrackNumber(attrs);
+            startTime = GetStartTime(attrs);
+            endTime = GetEndTime(attrs);
+        }
+
+        private static float GetEndTime(XmlAttributeCollection attrs)
+        {
+            float endTime;
+            if (attrs.GetNamedItem("endTime") != null)
+                endTime = ParseFloat(attrs.GetNamedItem("endTime").Value);
+            else
+                endTime = 0;
+            return endTime;
+        }
+
+        private static float GetStartTime(XmlAttributeCollection attrs)
+        {
+            float startTime;
+            if (attrs.GetNamedItem("startTime") != null)
+                startTime = ParseFloat(attrs.GetNamedItem("startTime").Value);
+            else
+                startTime = 0;
+            return startTime;
+        }
+
+        private static int GetTrackNumber(XmlAttributeCollection attrs)
+        {
+            int effectTrack;
+            if (attrs.GetNamedItem("track") != null)
+                effectTrack = int.Parse(attrs.GetNamedItem("track").Value);
+            else
+                effectTrack = 0;
+            return effectTrack;
+        }
+
+        private static string GetEffectName(string className, XmlAttributeCollection attrs)
+        {
+            string effectName;
+            if (attrs.GetNamedItem("name") != null)
+                effectName = attrs.GetNamedItem("name").Value;
+            else
+                effectName = className;
+            return effectName;
+        }
+
+        private static string GetClassName(XmlAttributeCollection attrs)
+        {
+            string className;
+            if (attrs.GetNamedItem("class") == null)
+                throw new DDXXException("class attr not found");
+            className = attrs.GetNamedItem("class").Value;
+            return className;
         }
 
         public void ReadParameters(XmlNode effectNode, bool readInputs)
@@ -513,7 +549,7 @@ namespace Dope.DDXX.DemoFramework
                 throw new DDXXException("Attribute " + attrName + " not found in node: " + node.ToString());
         }
 
-        private XmlNode FindParameterContainer(string effectName)
+        private XmlNode FindParameterContainer(string className, string effectName)
         {
             XmlNode root = doc.DocumentElement;
             while (root != null && root.Name != "Demo")
@@ -522,9 +558,16 @@ namespace Dope.DDXX.DemoFramework
             {
                 foreach (XmlNode node in root.ChildNodes)
                 {
-                    if (IsParameterContainer(node) && GetAttributeValue(node, "name") == effectName)
+                    if (IsParameterContainer(node))
                     {
-                        return node;
+                        string nameAttributeString = "name";
+                        if (GetAttribute(node, "name") == null)
+                            nameAttributeString = "class";
+                        if (GetAttributeValue(node, "class") == className &&
+                            GetAttributeValue(node, nameAttributeString) == effectName)
+                        {
+                            return node;
+                        }
                     }
                 }
             }
@@ -538,9 +581,9 @@ namespace Dope.DDXX.DemoFramework
                 node.Name == "Transition" || node.Name == "SetupCall");
         }
 
-        private XmlNode FindParamNode(string effect, string paramName)
+        private XmlNode FindParamNode(string className, string effect, string paramName)
         {
-            XmlNode effectNode = FindParameterContainer(effect);
+            XmlNode effectNode = FindParameterContainer(className, effect);
             if (effectNode == null)
                 throw new DDXXException("Named node " + effect + " not found");
             foreach (XmlNode node in effectNode.ChildNodes)
@@ -558,11 +601,11 @@ namespace Dope.DDXX.DemoFramework
             return node.NodeType == XmlNodeType.Element && node.Name == "Parameter";
         }
 
-        private XmlAttribute GetParamValueAttr(string effect, string param, TweakableType ty)
+        private XmlAttribute GetParamValueAttr(string className, string effect, string param, TweakableType ty)
         {
-            XmlNode paramNode = FindParamNode(effect, param);
+            XmlNode paramNode = FindParamNode(className, effect, param);
             if (paramNode == null)
-                paramNode = CreateParameterNode(effect, param, ty);
+                paramNode = CreateParameterNode(className, effect, param, ty);
             XmlAttribute attr = GetAttribute(paramNode, GetParameterTypeString(ty));
             if (attr == null)
                 throw new DDXXException("XmlNode " + param + " in effect " + effect +
@@ -570,9 +613,9 @@ namespace Dope.DDXX.DemoFramework
             return attr;
         }
 
-        private XmlNode CreateParameterNode(string effect, string param, TweakableType ty)
+        private XmlNode CreateParameterNode(string className, string effect, string param, TweakableType ty)
         {
-            XmlNode effectNode = FindParameterContainer(effect);
+            XmlNode effectNode = FindParameterContainer(className, effect);
             if (effectNode.ChildNodes.Count == 0)
                 effectNode.AppendChild(doc.CreateWhitespace("\r\n  "));
             XmlNode lastWhitespace = effectNode.LastChild;
@@ -591,36 +634,36 @@ namespace Dope.DDXX.DemoFramework
             return value.ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
         }
 
-        public void SetFloatParam(string effect, string param, float value)
+        public void SetFloatParam(string className, string effect, string param, float value)
         {
-            XmlAttribute attr = GetParamValueAttr(effect, param, TweakableType.Float);
+            XmlAttribute attr = GetParamValueAttr(className, effect, param, TweakableType.Float);
             attr.Value = FloatToString(value);
         }
 
-        public void SetIntParam(string effect, string param, int value)
+        public void SetIntParam(string className, string effect, string param, int value)
         {
-            XmlAttribute attr = GetParamValueAttr(effect, param, TweakableType.Integer);
+            XmlAttribute attr = GetParamValueAttr(className, effect, param, TweakableType.Integer);
             attr.Value = value.ToString();
         }
 
-        public void SetStringParam(string effect, string param, string value)
+        public void SetStringParam(string className, string effect, string param, string value)
         {
-            XmlAttribute attr = GetParamValueAttr(effect, param, TweakableType.String);
+            XmlAttribute attr = GetParamValueAttr(className, effect, param, TweakableType.String);
             attr.Value = value;
         }
 
-        public void SetVector3Param(string effect, string param, Vector3 value)
+        public void SetVector3Param(string className, string effect, string param, Vector3 value)
         {
-            XmlAttribute attr = GetParamValueAttr(effect, param, TweakableType.Vector3);
+            XmlAttribute attr = GetParamValueAttr(className, effect, param, TweakableType.Vector3);
             string strval = FloatToString(value.X) + ", " +
                 FloatToString(value.Y) + ", " +
                 FloatToString(value.Z);
             attr.Value = strval;
         }
 
-        public void SetColorParam(string effect, string param, Color value)
+        public void SetColorParam(string className, string effect, string param, Color value)
         {
-            XmlAttribute attr = GetParamValueAttr(effect, param, TweakableType.Color);
+            XmlAttribute attr = GetParamValueAttr(className, effect, param, TweakableType.Color);
             string strval;
             if (value.IsNamedColor)
             {
@@ -636,18 +679,18 @@ namespace Dope.DDXX.DemoFramework
             attr.Value = strval;
         }
 
-        public void SetBoolParam(string effect, string param, bool value)
+        public void SetBoolParam(string className, string effect, string param, bool value)
         {
-            XmlAttribute attr = GetParamValueAttr(effect, param, TweakableType.Bool);
+            XmlAttribute attr = GetParamValueAttr(className, effect, param, TweakableType.Bool);
             if (value)
                 attr.Value = "true";
             else
                 attr.Value = "false";
         }
 
-        private void ChangeOrCreateAttribute(string effectName, string attrName, string value)
+        private void ChangeOrCreateAttribute(string className, string effectName, string attrName, string value)
         {
-            XmlNode effectNode = FindParameterContainer(effectName);
+            XmlNode effectNode = FindParameterContainer(className, effectName);
             XmlAttribute startAttr = GetAttribute(effectNode, attrName);
             if (startAttr == null)
             {
@@ -660,14 +703,14 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        public void SetStartTime(string effectName, float value)
+        public void SetStartTime(string className, string effectName, float value)
         {
-            ChangeOrCreateAttribute(effectName, "startTime", value.ToString());
+            ChangeOrCreateAttribute(className, effectName, "startTime", value.ToString());
         }
 
-        public void SetEndTime(string effectName, float value)
+        public void SetEndTime(string className, string effectName, float value)
         {
-            ChangeOrCreateAttribute(effectName, "endTime", value.ToString());
+            ChangeOrCreateAttribute(className, effectName, "endTime", value.ToString());
         }
 
 

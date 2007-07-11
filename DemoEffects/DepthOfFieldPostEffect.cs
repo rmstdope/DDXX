@@ -10,8 +10,8 @@ namespace Dope.DDXX.DemoEffects
 {
     public class DepthOfFieldPostEffect : BaseDemoPostEffect
     {
-        public DepthOfFieldPostEffect(float startTime, float endTime)
-            : base(startTime, endTime)
+        public DepthOfFieldPostEffect(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
         }
 

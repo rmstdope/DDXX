@@ -122,11 +122,11 @@ namespace Dope.DDXX.DemoFramework
             tracks.Add(new Track());
             TestInitialize();
 
-            tracks[0].Register(CreateMockEffect(0.0f, 1.0f));
-            tracks[0].Register(CreateMockEffect(1.0f, 2.0f));
-            tracks[0].Register(CreateMockEffect(2.0f, 3.0f));
-            tracks[0].Register(CreateMockPostEffect(0.0f, 3.0f));
-            tracks[0].Register(CreateMockPostEffect(0.0f, 4.0f));
+            tracks[0].Register(CreateMockEffect("name1", 0.0f, 1.0f));
+            tracks[0].Register(CreateMockEffect("name2", 1.0f, 2.0f));
+            tracks[0].Register(CreateMockEffect("name3", 2.0f, 3.0f));
+            tracks[0].Register(CreateMockPostEffect("name1", 0.0f, 3.0f));
+            tracks[0].Register(CreateMockPostEffect("name2", 0.0f, 4.0f));
 
             ExpectDraw("TestDrawEffects");
             tweaker.Draw();

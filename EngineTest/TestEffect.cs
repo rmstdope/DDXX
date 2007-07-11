@@ -31,7 +31,10 @@ namespace EngineTest
         private ITexture generatedTexture1;
         private ITexture generatedTexture2;
         private ILine line;
-        private List<float> yPos = new List<float>();
+        private LinearSpline<InterpolatedFloat> lSpline;
+        private NaturalCubicSpline<InterpolatedFloat> ncSpline;
+        private ClampedCubicSpline<InterpolatedFloat> ccSpline;
+        private SimpleCubicSpline<InterpolatedFloat> scSpline;
         //private ModelNode terrainModel = null;
 
         public float ReflectiveFactor
@@ -43,8 +46,8 @@ namespace EngineTest
         //private ModelNode modelSkinning;
         private ModelNode modelNoSkinning;
 
-        public TestEffect(float startTime, float endTime) 
-            : base(startTime, endTime)
+        public TestEffect(string name, float startTime, float endTime) 
+            : base(name, startTime, endTime)
         {
             scene = new Scene();
         }
@@ -100,7 +103,7 @@ namespace EngineTest
             //spiralSystem2.WorldState.MoveForward(500.0f);
             spiralSystem1.WorldState.MoveUp(100.0f);
             //spiralSystem2.WorldState.MoveUp(100.0f);
-            scene.AddNode(spiralSystem1);
+            //scene.AddNode(spiralSystem1);
             //scene.AddNode(spiralSystem2);
 
             //generator1.SetColors(Color.Black, Color.Blue);
@@ -133,8 +136,26 @@ namespace EngineTest
             //TestMeshBuilder();
 
             line = GraphicsFactory.CreateLine(Device);
-            for (int i = 0; i < 10; i++)
-                yPos.Add(Rand.Int(0, 400));
+            lSpline = new LinearSpline<InterpolatedFloat>();
+            ncSpline = new NaturalCubicSpline<InterpolatedFloat>();
+            ccSpline = new ClampedCubicSpline<InterpolatedFloat>(new InterpolatedFloat(0), new InterpolatedFloat(0));
+            scSpline = new SimpleCubicSpline<InterpolatedFloat>();
+
+            KeyFrame<InterpolatedFloat> keyframe;
+
+            for (int i = 0; i < 40; i++)
+            {
+                float yPos = Rand.Int(0, 400);
+                keyframe = new KeyFrame<InterpolatedFloat>(800.0f * i / 40.0f, new InterpolatedFloat(yPos));
+                lSpline.AddKeyFrame(keyframe);
+                ncSpline.AddKeyFrame(keyframe);
+                ccSpline.AddKeyFrame(keyframe);
+                scSpline.AddKeyFrame(keyframe);
+            }
+            lSpline.Calculate();
+            ncSpline.Calculate();
+            ccSpline.Calculate();
+            scSpline.Calculate();
 
             //scene.DebugPrintGraph();
             scene.Validate();
@@ -336,32 +357,28 @@ namespace EngineTest
             //}
             //sprite.End();
 
-            Vector2[] points = new Vector2[9 * 10];
+            DrawSpline(lSpline, 0, Color.White);
+            DrawSpline(ncSpline, 0, Color.Red);
+            DrawSpline(ccSpline, 0, Color.Green);
+            DrawSpline(scSpline, 0, Color.Blue);
+
+        }
+
+        private void DrawSpline(ISpline<InterpolatedFloat> spline, float yAdd, Color color)
+        {
+            Vector2[] points = new Vector2[400];
             float xPos = 0;
             int p = 0;
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < 400; i++)
             {
-                float v0;
-                float v1;
-                float v2;
-                float v3;
-                v0 = yPos[i == 0 ? i : i - 1];
-                v1 = yPos[i];
-                v2 = yPos[i + 1];
-                v3 = yPos[i < 8 ? i + 2: i + 1];
-                for (int x = 0; x < 10; x++)
-                {
-                    float d = x / 10.0f;
-                    float P = (v3 - v2) - (v0 - v1);
-                    float Q = (v0 - v1) - P;
-                    float R = v2 - v0;
-                    float S = v1;
-                    xPos += 8.0f;
-                    points[p++] = new Vector2(xPos, P * d * d * d + Q * d * d + R * d + S); 
-                }
+                points[p++] = new Vector2(xPos, yAdd + spline.GetValue(xPos));
+                xPos += 2;
             }
             line.Begin();
-            line.Draw(points, Color.White);
+            Device.RenderState.BlendOperation = BlendOperation.Add;
+            Device.RenderState.SourceBlend = Blend.One;
+            Device.RenderState.DestinationBlend = Blend.One;
+            line.Draw(points, Color.FromArgb(200, color));
             line.End();
         }
 

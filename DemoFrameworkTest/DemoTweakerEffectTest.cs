@@ -18,6 +18,11 @@ namespace Dope.DDXX.DemoFramework
     {
         private class TestClass : TweakableContainer
         {
+            public TestClass()
+                : base("")
+            {
+            }
+
             int intType;
             public int IntType
             {
@@ -363,7 +368,7 @@ namespace Dope.DDXX.DemoFramework
         public void TestDraw()
         {
             TestInitialize();
-            tweaker.CurrentContainer = new TweakableContainer();
+            tweaker.CurrentContainer = new TweakableContainer("name");
 
             ExpectDraw("TestDraw");
             tweaker.Draw();

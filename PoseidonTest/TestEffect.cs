@@ -17,8 +17,8 @@ namespace PoseidonTest
     {
         //private Scene scene;
         private PosseTestEffect demoEffect;
-        public RealRenderPostEffect(float startTime, float endTime)
-            : base(startTime, endTime)
+        public RealRenderPostEffect(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
         }
 
@@ -120,8 +120,8 @@ namespace PoseidonTest
         int ymax;
         private float zScale = 0.003f;
 
-        public PosseTestEffect(float startTime, float endTime)
-            : base(startTime, endTime)
+        public PosseTestEffect(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
             scene = new Scene();
             virtualScene = new Scene();

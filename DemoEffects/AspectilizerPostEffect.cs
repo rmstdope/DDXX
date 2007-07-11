@@ -34,8 +34,8 @@ namespace Dope.DDXX.DemoEffects
             set { rounding = value; CreateTexture(); }
         }
 
-        public AspectilizerPostEffect(float startTime, float endTime)
-            : base(startTime, endTime)
+        public AspectilizerPostEffect(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
             AddNoise = true;
             SetStepSize(GetTweakableNumber("Rounding"), 0.001f);

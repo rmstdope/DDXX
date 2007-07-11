@@ -18,6 +18,11 @@ namespace Dope.DDXX.SceneGraph
         private string filename;
         private MeshTechniqueChooser techniquePrefix;
 
+        public IAnimationRootFrame RootFrame
+        {
+            get { return rootFrame; }
+        }
+
         /// <summary>
         /// Constructor. Will not perform the actual loading.
         /// </summary>

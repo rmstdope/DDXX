@@ -46,7 +46,7 @@ namespace Dope.DDXX.DemoEffects
 
             Time.Initialize();
             Time.Pause();
-            textFadingEffect = new TextFadingEffect(0, 10);
+            textFadingEffect = new TextFadingEffect("", 0, 10);
         }
 
         [TearDown]

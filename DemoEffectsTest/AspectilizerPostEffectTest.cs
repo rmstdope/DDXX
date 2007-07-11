@@ -28,7 +28,7 @@ namespace Dope.DDXX.DemoEffects
         public void SetUp()
         {
             mockery = new Mockery();
-            aspectilizer = new AspectilizerPostEffect(0, 10);
+            aspectilizer = new AspectilizerPostEffect("", 0, 10);
             postProcessor = mockery.NewMock<IPostProcessor>();
             textureFactory = mockery.NewMock<ITextureFactory>();
             textureBuilder = mockery.NewMock<ITextureBuilder>();

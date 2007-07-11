@@ -26,27 +26,31 @@ namespace TiVi
                 StartTime = startTime;
             }
         }
+        private struct TunnleRing
+        {
+            public DummyNode RingCenter;
+            public float RotDirection;
+        }
 
-        private const int NUM_RINGS = 6;
+        private const int NUM_RINGS = 32;
         private const int NUM_LIGHTS = 2;
-        private const int NUM_BLOCKS = 24;
+        private const int NUM_BLOCKS = 12;
         private IScene scene;
         private CameraNode camera;
         private List<PointLightNode> lights = new List<PointLightNode>();
-        private List<Brick> bricks = new List<Brick>();
-        private List<Brick> walkway = new List<Brick>();
+        private List<Brick> fallingBricks = new List<Brick>();
+        private List<TunnleRing> rings = new List<TunnleRing>();
         private ModelNode discModel;
         private ModelNode discModel2;
+        private ModelNode terrainModel;
         private ModelNode tiviNode;
         private ModelNode mirrorNode;
         private MeshDirector director;
         private List<ModelNode> diamonds = new List<ModelNode>();
-        private ModelNode plane;
-        private ModelNode cylinder;
-        private ModelNode blackPlane;
+        private Interpolator<InterpolatedVector3> interpolator;
 
-        public TunnelFlight(float startTime, float endTime)
-            : base(startTime, endTime)
+        public TunnelFlight(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
         }
 
@@ -69,16 +73,17 @@ namespace TiVi
             director = new MeshDirector(MeshBuilder);
 
             CreateStandardSceneAndCamera(out scene, out camera, 10);
-            camera.WorldState.MoveUp(1.5f);
+            camera.SetFOV((float)Math.PI / 2 * 0.7f);
 
+            CreateSplines();
             CreateNoiseTexture();
-            //CreateBricks();
+            CreateBricks();
+            //CreateFallingBricks();
             CreateLights();
             //CreateTerrain();
-            CreateDiamonds();
-            //CreateDiscs();
-            CreateTiVi();
-            CreateWalkway();
+            //CreateDiamonds();
+            CreateDiscs();
+            //CreateTiVi();
 
             //GlitterParticleSpawner spawner = new GlitterParticleSpawner(GraphicsFactory, Device, 500);
             //ParticleSystemNode system = new ParticleSystemNode("");
@@ -89,61 +94,17 @@ namespace TiVi
             scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
         }
 
-        private void CreateWalkway()
+        private void CreateSplines()
         {
-            MeshBuilder.SetDiffuseTexture("Default1", "square.tga");
-            MeshBuilder.SetDiffuseColor("Default1", new ColorValue(0.8f, 0.8f, 0.8f, 0.8f));
-            MeshBuilder.SetAmbientColor("Default1", new ColorValue(1.0f, 1.0f, 1.0f, 1.0f));
-            director.CreateChamferBox(1, 1, 0.4f, 0.1f, 4);
-            director.UvMapPlane(1, 1, 1);
-            director.Scale(0.5f);
-            IModel model = director.Generate("Default1");
-            EffectHandler effectHandler = new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
-                delegate(int material) { return "Terrain"; }, model);
-            float t = 0;
-            ModelNode modelNode;
-            for (int j = 0; j < 30; j++)
-            {
-                modelNode = new ModelNode("", model, effectHandler, Device);
-                //scene.AddNode(modelNode);
-                walkway.Add(new Brick(modelNode, t));
-                modelNode.WorldState.MoveForward(-0.6f * j);
-                modelNode.WorldState.MoveRight(-0.05f * j);
-                modelNode.WorldState.MoveUp(-0.17f);
-            }
-
-            director.CreatePlane(2, 20, 1, 1, true);
-            director.UvMapPlane(2, 0.2f, 2);
-            director.Rotate((float)Math.PI / 2, 0, 0);
-            //director.Rotate(0, 0, (float)Math.PI / 2);
-            model = director.Generate("Default1");
-            effectHandler = new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
-                delegate(int material) { return "Atmosphere"; }, model);
-            plane = new ModelNode("", model, effectHandler, Device);
-            plane.WorldState.MoveForward(-2);
-            plane.WorldState.MoveUp(-0.1f);
-            GraphicsStream stream = ShaderLoader.CompileShaderFromFile("Imaginations.psh", "CreateCloudTexture", null, "tx_1_0", ShaderFlags.None);
-            ITexture tex = GraphicsFactory.CreateTexture(Device, 256, 256, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
-            TextureLoader.FillTexture((Texture)((tex as TextureAdapter).BaseTextureDX), new TextureShader(stream));
-            tex.Save("clouds.dds", ImageFileFormat.Dds);
-            plane.Model.Materials[0].DiffuseTexture = tex;
-            //scene.AddNode(plane);
-
-            MeshBuilder.SetDiffuseTexture("Default1", "square.tga");
-            MeshBuilder.SetDiffuseColor("Default1", ColorValue.FromColor(Color.DarkGoldenrod));
-            MeshBuilder.SetAmbientColor("Default1", ColorValue.FromColor(Color.DarkGoldenrod));
-            director.CreateCylinder(0.1f, 20, 8, 1, true);
-            director.UvRemap(0, 1, 0, 20);
-            director.Rotate((float)Math.PI / 2, 0, 0);
-            model = director.Generate("Default1");
-            effectHandler = new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
-                delegate(int material) { return "Terrain"; }, model);
-            cylinder = new ModelNode("", model, effectHandler, Device);
-            plane.AddChild(cylinder);
-            cylinder.WorldState.MoveRight(1);
-            ModelNode cylinder2 = new ModelNode("", model, effectHandler, Device);
-            plane.AddChild(cylinder2);
-            cylinder2.WorldState.MoveRight(-1);
+            interpolator = new Interpolator<InterpolatedVector3>();
+            ClampedCubicSpline<InterpolatedVector3> spline = new ClampedCubicSpline<InterpolatedVector3>(new InterpolatedVector3(), new InterpolatedVector3());
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(0, new InterpolatedVector3(new Vector3(0.0f, 0.0f, 0.0f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(5, new InterpolatedVector3(new Vector3(2.0f, 0.0f, 10.0f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(10, new InterpolatedVector3(new Vector3(-2.0f, 0.0f, 20.0f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(15, new InterpolatedVector3(new Vector3(2.0f, 0.0f, 30.0f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(20, new InterpolatedVector3(new Vector3(-2.0f, 0.0f, 40.0f))));
+            spline.Calculate();
+            interpolator.AddSpline(spline);
         }
 
         private void CreateTiVi()
@@ -166,17 +127,6 @@ namespace TiVi
             tiviNode.Model.Materials[0].Ambient = Color.White;
 
             mirrorNode = CreateMirrorNode(tiviNode);
-
-            MeshBuilder.SetAmbientColor("Default1", ColorValue.FromArgb(0));
-            MeshBuilder.SetDiffuseColor("Default1", ColorValue.FromArgb(0));
-            director.CreatePlane(50, 50, 1, 1, true);
-            director.Rotate((float)Math.PI / 2, 0, 0);
-            director.Translate(0, -0.11f, 0);
-            IModel model = director.Generate("Default1");
-            IEffectHandler effectHandler = new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
-                delegate(int material) { return "Terrain"; }, model);
-            blackPlane = new ModelNode("", model, effectHandler, Device);
-
         }
 
         private ModelNode CreateMirrorNode(ModelNode originalNode)
@@ -190,9 +140,9 @@ namespace TiVi
 
         private void CreateDiscs()
         {
-            const float outerRadius = 2.5f;
-            const float innerRadius = 2.0f;
-            const float torusRadius = 0.07f;
+            const float outerRadius = 1.0f;
+            const float innerRadius = 0.9f;
+            const float torusRadius = 0.01f;
             discModel = CreateDisc(outerRadius, innerRadius, "AlphaTest");
             discModel.AddChild(CreateTorus(outerRadius, torusRadius, "Terrain"));
             discModel.AddChild(CreateTorus(innerRadius, torusRadius, "Terrain"));
@@ -213,13 +163,13 @@ namespace TiVi
         {
             const int NUM_DIAMONDS = 50;
             MeshBuilder.SetAmbientColor("Default3", new ColorValue(0.3f, 0.3f, 0.3f, 1.0f));
-            MeshBuilder.SetDiffuseColor("Default3", new ColorValue(0.3f, 0.3f, 0.3f, 1.0f));
+            MeshBuilder.SetDiffuseColor("Default3", new ColorValue(0.9f, 0.9f, 0.9f, 1.0f));
             MeshBuilder.SetDiffuseTexture("Default3", "square.tga");
             director.CreateChamferBox(1, 1, 0.4f, 0.2f, 4);
             director.UvMapPlane(1, 1, 1);
             director.Rotate((float)Math.PI / 2, 0, 0);
             director.Rotate(0, 0, (float)Math.PI / 4);
-            director.Scale(0.2f, 0.3f, 0.3f);
+            director.Scale(0.1f, 0.2f, 0.2f);
             IModel model = director.Generate("Default3");
             model.Mesh.ComputeNormals();
             EffectHandler handler = new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
@@ -227,19 +177,13 @@ namespace TiVi
             for (int i = 0; i < NUM_DIAMONDS; i++)
             {
                 ModelNode node1 = new ModelNode("", model, handler, Device);
-                ModelNode node2 = new ModelNode("", model, handler, Device);
-                node1.WorldState.MoveUp(Rand.Float(0, 4));
-                node1.WorldState.MoveRight(Rand.Float(-5, 5));
-                node1.WorldState.MoveForward(Rand.Float(-10, 10));
-                node2.WorldState.Position = 
-                    new Vector3(node1.WorldState.Position.X, -node1.WorldState.Position.Y, node1.WorldState.Position.Z);
+                node1.WorldState.MoveUp(Rand.Float(-1, 5));
+                node1.WorldState.MoveRight(Rand.Float(-3, 3));
+                node1.WorldState.MoveForward(Rand.Float(-3, 3));
                 float t = Rand.Float(Math.PI);
                 node1.WorldState.Turn(t);
-                node1.WorldState.Turn(t);
                 //scene.AddNode(node1);
-                //scene.AddNode(node2);
                 diamonds.Add(node1);
-                diamonds.Add(node2);
             }
         }
 
@@ -249,7 +193,7 @@ namespace TiVi
             director.CreateDisc(outerRadius, innerRadius, 32);
             IModel model = director.Generate("Default2");
             model.Materials[0].AmbientColor = new ColorValue(0.1f, 0.1f, 0.1f);
-            model.Materials[0].DiffuseColor = new ColorValue(0.9f, 0.9f, 0.9f);
+            model.Materials[0].DiffuseColor = new ColorValue(0.5f, 0.5f, 0.5f);
             return new ModelNode("Terrain", model,
                 new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
                 delegate(int material) { return technique; }, model), Device);
@@ -281,7 +225,8 @@ namespace TiVi
             terrain.HeightSegments = 25;
             terrain.WidthSegments = 25;
             terrain.Textured = true;
-            MeshBuilder.SetDiffuseTexture("Default2", "BENEDETI.JPG");
+            //MeshBuilder.SetDiffuseTexture("Default2", "BENEDETI.JPG");
+            MeshBuilder.SetDiffuseTexture("Default2", "clouds.dds");
             UvMapPlane uvMap = new UvMapPlane();
             uvMap.Input = terrain;
             uvMap.AlignToAxis = 1;
@@ -289,14 +234,14 @@ namespace TiVi
             uvMap.TileU = 4;
             IModel model = MeshBuilder.CreateModel(uvMap, "Default2");
             model.Mesh.ComputeNormals();
-            model.Materials[0].AmbientColor = new ColorValue(0.1f, 0.1f, 0.1f);
+            model.Materials[0].AmbientColor = new ColorValue(0.4f, 0.4f, 0.4f);
             model.Materials[0].DiffuseColor = new ColorValue(0.6f, 0.6f, 0.6f);
-            discModel = new ModelNode("Terrain", model,
+            terrainModel = new ModelNode("Terrain", model,
                 new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
                 delegate(int material) { return "Terrain"; }, model), Device);
-            scene.AddNode(discModel);
-            discModel.WorldState.MoveUp(-8);
-            discModel.WorldState.MoveForward(25);
+            scene.AddNode(terrainModel);
+            terrainModel.WorldState.MoveUp(-5.5f);
+            terrainModel.WorldState.MoveForward(0);
         }
 
         private void CreateLights()
@@ -314,6 +259,61 @@ namespace TiVi
         private void CreateBricks()
         {
             MeshBuilder.SetDiffuseTexture("Default1", "square.tga");
+            MeshBuilder.SetAmbientColor("Default1", new ColorValue(0, 0, 0, 0));
+            MeshBuilder.SetDiffuseColor("Default1", new ColorValue(0.6f, 0.6f, 0.6f, 1.0f));
+            director.CreateChamferBox(1.0f, 1.0f, 0.1f, 0.03f, 4);
+            director.UvMapPlane(1, 1, 1);
+            //director.UvRemap(0.1f, 0.8f, 0.1f, 0.8f);
+            IModel model = director.Generate("Default1");
+            EffectHandler effectHandler = new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
+                delegate(int material) { return "Bricks"; }, model);
+            Vector3 right = new Vector3(1, 0, 0);
+            float nextTime = 0;
+            for (int j = 0; j < NUM_RINGS; j++)
+            {
+                Vector3 up = interpolator.GetValue(nextTime + 0.05f) - (Vector3)interpolator.GetValue(nextTime);
+                Vector3 forward = Vector3.Cross(right, up);
+                right = Vector3.Cross(up, forward);
+                up.Normalize();
+                right.Normalize();
+                forward.Normalize();
+                DummyNode ringCenter = new DummyNode("");
+                ringCenter.WorldState.Position = interpolator.GetValue(nextTime);
+                Matrix rot = new Matrix();
+                rot.M11 = right.X;
+                rot.M12 = right.Y;
+                rot.M13 = right.Z;
+                rot.M21 = up.X;
+                rot.M22 = up.Y;
+                rot.M23 = up.Z;
+                rot.M31 = forward.X;
+                rot.M32 = forward.Y;
+                rot.M33 = forward.Z;
+                rot.M44 = 1;
+                ringCenter.WorldState.Rotation = rot;
+                TunnleRing ring = new TunnleRing();
+                ring.RingCenter = ringCenter;
+                ring.RotDirection = j % 2 == 1 ? 1 : -1;
+                rings.Add(ring);
+                for (int i = 0; i < NUM_BLOCKS; i++)
+                {
+                    ModelNode modelNode = new ModelNode("Brick", model, effectHandler, Device);
+                    modelNode.WorldState.Tilt((float)Math.PI / 2);
+                    modelNode.WorldState.Roll((float)(i * Math.PI * 2 / NUM_BLOCKS));
+                    modelNode.WorldState.MoveUp(-2);
+                    ringCenter.AddChild(modelNode);
+                }
+                scene.AddNode(ringCenter);
+                Vector3 oldPos = interpolator.GetValue(nextTime);
+                while ((oldPos - interpolator.GetValue(nextTime)).Length() < 2.0f && nextTime < 100)
+                    nextTime += 0.01f;
+                //nextTime += 1;
+            }
+        }
+
+        private void CreateFallingBricks()
+        {
+            MeshBuilder.SetDiffuseTexture("Default1", "square.tga");
             MeshBuilder.SetDiffuseColor("Default1", new ColorValue(0.8f, 0.8f, 0.8f, 0.8f));
             director.CreateChamferBox(0.6f, 0.6f, 0.1f, 0.05f, 4);
             director.UvMapPlane(1, 1, 1);
@@ -327,36 +327,27 @@ namespace TiVi
                 {
                     ModelNode modelNode = new ModelNode("Brick", model, effectHandler, Device);
                     scene.AddNode(modelNode);
-                    bricks.Add(new Brick(modelNode, t));
+                    fallingBricks.Add(new Brick(modelNode, t));
                     t += 0.03f;
                 }
                 t += 0.08f;
             }
         }
 
-
         public override void Step()
         {
-            camera.WorldState.Reset();
-            camera.WorldState.Position = new Vector3((float)Math.Sin(Time.StepTime / 4) * 10,
-                2.0f,
-                (float)Math.Cos(Time.StepTime / 4) * 10);
-            camera.LookAt(new Vector3(0, 1.0f, -5), new Vector3(0, 1, 0));
+            //Mixer.ClearColor = Color.Gray;
+            //camera.WorldState.Reset();
+            camera.WorldState.Position = interpolator.GetValue(Time.StepTime);
+            camera.WorldState.Position += new Vector3((float)Math.Sin(Time.StepTime / 4), 1.0f, (float)Math.Cos(Time.StepTime / 4)) * 1.3f;
+            camera.LookAt(interpolator.GetValue(Time.StepTime) + new Vector3(0, 0.8f, 0), new Vector3(0, 1, 0));
+            //camera.WorldState.Position = new Vector3((float)Math.Sin(Time.StepTime / 4), 0.6f, (float)Math.Cos(Time.StepTime / 4)) * 3;
+            //camera.LookAt(new Vector3(0, 0.5f, 0), new Vector3(0, 1, 0));
 
             StepDiamonds();
             StepDiscs();
-            StepBricks();
-            StepWalkway();
+            StepFallingBricks();
             scene.Step();
-        }
-
-        private void StepWalkway()
-        {
-            float[] f = new float[] { Time.StepTime * 0.075f, Time.StepTime * 0.063f};
-            EffectFactory.CreateFromFile("TiVi.fxo").SetValue(EffectHandle.FromString("AtmosphereTime"), f);
-
-            //cylinder.WorldState.Roll(Time.DeltaTime);
-            //cylinder.WorldState.Turn(Time.DeltaTime);
         }
 
         private void StepDiscs()
@@ -365,29 +356,37 @@ namespace TiVi
                 return;
             discModel.WorldState.Reset();
             discModel2.WorldState.Reset();
-            discModel.WorldState.MoveUp(0.85f);
+            discModel.WorldState.Position = interpolator.GetValue(Time.StepTime);
+            discModel2.WorldState.Position = interpolator.GetValue(Time.StepTime);
+            discModel.WorldState.MoveUp(0.40f);
             //discModel2.WorldState.MoveUp(-1.35f);
 
             discModel.WorldState.Turn(Time.StepTime * 2);
             discModel.WorldState.Tilt(0.3f);
             //Mixer.ClearColor = Color.FromArgb(0, Color.White);
             for (int i = 0; i < NUM_LIGHTS; i++)
-                lights[i].Position = new Vector3(
-                    (float)Math.Sin(Time.StepTime * 0.5f + i) * 20,
-                    (float)Math.Cos(Time.StepTime * 1.23f + i) * 10 + 10,
-                    (float)Math.Sin(Time.StepTime + i) * 10 + 10);
+            {
+                lights[i].Position = interpolator.GetValue(Time.StepTime) + new Vector3(
+                    (float)Math.Sin(Time.StepTime * 0.5f + i) * 2,
+                    (float)Math.Cos(Time.StepTime * 1.23f + i) * 1 + 1,
+                    (float)Math.Sin(Time.StepTime + i) * 2);
+                //lights[i].Position = new Vector3(
+                //    (float)Math.Sin(Time.StepTime * 0.5f + i) * 20,
+                //    (float)Math.Cos(Time.StepTime * 1.23f + i) * 10 + 10,
+                //    (float)Math.Sin(Time.StepTime + i) * 10 + 10);
+            }
         }
 
-        private void StepBricks()
+        private void StepFallingBricks()
         {
-            if (bricks.Count <= 0)
+            if (fallingBricks.Count <= 0)
                 return;
             for (int j = 0; j < NUM_RINGS; j++)
             {
                 for (int i = 0; i < NUM_BLOCKS; i++)
                 {
-                    ModelNode model = bricks[j * NUM_BLOCKS + i].Model;
-                    float startTime = bricks[j * NUM_BLOCKS + i].StartTime;
+                    ModelNode model = fallingBricks[j * NUM_BLOCKS + i].Model;
+                    float startTime = fallingBricks[j * NUM_BLOCKS + i].StartTime;
                     const float FALL_TIME = 1.3f;
                     const float FALL_HEIGHT = 10.0f;
                     float time = Time.StepTime - StartTime - startTime;
@@ -401,7 +400,7 @@ namespace TiVi
                     }
                     model.WorldState.Reset();
                     //model.WorldState.MoveForward(2);
-                    model.WorldState.MoveUp(-2 + 0.8f * j + upAdd);
+                    model.WorldState.MoveUp(0 + 0.8f * j + upAdd);
                     model.WorldState.Tilt((float)Math.PI / 2);
                     model.WorldState.Roll(Time.StepTime / 2 + (float)Math.PI * 2 * i / NUM_BLOCKS);
                     model.WorldState.MoveUp(-3.0f);
@@ -413,25 +412,25 @@ namespace TiVi
         {
             foreach (ModelNode node in diamonds)
             {
-                node.WorldState.Turn(Time.DeltaTime * 3);
-                node.WorldState.Position += new Vector3(0, 0, Time.DeltaTime * 4.5f);
-                if (node.WorldState.Position.Z > 10)
-                    node.WorldState.Position += new Vector3(0, 0, -20);
+                node.WorldState.Turn(Time.DeltaTime * 8);
+                node.WorldState.Position += new Vector3(0, Time.DeltaTime * 0.5f, 0);
+                if (node.WorldState.Position.Y > 5)
+                    node.WorldState.Position += new Vector3(0, -6, 0);
             }
         }
 
         public override void Render()
         {
-            mirrorNode.Render(scene);
+            foreach (TunnleRing ring in rings)
+                ring.RingCenter.WorldState.Turn(Time.DeltaTime * ring.RotDirection * 0.5f);
+            //mirrorNode.Render(scene);
             foreach (ModelNode node in diamonds)
                 node.Render(scene);
-            plane.Render(scene);
-            blackPlane.Render(scene);
             scene.Render();
             if (discModel != null)
             {
-                discModel.Render(scene);
                 discModel2.Render(scene);
+                discModel.Render(scene);
             }
         }
     }

@@ -10,11 +10,18 @@ namespace Dope.DDXX.DemoFramework
 {
     public class TweakableContainer : ITweakableContainer
     {
+        private string name;
         private List<PropertyInfo> properties;
         private List<float> steps;
 
-        public TweakableContainer()
+        public string Name
         {
+            get { return name; }
+        }
+
+        public TweakableContainer(string name)
+        {
+            this.name = name;
             properties = GetProperties();
             steps = new List<float>();
             for (int i = 0; i < properties.Count; i++)
@@ -115,36 +122,36 @@ namespace Dope.DDXX.DemoFramework
             for (int i = 0; i < properties.Count; i++)
             {
                 if (properties[i].Name == "StartTime")
-                    changeListener.SetStartTime(GetType().Name, GetFloatValue(i));
+                    changeListener.SetStartTime(GetType().Name, name, GetFloatValue(i));
                 else if (properties[i].Name == "EndTime")
-                    changeListener.SetEndTime(GetType().Name, GetFloatValue(i));
+                    changeListener.SetEndTime(GetType().Name, name, GetFloatValue(i));
                 else
                 {
                     switch (GetTweakableType(i))
                     {
                         case TweakableType.Integer:
-                            changeListener.SetIntParam(GetType().Name, 
-                                GetTweakableName(i), GetIntValue(i));
+                            changeListener.SetIntParam(GetType().Name,
+                                name, GetTweakableName(i), GetIntValue(i));
                             break;
                         case TweakableType.Float:
-                            changeListener.SetFloatParam(GetType().Name, 
-                                GetTweakableName(i), GetFloatValue(i));
+                            changeListener.SetFloatParam(GetType().Name,
+                                name, GetTweakableName(i), GetFloatValue(i));
                             break;
                         case TweakableType.String:
-                            changeListener.SetStringParam(GetType().Name, 
-                                GetTweakableName(i), GetStringValue(i));
+                            changeListener.SetStringParam(GetType().Name,
+                                name, GetTweakableName(i), GetStringValue(i));
                             break;
                         case TweakableType.Vector3:
-                            changeListener.SetVector3Param(GetType().Name, 
-                                GetTweakableName(i), GetVector3Value(i));
+                            changeListener.SetVector3Param(GetType().Name,
+                                name, GetTweakableName(i), GetVector3Value(i));
                             break;
                         case TweakableType.Color:
-                            changeListener.SetColorParam(GetType().Name, 
-                                GetTweakableName(i), GetColorValue(i));
+                            changeListener.SetColorParam(GetType().Name,
+                                name, GetTweakableName(i), GetColorValue(i));
                             break;
                         case TweakableType.Bool:
                             changeListener.SetBoolParam(GetType().Name,
-                                GetTweakableName(i), GetBoolValue(i));
+                                name, GetTweakableName(i), GetBoolValue(i));
                             break;
                     }
                 }

@@ -17,8 +17,8 @@ namespace EngineTest
         private CameraNode camera;
         private IScene scene;
 
-        public TerrainFlyover(float startTime, float endTime)
-            : base(startTime, endTime)
+        public TerrainFlyover(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
         }
 

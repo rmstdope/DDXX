@@ -8,8 +8,8 @@ namespace Dope.DDXX.DemoEffects
 {
     public abstract class SinglePassPostEffect : BaseDemoPostEffect
     {
-        public SinglePassPostEffect(float startTime, float endTime)
-            : base(startTime, endTime)
+        public SinglePassPostEffect(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
         }
 

@@ -6,6 +6,11 @@ namespace Dope.DDXX.DemoFramework
 {
     public interface IRegisterable
     {
+        string Name
+        {
+            get;
+        }
+
         float StartTime
         {
             get;

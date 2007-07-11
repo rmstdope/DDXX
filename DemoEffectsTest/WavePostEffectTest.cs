@@ -31,7 +31,7 @@ namespace Dope.DDXX.DemoEffects
             postProcessor = mockery.NewMock<IPostProcessor>();
             outputTexture = mockery.NewMock<ITexture>();
             texture1 = mockery.NewMock<ITexture>();
-            effect = new WavePostEffect(1.0f, 2.0f);
+            effect = new WavePostEffect("", 1.0f, 2.0f);
             effect.Initialize(postProcessor, null, null, null);
             Time.Initialize();
             Time.Pause();

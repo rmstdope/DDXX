@@ -142,6 +142,12 @@ namespace Dope.DDXX.DemoFramework
 
         public void Register(int track, IDemoEffect effect)
         {
+            foreach (ITrack testTrack in tracks)
+            {
+                if (testTrack.IsEffectRegistered(effect.Name, effect.GetType()))
+                    throw new DDXXException("Can not have two Effects of class " + effect.GetType().Name +
+                        "and name " + effect.Name + ".");
+            }
             while (NumTracks <= track)
             {
                 tracks.Add(demoFactory.CreateTrack());
@@ -151,6 +157,12 @@ namespace Dope.DDXX.DemoFramework
 
         public void Register(int track, IDemoPostEffect postEffect)
         {
+            foreach (ITrack testTrack in tracks)
+            {
+                if (testTrack.IsPostEffectRegistered(postEffect.Name, postEffect.GetType()))
+                    throw new DDXXException("Can not have two PostEffects of class " + postEffect.GetType().Name + 
+                        "and name " + postEffect.Name + ".");
+            }
             while (NumTracks <= track)
             {
                 tracks.Add(demoFactory.CreateTrack());
@@ -164,8 +176,16 @@ namespace Dope.DDXX.DemoFramework
             {
                 if (compare.StartTime < transition.EndTime &&
                     compare.EndTime > transition.StartTime)
-                    throw new DDXXException("Can not have operlapping transitions.");
+                    throw new DDXXException("Can not have overlapping transitions.");
             }
+            foreach (IDemoTransition compare in transitions)
+            {
+                if (compare.Name == transition.Name &&
+                    compare.GetType() == transition.GetType())
+                    throw new DDXXException("Can not have two Transitions of class " + transition.GetType().Name +
+                        "and name " + transition.Name + ".");
+            }
+
             transitions.Add(transition);
         }
 
@@ -219,9 +239,13 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
+        //private int screenshotNum = 0;
         public void Render()
         {
             ITexture renderedTexture = RenderTracks();
+
+            //if (inputDriver.KeyPressedNoRepeat(Key.F12))
+            //    renderedTexture.Save("Screenshot" + screenshotNum++ + ".jpg", ImageFileFormat.Jpg);
 
             if (renderedTexture != null)
             {
@@ -305,23 +329,23 @@ namespace Dope.DDXX.DemoFramework
         #region IDemoEffectBuilder Members
         private object lastAddedAsset;
 
-        public void AddEffect(string effectName, int effectTrack, float startTime, float endTime)
+        public void AddEffect(string className, string effectName, int effectTrack, float startTime, float endTime)
         {
-            IDemoEffect effect = (IDemoEffect)effectTypes.CreateInstance(effectName, startTime, endTime);
+            IDemoEffect effect = (IDemoEffect)effectTypes.CreateInstance(className, effectName, startTime, endTime);
             this.Register(effectTrack, effect);
             lastAddedAsset = effect;
         }
 
-        public void AddPostEffect(string effectName, int effectTrack, float startTime, float endTime)
+        public void AddPostEffect(string className, string effectName, int effectTrack, float startTime, float endTime)
         {
-            IDemoPostEffect postEffect = (IDemoPostEffect)effectTypes.CreateInstance(effectName, startTime, endTime);
+            IDemoPostEffect postEffect = (IDemoPostEffect)effectTypes.CreateInstance(className, effectName, startTime, endTime);
             this.Register(effectTrack, postEffect);
             lastAddedAsset = postEffect;
         }
 
-        public void AddTransition(string effectName, int destinationTrack, float startTime, float endTime)
+        public void AddTransition(string className, string effectName, int destinationTrack, float startTime, float endTime)
         {
-            IDemoTransition transition = (IDemoTransition)effectTypes.CreateInstance(effectName, startTime, endTime);
+            IDemoTransition transition = (IDemoTransition)effectTypes.CreateInstance(className, effectName, startTime, endTime);
             transition.DestinationTrack = destinationTrack;
             this.Register(transition);
             lastAddedAsset = transition;

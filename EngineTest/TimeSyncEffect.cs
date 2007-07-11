@@ -31,8 +31,8 @@ namespace EngineTest
         private ITexture circleTexture;
         private ISprite circleSprite;
 
-        public TimeSyncEffect(float startTimef, float endTime)
-            : base(startTimef, endTime)
+        public TimeSyncEffect(string name, float startTimef, float endTime)
+            : base(name, startTimef, endTime)
         {
         }
 

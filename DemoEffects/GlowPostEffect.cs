@@ -54,8 +54,8 @@ namespace Dope.DDXX.DemoEffects
             set { advancedGlow = value; }
         }
 
-        public GlowPostEffect(float startTime, float endTime)
-            : base(startTime, endTime)
+        public GlowPostEffect(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
             Luminance = 0.2f;
             SetStepSize(GetTweakableNumber("Luminance"), 0.01f);

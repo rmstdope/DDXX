@@ -175,8 +175,8 @@ namespace ShortPuzzle
             }
         }
 
-        public MainEffect(float startTime, float endTime) 
-            : base(startTime, endTime)
+        public MainEffect(string name, float startTime, float endTime) 
+            : base(name, startTime, endTime)
         {
         }
 

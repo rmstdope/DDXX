@@ -14,10 +14,19 @@ namespace Dope.DDXX.DemoFramework
     {
         private class EmptyContainer : TweakableContainer
         {
+            public EmptyContainer()
+                : base("")
+            {
+            }
         };
 
         private class TestClass : TweakableContainer
         {
+            public TestClass()
+                : base("TestName")
+            {
+            }
+
             private int intType;
             public int IntType
             {
@@ -341,56 +350,64 @@ namespace Dope.DDXX.DemoFramework
 
         #region IEffectChangeListener Members
 
-        public void SetStartTime(string effectName, float value)
+        public void SetStartTime(string className, string effectName, float value)
         {
-            Assert.AreEqual("TestClass", effectName);
+            Assert.AreEqual("TestClass", className);
+            Assert.AreEqual("TestName", effectName);
             startTime = value;
         }
 
-        public void SetEndTime(string effectName, float value)
+        public void SetEndTime(string className, string effectName, float value)
         {
-            Assert.AreEqual("TestClass", effectName);
+            Assert.AreEqual("TestClass", className);
+            Assert.AreEqual("TestName", effectName);
             endTime = value;
         }
 
-        public void SetColorParam(string effectName, string param, Color value)
+        public void SetColorParam(string className, string effectName, string param, Color value)
         {
-            Assert.AreEqual("TestClass", effectName);
+            Assert.AreEqual("TestClass", className);
+            Assert.AreEqual("TestName", effectName);
             Assert.AreEqual("ColorType", param);
             colorType = value;
         }
 
-        public void SetFloatParam(string effectName, string param, float value)
+        public void SetFloatParam(string className, string effectName, string param, float value)
         {
-            Assert.AreEqual("TestClass", effectName);
+            Assert.AreEqual("TestClass", className);
+            Assert.AreEqual("TestName", effectName);
             Assert.AreEqual("FloatType", param);
             floatType = value;
         }
 
-        public void SetIntParam(string effectName, string param, int value)
+        public void SetIntParam(string className, string effectName, string param, int value)
         {
-            Assert.AreEqual("TestClass", effectName);
+            Assert.AreEqual("TestClass", className);
+            Assert.AreEqual("TestName", effectName);
             Assert.AreEqual("IntType", param);
             intType = value;
         }
 
-        public void SetStringParam(string effectName, string param, string value)
+        public void SetStringParam(string className, string effectName, string param, string value)
         {
-            Assert.AreEqual("TestClass", effectName);
+            Assert.AreEqual("TestClass", className);
+            Assert.AreEqual("TestName", effectName);
             Assert.AreEqual("StringType", param);
             stringType = value;
         }
 
-        public void SetVector3Param(string effectName, string param, Vector3 value)
+        public void SetVector3Param(string className, string effectName, string param, Vector3 value)
         {
-            Assert.AreEqual("TestClass", effectName);
+            Assert.AreEqual("TestClass", className);
+            Assert.AreEqual("TestName", effectName);
             Assert.AreEqual("Vector3Type", param);
             vector3Type = value;
         }
 
-        public void SetBoolParam(string effectName, string param, bool value)
+        public void SetBoolParam(string className, string effectName, string param, bool value)
         {
-            Assert.AreEqual("TestClass", effectName);
+            Assert.AreEqual("TestClass", className);
+            Assert.AreEqual("TestName", effectName);
             Assert.AreEqual("BoolType", param);
             boolType = value;
         }

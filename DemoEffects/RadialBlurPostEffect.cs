@@ -19,8 +19,8 @@ namespace Dope.DDXX.DemoEffects
             set { blurColor = value; }
         }
 
-        public RadialBlurPostEffect(float startTime, float endTime)
-            : base(startTime, endTime)
+        public RadialBlurPostEffect(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
         }
 

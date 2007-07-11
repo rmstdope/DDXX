@@ -37,9 +37,9 @@ namespace TiVi
         private CameraNode bodyCamera1;
         private CameraNode handCamera;
         private CameraNode bodyCamera2;
-        private float bodyCameraStart1 = 6.0f;
-        private float handCameraStart = 12.0f;
-        private float bodyCameraStart2 = 19.0f;
+        private float bodyCameraStart1 = 7.0f;
+        private float handCameraStart = 14.0f;
+        private float bodyCameraStart2 = 21.0f;
         private static float segmentLength = 0.45f;
 
         public float FlareSize
@@ -47,13 +47,16 @@ namespace TiVi
             get { return flareSize; }
             set { flareSize = value; }
         }
-
         public float SegmentLength
         {
             get { return segmentLength; }
-            set { segmentLength = value; }
+            set 
+            { 
+                segmentLength = value;
+                if (lineTiViMesh != null)
+                    CreateLineMesh(startVertex);
+            }
         }
-
         public int StartVertex
         {
             get { return startVertex; }
@@ -64,11 +67,25 @@ namespace TiVi
                     CreateLineMesh(startVertex);
             }
         }
-
         public string BaseMesh
         {
             get { return baseMesh; }
             set { baseMesh = value; }
+        }
+        public float BodyCameraStart1
+        {
+            get { return bodyCameraStart1; }
+            set { bodyCameraStart1 = value; }
+        }
+        public float HandCameraStart
+        {
+            get { return handCameraStart; }
+            set { handCameraStart = value; }
+        }
+        public float BodyCameraStart2
+        {
+            get { return bodyCameraStart2; }
+            set { bodyCameraStart2 = value; }
         }
 
         private struct Vertex
@@ -107,9 +124,23 @@ namespace TiVi
             //public Vector3 Tangent;
         }
 
-        public CreationScene(float startTime, float endTime)
-            : base(startTime, endTime)
+        public CreationScene(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
+        }
+
+        private Vector4 circleCallback(Vector2 texCoord, Vector2 texelSize)
+        {
+            Vector2 centered = texCoord - new Vector2(0.5f, 0.5f);
+            float distance = centered.Length();
+            if (distance < 0.1f)
+                return new Vector4(1, 1, 1, 1);
+            else if (distance < 0.5f)
+            {
+                float scaled = (0.5f - distance) / 0.4f;
+                return new Vector4(scaled, scaled, scaled, 1);
+            }
+            return new Vector4(0, 0, 0, 0);
         }
 
         protected override void Initialize()
@@ -121,7 +152,8 @@ namespace TiVi
             SetUpCamera();
 
             sprite = GraphicsFactory.CreateSprite(Device);
-            flareTexture = TextureFactory.CreateFromFile("Flare.dds");
+            flareTexture = TextureFactory.CreateFromFunction(64, 64, 0, Usage.None, Format.A8R8G8B8, Pool.Managed, circleCallback);
+            //TextureFactory.CreateFromFile("Flare.dds");
             whiteTexture = TextureFactory.CreateFromFunction(64, 64, 1, Usage.None,
                 Format.A8R8G8B8, Pool.Managed,
                 delegate(Vector2 coord, Vector2 texel) { return new Vector4(1, 1, 1, 1); });
@@ -171,8 +203,10 @@ namespace TiVi
             {
                 StartTime = startTime;
                 Length = segmentLength + (float)(random.NextDouble() * segmentLength);
-                if (startTime < 3)
-                    Length += 0.2f;
+                if (startTime < 7.0f)
+                    Length += 1.0f;
+                //if (startTime == 0)
+                //    Length += 3;
             }
         }
 
@@ -220,6 +254,8 @@ namespace TiVi
                     };
                 });
             XLoader.AddToScene(scene);
+            //IAnimationSet set = XLoader.RootFrame.AnimationController.GetAnimationSet(0);
+            //XLoader.RootFrame.AnimationController.SetTrackAnimationSet(0, set);
             nodeTiVi = (ModelNode)scene.GetNodeByName("TiVi");
             modelTiVi = nodeTiVi.Model;
             originalTiViMesh = modelTiVi.Mesh;
@@ -377,6 +413,8 @@ namespace TiVi
             {
                 if (Time.CurrentTime > 25.0f)
                 {
+                    nodeTiVi.EffectHandler.Techniques[0] = EffectHandle.FromString("SolidSkinning");
+                    nodeTiVi.EffectHandler.Techniques[1] = EffectHandle.FromString("TvScreenSkinning");
                     modelTiVi.Materials[0].AmbientColor = new ColorValue(0.2f, 0.2f, 0.2f);
                     modelTiVi.Materials[0].DiffuseColor = new ColorValue(1.0f, 1.0f, 1.0f);
                     modelTiVi.Materials[0].SpecularColor = new ColorValue(1.0f, 1.0f, 1.0f);
@@ -385,25 +423,20 @@ namespace TiVi
                 }
                 else
                 {
+                    nodeTiVi.EffectHandler.Techniques[0] = EffectHandle.FromString("LineDrawerSkinning");
+                    nodeTiVi.EffectHandler.Techniques[1] = EffectHandle.FromString("LineDrawerSkinning");
                     modelTiVi.Materials[0].AmbientColor = new ColorValue(0.4f, 0.4f, 0.4f);
                     modelTiVi.Materials[0].DiffuseColor = new ColorValue(0.7f, 0.7f, 0.3f);
-                    modelTiVi.Materials[0].SpecularColor = new ColorValue(0.5f, 0.5f, 0.5f);
-                    modelTiVi.Materials[0].Shininess = 32;
+                    modelTiVi.Materials[0].SpecularColor = new ColorValue(1.0f, 1.0f, 1.0f);
+                    //modelTiVi.Materials[0].AmbientColor = new ColorValue(0.4f, 0.4f, 0.4f);
+                    //modelTiVi.Materials[0].DiffuseColor = new ColorValue(0.7f, 0.7f, 0.3f);
+                    //modelTiVi.Materials[0].SpecularColor = new ColorValue(0.5f, 0.5f, 0.5f);
+                    modelTiVi.Materials[0].Shininess = 16;
                     modelTiVi.Mesh = lineTiViMesh;
                 }
             }
             scene.Render();
             DrawFlares();
-
-            DrawFlash();
-        }
-
-        private void DrawFlash()
-        {
-            //fader.SetLengths(0.5f, 0.5f, 2.0f);
-            //fader.Draw(bodyCameraStart1 - 0.5f);
-            //fader.Draw(handCameraStart - 0.5f);
-            //fader.Draw(bodyCameraStart2 - 0.5f);
         }
 
         private void DrawFlares()
@@ -422,6 +455,9 @@ namespace TiVi
                 pos.Y *= Device.Viewport.Height;
                 pos.Y = Device.Viewport.Height - pos.Y;
                 pos -= new Vector3(flareSize / 2.0f, flareSize / 2.0f, 0);
+                Device.RenderState.BlendOperation = BlendOperation.Max;
+                Device.RenderState.SourceBlend = Blend.One;
+                Device.RenderState.DestinationBlend = Blend.One;
                 sprite.Draw2D(flareTexture, Rectangle.Empty, new SizeF(flareSize, flareSize),
                     new PointF(pos.X, pos.Y), Color.White);
             }
@@ -429,9 +465,3 @@ namespace TiVi
         }
     }
 }
-
-// 3.6 - Head done
-// 4.8 - Arm starts
-// 10.8 - Fingers ends
-// 14 - All done
-

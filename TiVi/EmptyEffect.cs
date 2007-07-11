@@ -16,8 +16,8 @@ namespace TiVi
         private MeshDirector meshDirector;
         private ModelNode box;
 
-        public EmptyEffect(float startTime, float endTime)
-            : base(startTime, endTime)
+        public EmptyEffect(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
         }
 

@@ -24,7 +24,7 @@ namespace Dope.DDXX.DemoEffects
             base.SetUp();
             Time.Initialize();
 
-            spin = new SpinningBackgroundEffect(0, 10);
+            spin = new SpinningBackgroundEffect("", 0, 10);
             sprite = mockery.NewMock<ISprite>();
             mixer = mockery.NewMock<IDemoMixer>();
         }

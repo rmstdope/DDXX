@@ -34,8 +34,8 @@ namespace TiVi
             get { return fadeColor; }
         }
 
-        public ColorFader(float startTime, float endTime)
-            : base(startTime, endTime)
+        public ColorFader(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
             fadeInLength = 0.5f;
             fadeOutLength = 2.0f;

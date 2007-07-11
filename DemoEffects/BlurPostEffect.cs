@@ -18,8 +18,8 @@ namespace Dope.DDXX.DemoEffects
             set { numPasses = value; }
         }
 
-        public BlurPostEffect(float startTime, float endTime)
-            : base(startTime, endTime)
+        public BlurPostEffect(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
         }
 

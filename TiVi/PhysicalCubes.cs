@@ -29,7 +29,7 @@ namespace TiVi
 
             public ConstraintPriority Priority
             {
-                get { return ConstraintPriority.PositionPriority; }
+                get { return ConstraintPriority.DummyPriority; }
             }
 
             public void Satisfy()
@@ -62,8 +62,8 @@ namespace TiVi
         private CameraNode camera;
         private List<PhysicalCube> cubes = new List<PhysicalCube>();
 
-        public PhysicalCubes(float start, float end)
-            : base(start, end)
+        public PhysicalCubes(string name, float start, float end)
+            : base(name, start, end)
         {
         }
 
@@ -73,9 +73,9 @@ namespace TiVi
                 return new Vector4(0.0f, 0.0f, 0.0f, 1.0f);
             else if (texCoord.X < 0.6f)
                 return new Vector4(0.0f, 0.0f, 0.2f, 1.0f);
-            //else if (texCoord.X < 0.9f)
-            return new Vector4(0.1f, 0.1f, 0.4f, 1.0f);
-            //return new Vector4(0.1f, 0.3f, 0.4f, 1);
+            else if (texCoord.X < 0.9f)
+                return new Vector4(0.1f, 0.1f, 0.4f, 1.0f);
+            return new Vector4(0.8f, 0.8f, 0.8f, 1);
         }
 
         protected override void Initialize()
@@ -132,20 +132,25 @@ namespace TiVi
             {
                 DirectionalLightNode light = new DirectionalLightNode("Light" + i);
                 scene.AddNode(light);
-                float x = i - 0.5f;
-                float y = Rand.Float(-1, 1);
-                float z = Rand.Float(-1, 0);
+                float x = 0;// i - 0.5f;
+                float y = 0;// Rand.Float(-1, 1);
+                float z = (i * 2) - 1;// Rand.Float(-1, 0);
                 light.Direction = new Vector3(x, y, z);
             }
 
-            //cubes.Add(CreateBox(new Vector3(0, -4, 0)));
+            MeshDirector director = new MeshDirector(MeshBuilder);
+            director.CreatePlane(100, 100, 1, 1, true);
+            director.Rotate((float)Math.PI / 2, 0, 0);
+            MeshBuilder.SetDiffuseTexture("Default1", "marble.jpg");
+            IModel model = director.Generate("Default1");
+            scene.AddNode(CreateSimpleModelNode(model, "TiVi.fxo", "Alpha"));
         }
 
         private PhysicalCube CreateBox(Vector3 pos, ITexture texture)
         {
             PhysicalCube cube = new PhysicalCube();
-            const float stiffness = 0.9f;
-            const float dragCoefficient = 0.1f;
+            const float stiffness = 1.0f;
+            const float dragCoefficient = 0.05f;
             IBody body = new Body();
             body.AddParticle(new PhysicalParticle(new Vector3(-1, 1, 1) + pos, 1, dragCoefficient));
             body.AddParticle(new PhysicalParticle(new Vector3(1, 1, 1) + pos, 1, dragCoefficient));
@@ -192,6 +197,7 @@ namespace TiVi
             cube.body = body;
             cube.floorContact = false;
             cube.mirror = new MirrorNode(cube.model);
+            cube.mirror.Brightness = 0.2f;
             return cube;
         }
 
@@ -199,7 +205,7 @@ namespace TiVi
         {
             Vector3 origo;
             float t = Time.StepTime * 0.1f;
-            //camera.Position = new Vector3((float)Math.Sin(t), 0.3f, (float)Math.Cos(t)) * 60;
+            camera.Position = new Vector3((float)Math.Sin(t), 0.3f, (float)Math.Cos(t)) * 60;
             camera.LookAt(new Vector3(), new Vector3(0, 1, 0));
 
             if (Time.StepTime < 0.2f)

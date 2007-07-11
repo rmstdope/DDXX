@@ -13,8 +13,8 @@ namespace EngineTest
         private Scene scene;
         private ModelNode node;
 
-        public ModelEffect(float start, float end)
-            : base(start, end)
+        public ModelEffect(string name, float start, float end)
+            : base(name, start, end)
         {
         }
 

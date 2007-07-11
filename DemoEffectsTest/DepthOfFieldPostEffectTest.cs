@@ -26,7 +26,7 @@ namespace Dope.DDXX.DemoEffects
             postProcessor = mockery.NewMock<IPostProcessor>();
             texture1 = mockery.NewMock<ITexture>();
             outputTexture = mockery.NewMock<ITexture>();
-            effect = new DepthOfFieldPostEffect(1.0f, 2.0f);
+            effect = new DepthOfFieldPostEffect("", 1.0f, 2.0f);
             effect.Initialize(postProcessor, null, null, null);
         }
 

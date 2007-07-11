@@ -11,8 +11,8 @@ namespace TiVi
 {
     public class FadeTransition : BaseDemoTransition
     {
-        public FadeTransition(float startTime, float endTime)
-            : base(startTime, endTime)
+        public FadeTransition(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
         }
 

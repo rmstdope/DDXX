@@ -26,8 +26,8 @@ namespace Dope.DDXX.DemoEffects
             set { distance = value; }
         }
 
-        public RingsPostEffect(float startTime, float endTime)
-            : base(startTime, endTime)
+        public RingsPostEffect(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
         }
 

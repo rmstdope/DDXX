@@ -26,7 +26,7 @@ namespace Dope.DDXX.DemoEffects
             postProcessor = mockery.NewMock<IPostProcessor>();
             outputTexture = mockery.NewMock<ITexture>();
             texture1 = mockery.NewMock<ITexture>();
-            effect = new BlurPostEffect(1.0f, 2.0f);
+            effect = new BlurPostEffect("", 1.0f, 2.0f);
             effect.Initialize(postProcessor, null, null, null);
         }
 

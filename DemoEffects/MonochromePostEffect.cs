@@ -10,8 +10,8 @@ namespace Dope.DDXX.DemoEffects
 {
     public class MonochromePostEffect : BaseDemoPostEffect
     {
-        public MonochromePostEffect(float startTime, float endTime)
-            : base(startTime, endTime)
+        public MonochromePostEffect(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
         }
 

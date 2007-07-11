@@ -30,8 +30,8 @@ namespace Dope.DDXX.DemoEffects
         private List<TextureLayer> textureLayers;
         private ISprite sprite;
 
-        public SpinningBackgroundEffect(float startTime, float endTime)
-            : base(startTime, endTime)
+        public SpinningBackgroundEffect(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
             textureLayers = new List<TextureLayer>();
         }

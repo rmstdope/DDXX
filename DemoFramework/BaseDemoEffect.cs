@@ -23,7 +23,8 @@ namespace Dope.DDXX.DemoFramework
         private TextureBuilder.TextureBuilder textureBuilder;
         private IDemoMixer mixer;
 
-        protected BaseDemoEffect(float startTime, float endTime)
+        protected BaseDemoEffect(string name, float startTime, float endTime)
+            : base(name)
         {
             StartTime = startTime;
             EndTime = endTime;

@@ -7,8 +7,8 @@ namespace EngineTest
 {
     class EmptyEffect : BaseDemoEffect
     {
-        public EmptyEffect(float startTime, float endTime) 
-            : base(startTime, endTime)
+        public EmptyEffect(string name, float startTime, float endTime) 
+            : base(name, startTime, endTime)
         {
         }
 

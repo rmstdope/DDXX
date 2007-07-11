@@ -28,7 +28,7 @@ namespace Dope.DDXX.DemoEffects
             outputTexture = mockery.NewMock<ITexture>();
             texture1 = mockery.NewMock<ITexture>();
             texture2 = mockery.NewMock<ITexture>();
-            effect = new GlowPostEffect(1.0f, 2.0f);
+            effect = new GlowPostEffect("", 1.0f, 2.0f);
             effect.Initialize(postProcessor, null, null, null);
         }
 

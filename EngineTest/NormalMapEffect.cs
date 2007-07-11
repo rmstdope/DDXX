@@ -13,8 +13,8 @@ namespace EngineTest
         private Scene scene;
         private ModelNode node;
 
-        public NormalMapEffect(float start, float end)
-            : base(start, end)
+        public NormalMapEffect(string name, float start, float end)
+            : base(name, start, end)
         {
         }
 

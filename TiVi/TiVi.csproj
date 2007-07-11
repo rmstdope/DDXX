@@ -74,6 +74,7 @@
     <Compile Include="TiViMain.cs" />
     <Compile Include="TiViMeshDirector.cs" />
     <Compile Include="TunnelFlight.cs" />
+    <Compile Include="Walkway.cs" />
     <Compile Include="WhiteFlare.cs" />
   </ItemGroup>
   <ItemGroup>

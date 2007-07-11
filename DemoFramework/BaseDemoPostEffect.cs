@@ -43,7 +43,8 @@ namespace Dope.DDXX.DemoFramework
             get { return drawOrder; }
         }
 
-        protected BaseDemoPostEffect(float startTime, float endTime)
+        protected BaseDemoPostEffect(string name, float startTime, float endTime)
+            : base(name)
         {
             StartTime = startTime;
             EndTime = endTime;

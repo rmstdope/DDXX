@@ -35,7 +35,7 @@ namespace Dope.DDXX.DemoFramework
         private FMOD.Sound sound;
         private FMOD.Channel channel;
         private List<ITrack> tracks;
-        private int trackNum;
+        private int numTracksRegistered;
         private IDemoEffectTypes effectTypes;
         private ITexture backBuffer1;
         private ITexture backBuffer2;
@@ -64,7 +64,7 @@ namespace Dope.DDXX.DemoFramework
 
             Stub.On(inputDriver).Method("KeyPressedNoRepeat").With(Key.Space).Will(Return.Value(false));
 
-            trackNum = 0;
+            numTracksRegistered = 0;
             tracks = new List<ITrack>();
             for (int i = 0; i < 100; i++)
                 tracks.Add(mockery.NewMock<ITrack>());
@@ -79,24 +79,58 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestTransitionsRegisterOk()
         {
-            RegisterTransition(1, 0, 5);
-            RegisterTransition(0, 5, 10);
+            RegisterTransition("name1", 1, 0, 5);
+            RegisterTransition("name2", 0, 5, 10);
         }
 
         [Test]
         [ExpectedException(typeof(DDXXException))]
         public void TestTransitionsRegisterOverlap1()
         {
-            RegisterTransition(1, 0, 5);
-            RegisterTransition(0, 4, 10);
+            RegisterTransition("name1", 1, 0, 5);
+            RegisterTransition("name2", 0, 4, 10);
         }
 
         [Test]
         [ExpectedException(typeof(DDXXException))]
         public void TestTransitionsRegisterOverlap2()
         {
-            RegisterTransition(0, 4, 10);
-            RegisterTransition(1, 0, 5);
+            RegisterTransition("name1", 0, 4, 10);
+            RegisterTransition("name2", 1, 0, 5);
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestTransitionsNotUnique()
+        {
+            RegisterTransition("name1", 1, 0, 5);
+            RegisterTransition("name1", 0, 5, 10);
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestEffectsNotUnique()
+        {
+            EnsureNumTracks(2);
+            Expect.Once.On(tracks[0]).Method("IsEffectRegistered").
+                Will(Return.Value(false));
+            Expect.Once.On(tracks[1]).Method("IsEffectRegistered").
+                Will(Return.Value(true));
+            IDemoEffect effect = CreateMockEffect("name1", 5, 10);
+            executer.Register(0, effect);
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void TestPostEffectsNotUnique()
+        {
+            EnsureNumTracks(2);
+            Expect.Once.On(tracks[0]).Method("IsPostEffectRegistered").
+                Will(Return.Value(false));
+            Expect.Once.On(tracks[1]).Method("IsPostEffectRegistered").
+                Will(Return.Value(true));
+            IDemoPostEffect effect = CreateMockPostEffect("name1", 5, 10);
+            executer.Register(0, effect);
         }
 
         [Test]
@@ -104,18 +138,17 @@ namespace Dope.DDXX.DemoFramework
         {
             Assert.AreEqual(0, executer.NumTracks);
 
-            RegisterEffect(0, 0, 10);
+            EnsureNumTracks(1);
             Assert.AreEqual(1, executer.NumTracks);
 
-            RegisterEffect(1, 5, 15);
+            EnsureNumTracks(2);
             Assert.AreEqual(2, executer.NumTracks);
         }
 
         [Test]
         public void TestStep()
         {
-            RegisterEffect(0, 0, 10);
-            RegisterEffect(1, 3, 12);
+            EnsureNumTracks(2);
 
             Expect.Once.On(tracks[0]).
                 Method("Step");
@@ -170,9 +203,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestInitializeOKEffects()
         {
-            RegisterEffect(0, 1, 2);
-            RegisterEffect(49, 1, 2);
-            RegisterPostEffect(1, 1, 2);
+            EnsureNumTracks(50);
 
             ExpectSoundInitialize();
             ExpectPostProcessorInitialize();
@@ -189,8 +220,8 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestInitializeOKTransitions()
         {
-            IDemoTransition t1 = RegisterTransition(0, 1, 2);
-            IDemoTransition t2 = RegisterTransition(49, 2, 3);
+            IDemoTransition t1 = RegisterTransition("name1", 0, 1, 2);
+            IDemoTransition t2 = RegisterTransition("name2", 49, 2, 3);
 
             ExpectSoundInitialize();
             ExpectPostProcessorInitialize();
@@ -213,15 +244,15 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual(0.0f, executer.StartTime);
             Assert.AreEqual(0.0f, executer.EndTime);
 
-            RegisterEffect(0, 1, 2);
+            EnsureNumTracks(1);
             Assert.AreEqual(0.0f, executer.StartTime);
             Assert.AreEqual(1.0f, executer.EndTime);
 
-            RegisterEffect(1, 1, 2);
+            EnsureNumTracks(2);
             Assert.AreEqual(0.0f, executer.StartTime);
             Assert.AreEqual(3.0f, executer.EndTime);
 
-            RegisterEffect(2, 1, 2);
+            EnsureNumTracks(3);
             Assert.AreEqual(0.0f, executer.StartTime);
             Assert.AreEqual(3.0f, executer.EndTime);
         }
@@ -270,7 +301,7 @@ namespace Dope.DDXX.DemoFramework
         {
             TestInitializeOKNoSong1();
 
-            RegisterEffect(0, 0, 0);
+            EnsureNumTracks(1);
             Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(1000.0f));
 
             executer.ClearColor = Color.DarkSlateBlue;
@@ -298,8 +329,7 @@ namespace Dope.DDXX.DemoFramework
         {
             TestInitializeOKNoSong1();
 
-            RegisterEffect(0, 0, 0);
-            RegisterEffect(1, 0, 0);
+            EnsureNumTracks(2);
             Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(1000.0f));
             Stub.On(tracks[1]).GetProperty("EndTime").Will(Return.Value(1000.0f));
 
@@ -329,9 +359,8 @@ namespace Dope.DDXX.DemoFramework
             ITexture newTexture = mockery.NewMock<ITexture>();
             TestInitializeOKNoSong1();
 
-            RegisterEffect(0, 0, 20);
-            RegisterEffect(1, 0, 20);
-            IDemoTransition transition = RegisterTransition(1, 0, 10);
+            EnsureNumTracks(2);
+            IDemoTransition transition = RegisterTransition("name1", 1, 0, 10);
             Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(1000.0f));
             Stub.On(tracks[1]).GetProperty("EndTime").Will(Return.Value(1000.0f));
 
@@ -372,9 +401,8 @@ namespace Dope.DDXX.DemoFramework
         {
             TestInitializeOKNoSong1();
 
-            RegisterEffect(0, 0, 20);
-            RegisterEffect(1, 0, 20);
-            IDemoTransition transition = RegisterTransition(1, 0, 10);
+            EnsureNumTracks(2);
+            IDemoTransition transition = RegisterTransition("name1", 1, 0, 10);
             Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(1000.0f));
             Stub.On(tracks[1]).GetProperty("EndTime").Will(Return.Value(1000.0f));
             Time.CurrentTime = 14;
@@ -413,20 +441,20 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestInitializeFromFile()
         {
-            FooEffect fooEffect = new FooEffect(0, 0);
-            BarEffect barEffect = new BarEffect(0, 0);
-            FooGlow fooGlow = new FooGlow(0, 0);
-            FooTransition fooTransition = new FooTransition(0, 0);
+            FooEffect fooEffect = new FooEffect("", 0, 0);
+            BarEffect barEffect = new BarEffect("", 0, 0);
+            FooGlow fooGlow = new FooGlow("", 0, 0);
+            FooTransition fooTransition = new FooTransition("", 0, 0);
             List<object> param = new List<object>();
 
             string twoEffectContents =
 @"<Demo>
-<Effect name=""FooEffect"" track=""1"" endTime=""6.5"">
+<Effect class=""FooEffect"" name=""FooName"" track=""1"" endTime=""6.5"">
 <Parameter name=""FooParam"" int=""3"" />
 <Parameter name=""BarParam"" float=""4.3"" />
 <Parameter name=""StrParam"" string=""foostr"" />
 </Effect>
-<Effect name=""BarEffect"" startTime=""2.5"" endTime=""5.2"">
+<Effect class=""BarEffect"" name=""BarName"" startTime=""2.5"" endTime=""5.2"">
 <Parameter name=""Goo"" string=""string value"" />
 <Parameter name=""VecParam"" Vector3=""5.4, 4.3, 3.2"" />
 <Parameter name=""ColParam"" Color=""250, 101, 102, 103"" />
@@ -435,34 +463,35 @@ namespace Dope.DDXX.DemoFramework
 <Parameter string=""MethodCalled"" />
 </SetupCall>
 </Effect>
-<PostEffect name=""FooGlow"" track=""2"" startTime=""3.4"" endTime=""4.5"">
+<PostEffect class=""FooGlow"" name=""GlowName"" track=""2"" startTime=""3.4"" endTime=""4.5"">
 <Parameter name=""GlowParam"" float=""5.4"" />
 </PostEffect>
-<Transition name=""FooTransition"" destinationTrack=""1"" startTime=""4"" endTime=""5"">
+<Transition class=""FooTransition"" name=""TransitionName"" destinationTrack=""1"" startTime=""4"" endTime=""5"">
 <Parameter name=""TransParameter"" float=""3.4"" />
 </Transition>
 </Demo>
 ";
+            StubTrackForRegisteredEffects();
             ExpectSoundInitialize();
             ExpectPostProcessorInitialize();
             ExpectTweakerInitialize();
 
             DemoXMLReaderTest.TempFiles tempFiles = new DemoXMLReaderTest.TempFiles();
             FileUtility.SetLoadPaths(new string[] { "" });
-            Expect.Once.On(effectTypes).Method("CreateInstance").With("FooEffect", 0.0f, 6.5f).Will(Return.Value(fooEffect));
+            Expect.Once.On(effectTypes).Method("CreateInstance").With("FooEffect", "FooName", 0.0f, 6.5f).Will(Return.Value(fooEffect));
             Expect.Once.On(effectTypes).Method("SetProperty").With(fooEffect, "FooParam", 3);
             Expect.Once.On(effectTypes).Method("SetProperty").With(fooEffect, "BarParam", 4.3f);
             Expect.Once.On(effectTypes).Method("SetProperty").With(fooEffect, "StrParam", "foostr");
-            Expect.Once.On(effectTypes).Method("CreateInstance").With("BarEffect", 2.5f, 5.2f).Will(Return.Value(barEffect));
+            Expect.Once.On(effectTypes).Method("CreateInstance").With("BarEffect", "BarName", 2.5f, 5.2f).Will(Return.Value(barEffect));
             Expect.Once.On(effectTypes).Method("SetProperty").With(barEffect, "Goo", "string value");
             Expect.Once.On(effectTypes).Method("SetProperty").With(barEffect, "VecParam", new Vector3(5.4f, 4.3f, 3.2f));
             Expect.Once.On(effectTypes).Method("SetProperty").With(barEffect, "ColParam", Color.FromArgb(250, 101, 102, 103));
             Expect.Once.On(effectTypes).Method("SetProperty").With(barEffect, "ColParamNamed", Color.SlateBlue);
             param.Add("MethodCalled");
             Expect.Once.On(effectTypes).Method("CallSetup").With(barEffect, "Setup", param);
-            Expect.Once.On(effectTypes).Method("CreateInstance").With("FooGlow", 3.4f, 4.5f).Will(Return.Value(fooGlow));
+            Expect.Once.On(effectTypes).Method("CreateInstance").With("FooGlow", "GlowName", 3.4f, 4.5f).Will(Return.Value(fooGlow));
             Expect.Once.On(effectTypes).Method("SetProperty").With(fooGlow, "GlowParam", 5.4f);
-            Expect.Once.On(effectTypes).Method("CreateInstance").With("FooTransition", 4.0f, 5.0f).Will(Return.Value(fooTransition));
+            Expect.Once.On(effectTypes).Method("CreateInstance").With("FooTransition", "TransitionName", 4.0f, 5.0f).Will(Return.Value(fooTransition));
             Expect.Once.On(effectTypes).Method("SetProperty").With(fooTransition, "TransParameter", 3.4f);
 
             Expect.Once.On(tracks[0]).Method("Register").With(barEffect);
@@ -552,7 +581,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestJumpSong()
         {
-            RegisterEffect(0, 0, 0);
+            EnsureNumTracks(1);
             Expect.Once.On(tracks[0]).Method("Initialize").WithAnyArguments();
             Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(100.0f));
             TestInitializeOKSong();
@@ -568,7 +597,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestJumpNoSong()
         {
-            RegisterEffect(0, 0, 0);
+            EnsureNumTracks(1);
             Expect.Once.On(tracks[0]).Method("Initialize").WithAnyArguments();
             Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(100.0f));
             TestInitializeOKNoSong1();
@@ -583,7 +612,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestJumpBeforeStart()
         {
-            RegisterEffect(0, 0, 0);
+            EnsureNumTracks(1);
             Expect.Once.On(tracks[0]).Method("Initialize").WithAnyArguments();
             Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(100.0f));
             TestInitializeOKSong();
@@ -599,7 +628,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestJumpPastEnd()
         {
-            RegisterEffect(0, 0, 0);
+            EnsureNumTracks(1);
             Expect.Once.On(tracks[0]).Method("Initialize").WithAnyArguments();
             Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(10.0f));
             TestInitializeOKSong();
@@ -726,25 +755,31 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreSame(generator1, generator2.Inputs[1]);
         }
 
-        private IDemoEffect RegisterEffect(int track, float startTime, float endTime)
+        private void StubTrackForRegisteredEffects()
         {
-            IDemoEffect effect = CreateMockEffect(startTime, endTime);
-            Expect.Once.On(tracks[track]).Method("Register").With(effect);
-            executer.Register(track, effect);
-            return effect;
+            foreach (ITrack track in tracks)
+            {
+                Stub.On(track).Method("IsEffectRegistered").Will(Return.Value(false));
+                Stub.On(track).Method("IsPostEffectRegistered").Will(Return.Value(false));
+            }
         }
 
-        private IDemoPostEffect RegisterPostEffect(int track, float startTime, float endTime)
+        private void EnsureNumTracks(int numTracks)
         {
-            IDemoPostEffect effect = CreateMockPostEffect(startTime, endTime);
-            Expect.Once.On(tracks[track]).Method("Register").With(effect);
-            executer.Register(track, effect);
-            return effect;
+            for (int i = 0; i < numTracksRegistered; i++)
+            {
+                Stub.On(tracks[i]).Method("IsEffectRegistered").Will(Return.Value(false));
+                Stub.On(tracks[i]).Method("IsPostEffectRegistered").Will(Return.Value(false));
+            }
+            IDemoEffect effect = CreateMockEffect("name", 0, 0);
+            Expect.Once.On(tracks[numTracks - 1]).Method("Register").With(effect);
+            executer.Register(numTracks - 1, effect);
+            numTracksRegistered = numTracks;
         }
 
-        private IDemoTransition RegisterTransition(int destinationTrack, float startTime, float endTime)
+        private IDemoTransition RegisterTransition(string name, int destinationTrack, float startTime, float endTime)
         {
-            IDemoTransition transition = CreateMockTransition(destinationTrack, startTime, endTime);
+            IDemoTransition transition = CreateMockTransition(name, destinationTrack, startTime, endTime);
             executer.Register(transition);
             return transition;
         }
@@ -780,7 +815,7 @@ namespace Dope.DDXX.DemoFramework
 
         public ITrack CreateTrack()
         {
-            return tracks[trackNum++];
+            return tracks[numTracksRegistered++];
         }
 
         #endregion
@@ -788,7 +823,7 @@ namespace Dope.DDXX.DemoFramework
 
     public class FooEffect : BaseDemoEffect
     {
-        public FooEffect(float start, float end) : base(start, end) { }
+        public FooEffect(string name, float start, float end) : base(name, start, end) { }
         private int fooParam;
         private float barParam;
         private string strParam;
@@ -816,7 +851,7 @@ namespace Dope.DDXX.DemoFramework
     }
     public class BarEffect : BaseDemoEffect
     {
-        public BarEffect(float start, float end) : base(start, end) { setupParam = "NotCalled"; }
+        public BarEffect(string name, float start, float end) : base(name, start, end) { setupParam = "NotCalled"; }
         private string goo;
         private Vector3 vecParam;
         private string setupParam;
@@ -853,7 +888,7 @@ namespace Dope.DDXX.DemoFramework
     }
     public class FooGlow : BaseDemoPostEffect
     {
-        public FooGlow(float start, float end) : base(start, end) { }
+        public FooGlow(string name, float start, float end) : base(name, start, end) { }
         private float glowParam;
         public float GlowParam
         {
@@ -865,7 +900,7 @@ namespace Dope.DDXX.DemoFramework
     }
     public class FooTransition : BaseDemoTransition
     {
-        public FooTransition(float start, float end) : base(start, end) { }
+        public FooTransition(string name, float start, float end) : base(name, start, end) { }
         public override ITexture Combine(ITexture fromTexture, ITexture toTexture)
         {
             throw new Exception("The method or operation is not implemented.");

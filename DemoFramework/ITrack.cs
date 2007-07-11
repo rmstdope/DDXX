@@ -23,5 +23,7 @@ namespace Dope.DDXX.DemoFramework
         ITexture Render(IDevice device, ITexture renderTarget, Color backgroundColor);
         void Step();
         void UpdateListener(IEffectChangeListener effectChangeListener);
+        bool IsEffectRegistered(string name, Type type);
+        bool IsPostEffectRegistered(string p, Type type);
     }
 }

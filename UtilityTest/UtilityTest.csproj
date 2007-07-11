@@ -45,6 +45,7 @@
     <Compile Include="NaturalCubicSplineTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandTest.cs" />
+    <Compile Include="SimpleCubicSplineTest.cs" />
     <Compile Include="SmoothIntervalTest.cs" />
     <Compile Include="SplineBaseTest.cs" />
     <Compile Include="TimeTest.cs" />

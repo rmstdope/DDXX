@@ -30,8 +30,8 @@ namespace EngineTest
         private BlitCircle[] circles;
         private float majorScale = 0.5f;
 
-        public WhiteFlare(float startTime, float endTime)
-            : base(startTime, endTime)
+        public WhiteFlare(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
         }
 

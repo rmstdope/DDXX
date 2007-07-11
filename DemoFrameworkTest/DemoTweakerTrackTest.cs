@@ -55,9 +55,9 @@ namespace Dope.DDXX.DemoFramework
         private void InitializeEffects(int numEffects, int numPostEffects)
         {
             for (int i = 0; i < numEffects; i++)
-                track.Register(CreateMockEffect(0.0f, 10.0f));
+                track.Register(CreateMockEffect("name", 0.0f, 10.0f));
             for (int i = 0; i < numPostEffects; i++)
-                track.Register(CreateMockPostEffect(0.0f, 10.0f));
+                track.Register(CreateMockPostEffect("name", 0.0f, 10.0f));
             Expect.Once.On(userInterface).
                 Method("Initialize");
             tweaker.Initialize(registrator);
@@ -127,8 +127,8 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestDraw13Effects()
         {
-            track.Register(CreateMockEffect(-10.0f, -5.0f));
-            track.Register(CreateMockPostEffect(100.0f, 110.0f));
+            track.Register(CreateMockEffect("name", -10.0f, -5.0f));
+            track.Register(CreateMockPostEffect("name", 100.0f, 110.0f));
             InitializeEffects(5, 6);
 
             ExpectDraw("TestDraw13Effects1");

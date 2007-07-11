@@ -29,8 +29,8 @@ namespace EngineTest
         private ISprite circleSprite;
         private BlitCircle[] circles;
 
-        public SunEffect(float startTime, float endTime)
-            : base(startTime, endTime)
+        public SunEffect(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
         }
 

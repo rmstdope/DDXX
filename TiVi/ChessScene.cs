@@ -82,8 +82,8 @@ namespace TiVi
         private Interpolator<InterpolatedVector3> interpolator;
         private List<ChessPiece> chessPieces = new List<ChessPiece>();
 
-        public ChessScene(float startTime, float endTime)
-            : base(startTime, endTime)
+        public ChessScene(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
         }
 

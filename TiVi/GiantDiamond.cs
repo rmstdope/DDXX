@@ -17,8 +17,8 @@ namespace TiVi
         private TiViMeshDirector tiviMeshDirector;
         private ModelNode giantDiamond;
 
-        public GiantDiamond(float startTime, float endTime)
-            : base(startTime, endTime)
+        public GiantDiamond(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
         }
 

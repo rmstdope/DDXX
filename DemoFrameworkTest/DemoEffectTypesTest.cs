@@ -19,8 +19,8 @@ using Dope.DDXX.Graphics;
 using Microsoft.DirectX;
 public class FooEffect : TweakableContainer, IDemoEffect 
 {
-  protected float start; protected float end; protected int drawOrder;
-  public FooEffect(float f1, float f2) { start = f1; end = f2;}
+  protected float start; protected float end; protected int drawOrder; 
+  public FooEffect(string s1, float f1, float f2) : base(s1) { start = f1; end = f2;}
   public int DrawOrder { get { return drawOrder;} set { drawOrder = value; } }
   public void Step() {} public void Render() {} public void Initialize(IGraphicsFactory graphicsFactory, IEffectFactory effectFactory, IDevice device, IDemoMixer mixer) {} 
   public float StartTime { get { return start;} set { start = value;} }
@@ -30,7 +30,7 @@ public class BarEffect : FooEffect {
   private int intParam;
   private float floatParam;
   private Vector3 vector3Param;
-  public BarEffect(float start, float end) : base(start, end) { 
+  public BarEffect(string name, float start, float end) : base(name, start, end) { 
     this.start = start;
     this.end = end; 
   }
@@ -94,7 +94,7 @@ public class Dummy {}
         public void TestCreateInstanceFail()
         {
             effectTypes = new DemoEffectTypes(new Assembly[] { assembly });
-            IRegisterable ei = effectTypes.CreateInstance("fooeffect", 0, 1);
+            IRegisterable ei = effectTypes.CreateInstance("fooeffect", "fooname", 0, 1);
             Assert.IsNull(ei);
         }
 
@@ -102,9 +102,10 @@ public class Dummy {}
         public void TestCreateInstanceOK1()
         {
             effectTypes = new DemoEffectTypes(new Assembly[] { assembly });
-            IRegisterable ei = effectTypes.CreateInstance("FooEffect", 3, 7);
+            IRegisterable ei = effectTypes.CreateInstance("FooEffect", "FooName", 3, 7);
             Assert.IsNotNull(ei);
             Assert.IsInstanceOfType(assembly.GetType("FooEffect"), ei);
+            Assert.AreEqual("FooName", ei.Name);
             Assert.AreEqual(3, ei.StartTime);
             Assert.AreEqual(7, ei.EndTime);
         }
@@ -113,9 +114,10 @@ public class Dummy {}
         public void TestCreateInstanceOK2()
         {
             effectTypes = new DemoEffectTypes(new Assembly[] { assembly });
-            IRegisterable ei = effectTypes.CreateInstance("BarEffect", 3, 7);
+            IRegisterable ei = effectTypes.CreateInstance("BarEffect", "BarName", 3, 7);
             Assert.IsNotNull(ei);
             Assert.IsInstanceOfType(assembly.GetType("BarEffect"), ei);
+            Assert.AreEqual("BarName", ei.Name);
             Assert.AreEqual(3, ei.StartTime);
             Assert.AreEqual(7, ei.EndTime);
         }
@@ -124,7 +126,7 @@ public class Dummy {}
         public void TestSetIntParameter()
         {
             effectTypes = new DemoEffectTypes(new Assembly[] { assembly });
-            IRegisterable ei = effectTypes.CreateInstance("BarEffect", 0, 1);
+            IRegisterable ei = effectTypes.CreateInstance("BarEffect", "BarName", 0, 1);
             Assert.IsNotNull(ei);
             effectTypes.SetProperty(ei, "IntParam", 5);
             int v = (int)effectTypes.GetProperty(ei, "IntParam");
@@ -135,7 +137,7 @@ public class Dummy {}
         public void TestSetFloatParameter()
         {
             effectTypes = new DemoEffectTypes(new Assembly[] { assembly });
-            IRegisterable ei = effectTypes.CreateInstance("BarEffect", 0, 1);
+            IRegisterable ei = effectTypes.CreateInstance("BarEffect", "BarName", 0, 1);
             Assert.IsNotNull(ei);
             effectTypes.SetProperty(ei, "FloatParam", 5.5F);
             float v = (float)effectTypes.GetProperty(ei, "FloatParam");
@@ -157,7 +159,7 @@ public class Dummy {}
             if (results.Errors.HasErrors)
             {
                 foreach (CompilerError e in results.Errors)
-                    Console.WriteLine(e.ToString());
+                    System.Diagnostics.Debug.WriteLine(e.ToString());
                 Assert.Fail("Internal error in test code");
             }
             Assert.IsEmpty(results.Errors);

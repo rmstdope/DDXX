@@ -13,8 +13,8 @@ namespace Dope.DDXX.DemoFramework
         public bool startCalled;
         public bool endCalled;
 
-        public TestPostEffect(float startTime, float endTime)
-            : base(startTime, endTime)
+        public TestPostEffect(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
         }
 
@@ -52,7 +52,7 @@ namespace Dope.DDXX.DemoFramework
         public void TestInit()
         {
             PostProcessor postProcessor = new PostProcessor();
-            TestPostEffect effect = new TestPostEffect(0.0f, 10.0f);
+            TestPostEffect effect = new TestPostEffect("", 0.0f, 10.0f);
 
             effect.Initialize(postProcessor, null, null, null);
         }
@@ -60,7 +60,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestTime()
         {
-            TestPostEffect effect = new TestPostEffect(0.0f, 10.0f);
+            TestPostEffect effect = new TestPostEffect("", 0.0f, 10.0f);
             Assert.AreEqual(0.0f, effect.StartTime);
             Assert.AreEqual(10.0f, effect.EndTime);
 

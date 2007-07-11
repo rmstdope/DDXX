@@ -21,7 +21,7 @@ SolidVertexShader(VertexShaderInput input,
 	// Transform the position from object space to homogeneous projection space
 	AnimatedVertex_PN animated = AnimateVertex(input.Position, input.Normal, input.BlendIndices, input.BlendWeights, numWeights);
 	output.Position = mul(animated.Position, WorldViewProjectionT);
-	float3 normal = normalize(mul(animated.Normal, WorldT));
+	float3 normal = normalize(mul(animated.Normal, WorldViewT));
 	float vDotN = saturate(dot(normal, float3(0, 0, -1)));
 	output.Diffuse = AmbientColor;
 	output.Diffuse += vDotN * MaterialDiffuseColor;
@@ -52,7 +52,7 @@ LineVertexShader(VertexShaderInput input,
 	// Transform the position from object space to homogeneous projection space
 	AnimatedVertex_PN animated = AnimateVertex(input.Position, input.Normal, input.BlendIndices, input.BlendWeights, numWeights);
 	output.Position = mul(animated.Position, WorldViewProjectionT);
-	float3 normal = normalize(mul(animated.Normal, WorldT));
+	float3 normal = normalize(mul(animated.Normal, WorldViewT));
 	float vDotN = saturate(dot(normal, float3(0, 0, -1)));
 	output.Light = AmbientColor;
 	output.Light += vDotN * MaterialDiffuseColor;
@@ -63,7 +63,7 @@ LineVertexShader(VertexShaderInput input,
 float4
 LinePixelShader(LinePixelInput input) : COLOR0
 {
-	return 1;//float4(input.Light, 0);
+	return float4(input.Light, 1);
 }
 
 technique SolidSkinning
@@ -183,6 +183,36 @@ TerrainVertexShader(InputVS input,
 	return output;    
 }
 
+TerrainPixelInput
+BrickVertexShader(InputVS input,
+									uniform int numWeights)
+{
+	TerrainPixelInput output;
+
+	// Calculate new position, normal and tangent depending on animation
+	AnimatedVertex_PN animated = AnimateVertex(input.Position, input.Normal, input.BlendIndices, input.BlendWeights, numWeights);
+	float3 normal = normalize(mul(animated.Normal, WorldT));
+	//normal = float3(0, -1, 0);
+
+	// Transform the position from object space to world space
+	float3 worldPosition = mul(animated.Position, WorldT);
+
+	// Transform the position from object space to homogeneous projection space
+	output.Position = mul(animated.Position, WorldViewProjectionT);
+
+	output.TextureCoord = input.TextureCoord;
+	float4 diffuse = 0;
+	for (int i = 0; i < NumLights; i++) {
+		float3 dir = LightPositions[i] - worldPosition;
+		float d = length(dir);
+		float att = 1 / (d * d * 0.05f);
+		diffuse += att * LightDiffuseColors[i] * abs(dot(normal, normalize(dir)));
+	}
+	output.Color = AmbientColor + MaterialDiffuseColor * diffuse;
+	
+	return output;    
+}
+
 DiamondPixelInput
 DiamondVertexShader(InputVS input,
 									 uniform int numWeights)
@@ -237,6 +267,26 @@ technique Terrain
 	}
 }
 
+technique Bricks
+<
+	bool NormalMapping = false;
+>
+{
+	pass BasePass
+	{
+		VertexShader			= compile vs_2_0 BrickVertexShader(0);
+		PixelShader				= compile ps_2_0 TerrainPixelShader();
+		AlphaBlendEnable	= true;
+		BlendOp						= Add;
+		SrcBlend					= One;
+		DestBlend					= One;
+		ZEnable						=	true;
+		ZFunc							= Less;
+		StencilEnable			= false;
+		CullMode					= CCW;
+	}
+}
+
 float4
 TestPixelShader(TerrainPixelInput input) : COLOR0
 {
@@ -253,6 +303,7 @@ technique AlphaTest
 		VertexShader			= compile vs_2_0 TerrainVertexShader(0);
 		PixelShader				= compile ps_2_0 TestPixelShader();
 		AlphaBlendEnable	= true;
+		BlendOp						= Add;
 		SrcBlend					= One;
 		DestBlend					= One;
 		ZEnable						=	true;

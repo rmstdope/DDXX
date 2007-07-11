@@ -26,8 +26,8 @@ namespace Dope.DDXX.DemoEffects
             set { strength = value; }
         }
 
-        public WavePostEffect(float startTime, float endTime)
-            : base(startTime, endTime)
+        public WavePostEffect(string name, float startTime, float endTime)
+            : base(name, startTime, endTime)
         {
         }
 

@@ -25,7 +25,7 @@ namespace Dope.DDXX.DemoEffects
         public void SetUp()
         {
             mockery = new Mockery();
-            overlay = new OverlayPostEffect(0, 10);
+            overlay = new OverlayPostEffect("", 0, 10);
             postProcessor = mockery.NewMock<IPostProcessor>();
             textureFactory = mockery.NewMock<ITextureFactory>();
             texture = mockery.NewMock<ITexture>();

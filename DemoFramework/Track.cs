@@ -205,5 +205,25 @@ namespace Dope.DDXX.DemoFramework
             foreach (IDemoPostEffect effect in postEffects)
                 effect.UpdateListener(effectChangeListener);
         }
+
+        public bool IsEffectRegistered(string name, Type type)
+        {
+            foreach (IDemoEffect effect in effects)
+            {
+                if (effect.Name == name && effect.GetType() == type)
+                    return true;
+            }
+            return false;
+        }
+
+        public bool IsPostEffectRegistered(string name, Type type)
+        {
+            foreach (IDemoPostEffect effect in postEffects)
+            {
+                if (effect.Name == name && effect.GetType() == type)
+                    return true;
+            }
+            return false;
+        }
     }
 }

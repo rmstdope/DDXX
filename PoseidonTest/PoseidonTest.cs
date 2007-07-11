@@ -76,8 +76,8 @@ namespace PoseidonTest
         private static void RegisterEffects(DemoExecuter executer)
         {
             float length = 65000.0f;
-            PosseTestEffect posseEffect = new PosseTestEffect(0.0f, length);
-            RealRenderPostEffect renderPostEffect = new RealRenderPostEffect(0.0f, length);
+            PosseTestEffect posseEffect = new PosseTestEffect("", 0.0f, length);
+            RealRenderPostEffect renderPostEffect = new RealRenderPostEffect("", 0.0f, length);
             renderPostEffect.SetPosseTestEffect(posseEffect);
             executer.Register(0, posseEffect);
             executer.Register(0, renderPostEffect);

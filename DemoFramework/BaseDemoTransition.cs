@@ -24,7 +24,8 @@ namespace Dope.DDXX.DemoFramework
             get { return postProcessor; }
         }
 
-        protected BaseDemoTransition(float startTime, float endTime)
+        protected BaseDemoTransition(string name, float startTime, float endTime)
+            : base(name)
         {
             StartTime = startTime;
             EndTime = endTime;

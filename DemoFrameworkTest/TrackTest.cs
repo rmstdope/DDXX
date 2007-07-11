@@ -41,7 +41,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestSingleEffectRegistration()
         {
-            IDemoEffect e1 = CreateMockEffect(0, 10);
+            IDemoEffect e1 = CreateMockEffect("name", 0, 10);
 
             track.Register(e1);
 
@@ -63,7 +63,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestSinglePostEffectRegistration()
         {
-            IDemoPostEffect e1 = CreateMockPostEffect(0, 10);
+            IDemoPostEffect e1 = CreateMockPostEffect("name", 0, 10);
 
             track.Register(e1);
 
@@ -85,8 +85,8 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestMultipleEffectRegistrations()
         {
-            IDemoEffect e1 = CreateMockEffect(0, 10);
-            IDemoEffect e2 = CreateMockEffect(5, 15);
+            IDemoEffect e1 = CreateMockEffect("name", 0, 10);
+            IDemoEffect e2 = CreateMockEffect("name", 5, 15);
 
             track.Register(e1);
             track.Register(e2);
@@ -109,8 +109,8 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestMultiplePostEffectRegistrations()
         {
-            IDemoPostEffect e1 = CreateMockPostEffect(0, 10);
-            IDemoPostEffect e2 = CreateMockPostEffect(5, 15);
+            IDemoPostEffect e1 = CreateMockPostEffect("name", 0, 10);
+            IDemoPostEffect e2 = CreateMockPostEffect("name", 5, 15);
 
             track.Register(e1);
             track.Register(e2);
@@ -134,11 +134,11 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestEffectSorting()
         {
-            IDemoEffect e1 = CreateMockEffect(5, 10);
-            IDemoEffect e2 = CreateMockEffect(0, 15);
-            IDemoEffect e3 = CreateMockEffect(10, 15);
-            IDemoEffect e4 = CreateMockEffect(0, 10);
-            IDemoEffect e5 = CreateMockEffect(5, 15);
+            IDemoEffect e1 = CreateMockEffect("name", 5, 10);
+            IDemoEffect e2 = CreateMockEffect("name", 0, 15);
+            IDemoEffect e3 = CreateMockEffect("name", 10, 15);
+            IDemoEffect e4 = CreateMockEffect("name", 0, 10);
+            IDemoEffect e5 = CreateMockEffect("name", 5, 15);
 
             track.Register(e1);
             track.Register(e2);
@@ -153,11 +153,11 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestPostEffectSorting()
         {
-            IDemoPostEffect e1 = CreateMockPostEffect(5, 10);
-            IDemoPostEffect e2 = CreateMockPostEffect(0, 15);
-            IDemoPostEffect e3 = CreateMockPostEffect(10, 15);
-            IDemoPostEffect e4 = CreateMockPostEffect(0, 10);
-            IDemoPostEffect e5 = CreateMockPostEffect(5, 15);
+            IDemoPostEffect e1 = CreateMockPostEffect("name", 5, 10);
+            IDemoPostEffect e2 = CreateMockPostEffect("name", 0, 15);
+            IDemoPostEffect e3 = CreateMockPostEffect("name", 10, 15);
+            IDemoPostEffect e4 = CreateMockPostEffect("name", 0, 10);
+            IDemoPostEffect e5 = CreateMockPostEffect("name", 5, 15);
 
             track.Register(e1);
             track.Register(e2);
@@ -173,43 +173,43 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestEndTimeOneEffect()
         {
-            track.Register(CreateMockEffect(5, 10));
+            track.Register(CreateMockEffect("name", 5, 10));
             Assert.AreEqual(10, track.EndTime);
         }
 
         [Test]
         public void TestEndTimeMoreEffects()
         {
-            track.Register(CreateMockEffect(5, 10));
-            track.Register(CreateMockEffect(5, 15));
-            track.Register(CreateMockEffect(5, 12));
+            track.Register(CreateMockEffect("name", 5, 10));
+            track.Register(CreateMockEffect("name", 5, 15));
+            track.Register(CreateMockEffect("name", 5, 12));
             Assert.AreEqual(15, track.EndTime);
         }
 
         [Test]
         public void TestEndTimeSingleEffectAndPostEffect()
         {
-            track.Register(CreateMockEffect(5, 10));
-            track.Register(CreateMockPostEffect(5, 12));
+            track.Register(CreateMockEffect("name", 5, 10));
+            track.Register(CreateMockPostEffect("name", 5, 12));
             Assert.AreEqual(12, track.EndTime);
         }
 
         [Test]
         public void TestEndTimeMoreEffectAndPostEffect()
         {
-            track.Register(CreateMockEffect(5, 10));
-            track.Register(CreateMockEffect(5, 15));
-            track.Register(CreateMockPostEffect(5, 12));
-            track.Register(CreateMockPostEffect(5, 18));
+            track.Register(CreateMockEffect("name", 5, 10));
+            track.Register(CreateMockEffect("name", 5, 15));
+            track.Register(CreateMockPostEffect("name", 5, 12));
+            track.Register(CreateMockPostEffect("name", 5, 18));
             Assert.AreEqual(18, track.EndTime);
         }
 
         [Test]
         public void TestInitializeOneEffectAndPostEffect()
         {
-            IDemoEffect e1 = CreateMockEffect(5, 10);
+            IDemoEffect e1 = CreateMockEffect("name", 5, 10);
             track.Register(e1);
-            IDemoPostEffect pe1 = CreateMockPostEffect(5, 12);
+            IDemoPostEffect pe1 = CreateMockPostEffect("name", 5, 12);
             track.Register(pe1);
             Expect.Once.On(e1).Method("Initialize").With(graphicsFactory, effectFactory, device, mixer);
             Expect.Once.On(pe1).Method("Initialize").With(postProcessor, textureFactory, textureBuilder, device);
@@ -219,12 +219,12 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestInitializeMoreEffectAndPostEffect()
         {
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 10; i++)
             {
-                IDemoEffect e1 = CreateMockEffect(5, 10);
+                IDemoEffect e1 = CreateMockEffect("name", 5, 10);
                 track.Register(e1);
                 Expect.Once.On(e1).Method("Initialize").With(graphicsFactory, effectFactory, device, mixer);
-                IDemoPostEffect pe1 = CreateMockPostEffect(5, 12);
+                IDemoPostEffect pe1 = CreateMockPostEffect("name", 5, 12);
                 track.Register(pe1);
                 Expect.Once.On(pe1).Method("Initialize").With(postProcessor, textureFactory, textureBuilder, device);
             }
@@ -236,7 +236,7 @@ namespace Dope.DDXX.DemoFramework
         {
             Time.Pause();
             Time.CurrentTime = 6.0f;
-            IDemoEffect e1 = CreateMockEffect(5, 10);
+            IDemoEffect e1 = CreateMockEffect("name", 5, 10);
             track.Register(e1);
             Expect.Once.On(e1).Method("Step");
             track.Step();
@@ -247,7 +247,7 @@ namespace Dope.DDXX.DemoFramework
         {
             Time.Pause();
             Time.CurrentTime = 1.0f;
-            IDemoEffect e1 = CreateMockEffect(5, 10);
+            IDemoEffect e1 = CreateMockEffect("name", 5, 10);
             track.Register(e1);
             track.Step();
         }
@@ -257,15 +257,15 @@ namespace Dope.DDXX.DemoFramework
         {
             Time.Pause();
             Time.CurrentTime = 6.0f;
-            IDemoEffect e1 = CreateMockEffect(4, 10);
+            IDemoEffect e1 = CreateMockEffect("name", 4, 10);
             track.Register(e1);
             Expect.Once.On(e1).Method("Step");
-            e1 = CreateMockEffect(1, 19);
+            e1 = CreateMockEffect("name", 1, 19);
             track.Register(e1);
             Expect.Once.On(e1).Method("Step");
-            e1 = CreateMockEffect(7, 10);
+            e1 = CreateMockEffect("name", 7, 10);
             track.Register(e1);
-            e1 = CreateMockEffect(3, 5);
+            e1 = CreateMockEffect("name", 3, 5);
             track.Register(e1);
             track.Step();
         }
@@ -291,7 +291,7 @@ namespace Dope.DDXX.DemoFramework
             track.Initialize(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, mixer, postProcessor);
             Time.Pause();
             Time.CurrentTime = 8.0f;
-            IDemoEffect e1 = CreateMockEffect(4, 10);
+            IDemoEffect e1 = CreateMockEffect("name", 4, 10);
             track.Register(e1);
             Stub.On(e1).GetProperty("DrawOrder").Will(Return.Value(0));
             using (mockery.Ordered)
@@ -312,10 +312,10 @@ namespace Dope.DDXX.DemoFramework
             track.Initialize(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, mixer, postProcessor);
             Time.Pause();
             Time.CurrentTime = 8.0f;
-            IDemoEffect e1 = CreateMockEffect(4, 10);
+            IDemoEffect e1 = CreateMockEffect("name", 4, 10);
             track.Register(e1);
             Stub.On(e1).GetProperty("DrawOrder").Will(Return.Value(0));
-            IDemoEffect e2 = CreateMockEffect(5, 10);
+            IDemoEffect e2 = CreateMockEffect("name", 5, 10);
             track.Register(e2);
             Stub.On(e2).GetProperty("DrawOrder").Will(Return.Value(1));
             using (mockery.Ordered)
@@ -337,10 +337,10 @@ namespace Dope.DDXX.DemoFramework
             track.Initialize(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, mixer, postProcessor);
             Time.Pause();
             Time.CurrentTime = 8.0f;
-            IDemoEffect e1 = CreateMockEffect(4, 10);
+            IDemoEffect e1 = CreateMockEffect("name", 4, 10);
             track.Register(e1);
             Stub.On(e1).GetProperty("DrawOrder").Will(Return.Value(1));
-            IDemoEffect e2 = CreateMockEffect(5, 10);
+            IDemoEffect e2 = CreateMockEffect("name", 5, 10);
             track.Register(e2);
             Stub.On(e2).GetProperty("DrawOrder").Will(Return.Value(0));
             using (mockery.Ordered)
@@ -362,7 +362,7 @@ namespace Dope.DDXX.DemoFramework
             track.Initialize(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, mixer, postProcessor);
             Time.Pause();
             Time.CurrentTime = 8.0f;
-            IDemoPostEffect pe1 = CreateMockPostEffect(4, 10);
+            IDemoPostEffect pe1 = CreateMockPostEffect("name", 4, 10);
             track.Register(pe1);
             Stub.On(pe1).GetProperty("DrawOrder").Will(Return.Value(0));
             using (mockery.Ordered)
@@ -383,10 +383,10 @@ namespace Dope.DDXX.DemoFramework
             track.Initialize(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, mixer, postProcessor);
             Time.Pause();
             Time.CurrentTime = 8.0f;
-            IDemoPostEffect pe1 = CreateMockPostEffect(4, 10);
+            IDemoPostEffect pe1 = CreateMockPostEffect("name", 4, 10);
             track.Register(pe1);
             Stub.On(pe1).GetProperty("DrawOrder").Will(Return.Value(0));
-            IDemoPostEffect pe2 = CreateMockPostEffect(5, 10);
+            IDemoPostEffect pe2 = CreateMockPostEffect("name", 5, 10);
             track.Register(pe2);
             Stub.On(pe2).GetProperty("DrawOrder").Will(Return.Value(1));
             using (mockery.Ordered)
@@ -408,10 +408,10 @@ namespace Dope.DDXX.DemoFramework
             track.Initialize(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, mixer, postProcessor);
             Time.Pause();
             Time.CurrentTime = 8.0f;
-            IDemoPostEffect pe1 = CreateMockPostEffect(4, 10);
+            IDemoPostEffect pe1 = CreateMockPostEffect("name", 4, 10);
             track.Register(pe1);
             Stub.On(pe1).GetProperty("DrawOrder").Will(Return.Value(1));
-            IDemoPostEffect pe2 = CreateMockPostEffect(5, 10);
+            IDemoPostEffect pe2 = CreateMockPostEffect("name", 5, 10);
             track.Register(pe2);
             Stub.On(pe2).GetProperty("DrawOrder").Will(Return.Value(0));
             using (mockery.Ordered)
@@ -436,7 +436,7 @@ namespace Dope.DDXX.DemoFramework
             List<IDemoPostEffect> postEffects = new List<IDemoPostEffect>();
             for (int i = 0; i < 10; i++)
             {
-                IDemoPostEffect pe = CreateMockPostEffect(4, 10);
+                IDemoPostEffect pe = CreateMockPostEffect("name", 4, 10);
                 track.Register(pe);
                 Stub.On(pe).GetProperty("DrawOrder").Will(Return.Value(i));
                 postEffects.Add(pe);
@@ -462,16 +462,16 @@ namespace Dope.DDXX.DemoFramework
             track.Initialize(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, mixer, postProcessor);
             Time.Pause();
             Time.CurrentTime = 8.0f;
-            IDemoEffect e1 = CreateMockEffect(4, 10);
+            IDemoEffect e1 = CreateMockEffect("name", 4, 10);
             track.Register(e1);
             Stub.On(e1).GetProperty("DrawOrder").Will(Return.Value(0));
-            IDemoEffect e2 = CreateMockEffect(5, 10);
+            IDemoEffect e2 = CreateMockEffect("name", 5, 10);
             track.Register(e2);
             Stub.On(e2).GetProperty("DrawOrder").Will(Return.Value(0));
-            IDemoPostEffect pe1 = CreateMockPostEffect(4, 10);
+            IDemoPostEffect pe1 = CreateMockPostEffect("name", 4, 10);
             track.Register(pe1);
             Stub.On(pe1).GetProperty("DrawOrder").Will(Return.Value(0));
-            IDemoPostEffect pe2 = CreateMockPostEffect(5, 10);
+            IDemoPostEffect pe2 = CreateMockPostEffect("name", 5, 10);
             track.Register(pe2);
             Stub.On(pe2).GetProperty("DrawOrder").Will(Return.Value(0));
             using (mockery.Ordered)
@@ -495,16 +495,16 @@ namespace Dope.DDXX.DemoFramework
             track.Initialize(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, mixer, postProcessor);
             Time.Pause();
             Time.CurrentTime = 4.0f;
-            IDemoEffect e1 = CreateMockEffect(4, 10);
+            IDemoEffect e1 = CreateMockEffect("name", 4, 10);
             track.Register(e1);
             Stub.On(e1).GetProperty("DrawOrder").Will(Return.Value(0));
-            IDemoEffect e2 = CreateMockEffect(5, 10);
+            IDemoEffect e2 = CreateMockEffect("name", 5, 10);
             track.Register(e2);
             Stub.On(e2).GetProperty("DrawOrder").Will(Return.Value(0));
-            IDemoPostEffect pe1 = CreateMockPostEffect(4, 10);
+            IDemoPostEffect pe1 = CreateMockPostEffect("name", 4, 10);
             track.Register(pe1);
             Stub.On(pe1).GetProperty("DrawOrder").Will(Return.Value(0));
-            IDemoPostEffect pe2 = CreateMockPostEffect(5, 10);
+            IDemoPostEffect pe2 = CreateMockPostEffect("name", 5, 10);
             track.Register(pe2);
             Stub.On(pe2).GetProperty("DrawOrder").Will(Return.Value(0));
             using (mockery.Ordered)
@@ -523,7 +523,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestUpdateListenerOneEffect()
         {
-            IDemoEffect e1 = CreateMockEffect(4, 10);
+            IDemoEffect e1 = CreateMockEffect("name", 4, 10);
             track.Register(e1);
             Expect.Once.On(e1).Method("UpdateListener").With(effectChangeListener);
             track.UpdateListener(effectChangeListener);
@@ -532,7 +532,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestUpdateListenerOnePostEffect()
         {
-            IDemoPostEffect pe1 = CreateMockPostEffect(4, 10);
+            IDemoPostEffect pe1 = CreateMockPostEffect("name", 4, 10);
             track.Register(pe1);
             Expect.Once.On(pe1).Method("UpdateListener").With(effectChangeListener);
             track.UpdateListener(effectChangeListener);
@@ -543,14 +543,80 @@ namespace Dope.DDXX.DemoFramework
         {
             for (int i = 0; i < 10; i++)
             {
-                IDemoEffect e1 = CreateMockEffect(4, 10);
+                IDemoEffect e1 = CreateMockEffect("name", 4, 10);
                 track.Register(e1);
                 Expect.Once.On(e1).Method("UpdateListener").With(effectChangeListener);
-                IDemoPostEffect pe1 = CreateMockPostEffect(4, 10);
+                IDemoPostEffect pe1 = CreateMockPostEffect("name", 4, 10);
                 track.Register(pe1);
                 Expect.Once.On(pe1).Method("UpdateListener").With(effectChangeListener);
             }
             track.UpdateListener(effectChangeListener);
+        }
+
+        [Test]
+        public void IsEffectRegisteredTrue()
+        {
+            // Setup
+            IDemoEffect e1 = CreateMockEffect("name", 4, 10);
+            // Exercise SUT
+            track.Register(e1);
+            // Verify
+            Assert.IsTrue(track.IsEffectRegistered("name", e1.GetType()));
+        }
+
+        [Test]
+        public void IsEffectRegisteredIncorrectType()
+        {
+            // Setup
+            IDemoEffect e1 = CreateMockEffect("name", 4, 10);
+            // Exercise SUT
+            track.Register(e1);
+            // Verify
+            Assert.IsFalse(track.IsEffectRegistered("name", typeof(float)));
+        }
+
+        [Test]
+        public void IsEffectRegisteredIncorrectName()
+        {
+            // Setup
+            IDemoEffect e1 = CreateMockEffect("name", 4, 10);
+            // Exercise SUT
+            track.Register(e1);
+            // Verify
+            Assert.IsFalse(track.IsEffectRegistered("unknownname", e1.GetType()));
+        }
+
+        [Test]
+        public void IsPostEffectRegisteredTrue()
+        {
+            // Setup
+            IDemoPostEffect e1 = CreateMockPostEffect("name", 4, 10);
+            // Exercise SUT
+            track.Register(e1);
+            // Verify
+            Assert.IsTrue(track.IsPostEffectRegistered("name", e1.GetType()));
+        }
+
+        [Test]
+        public void IsPostEffectRegisteredIncorrectType()
+        {
+            // Setup
+            IDemoPostEffect e1 = CreateMockPostEffect("name", 4, 10);
+            // Exercise SUT
+            track.Register(e1);
+            // Verify
+            Assert.IsFalse(track.IsPostEffectRegistered("name", typeof(float)));
+        }
+
+        [Test]
+        public void IsPostEffectRegisteredIncorrectName()
+        {
+            // Setup
+            IDemoPostEffect e1 = CreateMockPostEffect("name", 4, 10);
+            // Exercise SUT
+            track.Register(e1);
+            // Verify
+            Assert.IsFalse(track.IsPostEffectRegistered("unknownname", e1.GetType()));
         }
 
         private void ExpectRenderEnd()

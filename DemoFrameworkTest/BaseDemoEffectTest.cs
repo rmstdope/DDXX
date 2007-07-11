@@ -18,7 +18,7 @@ namespace Dope.DDXX.DemoFramework
         public bool initializeCalled;
 
         public BaseDemoEffectTest()
-            : base(0, 0)
+            : base("", 0, 0)
         {
         }
 
