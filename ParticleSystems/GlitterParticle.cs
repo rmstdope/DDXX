@@ -44,7 +44,7 @@ namespace Dope.DDXX.ParticleSystems
             get { return Blend.One; }
         }
 
-        public ISystemParticle Spawn()
+        public ISystemParticle Spawn(IRenderableCamera camera)
         {
             GlitterParticle particle = new GlitterParticle();
             return particle;
@@ -105,7 +105,7 @@ namespace Dope.DDXX.ParticleSystems
             return pos;
         }
 
-        public override void StepAndWrite(IGraphicsStream stream)
+        public override void StepAndWrite(IGraphicsStream stream, IRenderableCamera camera)
         {
             VertexNormalColorPoint vertex;
 

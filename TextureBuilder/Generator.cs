@@ -19,6 +19,11 @@ namespace Dope.DDXX.TextureBuilder
             inputPins = new IGenerator[numInputPins];
         }
 
+        public IGenerator GetInput(int pin)
+        {
+            return inputPins[pin];
+        }
+
         protected Vector4 ColorToRgba(Color color1)
         {
             return new Vector4(color1.R / 255f, color1.G / 255f, color1.B / 255f, color1.A / 255f);

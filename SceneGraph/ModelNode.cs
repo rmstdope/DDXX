@@ -33,7 +33,7 @@ namespace Dope.DDXX.SceneGraph
             this.device = device;
         }
 
-        protected override void StepNode()
+        protected override void StepNode(IRenderableCamera camera)
         {
             model.Step();
         }

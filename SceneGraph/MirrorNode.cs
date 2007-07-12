@@ -26,7 +26,7 @@ namespace Dope.DDXX.SceneGraph
             brightness = 1;
         }
 
-        protected override void StepNode()
+        protected override void StepNode(IRenderableCamera camera)
         {
         }
 

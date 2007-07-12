@@ -95,7 +95,7 @@ namespace Dope.DDXX.SceneGraph
             }
             Expect.Once.On(vertexBuffer).
                 Method("Unlock");
-            system.Step();
+            system.Step(null);
             Assert.AreEqual(4, system.ActiveParticles);
         }
 
@@ -117,7 +117,7 @@ namespace Dope.DDXX.SceneGraph
             }
             Expect.Once.On(vertexBuffer).
                 Method("Unlock");
-            system.Step();
+            system.Step(null);
         }
 
         [Test]
@@ -136,7 +136,7 @@ namespace Dope.DDXX.SceneGraph
             }
             Expect.Once.On(vertexBuffer).
                 Method("Unlock");
-            system.Step();
+            system.Step(null);
         }
 
         [Test]
@@ -159,7 +159,7 @@ namespace Dope.DDXX.SceneGraph
             }
             Expect.Once.On(vertexBuffer).
                 Method("Unlock");
-            system.Step();
+            system.Step(null);
         }
 
         [Test]
@@ -184,7 +184,7 @@ namespace Dope.DDXX.SceneGraph
             }
             Expect.Once.On(vertexBuffer).
                 Method("Unlock");
-            system.Step();
+            system.Step(null);
         }
 
         private void ExpectSpawner(int numInitial, int num, Type type)

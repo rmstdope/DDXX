@@ -15,7 +15,7 @@ namespace Dope.DDXX.SceneGraph
         class NodeBaseImpl : NodeBase
         {
             public NodeBaseImpl(string name) : base(name) { }
-            protected override void StepNode() { }
+            protected override void StepNode(IRenderableCamera camera) { }
             protected override void RenderNode(IScene scene) { }
         }
 
@@ -26,7 +26,7 @@ namespace Dope.DDXX.SceneGraph
             public bool setLightStateCalled;
             public IScene renderScene;
             public DerivedNode(string name) : base(name) { }
-            protected override void StepNode() { stepCalled = true; }
+            protected override void StepNode(IRenderableCamera camera) { stepCalled = true; }
             protected override void RenderNode(IScene scene) { renderCalled = true; renderScene = scene; }
             protected override void SetLightStateNode(LightState state) { setLightStateCalled = true; }
         }
@@ -64,7 +64,7 @@ namespace Dope.DDXX.SceneGraph
             DerivedNode node2 = new DerivedNode("NewNewNodeName");
             node1.AddChild(node2);
 
-            node1.Step();
+            node1.Step(null);
 
             Assert.IsTrue(node1.stepCalled);
             Assert.IsTrue(node2.stepCalled);

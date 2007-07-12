@@ -29,7 +29,7 @@ namespace Dope.DDXX.SceneGraph
             set { specularColor = value; }
         }
 
-        protected override void StepNode()
+        protected override void StepNode(IRenderableCamera camera)
         {
         }
 

@@ -11,7 +11,7 @@ namespace Dope.DDXX.SceneGraph
         {
         }
 
-        protected override void StepNode()
+        protected override void StepNode(IRenderableCamera camera)
         {
         }
 

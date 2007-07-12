@@ -7,7 +7,7 @@
 	<Texture name="noise" generator="noise"></Texture>
 	
 	<!--This post effect will run the entire demo-->
-	<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="3000">
+	<!--<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="3000">
 		<Parameter name="Width" float="16" />
 		<Parameter name="Height" float="9" />
 		<Parameter name="SubtractNoise" bool="true" />
@@ -16,10 +16,10 @@
 		<Parameter name="AddNoise" bool="false" />
 		<Parameter name="Filename" string="" />
 		<Parameter name="DrawOrder" int="4" />
-	</PostEffect>
+	</PostEffect>-->
 
 	<!--Creation scene and its post effects-->
-	<Effect class="CreationScene" track="0" startTime="0" endTime="300">
+	<!--<Effect class="CreationScene" track="0" startTime="0" endTime="300">
 		<Parameter name="BaseMesh" string="Tivi-Creation.X" />
 		<Parameter name="FlareSize" float="6" />
 		<Parameter name="StartVertex" int="8" />
@@ -86,7 +86,7 @@
 	<PostEffect class="RadialBlurPostEffect" startTime="0" endTime="25">
 		<Parameter name="DrawOrder" int="0" />
 	  <Parameter name="BlurColor" Color="White" />
-	</PostEffect>
+	</PostEffect>-->
 	
 	<!--<Effect class="SpinningBackgroundEffect" track="0" startTime="0" endTime="299">
 		<SetupCall name="AddTextureLayer">
@@ -176,6 +176,7 @@
 	<Transition name="FadeTransition" track="1" startTime="5" endTime="10" />-->
 	<!--<Effect class="PhysicalCubes" track="0" startTime="0" endTime="300" />-->
 
+	<Effect class="TestEffect" track="0" startTime="0" endTime="299"/>
 
 	<!--Flipsign effect-->
 	<!--<Effect class="SpinningBackgroundEffect" track="0" startTime="0" endTime="299">

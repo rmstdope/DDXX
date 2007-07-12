@@ -104,7 +104,7 @@ namespace Dope.DDXX.SceneGraph
         public void TestStep()
         {
             Expect.Once.On(model).Method("Step");
-            node.Step();
+            node.Step(null);
         }
     }
 }

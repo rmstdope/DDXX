@@ -43,7 +43,7 @@ namespace Dope.DDXX.ParticleSystems
             get { return Blend.One; }
         }
 
-        public ISystemParticle Spawn()
+        public ISystemParticle Spawn(IRenderableCamera camera)
         {
             return new FallingStarParticle(100.0f);
         }
@@ -116,7 +116,7 @@ namespace Dope.DDXX.ParticleSystems
             Velocity *= 50;
         }
 
-        public override void StepAndWrite(IGraphicsStream stream)
+        public override void StepAndWrite(IGraphicsStream stream, IRenderableCamera camera)
         {
             VertexColorPoint vertex;
 

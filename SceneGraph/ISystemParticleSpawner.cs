@@ -10,7 +10,7 @@ namespace Dope.DDXX.SceneGraph
         BlendOperation BlendOperation { get; }
         Blend SourceBlend { get; }
         Blend DestinationBlend { get; }
-        ISystemParticle Spawn();
+        ISystemParticle Spawn(IRenderableCamera camera);
         Type VertexType { get; }
         VertexDeclaration VertexDeclaration { get; }
         int NumInitialSpawns { get; }

@@ -22,7 +22,7 @@ namespace Dope.DDXX.SceneGraph
             positions[1] = endPosition;
         }
 
-        protected override void StepNode()
+        protected override void StepNode(IRenderableCamera camera)
         {
         }
 

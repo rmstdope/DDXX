@@ -25,7 +25,7 @@ namespace Dope.DDXX.SceneGraph
         {
         }
 
-        protected abstract void StepNode();
+        protected abstract void StepNode(IRenderableCamera camera);
         protected abstract void RenderNode(IScene scene);
 
         #region INode Members
@@ -102,13 +102,13 @@ namespace Dope.DDXX.SceneGraph
                 return false;
         }
 
-        public void Step()
+        public void Step(IRenderableCamera camera)
         {
-            StepNode();
+            StepNode(camera);
 
             foreach (INode node in children)
             {
-                node.Step();
+                node.Step(camera);
             }
         }
 

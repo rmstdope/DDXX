@@ -25,6 +25,6 @@ namespace Dope.DDXX.SceneGraph
             return false;
         }
 
-        public abstract void StepAndWrite(IGraphicsStream stream);
+        public abstract void StepAndWrite(IGraphicsStream stream, IRenderableCamera camera);
     }
 }

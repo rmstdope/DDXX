@@ -66,19 +66,19 @@ namespace Dope.DDXX.SceneGraph
             effectHandler.Techniques = new EffectHandle[] { EffectHandle.FromString(spawner.GetTechniqueName(texture != null)) };
 
             for (int i = 0; i < particleSpawner.NumInitialSpawns; i++)
-                particles.Add(particleSpawner.Spawn());
+                particles.Add(particleSpawner.Spawn(new CameraNode("")));
         }
 
-        protected override void StepNode()
+        protected override void StepNode(IRenderableCamera camera)
         {
             particles.RemoveAll(delegate(ISystemParticle particle) { if (particle.IsDead()) return true; else return false; });
             while (particleSpawner.MaxNumParticles != particles.Count && particleSpawner.ShouldSpawn())
-                particles.Add(particleSpawner.Spawn());
+                particles.Add(particleSpawner.Spawn(camera));
             using (IGraphicsStream stream = vertexBuffer.Lock(0, 0, LockFlags.Discard))
             {
                 foreach (ISystemParticle particle in particles)
                 {
-                    particle.StepAndWrite(stream);
+                    particle.StepAndWrite(stream, camera);
                 }
                 vertexBuffer.Unlock();
             }

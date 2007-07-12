@@ -73,7 +73,7 @@ namespace Dope.DDXX.SceneGraph
                     //controller.AdvanceTime(Time.DeltaTime);
                 }
             }
-            rootNode.Step();
+            rootNode.Step(ActiveCamera);
 
             lightState = new LightState();
             rootNode.SetLightState(lightState);

@@ -8,6 +8,6 @@ namespace Dope.DDXX.SceneGraph
     public interface ISystemParticle
     {
         bool IsDead();
-        void StepAndWrite(IGraphicsStream stream);
+        void StepAndWrite(IGraphicsStream stream, IRenderableCamera camera);
     }
 }

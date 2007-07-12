@@ -38,7 +38,7 @@ namespace Dope.DDXX.SceneGraph
             aspectRatio = aspect;
         }
 
-        protected override void StepNode()
+        protected override void StepNode(IRenderableCamera camera)
         {
         }
 

@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bricks.cs" />
+    <Compile Include="Circle.cs" />
     <Compile Include="ColorBlend.cs" />
     <Compile Include="ColorModulation.cs" />
     <Compile Include="FactorBlend.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoundedRectangle.cs" />
     <Compile Include="TextureBuilder.cs" />
+    <Compile Include="TextureDirector.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Graphics\Graphics.csproj">

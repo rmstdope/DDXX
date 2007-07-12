@@ -71,6 +71,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="SpaceTravel.cs" />
+    <Compile Include="TestEffect.cs" />
     <Compile Include="TiViMain.cs" />
     <Compile Include="TiViMeshDirector.cs" />
     <Compile Include="TunnelFlight.cs" />

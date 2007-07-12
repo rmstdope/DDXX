@@ -90,7 +90,7 @@ namespace Dope.DDXX.ParticleSystems
             set { timeBetweenSpawns = value; }
         }
 
-        public ISystemParticle Spawn()
+        public ISystemParticle Spawn(IRenderableCamera camera)
         {
             Vector3 position = new Vector3(Rand.Float(-1, 1), Rand.Float(-1, 1), Rand.Float(-1, 1));
             Vector3 velocity = new Vector3((float)Math.Sin(nextTime * 1.8f), -1.0f, (float)Math.Cos(nextTime * 1.8f));
@@ -154,7 +154,7 @@ namespace Dope.DDXX.ParticleSystems
             stopTime = 20;
         }
 
-        public override void StepAndWrite(IGraphicsStream stream)
+        public override void StepAndWrite(IGraphicsStream stream, IRenderableCamera camera)
         {
             VertexColorPoint vertex;
 

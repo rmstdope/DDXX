@@ -203,6 +203,11 @@ namespace Dope.DDXX.SceneGraph
                 Assert.AreEqual(Cull.None, newCulling);
         }
 
+        public void Step(IRenderableCamera camera)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
         public void Step()
         {
             throw new Exception("The method or operation is not implemented.");

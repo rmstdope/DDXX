@@ -51,7 +51,7 @@ namespace Dope.DDXX.ParticleSystems
             get { return maxNumParticles; }
         }
 
-        public ISystemParticle Spawn()
+        public ISystemParticle Spawn(IRenderableCamera camera)
         {
             return new FloaterParticle(RandomPositionInSphere(boundingRadius), Color.White, 10.0f);
         }
@@ -110,7 +110,7 @@ namespace Dope.DDXX.ParticleSystems
             amplitude = new Vector3(20, 20, 20) + new Vector3(Rand.Float(0, 60), Rand.Float(0, 60), Rand.Float(0, 60));
         }
 
-        public override void StepAndWrite(IGraphicsStream stream)
+        public override void StepAndWrite(IGraphicsStream stream, IRenderableCamera camera)
         {
             VertexColorPoint vertex = new VertexColorPoint();
             vertex.Position = Position + new Vector3(amplitude.X * (float)Math.Sin(Time.StepTime / period.X + phase.X),

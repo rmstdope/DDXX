@@ -10,17 +10,15 @@ using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.ParticleSystems
 {
-    public class SwirlParticleSpawner : ISystemParticleSpawner
+    public class CloudParticleSpawner : ISystemParticleSpawner
     {
         private VertexDeclaration vertexDeclaration;
         private int maxNumParticles;
         private BlendOperation blendOperation = BlendOperation.Add;
         private Color color = Color.FromArgb(200, Color.White);
-        float nextTime = 0;
         private int colorDistortion;
-        private float timeBetweenSpawns;
 
-        public SwirlParticleSpawner(IGraphicsFactory graphicsFactory, IDevice device, int maxNumParticles)
+        public CloudParticleSpawner(IGraphicsFactory graphicsFactory, IDevice device, int maxNumParticles)
         {
             this.maxNumParticles = maxNumParticles;
             VertexElement[] elements = new VertexElement[]
@@ -31,7 +29,6 @@ namespace Dope.DDXX.ParticleSystems
                 VertexElement.VertexDeclarationEnd 
             };
             vertexDeclaration = graphicsFactory.CreateVertexDeclaration(device, elements);
-            timeBetweenSpawns = 0.003f;
         }
 
         public BlendOperation BlendOperation
@@ -42,12 +39,12 @@ namespace Dope.DDXX.ParticleSystems
 
         public Blend SourceBlend
         {
-            get { return Blend.One; }//.SourceAlpha; }
+            get { return Blend.One; }
         }
 
         public Blend DestinationBlend
         {
-            get { return Blend.InvSourceColor; }//.InvSourceAlpha; }
+            get { return Blend.InvSourceColor; }
         }
 
         public Color Color
@@ -60,30 +57,20 @@ namespace Dope.DDXX.ParticleSystems
             set { colorDistortion = value; }
         }
 
-        public float NextTime
-        {
-            set { nextTime = value; }
-        }
-
-        public float TimeBetweenSpawns
-        {
-            set { timeBetweenSpawns = value; }
-        }
-
         public ISystemParticle Spawn(IRenderableCamera camera)
         {
-            float phi = Rand.Float(Math.PI * 2);
-            float angleVelocity = Rand.Float(2.0f, 4.5f);
-            float yVelocity = Rand.Float(1.5f, 2.8f);
-            float radius = Rand.Float(1, 2.5f);
-            float size = Rand.Float(0.1f, 0.2f);
+            float phi = Rand.Float(Math.PI);
+            float rho = Rand.Float(-Math.PI / 2, Math.PI / 2);
+            float size = Rand.Float(1f, 2f);
             Color createColor = Color.FromArgb(
                 color.R + Rand.Int(-colorDistortion, colorDistortion),
                 color.G + Rand.Int(-colorDistortion, colorDistortion),
                 color.B + Rand.Int(-colorDistortion, colorDistortion));
-            SwirlParticle particle = new SwirlParticle(radius, phi, angleVelocity, yVelocity, size, createColor);
-            particle.Step(Time.StepTime - nextTime);
-            nextTime += timeBetweenSpawns;
+            float x = Rand.Float(-5, 5);//(float)(10 * Math.Cos(phi) * Math.Sin(rho));
+            float y = Rand.Float(-5, 5);//(float)(10 * Math.Sin(phi) * Math.Sin(rho));
+            float z = Rand.Float(0, 10);//(float)(10 * Math.Cos(rho));
+            Vector3 pos = new Vector3(x, y, z) + camera.Position;
+            CloudParticle particle = new CloudParticle(pos, size, createColor);
             return particle;
         }
 
@@ -99,7 +86,7 @@ namespace Dope.DDXX.ParticleSystems
 
         public int NumInitialSpawns
         {
-            get { return 0; }
+            get { return maxNumParticles; }
         }
 
         public int MaxNumParticles
@@ -109,7 +96,7 @@ namespace Dope.DDXX.ParticleSystems
 
         public bool ShouldSpawn()
         {
-            return (Time.StepTime > nextTime);
+            return true;
         }
 
         public string GetTechniqueName(bool textured)
@@ -120,57 +107,33 @@ namespace Dope.DDXX.ParticleSystems
         }
     }
 
-    public class SwirlParticle : SystemParticle
+    public class CloudParticle : SystemParticle
     {
-        private float radius;
-        private float phi;
-        private float angleVelocity;
-        private float yVelocity;
-        private float y;
-        private const float LifeTime = 2;
-        private float cumulativeTime;
+        private bool dead;
 
-        public SwirlParticle(float radius, float phi, float angleVelocity, float yVelocity, float size, Color color)
-            : base(new Vector3(), color, size)
+        public CloudParticle(Vector3 pos, float size, Color color)
+            : base(pos, color, size)
         {
-            this.radius = radius;
-            this.phi = phi;
-            this.angleVelocity = angleVelocity;
-            this.yVelocity = yVelocity;
-            y = 0;
-            cumulativeTime = 0;
+            dead = false;
         }
 
         public override void StepAndWrite(IGraphicsStream stream, IRenderableCamera camera)
         {
             VertexColorPoint vertex;
 
-            Step(Time.DeltaTime);
             vertex.Position = Position;
             vertex.Size = Size;
-            if (cumulativeTime < 0.5f)
-            {
-                float d = cumulativeTime / 0.5f;
-                vertex.Color = Color.FromArgb((int)(Color.R * d), (int)(Color.G * d), (int)(Color.B * d)).ToArgb();
-            }
-            else
-                vertex.Color = Color.ToArgb();
+            vertex.Color = Color.ToArgb();
             stream.Write(vertex);
-        }
 
-        public void Step(float time)
-        {
-            phi += time * angleVelocity;
-            y += time * yVelocity;
-            cumulativeTime += time;
-            Position = new Vector3((float)Math.Sin(phi) * radius, y, (float)Math.Cos(phi) * radius);
+            Vector3 toParticle = Position - camera.Position;
+            if (Vector3.Dot(camera.WorldState.Forward, toParticle) < 0)
+                dead = true;
         }
 
         public override bool IsDead()
         {
-            if (cumulativeTime > LifeTime)
-                return true;
-            return false;
+            return dead;
         }
     }
 }
