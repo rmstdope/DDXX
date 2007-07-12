@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <VisualStudioToolFile
 	Name="DX9 Effect Compiler for DDXX"
-	Version="8,00"
+	Version="8.00"
 	>
 	<Rules>
 		<CustomBuildRule
 			Name="Effect Builder for DX9"
 			DisplayName="Effect Builder for DX9"
-			CommandLine="fxc.exe [AllOptions] [AdditionalOptions]  /Fo&quot;$(InputName).fxo&quot; &quot;$(InputName).fx&quot;"
+			CommandLine="fxc.exe [AllOptions] [AdditionalOptions] /Fo&quot;$(InputName).fxo&quot; &quot;$(InputName).fx&quot;"
 			Outputs="$(InputName).fxo"
-			AdditionalDependencies="SharedVariables.hlsl;CommonFunctions.hlsl;DataTypes.hlsl;Glass.hlsl;SkyBox.hlsl;ChessBoard.hlsl;DepthOfField.hlsl;Simple.hlsl;Reflective.hlsl;Atmosphere.hlsl"
+			AdditionalDependencies="SharedVariables.hlsl;CommonFunctions.hlsl;DataTypes.hlsl;Glass.hlsl;SkyBox.hlsl;ChessBoard.hlsl;DepthOfField.hlsl;Simple.hlsl;Reflective.hlsl;AtmosphereShader.hlsl"
 			FileExtensions="*.fx"
 			ExecutionDescription="Compiling $(InputName).fx..."
 			>
@@ -70,6 +70,10 @@
 						/>
 					</Values>
 				</EnumProperty>
+				<BooleanProperty
+					Name="ShaderModelOneSupport"
+					Switch="/LD"
+				/>
 			</Properties>
 		</CustomBuildRule>
 	</Rules>

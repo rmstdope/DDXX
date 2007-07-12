@@ -10,11 +10,23 @@ namespace Dope.DDXX.TextureBuilder
         private float mul;
         private float add;
 
-        public Madd(float mul, float add)
+        public float Add
+        {
+            get { return add; }
+            set { add = value; }
+        }
+
+        public float Mul
+        {
+            get { return mul; }
+            set { mul = value; }
+        }
+
+        public Madd()
             : base(1)
         {
-            this.add = add;
-            this.mul = mul;
+            mul = 1;
+            add = 0;
         }
 
         public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)

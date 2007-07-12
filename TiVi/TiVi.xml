@@ -176,7 +176,12 @@
 	<Transition name="FadeTransition" track="1" startTime="5" endTime="10" />-->
 	<!--<Effect class="PhysicalCubes" track="0" startTime="0" endTime="300" />-->
 
-	<Effect class="TestEffect" track="0" startTime="0" endTime="299"/>
+	<Effect class="TestEffect" track="0" startTime="0" endTime="299">
+    <Parameter name="Persistance" float="0.4300001" />
+    <Parameter name="NumOctaves" int="12" />
+    <Parameter name="BaseFrequency" int="7" />
+    <Parameter name="DrawOrder" int="0" />
+  </Effect>
 
 	<!--Flipsign effect-->
 	<!--<Effect class="SpinningBackgroundEffect" track="0" startTime="0" endTime="299">

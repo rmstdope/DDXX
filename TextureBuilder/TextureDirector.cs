@@ -47,6 +47,15 @@ namespace Dope.DDXX.TextureBuilder
             generatorStack.Push(modulate);
         }
 
+        public void Madd(float mul, float add)
+        {
+            Madd madd = new Madd();
+            madd.Add = add;
+            madd.Mul = mul;
+            ConnectFromStack(madd, 1);
+            generatorStack.Push(madd);
+        }
+
         private void ConnectFromStack(IGenerator modulate, int numInputs)
         {
             EnsureStackSize(numInputs);

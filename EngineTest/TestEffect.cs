@@ -255,8 +255,12 @@ namespace EngineTest
             PerlinNoise noise2 = new PerlinNoise();
             noise2.NumOctaves = 4;
             noise2.BaseFrequency = 128;
-            IGenerator madd = new Madd(0.5f, 0.5f);
-            IGenerator madd2 = new Madd(1.0f, 0.6f);
+            Madd madd = new Madd();
+            madd.Mul = 0.5f;
+            madd.Add = 0.5f;
+            Madd madd2 = new Madd();
+            madd2.Mul = 0.6f;
+            madd2.Add = 1.0f;
             IGenerator modulate = new Modulate();
             IGenerator factor = new FactorBlend(0.5f);
             IGenerator colorModulation = new ColorBlend(new Vector4(0.3f, 0.3f, 0.3f, 1), new Vector4(0.89f, 0.45f, 0.36f, 1));

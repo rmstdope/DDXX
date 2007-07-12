@@ -154,7 +154,9 @@ namespace TiVi
         {
             PerlinTurbulence noise = new PerlinTurbulence();
             noise.BaseFrequency = 30;
-            Madd madd = new Madd(0.6f, 0.4f);
+            Madd madd = new Madd();
+            madd.Mul = 0.6f;
+            madd.Add = 0.4f;
             madd.ConnectToInput(0, noise);
             TextureFactory.RegisterTexture("noise", TextureBuilder.Generate(madd, 32, 32, 1, Format.A8R8G8B8));
         }
