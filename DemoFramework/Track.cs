@@ -102,6 +102,27 @@ namespace Dope.DDXX.DemoFramework
             throw new Exception("The method or operation is not implemented.");
         }
 
+        public float StartTime
+        {
+            get
+            {
+                float minTime = float.MaxValue;
+                foreach (IDemoEffect effect in effects)
+                {
+                    if (effect.StartTime < minTime)
+                        minTime = effect.StartTime;
+                }
+                foreach (IDemoPostEffect effect in postEffects)
+                {
+                    if (effect.StartTime < minTime)
+                        minTime = effect.StartTime;
+                }
+                if (minTime == float.MaxValue)
+                    minTime = 0;
+                return minTime;
+            }
+        }
+
         public float EndTime
         {
             get 

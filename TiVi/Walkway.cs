@@ -61,7 +61,7 @@ namespace TiVi
                 delegate(int material) { return "Atmosphere"; }, model);
             plane = new ModelNode("", model, effectHandler, Device);
             plane.WorldState.MoveForward(-2);
-            plane.WorldState.MoveUp(-0.1f);
+            //plane.WorldState.MoveUp(-0.1f);
             GraphicsStream stream = ShaderLoader.CompileShaderFromFile("Imaginations.psh", "CreateCloudTexture", null, "tx_1_0", ShaderFlags.None);
             ITexture tex = GraphicsFactory.CreateTexture(Device, 256, 256, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
             TextureLoader.FillTexture((Texture)((tex as TextureAdapter).BaseTextureDX), new TextureShader(stream));
@@ -104,6 +104,7 @@ namespace TiVi
             tiviNode.WorldState.MoveForward(10);
             tiviNode.WorldState.Turn((float)Math.PI / 2);
             tiviNode.Model.Materials[0].Ambient = Color.White;
+            (tiviNode.Model as SkinnedModel).SetAnimationSet(0, StartTime);
 
             mirrorNode = new MirrorNode(tiviNode);
 
@@ -167,11 +168,11 @@ namespace TiVi
 
         public override void Step()
         {
-            camera.WorldState.Reset();
-            camera.WorldState.Position = new Vector3((float)Math.Sin(Time.StepTime / 4) * 10,
-                2.0f,
-                (float)Math.Cos(Time.StepTime / 4) * 10);
-            camera.LookAt(new Vector3(0, 1.0f, -5), new Vector3(0, 1, 0));
+            //camera.WorldState.Reset();
+            //camera.WorldState.Position = new Vector3((float)Math.Sin(Time.StepTime / 4) * 10,
+            //    2.0f,
+            //    (float)Math.Cos(Time.StepTime / 4) * 10);
+            //camera.LookAt(new Vector3(0, 1.0f, -5), new Vector3(0, 1, 0));
 
             StepDiamonds();
             StepWalkway();

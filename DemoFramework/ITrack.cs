@@ -9,6 +9,7 @@ namespace Dope.DDXX.DemoFramework
     {
         IDemoEffect[] Effects { get; }
         float EndTime { get; }
+        float StartTime { get; }
         IDemoEffect[] GetEffects(float time);
         IDemoEffect[] GetEffects(float startTime, float endTime);
         IDemoPostEffect[] GetPostEffects(float startTime, float endTime);

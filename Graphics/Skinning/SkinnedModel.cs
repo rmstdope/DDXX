@@ -10,6 +10,7 @@ namespace Dope.DDXX.Graphics
     public class SkinnedModel : ModelBase
     {
         private IAnimationRootFrame rootFrame;
+        private IAnimationSet animationSet;
         private const int MAX_NUM_BONES = 60;
         private IFrame frame;
         private IMesh mesh;
@@ -23,20 +24,19 @@ namespace Dope.DDXX.Graphics
 
         private SkinnedModel()
         {
-            startTime = 0;
         }
 
         public void SetAnimationSet(string name, float timeOffset)
         {
-            IAnimationSet set = rootFrame.AnimationController.GetAnimationSet(name);
-            rootFrame.AnimationController.SetTrackAnimationSet(0, set);
+            animationSet = rootFrame.AnimationController.GetAnimationSet(name);
+            rootFrame.AnimationController.SetTrackAnimationSet(0, animationSet);
             startTime = timeOffset;
         }
 
         public void SetAnimationSet(int num, float timeOffset)
         {
-            IAnimationSet set = rootFrame.AnimationController.GetAnimationSet(num);
-            rootFrame.AnimationController.SetTrackAnimationSet(0, set);
+            animationSet = rootFrame.AnimationController.GetAnimationSet(num);
+            rootFrame.AnimationController.SetTrackAnimationSet(0, animationSet);
             startTime = timeOffset;
         }
 
@@ -48,6 +48,8 @@ namespace Dope.DDXX.Graphics
 
             if (frame.MeshContainer.SkinInformation != null)
             {
+                animationSet = rootFrame.AnimationController.GetAnimationSet(0);
+                startTime = 0;
                 numBones = Math.Min(MAX_NUM_BONES, frame.MeshContainer.SkinInformation.NumberBones);
                 int influences = 0;
                 BoneCombination[] bones = null;
@@ -129,7 +131,7 @@ namespace Dope.DDXX.Graphics
             IAnimationController controller = rootFrame.AnimationController;
             if (controller != null)
             {
-                controller.AdvanceTime(controller.GetAnimationSet(0).Period - (controller.Time % controller.GetAnimationSet(0).Period));
+                controller.AdvanceTime(animationSet.Period - (controller.Time % animationSet.Period));
                 controller.AdvanceTime(Time.StepTime - startTime);
             }
         }
@@ -158,6 +160,8 @@ namespace Dope.DDXX.Graphics
         {
             SkinnedModel newModel = new SkinnedModel();
             newModel.rootFrame = rootFrame;
+            newModel.animationSet = animationSet;
+            newModel.startTime = startTime;
             newModel.frame = frame;
             newModel.mesh = mesh;
             newModel.numBones = numBones;

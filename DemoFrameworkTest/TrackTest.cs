@@ -171,10 +171,26 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
+        public void TestStartTimeOneEffect()
+        {
+            track.Register(CreateMockEffect("name", 5, 10));
+            Assert.AreEqual(5, track.StartTime);
+        }
+
+        [Test]
         public void TestEndTimeOneEffect()
         {
             track.Register(CreateMockEffect("name", 5, 10));
             Assert.AreEqual(10, track.EndTime);
+        }
+
+        [Test]
+        public void TestStartTimeMoreEffects()
+        {
+            track.Register(CreateMockEffect("name", 6, 10));
+            track.Register(CreateMockEffect("name", 2, 15));
+            track.Register(CreateMockEffect("name", 5, 12));
+            Assert.AreEqual(2, track.StartTime);
         }
 
         [Test]
@@ -187,11 +203,29 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
+        public void TestStartTimeSingleEffectAndPostEffect()
+        {
+            track.Register(CreateMockEffect("name", 2, 10));
+            track.Register(CreateMockPostEffect("name", 1, 12));
+            Assert.AreEqual(1, track.StartTime);
+        }
+
+        [Test]
         public void TestEndTimeSingleEffectAndPostEffect()
         {
             track.Register(CreateMockEffect("name", 5, 10));
             track.Register(CreateMockPostEffect("name", 5, 12));
             Assert.AreEqual(12, track.EndTime);
+        }
+
+        [Test]
+        public void TestStartTimeMoreEffectAndPostEffect()
+        {
+            track.Register(CreateMockEffect("name", 5, 10));
+            track.Register(CreateMockEffect("name", 2, 15));
+            track.Register(CreateMockPostEffect("name", 1, 12));
+            track.Register(CreateMockPostEffect("name", 7, 18));
+            Assert.AreEqual(1, track.StartTime);
         }
 
         [Test]

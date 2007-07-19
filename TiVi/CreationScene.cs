@@ -404,7 +404,6 @@ namespace TiVi
 
             if (t < bodyCameraStart1)
             {
-                //modelTiVi.SetAnimationSet("LookArm", 0);
                 modelTiVi.SetAnimationSet("SkinPose", StartTime);
                 scene.ActiveCamera = headCamera;
             }

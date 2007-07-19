@@ -241,19 +241,22 @@ namespace Dope.DDXX.DemoFramework
             Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(1.0f));
             Stub.On(tracks[1]).GetProperty("EndTime").Will(Return.Value(3.0f));
             Stub.On(tracks[2]).GetProperty("EndTime").Will(Return.Value(2.0f));
+            Stub.On(tracks[0]).GetProperty("StartTime").Will(Return.Value(0.3f));
+            Stub.On(tracks[1]).GetProperty("StartTime").Will(Return.Value(0.1f));
+            Stub.On(tracks[2]).GetProperty("StartTime").Will(Return.Value(0.2f));
             Assert.AreEqual(0.0f, executer.StartTime);
             Assert.AreEqual(0.0f, executer.EndTime);
 
             EnsureNumTracks(1);
-            Assert.AreEqual(0.0f, executer.StartTime);
+            Assert.AreEqual(0.3f, executer.StartTime);
             Assert.AreEqual(1.0f, executer.EndTime);
 
             EnsureNumTracks(2);
-            Assert.AreEqual(0.0f, executer.StartTime);
+            Assert.AreEqual(0.1f, executer.StartTime);
             Assert.AreEqual(3.0f, executer.EndTime);
 
             EnsureNumTracks(3);
-            Assert.AreEqual(0.0f, executer.StartTime);
+            Assert.AreEqual(0.1f, executer.StartTime);
             Assert.AreEqual(3.0f, executer.EndTime);
         }
 

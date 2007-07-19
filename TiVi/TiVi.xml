@@ -19,8 +19,7 @@
 	</PostEffect>-->
 
 	<!--Creation scene and its post effects-->
-	<Effect class="CreationScene" track="0" startTime="7" endTime="300">
-		<!--<Parameter name="BaseMesh" string="Tivi-Creation.X" />-->
+	<!--<Effect class="CreationScene" track="0" startTime="7" endTime="42">
 		<Parameter name="BaseMesh" string="TiVi.x" />
 		<Parameter name="FlareSize" float="3" />
 		<Parameter name="StartVertex" int="10" />
@@ -45,7 +44,7 @@
 		<Parameter name="FadeOutLength" float="2" />
 		<Parameter name="FadeColor" Color="Black" />
 	</PostEffect>
-	<PostEffect class="GlowPostEffect" name="CreationGlow2" track="0" startTime="14" endTime="21">
+	<PostEffect class="GlowPostEffect" name="CreationGlow2" track="0" startTime="14" endTime="50">
 		<Parameter name="BloomScale" float="1.1" />
 		<Parameter name="Exposure" float="0.6200004" />
 		<Parameter name="DrawOrder" int="1" />
@@ -75,19 +74,23 @@
 		<Parameter name="FadeOutLength" float="2" />
 		<Parameter name="FadeColor" Color="Black" />
 	</PostEffect>
-	<!--<PostEffect class="ColorFader" name="WhiteFader" startTime="28.5" endTime="31.5">
+	<PostEffect class="ColorFader" name="WhiteFader" startTime="41.5" endTime="44.5">
 		<Parameter name="DrawOrder" int="3" />
 		<Parameter name="FadeInLength" float="0.5" />
 		<Parameter name="FadeOutLength" float="2" />
 		<Parameter name="FadeColor" Color="White" />
 	</PostEffect>
-	<Effect class="WhiteFlare" startTime="24" endTime="29">
+	<Effect class="WhiteFlare" startTime="37" endTime="42">
 		<Parameter name="DrawOrder" int="0" />
-	</Effect>
-	<PostEffect class="RadialBlurPostEffect" startTime="0" endTime="25">
+	</Effect>-->
+	<!--<PostEffect class="RadialBlurPostEffect" startTime="0" endTime="25">
 		<Parameter name="DrawOrder" int="0" />
 		<Parameter name="BlurColor" Color="White" />
 	</PostEffect>-->
+	
+	<Effect class="Walkway" track="0" startTime="42" endTime="300">
+		<Parameter name="DrawOrder" int="0" />
+	</Effect>	
 	
 	<!--<Effect class="SpinningBackgroundEffect" track="0" startTime="0" endTime="299">
 		<SetupCall name="AddTextureLayer">
@@ -250,3 +253,4 @@
 		<Parameter name="Scale" float="10" />
 	</PostEffect-->
 </Demo>
+

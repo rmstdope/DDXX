@@ -45,7 +45,18 @@ namespace Dope.DDXX.DemoFramework
 
         public float StartTime
         {
-            get { return 0.0f; }
+            get
+            {
+                float minTime = float.MaxValue;
+                foreach (ITrack track in tracks)
+                {
+                    if (track.StartTime < minTime)
+                        minTime = track.StartTime;
+                }
+                if (minTime == float.MaxValue)
+                    minTime = 0;
+                return minTime;
+            }
         }
 
         public float EndTime
@@ -204,6 +215,7 @@ namespace Dope.DDXX.DemoFramework
         public void Run()
         {
             Time.Initialize();
+            Time.CurrentTime = StartTime;
 
             if (sound != null)
             {
