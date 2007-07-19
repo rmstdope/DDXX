@@ -22,6 +22,8 @@ namespace TiVi
         private IScene scene;
         private CameraNode camera;
         private ModelNode node;
+        private List<NaturalCubicSpline<InterpolatedVector3>> splines = new List<NaturalCubicSpline<InterpolatedVector3>>();
+        private ILine line;
 
         private int baseFrequency = 16;
         private int numOctaves = 6;
@@ -62,18 +64,16 @@ namespace TiVi
             node = CreateSimpleModelNode(model, "TiVi.fxo", "Atmosphere");
             scene.AddNode(node);
 
-            GraphicsStream stream = ShaderLoader.CompileShaderFromFile("Imaginations.psh", "CreateCloudTexture", null, "tx_1_0", ShaderFlags.None);
-            ITexture tex = GraphicsFactory.CreateTexture(Device, 256, 256, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
-            TextureLoader.FillTexture((Texture)((tex as TextureAdapter).BaseTextureDX), new TextureShader(stream));
-            tex.Save("cloud.dds", ImageFileFormat.Dds);
-            //node.Model.Materials[0].DiffuseTexture = tex;
-
             GeneratePerlinNoise();
 
-            //system = new ParticleSystemNode("");
-            //CloudParticleSpawner spawner = new CloudParticleSpawner(GraphicsFactory, Device, 10);
-            //system.Initialize(spawner, Device, GraphicsFactory, EffectFactory, texture);
-            //scene.AddNode(system);
+            for (int j = 0; j < 3; j++)
+            {
+                splines.Add(new NaturalCubicSpline<InterpolatedVector3>());
+                for (int i = 0; i < 20; i++)
+                    splines[j].AddKeyFrame(new KeyFrame<InterpolatedVector3>(0.1f * i, new InterpolatedVector3(-20 + i * 2 + Rand.Float(-2, 2), Rand.Float(-10, 10), Rand.Float(-10, 10))));
+                splines[j].Calculate();
+            }
+            line = GraphicsFactory.CreateLine(Device);
         }
 
         private void GeneratePerlinNoise()
@@ -83,9 +83,7 @@ namespace TiVi
                 TextureDirector textureDirector = new TextureDirector(TextureBuilder);
                 //textureDirector.CreateCircle(0.2f, 0.5f);
                 textureDirector.CreatePerlinNoise(baseFrequency, numOctaves, persistance);
-                textureDirector.Madd(1.0f, -0.3f);
-                //textureDirector.Madd(3.2f, 0.0f);
-                //textureDirector.Modulate();
+                textureDirector.Madd(1.0f, -0.4f);
                 texture = textureDirector.Generate(256, 256, 1, Format.A8R8G8B8);
                 node.Model.Materials[0].DiffuseTexture = texture;
             }
@@ -93,6 +91,7 @@ namespace TiVi
 
         public override void Step()
         {
+            Mixer.ClearColor = Color.Black;
             float[] f = new float[] { 
                 Time.StepTime * 0.025f, 
                 Time.StepTime * 0.031f, 
@@ -106,11 +105,27 @@ namespace TiVi
 
         public override void Render()
         {
-            scene.Render();
+            //scene.Render();
 
-            sprite.Begin(SpriteFlags.None);
-            sprite.Draw2D(texture, Rectangle.Empty, SizeF.Empty, new PointF(512, 0), Color.White);
-            sprite.End();
+            Matrix transform = scene.ActiveCamera.ViewMatrix * scene.ActiveCamera.ProjectionMatrix;
+            Vector3[] vectors = new Vector3[40];
+            float t = Time.StepTime % 3;
+            foreach (NaturalCubicSpline<InterpolatedVector3> spline in splines)
+            {
+                int c = (int)(Math.Sin(t * Math.PI / 2) * 206 + 50);
+                c = Math.Max(0, c);
+                for (int i = 0; i < 40; i++)
+                    vectors[i] = spline.GetValue(t - 0.4f + 0.4f * i / 39);
+                line.Antialias = false;
+                line.Width = 5;
+                line.Begin();
+                line.DrawTransform(vectors, transform, Color.FromArgb(c, 0, 0));
+                line.End();
+            }
+
+            //sprite.Begin(SpriteFlags.None);
+            //sprite.Draw2D(texture, Rectangle.Empty, SizeF.Empty, new PointF(512, 0), Color.White);
+            //sprite.End();
         }
     }
 }

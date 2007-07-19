@@ -14,9 +14,30 @@ namespace Dope.DDXX.Graphics
         private IFrame frame;
         private IMesh mesh;
         private int numBones;
+        private float startTime;
+
+        public IAnimationRootFrame AnimationRootFrame
+        {
+            get { return rootFrame; }
+        }
 
         private SkinnedModel()
         {
+            startTime = 0;
+        }
+
+        public void SetAnimationSet(string name, float timeOffset)
+        {
+            IAnimationSet set = rootFrame.AnimationController.GetAnimationSet(name);
+            rootFrame.AnimationController.SetTrackAnimationSet(0, set);
+            startTime = timeOffset;
+        }
+
+        public void SetAnimationSet(int num, float timeOffset)
+        {
+            IAnimationSet set = rootFrame.AnimationController.GetAnimationSet(num);
+            rootFrame.AnimationController.SetTrackAnimationSet(0, set);
+            startTime = timeOffset;
         }
 
         public SkinnedModel(IAnimationRootFrame rootFrame, IFrame frame, ITextureFactory textureFactory)
@@ -99,7 +120,18 @@ namespace Dope.DDXX.Graphics
 
         public override void Step()
         {
+            StepAnimation();
             UpdateFrameMatrices(rootFrame.FrameHierarchy, Matrix.Identity);
+        }
+
+        private void StepAnimation()
+        {
+            IAnimationController controller = rootFrame.AnimationController;
+            if (controller != null)
+            {
+                controller.AdvanceTime(controller.GetAnimationSet(0).Period - (controller.Time % controller.GetAnimationSet(0).Period));
+                controller.AdvanceTime(Time.StepTime - startTime);
+            }
         }
 
         private void UpdateFrameMatrices(IFrame frame, Matrix parentMatrix)

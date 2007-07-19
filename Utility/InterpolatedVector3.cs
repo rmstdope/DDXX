@@ -16,6 +16,10 @@ namespace Dope.DDXX.Utility
         {
             this.value = value;
         }
+        public InterpolatedVector3(float x, float y, float z)
+        {
+            this.value = new Vector3(x, y, z);
+        }
         public static implicit operator Vector3(InterpolatedVector3 f)
         {
             return f.value;

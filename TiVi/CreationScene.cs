@@ -20,7 +20,7 @@ namespace TiVi
         private UnindexedMesh lineTiViMesh;
         //private UnindexedMesh drawLineMesh;
         private IMesh originalTiViMesh;
-        private IModel modelTiVi;
+        private SkinnedModel modelTiVi;
         private ModelNode nodeTiVi;
         private Vertex[] lineVertices;
         private List<TiViEdge> edges;
@@ -40,6 +40,7 @@ namespace TiVi
         private float bodyCameraStart1 = 7.0f;
         private float handCameraStart = 14.0f;
         private float bodyCameraStart2 = 21.0f;
+        private float solidStart = 35.0f;
         private static float segmentLength = 0.45f;
 
         public float FlareSize
@@ -174,6 +175,8 @@ namespace TiVi
 
             handCamera = new CameraNode("HandCamera");
             scene.AddNode(handCamera);
+
+            scene.ActiveCamera = bodyCamera1;
         }
 
         private class TiViEdge
@@ -204,7 +207,9 @@ namespace TiVi
                 StartTime = startTime;
                 Length = segmentLength + (float)(random.NextDouble() * segmentLength);
                 if (startTime < 7.0f)
-                    Length += 1.0f;
+                    Length += 0.5f;
+                if (startTime > 21.0f)
+                    Length -= 0.15f;
                 //if (startTime == 0)
                 //    Length += 3;
             }
@@ -257,7 +262,7 @@ namespace TiVi
             //IAnimationSet set = XLoader.RootFrame.AnimationController.GetAnimationSet(0);
             //XLoader.RootFrame.AnimationController.SetTrackAnimationSet(0, set);
             nodeTiVi = (ModelNode)scene.GetNodeByName("TiVi");
-            modelTiVi = nodeTiVi.Model;
+            modelTiVi = nodeTiVi.Model as SkinnedModel;
             originalTiViMesh = modelTiVi.Mesh;
         }
 
@@ -354,6 +359,8 @@ namespace TiVi
 
         public override void Step()
         {
+            float t = Time.StepTime - StartTime;
+
             Mixer.ClearColor = Color.FromArgb(0, 0, 0, 0);
             if (nodeTiVi != null)
             {
@@ -361,11 +368,11 @@ namespace TiVi
                 flareIndices.Clear();
                 for (i = 0; i < edges.Count; i++)
                 {
-                    if (edges[i].StartTime > Time.CurrentTime)
+                    if (edges[i].StartTime > t)
                         break;
                     lineVertices[i * 2 + 0] = allVertices[edges[i].V1];
                     lineVertices[i * 2 + 1] = allVertices[edges[i].V2];
-                    float delta = (Time.CurrentTime - edges[i].StartTime) / edges[i].Length;
+                    float delta = (t - edges[i].StartTime) / edges[i].Length;
                     if (delta > 1.0f)
                         delta = 1.0f;
                     else
@@ -378,31 +385,44 @@ namespace TiVi
             }
 
             headCamera.WorldState.Reset();
-            headCamera.WorldState.MoveForward(-(1.0f + Time.StepTime / 8.0f));
+            headCamera.WorldState.MoveForward(-(1.0f + t / 8.0f));
             headCamera.WorldState.MoveUp(1.5f);
 
             bodyCamera1.WorldState.Reset();
-            bodyCamera1.WorldState.MoveForward(-(3.0f - Time.StepTime / 10.0f));
+            bodyCamera1.WorldState.MoveForward(-(3.0f - t / 10.0f));
             bodyCamera1.WorldState.MoveUp(1);
 
             handCamera.WorldState.Reset();
-            handCamera.WorldState.Turn(1.0f - Time.StepTime / 7.0f);
+            handCamera.WorldState.Turn(1.0f - t / 7.0f);
             handCamera.WorldState.MoveUp(1.0f);
             handCamera.WorldState.MoveForward(-1.0f);//.Position = new Vector3(2, 2, 0);
             handCamera.LookAt(new Vector3(0, 1.5f, 0), new Vector3(0, 1, 0));
 
             bodyCamera2.WorldState.Reset();
-            bodyCamera2.WorldState.MoveForward(-(1.0f + Time.StepTime / 10.0f));
+            bodyCamera2.WorldState.MoveForward(-(1.0f + t / 10.0f));
             bodyCamera2.WorldState.MoveUp(1);
 
-            if (Time.StepTime < bodyCameraStart1)
+            if (t < bodyCameraStart1)
+            {
+                //modelTiVi.SetAnimationSet("LookArm", 0);
+                modelTiVi.SetAnimationSet("SkinPose", StartTime);
                 scene.ActiveCamera = headCamera;
-            else if (Time.StepTime < handCameraStart)
+            }
+            else if (t < handCameraStart)
+            {
+                modelTiVi.SetAnimationSet("ArmsCrossed", StartTime + bodyCameraStart1);
                 scene.ActiveCamera = bodyCamera1;
-            else if (Time.StepTime < bodyCameraStart2)
+            }
+            else if (t < bodyCameraStart2)
+            {
+                modelTiVi.SetAnimationSet("LookArm", StartTime + handCameraStart);
                 scene.ActiveCamera = handCamera;
+            }
             else
+            {
+                modelTiVi.SetAnimationSet("ArmsCrossed", StartTime + bodyCameraStart2);
                 scene.ActiveCamera = bodyCamera2;
+            }
 
             scene.Step();
         }
@@ -411,7 +431,7 @@ namespace TiVi
         {
             if (nodeTiVi != null)
             {
-                if (Time.CurrentTime > 25.0f)
+                if (Time.CurrentTime > solidStart + StartTime)
                 {
                     nodeTiVi.EffectHandler.Techniques[0] = EffectHandle.FromString("SolidSkinning");
                     nodeTiVi.EffectHandler.Techniques[1] = EffectHandle.FromString("TvScreenSkinning");

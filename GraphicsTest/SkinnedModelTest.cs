@@ -244,10 +244,18 @@ namespace Dope.DDXX.Graphics
         [Test]
         public void TestStep()
         {
+            IAnimationSet animationSet = mockery.NewMock<IAnimationSet>();
             Time.Initialize();
             Time.Step();
             ConstructorMaterialTest();
             ExpectFrameUpdate();
+
+            Stub.On(rootFrame).GetProperty("AnimationController").Will(Return.Value(animationController));
+            Stub.On(animationController).Method("GetAnimationSet").With(0).Will(Return.Value(animationSet));
+            Stub.On(animationController).GetProperty("Time").Will(Return.Value(2.5));
+            Stub.On(animationSet).GetProperty("Period").Will(Return.Value(2.0));
+            Expect.Once.On(animationController).Method("AdvanceTime").With(1.5);
+            Expect.Once.On(animationController).Method("AdvanceTime").With((double)Time.StepTime);
 
             model.Step();
         }

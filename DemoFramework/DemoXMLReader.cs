@@ -705,12 +705,12 @@ namespace Dope.DDXX.DemoFramework
 
         public void SetStartTime(string className, string effectName, float value)
         {
-            ChangeOrCreateAttribute(className, effectName, "startTime", value.ToString());
+            ChangeOrCreateAttribute(className, effectName, "startTime", FloatToString(value));
         }
 
         public void SetEndTime(string className, string effectName, float value)
         {
-            ChangeOrCreateAttribute(className, effectName, "endTime", value.ToString());
+            ChangeOrCreateAttribute(className, effectName, "endTime", FloatToString(value));
         }
 
 

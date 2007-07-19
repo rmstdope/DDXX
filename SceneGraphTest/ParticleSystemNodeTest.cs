@@ -23,6 +23,7 @@ namespace Dope.DDXX.SceneGraph
         private IGraphicsStream graphicsStream;
         private ISystemParticleSpawner spawner;
         private List<ISystemParticle> particles;
+        private IRenderableCamera camera;
 
         [SetUp]
         public void SetUp()
@@ -38,6 +39,7 @@ namespace Dope.DDXX.SceneGraph
             graphicsStream = mockery.NewMock<IGraphicsStream>();
             spawner = mockery.NewMock<ISystemParticleSpawner>();
             particles = new List<ISystemParticle>();
+            camera = mockery.NewMock<IRenderableCamera>();
 
             Stub.On(graphicsStream).Method("Dispose");
             Time.Initialize();
@@ -89,13 +91,13 @@ namespace Dope.DDXX.SceneGraph
                 else
                 {
                     Stub.On(particle).Method("IsDead").Will(Return.Value(false));
-                    Expect.Once.On(particle).Method("StepAndWrite").With(graphicsStream);
+                    Expect.Once.On(particle).Method("StepAndWrite").With(graphicsStream, camera);
                 }
                 i++;
             }
             Expect.Once.On(vertexBuffer).
                 Method("Unlock");
-            system.Step(null);
+            system.Step(camera);
             Assert.AreEqual(4, system.ActiveParticles);
         }
 
@@ -113,11 +115,11 @@ namespace Dope.DDXX.SceneGraph
             foreach (ISystemParticle particle in particles)
             {
                 Stub.On(particle).Method("IsDead").Will(Return.Value(false));
-                Expect.Once.On(particle).Method("StepAndWrite").With(graphicsStream);
+                Expect.Once.On(particle).Method("StepAndWrite").With(graphicsStream, camera);
             }
             Expect.Once.On(vertexBuffer).
                 Method("Unlock");
-            system.Step(null);
+            system.Step(camera);
         }
 
         [Test]
@@ -132,11 +134,11 @@ namespace Dope.DDXX.SceneGraph
             foreach (ISystemParticle particle in particles)
             {
                 Stub.On(particle).Method("IsDead").Will(Return.Value(false));
-                Expect.Once.On(particle).Method("StepAndWrite").With(graphicsStream);
+                Expect.Once.On(particle).Method("StepAndWrite").With(graphicsStream, camera);
             }
             Expect.Once.On(vertexBuffer).
                 Method("Unlock");
-            system.Step(null);
+            system.Step(camera);
         }
 
         [Test]
@@ -155,11 +157,11 @@ namespace Dope.DDXX.SceneGraph
             foreach (ISystemParticle particle in particles)
             {
                 Stub.On(particle).Method("IsDead").Will(Return.Value(false));
-                Expect.Once.On(particle).Method("StepAndWrite").With(graphicsStream);
+                Expect.Once.On(particle).Method("StepAndWrite").With(graphicsStream, camera);
             }
             Expect.Once.On(vertexBuffer).
                 Method("Unlock");
-            system.Step(null);
+            system.Step(camera);
         }
 
         [Test]
@@ -179,12 +181,12 @@ namespace Dope.DDXX.SceneGraph
                 Will(Return.Value(graphicsStream));
             foreach (ISystemParticle particle in particles)
             {
-                Expect.Once.On(particle).Method("StepAndWrite").With(graphicsStream);
+                Expect.Once.On(particle).Method("StepAndWrite").With(graphicsStream, camera);
                 Stub.On(particle).Method("IsDead").Will(Return.Value(false));
             }
             Expect.Once.On(vertexBuffer).
                 Method("Unlock");
-            system.Step(null);
+            system.Step(camera);
         }
 
         private void ExpectSpawner(int numInitial, int num, Type type)
