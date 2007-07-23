@@ -310,5 +310,25 @@ namespace Dope.DDXX.SceneGraph
         }
 
         #endregion
+
+        #region IScene Members
+
+
+        public void RemoveNode(INode node)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
+
+        #region INode Members
+
+
+        public void RemoveChild(INode child)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
     }
 }

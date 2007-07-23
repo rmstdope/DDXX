@@ -230,8 +230,8 @@ DiamondVertexShader(InputVS input,
 
 	output.TextureCoord = input.TextureCoord;
 
-	float diffuse = max(0, dot(viewNormal, float3(0, 0, -1)));
-	float specular = 0;//20 * pow(diffuse, 64);
+	float diffuse = abs(dot(viewNormal, float3(0, 0, -1)));
+	float specular = 20 * pow(diffuse, 64);
 	output.DiffuseColor = AmbientColor + MaterialDiffuseColor * diffuse;
 	output.SpecularColor = specular;
 	
@@ -263,7 +263,7 @@ technique Terrain
 		ZEnable						=	true;
 		ZFunc							= Less;
 		StencilEnable			= false;
-		CullMode					= CCW;
+		//CullMode					= CCW;
 	}
 }
 

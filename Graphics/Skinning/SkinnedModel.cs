@@ -15,7 +15,8 @@ namespace Dope.DDXX.Graphics
         private IFrame frame;
         private IMesh mesh;
         private int numBones;
-        private float startTime;
+        private float animationStartTime;
+        private float animationSpeed;
 
         public IAnimationRootFrame AnimationRootFrame
         {
@@ -26,18 +27,20 @@ namespace Dope.DDXX.Graphics
         {
         }
 
-        public void SetAnimationSet(string name, float timeOffset)
+        public void SetAnimationSet(string name, float timeOffset, float speed)
         {
             animationSet = rootFrame.AnimationController.GetAnimationSet(name);
             rootFrame.AnimationController.SetTrackAnimationSet(0, animationSet);
-            startTime = timeOffset;
+            animationStartTime = timeOffset;
+            this.animationSpeed = speed;
         }
 
-        public void SetAnimationSet(int num, float timeOffset)
+        public void SetAnimationSet(int num, float timeOffset, float speed)
         {
             animationSet = rootFrame.AnimationController.GetAnimationSet(num);
             rootFrame.AnimationController.SetTrackAnimationSet(0, animationSet);
-            startTime = timeOffset;
+            animationStartTime = timeOffset;
+            this.animationSpeed = speed;
         }
 
         public SkinnedModel(IAnimationRootFrame rootFrame, IFrame frame, ITextureFactory textureFactory)
@@ -49,7 +52,7 @@ namespace Dope.DDXX.Graphics
             if (frame.MeshContainer.SkinInformation != null)
             {
                 animationSet = rootFrame.AnimationController.GetAnimationSet(0);
-                startTime = 0;
+                animationStartTime = 0;
                 numBones = Math.Min(MAX_NUM_BONES, frame.MeshContainer.SkinInformation.NumberBones);
                 int influences = 0;
                 BoneCombination[] bones = null;
@@ -132,7 +135,7 @@ namespace Dope.DDXX.Graphics
             if (controller != null)
             {
                 controller.AdvanceTime(animationSet.Period - (controller.Time % animationSet.Period));
-                controller.AdvanceTime(Time.StepTime - startTime);
+                controller.AdvanceTime((Time.StepTime - animationStartTime) * animationSpeed);
             }
         }
 
@@ -161,7 +164,7 @@ namespace Dope.DDXX.Graphics
             SkinnedModel newModel = new SkinnedModel();
             newModel.rootFrame = rootFrame;
             newModel.animationSet = animationSet;
-            newModel.startTime = startTime;
+            newModel.animationStartTime = animationStartTime;
             newModel.frame = frame;
             newModel.mesh = mesh;
             newModel.numBones = numBones;

@@ -34,7 +34,7 @@ namespace Dope.DDXX.SceneGraph
             IEffectHandler effectHandler = new EffectHandler(effect, 
                 prefix(frame.Name), model);
             ModelNode node = new ModelNode(frame.Name, model, effectHandler, device);
-            if (!(node is ModelNode))
+            //if (!(node is ModelNode))
                 node.EnableFrameHandling(frame);
             return node;
         }

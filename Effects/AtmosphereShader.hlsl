@@ -16,9 +16,9 @@
 ***********************************************************************************/
 
 float4 AtmosphereSunColor;
-float4 AtmosphereSkyColor = float4(0.5, 0.5, 0.8, 0);
-float4 AtmosphereCloudColor1 = float4(0.5, 0.5, 0.2, 0) * 4;
-float4 AtmosphereCloudColor2 = float4(0.5, 0.5, 0.2, 0) * 4;
+float4 AtmosphereSkyColor = float4(0.2, 0.2, 0.4, 0) * 0.5;
+float4 AtmosphereCloudColor1 = float4(0.5, 0.5, 0.2, 0) * 1;
+float4 AtmosphereCloudColor2 = float4(0.5, 0.5, 0.2, 0) * 1;
 float2 AtmosphereSunPosition;
 
 float4 AtmosphereTime = float4(1, 1, 1, 1);

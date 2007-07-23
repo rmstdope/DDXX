@@ -61,6 +61,20 @@ namespace Dope.DDXX.SceneGraph
             rootNode.AddChild(node);
         }
 
+        public void RemoveNode(INode node)
+        {
+            RemoveChild(rootNode, node);
+        }
+
+        private void RemoveChild(INode thisNode, INode removeNode)
+        {
+            thisNode.RemoveChild(removeNode);
+            foreach (INode child in thisNode.Children)
+            {
+                RemoveChild(child, removeNode);
+            }
+        }
+
         public void Step()
         {
             foreach (IAnimationRootFrame hierarchy in hierarchies)

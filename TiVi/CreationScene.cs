@@ -404,22 +404,22 @@ namespace TiVi
 
             if (t < bodyCameraStart1)
             {
-                modelTiVi.SetAnimationSet("SkinPose", StartTime);
+                modelTiVi.SetAnimationSet("SkinPose", StartTime, 1);
                 scene.ActiveCamera = headCamera;
             }
             else if (t < handCameraStart)
             {
-                modelTiVi.SetAnimationSet("ArmsCrossed", StartTime + bodyCameraStart1);
+                modelTiVi.SetAnimationSet("ArmsCrossed", StartTime + bodyCameraStart1, 1);
                 scene.ActiveCamera = bodyCamera1;
             }
             else if (t < bodyCameraStart2)
             {
-                modelTiVi.SetAnimationSet("LookArm", StartTime + handCameraStart);
+                modelTiVi.SetAnimationSet("LookArm", StartTime + handCameraStart, 1);
                 scene.ActiveCamera = handCamera;
             }
             else
             {
-                modelTiVi.SetAnimationSet("ArmsCrossed", StartTime + bodyCameraStart2);
+                modelTiVi.SetAnimationSet("ArmsCrossed", StartTime + bodyCameraStart2, 1);
                 scene.ActiveCamera = bodyCamera2;
             }
 
