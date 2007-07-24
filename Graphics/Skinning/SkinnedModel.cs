@@ -80,6 +80,7 @@ namespace Dope.DDXX.Graphics
                     frameMatrix[i] = foundFrame;
                 }
                 frame.MeshContainer.Frames = frameMatrix;
+                SetAnimationSet(0, 0, 1);
             }
             else
             {

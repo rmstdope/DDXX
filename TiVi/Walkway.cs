@@ -117,7 +117,7 @@ namespace TiVi
             tiviNode = (ModelNode)scene.GetNodeByName("TiVi");
             /// TODO: Framehandling is buggy!
             tiviNode.WorldState.MoveForward(0);
-            (tiviNode.Model as SkinnedModel).SetAnimationSet(0, StartTime, 1.05f);
+            (tiviNode.Model as SkinnedModel).SetAnimationSet(0, StartTime, 1.03f);
             scene.ActiveCamera = scene.GetNodeByName("Camera01") as CameraNode;
 
             CreateMirrorOfNode(scene.GetNodeByName("Cylinder01"));

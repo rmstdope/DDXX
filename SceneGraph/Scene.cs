@@ -84,7 +84,6 @@ namespace Dope.DDXX.SceneGraph
                 {
                     controller.AdvanceTime(controller.GetAnimationSet(0).Period - (controller.Time % controller.GetAnimationSet(0).Period));
                     controller.AdvanceTime(Time.StepTime);
-                    //controller.AdvanceTime(Time.DeltaTime);
                 }
             }
             rootNode.Step(ActiveCamera);

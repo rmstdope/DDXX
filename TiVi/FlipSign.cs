@@ -24,18 +24,13 @@ namespace TiVi
         private Interpolator<InterpolatedVector3> interpolator;
         private Interpolator<InterpolatedVector3> platformInterpolator;
         private ModelNode platform;
-        private FlipSign subEffect;
+        private IDemoEffect subEffect;
         private ITexture subEffectTexture;
-
-        public FlipSign(string name, float startTime, float endTime, bool subEffect)
-            : base(name, startTime, endTime)
-        {
-        }
 
         public FlipSign(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
         {
-            subEffect = new FlipSign("new", StartTime, EndTime, true);
+            subEffect = new DanceCloseup("Dance closeup", StartTime, EndTime);
         }
 
         private Vector4 circleCallback(Vector2 texCoord, Vector2 texelSize)
@@ -54,11 +49,8 @@ namespace TiVi
 
         protected override void Initialize()
         {
-            if (subEffect != null)
-            {
-                subEffect.Initialize(GraphicsFactory, EffectFactory, Device, Mixer);
-                subEffectTexture = GraphicsFactory.CreateTexture(Device, 256, 256, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
-            }
+            subEffect.Initialize(GraphicsFactory, EffectFactory, Device, Mixer);
+            subEffectTexture = GraphicsFactory.CreateTexture(Device, 256, 256, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
 
             IDevice device = Device;
             CreateStandardSceneAndCamera(out scene, out camera, 15);
@@ -98,7 +90,7 @@ namespace TiVi
                             return "Solid";
                     };
                 });
-            INode node = XLoader.GetNodeHierarchy()[0];
+            INode node = XLoader.GetNodeHierarchy()[0].Children[1];
             node.WorldState.Turn((float)Math.PI * 1.2f);
             node.WorldState.Position = new Vector3(0, 0.25f, 0);
             platform.AddChild(node);
@@ -170,11 +162,11 @@ namespace TiVi
                     meshDirector.UvMapPlane(2, 1, 1);
                     meshDirector.UvRemap(1, -1, 1, -1);
                     meshDirector.UvRemap(uStart, uWidth, vStart, vWidth);
+                    meshDirector.UvRemap(1, -1, 0, 1);
                     uStart += uAdd;
                     IModel model = meshDirector.Generate("Default1");
                     ModelNode node = CreateSimpleModelNode(model, "TiVi.fxo", "ReflectiveTransparent");
-                    if (subEffect != null)
-                        node.Model.Materials[0].DiffuseTexture = subEffectTexture;
+                    node.Model.Materials[0].DiffuseTexture = subEffectTexture;
                     node.WorldState.MoveUp(yPos);
                     node.WorldState.MoveRight(xPos);
                     signs[y * NUM_SIGNS_X + x] = node;
@@ -186,8 +178,7 @@ namespace TiVi
 
         public override void Step()
         {
-            if (subEffect != null)
-                RenderSubEffect();
+            RenderSubEffect();
             platform.WorldState.Position = platformInterpolator.GetValue(Time.StepTime);
 
             Mixer.ClearColor = Color.Black;

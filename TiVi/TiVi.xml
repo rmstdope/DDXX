@@ -88,7 +88,7 @@
 		<Parameter name="BlurColor" Color="White" />
 	</PostEffect>-->
 	
-	<Effect class="Walkway" track="0" startTime="42" endTime="300">
+	<!--<Effect class="Walkway" track="0" startTime="42" endTime="300">
 		<Parameter name="DrawOrder" int="0" />
 	</Effect>
 	<PostEffect class="GlowPostEffect" track="0" startTime="42" endTime="300">
@@ -99,7 +99,7 @@
 		<Parameter name="Luminance" float="0.4099998" />
 		<Parameter name="DownSamples" int="2" />
 		<Parameter name="AdvancedGlow" bool="false" />
-	</PostEffect>
+	</PostEffect>-->
 
 	<!--<Effect class="SpinningBackgroundEffect" track="0" startTime="0" endTime="299">
 		<SetupCall name="AddTextureLayer">
@@ -206,7 +206,10 @@
 	</PostEffect>-->
 
 	<!--Flipsign effect-->
-	<!--<Effect class="SpinningBackgroundEffect" track="0" startTime="0" endTime="299">
+	<!--<Effect class="DanceCloseup" track="0" startTime="0" endTime="300">
+		<Parameter name="DrawOrder" int="0" />
+	</Effect>-->
+	<Effect class="SpinningBackgroundEffect" track="0" startTime="0" endTime="299">
 		<SetupCall name="AddTextureLayer">
 			<Parameter string="noise" />
 			<Parameter float="55.0" />
@@ -228,11 +231,11 @@
 		<Parameter name="BloomScale" float="1.5" />
 		<Parameter name="Exposure" float="0.9000002" />
 		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="WhiteCutoff" float="0.28" />
+		<Parameter name="WhiteCutoff" float="0.14" />
 		<Parameter name="Luminance" float="0.5099998" />
-		<Parameter name="DownSamples" int="1" />
+		<Parameter name="DownSamples" int="2" />
 		<Parameter name="AdvancedGlow" bool="false" />
-	</PostEffect>-->
+	</PostEffect>
 
 	<!--<Effect class="Walkway" track="0" startTime="0" endTime="300">
 		<Parameter name="DrawOrder" int="0" />

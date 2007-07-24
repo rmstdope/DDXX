@@ -26,7 +26,9 @@ namespace Dope.DDXX.SceneGraph
         public ModelNode CreateSkinnedModelNode(IAnimationRootFrame animationRootFrame, IFrame frame, IEffect effect, MeshTechniqueChooser prefix)
         {
             IModel model = new SkinnedModel(animationRootFrame, frame, textureFactory);
-            return CommonCreateModelNode(frame, effect, prefix, model);
+            ModelNode node = CommonCreateModelNode(frame, effect, prefix, model);
+            node.EnableFrameHandling(null);
+            return node;
         }
 
         private ModelNode CommonCreateModelNode(IFrame frame, IEffect effect, MeshTechniqueChooser prefix, IModel model)
@@ -35,7 +37,7 @@ namespace Dope.DDXX.SceneGraph
                 prefix(frame.Name), model);
             ModelNode node = new ModelNode(frame.Name, model, effectHandler, device);
             //if (!(node is ModelNode))
-                node.EnableFrameHandling(frame);
+            node.EnableFrameHandling(frame);
             return node;
         }
 
