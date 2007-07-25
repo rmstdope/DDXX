@@ -46,6 +46,10 @@ namespace Dope.DDXX.DemoFramework
             get { return postEffects.ToArray(); }
         }
 
+        public Track()
+        {
+        }
+
         public void Register(IDemoEffect effect)
         {
             effects.Add(effect);
@@ -169,7 +173,10 @@ namespace Dope.DDXX.DemoFramework
                     device.SetRenderTarget(0, currentRenderTarget);
                 }
                 
-                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer | ClearFlags.Stencil, backgroundColor, 1.0f, 0);
+                if (D3DDriver.GetInstance().Description.useStencil)
+                    device.Clear(ClearFlags.Target | ClearFlags.ZBuffer | ClearFlags.Stencil, backgroundColor, 1.0f, 0);
+                else
+                    device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, backgroundColor, 1.0f, 0);
 
                 RenderEffects(device);
 

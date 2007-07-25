@@ -32,6 +32,7 @@ namespace Dope.DDXX.Graphics
 
         private IManager manager;
         private IDevice device;
+        private DeviceDescription description;
 
         private DisplayMode displayMode;
 
@@ -79,11 +80,17 @@ namespace Dope.DDXX.Graphics
             return instance;
         }
 
+        public DeviceDescription Description
+        {
+            get { return description; }
+        }
+
         public void Initialize(Control control, DeviceDescription desc, IPrerequisits prerequisits)
         {
             if (device != null)
                 Reset();
 
+            description = desc;
             PresentParameters present = GetPresentParameters(desc);
             CreateFlags createFlags = GetCreateFlags(desc);
 
