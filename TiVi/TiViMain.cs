@@ -33,6 +33,7 @@ namespace TiVi
                 {
                     DeviceDescription desc;
                     SetupFramework(setupLogic, out window, out executer, out desc);
+                    desc.useStencil = true;
                     FileUtility.SetLoadPaths("../../Data/",
                                              "../../../Effects/",
                                              "../../");
