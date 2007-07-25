@@ -29,6 +29,7 @@ namespace TiVi
             tiviMeshDirector = new TiViMeshDirector(MeshBuilder, new MeshDirector(MeshBuilder), EffectFactory, Device);
             giantDiamond = tiviMeshDirector.CreateDiamondNode(10);
             scene.AddNode(giantDiamond);
+            giantDiamond.WorldState.Turn((float)Math.PI / 2);
         }
 
         public override void Step()

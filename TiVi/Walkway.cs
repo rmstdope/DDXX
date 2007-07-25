@@ -30,6 +30,8 @@ namespace TiVi
         private ModelNode walkwayPlane;
         private ModelNode walkwayStencilPlane;
         //private ModelNode cylinder;
+        private ITexture screenTexture;
+        private IDemoEffect subEffect;
 
         public Walkway(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
@@ -43,31 +45,40 @@ namespace TiVi
             CreateStandardSceneAndCamera(out scene, out camera, 10);
             camera.WorldState.MoveUp(1.5f);
 
+            CreateScreenTexture();
             CreateLights();
             CreateDiamonds();
             CreateTiVi();
             //CreateWalkway();
 
+            subEffect = new DiscoFever("screeneffect", StartTime, EndTime);
+            subEffect.Initialize(GraphicsFactory, EffectFactory, Device, Mixer);
+
             scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
         }
 
-        //private void CreateWalkway()
-        //{
-        //    director.CreatePlane(2, 20, 1, 1, true);
-        //    director.UvMapPlane(2, 0.2f, 2);
-        //    director.Rotate((float)Math.PI / 2, 0, 0);
-        //    //director.Rotate(0, 0, (float)Math.PI / 2);
-        //    IModel model = director.Generate("Default1");
-        //    IEffectHandler effectHandler = new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
-        //        delegate(int material) { return "Atmosphere"; }, model);
-        //    walkwayPlane = new ModelNode("", model, effectHandler, Device);
-        //    walkwayPlane.WorldState.MoveForward(-2);
-        //    //plane.WorldState.MoveUp(-0.1f);
-        //    GraphicsStream stream = ShaderLoader.CompileShaderFromFile("Imaginations.psh", "CreateCloudTexture", null, "tx_1_0", ShaderFlags.None);
-        //    ITexture tex = GraphicsFactory.CreateTexture(Device, 256, 256, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
-        //    TextureLoader.FillTexture((Texture)((tex as TextureAdapter).BaseTextureDX), new TextureShader(stream));
-        //    tex.Save("clouds.dds", ImageFileFormat.Dds);
-        //    walkwayPlane.Model.Materials[0].DiffuseTexture = tex;
+        private void CreateScreenTexture()
+        {
+            screenTexture = GraphicsFactory.CreateTexture(Device, 256, 256, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
+        }
+
+        private void CreateWalkway()
+        {
+            director.CreatePlane(2, 20, 1, 1, true);
+            director.UvMapPlane(2, 0.2f, 2);
+            director.Rotate((float)Math.PI / 2, 0, 0);
+            //director.Rotate(0, 0, (float)Math.PI / 2);
+            IModel model = director.Generate("Default1");
+            IEffectHandler effectHandler = new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
+                delegate(int material) { return "Atmosphere"; }, model);
+            plane = new ModelNode("", model, effectHandler, Device);
+            plane.WorldState.MoveForward(-2);
+            //plane.WorldState.MoveUp(-0.1f);
+            GraphicsStream stream = ShaderLoader.CompileShaderFromFile("Imaginations.psh", "CreateCloudTexture", null, "tx_1_0", ShaderFlags.None);
+            ITexture tex = GraphicsFactory.CreateTexture(Device, 256, 256, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
+            TextureLoader.FillTexture((Texture)((tex as TextureAdapter).BaseTextureDX), new TextureShader(stream));
+            //tex.Save("clouds.dds", ImageFileFormat.Dds);
+            plane.Model.Materials[0].DiffuseTexture = tex;
 
         //    MeshBuilder.SetDiffuseTexture("Default1", "square.tga");
         //    MeshBuilder.SetDiffuseColor("Default1", ColorValue.FromColor(Color.DarkGoldenrod));
@@ -120,6 +131,7 @@ namespace TiVi
             tiviNode.WorldState.MoveForward(0);
             (tiviNode.Model as SkinnedModel).SetAnimationSet(0, StartTime, 1.03f);
             scene.ActiveCamera = scene.GetNodeByName("Camera01") as CameraNode;
+            tiviNode.Model.Materials[1].DiffuseTexture = screenTexture;
 
             CreateMirrorOfNode(scene.GetNodeByName("Cylinder01"));
             CreateMirrorOfNode(scene.GetNodeByName("Cylinder02"));
@@ -200,10 +212,27 @@ namespace TiVi
             //    2.0f,
             //    (float)Math.Cos(Time.StepTime / 4) * 10);
             //camera.LookAt(new Vector3(0, 1.0f, -5), new Vector3(0, 1, 0));
-
+            StepScreen();
             StepDiamonds();
             StepWalkway();
             scene.Step();
+        }
+
+        private void StepScreen()
+        {
+            subEffect.Step();
+            using (ISurface original = Device.GetRenderTarget(0))
+            {
+                using (ISurface surface = screenTexture.GetSurfaceLevel(0))
+                {
+                    Device.SetRenderTarget(0, surface);
+                    Device.BeginScene();
+                    Device.Clear(ClearFlags.Target, Color.Black, 0, 0);
+                    subEffect.Render();
+                    Device.EndScene();
+                    Device.SetRenderTarget(0, original);
+                }
+            }
         }
 
         private void StepWalkway()

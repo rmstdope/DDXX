@@ -262,6 +262,7 @@ namespace TiVi
             //IAnimationSet set = XLoader.RootFrame.AnimationController.GetAnimationSet(0);
             //XLoader.RootFrame.AnimationController.SetTrackAnimationSet(0, set);
             nodeTiVi = (ModelNode)scene.GetNodeByName("TiVi");
+            nodeTiVi.Position = new Vector3();
             modelTiVi = nodeTiVi.Model as SkinnedModel;
             originalTiViMesh = modelTiVi.Mesh;
         }

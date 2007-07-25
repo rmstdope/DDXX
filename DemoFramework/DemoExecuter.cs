@@ -251,13 +251,13 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        //private int screenshotNum = 0;
+        private int screenshotNum = 0;
         public void Render()
         {
             ITexture renderedTexture = RenderTracks();
 
-            //if (inputDriver.KeyPressedNoRepeat(Key.F12))
-            //    renderedTexture.Save("Screenshot" + screenshotNum++ + ".jpg", ImageFileFormat.Jpg);
+            if (inputDriver.KeyPressedNoRepeat(Key.F12))
+                renderedTexture.Save("Screenshot" + screenshotNum++ + ".jpg", ImageFileFormat.Jpg);
 
             if (renderedTexture != null)
             {

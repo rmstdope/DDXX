@@ -22,7 +22,7 @@ namespace TiVi
         private IScene scene;
         private CameraNode camera;
         private ModelNode node;
-        private List<NaturalCubicSpline<InterpolatedVector3>> splines = new List<NaturalCubicSpline<InterpolatedVector3>>();
+        private List<SimpleCubicSpline<InterpolatedVector3>> splines = new List<SimpleCubicSpline<InterpolatedVector3>>();
         private ILine line;
 
         private int baseFrequency = 16;
@@ -68,7 +68,7 @@ namespace TiVi
 
             for (int j = 0; j < 3; j++)
             {
-                splines.Add(new NaturalCubicSpline<InterpolatedVector3>());
+                splines.Add(new SimpleCubicSpline<InterpolatedVector3>());
                 for (int i = 0; i < 20; i++)
                     splines[j].AddKeyFrame(new KeyFrame<InterpolatedVector3>(0.1f * i, new InterpolatedVector3(-20 + i * 2 + Rand.Float(-2, 2), Rand.Float(-10, 10), Rand.Float(-10, 10))));
                 splines[j].Calculate();
@@ -110,7 +110,7 @@ namespace TiVi
             Matrix transform = scene.ActiveCamera.ViewMatrix * scene.ActiveCamera.ProjectionMatrix;
             Vector3[] vectors = new Vector3[40];
             float t = Time.StepTime % 3;
-            foreach (NaturalCubicSpline<InterpolatedVector3> spline in splines)
+            foreach (SimpleCubicSpline<InterpolatedVector3> spline in splines)
             {
                 int c = (int)(Math.Sin(t * Math.PI / 2) * 206 + 50);
                 c = Math.Max(0, c);

@@ -23,7 +23,7 @@ namespace TiVi
 
         protected override void Initialize()
         {
-            CreateStandardSceneAndCamera(out scene, out camera, 10);
+            CreateStandardSceneAndCamera(out scene, out camera, 3);
 
             MeshBuilder.SetDiffuseTexture("Default1", "FLOWER6P.jpg");
             meshDirector = new MeshDirector(MeshBuilder);

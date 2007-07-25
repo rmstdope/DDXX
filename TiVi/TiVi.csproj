@@ -47,6 +47,7 @@
     <Compile Include="CreationScene.cs" />
     <Compile Include="DanceCloseup.cs" />
     <Compile Include="DiamondBelt.cs" />
+    <Compile Include="DiscoFever.cs" />
     <Compile Include="EmptyEffect.cs" />
     <Compile Include="FadeTransition.cs" />
     <Compile Include="GiantDiamond.cs" />
