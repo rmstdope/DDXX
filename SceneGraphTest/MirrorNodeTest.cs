@@ -330,5 +330,34 @@ namespace Dope.DDXX.SceneGraph
         }
 
         #endregion
+
+        #region IModel Members
+
+
+        public bool UseStencil
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public int StencilReference
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        #endregion
     }
 }

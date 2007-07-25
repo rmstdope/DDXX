@@ -27,9 +27,9 @@ namespace TiVi
         private MeshDirector director;
         private List<ModelNode> diamonds = new List<ModelNode>();
         private DummyNode diamondBase;
-        private ModelNode plane;
-        private ModelNode cylinder;
-        private ModelNode blackPlane;
+        private ModelNode walkwayPlane;
+        private ModelNode walkwayStencilPlane;
+        //private ModelNode cylinder;
 
         public Walkway(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
@@ -51,40 +51,40 @@ namespace TiVi
             scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
         }
 
-        private void CreateWalkway()
-        {
-            director.CreatePlane(2, 20, 1, 1, true);
-            director.UvMapPlane(2, 0.2f, 2);
-            director.Rotate((float)Math.PI / 2, 0, 0);
-            //director.Rotate(0, 0, (float)Math.PI / 2);
-            IModel model = director.Generate("Default1");
-            IEffectHandler effectHandler = new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
-                delegate(int material) { return "Atmosphere"; }, model);
-            plane = new ModelNode("", model, effectHandler, Device);
-            plane.WorldState.MoveForward(-2);
-            //plane.WorldState.MoveUp(-0.1f);
-            GraphicsStream stream = ShaderLoader.CompileShaderFromFile("Imaginations.psh", "CreateCloudTexture", null, "tx_1_0", ShaderFlags.None);
-            ITexture tex = GraphicsFactory.CreateTexture(Device, 256, 256, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
-            TextureLoader.FillTexture((Texture)((tex as TextureAdapter).BaseTextureDX), new TextureShader(stream));
-            tex.Save("clouds.dds", ImageFileFormat.Dds);
-            plane.Model.Materials[0].DiffuseTexture = tex;
+        //private void CreateWalkway()
+        //{
+        //    director.CreatePlane(2, 20, 1, 1, true);
+        //    director.UvMapPlane(2, 0.2f, 2);
+        //    director.Rotate((float)Math.PI / 2, 0, 0);
+        //    //director.Rotate(0, 0, (float)Math.PI / 2);
+        //    IModel model = director.Generate("Default1");
+        //    IEffectHandler effectHandler = new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
+        //        delegate(int material) { return "Atmosphere"; }, model);
+        //    walkwayPlane = new ModelNode("", model, effectHandler, Device);
+        //    walkwayPlane.WorldState.MoveForward(-2);
+        //    //plane.WorldState.MoveUp(-0.1f);
+        //    GraphicsStream stream = ShaderLoader.CompileShaderFromFile("Imaginations.psh", "CreateCloudTexture", null, "tx_1_0", ShaderFlags.None);
+        //    ITexture tex = GraphicsFactory.CreateTexture(Device, 256, 256, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
+        //    TextureLoader.FillTexture((Texture)((tex as TextureAdapter).BaseTextureDX), new TextureShader(stream));
+        //    tex.Save("clouds.dds", ImageFileFormat.Dds);
+        //    walkwayPlane.Model.Materials[0].DiffuseTexture = tex;
 
-            MeshBuilder.SetDiffuseTexture("Default1", "square.tga");
-            MeshBuilder.SetDiffuseColor("Default1", ColorValue.FromColor(Color.DarkGoldenrod));
-            MeshBuilder.SetAmbientColor("Default1", ColorValue.FromColor(Color.DarkGoldenrod));
-            director.CreateCylinder(0.1f, 20, 8, 1, true);
-            director.UvRemap(0, 1, 0, 20);
-            director.Rotate((float)Math.PI / 2, 0, 0);
-            model = director.Generate("Default1");
-            effectHandler = new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
-                delegate(int material) { return "Terrain"; }, model);
-            cylinder = new ModelNode("", model, effectHandler, Device);
-            plane.AddChild(cylinder);
-            cylinder.WorldState.MoveRight(1);
-            ModelNode cylinder2 = new ModelNode("", model, effectHandler, Device);
-            plane.AddChild(cylinder2);
-            cylinder2.WorldState.MoveRight(-1);
-        }
+        //    MeshBuilder.SetDiffuseTexture("Default1", "square.tga");
+        //    MeshBuilder.SetDiffuseColor("Default1", ColorValue.FromColor(Color.DarkGoldenrod));
+        //    MeshBuilder.SetAmbientColor("Default1", ColorValue.FromColor(Color.DarkGoldenrod));
+        //    director.CreateCylinder(0.1f, 20, 8, 1, true);
+        //    director.UvRemap(0, 1, 0, 20);
+        //    director.Rotate((float)Math.PI / 2, 0, 0);
+        //    model = director.Generate("Default1");
+        //    effectHandler = new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
+        //        delegate(int material) { return "Terrain"; }, model);
+        //    cylinder = new ModelNode("", model, effectHandler, Device);
+        //    walkwayPlane.AddChild(cylinder);
+        //    cylinder.WorldState.MoveRight(1);
+        //    ModelNode cylinder2 = new ModelNode("", model, effectHandler, Device);
+        //    walkwayPlane.AddChild(cylinder2);
+        //    cylinder2.WorldState.MoveRight(-1);
+        //}
 
         private void CreateTiVi()
         {
@@ -102,17 +102,18 @@ namespace TiVi
                                     return "Solid";
                             };
                         case "Plane01":
-                            return TechniqueChooser.MaterialPrefix("Atmosphere");
+                            return TechniqueChooser.MaterialPrefix("TiViWalkwayMirror");
                         default:
-                        return TechniqueChooser.MaterialPrefix("Terrain");
+                            return TechniqueChooser.MaterialPrefix("Terrain");
                     }
                 });
             XLoader.AddToScene(scene);
-            plane = scene.GetNodeByName("Plane01") as ModelNode;
+            walkwayPlane = scene.GetNodeByName("Plane01") as ModelNode;
+            walkwayStencilPlane = CreateStencilNodeOfNode(walkwayPlane);
             GraphicsStream stream = ShaderLoader.CompileShaderFromFile("Imaginations.psh", "CreateCloudTexture", null, "tx_1_0", ShaderFlags.None);
             ITexture tex = GraphicsFactory.CreateTexture(Device, 256, 256, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
             TextureLoader.FillTexture((Texture)((tex as TextureAdapter).BaseTextureDX), new TextureShader(stream));
-            plane.Model.Materials[0].DiffuseTexture = tex;
+            walkwayPlane.Model.Materials[0].DiffuseTexture = tex;
             scene.RemoveNode(scene.GetNodeByName("Plane01"));
             tiviNode = (ModelNode)scene.GetNodeByName("TiVi");
             /// TODO: Framehandling is buggy!
@@ -125,21 +126,14 @@ namespace TiVi
             CreateMirrorOfNode(scene.GetNodeByName("ChamferBox01"));
             CreateMirrorOfNode(scene.GetNodeByName("Text02"));
             CreateMirrorOfNode(scene.GetNodeByName("TiVi"));
-
-            CreateBlackPlane();
         }
 
-        private void CreateBlackPlane()
+        private ModelNode CreateStencilNodeOfNode(ModelNode originalNode)
         {
-            MeshBuilder.SetAmbientColor("Default1", ColorValue.FromArgb(0));
-            MeshBuilder.SetDiffuseColor("Default1", ColorValue.FromArgb(0));
-            director.CreatePlane(50, 50, 1, 1, true);
-            director.Rotate((float)Math.PI / 2, 0, 0);
-            director.Translate(0, -0.01f, 0);
-            IModel model = director.Generate("Default1");
-            IEffectHandler effectHandler = new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
-                delegate(int material) { return "Terrain"; }, model);
-            blackPlane = new ModelNode("", model, effectHandler, Device);
+            IModel newModel = originalNode.Model.Clone();
+            ModelNode node = new ModelNode("Stencil" + originalNode.Name, newModel,
+                new EffectHandler(originalNode.EffectHandler.Effect, TechniqueChooser.MaterialPrefix("StencilOnly"), newModel), Device);
+            return node;
         }
 
         private void CreateMirrorOfNode(INode node)
@@ -235,11 +229,15 @@ namespace TiVi
         public override void Render()
         {
             scene.SetEffectParameters();
+
+            walkwayPlane.AddChild(walkwayStencilPlane);
+            walkwayStencilPlane.Render(scene);
+            walkwayPlane.RemoveChild(walkwayStencilPlane);
             foreach (MirrorNode node in mirrors)
                 node.Render(scene);
+            walkwayPlane.Render(scene);
+
             diamondBase.Render(scene);
-            plane.Render(scene);
-            blackPlane.Render(scene);
             scene.Render();
         }
     }

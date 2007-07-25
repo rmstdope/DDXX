@@ -17,5 +17,7 @@ namespace Dope.DDXX.Graphics
         /// <returns>The clones IModel.</returns>
         IModel Clone();
         Cull CullMode { get; set; }
+        bool UseStencil { get; set; }
+        int StencilReference { get; set; }
     }
 }

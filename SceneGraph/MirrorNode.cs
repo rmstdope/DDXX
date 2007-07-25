@@ -62,6 +62,7 @@ namespace Dope.DDXX.SceneGraph
                         modelNode.Model.CullMode = Cull.Clockwise;
                         break;
                 }
+                modelNode.Model.UseStencil = !modelNode.Model.UseStencil;
             }
             foreach (INode child in node.Children)
                 SwitchCulling(child);

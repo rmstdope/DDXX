@@ -122,5 +122,4 @@ struct VertexShaderInput
 	float2	TexCoords			: TEXCOORD0;		// Vertex Texture Coordinate
 };
 
-
 #endif

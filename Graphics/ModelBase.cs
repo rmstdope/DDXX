@@ -10,10 +10,14 @@ namespace Dope.DDXX.Graphics
     {
         private ModelMaterial[] materials;
         private Cull cullMode;
+        private bool useStencil;
+        private int stencilReference;
 
         protected ModelBase()
         {
             cullMode = Cull.CounterClockwise;
+            useStencil = false;
+            stencilReference = 1;
         }
 
         protected ModelMaterial[] CreateModelMaterials(ITextureFactory textureFactory, ExtendedMaterial[] extendedMaterials)
@@ -39,6 +43,18 @@ namespace Dope.DDXX.Graphics
             set { cullMode = value; }
         }
 
+        public bool UseStencil
+        {
+            get { return useStencil; }
+            set { useStencil = value; }
+        }
+
+        public int StencilReference
+        {
+            get { return stencilReference; }
+            set { stencilReference = value; }
+        }
+
         public abstract IMesh Mesh
         { get; set; }
 
@@ -57,6 +73,9 @@ namespace Dope.DDXX.Graphics
         {
             effectHandler.SetNodeConstants(world, view, projection);
             device.RenderState.CullMode = cullMode;
+            device.RenderState.StencilEnable = useStencil;
+            device.RenderState.ReferenceStencil = stencilReference;
+            device.RenderState.StencilFunction = Compare.Equal;
             for (int j = 0; j < Materials.Length; j++)
             {
                 HandleSkin(effectHandler, j);

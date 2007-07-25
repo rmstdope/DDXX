@@ -82,7 +82,6 @@ technique SolidSkinning
 		ZEnable						=	true;
 		ZWriteEnable			= true;
 		ZFunc							= Less;
-		StencilEnable			= false;
 	}
 }
 
@@ -102,7 +101,6 @@ technique TvScreenSkinning
 		ZEnable						=	true;
 		ZWriteEnable			= true;
 		ZFunc							= Less;
-		StencilEnable			= false;
 	}
 }
 
@@ -122,7 +120,6 @@ technique LineDrawerSkinning
 		ZEnable						=	true;
 		ZWriteEnable			= true;
 		ZFunc							= Less;
-		StencilEnable			= false;
 		CullMode					= None;
 	}
 }
@@ -262,7 +259,6 @@ technique Terrain
 		AlphaBlendEnable	= false;
 		ZEnable						=	true;
 		ZFunc							= Less;
-		StencilEnable			= false;
 		//CullMode					= CCW;
 	}
 }
@@ -282,7 +278,6 @@ technique Bricks
 		DestBlend					= One;
 		ZEnable						=	true;
 		ZFunc							= Less;
-		StencilEnable			= false;
 		CullMode					= CCW;
 	}
 }
@@ -308,7 +303,6 @@ technique AlphaTest
 		DestBlend					= One;
 		ZEnable						=	true;
 		ZFunc							= Less;
-		StencilEnable			= false;
 		CullMode					= None;
 	}
 }
@@ -325,7 +319,6 @@ technique Diamond
 		AlphaBlendEnable	= false;
 		ZEnable						=	true;
 		ZFunc							= Less;
-		StencilEnable			= false;
 		CullMode					= CCW;
 	}
 }
@@ -388,7 +381,70 @@ technique Room
 		ZEnable						=	true;
 		ZWriteEnable			= true;
 		ZFunc							= Less;
-		StencilEnable			= false;
 		CullMode					= CCW;
+	}
+}
+
+technique TiViWalkwayMirror
+{
+	pass BasePass
+	{
+		VertexShader			= compile vs_2_0 AtmosphereVertexShader();
+		PixelShader				= compile ps_2_0 AtmospherePixelShader();
+		AlphaBlendEnable	= true;
+		BlendOp						= Add;
+		SrcBlend					= One;
+		DestBlend					= One;
+		ZEnable						= true;
+		ZFunc							= Always;
+		ZWriteEnable			= true;
+	}
+}
+
+float4
+RudimentaryVertexShader(float4 position : POSITION) : POSITION
+{
+	return mul(position, WorldViewProjectionT);
+}
+
+float4
+RudimentaryPixelShader() : COLOR
+{
+	return 1;
+}
+
+technique StencilOnly
+{
+	pass BasePass
+	{
+		VertexShader			= compile vs_2_0 RudimentaryVertexShader();
+		PixelShader				= compile ps_2_0 RudimentaryPixelShader();
+		AlphaBlendEnable	= false;
+		ZEnable						= true;
+		ZFunc							= Never;
+		ZWriteEnable			= false;
+		StencilEnable			= true;
+		StencilFunc				=	Always;
+		StencilZFail			= Replace;
+		StencilRef				= 1;
+	}
+}
+
+technique TiviChessPiece
+<
+	bool NormalMapping = false;
+	bool Skinning = false;
+>
+{
+	pass BasePass
+	{
+		VertexShader			= compile vs_2_0 ReflectiveVertexShader(0);
+		PixelShader				= compile ps_2_0 ReflectivePixelShader();
+		AlphaTestEnable		= false;
+		AlphaBlendEnable	= false;
+		FillMode					= Solid;
+		ZEnable						=	true;
+		ZWriteEnable			= true;
+		ZFunc							= Less;
 	}
 }

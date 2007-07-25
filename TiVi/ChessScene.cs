@@ -81,6 +81,7 @@ namespace TiVi
         private ModelNode[] signs = new ModelNode[NUM_SIGNS_X * NUM_SIGNS_Y];
         private Interpolator<InterpolatedVector3> interpolator;
         private List<ChessPiece> chessPieces = new List<ChessPiece>();
+        private ModelNode boardStencilNode;
 
         public ChessScene(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
@@ -101,13 +102,13 @@ namespace TiVi
         private void CreateRoom()
         {
             MeshDirector director = new MeshDirector(MeshBuilder);
-            director.CreatePlane(50, 50, 50, 50, false);
+            director.CreatePlane(8, 8, 1, 1, false);
             director.Rotate((float)Math.PI / 2, 0, 0);
-            director.Translate(0, -0.1f, 0);
-            MeshBuilder.SetDiffuseColor("Default1", new ColorValue(0.1f, 0.1f, 0.1f));
+            director.Translate(0.5f, 0, 0.5f);
+            //MeshBuilder.SetDiffuseColor("Default1", new ColorValue(0.1f, 0.1f, 0.1f));
             IModel model = director.Generate("Default1");
-            ModelNode node = CreateSimpleModelNode(model, "TiVi.fxo", "Room");
-            scene.AddNode(node);
+            boardStencilNode = CreateSimpleModelNode(model, "TiVi.fxo", "StencilOnly");
+            //scene.AddNode(node);
         }
 
         private void CreateLights()
@@ -126,7 +127,7 @@ namespace TiVi
         private void CreatePieces()
         {
             IScene tempScene = new Scene();
-            XLoader.Load("ChessPieces2.X", EffectFactory.CreateFromFile("TiVi.fxo"), TechniqueChooser.MeshPrefix("Reflective"));
+            XLoader.Load("ChessPieces2.X", EffectFactory.CreateFromFile("TiVi.fxo"), TechniqueChooser.MeshPrefix("TiviChessPiece"));
             XLoader.AddToScene(tempScene);
             ChessPiece piece;
 
@@ -239,6 +240,7 @@ namespace TiVi
         public override void Render()
         {
             scene.SetEffectParameters();
+            boardStencilNode.Render(scene);
             foreach (ChessPiece piece in chessPieces)
                 piece.RenderMirror(scene);
             foreach (ChessPiece piece in chessPieces)

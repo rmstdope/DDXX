@@ -169,7 +169,7 @@ namespace Dope.DDXX.DemoFramework
                     device.SetRenderTarget(0, currentRenderTarget);
                 }
                 
-                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, backgroundColor, 1.0f, 0);
+                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer | ClearFlags.Stencil, backgroundColor, 1.0f, 0);
 
                 RenderEffects(device);
 
