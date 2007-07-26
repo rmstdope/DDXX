@@ -183,6 +183,9 @@
 	</PostEffect>-->
 
 	<!--Chess scene and its post effects-->
+	<Effect class="ThinkTank" track="0" startTime="160" endTime="200">
+		<Parameter name="DrawOrder" int="0" />
+	</Effect>
 	<!--<Effect class="ChessScene" track="0" startTime="160" endTime="200">
 		<Parameter name="DrawOrder" int="0" />
 	</Effect>
@@ -223,7 +226,7 @@
 	</PostEffect>-->
 
 	<!--Physical cubes effect-->
-	<Effect class="PhysicalCubes" track="0" startTime="227" endTime="240">
+	<!--<Effect class="PhysicalCubes" track="0" startTime="227" endTime="240">
 		<Parameter name="DrawOrder" int="0" />
 	</Effect>
 	<PostEffect class="DepthOfFieldPostEffect" track="0" startTime="227" endTime="240">
@@ -243,10 +246,10 @@
 		<Parameter name="FadeInLength" float="0.5" />
 		<Parameter name="FadeOutLength" float="2" />
 		<Parameter name="FadeColor" Color="Black" />
-	</PostEffect>
+	</PostEffect>-->
 
 	<!--Flipsign effect-->
-	<Effect class="SpinningBackgroundEffect" name="SignSpin" track="0" startTime="240" endTime="260">
+	<!--<Effect class="SpinningBackgroundEffect" name="SignSpin" track="0" startTime="240" endTime="260">
 		<SetupCall name="AddTextureLayer">
 			<Parameter string="noise" />
 			<Parameter float="55.0" />
@@ -272,7 +275,7 @@
 		<Parameter name="Luminance" float="0.5099998" />
 		<Parameter name="DownSamples" int="2" />
 		<Parameter name="AdvancedGlow" bool="false" />
-	</PostEffect>
+	</PostEffect>-->
 
 
 	<!--After this line is only test stuff-->

@@ -34,7 +34,6 @@ namespace TiVi
                     };
                 });
             XLoader.AddToScene(scene);
-            //scene.GetNodeByName("TiVi").Position = new Vector3();
             scene.GetNodeByName("TiVi").WorldState.Turn((float)Math.PI * 1.2f);
             scene.GetNodeByName("TiVi").WorldState.Position = new Vector3(0, 0.25f, 0);
         }

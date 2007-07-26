@@ -75,6 +75,7 @@
     </Compile>
     <Compile Include="SpaceTravel.cs" />
     <Compile Include="TestEffect.cs" />
+    <Compile Include="ThinkTank.cs" />
     <Compile Include="TiViMain.cs" />
     <Compile Include="TiViMeshDirector.cs" />
     <Compile Include="TunnelFlight1.cs" />

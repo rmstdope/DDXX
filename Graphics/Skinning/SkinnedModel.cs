@@ -51,7 +51,8 @@ namespace Dope.DDXX.Graphics
 
             if (frame.MeshContainer.SkinInformation != null)
             {
-                animationSet = rootFrame.AnimationController.GetAnimationSet(0);
+                if (rootFrame.AnimationController != null)
+                    animationSet = rootFrame.AnimationController.GetAnimationSet(0);
                 animationStartTime = 0;
                 numBones = Math.Min(MAX_NUM_BONES, frame.MeshContainer.SkinInformation.NumberBones);
                 int influences = 0;
@@ -80,7 +81,8 @@ namespace Dope.DDXX.Graphics
                     frameMatrix[i] = foundFrame;
                 }
                 frame.MeshContainer.Frames = frameMatrix;
-                SetAnimationSet(0, 0, 1);
+                if (rootFrame.AnimationController != null)
+                    SetAnimationSet(0, 0, 1);
             }
             else
             {
