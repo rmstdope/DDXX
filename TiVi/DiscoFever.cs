@@ -58,7 +58,7 @@ namespace TiVi {
                 }
             }
             scene.AddNode(room);
-            Mixer.ClearColor = Color.Blue;
+            //Mixer.ClearColor = Color.Blue;
         }
 
         private void AddDiscoPlane(IModel model, int i, int j, int k,
@@ -96,9 +96,11 @@ namespace TiVi {
         }
 
         public override void Step() {
-            Mixer.ClearColor = Color.Blue;
+            //Mixer.ClearColor = Color.Blue;
             scene.Step();
-            room.WorldState.Turn(0.5f*Time.DeltaTime);
+            room.WorldState.Turn(0.5f * Time.DeltaTime);
+            room.WorldState.Roll(0.7f * Time.DeltaTime);
+            room.WorldState.Tilt(0.9f * Time.DeltaTime);
             for (int j = 0; j < Ny; j++) {
                 for (int i = 0; i < Nx; i++) {
                     SetModelColor(i, j, Nz - 1);
@@ -117,9 +119,11 @@ namespace TiVi {
                     SetModelColor(i, 0, k);
                 }
             }
-            redOffset = (redOffset + 1) % 256;
-            greenOffset = (greenOffset == 0) ? 255 : greenOffset - 1;
-            blueOffset = (blueOffset + 1) % 256;
+            redOffset = (redOffset + (int)(Time.DeltaTime*180)) % 256;
+            greenOffset = greenOffset - (int)(Time.DeltaTime * 210);
+            if (greenOffset < 0)
+                greenOffset += 256;
+            blueOffset = (blueOffset + (int)(Time.DeltaTime * 150)) % 256;
         }
 
         public override void Render() {

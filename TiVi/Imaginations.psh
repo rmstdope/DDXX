@@ -1,0 +1,177 @@
+float PI = 3.1415926535898;
+
+float4
+CreateCloudTexture(float2 Pos : POSITION) : COLOR
+{
+	const float NumNoise = 12;
+	float4 n = float4(0,0,0,0);
+	for(int i = 0; i < NumNoise; i++) {
+		n.r += noise(float2(6,3) + Pos * 1 * pow(2, i)) / pow(2, i);
+		n.r += noise(float2(6,2) + Pos * 1 * pow(2, i)) / pow(2, i);
+		n.g += noise(float2(4,8) + Pos * 1 * pow(2, i)) / pow(2, i);
+		n.g += noise(float2(3,5) + Pos * 1 * pow(2, i)) / pow(2, i);
+		n.a += 8 * noise(float2(2,7) + Pos * 1 * pow(2, i)) / pow(2, i);
+	}
+	n.a *= 0.4f;
+	return n;
+}
+
+float4
+CreateSunTexture(float2 Pos : POSITION) : COLOR
+{
+	const float innerCircle = 0.02f;
+	const float outerCircle = 0.3f;
+	const float4 innerColor = float4(0.4, 0.4, 0.4, 0);
+	const float4 outerColor = float4(0.3, 0.3, 0.3, 0);
+	if(Pos.y < 0.5f) {
+		float4 ret = float4(0,0,0,0);
+		float x = Pos.x - 0.5f;
+		float y = Pos.y * 2 - 0.5f;
+		float dist = sqrt(x * x + y * y);
+		if(dist < innerCircle)
+			ret = innerColor;
+		else if(dist < outerCircle)
+			ret = outerColor * ((outerCircle - dist) / outerCircle);
+		return ret;
+	} else {
+		return float4(0,0,0,0);
+	}
+}
+
+float4
+CreateGroundTexture(float2 Pos : POSITION) : COLOR
+{
+	float4 n = float4(0,0,0,0);
+	//	n.r += noise(float2(6,5) + Pos * pow(2, i + 1));// / pow(2, i);
+	//	n.g += noise(float2(4,8) + Pos * pow(2, i + 1));// / pow(2, i);
+	//	n.b += noise(float2(2,1) + Pos * pow(2, i + 1));// / pow(2, i);
+	//	n.a += 8 * noise(float2(2,7) + Pos * 1 * pow(2, i)) / pow(2, i);
+	//}
+	float2 rand = float2(1,1);
+	float x = Pos.x - 0.5f;
+	float y = Pos.y - 0.5f;
+	float dist = sqrt(x * x + y * y);
+	//n.r += noise(rand + Pos * 32) / 4;
+	//n.r += noise(rand + Pos * 16) / 2;
+	//n.r += noise(rand + Pos * 8) / 1;
+	//n.r += noise(rand + Pos * 4) / 1;
+	//n.r += noise(rand + Pos * 2) / 1;
+	//n.r += noise(rand + Pos * 1) / 1;
+
+	rand = float2(2,2);
+	n.g += noise(rand + Pos * 32) / 4;
+	n.g += noise(rand + Pos * 16) / 2;
+	n.g += noise(rand + Pos * 8) / 1;
+	n.g += noise(rand + Pos * 4) / 1;
+	n.g += noise(rand + Pos * 2) / 1;
+	n.g += noise(rand + Pos * 1) / 1;
+
+	n = n * 2;
+
+	n.r = saturate(dist - 0.4f) / 0.1f;	
+	n.b = (0.5f - dist) * 2;
+
+	//rand = float2(3,4);
+	//n.b += noise(rand + Pos * 32) / 4;
+	//n.b += noise(rand + Pos * 16) / 2;
+	//n.b += noise(rand + Pos * 8) / 1;
+	//n.b += noise(rand + Pos * 4) / 1;
+	//n.b += noise(rand + Pos * 2) / 1;
+	//n.b += noise(rand + Pos * 1) / 1;
+
+	return n;
+}
+
+
+float4 
+CreateWaterNormalTexture2(float3 pos : POSITION) : COLOR
+{
+    float4 normal;
+    pos.xz -= 0.5;
+
+    float r=0.7+0.7*sin(-2*PI*pos.y);
+    float dA=r*(0.5+0.5*cos(-4*PI*pos.y+32*PI*pos.z*pos.z+40*PI*pos.x));
+
+    float3 updir={0,1,0};
+    float3 frontdir={1,0,1};
+    float3 tangent = frontdir + float3(0,dA,0); // frontdir.y must be zero
+    float3 sidedir = cross(updir, frontdir);
+    normal = float4(cross(tangent, sidedir),1);    
+
+    // Signed noise 
+    float3 bump = normal; //2 * noisy - 1;
+
+    float3 noisescale={10,2,10};
+    //float noiseval=mynoise(noisescale.y,noisescale*pos);
+    return float4(normalize(bump),1);//+float3(0,noiseval,0);
+}
+
+
+float mynoise(float3 v)
+{
+   float noiseval=noise(v);
+   noiseval += noise(2*v)/2;
+   noiseval += noise(4*v)/4;
+   noiseval += noise(8*v)/8;
+   noiseval += noise(16*v)/16;
+   noiseval += noise(32*v)/32;
+   noiseval += noise(64*v)/64;
+   noiseval += noise(128*v)/128;
+   return noiseval;
+}
+
+float tileable_noise(float3 s, float3 v)
+{
+    v = s*v;
+    float res = (s.x-v.x)*(s.y-v.y)*(s.z-v.z)*mynoise(float3(v.x,     v.y,     v.z)) +
+                (s.x-v.x)*(s.y-v.y)*(v.z)    *mynoise(float3(v.x,     v.y,     v.z-s.z)) +
+                (s.x-v.x)*(v.y)    *(s.z-v.z)*mynoise(float3(v.x,     v.y-s.y, v.z)) +
+                (s.x-v.x)*(v.y)    *(v.z)    *mynoise(float3(v.x,     v.y-s.y, v.z-s.z)) +
+                (v.x)    *(s.y-v.y)*(s.z-v.z)*mynoise(float3(v.x-s.x, v.y,     v.z)) +
+                (v.x)    *(s.y-v.y)*(v.z)    *mynoise(float3(v.x-s.x, v.y,     v.z-s.z)) +
+                (v.x)    *(v.y)    *(s.z-v.z)*mynoise(float3(v.x-s.x, v.y-s.y, v.z)) +
+                (v.x)    *(v.y)    *(v.z)    *mynoise(float3(v.x-s.x, v.y-s.y, v.z-s.z));
+    res = res/(s.x*s.y*s.z);
+    return res;
+}
+
+float3 tileable_noise_grad(float3 s, float3 v)
+{
+	float3 d = float3(0.05, 0.05, 0.05);
+	float dudx= (tileable_noise(s, v+float3(d.x,0,0)) - tileable_noise(s, v-float3(d.x,0,0)))/(2*d.x);
+	float dudy= (tileable_noise(s, v+float3(0,d.y,0)) - tileable_noise(s, v-float3(0,d.y,0)))/(2*d.y);
+	float dudz= (tileable_noise(s, v+float3(0,0,d.z)) - tileable_noise(s, v-float3(0,0,d.z)))/(2*d.z);
+	return float3(dudx, dudy, dudz);
+}
+
+float3 CreateWaterNormalTexture(float3 pos : POSITION) : COLOR
+{
+//    float4 normal;
+//    float3 centeredPos = pos;
+//    centeredPos.xz -= 0.5;
+
+//    float r=0.5+0.5*sin(-2*PI*centeredPos.y);
+//    float dA=r*(0.5+0.5*cos(-4*PI*centeredPos.y+32*PI*centeredPos.z*centeredPos.z+40*PI*centeredPos.x));
+//    float3 updir={0,1,0};
+//    float3 frontdir={1,0,1};
+//    float3 tangent = frontdir + float3(0,dA,0); // frontdir.y must be zero
+//    float3 sidedir = cross(updir, frontdir);
+//    normal = float4(cross(tangent, sidedir),1);    
+
+    float3 noisescale={8,4,4};
+    float noiseval=tileable_noise(noisescale,pos); //mynoise(noisescale,pos)+1;
+ 
+		// use when generation noise texture, not normal texture
+		// noiseval = (1+noiseval)/2;
+    // return noiseval;
+
+		// generate normal as well
+    float3 bump = float3(noiseval, noiseval, noiseval); // -1 to 1
+    bump.xz *= 0.15;
+    // Make sure the normal always points upwards
+    bump.y = 0.8 * abs(bump.y) + 0.2;
+
+    return normalize(bump);
+}
+
+
