@@ -186,10 +186,7 @@
 	<Effect class="ThinkTank" track="0" startTime="160" endTime="165">
 		<Parameter name="DrawOrder" int="0" />
 	</Effect>
-	<Effect class="DiscoFever" track="0" startTime="165" endTime="170">
-		<Parameter name="DrawOrder" int="0" />
-	</Effect>
-	<!--<Effect class="ChessScene" track="0" startTime="160" endTime="200">
+	<Effect class="ChessScene" track="0" startTime="165" endTime="200">
 		<Parameter name="DrawOrder" int="0" />
 	</Effect>
 	<PostEffect class="GlowPostEffect" name="ChessGlow" track="0" startTime="160" endTime="200">
@@ -206,7 +203,7 @@
 		<Parameter name="FadeInLength" float="0.5" />
 		<Parameter name="FadeOutLength" float="2" />
 		<Parameter name="FadeColor" Color="Black" />
-	</PostEffect>-->
+	</PostEffect>
 
 	<!--Second TunnelFlight effect-->
 	<!--<Effect class="TunnelFlight2" track="0" startTime="200" endTime="227">

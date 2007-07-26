@@ -149,12 +149,11 @@ sampler BaseTextureSamplerMirrored = sampler_state
 sampler BaseTextureSamplerBordered = sampler_state
 {
     Texture = (BaseTexture);
-    MipFilter = Linear;
-    MinFilter = Linear;
-    MagFilter = Linear;
+    MipFilter = Point;
+    MinFilter = Point;
+    MagFilter = Point;
     AddressU	= Border;
     AddressV	= Border;
-    AddressW	= Mirror;
 		BorderColor = 0;
 };
 

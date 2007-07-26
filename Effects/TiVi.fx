@@ -37,6 +37,13 @@ SolidPixelShader(SolidPixelInput input,
 	return float4(input.Diffuse, 1) * tex2D(textureSampler, input.TexCoords) + float4(input.Specular, 1);
 }
 
+float4
+ScreenPixelShader(SolidPixelInput input,
+								 uniform sampler textureSampler) : COLOR0
+{
+	return tex2D(textureSampler, input.TexCoords);
+}
+
 struct LinePixelInput
 {
 	float4	Position			:	POSITION;
@@ -75,7 +82,7 @@ technique SolidSkinning
 	pass BasePass
 	{
 		VertexShader			= compile vs_2_0 SolidVertexShader(2);
-		PixelShader				= compile ps_2_0 SolidPixelShader(BaseTextureSampler);
+		PixelShader				= compile ps_2_0 ScreenPixelShader(BaseTextureSampler);
 		AlphaTestEnable		= false;
 		AlphaBlendEnable	= false;
 		FillMode					= Solid;

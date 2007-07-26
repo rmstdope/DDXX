@@ -57,7 +57,7 @@ namespace TiVi
 
             ExtractTiViInfo();
 
-            subEffect = new DiscoFever("screeneffect", StartTime, EndTime);
+            subEffect = new ChessScene("screeneffect", EndTime, EndTime + 100);
             subEffect.Initialize(GraphicsFactory, EffectFactory, Device, Mixer, PostProcessor);
             screenTexture = TextureFactory.CreateFullsizeRenderTarget();
             (scene.GetNodeByName("TiVi") as ModelNode).Model.Materials[1].DiffuseTexture = screenTexture;

@@ -60,7 +60,7 @@ namespace TiVi
             ModifyMaterial(textureFactory, color, model);
             modelNode = new ModelNode("", model, originalNode.EffectHandler, device);
             SetRotationAndScaling(type);
-            AddPosition(0, 0, startPosition, 0);
+            AddPosition(-1000, 0, startPosition, 0);
             CreateLineNode(graphicsFactory, device);
             CreateMirrorNode();
         }
