@@ -576,6 +576,14 @@ namespace Dope.DDXX.SceneGraph
             throw new Exception("The method or operation is not implemented.");
         }
 
+        public ITexture CreateRenderTarget(int width, int height) {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public ITexture CreateRenderTarget(int width, int height, Format format) {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
         #endregion
 
         #region IEffect Members

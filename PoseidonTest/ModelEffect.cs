@@ -13,12 +13,12 @@ namespace EngineTest
 {
     public class ModelEffect : BaseDemoEffect
     {
-        private Scene scene;
-        private ModelNode node;
-        MeshBuilder meshBuilder;
+        private ModelNode box;
         private float xAngle;
         private float yAngle;
         private float zAngle;
+        private CameraNode camera;
+        private IScene scene;
 
         public ModelEffect(string name, float start, float end)
             : base(name, start, end)
@@ -27,39 +27,16 @@ namespace EngineTest
 
         protected override void Initialize()
         {
-            meshBuilder = new MeshBuilder(D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
-                D3DDriver.GetInstance().Device);
-            scene = new Scene();
+            CreateStandardSceneAndCamera(out scene, out camera, 3);
 
-            CreatePlane();
-
-            // Create camera
-            CameraNode camera = new CameraNode("Test Camera");
-            camera.WorldState.MoveForward(-10);
-            scene.AddNode(camera);
-            scene.ActiveCamera = camera;
-
+            MeshBuilder.SetDiffuseTexture("Default1", "FLOWER6P.jpg");
+            MeshDirector meshDirector = new MeshDirector(MeshBuilder);
+            meshDirector.CreateBox(2, 2, 2);
+            IModel model = meshDirector.Generate("Default1");
+            box = CreateSimpleModelNode(model, "PosseTest.fxo", "Tex");
+            scene.AddNode(box);
             scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
-        }
-
-        private void CreatePlane()
-        {
-            ModelMaterial material = new ModelMaterial(new Material());
-            material.DiffuseTexture = TextureFactory.CreateFromFile("wings.bmp");
-            //meshBuilder.CreateSphere("Box", 3, 4, 2);
-//            meshBuilder.CreatePlane("Box", 3, 3, 6, 6, true);
-//            meshBuilder.AssignMaterial("Box", "Default1");
-            meshBuilder.SetDiffuseTexture("Default1", "wings.bmp");
-            //meshBuilder.SetReflectiveTexture("Default1", "rnl_cross.dds");
-            //meshBuilder.SetReflectiveFactor("Default1", 0.02f);
-            IModel boxModel = null;// meshBuilder.CreateModel("Box");
-            boxModel.Materials[0].DiffuseColor = ColorValue.FromColor(Color.Gray);
-            boxModel.Materials[0].AmbientColor = ColorValue.FromColor(Color.MediumAquamarine);
-            node = new ModelNode("Box", boxModel,
-                new EffectHandler(EffectFactory.CreateFromFile("../../Effects/PosseTest.fxo"),
-                TechniqueChooser.MaterialPrefix("Tex"), boxModel), Device);
-            scene.AddNode(node);
-            node.WorldState.MoveUp(1f);
+            scene.Validate();
         }
 
         public float XAngle

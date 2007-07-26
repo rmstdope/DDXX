@@ -99,8 +99,8 @@ namespace TiVi {
             //Mixer.ClearColor = Color.Blue;
             scene.Step();
             room.WorldState.Turn(0.5f * Time.DeltaTime);
-            room.WorldState.Roll(0.7f * Time.DeltaTime);
-            room.WorldState.Tilt(0.9f * Time.DeltaTime);
+            room.WorldState.Roll(0.2f * Time.DeltaTime);
+            room.WorldState.Tilt(0.3f * Time.DeltaTime);
             for (int j = 0; j < Ny; j++) {
                 for (int i = 0; i < Nx; i++) {
                     SetModelColor(i, j, Nz - 1);

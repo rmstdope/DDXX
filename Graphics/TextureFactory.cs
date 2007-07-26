@@ -90,14 +90,23 @@ namespace Dope.DDXX.Graphics
             return texture;
         }
 
-        public ITexture CreateFullsizeRenderTarget()
-        {
-            return factory.CreateTexture(device, presentParameters.BackBufferWidth, presentParameters.BackBufferHeight, 1, Usage.RenderTarget, presentParameters.BackBufferFormat, Pool.Default);
+        public ITexture CreateRenderTarget(int width, int height) {
+            return factory.CreateTexture(device, width, height, 1, Usage.RenderTarget, presentParameters.BackBufferFormat, Pool.Default);
+        }
+
+        public ITexture CreateRenderTarget(int width, int height, Format format) {
+            return factory.CreateTexture(device, width, height, 1, Usage.RenderTarget, presentParameters.BackBufferFormat, Pool.Default);
+        }
+
+        public ITexture CreateFullsizeRenderTarget() {
+            return this.CreateRenderTarget(presentParameters.BackBufferWidth, 
+                presentParameters.BackBufferHeight);
         }
 
         public ITexture CreateFullsizeRenderTarget(Format format)
         {
-            return factory.CreateTexture(device, presentParameters.BackBufferWidth, presentParameters.BackBufferHeight, 1, Usage.RenderTarget, format, Pool.Default);
+            return this.CreateRenderTarget(presentParameters.BackBufferWidth, 
+                presentParameters.BackBufferHeight, format);
         }
 
         public ITexture CreateFromFunction(int width, int height, int numLevels, Usage usage, Format format, Pool pool, Fill2DTextureCallback callbackFunction)

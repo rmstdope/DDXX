@@ -51,14 +51,14 @@ namespace TiVi
             CreateTiVi();
 
             subEffect = new DiscoFever("screeneffect", StartTime, EndTime);
-            subEffect.Initialize(GraphicsFactory, EffectFactory, Device, Mixer);
+            subEffect.Initialize(GraphicsFactory, EffectFactory, Device, Mixer, PostProcessor);
 
             scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
         }
 
         private void CreateScreenTexture()
         {
-            screenTexture = GraphicsFactory.CreateTexture(Device, 256, 256, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
+            screenTexture = TextureFactory.CreateRenderTarget(256, 256, Format.A8R8G8B8);
         }
 
         private void CreateTiVi()

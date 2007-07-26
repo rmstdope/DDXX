@@ -27,6 +27,7 @@ namespace Dope.DDXX.DemoEffects
         private ISprite sprite;
         private IFont font;
         private IDemoMixer mixer;
+        private IPostProcessor postProcessor;
 
         private Viewport viewport;
 
@@ -39,6 +40,7 @@ namespace Dope.DDXX.DemoEffects
             sprite = mockery.NewMock<ISprite>();
             font = mockery.NewMock<IFont>();
             mixer = mockery.NewMock<IDemoMixer>();
+            postProcessor = mockery.NewMock<IPostProcessor>();
             viewport = new Viewport();
             viewport.Width = VIEWPORT_WIDTH;
             viewport.Height = VIEWPORT_HEIGHT;
@@ -262,7 +264,7 @@ namespace Dope.DDXX.DemoEffects
             textFadingEffect.FontHeight = fontHeight;
             ExpectSprite();
             ExpectFont(fontName, fontHeight);
-            textFadingEffect.Initialize(graphicsFactory, null, device, mixer);
+            textFadingEffect.Initialize(graphicsFactory, null, device, mixer, postProcessor);
         }
 
         private void ExpectFont(string fontName, int fontHeight)

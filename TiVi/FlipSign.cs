@@ -49,7 +49,7 @@ namespace TiVi
 
         protected override void Initialize()
         {
-            subEffect.Initialize(GraphicsFactory, EffectFactory, Device, Mixer);
+            subEffect.Initialize(GraphicsFactory, EffectFactory, Device, Mixer, PostProcessor);
             subEffectTexture = GraphicsFactory.CreateTexture(Device, 256, 256, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
 
             IDevice device = Device;

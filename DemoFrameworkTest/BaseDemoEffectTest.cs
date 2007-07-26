@@ -11,7 +11,8 @@ using Microsoft.DirectX;
 namespace Dope.DDXX.DemoFramework
 {
     [TestFixture]
-    public class BaseDemoEffectTest : BaseDemoEffect, IGraphicsFactory, IEffectFactory, IDevice, IDemoMixer, IEffect
+    public class BaseDemoEffectTest : BaseDemoEffect, IGraphicsFactory, IEffectFactory, 
+        IDevice, IDemoMixer, IEffect, IPostProcessor
     {
         public bool startCalled;
         public bool endCalled;
@@ -33,7 +34,7 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void Initialization()
         {
-            Initialize(this, this, this, this);
+            Initialize(this, this, this, this, this);
             Assert.IsTrue(initializeCalled);
             Assert.AreSame(this, GraphicsFactory);
             Assert.AreSame(this, Device);
@@ -64,7 +65,7 @@ namespace Dope.DDXX.DemoFramework
             // Setup fixture
             IScene scene;
             CameraNode camera;
-            Initialize(this, this, this, this);
+            Initialize(this, this, this, this, this);
             //Exercise SUT
             CreateStandardSceneAndCamera(out scene, out camera, 10);
             // Verify
@@ -1503,6 +1504,58 @@ namespace Dope.DDXX.DemoFramework
 
         public void ValidateTechnique(EffectHandle technique)
         {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
+
+        #region IPostProcessor Members
+
+        public void Initialize(IDevice device, ITextureFactory textureFactory, IEffectFactory effectFactory) {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public ITexture OutputTexture {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public void StartFrame(ITexture startTexture) {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void Process(string technique, ITexture sourceTexture, ITexture destinationTexture) {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetBlendParameters(BlendOperation blendOperation, Blend sourceBlend, Blend destinatonBlend, System.Drawing.Color blendFactor) {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetValue(string parameter, float value) {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetValue(string parameter, float[] value) {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetValue(string parameter, Vector2 value) {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetValue(string parameter, Vector4 value) {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public List<ITexture> GetTemporaryTextures(int num, bool skipOutput) {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void AllocateTexture(ITexture texture) {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void FreeTexture(ITexture texture) {
             throw new Exception("The method or operation is not implemented.");
         }
 

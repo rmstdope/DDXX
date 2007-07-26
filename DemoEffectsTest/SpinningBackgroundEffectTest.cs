@@ -17,6 +17,7 @@ namespace Dope.DDXX.DemoEffects
         private SpinningBackgroundEffect spin;
         private ISprite sprite;
         private IDemoMixer mixer;
+        private IPostProcessor postProcessor;
 
         [SetUp]
         public override void SetUp()
@@ -27,6 +28,7 @@ namespace Dope.DDXX.DemoEffects
             spin = new SpinningBackgroundEffect("", 0, 10);
             sprite = mockery.NewMock<ISprite>();
             mixer = mockery.NewMock<IDemoMixer>();
+            postProcessor = mockery.NewMock<IPostProcessor>();
         }
 
         [TearDown]
@@ -39,7 +41,7 @@ namespace Dope.DDXX.DemoEffects
         public void TestInitialize()
         {
             ExpectSprite();
-            spin.Initialize(graphicsFactory, null, device, mixer);
+            spin.Initialize(graphicsFactory, null, device, mixer, postProcessor);
         }
 
         [Test]
@@ -49,7 +51,7 @@ namespace Dope.DDXX.DemoEffects
             spin.AddTextureLayer(new SpinningBackgroundEffect.TextureLayer("file", 2 * (float)Math.PI, Color.Aqua, 0.2f));
 
             ExpectSprite();
-            spin.Initialize(graphicsFactory, null, device, mixer);
+            spin.Initialize(graphicsFactory, null, device, mixer, postProcessor);
         }
 
         [Test]
@@ -63,14 +65,14 @@ namespace Dope.DDXX.DemoEffects
             spin.AddTextureLayer(new SpinningBackgroundEffect.TextureLayer("file2", -2, Color.Azure, 0.4f));
 
             ExpectSprite();
-            spin.Initialize(graphicsFactory, null, device, mixer);
+            spin.Initialize(graphicsFactory, null, device, mixer, postProcessor);
         }
 
         [Test]
         public void TestRender1()
         {
             ExpectSprite();
-            spin.Initialize(graphicsFactory, null, device, mixer);
+            spin.Initialize(graphicsFactory, null, device, mixer, postProcessor);
             Expect.Once.On(sprite).Method("Begin").With(SpriteFlags.AlphaBlend);
             Expect.Once.On(renderStateManager).SetProperty("ZBufferEnable").To(false);
             Expect.Once.On(sprite).Method("End");

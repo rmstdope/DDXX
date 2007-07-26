@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Demo song="scanner-dopeasm2007-v1.mp3">
 	<!--Textures-->
-	<Generator name="noise" class="PerlinNoise">
+	<!--<Generator name="noise" class="PerlinNoise">
 		<Parameter name="BaseFrequency" int="64" />
 	</Generator>
-	<Texture name="noise" generator="noise"></Texture>
+	<Texture name="noise" generator="noise"></Texture>-->
 	
 	<!--This post effect will run the entire demo-->
 	<!--<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="3000">
@@ -329,6 +329,15 @@
 	<!--<Effect class="DiscoFever" track="0" startTime="42" endTime="300">
 		<Parameter name="DrawOrder" int="0" />
 	</Effect>-->
+
+  <Effect class="FilmRoll" track="0" startTime="42" endTime="300">
+		<Parameter name="FilmRounding" float="0.02000001" />
+		<Parameter name="FilmWidth" float="0.65" />
+		<Parameter name="XAngle" float="0" />
+		<Parameter name="YAngle" float="0" />
+		<Parameter name="ZAngle" float="0" />
+		<Parameter name="DrawOrder" int="0" />
+	</Effect>
 
 </Demo>
 
