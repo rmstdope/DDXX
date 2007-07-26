@@ -124,7 +124,7 @@ namespace Dope.DDXX.DemoFramework
             this.textureFactory = textureFactory;
             this.textureBuilder = textureBuilder;
 
-            //effectTypes.Initialize(assemblies);
+            Time.Initialize();
 
             InitializeFromFile(xmlFile);
 
@@ -214,7 +214,6 @@ namespace Dope.DDXX.DemoFramework
 
         public void Run()
         {
-            Time.Initialize();
             Time.CurrentTime = StartTime;
 
             if (sound != null)

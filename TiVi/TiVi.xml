@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Demo song="scanner-dopeasm2007-v1.mp3">
 	<!--Textures-->
-	<!--<Generator name="noise" class="PerlinNoise">
+	<Generator name="noise" class="PerlinNoise">
 		<Parameter name="BaseFrequency" int="64" />
 	</Generator>
-	<Texture name="noise" generator="noise"></Texture>-->
+	<Texture name="noise" generator="noise"></Texture>
 	
 	<!--This post effect will run the entire demo-->
 	<!--<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="3000">
@@ -184,8 +184,26 @@
 
 	<!--Chess scene and its post effects-->
 	<Effect class="ThinkTank" track="0" startTime="160" endTime="165">
+		<Parameter name="DrawOrder" int="1" />
+	</Effect>
+	<Effect class="SpinningBackgroundEffect" name="ThinkSpin" track="0" startTime="160" endTime="165">
+		<SetupCall name="AddTextureLayer">
+			<Parameter string="noise" />
+			<Parameter float="35.0" />
+			<Parameter Color="DarkGray" />
+			<Parameter float="0.2" />
+		</SetupCall>
+		<SetupCall name="AddTextureLayer">
+			<Parameter string="noise" />
+			<Parameter float="-34.0" />
+			<Parameter Color="50,50,120,255" />
+			<Parameter float="0.2" />
+		</SetupCall>
 		<Parameter name="DrawOrder" int="0" />
 	</Effect>
+	<!--<Effect class="DiscoFever" track="0" startTime="165" endTime="170">
+		<Parameter name="DrawOrder" int="0" />
+	</Effect>-->
 	<Effect class="ChessScene" track="0" startTime="165" endTime="200">
 		<Parameter name="DrawOrder" int="0" />
 	</Effect>

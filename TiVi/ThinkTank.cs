@@ -7,6 +7,7 @@ using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Graphics;
 using Microsoft.DirectX;
 using System.Drawing;
+using Dope.DDXX.Utility;
 
 namespace TiVi
 {
@@ -18,12 +19,15 @@ namespace TiVi
         private ITexture screenTexture;
         private IDemoEffect subEffect;
 
-        Vector3 upperLeft;
-        Vector3 upperRight;
-        Vector3 lowerLeft;
-        Vector3 center;
-        Vector3 normal;
-        LineNode lineNode;
+        private Vector3 upperLeft;
+        private Vector3 upperRight;
+        private Vector3 lowerLeft;
+        private Vector3 center;
+        private Vector3 normal;
+        private LineNode lineNode;
+        private Vector3 destinationPos;
+        private Vector3 destinationUp;
+        private Interpolator<InterpolatedVector3> cameraInterpolator;
 
         public ThinkTank(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
@@ -57,10 +61,37 @@ namespace TiVi
 
             ExtractTiViInfo();
 
-            subEffect = new ChessScene("screeneffect", EndTime, EndTime + 100);
+            cameraInterpolator = new Interpolator<InterpolatedVector3>();
+            SimpleCubicSpline<InterpolatedVector3> spline = new SimpleCubicSpline<InterpolatedVector3>();
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(0, new InterpolatedVector3(new Vector3(-2.0f, 3.0f, -2.0f))));
+            //spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(1, new InterpolatedVector3(new Vector3(0.0f, 2.0f, -3.0f))));
+            //spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(2, new InterpolatedVector3(new Vector3(1.0f, 1.0f, -3.0f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(3, new InterpolatedVector3(new Vector3(2.0f, 1.0f, -2.0f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(5, new InterpolatedVector3(destinationPos)));
+            spline.Calculate();
+            cameraInterpolator.AddSpline(spline);
+
+            subEffect = new ChessScene("screeneffect", EndTime, EndTime);
             subEffect.Initialize(GraphicsFactory, EffectFactory, Device, Mixer, PostProcessor);
             screenTexture = TextureFactory.CreateFullsizeRenderTarget();
             (scene.GetNodeByName("TiVi") as ModelNode).Model.Materials[1].DiffuseTexture = screenTexture;
+
+            Time.Pause();
+            Time.CurrentTime = EndTime;
+            subEffect.Step();
+            using (ISurface original = Device.GetRenderTarget(0))
+            {
+                using (ISurface surface = screenTexture.GetSurfaceLevel(0))
+                {
+                    Device.SetRenderTarget(0, surface);
+                    Device.BeginScene();
+                    Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer | ClearFlags.Stencil, Color.Black, 1, 0);
+                    subEffect.Render();
+                    Device.EndScene();
+                    Device.SetRenderTarget(0, original);
+                }
+            }
+            Time.Resume();
         }
 
         private void ExtractTiViInfo()
@@ -91,25 +122,26 @@ namespace TiVi
             //Matrix[] m = (tiviNode.Model as SkinnedModel).GetBoneMatrices(1);
             float oppositeLength = (upperLeft - lowerLeft).Length() / 2;
             float closeLength = oppositeLength / (float)Math.Tan(camera.GetFOV() / 2);
-            camera.Position = center + normal * closeLength * 1.0f;// new Vector3(1, 0, 0);
+            //camera.Position = center + normal * closeLength * 1.0f;// new Vector3(1, 0, 0);
+            destinationPos = center + normal * closeLength * 1.0f;
             //camera.LookAt(center, new Vector3(0, 1, 0));
 
             Vector3 right = (upperRight - upperLeft);
             right.Normalize();
-            Vector3 up = (upperLeft - lowerLeft);
-            up.Normalize();
-            Matrix rot = new Matrix();
-            rot.M11 = right.X;
-            rot.M12 = right.Y;
-            rot.M13 = right.Z;
-            rot.M21 = up.X;
-            rot.M22 = up.Y;
-            rot.M23 = up.Z;
-            rot.M31 = -normal.X;
-            rot.M32 = -normal.Y;
-            rot.M33 = -normal.Z;
-            rot.M44 = 1;
-            camera.WorldState.Rotation = rot;
+            destinationUp = (upperLeft - lowerLeft);
+            destinationUp.Normalize();
+            //Matrix rot = new Matrix();
+            //rot.M11 = right.X;
+            //rot.M12 = right.Y;
+            //rot.M13 = right.Z;
+            //rot.M21 = up.X;
+            //rot.M22 = up.Y;
+            //rot.M23 = up.Z;
+            //rot.M31 = -normal.X;
+            //rot.M32 = -normal.Y;
+            //rot.M33 = -normal.Z;
+            //rot.M44 = 1;
+            //camera.WorldState.Rotation = rot;
 
             lineNode = new LineNode("Line", line, upperLeft, upperRight, Color.Blue);
         }
@@ -137,20 +169,9 @@ namespace TiVi
 
         public override void Step()
         {
-            subEffect.Step();
-            using (ISurface original = Device.GetRenderTarget(0))
-            {
-                using (ISurface surface = screenTexture.GetSurfaceLevel(0))
-                {
-                    Device.SetRenderTarget(0, surface);
-                    Device.BeginScene();
-                    Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1, 0);
-                    subEffect.Render();
-                    Device.EndScene();
-                    Device.SetRenderTarget(0, original);
-                }
-            }
-            //screenTexture.Save("h.jpg", ImageFileFormat.Jpg);
+            camera.Position = cameraInterpolator.GetValue(Time.StepTime - StartTime);
+            camera.LookAt(center, destinationUp);
+
             scene.Step();
         }
 
