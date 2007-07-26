@@ -17,7 +17,7 @@ namespace Dope.DDXX.SceneGraph
         {
         }
 
-        public object GetFOV()
+        public float GetFOV()
         {
             return fov;
         }

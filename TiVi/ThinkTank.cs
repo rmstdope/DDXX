@@ -6,6 +6,7 @@ using Dope.DDXX.SceneGraph;
 using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Graphics;
 using Microsoft.DirectX;
+using System.Drawing;
 
 namespace TiVi
 {
@@ -13,6 +14,16 @@ namespace TiVi
     {
         private IScene scene;
         private CameraNode camera;
+        private ILine line;
+        private ITexture screenTexture;
+        private IDemoEffect subEffect;
+
+        Vector3 upperLeft;
+        Vector3 upperRight;
+        Vector3 lowerLeft;
+        Vector3 center;
+        Vector3 normal;
+        LineNode lineNode;
 
         public ThinkTank(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
@@ -21,6 +32,7 @@ namespace TiVi
 
         protected override void Initialize()
         {
+            line = GraphicsFactory.CreateLine(Device);
             CreateStandardSceneAndCamera(out scene, out camera, 3);
             camera.WorldState.MoveUp(1.5f);
 
@@ -41,10 +53,14 @@ namespace TiVi
                         return TechniqueChooser.MaterialPrefix("Terrain");
                 });
             XLoader.AddToScene(scene);
-            //scene.GetNodeByName("TiVi").WorldState.Turn((float)Math.PI * 1.2f);
             //scene.GetNodeByName("TiVi").WorldState.Position = new Vector3(0, 0.25f, 0);
 
             ExtractTiViInfo();
+
+            subEffect = new DiscoFever("screeneffect", StartTime, EndTime);
+            subEffect.Initialize(GraphicsFactory, EffectFactory, Device, Mixer, PostProcessor);
+            screenTexture = TextureFactory.CreateFullsizeRenderTarget();
+            (scene.GetNodeByName("TiVi") as ModelNode).Model.Materials[1].DiffuseTexture = screenTexture;
         }
 
         private void ExtractTiViInfo()
@@ -61,23 +77,88 @@ namespace TiVi
             vertices = mesh.VertexBuffer.Lock(0, typeof(TiViVertex), LockFlags.ReadOnly, new int[] { mesh.NumberVertices }) as TiViVertex[];
             mesh.VertexBuffer.Unlock();
 
-            Vector3 pos = new Vector3();
-            for (int i = 0; i < range.FaceCount * 3; i++)
-            {
-                TiViVertex vertex = vertices[indices[i]];
-                pos += vertex.Position;
-            }
-            //pos /= range.FaceCount * 3;
+            int i1 = 0;
+            int i2 = 1;
+            int i3 = 2;
+            upperLeft = GetScreenPosition(new Vector2(0, 0), vertices[indices[i1]], vertices[indices[i2]], vertices[indices[i3]]);
+            upperRight = GetScreenPosition(new Vector2(1, 0), vertices[indices[i1]], vertices[indices[i2]], vertices[indices[i3]]);
+            lowerLeft = GetScreenPosition(new Vector2(0, 1), vertices[indices[i1]], vertices[indices[i2]], vertices[indices[i3]]);
+
+            center = (lowerLeft + upperRight) * 0.5f;// new Vector3((upperLeft.mX + upperRight.mX) / 2.0f, (upperLeft.mY + lowerLeft.mY) / 2.0f, lowerLeft.mZ);
+            normal = Vector3.Cross(upperRight - upperLeft, lowerLeft - upperLeft);
+            normal.Normalize();
+
+            //Matrix[] m = (tiviNode.Model as SkinnedModel).GetBoneMatrices(1);
+            float oppositeLength = (upperLeft - lowerLeft).Length() / 2;
+            float closeLength = oppositeLength / (float)Math.Tan(camera.GetFOV() / 2);
+            camera.Position = center + normal * closeLength * 1.0f;// new Vector3(1, 0, 0);
+            //camera.LookAt(center, new Vector3(0, 1, 0));
+
+            Vector3 right = (upperRight - upperLeft);
+            right.Normalize();
+            Vector3 up = (upperLeft - lowerLeft);
+            up.Normalize();
+            Matrix rot = new Matrix();
+            rot.M11 = right.X;
+            rot.M12 = right.Y;
+            rot.M13 = right.Z;
+            rot.M21 = up.X;
+            rot.M22 = up.Y;
+            rot.M23 = up.Z;
+            rot.M31 = -normal.X;
+            rot.M32 = -normal.Y;
+            rot.M33 = -normal.Z;
+            rot.M44 = 1;
+            camera.WorldState.Rotation = rot;
+
+            lineNode = new LineNode("Line", line, upperLeft, upperRight, Color.Blue);
+        }
+
+        private Vector3 GetScreenPosition(Vector2 destUV, TiViVertex v1, TiViVertex v2, TiViVertex v3)
+        {
+            Vector3 p1 = v1.Position;
+            Vector2 t1 = new Vector2(v1.U, v1.V);
+            Vector3 p2 = v2.Position;
+            Vector2 t2 = new Vector2(v2.U, v2.V);
+            Vector3 p3 = v3.Position;
+            Vector2 t3 = new Vector2(v3.U, v3.V);
+
+            Vector2 tv1 = t2 - t1;
+            Vector2 tv2 = t3 - t1;
+
+            float c2 = (((t1.Y - destUV.Y) * tv1.X / tv1.Y) - (t1.X - destUV.X)) / (tv2.X - (tv2.Y * tv1.X) / tv1.Y);
+            float c1 = (-(t1.X - destUV.X) - c2 * tv2.X) / tv1.X;
+
+            Vector3 pv1 = p2 - p1;
+            Vector3 pv2 = p3 - p1;
+
+            return p1 + c1 * pv1 + c2 * pv2;
         }
 
         public override void Step()
         {
+            subEffect.Step();
+            using (ISurface original = Device.GetRenderTarget(0))
+            {
+                using (ISurface surface = screenTexture.GetSurfaceLevel(0))
+                {
+                    Device.SetRenderTarget(0, surface);
+                    Device.BeginScene();
+                    Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1, 0);
+                    subEffect.Render();
+                    Device.EndScene();
+                    Device.SetRenderTarget(0, original);
+                }
+            }
+            //screenTexture.Save("h.jpg", ImageFileFormat.Jpg);
             scene.Step();
         }
 
         public override void Render()
         {
             scene.Render();
+            //Device.RenderState.ZBufferEnable = false;
+            //lineNode.Render(scene);
         }
     }
 }
