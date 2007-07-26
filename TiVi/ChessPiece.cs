@@ -160,8 +160,8 @@ namespace TiVi
 
                     float d = SmoothInterval.ScaledSine(info.StartTime, info.EndTime, time, 1);
                     lineNode.WorldState.ResetRotation();
-                    lineNode.WorldState.Turn(Time.StepTime * 0.4f * d);
-                    lineNode.WorldState.Roll((float)Math.Sin(Time.StepTime * 2) * 0.05f * d);
+                    lineNode.WorldState.Turn((Time.StepTime - info.StartTime) * 0.01f * d);
+                    lineNode.WorldState.Roll((float)Math.Sin(Time.StepTime * 4.0f) * 0.2f * d);
                 }
                 oldPos = lineNode.Position;
             }
