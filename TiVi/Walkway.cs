@@ -49,7 +49,6 @@ namespace TiVi
             CreateLights();
             CreateDiamonds();
             CreateTiVi();
-            //CreateWalkway();
 
             subEffect = new DiscoFever("screeneffect", StartTime, EndTime);
             subEffect.Initialize(GraphicsFactory, EffectFactory, Device, Mixer);
@@ -61,41 +60,6 @@ namespace TiVi
         {
             screenTexture = GraphicsFactory.CreateTexture(Device, 256, 256, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
         }
-
-        private void CreateWalkway()
-        {
-            director.CreatePlane(2, 20, 1, 1, true);
-            director.UvMapPlane(2, 0.2f, 2);
-            director.Rotate((float)Math.PI / 2, 0, 0);
-            //director.Rotate(0, 0, (float)Math.PI / 2);
-            IModel model = director.Generate("Default1");
-            IEffectHandler effectHandler = new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
-                delegate(int material) { return "Atmosphere"; }, model);
-            plane = new ModelNode("", model, effectHandler, Device);
-            plane.WorldState.MoveForward(-2);
-            //plane.WorldState.MoveUp(-0.1f);
-            GraphicsStream stream = ShaderLoader.CompileShaderFromFile("Imaginations.psh", "CreateCloudTexture", null, "tx_1_0", ShaderFlags.None);
-            ITexture tex = GraphicsFactory.CreateTexture(Device, 256, 256, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
-            TextureLoader.FillTexture((Texture)((tex as TextureAdapter).BaseTextureDX), new TextureShader(stream));
-            //tex.Save("clouds.dds", ImageFileFormat.Dds);
-            plane.Model.Materials[0].DiffuseTexture = tex;
-
-        //    MeshBuilder.SetDiffuseTexture("Default1", "square.tga");
-        //    MeshBuilder.SetDiffuseColor("Default1", ColorValue.FromColor(Color.DarkGoldenrod));
-        //    MeshBuilder.SetAmbientColor("Default1", ColorValue.FromColor(Color.DarkGoldenrod));
-        //    director.CreateCylinder(0.1f, 20, 8, 1, true);
-        //    director.UvRemap(0, 1, 0, 20);
-        //    director.Rotate((float)Math.PI / 2, 0, 0);
-        //    model = director.Generate("Default1");
-        //    effectHandler = new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
-        //        delegate(int material) { return "Terrain"; }, model);
-        //    cylinder = new ModelNode("", model, effectHandler, Device);
-        //    walkwayPlane.AddChild(cylinder);
-        //    cylinder.WorldState.MoveRight(1);
-        //    ModelNode cylinder2 = new ModelNode("", model, effectHandler, Device);
-        //    walkwayPlane.AddChild(cylinder2);
-        //    cylinder2.WorldState.MoveRight(-1);
-        //}
 
         private void CreateTiVi()
         {
@@ -127,17 +91,15 @@ namespace TiVi
             walkwayPlane.Model.Materials[0].DiffuseTexture = tex;
             scene.RemoveNode(scene.GetNodeByName("Plane01"));
             tiviNode = (ModelNode)scene.GetNodeByName("TiVi");
-            /// TODO: Framehandling is buggy!
-            tiviNode.WorldState.MoveForward(0);
             (tiviNode.Model as SkinnedModel).SetAnimationSet(0, StartTime, 1.03f);
             scene.ActiveCamera = scene.GetNodeByName("Camera01") as CameraNode;
             tiviNode.Model.Materials[1].DiffuseTexture = screenTexture;
 
-            CreateMirrorOfNode(scene.GetNodeByName("Cylinder01"));
-            CreateMirrorOfNode(scene.GetNodeByName("Cylinder02"));
-            CreateMirrorOfNode(scene.GetNodeByName("ChamferBox01"));
-            CreateMirrorOfNode(scene.GetNodeByName("Text02"));
-            CreateMirrorOfNode(scene.GetNodeByName("TiVi"));
+            CreateMirrorOfNode(scene.GetNodeByName("Cylinder01"), 0.2f);
+            CreateMirrorOfNode(scene.GetNodeByName("Cylinder02"), 0.2f);
+            CreateMirrorOfNode(scene.GetNodeByName("ChamferBox01"), 0.2f);
+            CreateMirrorOfNode(scene.GetNodeByName("Text02"), 0.2f);
+            CreateMirrorOfNode(scene.GetNodeByName("TiVi"), 0.2f);
         }
 
         private ModelNode CreateStencilNodeOfNode(ModelNode originalNode)
@@ -148,18 +110,16 @@ namespace TiVi
             return node;
         }
 
-        private void CreateMirrorOfNode(INode node)
+        private void CreateMirrorOfNode(INode node, float brightness)
         {
             MirrorNode mirrorNode = new MirrorNode(node);
-            mirrorNode.Brightness = 0.2f;
+            mirrorNode.Brightness = brightness;
             mirrors.Add(mirrorNode);
         }
 
         private void CreateDiamonds()
         {
-            const int NUM_DIAMONDS = 50;
-            MeshBuilder.SetAmbientColor("Default3", new ColorValue(0.3f, 0.3f, 0.3f, 1.0f));
-            MeshBuilder.SetDiffuseColor("Default3", new ColorValue(0.9f, 0.9f, 0.9f, 1.0f));
+            const int NUM_DIAMONDS = 100;
             MeshBuilder.SetDiffuseTexture("Default3", "square.tga");
             director.CreateChamferBox(1, 1, 0.4f, 0.2f, 4);
             director.UvMapPlane(1, 1, 1);
@@ -175,22 +135,16 @@ namespace TiVi
             diamondBase.WorldState.MoveForward(-10);
             for (int i = 0; i < NUM_DIAMONDS; i++)
             {
-                ModelNode node1 = new ModelNode("", model, handler, Device);
-                ModelNode node2 = new ModelNode("", model, handler, Device);
+                ModelNode node1 = new ModelNode("", model.Clone(), handler, Device);
                 node1.WorldState.MoveUp(Rand.Float(0, 4));
                 node1.WorldState.MoveRight(Rand.Float(-5, 5));
                 node1.WorldState.MoveForward(Rand.Float(-15, 15));
-                node2.WorldState.Position =
-                    new Vector3(node1.WorldState.Position.X, -node1.WorldState.Position.Y, node1.WorldState.Position.Z);
                 float t = Rand.Float(Math.PI);
                 node1.WorldState.Turn(t);
-                node2.WorldState.Turn(t);
                 diamonds.Add(node1);
-                //diamonds.Add(node2);
                 diamondBase.AddChild(node1);
-                //diamondBase.AddChild(node2);
             }
-            CreateMirrorOfNode(diamondBase);
+            CreateMirrorOfNode(diamondBase, 0.05f);
         }
 
         private void CreateLights()
@@ -252,6 +206,14 @@ namespace TiVi
                 node.WorldState.Position += new Vector3(0, 0, Time.DeltaTime * 2.5f);
                 if (node.WorldState.Position.Z > 15)
                     node.WorldState.Position += new Vector3(0, 0, -30);
+                float d = 1;
+                if (node.WorldState.Position.Z > 8)
+                    d = (15 - node.WorldState.Position.Z) / 7;
+                if (node.WorldState.Position.Z < -8)
+                    d = (node.WorldState.Position.Z + 15) / 7;
+                node.Model.Materials[0].AmbientColor = new ColorValue(0.2f, 0.2f, 0.2f, 1.0f * d);
+                node.Model.Materials[0].DiffuseColor = new ColorValue(0.5f, 0.5f, 1.0f, 1.0f * d);
+                node.Model.Materials[0].SpecularColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f * d);
             }
         }
 

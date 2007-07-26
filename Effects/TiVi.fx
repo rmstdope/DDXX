@@ -230,7 +230,7 @@ DiamondVertexShader(InputVS input,
 	float diffuse = abs(dot(viewNormal, float3(0, 0, -1)));
 	float specular = 20 * pow(diffuse, 64);
 	output.DiffuseColor = AmbientColor + MaterialDiffuseColor * diffuse;
-	output.SpecularColor = specular;
+	output.SpecularColor = specular * MaterialSpecularColor;
 	
 	return output;    
 }
@@ -259,7 +259,6 @@ technique Terrain
 		AlphaBlendEnable	= false;
 		ZEnable						=	true;
 		ZFunc							= Less;
-		//CullMode					= CCW;
 	}
 }
 
@@ -316,10 +315,12 @@ technique Diamond
 	{
 		VertexShader			= compile vs_2_0 DiamondVertexShader(0);
 		PixelShader				= compile ps_2_0 DiamondPixelShader();
-		AlphaBlendEnable	= false;
+		AlphaBlendEnable	= true;
+		BlendOp						= Add;
+		SrcBlend					= SrcAlpha;
+		DestBlend					= One;
 		ZEnable						=	true;
 		ZFunc							= Less;
-		CullMode					= CCW;
 	}
 }
 
@@ -422,10 +423,12 @@ technique StencilOnly
 		AlphaBlendEnable	= false;
 		ZEnable						= true;
 		ZFunc							= Never;
+		//ZFunc							= Always;
 		ZWriteEnable			= false;
 		StencilEnable			= true;
 		StencilFunc				=	Always;
 		StencilZFail			= Replace;
+		//StencilPass				= Replace;
 		StencilRef				= 1;
 	}
 }

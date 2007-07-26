@@ -625,7 +625,7 @@ namespace Dope.DDXX.DemoFramework
             effectNode.AppendChild(newWhitespace);
             newElement.SetAttribute("name", param);
             newElement.SetAttribute(GetParameterTypeString(ty), "");
-            lastWhitespace.Value += "  ";
+            lastWhitespace.Value += "\t";
             return newElement;
         }
 

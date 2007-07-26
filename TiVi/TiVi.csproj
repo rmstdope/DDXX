@@ -51,6 +51,7 @@
     <Compile Include="EmptyEffect.cs" />
     <Compile Include="FadeTransition.cs" />
     <Compile Include="GiantDiamond.cs" />
+    <Compile Include="MovingCloudBackground.cs" />
     <Compile Include="PhysicalCubes.cs" />
     <Compile Include="FlipSign.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -76,7 +77,9 @@
     <Compile Include="TestEffect.cs" />
     <Compile Include="TiViMain.cs" />
     <Compile Include="TiViMeshDirector.cs" />
-    <Compile Include="TunnelFlight.cs" />
+    <Compile Include="TunnelFlight1.cs" />
+    <Compile Include="TunnelFlight2.cs" />
+    <Compile Include="TunnelFlightBase.cs" />
     <Compile Include="Walkway.cs" />
     <Compile Include="WhiteFlare.cs" />
   </ItemGroup>

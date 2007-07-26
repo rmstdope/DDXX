@@ -63,8 +63,8 @@ namespace TiVi
         private void CreateSpiralSystems()
         {
             ITexture circleTexture = TextureFactory.CreateFromFunction(64, 64, 0, Usage.None, Format.A8R8G8B8, Pool.Managed, circleCallback);
-            spiralSystems.Add(CreateSpiralSystem("1", circleTexture, Color.FromArgb(100, 70, 70), -5));
-            spiralSystems.Add(CreateSpiralSystem("2", circleTexture, Color.FromArgb(20, 20, 50), -5));
+            spiralSystems.Add(CreateSpiralSystem("1", circleTexture, Color.FromArgb(100, 70, 70), StartTime - 5));
+            spiralSystems.Add(CreateSpiralSystem("2", circleTexture, Color.FromArgb(20, 20, 50), StartTime - 5));
             spiralSystems.Add(new MirrorNode(spiralSystems[0]));// CreateSpiralSystem("3", circleTexture, Color.FromArgb(100, 70, 70), 5));
             spiralSystems.Add(new MirrorNode(spiralSystems[1]));// CreateSpiralSystem("4", circleTexture, Color.FromArgb(20, 20, 50), 5));
             scene.AddNode(spiralSystems[2]);
@@ -89,6 +89,8 @@ namespace TiVi
 
         public override void Step()
         {
+            Mixer.ClearColor = Color.Black;
+
             StepCamera();
 
             StepSpiralSystems();

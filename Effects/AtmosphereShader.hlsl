@@ -82,4 +82,16 @@ technique Atmosphere
 	}
 }
 
+technique MovingCloudBackground
+{
+	pass BasePass
+	{
+		VertexShader			= compile vs_2_0 AtmosphereVertexShader();
+		PixelShader				= compile ps_2_0 AtmospherePixelShader();
+		AlphaBlendEnable	= false;
+		ZEnable						= false;
+		ZWriteEnable			= false;
+	}
+}
+
 #endif

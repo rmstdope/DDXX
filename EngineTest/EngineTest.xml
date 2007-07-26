@@ -36,7 +36,7 @@
 	</Effect-->
 	<!--<Effect class="TextWave" track="0" startTime="0" endTime="300" />-->
 	<!--<Effect class="TestEffect" track="0" startTime="0" endTime="300" />-->
-	<Effect class="TerrainFlyover" track="0" startTime="0" endTime="300" />
+	<!--<Effect class="TerrainFlyover" track="0" startTime="0" endTime="300" />-->
   <!--Effect name="TimeSyncEffect" track="0" startTime="0" endTime="300" /-->
   <!--Effect name="DofCubesEffect" track="0" startTime="0" endTime="300" /-->
   <!--PostEffect name="DepthOfFieldPostEffect" track="0" startTime="0.0" endTime="300.0" /-->

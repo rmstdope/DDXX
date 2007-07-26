@@ -37,12 +37,11 @@ namespace TiVi
             modelNode = CreateSimpleModelNode(model.Clone(), "TiVi.fxo", "Simple");
             modelNode.WorldState.MoveRight(+0.5f);
             scene.AddNode(modelNode);
-
-            Mixer.ClearColor = Color.Blue;
         }
 
         public override void Step()
         {
+            Mixer.ClearColor = Color.Blue;
             scene.Step();
         }
 
