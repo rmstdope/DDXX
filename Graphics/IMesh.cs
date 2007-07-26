@@ -24,7 +24,7 @@ namespace Dope.DDXX.Graphics
         //
         // Summary:
         //     Retrieves the data in an index buffer.
-        IndexBuffer IndexBuffer { get; }
+        IIndexBuffer IndexBuffer { get; }
         //
         // Summary:
         //     Retrieves the number of entries stored in an attribute table for a mesh.

@@ -22,9 +22,9 @@ namespace TiVi
         private IMesh originalTiViMesh;
         private SkinnedModel modelTiVi;
         private ModelNode nodeTiVi;
-        private Vertex[] lineVertices;
+        private TiViVertex[] lineVertices;
         private List<TiViEdge> edges;
-        private Vertex[] allVertices;
+        private TiViVertex[] allVertices;
         private short[] indices;
         private ISprite sprite;
         private ITexture flareTexture;
@@ -87,42 +87,6 @@ namespace TiVi
         {
             get { return bodyCameraStart2; }
             set { bodyCameraStart2 = value; }
-        }
-
-        private struct Vertex
-        {
-            public Vertex(int i)
-            {
-                Position = new Vector3();
-                BlendWeight1 = 0;
-                BlendWeight2 = 0;
-                BlendWeight3 = 0;
-                BlendIndices = 0;
-                Normal = new Vector3();
-                U = 0;
-                V = 0;
-                //BiNormal = new Vector3();
-                //Tangent = new Vector3();
-            }
-            public VertexFormats VertexFormats
-            {
-                get
-                {
-                    return VertexFormats.PositionBlend4 | VertexFormats.LastBetaUByte4 |
-                        VertexFormats.Normal | VertexFormats.Texture0 | 
-                        (VertexFormats)(1 << (int)VertexFormats.TextureCountShift);
-                }
-            }
-            public Vector3 Position;
-            public float BlendWeight1;
-            public float BlendWeight2;
-            public float BlendWeight3;
-            public UInt32 BlendIndices;
-            public Vector3 Normal;
-            public float U;
-            public float V;
-            //public Vector3 BiNormal;
-            //public Vector3 Tangent;
         }
 
         public CreationScene(string name, float startTime, float endTime)
@@ -232,8 +196,8 @@ namespace TiVi
 
         private void CreateLineMeshes()
         {
-            lineVertices = new Vertex[edges.Count * 2];
-            lineTiViMesh = new UnindexedMesh(GraphicsFactory, typeof(Vertex), lineVertices.Length,
+            lineVertices = new TiViVertex[edges.Count * 2];
+            lineTiViMesh = new UnindexedMesh(GraphicsFactory, typeof(TiViVertex), lineVertices.Length,
                 Device, Usage.WriteOnly | Usage.Dynamic, lineVertices[0].VertexFormats, Pool.Default);
 
             //drawLineMesh = new UnindexedMesh(GraphicsFactory, typeof(Vertex), MAX_NUM_DRAW_LINES * 2,
@@ -277,7 +241,7 @@ namespace TiVi
         {
             using (IGraphicsStream stream = mesh.LockVertexBuffer(LockFlags.ReadOnly))
             {
-                allVertices = (Vertex[])stream.Read(typeof(Vertex), new int[] { mesh.NumberVertices });
+                allVertices = (TiViVertex[])stream.Read(typeof(TiViVertex), new int[] { mesh.NumberVertices });
                 mesh.UnlockVertexBuffer();
             }
         }
@@ -465,7 +429,7 @@ namespace TiVi
             Matrix[] matrices = ((SkinnedModel)modelTiVi).GetBoneMatrices(0);
             for (int i = 0; i < flareIndices.Count; i++)
             {
-                Vertex v = lineVertices[flareIndices[i]];
+                TiViVertex v = lineVertices[flareIndices[i]];
                 Matrix matrix = matrices[v.BlendIndices & 0xFF] * scene.ActiveCamera.ViewMatrix * scene.ActiveCamera.ProjectionMatrix;
                 Vector3 pos = v.Position;
                 pos.TransformCoordinate(matrix);

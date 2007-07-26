@@ -189,7 +189,7 @@ namespace Dope.DDXX.Graphics
         {
         }
 
-        public Microsoft.DirectX.Direct3D.IndexBuffer IndexBuffer
+        public IIndexBuffer IndexBuffer
         {
             get { throw new Exception("The method or operation is not implemented."); }
         }

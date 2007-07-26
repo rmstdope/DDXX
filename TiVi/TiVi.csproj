@@ -78,6 +78,7 @@
     <Compile Include="ThinkTank.cs" />
     <Compile Include="TiViMain.cs" />
     <Compile Include="TiViMeshDirector.cs" />
+    <Compile Include="TiViVertex.cs" />
     <Compile Include="TunnelFlight1.cs" />
     <Compile Include="TunnelFlight2.cs" />
     <Compile Include="TunnelFlightBase.cs" />

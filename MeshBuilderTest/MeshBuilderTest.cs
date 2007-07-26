@@ -1374,7 +1374,7 @@ namespace Dope.DDXX.MeshBuilder
             get { throw new Exception("The method or operation is not implemented."); }
         }
 
-        public IndexBuffer IndexBuffer
+        public IIndexBuffer IndexBuffer
         {
             get { throw new Exception("The method or operation is not implemented."); }
         }

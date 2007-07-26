@@ -499,9 +499,9 @@ namespace Dope.DDXX.Graphics
             mesh.Dispose();
         }
 
-        public IndexBuffer IndexBuffer
+        public IIndexBuffer IndexBuffer
         {
-            get { return mesh.IndexBuffer; }
+            get { return new IndexBufferAdapter(mesh.IndexBuffer); }
         }
 
         public int NumberAttributes

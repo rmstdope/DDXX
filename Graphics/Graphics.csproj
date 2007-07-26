@@ -58,12 +58,14 @@
     <Compile Include="IEffectHandler.cs" />
     <Compile Include="IFont.cs" />
     <Compile Include="IGraphicsFactory.cs" />
+    <Compile Include="IIndexBuffer.cs" />
     <Compile Include="ILine.cs" />
     <Compile Include="IGraphicsStream.cs" />
     <Compile Include="IManager.cs" />
     <Compile Include="IMesh.cs" />
     <Compile Include="IModel.cs" />
     <Compile Include="IModelFactory.cs" />
+    <Compile Include="IndexBufferAdapter.cs" />
     <Compile Include="IPrerequisits.cs" />
     <Compile Include="IRenderStateManager.cs" />
     <Compile Include="ISphericalHarmonics.cs">
