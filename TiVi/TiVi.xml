@@ -7,7 +7,7 @@
 	<Texture name="noise" generator="noise"></Texture>
 	
 	<!--This post effect will run the entire demo-->
-	<!--<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="3000">
+	<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="3000">
 		<Parameter name="Width" float="16" />
 		<Parameter name="Height" float="9" />
 		<Parameter name="SubtractNoise" bool="true" />
@@ -16,10 +16,10 @@
 		<Parameter name="AddNoise" bool="false" />
 		<Parameter name="Filename" string="" />
 		<Parameter name="DrawOrder" int="4" />
-	</PostEffect>-->
+	</PostEffect>
 
 	<!--Creation scene and its post effects-->
-	<!--<Effect class="CreationScene" track="0" startTime="7" endTime="42">
+	<Effect class="CreationScene" track="0" startTime="7" endTime="42">
 		<Parameter name="BaseMesh" string="TiVi-Creation.x" />
 		<Parameter name="FlareSize" float="3" />
 		<Parameter name="StartVertex" int="10" />
@@ -95,14 +95,8 @@
 	<PostEffect class="RadialBlurPostEffect" startTime="7" endTime="42">
 		<Parameter name="DrawOrder" int="0" />
 		<Parameter name="BlurColor" Color="255, 119, 118, 112" />
-	</PostEffect>-->
-
-	<PostEffect class="ColorFader" name="WhiteFader" startTime="41.5" endTime="44.5">
-		<Parameter name="DrawOrder" int="3" />
-		<Parameter name="FadeInLength" float="0.5" />
-		<Parameter name="FadeOutLength" float="2" />
-		<Parameter name="FadeColor" Color="White" />
 	</PostEffect>
+
 	<!--Walkway effect and its post effects-->
 	<Effect class="DiscoFever" name="WalkwayFever" track="0" startTime="42" endTime="44">
 	</Effect>

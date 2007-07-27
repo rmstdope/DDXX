@@ -57,7 +57,7 @@ namespace TiVi
                         return TechniqueChooser.MaterialPrefix("Terrain");
                 });
             XLoader.AddToScene(scene);
-            (scene.GetNodeByName("TiVi") as ModelNode).Model.Materials[0].Ambient = Color.White;
+            //(scene.GetNodeByName("TiVi") as ModelNode).Model.Materials[0].Ambient = Color.White;
 
             ExtractTiViInfo();
 
