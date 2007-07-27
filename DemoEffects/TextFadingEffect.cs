@@ -115,7 +115,7 @@ namespace Dope.DDXX.DemoEffects
             int alpha = GetFadeAlpha();
             Rectangle textRectangle = GetTextRectangle();
             sprite.Begin(SpriteFlags.AlphaBlend);
-            font.DrawText(sprite, text, textRectangle, 
+            font.DrawText(sprite, text, textRectangle,
                 DrawTextFormat.Center | DrawTextFormat.VerticalCenter, Color.FromArgb(alpha, textColor));
             sprite.End();
         }
@@ -131,10 +131,10 @@ namespace Dope.DDXX.DemoEffects
         private int GetFadeAlpha()
         {
             int alpha = 255;
-            float time = Time.CurrentTime - StartTime;
+            float time = Time.StepTime - StartTime;
             if (time < FadeInLength)
                 alpha = (int)(255 * (time / FadeInLength));
-            time = Time.CurrentTime - (EndTime - FadeOutLength);
+            time = Time.StepTime - (EndTime - FadeOutLength);
             if (time > 0)
                 alpha = 254 - (int)(255 * (time / FadeOutLength));
             return alpha;

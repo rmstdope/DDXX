@@ -7,7 +7,7 @@
 	<Texture name="noise" generator="noise"></Texture>
 	
 	<!--This post effect will run the entire demo-->
-	<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="3000">
+	<!--<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="3000">
 		<Parameter name="Width" float="16" />
 		<Parameter name="Height" float="9" />
 		<Parameter name="SubtractNoise" bool="true" />
@@ -16,10 +16,10 @@
 		<Parameter name="AddNoise" bool="false" />
 		<Parameter name="Filename" string="" />
 		<Parameter name="DrawOrder" int="4" />
-	</PostEffect>
+	</PostEffect>-->
 
 	<!--Creation scene and its post effects-->
-	<Effect class="CreationScene" track="0" startTime="7" endTime="42">
+	<!--<Effect class="CreationScene" track="0" startTime="7" endTime="42">
 		<Parameter name="BaseMesh" string="TiVi-Creation.x" />
 		<Parameter name="FlareSize" float="3" />
 		<Parameter name="StartVertex" int="10" />
@@ -95,12 +95,49 @@
 	<PostEffect class="RadialBlurPostEffect" startTime="7" endTime="42">
 		<Parameter name="DrawOrder" int="0" />
 		<Parameter name="BlurColor" Color="255, 119, 118, 112" />
-	</PostEffect>
+	</PostEffect>-->
 
 	<!--Walkway effect and its post effects-->
-	<Effect class="DiscoFever" name="WalkwayFever" track="0" startTime="42" endTime="44">
+	<!--<Effect class="DiscoFever" name="WalkwayFever" track="0" startTime="42" endTime="50">
+		<Parameter name="DrawOrder" int="0" />
 	</Effect>
-	<Effect class="MovingCloudBackground" track="0" startTime="44" endTime="83">
+  <Effect class="TextFadingEffect" name="AssemblyText1.1" track="0" startTime="45" endTime="48">
+  	<Parameter name="FadeOutLength" float="1" />
+  	<Parameter name="FadeInLength" float="1" />
+  	<Parameter name="TextColor" Color="Black" />
+  	<Parameter name="Text" string="You Are " />
+  	<Parameter name="FontHeight" int="110" />
+  	<Parameter name="FontName" string="Edwardian Script ITC" />
+  	<Parameter name="DrawOrder" int="1" />
+  </Effect>
+  <Effect class="TextFadingEffect" name="AssemblyText1.2" track="0" startTime="45" endTime="48">
+    <Parameter name="FadeOutLength" float="1" />
+    <Parameter name="FadeInLength" float="1" />
+    <Parameter name="TextColor" Color="White" />
+    <Parameter name="Text" string="You Are " />
+    <Parameter name="FontHeight" int="100" />
+    <Parameter name="FontName" string="Edwardian Script ITC" />
+    <Parameter name="DrawOrder" int="2" />
+  </Effect>
+  <Effect class="TextFadingEffect" name="AssemblyText2.1" track="0" startTime="47" endTime="50">
+    <Parameter name="FadeOutLength" float="1" />
+    <Parameter name="FadeInLength" float="1" />
+    <Parameter name="TextColor" Color="Black" />
+    <Parameter name="Text" string="Enjoying " />
+    <Parameter name="FontHeight" int="110" />
+    <Parameter name="FontName" string="Edwardian Script ITC" />
+    <Parameter name="DrawOrder" int="1" />
+  </Effect>
+  <Effect class="TextFadingEffect" name="AssemblyText2.2" track="0" startTime="47" endTime="50">
+    <Parameter name="FadeOutLength" float="1" />
+    <Parameter name="FadeInLength" float="1" />
+    <Parameter name="TextColor" Color="White" />
+    <Parameter name="Text" string="Enjoying " />
+    <Parameter name="FontHeight" int="100" />
+    <Parameter name="FontName" string="Edwardian Script ITC" />
+    <Parameter name="DrawOrder" int="2" />
+  </Effect>
+  <Effect class="MovingCloudBackground" track="0" startTime="50" endTime="83">
 		<Parameter name="Persistance" float="0.5000001" />
 		<Parameter name="NumOctaves" int="12" />
 		<Parameter name="BaseFrequency" int="7" />
@@ -109,7 +146,7 @@
 		<Parameter name="CloudColor1" Color="255, 50, 50, 150" />
 		<Parameter name="CloudColor2" Color="255, 50, 50, 150" />
 	</Effect>
-	<Effect class="Walkway" track="0" startTime="44" endTime="83">
+	<Effect class="Walkway" track="0" startTime="50" endTime="83">
 		<Parameter name="DrawOrder" int="1" />
 	</Effect>
 	<PostEffect class="GlowPostEffect" name="WalkwayGlow" track="0" startTime="42" endTime="83">
@@ -126,7 +163,7 @@
 		<Parameter name="FadeInLength" float="0.5" />
 		<Parameter name="FadeOutLength" float="2" />
 		<Parameter name="FadeColor" Color="Black" />
-	</PostEffect>
+	</PostEffect>-->
 
 	<!--Space travel effect and post effects-->
 	<!--<Effect class="SpaceTravel" track="0" startTime="83" endTime="133">
@@ -232,7 +269,7 @@
 	</PostEffect>-->
 
 	<!--Second TunnelFlight effect-->
-	<!--<Effect class="TunnelFlight2" track="0" startTime="200" endTime="227">
+	<Effect class="TunnelFlight2" track="0" startTime="200" endTime="227">
 		<Parameter name="DrawOrder" int="0" />
 	</Effect>
 	<PostEffect class="GlowPostEffect" name="Tunnel2Glow" track="0" startTime="200" endTime="227">
@@ -249,7 +286,7 @@
 		<Parameter name="FadeInLength" float="0.5" />
 		<Parameter name="FadeOutLength" float="2" />
 		<Parameter name="FadeColor" Color="Black" />
-	</PostEffect>-->
+	</PostEffect>
 
 	<!--Physical cubes effect-->
 	<!--<Effect class="MovingCloudBackground" name="CubesBackground" track="0" startTime="227" endTime="240">

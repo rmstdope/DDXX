@@ -31,7 +31,7 @@ namespace TiVi {
         const float sz = 1.2f;
 
         protected override void Initialize() {
-            CreateStandardSceneAndCamera(out scene, out camera, 10);
+            CreateStandardSceneAndCamera(out scene, out camera, 8.5f);
             MeshDirector director = new MeshDirector(MeshBuilder);
             director.CreatePlane(1, 1, 1, 1, true);
             MeshBuilder.SetDiffuseTexture("Default1", "SquareNoAlpha.dds");

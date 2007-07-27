@@ -52,11 +52,16 @@ namespace TiVi
             subEffect.Initialize(GraphicsFactory, EffectFactory, Device, Mixer, PostProcessor);
 
             scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
+
+            // To make sure stuff is on GPU memory
+            Device.BeginScene();
+            Render();
+            Device.EndScene();
         }
 
         private void CreateScreenTexture()
         {
-            screenTexture = TextureFactory.CreateRenderTarget(256, 256, Format.A8R8G8B8);
+            screenTexture = TextureFactory.CreateFullsizeRenderTarget();
         }
 
         private void CreateTiVi()
