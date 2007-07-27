@@ -35,7 +35,7 @@ ReflectiveVertexShader(VertexShaderInput input,
 	for (int i = 0; i < NumLights; i++) {
 		float3 dir = LightPositions[i] - worldPosition;
 		float d = length(dir);
-		float att = 1 / (d * d * 0.02f);
+		float att = 1 / (d * d * LightRanges[i]);
 		diffuse += att * LightDiffuseColors[i] * max(0, dot(worldNormal, normalize(dir)));
 	}
 	output.Diffuse = diffuse * MaterialDiffuseColor;

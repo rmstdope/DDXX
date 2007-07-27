@@ -89,8 +89,10 @@ technique MovingCloudBackground
 		VertexShader			= compile vs_2_0 AtmosphereVertexShader();
 		PixelShader				= compile ps_2_0 AtmospherePixelShader();
 		AlphaBlendEnable	= false;
-		ZEnable						= false;
+		ZEnable						= true;
+		ZFunc							= Less;
 		ZWriteEnable			= false;
+		ColorWriteEnable	= 0x7;
 	}
 }
 

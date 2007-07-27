@@ -61,6 +61,7 @@ namespace TiVi
         private IScene scene;
         private CameraNode camera;
         private List<PhysicalCube> cubes = new List<PhysicalCube>();
+        private ChessBoard chessBoard;
 
         public PhysicalCubes(string name, float start, float end)
             : base(name, start, end)
@@ -85,11 +86,11 @@ namespace TiVi
             cubes.Clear();
 
             string[] text1 = new string[] {
-                "***** ***** *****",
-                "*       *   *    ",
-                "*****   *   *****",
-                "    *   *       *",
-                "*****   *   *****",
+                "***** ***** **** ",
+                "*   * *     *   *",
+                "***** ***** *   *",
+                "*   *     * *   *", 
+                "*   * ***** **** ",
             };
             string[] text2 = new string[] {
                 "**   **  ***  ***  *",
@@ -105,7 +106,7 @@ namespace TiVi
                 text = text2;
 
             const float epsilon = 0.01f;
-            CreateStandardSceneAndCamera(out scene, out camera, 40);
+            CreateStandardSceneAndCamera(out scene, out camera, 30);
             camera.WorldState.MoveUp(20);
             line = GraphicsFactory.CreateLine(Device);
 
@@ -128,24 +129,41 @@ namespace TiVi
                 }
             }
 
-            for (int i = 0; i < 2; i++)
-            {
-                DirectionalLightNode light = new DirectionalLightNode("Light" + i);
-                scene.AddNode(light);
-                float x = 0;// i - 0.5f;
-                float y = 0;// Rand.Float(-1, 1);
-                float z = (i * 2) - 1;// Rand.Float(-1, 0);
-                light.Direction = new Vector3(x, y, z);
-            }
+            CreateLights();
+            //for (int i = 0; i < 2; i++)
+            //{
+            //    DirectionalLightNode light = new DirectionalLightNode("Light" + i);
+            //    scene.AddNode(light);
+            //    float x = 0;// i - 0.5f;
+            //    float y = 0;// Rand.Float(-1, 1);
+            //    float z = (i * 2) - 1;// Rand.Float(-1, 0);
+            //    light.Direction = new Vector3(x, y, z);
+            //}
 
-            MeshDirector director = new MeshDirector(MeshBuilder);
-            director.CreatePlane(100, 100, 1, 1, true);
-            director.Rotate((float)Math.PI / 2, 0, 0);
-            MeshBuilder.SetDiffuseTexture("Default1", "marble.jpg");
-            IModel model = director.Generate("Default1");
-            scene.AddNode(CreateSimpleModelNode(model, "TiVi.fxo", "Alpha"));
+            //MeshDirector director = new MeshDirector(MeshBuilder);
+            //director.CreatePlane(100, 100, 1, 1, true);
+            //director.Rotate((float)Math.PI / 2, 0, 0);
+            //MeshBuilder.SetDiffuseTexture("Default1", "marble.jpg");
+            //IModel model = director.Generate("Default1");
+            //scene.AddNode(CreateSimpleModelNode(model, "TiVi.fxo", "Alpha"));
+
+            chessBoard = new ChessBoard(scene, MeshBuilder, EffectFactory.CreateFromFile("TiVi.fxo"), Device, 10);
         }
 
+        private void CreateLights()
+        {
+            PointLightNode[] lights = new PointLightNode[2];
+            lights[0] = new PointLightNode("");
+            lights[0].Position = new Vector3(-20, 8, 0);
+            lights[0].DiffuseColor = new ColorValue(1.0f, 0.7f, 0.7f, 1.0f);
+            lights[0].Range = 0.0003f;
+            scene.AddNode(lights[0]);
+            lights[1] = new PointLightNode("");
+            lights[1].Position = new Vector3(20, 8, 0);
+            lights[1].DiffuseColor = new ColorValue(0.7f, 0.7f, 1.0f, 1.0f);
+            lights[1].Range = 0.0003f;
+            scene.AddNode(lights[1]);
+        }
         private PhysicalCube CreateBox(Vector3 pos, ITexture texture)
         {
             PhysicalCube cube = new PhysicalCube();
@@ -187,12 +205,18 @@ namespace TiVi
             body.Gravity = new Vector3(0, -100.0f, 0);
 
             MeshDirector director = new MeshDirector(MeshBuilder);
-            director.CreateChamferBox(2, 2, 2, 0.5f, 4);
+            director.CreateChamferBox(2, 2, 2, 0.6f, 4);
             IModel model = director.Generate("Default1");
-            model.Materials[0].DiffuseTexture = texture;
-            model.Materials[0].AmbientColor = new ColorValue(0.1f, 0.1f, 0.6f);
-            //model.Mesh.ComputeNormals();
-            cube.model = CreateSimpleModelNode(model, "TiVi.fxo", "CelWithDoF");
+            model.Mesh.ComputeNormals();
+            //model.Materials[0].DiffuseTexture = texture;
+            model.Materials[0].DiffuseTexture = TextureFactory.CreateFromFile("marble.jpg");
+            //model.Materials[0].AmbientColor = new ColorValue(0.1f, 0.1f, 0.6f);
+            model.Materials[0].AmbientColor = new ColorValue(0.3f, 0.3f, 0.3f, 0.3f);
+            model.Materials[0].DiffuseColor = new ColorValue(0.8f, 0.8f, 0.8f, 0.8f);
+            model.Materials[0].ReflectiveFactor = 0.4f;
+            model.Materials[0].ReflectiveTexture = TextureFactory.CreateCubeFromFile("rnl_cross.dds");
+            //cube.model = CreateSimpleModelNode(model, "TiVi.fxo", "CelWithDoF");
+            cube.model = CreateSimpleModelNode(model, "TiVi.fxo", "TiviChessPiece");
             cube.model.Position = pos;
             cube.body = body;
             cube.floorContact = false;
@@ -205,11 +229,9 @@ namespace TiVi
         {
             Vector3 origo;
             float t = Time.StepTime * 0.1f;
-            camera.Position = new Vector3((float)Math.Sin(t), 0.3f, (float)Math.Cos(t)) * 60;
-            camera.LookAt(new Vector3(), new Vector3(0, 1, 0));
 
-            if (Time.StepTime < 0.2f)
-                Initialize();
+            if (Time.StepTime - StartTime < 2.0f)
+                ;//Initialize();
             else
             {
                 foreach (PhysicalCube cube in cubes)
@@ -224,8 +246,11 @@ namespace TiVi
                     CheckColidingCubes(cube);
                     UpdateBody(cube);
                 }
-                scene.Step();
             }
+
+            camera.Position = new Vector3((float)Math.Sin(t), 0.3f, (float)Math.Cos(t)) * 60;
+            camera.LookAt(new Vector3(), new Vector3(0, 1, 0));
+            scene.Step();
         }
 
         private void CheckColidingCubes(PhysicalCube cube)
@@ -335,6 +360,8 @@ namespace TiVi
 
         public override void Render()
         {
+            scene.SetEffectParameters();
+            chessBoard.Render(scene);
             foreach (PhysicalCube cube in cubes)
             {
                 //Matrix transform = camera.ViewMatrix * camera.ProjectionMatrix;
@@ -353,10 +380,9 @@ namespace TiVi
                 //    }
                 //}
                 //line.End();
-                scene.SetEffectParameters();
-                cube.model.EffectHandler.Techniques[0] = EffectHandle.FromString("CelWithDoF");
+                //cube.model.EffectHandler.Techniques[0] = EffectHandle.FromString("CelWithDoF");
                 cube.model.Render(scene);
-                cube.model.EffectHandler.Techniques[0] = EffectHandle.FromString("CelWithDoFMirrored");
+                //cube.model.EffectHandler.Techniques[0] = EffectHandle.FromString("CelWithDoFMirrored");
                 cube.mirror.Render(scene);
             }
             scene.Render();

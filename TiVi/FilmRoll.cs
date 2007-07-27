@@ -171,6 +171,7 @@ namespace EngineTest
                     filmTexture.Save("c:/film1.dds", ImageFileFormat.Dds);
                     DrawFilmFrame();
                     DrawPerforations();
+                    filmTexture.Save("c:/film3.dds", ImageFileFormat.Dds);
                 }
                 Device.SetRenderTarget(0, original);
             }

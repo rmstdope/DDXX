@@ -108,6 +108,9 @@ namespace Dope.DDXX.DemoFramework
             device.EndScene();
 
             lastUsedTexture = destination;
+
+            sourceContainer.Texture.Save("source.dds", ImageFileFormat.Dds);
+            destinationContainer.Texture.Save("destination.dds", ImageFileFormat.Dds);
         }
 
         private TextureContainer GetContainer(ITexture source, bool useSourceIfNotFound)

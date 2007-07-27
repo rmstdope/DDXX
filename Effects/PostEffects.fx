@@ -744,7 +744,8 @@ technique Rings
 	{
 		VertexShader = null;
 		PixelShader = compile ps_2_0 Rings();
-		ZEnable = false;
+		ZEnable						= false;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }
@@ -758,7 +759,8 @@ technique Wave
 	{
 		VertexShader = null;
 		PixelShader = compile ps_2_0 Wave();
-		ZEnable = false;
+		ZEnable						= false;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }
@@ -772,7 +774,8 @@ technique ZoomAdd
 	{
 		VertexShader = null;
 		PixelShader = compile ps_2_0 ZoomAdd();
-		ZEnable = false;
+		ZEnable						= false;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }
@@ -787,7 +790,8 @@ technique DownSample4x
 	{
 		VertexShader = null;
 		PixelShader = compile ps_2_0 DownSample4x();
-		ZEnable = false;
+		ZEnable						= false;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }
@@ -801,7 +805,8 @@ technique UpSample4x
 	{
 		VertexShader = null;
 		PixelShader = compile ps_2_0 Copy();
-		ZEnable = false;
+		ZEnable						= false;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }
@@ -816,6 +821,7 @@ technique ToneMap
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 ToneMapPixelShader();
 		ZEnable						= false;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }
@@ -830,6 +836,7 @@ technique FinalHDR
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 FinalHDR_PixelShader(true);
 		ZEnable						= false;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }
@@ -844,6 +851,7 @@ technique InverseColor
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 InversePixelShader();
 		ZEnable						= false;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }
@@ -858,6 +866,7 @@ technique HorizontalBloom
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 HBloomPixelShader();
 		ZEnable						= false;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }
@@ -872,6 +881,7 @@ technique VerticalBloom
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 VBloomPixelShader();
 		ZEnable						= false;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }
@@ -886,6 +896,7 @@ technique Brighten
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 SimpleBrightenPixelShader();
 		ZEnable						= false;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }
@@ -900,6 +911,7 @@ technique AdvancedBrighten
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 BrightenPixelShader();
 		ZEnable						= false;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }
@@ -914,11 +926,7 @@ technique HDRLuminanceGreyDS
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 HDRLuminanceGreyDS();
 		ZEnable						= false;
-		//AlphaBlendEnable	= false;
-		//BlendOp						= Add;
-		//SrcBlend					= <SourceBlend>;
-		//DestBlend					= <DestBlend>;
-		//BlendFactor				= <BlendFactor>;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }
@@ -933,11 +941,7 @@ technique HDRLuminanceDS
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 HDRLuminanceDS();
 		ZEnable						= false;
-		//AlphaBlendEnable	= false;
-		//BlendOp						= Add;
-		//SrcBlend					= <SourceBlend>;
-		//DestBlend					= <DestBlend>;
-		//BlendFactor				= <BlendFactor>;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }
@@ -952,6 +956,7 @@ technique Monochrome
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 MonoPixelShader();
 		ZEnable						= false;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }
@@ -966,6 +971,7 @@ technique HorizontalSmear
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 HSmearPixelShader();
 		ZEnable						= false;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }
@@ -980,6 +986,7 @@ technique VerticalSmear
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 VSmearPixelShader();
 		ZEnable						= false;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }
@@ -994,6 +1001,7 @@ technique HorizontalBlur
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 HBlurPixelShader();
 		ZEnable						= false;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }
@@ -1008,6 +1016,7 @@ technique VerticalBlur
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 VBlurPixelShader();
 		ZEnable						= false;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }
@@ -1021,8 +1030,8 @@ technique Copy
 	{
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 CopyPixelShader();
-		//AlphaBlendEnable	= false;
 		ZEnable						= false;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }
@@ -1036,14 +1045,8 @@ technique Blend
 	{
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 BlendPixelShader(false);
-		//AlphaBlendEnable	= true;
-		//BlendOp						= Add;
-		//SrcBlend					= One;
-		//DestBlend					= One;
-		//SrcBlend					= <SourceBlend>;
-		//DestBlend					= <DestBlend>;
-		//BlendFactor					= <BlendFactor>;
 		ZEnable						= false;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }
@@ -1058,6 +1061,7 @@ technique DepthOfFieldVertical
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 DoFPixelShaderVertical();
 		ZEnable						= false;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }
@@ -1072,6 +1076,7 @@ technique DepthOfFieldHorizontal
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 DoFPixelShaderHorizontal();
 		ZEnable						= false;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }
@@ -1086,6 +1091,7 @@ technique DepthOfField
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 DoFPixelShader(DofKernel20, 12);
 		ZEnable						= false;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }
@@ -1099,12 +1105,8 @@ technique Color
 	{
 		VertexShader			= null;
 		PixelShader				= compile ps_2_0 ColorPixelShader();
-		//AlphaBlendEnable	= true;
-		//BlendOp						= Add;
-		//SrcBlend					= <SourceBlend>;
-		//DestBlend					= <DestBlend>;
-		//BlendFactor					= <BlendFactor>;
 		ZEnable						= false;
+		StencilEnable			= false;
 		CullMode = CCW;
 	}
 }

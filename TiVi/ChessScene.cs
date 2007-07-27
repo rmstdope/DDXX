@@ -73,15 +73,11 @@ namespace TiVi
             new PieceMovement("g6", "g7"),
         };
 
-        private const int NUM_SIGNS_X = 8;
-        private const int NUM_SIGNS_Y = 8;
         private IScene scene;
         private CameraNode camera;
-        private MeshDirector meshDirector;
-        private ModelNode[] signs = new ModelNode[NUM_SIGNS_X * NUM_SIGNS_Y];
         private Interpolator<InterpolatedVector3> interpolator;
         private List<ChessPiece> chessPieces = new List<ChessPiece>();
-        private ModelNode boardStencilNode;
+        private ChessBoard chessBoard;
 
         public ChessScene(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
@@ -92,23 +88,10 @@ namespace TiVi
         {
             IDevice device = Device;
             CreateStandardSceneAndCamera(out scene, out camera, 15);
-            CreateBoard();
             CreatePieces();
             CreateCameraInterpolator();
             CreateLights();
-            CreateRoom();
-        }
-
-        private void CreateRoom()
-        {
-            MeshDirector director = new MeshDirector(MeshBuilder);
-            director.CreatePlane(8, 8, 1, 1, false);
-            director.Rotate((float)Math.PI / 2, 0, 0);
-            director.Translate(0.5f, 0, 0.5f);
-            //MeshBuilder.SetDiffuseColor("Default1", new ColorValue(0.1f, 0.1f, 0.1f));
-            IModel model = director.Generate("Default1");
-            boardStencilNode = CreateSimpleModelNode(model, "TiVi.fxo", "StencilOnly");
-            //scene.AddNode(node);
+            chessBoard = new ChessBoard(scene, MeshBuilder, EffectFactory.CreateFromFile("TiVi.fxo"), Device, 1);
         }
 
         private void CreateLights()
@@ -117,10 +100,12 @@ namespace TiVi
             lights[0] = new PointLightNode("");
             lights[0].Position = new Vector3(-5, 4, 0);
             lights[0].DiffuseColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
+            lights[0].Range = 0.02f;
             scene.AddNode(lights[0]);
             lights[1] = new PointLightNode("");
             lights[1].Position = new Vector3(5, 4, 0);
             lights[1].DiffuseColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
+            lights[1].Range = 0.02f;
             scene.AddNode(lights[1]);
         }
 
@@ -175,63 +160,10 @@ namespace TiVi
             interpolator.AddSpline(spline);
         }
 
-        private void CreateBoard()
-        {
-            MeshBuilder.SetDiffuseTexture("Default1", "Square.tga");
-            MeshBuilder.SetReflectiveTexture("Default1", "rnl_cross.dds");
-            MeshBuilder.SetReflectiveFactor("Default1", 0.4f);
-            meshDirector = new MeshDirector(MeshBuilder);
-            meshDirector.CreatePlane(1, 1, 1, 1, true);
-            meshDirector.Rotate((float)Math.PI / 2, 0, 0);
-            float c = 0;
-            for (int y = 0; y < NUM_SIGNS_Y; y++)
-            {
-                for (int x = 0; x < NUM_SIGNS_X; x++)
-                {
-                    IModel model = meshDirector.Generate("Default1");
-                    ModelNode node = CreateSimpleModelNode(model, "TiVi.fxo", "ReflectiveTransparent");
-                    node.WorldState.MoveForward(-1.0f * (y - NUM_SIGNS_Y / 2));
-                    node.WorldState.MoveRight(-1.0f * (x - NUM_SIGNS_X / 2));
-                    float color = 0.0f + c * 0.5f;
-                    node.Model.Materials[0].AmbientColor = new ColorValue(0.02f, 0.02f, 0.02f, 0.02f);
-                    node.Model.Materials[0].DiffuseColor = new ColorValue(color, color, color, color);
-                    if (c == 0)
-                        node.Model.Materials[0].ReflectiveFactor = 0.7f;
-                    else
-                        node.Model.Materials[0].ReflectiveFactor = 0.1f;
-                    c = 1 - c;
-                    signs[y * NUM_SIGNS_X + x] = node;
-                    scene.AddNode(node);
-                }
-                c = 1 - c;
-            }
-        }
-
         public override void Step()
         {
-            //camera.WorldState.Position = new Vector3(0, 3, -10);
-            //camera.WorldState.Position = interpolator.GetValue(Time.StepTime % 10);
             camera.WorldState.Position = new Vector3((float)Math.Sin(Time.StepTime * 0.2f), 0.2f, (float)Math.Cos(Time.StepTime * 0.2f)) * 8;
             camera.LookAt(new Vector3(0, 0, 0), new Vector3(0, 1, 0));
-            for (int y = 0; y < NUM_SIGNS_Y; y++)
-            {
-                for (int x = 0; x < NUM_SIGNS_X; x++)
-                {
-                    //ModelNode node = signs[y * NUM_SIGNS_X + x];
-                    //node.WorldState.ResetRotation();
-                    //float t = (Time.StepTime + (x - y) / 20.0f) % 3;
-                    //const float period = 0.5f;
-                    //if (t < period)
-                    //{
-                    //    float d = (float)Math.Sin(t / period * Math.PI);
-                    //node.WorldState.MoveForward(-d * 0.5f);
-                    //node.WorldState.Turn(d * 1.0f);
-                    //node.WorldState.Tilt(d * 1.0f);
-                    //node.WorldState.Roll(d * 0.5f);
-                    //node.Model.Materials[0].AmbientColor = new ColorValue(0.8f, 0.6f, d);
-                    //}
-                }
-            }
             foreach (ChessPiece piece in chessPieces)
                 piece.Step(Time.StepTime - StartTime);
             scene.Step();
@@ -240,7 +172,7 @@ namespace TiVi
         public override void Render()
         {
             scene.SetEffectParameters();
-            boardStencilNode.Render(scene);
+            chessBoard.Render(scene);
             foreach (ChessPiece piece in chessPieces)
                 piece.RenderMirror(scene);
             foreach (ChessPiece piece in chessPieces)

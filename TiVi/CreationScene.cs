@@ -358,10 +358,10 @@ namespace TiVi
             bodyCamera1.WorldState.MoveUp(1);
 
             handCamera.WorldState.Reset();
-            handCamera.WorldState.Turn(1.0f - t / 7.0f);
+            handCamera.WorldState.Turn(0.3f - t / 7.0f);
             handCamera.WorldState.MoveUp(1.0f);
-            handCamera.WorldState.MoveForward(-1.0f);//.Position = new Vector3(2, 2, 0);
-            handCamera.LookAt(new Vector3(0, 1.5f, 0), new Vector3(0, 1, 0));
+            handCamera.WorldState.MoveForward(-2.0f);//.Position = new Vector3(2, 2, 0);
+            handCamera.LookAt(new Vector3(0, 1.0f, 0), new Vector3(0, 1, 0));
 
             bodyCamera2.WorldState.Reset();
             bodyCamera2.WorldState.MoveForward(-(1.0f + t / 10.0f));
@@ -430,7 +430,16 @@ namespace TiVi
             for (int i = 0; i < flareIndices.Count; i++)
             {
                 TiViVertex v = lineVertices[flareIndices[i]];
-                Matrix matrix = matrices[v.BlendIndices & 0xFF] * scene.ActiveCamera.ViewMatrix * scene.ActiveCamera.ProjectionMatrix;
+                Matrix matrix = new Matrix();
+                int shift = 0;
+                float[] weights = new float[] { v.BlendWeight1, v.BlendWeight2, v.BlendWeight3, 0 };
+                weights[3] = 1 - v.BlendWeight1 - v.BlendWeight2 - v.BlendWeight3;
+                for (int j = 0; j < 4; j++)
+                {
+                    matrix += MultiplyMatrix(matrices[(v.BlendIndices >> shift) & 0xFF], weights[j]);
+                    shift += 8;
+                }
+                matrix = matrix * scene.ActiveCamera.ViewMatrix * scene.ActiveCamera.ProjectionMatrix;
                 Vector3 pos = v.Position;
                 pos.TransformCoordinate(matrix);
                 pos *= 0.5f;
@@ -446,6 +455,28 @@ namespace TiVi
                     new PointF(pos.X, pos.Y), Color.White);
             }
             sprite.End();
+        }
+
+        private Matrix MultiplyMatrix(Matrix matrix, float p)
+        {
+            Matrix newMatrix = new Matrix();
+            newMatrix.M11 = matrix.M11 * p;
+            newMatrix.M12 = matrix.M12 * p;
+            newMatrix.M13 = matrix.M13 * p;
+            newMatrix.M14 = matrix.M14 * p;
+            newMatrix.M21 = matrix.M21 * p;
+            newMatrix.M22 = matrix.M22 * p;
+            newMatrix.M23 = matrix.M23 * p;
+            newMatrix.M24 = matrix.M24 * p;
+            newMatrix.M31 = matrix.M31 * p;
+            newMatrix.M32 = matrix.M32 * p;
+            newMatrix.M33 = matrix.M33 * p;
+            newMatrix.M34 = matrix.M34 * p;
+            newMatrix.M41 = matrix.M41 * p;
+            newMatrix.M42 = matrix.M42 * p;
+            newMatrix.M43 = matrix.M43 * p;
+            newMatrix.M44 = matrix.M44 * p;
+            return newMatrix;
         }
     }
 }

@@ -64,9 +64,9 @@ technique SimpleAlphaBlend
 		PixelShader				= compile ps_2_0 SimplePixelShader(BaseTextureSampler);
 		AlphaTestEnable		= false;
 		AlphaBlendEnable	= true;
-		SrcBlend = SrcAlpha;
-		DestBlend = InvSrcAlpha;
-		BlendOp = Add;
+		SrcBlend					= SrcAlpha;
+		DestBlend					= InvSrcAlpha;
+		BlendOp						= Add;
 		FillMode					= Solid;
 		ZEnable						=	true;
 		ZWriteEnable			= true;

@@ -81,7 +81,7 @@ technique SolidSkinning
 {
 	pass BasePass
 	{
-		VertexShader			= compile vs_2_0 SolidVertexShader(2);
+		VertexShader			= compile vs_2_0 SolidVertexShader(4);
 		PixelShader				= compile ps_2_0 ScreenPixelShader(BaseTextureSampler);
 		AlphaTestEnable		= false;
 		AlphaBlendEnable	= false;
@@ -100,7 +100,7 @@ technique TvScreenSkinning
 {
 	pass BasePass
 	{
-		VertexShader			= compile vs_2_0 SolidVertexShader(2);
+		VertexShader			= compile vs_2_0 SolidVertexShader(4);
 		PixelShader				= compile ps_2_0 SolidPixelShader(BaseTextureSamplerBordered);
 		AlphaTestEnable		= false;
 		AlphaBlendEnable	= false;
@@ -119,7 +119,7 @@ technique LineDrawerSkinning
 {
 	pass BasePass
 	{
-		VertexShader			= compile vs_2_0 LineVertexShader(2);
+		VertexShader			= compile vs_2_0 LineVertexShader(4);
 		PixelShader				= compile ps_2_0 LinePixelShader();
 		AlphaTestEnable		= false;
 		AlphaBlendEnable	= false;
@@ -456,5 +456,57 @@ technique TiviChessPiece
 		ZEnable						=	true;
 		ZWriteEnable			= true;
 		ZFunc							= Less;
+		ColorWriteEnable	= 0xF;
+	}
+	pass DofPass
+	{
+		VertexShader			= compile vs_2_0 PureDoFVertexShader();
+		PixelShader				= compile ps_2_0 PureDoFPixelShader();
+		AlphaTestEnable		= false;
+		AlphaBlendEnable	= false;
+		FillMode					= Solid;
+		ZEnable						=	true;
+		ZWriteEnable			= false;
+		ZFunc							= Equal;
+		StencilEnable			= false;
+		ColorWriteEnable	= 0x8;
+	}
+}
+
+
+technique TiViChessBoard
+<
+	bool NormalMapping = false;
+	bool Skinning = false;
+>
+{
+	pass BasePass
+	{
+		VertexShader			= compile vs_2_0 ReflectiveVertexShader(0);
+		PixelShader				= compile ps_2_0 ReflectivePixelShader();
+		AlphaTestEnable		= false;
+		AlphaBlendEnable	= true;
+		FillMode					= Solid;
+		ZEnable						=	true;
+		ZWriteEnable			= true;
+		ZFunc							= Less;
+		StencilEnable			= false;
+		BlendOp						= Add;
+		SrcBlend					= One;
+		DestBlend					= SrcAlpha;
+		ColorWriteEnable	= 0xF;
+	}
+	pass DofPass
+	{
+		VertexShader			= compile vs_2_0 PureDoFVertexShader();
+		PixelShader				= compile ps_2_0 PureDoFPixelShader();
+		AlphaTestEnable		= false;
+		AlphaBlendEnable	= false;
+		FillMode					= Solid;
+		ZEnable						=	true;
+		ZWriteEnable			= false;
+		ZFunc							= Equal;
+		StencilEnable			= false;
+		ColorWriteEnable	= 0x8;
 	}
 }

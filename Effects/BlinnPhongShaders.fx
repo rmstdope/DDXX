@@ -119,7 +119,7 @@ GetAttenuation(float4 Position,
 	} else if(LightType == POINT) {
 		float3 lightDir = LightPositions[0] - Position;
 		// Make [-LightRange..LightRange] become [0..1]
-		output = (lightDir / LightRange) * 0.5f + 0.5f;
+		output = (lightDir / LightRanges[0]) * 0.5f + 0.5f;
 	}
 
 	return output;	

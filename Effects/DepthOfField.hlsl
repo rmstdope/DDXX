@@ -20,9 +20,9 @@ struct OutlinePixelInput
 };
 
 float4 FocalPlane = float4(0.0f, 0.0f, 1.0f, -55.0f);
-float  HyperfocalDistance = 0.2f;
-//float  MaxBlurFactor = 3.0f / 4.0f;
-float  MaxBlurFactor = 12.0f / 13.0f;
+float HyperfocalDistance = 0.08f;
+//float MaxBlurFactor = 3.0f / 4.0f;
+float MaxBlurFactor = 12.0f / 13.0f;
 float ChamferAdd = 0.06;
 
 DoFPixelInput
@@ -179,5 +179,36 @@ technique CelWithDoFMirrored
 	}
 }
 
+DoFPixelInput
+PureDoFVertexShader(DoFVertexInput input)
+{
+	DoFPixelInput output;
+
+	float3 positionWS = mul(input.Position, WorldT);
+	output.Position = mul(input.Position, WorldViewProjectionT);
+	output.Normal = mul(input.Normal, (float3x3)WorldViewT);
+	output.InvEye = EyePosition.xyz - positionWS;
+
+	// Tranform the position from object space to view space
+	float3 ViewPosition = mul(input.Position, (float4x3)WorldViewT);
+
+	// Compute blur factor and place in output alpha
+	float BlurFactor = dot(float4(ViewPosition, 1.0), FocalPlane) * HyperfocalDistance;
+	output.Diffuse.a = BlurFactor * BlurFactor;
+
+	// Put a cap on the max blur value.  This is required to ensure that the center pixel
+	// is always weighted in the blurred image.  I.E. in the PS11 case, the correct maximum
+	// value is (NumSamples - 1) / NumSamples, otherwise at BlurFactor == 1.0f, only the outer
+	// samples are contributing to the blurred image which causes annoying ring artifacts
+	output.Diffuse.rgba = min(output.Diffuse.a, MaxBlurFactor);
+
+	return output;
+}
+
+float4
+PureDoFPixelShader(DoFPixelInput input) : COLOR0
+{
+	return input.Diffuse;
+}
 
 

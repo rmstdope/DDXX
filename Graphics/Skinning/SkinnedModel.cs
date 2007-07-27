@@ -119,8 +119,8 @@ namespace Dope.DDXX.Graphics
                 int index = bones[material].BoneId[i];
                 if (index != -1)
                 {
-                    skinMatrices[i] = Matrix.Identity;// frame.MeshContainer.RestMatrices[index];// *
-                        //frame.MeshContainer.Frames[index].CombinedTransformationMatrix;
+                    skinMatrices[i] = frame.MeshContainer.RestMatrices[index] *
+                        frame.MeshContainer.Frames[index].CombinedTransformationMatrix;
                 }
             }
             return skinMatrices;

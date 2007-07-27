@@ -17,6 +17,7 @@ namespace Dope.DDXX.SceneGraph
         private EffectHandle lightSpecularHandle;
         private EffectHandle lightPositionHandle;
         private EffectHandle lightDirectionHandle;
+        private EffectHandle lightRangeHandle;
         private EffectHandle eyePositionHandle;
 
         private NodeBase rootNode;
@@ -42,9 +43,10 @@ namespace Dope.DDXX.SceneGraph
             lightSpecularHandle = effect.GetParameter(null, "LightSpecularColors");
             lightPositionHandle = effect.GetParameter(null, "LightPositions");
             lightDirectionHandle = effect.GetParameter(null, "LightDirections");
+            lightRangeHandle = effect.GetParameter(null, "LightRanges");
             eyePositionHandle = effect.GetParameter(null, "EyePosition");
 
-            if (numLightsHandle == null || lightDiffuseHandle == null || lightSpecularHandle == null || lightPositionHandle == null || lightDirectionHandle == null || eyePositionHandle == null)
+            if (numLightsHandle == null || lightDiffuseHandle == null || lightSpecularHandle == null || lightPositionHandle == null || lightDirectionHandle == null || eyePositionHandle == null || lightRangeHandle == null)
                 throw new DDXXException("Can't find mandatory handles in PoolEffect");
         }
 
@@ -109,6 +111,7 @@ namespace Dope.DDXX.SceneGraph
             effect.SetValue(lightSpecularHandle, lightState.SpecularColor);
             effect.SetValue(lightPositionHandle, lightState.Positions);
             effect.SetValue(lightDirectionHandle, lightState.Directions);
+            effect.SetValue(lightRangeHandle, lightState.Ranges);
 
             Vector3 eyePos = ActiveCamera.Position;
             effect.SetValue(eyePositionHandle, new Vector4(eyePos.X, eyePos.Y, eyePos.Z, 1.0f));

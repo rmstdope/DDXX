@@ -50,7 +50,7 @@ shared float4 LightPositions[5];
  * Light range
  * Used for point lights and spot lights
  */
-shared float LightRange;
+shared float LightRanges[5];
 
 /**
  * Light radius 
