@@ -34,7 +34,7 @@ namespace TiVi {
             CreateStandardSceneAndCamera(out scene, out camera, 10);
             MeshDirector director = new MeshDirector(MeshBuilder);
             director.CreatePlane(1, 1, 1, 1, true);
-            MeshBuilder.SetDiffuseTexture("Default1", "square.tga");
+            MeshBuilder.SetDiffuseTexture("Default1", "SquareNoAlpha.dds");
             IModel model = director.Generate("Default1");
             const float pihalf = (float)(Math.PI / 2.0);
             room = new DummyNode("Room node");

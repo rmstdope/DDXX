@@ -95,7 +95,7 @@ namespace Dope.DDXX.Graphics
         }
 
         public ITexture CreateRenderTarget(int width, int height, Format format) {
-            return factory.CreateTexture(device, width, height, 1, Usage.RenderTarget, presentParameters.BackBufferFormat, Pool.Default);
+            return factory.CreateTexture(device, width, height, 1, Usage.RenderTarget, format, Pool.Default);
         }
 
         public ITexture CreateFullsizeRenderTarget() {

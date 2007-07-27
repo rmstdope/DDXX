@@ -64,7 +64,7 @@ namespace EngineTest
             model.Materials[0].DiffuseTexture = filmTexture;
 
             for (int i = 0; i < squareCount; i++) {
-                ModelNode plane = CreateSimpleModelNode(model.Clone(), "TiVi.fxo", "Simple");
+                ModelNode plane = CreateSimpleModelNode(model.Clone(), "TiVi.fxo", "SimpleAlphaBlend");
                 plane.WorldState.MoveUp(i * squareHeight - (squareCount / 2) * squareHeight);
                 film.AddChild(plane);
             }
@@ -117,7 +117,6 @@ namespace EngineTest
                 Vector2 size = new Vector2(FilmWidth, FilmWidth / ratio);
                 IGenerator rect = new RoundedRectangle(size, new Vector2(0.5f, 0.5f), FilmRounding);
                 filmSquareTexture = TextureBuilder.Generate(rect, width, height, 1, Format.A8R8G8B8);
-                filmSquareTexture.Save("c:/filmSquareTexture.dds", ImageFileFormat.Dds);
             }
         }
 
@@ -130,7 +129,6 @@ namespace EngineTest
                     delegate(Vector2 texCoord, Vector2 texelSize) {
                         return new Vector4(1, 1, 1, 0);
                     });
-                filmPerforationTexture.Save("c:/filmPerforationTexture.dds", ImageFileFormat.Dds);
             }
         }
 
@@ -172,9 +170,7 @@ namespace EngineTest
                     //subPostEffect.Render();
                     filmTexture.Save("c:/film1.dds", ImageFileFormat.Dds);
                     DrawFilmFrame();
-                    filmTexture.Save("c:/film2.dds", ImageFileFormat.Dds);
                     DrawPerforations();
-                    filmTexture.Save("c:/film3.dds", ImageFileFormat.Dds);
                 }
                 Device.SetRenderTarget(0, original);
             }
@@ -183,7 +179,7 @@ namespace EngineTest
         private void DrawSubEffect(ISurface surface) {
             Device.SetRenderTarget(0, surface);
             Device.BeginScene();
-            Device.Clear(ClearFlags.Target, Color.Black, 0, 0);
+            Device.Clear(ClearFlags.Target, Color.FromArgb(0xff, Color.Black), 0, 0);
             subEffect.Render();
             Device.EndScene();
         }
@@ -195,11 +191,11 @@ namespace EngineTest
             float xPos = 256 * PerforationDistance / squareWidth;
             float yDistance = 256 * squareHeight / 4;
             float yOffset = yDistance / 2 - height / 2;
-            sprite.Begin(SpriteFlags.AlphaBlend);
+            sprite.Begin(SpriteFlags.None);
             for (int i = 0; i < 4; i++) {
                 sprite.Draw2D(filmPerforationTexture, Rectangle.Empty, SizeF.Empty,
                     new PointF(xPos, yOffset + (yDistance * i)),
-                    Color.FromArgb(0x80, Color.White));
+                    Color.Transparent);
             }
             sprite.End();
             sprite.Begin(SpriteFlags.None);
@@ -207,7 +203,7 @@ namespace EngineTest
             for (int i = 0; i < 4; i++) {
                 sprite.Draw2D(filmPerforationTexture, Rectangle.Empty, SizeF.Empty,
                     new PointF(xPos, yOffset + (yDistance * i)),
-                    Color.FromArgb(0x80, Color.White));
+                    Color.Transparent);
             }
             sprite.End();
         }
@@ -215,7 +211,7 @@ namespace EngineTest
         private void DrawFilmFrame() {
             sprite.Begin(SpriteFlags.AlphaBlend);
             sprite.Draw2D(filmSquareTexture, Rectangle.Empty, SizeF.Empty,
-                new PointF(0, 0), Color.FromArgb(0xff, Color.Black));
+                new PointF(0, 0), Color.Black);
             sprite.End();
         }
 
