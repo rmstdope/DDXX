@@ -15,5 +15,6 @@ namespace Dope.DDXX.SceneGraph
         {
             get;
         }
+        void SetClippingPlanes(float near, float far);
     }
 }

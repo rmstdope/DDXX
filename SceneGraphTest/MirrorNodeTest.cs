@@ -359,5 +359,15 @@ namespace Dope.DDXX.SceneGraph
         }
 
         #endregion
+
+        #region IRenderableCamera Members
+
+
+        public void SetClippingPlanes(float near, float far)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
     }
 }

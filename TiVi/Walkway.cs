@@ -20,7 +20,6 @@ namespace TiVi
         private const int NUM_LIGHTS = 2;
         private const int NUM_BLOCKS = 24;
         private IScene scene;
-        private CameraNode camera;
         private List<PointLightNode> lights = new List<PointLightNode>();
         private ModelNode tiviNode;
         private List<MirrorNode> mirrors = new List<MirrorNode>();
@@ -42,8 +41,7 @@ namespace TiVi
         {
             director = new MeshDirector(MeshBuilder);
 
-            CreateStandardSceneAndCamera(out scene, out camera, 10);
-            camera.WorldState.MoveUp(1.5f);
+            scene = new Scene(EffectFactory);
 
             CreateScreenTexture();
             CreateLights();
@@ -93,6 +91,7 @@ namespace TiVi
             tiviNode = (ModelNode)scene.GetNodeByName("TiVi");
             (tiviNode.Model as SkinnedModel).SetAnimationSet(0, StartTime, 1.03f);
             scene.ActiveCamera = scene.GetNodeByName("Camera01") as CameraNode;
+            scene.ActiveCamera.SetClippingPlanes(0.01f, 1000);
             tiviNode.Model.Materials[1].DiffuseTexture = screenTexture;
 
             CreateMirrorOfNode(scene.GetNodeByName("Cylinder01"), 0.2f);
@@ -161,11 +160,7 @@ namespace TiVi
 
         public override void Step()
         {
-            //camera.WorldState.Reset();
-            //camera.WorldState.Position = new Vector3((float)Math.Sin(Time.StepTime / 4) * 10,
-            //    2.0f,
-            //    (float)Math.Cos(Time.StepTime / 4) * 10);
-            //camera.LookAt(new Vector3(0, 1.0f, -5), new Vector3(0, 1, 0));
+            //Time.CurrentTime = 42.5f;
             StepScreen();
             StepDiamonds();
             StepWalkway();
@@ -181,7 +176,7 @@ namespace TiVi
                 {
                     Device.SetRenderTarget(0, surface);
                     Device.BeginScene();
-                    Device.Clear(ClearFlags.Target, Color.Black, 0, 0);
+                    Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1, 0);
                     subEffect.Render();
                     Device.EndScene();
                     Device.SetRenderTarget(0, original);
