@@ -183,7 +183,7 @@
 	</PostEffect>-->
 
 	<!--Chess scene and its post effects-->
-	<Effect class="ThinkTank" track="0" startTime="160" endTime="165">
+	<!--<Effect class="ThinkTank" track="0" startTime="160" endTime="165">
 		<Parameter name="DrawOrder" int="1" />
 	</Effect>
 	<Effect class="SpinningBackgroundEffect" name="ThinkSpin" track="0" startTime="160" endTime="165">
@@ -200,11 +200,11 @@
 			<Parameter float="0.2" />
 		</SetupCall>
 		<Parameter name="DrawOrder" int="0" />
-	</Effect>
+	</Effect>-->
 	<!--<Effect class="DiscoFever" track="0" startTime="165" endTime="170">
 		<Parameter name="DrawOrder" int="0" />
 	</Effect>-->
-	<Effect class="ChessScene" track="0" startTime="165" endTime="200">
+	<!--<Effect class="ChessScene" track="0" startTime="165" endTime="200">
 		<Parameter name="DrawOrder" int="0" />
 	</Effect>
 	<PostEffect class="GlowPostEffect" name="ChessGlow" track="0" startTime="160" endTime="200">
@@ -221,7 +221,7 @@
 		<Parameter name="FadeInLength" float="0.5" />
 		<Parameter name="FadeOutLength" float="2" />
 		<Parameter name="FadeColor" Color="Black" />
-	</PostEffect>
+	</PostEffect>-->
 
 	<!--Second TunnelFlight effect-->
 	<!--<Effect class="TunnelFlight2" track="0" startTime="200" endTime="227">
@@ -348,14 +348,17 @@
 		<Parameter name="DrawOrder" int="0" />
 	</Effect>-->
 
-  <!--<Effect class="FilmRoll" track="0" startTime="42" endTime="300">
+  <Effect class="FilmRoll" track="0" startTime="42" endTime="300">
 		<Parameter name="FilmRounding" float="0.02000001" />
 		<Parameter name="FilmWidth" float="0.65" />
 		<Parameter name="XAngle" float="0" />
 		<Parameter name="YAngle" float="0" />
 		<Parameter name="ZAngle" float="0" />
 		<Parameter name="DrawOrder" int="0" />
-	</Effect>-->
+		<Parameter name="PerforationWidth" float="0.09" />
+		<Parameter name="PerforationHeight" float="0.06999999" />
+		<Parameter name="PerforationDistance" float="0.06999999" />
+	</Effect>
 
 </Demo>
 

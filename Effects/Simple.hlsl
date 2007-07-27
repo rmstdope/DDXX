@@ -42,7 +42,10 @@ technique Simple
 		VertexShader			= compile vs_2_0 SimpleVertexShader(0);
 		PixelShader				= compile ps_2_0 SimplePixelShader(BaseTextureSampler);
 		AlphaTestEnable		= false;
-		AlphaBlendEnable	= false;
+		AlphaBlendEnable	= true;
+		SrcBlend = SrcAlpha;
+		DestBlend = One;
+		BlendOp = Add;
 		FillMode					= Solid;
 		ZEnable						=	true;
 		ZWriteEnable			= true;
@@ -50,4 +53,23 @@ technique Simple
 		StencilEnable			= false;
 		CullMode					= CCW;
 	}
+
+/*
+	pass AlphaPass
+	{
+		VertexShader			= compile vs_2_0 SimpleVertexShader(0);
+		PixelShader				= compile ps_2_0 SimplePixelShader(BaseTextureSampler);
+		AlphaTestEnable		= true;
+		AlphaBlendEnable	= true;
+		SrcBlend = Zero;
+		DestBlend = SrcAlpha;
+		BlendOp = Add;
+		FillMode					= Solid;
+		ZEnable						=	true;
+		ZWriteEnable			= true;
+		ZFunc							= Less;
+		StencilEnable			= false;
+		CullMode					= CCW;
+	}
+*/
 }
