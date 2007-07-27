@@ -385,6 +385,7 @@
 		<Parameter name="PerforationWidth" float="0.09" />
 		<Parameter name="PerforationHeight" float="0.06999999" />
 		<Parameter name="PerforationDistance" float="0.06999999" />
+		<Parameter name="SlowDown" int="8" />
 	</Effect>
 	<PostEffect class="OverlayPostEffect" track="0" startTime="42" endTime="300.0">
 		<Parameter name="AddNoise" bool="true" />
