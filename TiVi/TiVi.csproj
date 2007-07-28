@@ -82,6 +82,7 @@
     <Compile Include="SunEffect.cs" />
     <Compile Include="TestEffect.cs" />
     <Compile Include="ThinkTank.cs" />
+    <Compile Include="TiVi.cs" />
     <Compile Include="TiViMain.cs" />
     <Compile Include="TiViMeshDirector.cs" />
     <Compile Include="TiViVertex.cs" />

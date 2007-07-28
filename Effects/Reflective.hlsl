@@ -31,11 +31,10 @@ ReflectiveVertexShader(VertexShaderInput input,
 	output.TexCoords = input.TexCoords;
 
 	float4 diffuse = 0;
-	float range = 5;
 	for (int i = 0; i < NumLights; i++) {
 		float3 dir = LightPositions[i] - worldPosition;
 		float d = length(dir);
-		float att = 1 / (d * d * LightRanges[i]);
+		float att = 1;//min(1, 1 / (d * d * LightRanges[i]));
 		diffuse += att * LightDiffuseColors[i] * max(0, dot(worldNormal, normalize(dir)));
 	}
 	output.Diffuse = diffuse * MaterialDiffuseColor;

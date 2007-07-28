@@ -38,6 +38,12 @@ SolidPixelShader(SolidPixelInput input,
 }
 
 float4
+WhitePixelShader(SolidPixelInput input) : COLOR0
+{
+	return 1;//float4(input.Diffuse, 1) * float4(input.Specular, 1);
+}
+
+float4
 ScreenPixelShader(SolidPixelInput input,
 								 uniform sampler textureSampler) : COLOR0
 {
@@ -92,6 +98,41 @@ technique SolidSkinning
 	}
 }
 
+float4
+TiViReflectivePixelShader(ReflectivePixelInput input) : COLOR0
+{
+	float3 reflection = texCUBE(ReflectiveTextureSampler, input.Reflection);
+	float m = min(min(reflection.r, reflection.g), reflection.b);
+	m = 4 * pow(m , 16);
+	reflection = reflection * m;
+	//reflection *= 2;//reflection.a * reflection.a * 2;
+	float3 color = tex2D(BaseTextureSampler, input.TexCoords) * (input.Diffuse + AmbientColor);
+	//float factor = ReflectiveFactor;// * reflection.a;
+	float factor = saturate((input.VdN * input.VdN) * ReflectiveFactor);
+	return float4(lerp(color, reflection, factor), ReflectiveFactor);
+	//return input.Diffuse;
+	//return float4(reflection * ReflectiveFactor + color, 1);
+}
+
+technique TiViReflective
+<
+	bool NormalMapping = false;
+	bool Skinning = true;
+>
+{
+	pass BasePass
+	{
+		VertexShader			= compile vs_2_0 ReflectiveVertexShader(4);
+		PixelShader				= compile ps_2_0 TiViReflectivePixelShader();
+		AlphaTestEnable		= false;
+		AlphaBlendEnable	= false;
+		FillMode					= Solid;
+		ZEnable						=	true;
+		ZWriteEnable			= true;
+		ZFunc							= Less;
+	}
+}
+
 technique TvScreenSkinning
 <
 	bool NormalMapping = false;
@@ -102,6 +143,25 @@ technique TvScreenSkinning
 	{
 		VertexShader			= compile vs_2_0 SolidVertexShader(4);
 		PixelShader				= compile ps_2_0 SolidPixelShader(BaseTextureSamplerBordered);
+		AlphaTestEnable		= false;
+		AlphaBlendEnable	= false;
+		FillMode					= Solid;
+		ZEnable						=	true;
+		ZWriteEnable			= true;
+		ZFunc							= Less;
+	}
+}
+
+technique WhiteScreenSkinning
+<
+	bool NormalMapping = false;
+	bool Skinning = true;
+>
+{
+	pass BasePass
+	{
+		VertexShader			= compile vs_2_0 SolidVertexShader(4);
+		PixelShader				= compile ps_2_0 WhitePixelShader();
 		AlphaTestEnable		= false;
 		AlphaBlendEnable	= false;
 		FillMode					= Solid;

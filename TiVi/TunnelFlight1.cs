@@ -15,6 +15,7 @@ namespace TiVi
         private const int NUM_BLOCKS = 12;
 
         private List<Brick> fallingBricks = new List<Brick>();
+        private TiVi tivi;
 
         public TunnelFlight1(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
@@ -26,6 +27,8 @@ namespace TiVi
             CreateStandardSceneAndCamera(out scene, out camera, 6);
             camera.WorldState.MoveUp(1.5f);
             camera.SetFOV((float)Math.PI / 4);
+
+            tivi = new TiVi(tiviNode, camera, StartTime);
 
             CreateSplines();
             CreateFallingBricks();
@@ -40,7 +43,7 @@ namespace TiVi
             IModel model = director.Generate("Default1");
             EffectHandler effectHandler = new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
                 delegate(int material) { return "Terrain"; }, model);
-            float t = 0;
+            float t = 2;
             for (int j = 0; j < NUM_RINGS; j++)
             {
                 for (int i = 0; i < NUM_BLOCKS; i++)
@@ -64,8 +67,8 @@ namespace TiVi
         private void StepCamera()
         {
             float t = Time.StepTime - StartTime;
-            camera.WorldState.Position = cameraInterpolator.GetValue(t);
-            camera.LookAt(tiviNode.Position + new Vector3(0, 0.8f, 0), new Vector3(0, 1, 0));
+            camera.WorldState.Position = cameraInterpolator.GetValue(t) + tiviNode.Position;
+            camera.LookAt(cameraTargetInterpolator.GetValue(t) + tiviNode.Position, cameraUpInterpolator.GetValue(t));
         }
 
         protected override void RenderSpecific()
@@ -85,14 +88,30 @@ namespace TiVi
 
             cameraInterpolator = new Interpolator<InterpolatedVector3>();
             spline = new ClampedCubicSpline<InterpolatedVector3>(new InterpolatedVector3(), new InterpolatedVector3());
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(3, new InterpolatedVector3(new Vector3(0.0f, 0.8f, -7.0f))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(6, new InterpolatedVector3(new Vector3(0.0f, 0.8f, -4.0f))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(9, new InterpolatedVector3(new Vector3(-1.0f, 1.0f, -1.0f))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(10, new InterpolatedVector3(new Vector3(1.0f, 0.8f, -1.0f))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(15, new InterpolatedVector3(new Vector3(-1.0f, 3.6f, 1.0f))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(20, new InterpolatedVector3(new Vector3(1.0f, 10.0f, -1.0f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(0, new InterpolatedVector3(tivi.DestinationPos)));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(2, new InterpolatedVector3(new Vector3(tivi.DestinationPos.X, 1, 5))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(6, new InterpolatedVector3(new Vector3(-1.5f, 0.8f, 1.5f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(9, new InterpolatedVector3(new Vector3(-1.0f, 1.0f, 1.5f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(10, new InterpolatedVector3(new Vector3(1.0f, 2.8f, 1.5f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(15, new InterpolatedVector3(new Vector3(-1.0f, 1.2f, -1.0f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(20, new InterpolatedVector3(new Vector3(1.0f, 1.3f, 1.5f))));
             spline.Calculate();
             cameraInterpolator.AddSpline(spline);
+
+            cameraUpInterpolator = new Interpolator<InterpolatedVector3>();
+            spline = new ClampedCubicSpline<InterpolatedVector3>(new InterpolatedVector3(), new InterpolatedVector3());
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(0, new InterpolatedVector3(tivi.DestinationPos)));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(2, new InterpolatedVector3(new Vector3(0, 1, 0))));
+            spline.Calculate();
+            cameraUpInterpolator.AddSpline(spline);
+
+            cameraTargetInterpolator = new Interpolator<InterpolatedVector3>();
+            spline = new ClampedCubicSpline<InterpolatedVector3>(new InterpolatedVector3(), new InterpolatedVector3());
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(6, new InterpolatedVector3(tivi.Center)));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(12, new InterpolatedVector3(tivi.Center + new Vector3(0.3f, -1.0f, 0.2f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(16, new InterpolatedVector3(tivi.Center + new Vector3(0.1f, -0.2f, -0.3f))));
+            spline.Calculate();
+            cameraTargetInterpolator.AddSpline(spline);
         }
 
         private void StepFallingBricks()
@@ -105,7 +124,7 @@ namespace TiVi
                 {
                     ModelNode model = fallingBricks[j * NUM_BLOCKS + i].Model;
                     float startTime = fallingBricks[j * NUM_BLOCKS + i].StartTime;
-                    const float FALL_TIME = 1.3f;
+                    const float FALL_TIME = 1.5f;
                     const float FALL_HEIGHT = 10.0f;
                     float time = Time.StepTime - StartTime - startTime;
                     float upAdd = 0;
@@ -126,5 +145,9 @@ namespace TiVi
             }
         }
 
+        protected override string GetScreenTechnique()
+        {
+            return "WhiteScreen";
+        }
     }
 }

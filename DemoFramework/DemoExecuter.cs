@@ -202,6 +202,8 @@ namespace Dope.DDXX.DemoFramework
 
         public void Step()
         {
+            //Time.Pause();
+            //Time.CurrentTime = 132.999f;
             Time.Step();
 
             foreach (ITrack track in tracks)

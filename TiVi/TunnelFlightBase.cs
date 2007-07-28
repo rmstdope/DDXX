@@ -43,6 +43,8 @@ namespace TiVi
 
         protected Interpolator<InterpolatedVector3> discInterpolator;
         protected Interpolator<InterpolatedVector3> cameraInterpolator;
+        protected Interpolator<InterpolatedVector3> cameraTargetInterpolator;
+        protected Interpolator<InterpolatedVector3> cameraUpInterpolator;
         private List<PointLightNode> lights = new List<PointLightNode>();
 
         public TunnelFlightBase(string name, float startTime, float endTime)
@@ -60,6 +62,10 @@ namespace TiVi
             InitializeSpecific();
 
             CreateLights();
+
+            Device.BeginScene();
+            Render();
+            Device.EndScene();
         }
 
         protected abstract void InitializeSpecific();
@@ -100,6 +106,7 @@ namespace TiVi
                 PointLightNode light = new PointLightNode("");
                 light.DiffuseColor = new ColorValue(0.3f + 0.7f * (1 - i), 0.3f + 0.7f * i, 1.0f, 1.0f);
                 light.Position = new Vector3(0, 0, 0);
+                light.Range = 0.00001f;
                 scene.AddNode(light);
                 lights.Add(light);
             }
@@ -113,16 +120,24 @@ namespace TiVi
                     return delegate(int material)
                     {
                         if (material == 1)
-                            return "TvScreen";
+                            return GetScreenTechnique();
                         else
-                            return "Solid";
+                            return "TiViReflective";
                     };
                 });
             tiviNode = XLoader.GetNodeHierarchy()[0].Children[1] as ModelNode;
-            tiviNode.WorldState.Scale(0.6f);
+            tiviNode.Model.Materials[0].ReflectiveTexture = TextureFactory.CreateCubeFromFile("rnl_cross.dds");
+            tiviNode.Model.Materials[0].DiffuseTexture = TextureFactory.CreateFromFile("marble.jpg");
+            tiviNode.Model.Materials[0].AmbientColor = new ColorValue(0.5f, 0.5f, 0.5f, 0.5f);
+            tiviNode.Model.Materials[0].DiffuseColor = new ColorValue(0.5f, 0.5f, 0.5f, 0.5f);
+            tiviNode.Model.Materials[0].ReflectiveFactor = 0.2f;
+            ((tiviNode as ModelNode).Model as SkinnedModel).SetAnimationSet(0, StartTime, 1);
+            //tiviNode.WorldState.Scale(0.7f);
             mirrorNode = new MirrorNode(tiviNode);
-            mirrorNode.Brightness = 0.2f;
+            mirrorNode.Brightness = 0.4f;
         }
+
+        protected abstract string GetScreenTechnique();
 
         private void CreateDiscs()
         {
@@ -171,7 +186,7 @@ namespace TiVi
             discModel.WorldState.Position = discInterpolator.GetValue(t);
             discModel2.WorldState.Position = discInterpolator.GetValue(t);
             discModel.WorldState.MoveUp(0.40f);
-            tiviNode.Position = discModel2.Position + new Vector3(1, 0, -0.8f);
+            tiviNode.Position = discModel2.Position + new Vector3(0, 0, 0);
             stencilDisc.Position = discModel2.Position;
             mirrorNode.Position = new Vector3(0, tiviNode.Position.Y * 2, 0);
 

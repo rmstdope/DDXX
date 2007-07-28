@@ -16,10 +16,18 @@ namespace TiVi
         private CameraNode camera;
         private TiViMeshDirector tiviMeshDirector;
         private ModelNode giantDiamond;
+        private float positionDelta;
+
+        public float PositionDelta
+        {
+            get { return positionDelta; }
+            set { positionDelta = value; }
+        }
 
         public GiantDiamond(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
         {
+            positionDelta = 1000;
         }
 
         protected override void Initialize()
@@ -29,14 +37,14 @@ namespace TiVi
             tiviMeshDirector = new TiViMeshDirector(MeshBuilder, new MeshDirector(MeshBuilder), EffectFactory, Device);
             giantDiamond = tiviMeshDirector.CreateDiamondNode(10);
             scene.AddNode(giantDiamond);
-            giantDiamond.WorldState.Turn((float)Math.PI / 2);
         }
 
         public override void Step()
         {
             float modifiedTime = Time.StepTime - StartTime;
-            giantDiamond.WorldState.Turn(Time.DeltaTime * 1.5f);
-            giantDiamond.WorldState.Position = new Vector3(0, 0, 1000 - modifiedTime * 50);
+            giantDiamond.WorldState.ResetRotation();
+            giantDiamond.WorldState.Turn((Time.StepTime - StartTime) * 1.5f + (float)Math.PI / 2);
+            giantDiamond.WorldState.Position = new Vector3(0, 0, positionDelta - modifiedTime * 50);
 
             scene.Step();
         }

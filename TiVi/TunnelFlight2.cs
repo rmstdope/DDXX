@@ -230,5 +230,10 @@ namespace TiVi
                 node.Render(scene);
             scene.Render();
         }
+
+        protected override string GetScreenTechnique()
+        {
+            return "TvScreen";
+        }
     }
 }

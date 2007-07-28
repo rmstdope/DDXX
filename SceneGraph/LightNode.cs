@@ -13,8 +13,8 @@ namespace Dope.DDXX.SceneGraph
         public LightNode(string name)
             : base(name)
         {
-            diffuseColor = new ColorValue(1, 1, 1, 1);
-            specularColor = new ColorValue(1, 1, 1, 1);
+            diffuseColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
+            specularColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
         }
 
         public ColorValue DiffuseColor

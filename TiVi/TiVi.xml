@@ -165,23 +165,32 @@
 	<PostEffect class="RadialBlurPostEffect" name="SpaceRadialBlur" startTime="83" endTime="133">
 		<Parameter name="DrawOrder" int="0" />
 		<Parameter name="BlurColor" Color="50, 40, 40, 150" />
-	</PostEffect>
-	<PostEffect class="ColorFader" name="WhiteFader" startTime="132.5" endTime="135.5">
-		<Parameter name="DrawOrder" int="3" />
-		<Parameter name="FadeInLength" float="0.5" />
-		<Parameter name="FadeOutLength" float="2" />
-		<Parameter name="FadeColor" Color="White" />
 	</PostEffect>-->
 
 	<!--First TunnelFlight effect-->
-	<!--<Effect class="TunnelFlight1" track="0" startTime="133" endTime="160">
+	<Effect class="SpinningBackgroundEffect" name="SpaceSpin" track="0" startTime="133" endTime="160">
+		<SetupCall name="AddTextureLayer">
+			<Parameter string="noise" />
+			<Parameter float="35.0" />
+			<Parameter Color="DarkGray" />
+			<Parameter float="0.2" />
+		</SetupCall>
+		<SetupCall name="AddTextureLayer">
+			<Parameter string="noise" />
+			<Parameter float="-34.0" />
+			<Parameter Color="50,50,120,255" />
+			<Parameter float="0.2" />
+		</SetupCall>
 		<Parameter name="DrawOrder" int="0" />
+	</Effect>
+	<Effect class="TunnelFlight1" track="0" startTime="133" endTime="160">
+		<Parameter name="DrawOrder" int="1" />
 	</Effect>
 	<PostEffect class="GlowPostEffect" name="Tunnel1Glow" track="0" startTime="133" endTime="160">
 		<Parameter name="BloomScale" float="1.5" />
 		<Parameter name="Exposure" float="1" />
 		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="WhiteCutoff" float="0.38" />
+		<Parameter name="WhiteCutoff" float="0.5799998" />
 		<Parameter name="Luminance" float="0.5099998" />
 		<Parameter name="DownSamples" int="1" />
 		<Parameter name="AdvancedGlow" bool="false" />
@@ -191,7 +200,7 @@
 		<Parameter name="FadeInLength" float="0.5" />
 		<Parameter name="FadeOutLength" float="2" />
 		<Parameter name="FadeColor" Color="Black" />
-	</PostEffect>-->
+	</PostEffect>
 
 	<!--Chess scene and its post effects-->
 	<!--<Effect class="ThinkTank" track="0" startTime="160" endTime="165">
@@ -386,7 +395,9 @@
 		<Parameter name="BlendFactor" float="0.1" />
 	</PostEffect>-->
 
-	<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="100">
+	<!--<Effect class="DanceCloseup" track="0" startTime="0" endTime="100">
+	</Effect>-->
+	<!--<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="100">
 		<Parameter name="Width" float="16" />
 		<Parameter name="Height" float="9" />
 		<Parameter name="SubtractNoise" bool="true" />
@@ -408,7 +419,7 @@
 		<Parameter name="DownSamples" int="2" />
 		<Parameter name="AdvancedGlow" bool="false" />
 		<Parameter name="DrawOrder" int="0" />
-	</PostEffect>
+	</PostEffect>-->
 
 </Demo>
 
