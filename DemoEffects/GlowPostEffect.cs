@@ -85,6 +85,7 @@ namespace Dope.DDXX.DemoEffects
                 PostProcessor.Process("DownSample4x", startTexture, textures[0]);
                 PostProcessor.Process("DownSample4x", textures[0], textures[1]);
             }
+            //textures[1].Save("text.jpg", ImageFileFormat.Jpg);
             if (advancedGlow)
                 PostProcessor.Process("AdvancedBrighten", textures[1], textures[0]);
             else

@@ -171,7 +171,7 @@ namespace TiVi
             discModel.WorldState.Position = discInterpolator.GetValue(t);
             discModel2.WorldState.Position = discInterpolator.GetValue(t);
             discModel.WorldState.MoveUp(0.40f);
-            tiviNode.Position = discModel2.Position;
+            tiviNode.Position = discModel2.Position + new Vector3(1, 0, -0.8f);
             stencilDisc.Position = discModel2.Position;
             mirrorNode.Position = new Vector3(0, tiviNode.Position.Y * 2, 0);
 

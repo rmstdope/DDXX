@@ -52,6 +52,27 @@ technique Simple
 	}
 }
 
+technique SimpleMirroredTexture
+<
+	bool NormalMapping = false;
+	bool Skinning = false;
+>
+{
+	pass BasePass
+	{
+		VertexShader			= compile vs_2_0 SimpleVertexShader(0);
+		PixelShader				= compile ps_2_0 SimplePixelShader(BaseTextureSamplerMirrored);
+		AlphaTestEnable		= false;
+		AlphaBlendEnable	= false;
+		FillMode					= Solid;
+		ZEnable						=	true;
+		ZWriteEnable			= true;
+		ZFunc							= Less;
+		StencilEnable			= false;
+		CullMode					= CCW;
+	}
+}
+
 technique SimpleAlphaBlend
 <
 	bool NormalMapping = false;

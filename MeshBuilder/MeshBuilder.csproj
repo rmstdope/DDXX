@@ -48,6 +48,7 @@
     <Compile Include="MeshDirector.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NormalFlip.cs" />
     <Compile Include="PlanePrimitive.cs" />
     <Compile Include="MeshBuilder.cs" />
     <Compile Include="Primitive.cs" />

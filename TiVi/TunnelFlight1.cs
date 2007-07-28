@@ -25,7 +25,6 @@ namespace TiVi
         {
             CreateStandardSceneAndCamera(out scene, out camera, 6);
             camera.WorldState.MoveUp(1.5f);
-            //camera.SetFOV((float)Math.PI / 2 * 0.7f);
             camera.SetFOV((float)Math.PI / 4);
 
             CreateSplines();

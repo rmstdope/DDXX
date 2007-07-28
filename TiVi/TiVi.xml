@@ -98,7 +98,7 @@
 	</PostEffect>-->
 
 	<!--Walkway effect and its post effects-->
-	<Effect class="DiscoFever" name="WalkwayFever" track="0" startTime="42" endTime="44">
+	<!--<Effect class="DiscoFever" name="WalkwayFever" track="0" startTime="42" endTime="44">
 	</Effect>
 	<Effect class="MovingCloudBackground" track="0" startTime="44" endTime="83">
 		<Parameter name="Persistance" float="0.5000001" />
@@ -126,7 +126,7 @@
 		<Parameter name="FadeInLength" float="0.5" />
 		<Parameter name="FadeOutLength" float="2" />
 		<Parameter name="FadeColor" Color="Black" />
-	</PostEffect>
+	</PostEffect>-->
 
 	<!--Space travel effect and post effects-->
 	<!--<Effect class="SpaceTravel" track="0" startTime="83" endTime="133">
@@ -138,22 +138,22 @@
 	<Effect class="GiantDiamond" track="0" startTime="113" endTime="133">
 		<Parameter name="DrawOrder" int="0" />
 	</Effect>
-  <Effect class="SpinningBackgroundEffect" name="SpaceSpin" track="0" startTime="83" endTime="133">
-    <SetupCall name="AddTextureLayer">
-      <Parameter string="noise" />
-      <Parameter float="35.0" />
-      <Parameter Color="DarkGray" />
-      <Parameter float="0.2" />
-    </SetupCall>
-    <SetupCall name="AddTextureLayer">
-      <Parameter string="noise" />
-      <Parameter float="-34.0" />
-      <Parameter Color="50,50,120,255" />
-      <Parameter float="0.2" />
-    </SetupCall>
-    <Parameter name="DrawOrder" int="0" />
-  </Effect>
-  <PostEffect class="GlowPostEffect" name="SpaceGlow" track="0" startTime="83" endTime="133">
+	<Effect class="SpinningBackgroundEffect" name="SpaceSpin" track="0" startTime="83" endTime="133">
+		<SetupCall name="AddTextureLayer">
+			<Parameter string="noise" />
+			<Parameter float="35.0" />
+			<Parameter Color="DarkGray" />
+			<Parameter float="0.2" />
+		</SetupCall>
+			<SetupCall name="AddTextureLayer">
+			<Parameter string="noise" />
+			<Parameter float="-34.0" />
+			<Parameter Color="50,50,120,255" />
+			<Parameter float="0.2" />
+		</SetupCall>
+		<Parameter name="DrawOrder" int="0" />
+	</Effect>
+	<PostEffect class="GlowPostEffect" name="SpaceGlow" track="0" startTime="83" endTime="133">
 		<Parameter name="BloomScale" float="1.1" />
 		<Parameter name="Exposure" float="0.9300001" />
 		<Parameter name="DrawOrder" int="1" />
@@ -386,6 +386,29 @@
 		<Parameter name="BlendFactor" float="0.1" />
 	</PostEffect>-->
 
+	<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="100">
+		<Parameter name="Width" float="16" />
+		<Parameter name="Height" float="9" />
+		<Parameter name="SubtractNoise" bool="true" />
+		<Parameter name="BlendFactor" float="1" />
+		<Parameter name="Rounding" float="0.04" />
+		<Parameter name="AddNoise" bool="false" />
+		<Parameter name="Filename" string="" />
+		<Parameter name="DrawOrder" int="4" />
+	</PostEffect>
+	<Effect class="HoneyComb" track="0" startTime="0" endTime="100">
+		<Parameter name="DrawOrder" int="0" />
+		<Parameter name="Brightness" float="0.3199999" />
+	</Effect>
+	<PostEffect class="GlowPostEffect" name="CreationGlow2" track="0" startTime="0" endTime="100">
+		<Parameter name="BloomScale" float="1.5" />
+		<Parameter name="WhiteCutoff" float="0.05000001" />
+		<Parameter name="Exposure" float="0.1" />
+		<Parameter name="Luminance" float="0.2" />
+		<Parameter name="DownSamples" int="2" />
+		<Parameter name="AdvancedGlow" bool="false" />
+		<Parameter name="DrawOrder" int="0" />
+	</PostEffect>
 
 </Demo>
 

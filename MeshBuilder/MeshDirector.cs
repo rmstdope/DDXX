@@ -15,6 +15,16 @@ namespace Dope.DDXX.MeshBuilder
             this.builder = builder;
         }
 
+        public void CreateCylinder(float radius, float height, int segments, int heightSegments)
+        {
+            CylinderPrimitive cylinder = new CylinderPrimitive();
+            cylinder.Height = height;
+            cylinder.HeightSegments = heightSegments;
+            cylinder.Radius = radius;
+            cylinder.Segments = segments;
+            primitive = cylinder;
+        }
+
         public void CreatePlane(float width, float height, int widthSegments, int heightSegments, bool textured)
         {
             PlanePrimitive plane = new PlanePrimitive();
@@ -136,6 +146,13 @@ namespace Dope.DDXX.MeshBuilder
             scale.Z = z;
             scale.Input = primitive;
             primitive = scale;
+        }
+
+        public void NormalFlip()
+        {
+            NormalFlip flip = new NormalFlip();
+            flip.Input = primitive;
+            primitive = flip;
         }
 
         public IModel Generate(string materialName)

@@ -45,7 +45,7 @@ namespace Dope.DDXX.MeshBuilder
             if (heightSegments < 1)
                 throw new DDXXException("Cylinder must have at least three segments.");
 
-            Vertex[] vertices = new Vertex[segments * (heightSegments + 1) + 2];
+            Vertex[] vertices = new Vertex[(segments + 1) * (heightSegments + 1) + 2];
             short[] indices = new short[3 * 2 * segments + 6 * segments * heightSegments];
 
             FillVertices(vertices);
@@ -89,9 +89,9 @@ namespace Dope.DDXX.MeshBuilder
 
         private short GetIndex(int segment, int side)
         {
-            if (side >= segments)
+            if (side > segments)
                 side -= segments;
-            return (short)(1 + segment * segments + side);
+            return (short)(1 + segment * (segments + 1) + side);
         }
 
         private void FillVertices(Vertex[] vertices)
@@ -104,7 +104,7 @@ namespace Dope.DDXX.MeshBuilder
             for (int i = 0; i < heightSegments + 1; i++)
             {
                 float yPos = height / 2 - height * i / (float)heightSegments;
-                for (int j = 0; j < segments; j++)
+                for (int j = 0; j < segments + 1; j++)
                 {
                     float phi = j * 2 * (float)Math.PI / segments;
                     Vector3 position = new Vector3((float)Math.Sin(phi), 0, (float)Math.Cos(phi));
@@ -112,7 +112,7 @@ namespace Dope.DDXX.MeshBuilder
                     position *= radius;
                     position.Y = yPos;
                     vertices[vertex].Position = position;
-                    vertices[vertex].U = j / (float)(segments - 1);
+                    vertices[vertex].U = j / (float)(segments);
                     vertices[vertex].V = i / (float)heightSegments;
                     vertices[vertex].Normal = normal;
                     vertex++;

@@ -54,6 +54,7 @@
     <Compile Include="FadeTransition.cs" />
     <Compile Include="GiantDiamond.cs" />
     <Compile Include="FilmRoll.cs" />
+    <Compile Include="HoneyComb.cs" />
     <Compile Include="MovingCloudBackground.cs" />
     <Compile Include="PhysicalCubes.cs" />
     <Compile Include="FlipSign.cs" />
@@ -78,6 +79,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="SpaceTravel.cs" />
+    <Compile Include="SunEffect.cs" />
     <Compile Include="TestEffect.cs" />
     <Compile Include="ThinkTank.cs" />
     <Compile Include="TiViMain.cs" />
