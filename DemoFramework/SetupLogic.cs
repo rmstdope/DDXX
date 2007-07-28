@@ -193,7 +193,12 @@ namespace Dope.DDXX.DemoFramework
             if (modes.Length == 0)
                 dialog.EnableRadio16_10 = false;
 
-            dialog.CheckedRadio3_4 = true;
+            if (dialog.EnableRadio16_10)
+                dialog.CheckedRadio16_10 = true;
+            else if (dialog.EnableRadio16_9)
+                dialog.CheckedRadio16_9 = true;
+            else
+                dialog.CheckedRadio3_4 = true;
 
         }
     }

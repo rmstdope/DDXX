@@ -63,10 +63,24 @@ namespace Dope.DDXX.DemoFramework
             get { return bit32.Enabled; } 
         }
 
-        public bool EnableRadio4_3 { set { radio_4_3.Enabled = value; } }
-        public bool EnableRadio16_9 { set { radio_16_9.Enabled = value; } }
-        public bool EnableRadio16_10 { set { radio_16_10.Enabled = value; } }
+        public bool EnableRadio4_3 
+        {
+            set { radio_4_3.Enabled = value; }
+            get { return radio_4_3.Enabled; } 
+        }
+        public bool EnableRadio16_9 
+        {
+            set { radio_16_9.Enabled = value; } 
+            get { return radio_16_9.Enabled; } 
+        }
+        public bool EnableRadio16_10 
+        {
+            set { radio_16_10.Enabled = value; }
+            get { return radio_16_10.Enabled; }
+        }
         public bool CheckedRadio3_4 { set { radio_4_3.Checked = value; } }
+        public bool CheckedRadio16_9 { set { radio_16_9.Checked = value; } }
+        public bool CheckedRadio16_10 { set { radio_16_10.Checked = value; } }
 
         public string[] Resolution 
         {
