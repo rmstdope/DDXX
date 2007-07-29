@@ -168,7 +168,7 @@
 	</PostEffect>-->
 
 	<!--First TunnelFlight effect-->
-	<Effect class="SpinningBackgroundEffect" name="SpaceSpin" track="0" startTime="133" endTime="160">
+	<Effect class="SpinningBackgroundEffect" name="Tunnel1Spin" track="0" startTime="133" endTime="160">
 		<SetupCall name="AddTextureLayer">
 			<Parameter string="noise" />
 			<Parameter float="35.0" />

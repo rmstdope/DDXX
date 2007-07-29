@@ -31,12 +31,12 @@ ReflectiveVertexShader(VertexShaderInput input,
 	output.TexCoords = input.TexCoords;
 
 	float4 diffuse = 0;
-	for (int i = 0; i < NumLights; i++) {
-		float3 dir = LightPositions[i] - worldPosition;
-		float d = length(dir);
-		float att = 1;//min(1, 1 / (d * d * LightRanges[i]));
-		diffuse += att * LightDiffuseColors[i] * max(0, dot(worldNormal, normalize(dir)));
-	}
+	//for (int i = 0; i < NumLights; i++) {
+	//	float3 dir = LightPositions[i] - worldPosition;
+	//	float d = length(dir);
+	//	float att = 1;//min(1, 1 / (d * d * LightRanges[i]));
+	//	diffuse += att * LightDiffuseColors[i] * max(0, dot(worldNormal, normalize(dir)));
+	//}
 	output.Diffuse = diffuse * MaterialDiffuseColor;
 
 	// Get eye vector
@@ -44,11 +44,6 @@ ReflectiveVertexShader(VertexShaderInput input,
 	// Reflect eye vector around normal
 	output.Reflection = reflect(worldNormal, eyeVector);
 	output.VdN = dot(eyeVector, worldNormal);
-
-	// Reflection vector is R = (2V.N)N - V
-	//float3 viewVector = normalize(eyeVector);
-	//float normal = worldNormal;
-	//output.Reflection = dot(viewVector * 2, normal) * normal - viewVector;
 
 	return output;
 }

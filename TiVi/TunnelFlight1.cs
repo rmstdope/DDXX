@@ -6,16 +6,24 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.SceneGraph;
+using Dope.DDXX.MeshBuilder;
 
 namespace TiVi
 {
     public class TunnelFlight1 : TunnelFlightBase
     {
+        private class Diamond
+        {
+            public ModelNode Node;
+            public Vector3 Velocity;
+        };
+
         private const int NUM_RINGS = 32;
         private const int NUM_BLOCKS = 12;
 
         private List<Brick> fallingBricks = new List<Brick>();
         private TiVi tivi;
+        private List<Diamond> diamonds = new List<Diamond>();
 
         public TunnelFlight1(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
@@ -26,12 +34,28 @@ namespace TiVi
         {
             CreateStandardSceneAndCamera(out scene, out camera, 6);
             camera.WorldState.MoveUp(1.5f);
-            camera.SetFOV((float)Math.PI / 4);
+            camera.SetFOV((float)Math.PI / 3);
 
             tivi = new TiVi(tiviNode, camera, StartTime);
 
             CreateSplines();
             CreateFallingBricks();
+            CreateDiamonds();
+        }
+
+        private void CreateDiamonds()
+        {
+            TiViMeshDirector director = 
+                new TiViMeshDirector(MeshBuilder, new MeshDirector(MeshBuilder), EffectFactory, Device);
+            ModelNode node = director.CreateDiamondNode(0.2f);
+            for (int i = 0; i < 20; i++)
+            {
+                Diamond diamond = new Diamond();
+                diamond.Node = new ModelNode(i.ToString(), node.Model, node.EffectHandler, Device);
+                RestartDiamond(diamond);
+                scene.AddNode(diamond.Node);
+                diamonds.Add(diamond);
+            }
         }
 
         private void CreateFallingBricks()
@@ -59,9 +83,30 @@ namespace TiVi
 
         protected override void StepSpecific()
         {
+            StepDiamonds();
             StepFallingBricks();
             StepCamera();
             scene.Step();
+        }
+
+        private void StepDiamonds()
+        {
+            foreach (Diamond diamond in diamonds)
+            {
+                diamond.Node.WorldState.Turn(Time.DeltaTime);
+                diamond.Node.Position += diamond.Velocity * Time.DeltaTime * 1.5f;
+                if (diamond.Node.Position.Length() > 3)
+                    RestartDiamond(diamond);
+            }
+        }
+
+        private void RestartDiamond(Diamond diamond)
+        {
+            diamond.Node.Position = new Vector3((float)Math.Sin(Rand.Float(0, Math.PI * 2)), 0, (float)Math.Cos(Rand.Float(0, Math.PI * 2))) * 3;
+            diamond.Velocity = new Vector3(Rand.Float(-1, 1), Rand.Float(-0.2, 0.2), Rand.Float(-1, 1));
+            //diamond.Velocity = -diamond.Node.Position;
+            diamond.Velocity.Normalize();
+            diamond.Node.Position = new Vector3(diamond.Node.Position.X, 1, diamond.Node.Position.Z) + discInterpolator.GetValue(Time.StepTime - StartTime);
         }
 
         private void StepCamera()
@@ -89,12 +134,11 @@ namespace TiVi
             cameraInterpolator = new Interpolator<InterpolatedVector3>();
             spline = new ClampedCubicSpline<InterpolatedVector3>(new InterpolatedVector3(), new InterpolatedVector3());
             spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(0, new InterpolatedVector3(tivi.DestinationPos)));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(2, new InterpolatedVector3(new Vector3(tivi.DestinationPos.X, 1, 5))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(6, new InterpolatedVector3(new Vector3(-1.5f, 0.8f, 1.5f))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(9, new InterpolatedVector3(new Vector3(-1.0f, 1.0f, 1.5f))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(10, new InterpolatedVector3(new Vector3(1.0f, 2.8f, 1.5f))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(15, new InterpolatedVector3(new Vector3(-1.0f, 1.2f, -1.0f))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(20, new InterpolatedVector3(new Vector3(1.0f, 1.3f, 1.5f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(2, new InterpolatedVector3(new Vector3(tivi.DestinationPos.X + 1, 1, 4))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(6, new InterpolatedVector3(new Vector3(-1.9f, 0.8f, 1.5f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(10, new InterpolatedVector3(new Vector3(-1.8f, 2.0f, 1.3f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(15, new InterpolatedVector3(new Vector3(-1.5f, 1.2f, 1.0f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(20, new InterpolatedVector3(new Vector3(-1.6f, 1.3f, 1.2f))));
             spline.Calculate();
             cameraInterpolator.AddSpline(spline);
 
@@ -136,10 +180,9 @@ namespace TiVi
                         upAdd = (1 - zeroToOne) * FALL_HEIGHT;
                     }
                     model.WorldState.Reset();
-                    //model.WorldState.MoveForward(2);
                     model.WorldState.MoveUp(0 + 0.8f * j + upAdd);
                     model.WorldState.Tilt((float)Math.PI / 2);
-                    model.WorldState.Roll((Time.StepTime - StartTime) / 2 + (float)Math.PI * 2 * i / NUM_BLOCKS);
+                    model.WorldState.Roll((Time.StepTime - StartTime) / 1.0f + (float)Math.PI * 2 * i / NUM_BLOCKS);
                     model.WorldState.MoveUp(-3.0f);
                 }
             }

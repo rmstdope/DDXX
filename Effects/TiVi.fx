@@ -105,7 +105,6 @@ TiViReflectivePixelShader(ReflectivePixelInput input) : COLOR0
 	float m = min(min(reflection.r, reflection.g), reflection.b);
 	m = 4 * pow(m , 16);
 	reflection = reflection * m;
-	//reflection *= 2;//reflection.a * reflection.a * 2;
 	float3 color = tex2D(BaseTextureSampler, input.TexCoords) * (input.Diffuse + AmbientColor);
 	//float factor = ReflectiveFactor;// * reflection.a;
 	float factor = saturate((input.VdN * input.VdN) * ReflectiveFactor);
@@ -114,7 +113,7 @@ TiViReflectivePixelShader(ReflectivePixelInput input) : COLOR0
 	//return float4(reflection * ReflectiveFactor + color, 1);
 }
 
-technique TiViReflective
+technique TiViReflectiveSkinning
 <
 	bool NormalMapping = false;
 	bool Skinning = true;
@@ -122,8 +121,10 @@ technique TiViReflective
 {
 	pass BasePass
 	{
+		//VertexShader			= compile vs_2_0 SolidVertexShader(4);
+		//PixelShader				= compile ps_2_0 SolidPixelShader(BaseTextureSamplerBordered);
 		VertexShader			= compile vs_2_0 ReflectiveVertexShader(4);
-		PixelShader				= compile ps_2_0 TiViReflectivePixelShader();
+		PixelShader				= compile ps_2_0 ReflectivePixelShader();
 		AlphaTestEnable		= false;
 		AlphaBlendEnable	= false;
 		FillMode					= Solid;

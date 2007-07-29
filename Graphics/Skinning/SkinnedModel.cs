@@ -9,6 +9,13 @@ namespace Dope.DDXX.Graphics
 {
     public class SkinnedModel : ModelBase
     {
+        public enum AnimationDirection
+        {
+            Forward,
+            Backward,
+            PingPong
+        }
+
         private IAnimationRootFrame rootFrame;
         private IAnimationSet animationSet;
         private const int MAX_NUM_BONES = 60;
@@ -17,6 +24,13 @@ namespace Dope.DDXX.Graphics
         private int numBones;
         private float animationStartTime;
         private float animationSpeed;
+        private AnimationDirection direction = AnimationDirection.PingPong;
+
+        public AnimationDirection Direction
+        {
+            get { return direction; }
+            set { direction = value; }
+        }
 
         public IAnimationRootFrame AnimationRootFrame
         {
@@ -137,8 +151,21 @@ namespace Dope.DDXX.Graphics
             IAnimationController controller = rootFrame.AnimationController;
             if (controller != null)
             {
-                controller.AdvanceTime(animationSet.Period - (controller.Time % animationSet.Period));
-                controller.AdvanceTime((Time.StepTime - animationStartTime) * animationSpeed);
+                double rewindTime = animationSet.Period - (controller.Time % animationSet.Period);
+                if (rewindTime < 0)
+                    rewindTime += animationSet.Period;
+                double forwardTime = (Time.StepTime - animationStartTime) * animationSpeed;
+                int num = (int)(forwardTime / animationSet.Period);
+                forwardTime = forwardTime % animationSet.Period;
+                double time;
+                if (AnimationDirection.Forward == direction ||
+                    (AnimationDirection.PingPong == direction && (num & 1) == 0))
+                    time = rewindTime + forwardTime;
+                else
+                    time = rewindTime - forwardTime;
+                if (time < 0)
+                    time += animationSet.Period;
+                controller.AdvanceTime(time);
             }
         }
 

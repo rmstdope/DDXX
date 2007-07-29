@@ -79,20 +79,20 @@ namespace TiVi
                                 else
                                     return "Solid";
                             };
-                        case "Plane01":
+                        case "Walkway":
                             return TechniqueChooser.MaterialPrefix("TiViWalkwayMirror");
                         default:
                             return TechniqueChooser.MaterialPrefix("Terrain");
                     }
                 });
             XLoader.AddToScene(scene);
-            walkwayPlane = scene.GetNodeByName("Plane01") as ModelNode;
+            walkwayPlane = scene.GetNodeByName("Walkway") as ModelNode;
             walkwayStencilPlane = CreateStencilNodeOfNode(walkwayPlane);
             GraphicsStream stream = ShaderLoader.CompileShaderFromFile("Imaginations.psh", "CreateCloudTexture", null, "tx_1_0", ShaderFlags.None);
             ITexture tex = GraphicsFactory.CreateTexture(Device, 256, 256, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
             TextureLoader.FillTexture((Texture)((tex as TextureAdapter).BaseTextureDX), new TextureShader(stream));
             walkwayPlane.Model.Materials[0].DiffuseTexture = tex;
-            scene.RemoveNode(scene.GetNodeByName("Plane01"));
+            scene.RemoveNode(scene.GetNodeByName("Walkway"));
             tiviNode = (ModelNode)scene.GetNodeByName("TiVi");
             (tiviNode.Model as SkinnedModel).SetAnimationSet(0, StartTime, 1.03f);
             scene.ActiveCamera = scene.GetNodeByName("Camera01") as CameraNode;
