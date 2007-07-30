@@ -142,5 +142,15 @@ namespace Dope.DDXX.Physics
         }
 
         #endregion
+
+        #region IPhysicalParticle Members
+
+
+        public void Reset()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
     }
 }

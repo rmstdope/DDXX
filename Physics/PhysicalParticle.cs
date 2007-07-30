@@ -44,6 +44,13 @@ namespace Dope.DDXX.Physics
             externalForces = new Vector3(0, 0, 0);
         }
 
+        public void Reset()
+        {
+            lastDeltaTime = 0.002f;
+            externalForces = new Vector3(0, 0, 0);
+            this.lastVelocity = new Vector3(0, 0, 0);
+        }
+
         public Vector3 Position
         {
             get { return position; }

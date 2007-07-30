@@ -10,5 +10,6 @@ namespace Dope.DDXX.Physics
         Vector3 OldPosition { get; set; }
         void Step(Vector3 gravity);
         void ApplyForce(Vector3 force);
+        void Reset();
     }
 }

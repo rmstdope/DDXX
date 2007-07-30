@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Demo song="scanner-dopeasm2007-v1.mp3">
+<Demo>
+	<!--<Demo song="scanner-dopeasm2007-v1.mp3">-->
 	<!--Textures-->
 	<Generator name="noise" class="PerlinNoise">
 		<Parameter name="BaseFrequency" int="64" />
@@ -261,7 +262,7 @@
 	</PostEffect>-->
 
 	<!--Physical cubes effect-->
-	<!--<Effect class="MovingCloudBackground" name="CubesBackground" track="0" startTime="227" endTime="240">
+	<Effect class="MovingCloudBackground" name="CubesBackground" track="0" startTime="227" endTime="240">
 		<Parameter name="Persistance" float="0.5000001" />
 		<Parameter name="NumOctaves" int="12" />
 		<Parameter name="BaseFrequency" int="7" />
@@ -270,12 +271,14 @@
 		<Parameter name="CloudColor1" Color="255, 10, 10, 20" />
 		<Parameter name="CloudColor2" Color="255, 10, 10, 20" />
 	</Effect>
-	<Effect class="PhysicalCubes" track="0" startTime="227" endTime="240">
+	<Effect class="PhysicalCubes" track="0" startTime="227" endTime="260">
 		<Parameter name="DrawOrder" int="0" />
+		<Parameter name="FocalDistance" float="40" />
+		<Parameter name="HyperfocalDistance" float="0.18" />
 	</Effect>
-	<PostEffect class="DepthOfFieldPostEffect" track="0" startTime="227" endTime="240">
+	<PostEffect class="DepthOfFieldPostEffect" track="0" startTime="227" endTime="260">
 		<Parameter name="DrawOrder" int="0" />
-	</PostEffect>-->
+	</PostEffect>
 	<!--<PostEffect class="GlowPostEffect" name="CubesGlow" track="0" startTime="227" endTime="240">
 		<Parameter name="BloomScale" float="1.5" />
 		<Parameter name="Exposure" float="0.8000003" />
@@ -378,7 +381,7 @@
 		<Parameter name="CloudColor1" Color="255, 10, 10, 20" />
 		<Parameter name="CloudColor2" Color="255, 10, 10, 20" />
 	</Effect>-->
-	<Effect class="FilmRoll" track="0" startTime="42" endTime="300">
+	<!--<Effect class="FilmRoll" track="0" startTime="42" endTime="300">
 		<Parameter name="FilmRounding" float="0.02000001" />
 		<Parameter name="FilmWidth" float="0.65" />
 		<Parameter name="DrawOrder" int="1" />
@@ -386,7 +389,7 @@
 		<Parameter name="PerforationHeight" float="0.06999999" />
 		<Parameter name="PerforationDistance" float="0.06999999" />
 		<Parameter name="SlowDown" int="64" />
-	</Effect>
+	</Effect>-->
 	<!--<PostEffect class="OverlayPostEffect" track="0" startTime="42" endTime="300.0">
 		<Parameter name="AddNoise" bool="true" />
 		<Parameter name="Filename" string="Noise2.jpg" />

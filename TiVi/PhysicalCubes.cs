@@ -55,17 +55,40 @@ namespace TiVi
             public Vector3 up;
             public Vector3 forward;
             public Vector3 right;
+            public bool active;
         }
 
-        private ILine line;
+        //private ILine line;
         private IScene scene;
         private CameraNode camera;
         private List<PhysicalCube> cubes = new List<PhysicalCube>();
         private ChessBoard chessBoard;
+        protected Interpolator<InterpolatedVector3> cameraInterpolator;
+        protected Interpolator<InterpolatedVector3> cameraTargetInterpolator;
+        protected Interpolator<InterpolatedVector3> focalTargetInterpolator;
+        private IEffect effect;
+        private float focalDistance;
+        private float hyperfocalDistance;
+        private float loopTime;
+
+        public float FocalDistance
+        {
+            get { return focalDistance; }
+            set { focalDistance = value; }
+        }
+
+        public float HyperfocalDistance
+        {
+            get { return hyperfocalDistance; }
+            set { hyperfocalDistance = value; }
+        }
 
         public PhysicalCubes(string name, float start, float end)
             : base(name, start, end)
         {
+            focalDistance = 40;
+            hyperfocalDistance = 0.1f;
+            SetStepSize(GetTweakableNumber("HyperfocalDistance"), 0.01f);
         }
 
         private Vector4 celMapCallback(Vector2 texCoord, Vector2 texelSize)
@@ -81,73 +104,60 @@ namespace TiVi
 
         protected override void Initialize()
         {
-            ITexture celTexture = TextureFactory.CreateFromFunction(64, 1, 0, Usage.None, Format.A8R8G8B8, Pool.Managed, celMapCallback);
+            //ITexture celTexture = TextureFactory.CreateFromFunction(64, 1, 0, Usage.None, Format.A8R8G8B8, Pool.Managed, celMapCallback);
+
+            CreateStandardSceneAndCamera(out scene, out camera, 30);
+            camera.SetFOV((float)Math.PI * 0.3f);
 
             cubes.Clear();
-
-            string[] text1 = new string[] {
-                "***** ***** **** ",
-                "*   * *     *   *",
-                "***** ***** *   *",
-                "*   *     * *   *", 
-                "*   * ***** **** ",
-            };
-            string[] text2 = new string[] {
-                "**   **  ***  ***  *",
-                "* * *  * *  * *    * ",
-                "* * *  * ***  ***  * ",
-                "* * *  * *    *      ",
-                "**   **  *    ***  * ",
-            };
-            string[] text;
-            if (Rand.Int(-1, 1) == 0)
-                text = text1;
-            else
-                text = text2;
-
-            const float epsilon = 0.01f;
-            CreateStandardSceneAndCamera(out scene, out camera, 30);
-            camera.WorldState.MoveUp(20);
-            line = GraphicsFactory.CreateLine(Device);
-
-            int yLength = text.Length;
-            for (int y = 0; y < yLength; y++)
-            {
-                int xLength = text[y].Length;
-                for (int x = 0; x < xLength; x++)
-                {
-                    if (text[y][x] == '*')
-                    {
-                        Vector3 pos = new Vector3((x - xLength / 2) * 2.4f, 20 - y * 2.4f, 0);
-                        cubes.Add(CreateBox(pos, celTexture));
-                        foreach (IPhysicalParticle particle in cubes[cubes.Count - 1].body.Particles)
-                        {
-                            particle.Position += new Vector3(
-                                0, 0, Rand.Float(0, epsilon));
-                        }
-                    }
-                }
-            }
+            for (int i = 0; i < GetMaxNumCubes(); i++)
+                cubes.Add(CreateBox(new Vector3(1000, 0, 0)));
+            ResetText(0);
 
             CreateLights();
-            //for (int i = 0; i < 2; i++)
-            //{
-            //    DirectionalLightNode light = new DirectionalLightNode("Light" + i);
-            //    scene.AddNode(light);
-            //    float x = 0;// i - 0.5f;
-            //    float y = 0;// Rand.Float(-1, 1);
-            //    float z = (i * 2) - 1;// Rand.Float(-1, 0);
-            //    light.Direction = new Vector3(x, y, z);
-            //}
+            CreateSplines();
 
-            //MeshDirector director = new MeshDirector(MeshBuilder);
-            //director.CreatePlane(100, 100, 1, 1, true);
-            //director.Rotate((float)Math.PI / 2, 0, 0);
-            //MeshBuilder.SetDiffuseTexture("Default1", "marble.jpg");
-            //IModel model = director.Generate("Default1");
-            //scene.AddNode(CreateSimpleModelNode(model, "TiVi.fxo", "Alpha"));
+            effect = EffectFactory.CreateFromFile("TiVi.fxo");
+            chessBoard = new ChessBoard(scene, MeshBuilder, effect, Device, 10);
+        }
 
-            chessBoard = new ChessBoard(scene, MeshBuilder, EffectFactory.CreateFromFile("TiVi.fxo"), Device, 10);
+        private void CreateSplines()
+        {
+            loopTime = 8;
+
+            cameraInterpolator = new Interpolator<InterpolatedVector3>();
+            ClampedCubicSpline<InterpolatedVector3> spline = new ClampedCubicSpline<InterpolatedVector3>(new InterpolatedVector3(), new InterpolatedVector3());
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(0, new InterpolatedVector3(new Vector3(-60, 20, -50.0f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(3, new InterpolatedVector3(new Vector3(0, 20, -55.0f))));
+            spline.Calculate();
+            cameraInterpolator.AddSpline(spline);
+            spline = new ClampedCubicSpline<InterpolatedVector3>(new InterpolatedVector3(), new InterpolatedVector3());
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(4, new InterpolatedVector3(new Vector3(0, 20, -55.0f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(5, new InterpolatedVector3(new Vector3(0, 4, 0.0f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(6, new InterpolatedVector3(new Vector3(-10, 6, 5.0f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(7, new InterpolatedVector3(new Vector3(-60, 20, -50.0f))));
+            spline.Calculate();
+            cameraInterpolator.AddSpline(spline);
+
+            cameraTargetInterpolator = new Interpolator<InterpolatedVector3>();
+            spline = new ClampedCubicSpline<InterpolatedVector3>(new InterpolatedVector3(), new InterpolatedVector3());
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(0, new InterpolatedVector3(new Vector3(0.0f, 10.0f, 0.0f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(4, new InterpolatedVector3(new Vector3(0.0f, 6.0f, 0.01f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(5, new InterpolatedVector3(new Vector3(10, 4, 30.0f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(6, new InterpolatedVector3(new Vector3(10, 5, 30.0f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(7, new InterpolatedVector3(new Vector3(0.0f, 10.0f, 0.0f))));
+            spline.Calculate();
+            cameraTargetInterpolator.AddSpline(spline);
+
+            focalTargetInterpolator = new Interpolator<InterpolatedVector3>();
+            spline = new ClampedCubicSpline<InterpolatedVector3>(new InterpolatedVector3(), new InterpolatedVector3());
+            //spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(0, new InterpolatedVector3(new Vector3(-30, 20, -39.0f))));
+            //spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(0, new InterpolatedVector3(new Vector3(0.0f, 15.0f, 0.0f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(6, new InterpolatedVector3(new Vector3(0.0f, 15.0f, 0.0f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(7, new InterpolatedVector3(new Vector3(-30, 20, -39.0f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(8, new InterpolatedVector3(new Vector3(0.0f, 15.0f, 0.0f))));
+            spline.Calculate();
+            focalTargetInterpolator.AddSpline(spline);
         }
 
         private void CreateLights()
@@ -164,7 +174,7 @@ namespace TiVi
             lights[1].Range = 0.0003f;
             scene.AddNode(lights[1]);
         }
-        private PhysicalCube CreateBox(Vector3 pos, ITexture texture)
+        private PhysicalCube CreateBox(Vector3 pos)
         {
             PhysicalCube cube = new PhysicalCube();
             const float stiffness = 1.0f;
@@ -205,7 +215,8 @@ namespace TiVi
             body.Gravity = new Vector3(0, -100.0f, 0);
 
             MeshDirector director = new MeshDirector(MeshBuilder);
-            director.CreateChamferBox(2, 2, 2, 0.6f, 4);
+            //director.CreateChamferBox(2, 2, 2, 0.6f, 4);
+            director.CreateBox(2, 2, 2);
             IModel model = director.Generate("Default1");
             model.Mesh.ComputeNormals();
             //model.Materials[0].DiffuseTexture = texture;
@@ -220,37 +231,207 @@ namespace TiVi
             cube.model.Position = pos;
             cube.body = body;
             cube.floorContact = false;
+            cube.active = false;
             cube.mirror = new MirrorNode(cube.model);
-            cube.mirror.Brightness = 0.2f;
+            cube.mirror.Brightness = 0.4f;
             return cube;
         }
 
         public override void Step()
         {
             Vector3 origo;
-            float t = Time.StepTime * 0.1f;
+            //float t = Time.StepTime * 0.1f;
 
-            if (Time.StepTime - StartTime < 2.0f)
-                ;//Initialize();
-            else
+            float t = (Time.StepTime - StartTime) % loopTime;
+            int loop = (int)((Time.StepTime - StartTime) / loopTime);
+            if (t > loopTime - 2)
+                ResetText(loop + 1);
+            else if (t > 2.5f)
             {
                 foreach (PhysicalCube cube in cubes)
-                {
-                    cube.body.Step();
-                    GetBodyBase(cube, out origo);
-                    UpdateNode(cube, origo);
-                }
-                foreach (PhysicalCube cube in cubes)
-                {
-                    LimitNodeToFloor(cube);
-                    CheckColidingCubes(cube);
-                    UpdateBody(cube);
-                }
+                    if (cube.active)
+                        cube.body.Step();
+            }
+            foreach (PhysicalCube cube in cubes)
+            {
+                GetBodyBase(cube, out origo);
+                UpdateNode(cube, origo);
+            }
+            foreach (PhysicalCube cube in cubes)
+            {
+                LimitNodeToFloor(cube);
+                CheckColidingCubes(cube);
+                UpdateBody(cube);
             }
 
-            camera.Position = new Vector3((float)Math.Sin(t), 0.3f, (float)Math.Cos(t)) * 60;
-            camera.LookAt(new Vector3(), new Vector3(0, 1, 0));
+            camera.WorldState.Position = cameraInterpolator.GetValue(t);
+            camera.LookAt(cameraTargetInterpolator.GetValue(t), new Vector3(0, 1, 0));
+
+            //camera.Position = new Vector3((float)Math.Sin(t), 0.3f, (float)Math.Cos(t)) * 60;
+            //camera.LookAt(new Vector3(), new Vector3(0, 1, 0));
+            Vector3 position = cameraInterpolator.GetValue(t);
+            Vector3 target = focalTargetInterpolator.GetValue(t);
+            Vector3 dir = target - position;
+            float dist = dir.Length();
+            dir.Normalize();
+            Vector4 vec = new Vector4(0, 0, 1, -dist);
+            //Vector4 vec = new Vector4(dir.X, dir.Y, dir.Z, -dist);
+            effect.SetValue(EffectHandle.FromString("FocalPlane"), vec);
+            effect.SetValue(EffectHandle.FromString("HyperfocalDistance"), hyperfocalDistance);
+            
             scene.Step();
+        }
+
+        private void ResetText(int num)
+        {
+            string text = GetText(num);
+            float xLength = GetXLength(text);
+            float yLength = GetYLength(text);
+            const float epsilon = 0.01f;
+            int cubeNum = 0;
+            int yPos = 0;
+            int xPos = 0;
+            const float cubeDist = 2.4f;
+            for (int j = 0; j < text.Length; j++)
+            {
+                if (text[j] == 'x')
+                {
+                    xPos = 0;
+                    yPos++;
+                }
+                else
+                {
+                    if (text[j] == '*')
+                    {
+                        Vector3 pos = new Vector3((xPos - xLength / 2), (yLength - yPos + 2), 0);
+                        pos *= cubeDist;
+                        List<IPhysicalParticle> particles = cubes[cubeNum].body.Particles;
+                        foreach (IPhysicalParticle particle in particles)
+                        {
+                            particle.Reset();
+                        }
+                        particles[0].Position = new Vector3(-1, 1, 1) + pos;
+                        particles[1].Position = new Vector3(1, 1, 1) + pos;
+                        particles[2].Position = new Vector3(1, -1, 1) + pos;
+                        particles[3].Position = new Vector3(-1, -1, 1) + pos;
+                        particles[4].Position = new Vector3(-1, 1, -1) + pos;
+                        particles[5].Position = new Vector3(1, 1, -1) + pos;
+                        particles[6].Position = new Vector3(1, -1, -1) + pos;
+                        particles[7].Position = new Vector3(-1, -1, -1) + pos;
+                        foreach (IPhysicalParticle particle in particles)
+                        {
+                            particle.OldPosition = particle.Position;
+                            particle.Position += new Vector3(0, 0, Rand.Float(0, epsilon));
+                            particle.DragCoefficient = 0.05f;
+                        }
+                        cubes[cubeNum].floorContact = false;
+                        cubes[cubeNum].active = true;
+                        cubeNum++;
+                    }
+                    xPos++;
+                }
+            }
+        }
+
+        private float GetYLength(string text)
+        {
+            float yNum = 0;
+            for (int j = 0; j < text.Length; j++)
+            {
+                if (text[j] == 'x')
+                    yNum++;
+            }
+            return yNum;
+        }
+
+        private float GetXLength(string text)
+        {
+            float xMax = 0;
+            int xPos = 0;
+            int yPos = 0;
+            for (int j = 0; j < text.Length; j++)
+            {
+                if (text[j] == 'x')
+                {
+                    if (xPos > xMax)
+                        xMax = xPos;
+                    xPos = 0;
+                    yPos++;
+                }
+                else
+                    xPos++;
+            }
+            return xMax;
+        }
+
+        private string[] allTexts = new string[] {
+            "***** ***** **** x" +
+            "*   * *     *   *x" +
+            "***** ***** *   *x" +
+            "*   *     * *   *x" +
+            "*   * ***** **** x" +
+            "xxxx",
+
+            "    *** * * ***x" +
+            "    * * * *  * x" +
+            "    * * * *  * x" +
+            "    * * * *  * x" +
+            "    *** ***  * x" +
+            "x" +
+            "**  **  *** *** * *x" +
+            "* * * * *   * * * *x" +
+            "**  **  *** *** ** x" +
+            "* * * * *   * * * *x" +
+            "**  * * *** * * * *x",
+                
+            "***** ***** *****x" +
+            "*       *   *    x" +
+            "*****   *   *****x" +
+            "    *   *       *x" +
+            "*****   *   *****x" +
+            "xxxx",
+
+            "  *** *** *** ** x" +
+            "  *   * * * * * *x" +
+            "  *** *** **  ** x" +
+            "  *   * * * * * *x" +
+            "  *   * * * * ** x" +
+            "x" +
+            "*** *** * * *** * *x" +
+            "* * * * * * *   * *x" +
+            "**  *** * * *   ***x" +
+            "* * * * * * *   * *x" +
+            "* * * * *** *** * *",
+
+            "***** ****  *    x" +
+            "  *   *   * *    x" +
+            "  *   ****  *    x" +
+            "  *   *   * *    x" +
+            "  *   ****  *****x" +
+            "xxxx",
+
+            };
+
+        private string GetText(int num)
+        {
+            return allTexts[num];
+        }
+
+        private int GetMaxNumCubes()
+        {
+            int max = 0;
+            for (int i = 0; i < allTexts.Length; i++)
+            {
+                int num = 0;
+                for (int j = 0; j < allTexts[i].Length; j++)
+                {
+                    if (allTexts[i][j] == '*')
+                        num++;
+                }
+                if (num > max)
+                    max = num;
+            }
+            return max;
         }
 
         private void CheckColidingCubes(PhysicalCube cube)
@@ -334,11 +515,6 @@ namespace TiVi
             cube.forward.Normalize();
             cube.up.Normalize();
             cube.right.Normalize();
-
-            //origo = new Vector3();
-            //foreach (IPhysicalParticle particle in body.Particles)
-            //    origo += particle.Position;
-            //origo.Scale(1/8.0f);
         }
 
         private static void UpdateNode(PhysicalCube cube, Vector3 origo)
@@ -361,31 +537,34 @@ namespace TiVi
         public override void Render()
         {
             scene.SetEffectParameters();
-            chessBoard.Render(scene);
+            //chessBoard.Render(scene);
             foreach (PhysicalCube cube in cubes)
             {
-                //Matrix transform = camera.ViewMatrix * camera.ProjectionMatrix;
-                //Vector3[] vecs = new Vector3[] { new Vector3(0, 0, 0), new Vector3(10, 0, 0) };
-                //Vector3[] vertices = new Vector3[cube.body.Particles.Count];
-                //for (int i = 0; i < vertices.Length; i++)
-                //    vertices[i] = cube.body.Particles[i].Position;
-                //line.Width = 1;
-                //line.Begin();
-                //foreach (IConstraint constraint in cube.body.Constraints)
-                //{
-                //    if (constraint is StickConstraint)
-                //    {
-                //        StickConstraint stick = constraint as StickConstraint;
-                //        line.DrawTransform(new Vector3[] { stick.Particle1.Position, stick.Particle2.Position }, transform, Color.White);
-                //    }
-                //}
-                //line.End();
-                //cube.model.EffectHandler.Techniques[0] = EffectHandle.FromString("CelWithDoF");
+                //DrawLineCube(cube);
                 cube.model.Render(scene);
-                //cube.model.EffectHandler.Techniques[0] = EffectHandle.FromString("CelWithDoFMirrored");
                 cube.mirror.Render(scene);
             }
             scene.Render();
+        }
+
+        private void DrawLineCube(PhysicalCube cube)
+        {
+            //Matrix transform = camera.ViewMatrix * camera.ProjectionMatrix;
+            //Vector3[] vecs = new Vector3[] { new Vector3(0, 0, 0), new Vector3(10, 0, 0) };
+            //Vector3[] vertices = new Vector3[cube.body.Particles.Count];
+            //for (int i = 0; i < vertices.Length; i++)
+            //    vertices[i] = cube.body.Particles[i].Position;
+            //line.Width = 1;
+            //line.Begin();
+            //foreach (IConstraint constraint in cube.body.Constraints)
+            //{
+            //    if (constraint is StickConstraint)
+            //    {
+            //        StickConstraint stick = constraint as StickConstraint;
+            //        line.DrawTransform(new Vector3[] { stick.Particle1.Position, stick.Particle2.Position }, transform, Color.White);
+            //    }
+            //}
+            //line.End();
         }
     }
 }
