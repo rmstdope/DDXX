@@ -73,7 +73,7 @@ technique SimpleMirroredTexture
 	}
 }
 
-technique SimpleAlphaBlend
+technique FilmRoll
 <
 	bool NormalMapping = false;
 	bool Skinning = false;
@@ -93,6 +93,6 @@ technique SimpleAlphaBlend
 		ZWriteEnable			= true;
 		ZFunc							= Less;
 		StencilEnable			= false;
-		CullMode					= CCW;
+		CullMode					= None;
 	}
 }

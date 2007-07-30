@@ -13,23 +13,19 @@ using Dope.DDXX.DemoEffects;
 using Dope.DDXX.TextureBuilder;
 using Microsoft.DirectX;
 
-namespace EngineTest
-{
-    public class FilmRoll : BaseDemoEffect
-    {
+namespace EngineTest {
+    public class FilmRoll : BaseDemoEffect {
         private DummyNode film;
-        private DummyNode filmWithCover;
-        private float xAngle;
-        private float yAngle;
-        private float zAngle;
         private CameraNode camera;
+        private ModelNode filmNode;
+        private ModelNode stillFilmNode;
         private IScene scene;
-        private ITexture[] filmTextures;
+        private ITexture filmTexture;
+        private ITexture filmRenderTarget;
         private IDemoEffect subEffect;
         private ISprite sprite;
         private ITexture filmSquareTexture;
         private ITexture filmPerforationTexture;
-        private ITexture fadeTexture;
         private float rounding = 0.05f;
         private float filmWidth = 0.6f;
         private float squareWidth = 1.37f;
@@ -37,26 +33,26 @@ namespace EngineTest
         private float perforationWidth = 0.05f;
         private float perforationHeight = 0.03f;
         private float perforationDistance = 0.03f;
-        private ModelNode[] squareModelNodes;
         private const int squareCount = 10;
+        private const int textureCount = squareCount + 2;
         private const int heightSegments = 5;
+        float[] yValues = new float[squareCount * heightSegments + 1];
         float[] zValues = new float[squareCount * heightSegments + 1];
         private float filmOffset;
         private const float zDelta = 0.01f;
         private int currentFilmTexture;
-        IModel coverModel1;
-        IModel coverModel2;
         private int slowDown = 8;
         private float curveOffset;
+        const int textureWidth = 128;
+        const int textureHeight = 128;
 
         public FilmRoll(string name, float start, float end)
-            : base(name, start, end)
-        {
-            filmTextures = new ITexture[squareCount];
-            for (int i = 0; i < squareCount; i++) {
-                filmTextures[i] = TextureFactory.CreateRenderTarget(256, 256, Format.A8R8G8B8);
-            }
-            currentFilmTexture = squareCount - 1;
+            : base(name, start, end) {
+            filmTexture = TextureFactory.CreateRenderTarget(textureWidth,
+                textureHeight * textureCount, Format.A8R8G8B8);
+            filmRenderTarget = TextureFactory.CreateRenderTarget(textureWidth,
+                textureHeight, Format.A8R8G8B8);
+            currentFilmTexture = textureCount - 1;
             SetStepSize(GetTweakableNumber("FilmWidth"), 0.01f);
             SetStepSize(GetTweakableNumber("FilmRounding"), 0.01f);
             SetStepSize(GetTweakableNumber("PerforationWidth"), 0.01f);
@@ -64,79 +60,104 @@ namespace EngineTest
             SetStepSize(GetTweakableNumber("PerforationDistance"), 0.01f);
         }
 
-        protected override void Initialize()
-        {
+        protected override void Initialize() {
             InitializeSubEffects();
             sprite = GraphicsFactory.CreateSprite(Device);
             CreateFilmSquareTexture();
             CreateFilmPerforationTexture();
-            CreateFadeTexture();
 
-            CreateStandardSceneAndCamera(out scene, out camera, 12);
+            CreateStandardSceneAndCamera(out scene, out camera, 15);
             film = new DummyNode("Film roll");
-            filmWithCover = new DummyNode("Film with cover");
-
-            squareModelNodes = new ModelNode[squareCount];
 
             //MeshBuilder.SetDiffuseTexture("Default1", "FLOWER6P.jpg");
-     
+
             MeshDirector meshDirector = new MeshDirector(MeshBuilder);
-            meshDirector.CreatePlane(squareWidth, squareHeight, 1, heightSegments, true);
-            for (int i = 0; i < squareCount; i++) {
-                IModel model = meshDirector.Generate("Default1");
-                model.Materials[0].AmbientColor = ColorValue.FromColor(Color.White);
-                model.Materials[0].DiffuseTexture = filmTextures[i];
-                ModelNode plane = CreateSimpleModelNode(model, "TiVi.fxo", "SimpleAlphaBlend");
-                plane.WorldState.MoveUp(i * squareHeight - (squareCount / 2) * squareHeight);
-                film.AddChild(plane);
-                squareModelNodes[i] = plane;
-            }
-            coverModel1 = meshDirector.Generate("Default1");
-            coverModel2 = meshDirector.Generate("Default1");
-            coverModel1.Materials[0].AmbientColor = ColorValue.FromColor(Color.White);
-            coverModel1.Materials[0].DiffuseTexture = fadeTexture;
-            coverModel2.Materials[0].AmbientColor = ColorValue.FromColor(Color.White);
-            coverModel2.Materials[0].DiffuseTexture = fadeTexture;
-            ModelNode cover1 = CreateSimpleModelNode(coverModel1, "TiVi.fxo", "SimpleAlphaBlend");
-            ModelNode cover2 = CreateSimpleModelNode(coverModel2, "TiVi.fxo", "SimpleAlphaBlend");
-            Vector3 coverPos = cover1.WorldState.Position;
-            coverPos.X -= 0.5f;
-            coverPos.Y = squareCount * squareHeight - (squareCount / 2) * squareHeight;
-            coverPos.Z -= zDelta;
-            cover1.WorldState.Position = coverPos;
-            cover1.WorldState.Scale(2.0f);
-            coverPos = cover2.WorldState.Position;
-            //coverPos.X -= 0.5f;
-            coverPos.Y = 0 * squareHeight - (squareCount / 2) * squareHeight;
-            coverPos.Z -= zDelta;
-            cover2.WorldState.Position = coverPos;
-            //cover2.WorldState.Scale(2.0f);
-            //film.WorldState.Turn(-(float)(Math.PI / 3));
+            meshDirector.CreatePlane(squareWidth, squareCount * squareHeight, 1,
+                squareCount * (heightSegments + 1) - 1, true);
+            IModel filmModel = meshDirector.Generate("Default1");
+            filmModel.Materials[0].AmbientColor = ColorValue.FromColor(Color.White);
+            filmModel.Materials[0].DiffuseTexture = filmTexture;
+            filmNode = CreateSimpleModelNode(filmModel, "TiVi.fxo", "FilmRoll");
+            film.AddChild(filmNode);
+
+            meshDirector.CreatePlane(squareWidth, squareHeight, 1, 1, true);
+            IModel stillFilmModel = meshDirector.Generate("Default1");
+            stillFilmModel.Materials[0].AmbientColor = ColorValue.FromColor(Color.White);
+            stillFilmModel.Materials[0].DiffuseTexture = filmTexture;
+            stillFilmNode = CreateSimpleModelNode(stillFilmModel, "TiVi.fxo", "FilmRoll");
+            stillFilmNode.WorldState.MoveUp(-(squareHeight*squareCount)/2-squareHeight/2);
+            stillFilmNode.WorldState.MoveForward(-zDelta);
+            film.AddChild(stillFilmNode);
+
+            film.WorldState.Turn(-(float)(-Math.PI / 4));
+            film.WorldState.Tilt(-(float)(-Math.PI / 3));
             //film.WorldState.MoveUp(-5);
             //camera.WorldState.Tilt(-(float)(Math.PI / 4));
-            filmWithCover.AddChild(cover1);
-            filmWithCover.AddChild(cover2);
-            filmWithCover.AddChild(film);
+            scene.AddNode(film);
 
-            filmWithCover.WorldState.Turn((float)(Math.PI / 4));
-            filmWithCover.WorldState.Tilt((float)(Math.PI / 4));
-            filmWithCover.WorldState.MoveRight(2);
-            filmWithCover.WorldState.MoveUp(2);
-            scene.AddNode(filmWithCover);
+            SetVertices();
+            SetFilmTextureCoordinates();
+            SetStillFilmTextureCoordinates();
 
-            //SetVertices();
             scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
             //Mixer.ClearColor = Color.Blue;
+
+            // TODO: why doesn't this draw the blue film frames and perforations?
+            DrawEmptyFilmTextures();
+        }
+
+        private void SetStillFilmTextureCoordinates() {
+            int textureIndex = NextFilmTexture(currentFilmTexture);
+            IModel model = stillFilmNode.Model;
+            using (IVertexBuffer vb = model.Mesh.VertexBuffer) {
+                CustomVertex.PositionNormalTextured[] verts =
+                    (CustomVertex.PositionNormalTextured[])
+                    vb.Lock(0, typeof(CustomVertex.PositionNormalTextured), LockFlags.None, model.Mesh.NumberVertices);
+                try {
+                    float yOffset = (float)textureIndex / (float)textureCount;
+                    verts[0].Tv = yOffset;
+                    verts[1].Tv = yOffset;
+                    verts[2].Tv = yOffset + (float)1 / textureCount;
+                    verts[3].Tv = yOffset + (float)1 / textureCount;
+                } finally {
+                    vb.Unlock();
+                }
+            }
+        }
+
+        private void CalculateCoordinates() {
+            for (int i = 0; i <= squareCount * heightSegments; i++) {
+                yValues[i] = i * squareHeight / heightSegments - (squareCount * squareHeight / 2);
+                zValues[i] = (float)(0.5 * Math.Sin(curveOffset + ((float)i / zValues.Length) * Math.PI * 2 * 4));
+            }
         }
 
         private void SetVertices() {
-            for (int i = 0; i < zValues.Length; i++) {
-                zValues[i] = (float)(Math.Sin(curveOffset + ((float)i / zValues.Length) * Math.PI * 2 * 4));
-            }
-            int offset = 0;
-            for (int k = 0; k < squareCount; k++) {
-                IModel model = squareModelNodes[k].Model;
-                offset = SetModelVertices(model, offset);
+            CalculateCoordinates();
+            IModel model = filmNode.Model;
+            using (IVertexBuffer vb = model.Mesh.VertexBuffer) {
+                CustomVertex.PositionNormalTextured[] verts =
+                    (CustomVertex.PositionNormalTextured[])
+                    vb.Lock(0, typeof(CustomVertex.PositionNormalTextured), LockFlags.None, model.Mesh.NumberVertices);
+                try {
+                    int offset = 0;
+                    for (int squareIndex = squareCount-1; squareIndex >= 0; squareIndex--) {
+                        int vertexOffset = squareIndex * (heightSegments + 1) * 2;
+                        for (int i = heightSegments; i >= 0; i--) {
+                            float y = yValues[offset];
+                            float z = zValues[offset];
+                            verts[vertexOffset + i * 2 + 0].Y = y;
+                            verts[vertexOffset + i * 2 + 0].Z = z;
+                            verts[vertexOffset + i * 2 + 1].Y = y;
+                            verts[vertexOffset + i * 2 + 1].Z = z;
+                            // last two y positions same, unless last square
+                            if (i > 0 || squareIndex == 0)
+                                offset++;
+                        }
+                    }
+                } finally {
+                    vb.Unlock();
+                }
             }
         }
 
@@ -144,49 +165,52 @@ namespace EngineTest
             filmOffset -= squareHeight / slowDown;
             if (filmOffset < 0) {
                 filmOffset += squareHeight;
+                currentFilmTexture = NextFilmTexture(currentFilmTexture);
                 StepSubEffect();
-                MoveFilmTextures();
             }
-            Vector3 pos = film.WorldState.Position;
-            pos.Y = filmOffset;
-            film.WorldState.Position = pos;
+            SetFilmTextureCoordinates();
         }
 
-        private void MoveFilmTextures() {
-            int t = currentFilmTexture;
-            for (int i = squareCount - 1; i >= 0; i--) {
-                squareModelNodes[i].Model.Materials[0].DiffuseTexture =
-                    filmTextures[t];
-                t -= 1;
-                if (t < 0)
-                    t += squareCount;
+        private void SetFilmTextureCoordinates() {
+            int textureIndex = NextFilmTexture(currentFilmTexture);
+            textureIndex = NextFilmTexture(textureIndex);
+            for (int squareIndex = squareCount - 1; squareIndex >= 0; squareIndex--) {
+                //squareModelNodes[i].Model.Materials[0].DiffuseTexture =
+                //    filmTextures[t];
+                SetTextureCoordinates(squareIndex, textureIndex);
+                textureIndex = NextFilmTexture(textureIndex);
             }
-            coverModel2.Materials[0].DiffuseTexture = 
-                squareModelNodes[0].Model.Materials[0].DiffuseTexture;
-            currentFilmTexture += 1;
-            if (currentFilmTexture >= squareCount)
-                currentFilmTexture -= squareCount;
         }
 
-        private int SetModelVertices(IModel model, int offset) {
+        private int NextFilmTexture(int index) {
+            index -= 1;
+            if (index < 0)
+                index += (textureCount-1);
+            return index;
+        }
+
+        private void SetTextureCoordinates(int squareIndex, int textureIndex) {
+            IModel model = filmNode.Model;
             using (IVertexBuffer vb = model.Mesh.VertexBuffer) {
                 CustomVertex.PositionNormalTextured[] verts =
                     (CustomVertex.PositionNormalTextured[])
                     vb.Lock(0, typeof(CustomVertex.PositionNormalTextured), LockFlags.None, model.Mesh.NumberVertices);
                 try {
-                    for (int i = verts.Length-2; i >= 0; i -= 2) {
-                        float z = zValues[offset];
-                        verts[i + 0].Z = z;
-                        verts[i + 1].Z = z;
-                        if (i > 0)
-                            offset++;
+                    //float yOffset = (filmOffset / squareHeight) * heightSegments + textureIndex * heightSegments;
+                    float yOffset = (float)textureIndex / (float)textureCount;
+                    int vertexOffset = squareIndex * (heightSegments + 1) * 2;
+                    for (int i = 0; i <= heightSegments; i++) {
+                        float tv = yOffset + (float)i / (heightSegments*textureCount);
+                        tv += filmOffset / (squareHeight*textureCount);
+                        verts[vertexOffset + i * 2].Tv = tv;
+                        verts[vertexOffset + i * 2 + 1].Tv = tv;
                     }
                 } finally {
                     vb.Unlock();
                 }
             }
-            return offset;
         }
+
 
         private void InitializeSubEffects() {
             subEffect = new DiscoFever("film effect", StartTime, EndTime);
@@ -218,8 +242,8 @@ namespace EngineTest
         }
 
         private void CreateFilmSquareTexture() {
-            const int width = 256;
-            const int height = 256;
+            const int width = textureWidth;
+            const int height = textureHeight;
             if (Device != null) {
                 float ratio = 1.37f * squareHeight / squareWidth;
                 Vector2 size = new Vector2(FilmWidth, FilmWidth / ratio);
@@ -230,8 +254,8 @@ namespace EngineTest
 
         private void CreateFilmPerforationTexture() {
             if (Device != null) {
-                int w = (int)(256 * PerforationWidth / squareWidth);
-                int h = (int)(256 * PerforationHeight / squareHeight);
+                int w = (int)(textureWidth * PerforationWidth / squareWidth);
+                int h = (int)(textureHeight * PerforationHeight / squareHeight);
                 filmPerforationTexture = TextureFactory.CreateFromFunction(w, h, 1, Usage.None,
                     Format.A8R8G8B8, Pool.Managed,
                     delegate(Vector2 texCoord, Vector2 texelSize) {
@@ -240,52 +264,26 @@ namespace EngineTest
             }
         }
 
-        private void CreateFadeTexture() {
-            const int w = 256;
-            const int h = 256;
-            if (Device != null) {
-                float ratio = 1.37f * squareHeight / squareWidth;
-                Vector2 size = new Vector2(FilmWidth, FilmWidth / ratio);
-                fadeTexture = TextureFactory.CreateFromFunction(w, h, 1, Usage.None,
-                    Format.A8R8G8B8, Pool.Managed,
-                    delegate(Vector2 texCoord, Vector2 texelSize) {
-                        return new Vector4(0,0,0,0);
-                    });
-            }
-        }
-
-        public float XAngle
-        {
-            set { xAngle = value; }
-            get { return xAngle; }
-        }
-
-        public float YAngle
-        {
-            set { yAngle = value; }
-            get { return yAngle; }
-        }
-
-        public float ZAngle
-        {
-            set { zAngle = value; }
-            get { return zAngle; }
-        }
-
-        private void DrawSubEffect(ISurface surface) {
-            Device.SetRenderTarget(0, surface);
-            Device.BeginScene();
-            Device.Clear(ClearFlags.Target, Color.FromArgb(0xff, Color.Black), 0, 0);
-            subEffect.Render();
-            Device.EndScene();
-        }
+        //private void CreateFadeTexture() {
+        //    const int w = 256;
+        //    const int h = 256;
+        //    if (Device != null) {
+        //        float ratio = 1.37f * squareHeight / squareWidth;
+        //        Vector2 size = new Vector2(FilmWidth, FilmWidth / ratio);
+        //        fadeTexture = TextureFactory.CreateFromFunction(w, h, 1, Usage.None,
+        //            Format.A8R8G8B8, Pool.Managed,
+        //            delegate(Vector2 texCoord, Vector2 texelSize) {
+        //                return new Vector4(0, 0, 0, 0);
+        //            });
+        //    }
+        //}
 
         private void DrawPerforations() {
 
             float width = filmPerforationTexture.GetLevelDescription(0).Width;
             float height = filmPerforationTexture.GetLevelDescription(0).Height;
-            float xPos = 256 * PerforationDistance / squareWidth;
-            float yDistance = 256 * squareHeight / 4;
+            float xPos = textureWidth * PerforationDistance / squareWidth;
+            float yDistance = textureHeight * squareHeight / 4;
             float yOffset = yDistance / 2 - height / 2;
             sprite.Begin(SpriteFlags.None);
             for (int i = 0; i < 4; i++) {
@@ -295,7 +293,7 @@ namespace EngineTest
             }
             sprite.End();
             sprite.Begin(SpriteFlags.None);
-            xPos = 256 - xPos - width;
+            xPos = textureWidth - xPos - width;
             for (int i = 0; i < 4; i++) {
                 sprite.Draw2D(filmPerforationTexture, Rectangle.Empty, SizeF.Empty,
                     new PointF(xPos, yOffset + (yDistance * i)),
@@ -312,12 +310,9 @@ namespace EngineTest
         }
 
         public override void Step() {
-            //film.WorldState.ResetRotation();
-            //film.WorldState.Roll(ZAngle);
-            //film.WorldState.Turn(YAngle);
-            //film.WorldState.Tilt(XAngle);
             MoveFilm();
-            //SetVertices();
+            SetStillFilmTextureCoordinates();
+            SetVertices();
             scene.Step();
         }
 
@@ -328,20 +323,63 @@ namespace EngineTest
 
         private void StepSubEffect() {
             subEffect.Step();
+            DrawIntoFilmTexture();
+        }
+
+        private void DrawIntoFilmTexture() {
             using (ISurface original = Device.GetRenderTarget(0)) {
-                using (ISurface surface = filmTextures[currentFilmTexture].GetSurfaceLevel(0)) {
-                    DrawSubEffect(surface);
-                    //PostProcessor.StartFrame(filmTexture);
-                    //subPostEffect.Render();
+                using (ISurface surface = filmRenderTarget.GetSurfaceLevel(0)) {
+                    Device.SetRenderTarget(0, surface);
+                    DrawSubEffect();
                     DrawFilmFrame();
                     DrawPerforations();
+                    Device.SetRenderTarget(0, original);
+                    CopySurfaceToFilmTexture(surface, currentFilmTexture);
+                    if (currentFilmTexture == 0)
+                        CopySurfaceToFilmTexture(surface, textureCount - 1);
                 }
-                Device.SetRenderTarget(0, original);
             }
         }
 
-        public override void Render()
-        {
+        private void DrawEmptyFilmTextures() {
+            using (ISurface original = Device.GetRenderTarget(0)) {
+                using (ISurface surface = filmRenderTarget.GetSurfaceLevel(0)) {
+                    Device.SetRenderTarget(0, surface);
+                    for (int textureIndex = 0; textureIndex < textureCount; textureIndex++) {
+                        DrawBlackScreen();
+                        DrawFilmFrame();
+                        DrawPerforations();
+                        CopySurfaceToFilmTexture(surface, textureIndex);
+                    }
+                    Device.SetRenderTarget(0, original);
+                }
+            }
+        }
+
+        private void DrawSubEffect() {
+            Device.BeginScene();
+            Device.Clear(ClearFlags.Target, Color.FromArgb(0xff, Color.Black), 0, 0);
+            subEffect.Render();
+            Device.EndScene();
+        }
+
+        private void DrawBlackScreen() {
+            Device.BeginScene();
+            Device.Clear(ClearFlags.Target, Color.FromArgb(0xff, Color.Black), 0, 0);
+            Device.EndScene();
+        }
+
+
+        private void CopySurfaceToFilmTexture(ISurface surface, int textureIndex) {
+            Rectangle destRectangle = new Rectangle(0, textureIndex * textureHeight,
+                textureWidth, textureHeight);
+            using (ISurface destSurface = filmTexture.GetSurfaceLevel(0)) {
+                Device.StretchRectangle(surface, new Rectangle(0, 0, textureWidth, textureHeight),
+                    destSurface, destRectangle, TextureFilter.None);
+            }
+        }
+
+        public override void Render() {
             scene.Render();
         }
     }

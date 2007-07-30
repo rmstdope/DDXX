@@ -168,7 +168,7 @@
 	</PostEffect>-->
 
 	<!--First TunnelFlight effect-->
-	<Effect class="SpinningBackgroundEffect" name="Tunnel1Spin" track="0" startTime="133" endTime="160">
+	<!--<Effect class="SpinningBackgroundEffect" name="Tunnel1Spin" track="0" startTime="133" endTime="160">
 		<SetupCall name="AddTextureLayer">
 			<Parameter string="noise" />
 			<Parameter float="35.0" />
@@ -200,7 +200,7 @@
 		<Parameter name="FadeInLength" float="0.5" />
 		<Parameter name="FadeOutLength" float="2" />
 		<Parameter name="FadeColor" Color="Black" />
-	</PostEffect>
+	</PostEffect>-->
 
 	<!--Chess scene and its post effects-->
 	<!--<Effect class="ThinkTank" track="0" startTime="160" endTime="165">
@@ -377,19 +377,17 @@
 		<Parameter name="SkyColor" Color="255, 0, 0, 0" />
 		<Parameter name="CloudColor1" Color="255, 10, 10, 20" />
 		<Parameter name="CloudColor2" Color="255, 10, 10, 20" />
-	</Effect>
+	</Effect>-->
 	<Effect class="FilmRoll" track="0" startTime="42" endTime="300">
 		<Parameter name="FilmRounding" float="0.02000001" />
 		<Parameter name="FilmWidth" float="0.65" />
-		<Parameter name="XAngle" float="0" />
-		<Parameter name="YAngle" float="0" />
-		<Parameter name="ZAngle" float="0" />
 		<Parameter name="DrawOrder" int="1" />
 		<Parameter name="PerforationWidth" float="0.09" />
 		<Parameter name="PerforationHeight" float="0.06999999" />
 		<Parameter name="PerforationDistance" float="0.06999999" />
+		<Parameter name="SlowDown" int="64" />
 	</Effect>
-	<PostEffect class="OverlayPostEffect" track="0" startTime="42" endTime="300.0">
+	<!--<PostEffect class="OverlayPostEffect" track="0" startTime="42" endTime="300.0">
 		<Parameter name="AddNoise" bool="true" />
 		<Parameter name="Filename" string="Noise2.jpg" />
 		<Parameter name="BlendFactor" float="0.1" />
