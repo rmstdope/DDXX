@@ -171,15 +171,15 @@
 	<!--<Effect class="SpinningBackgroundEffect" name="Tunnel1Spin" track="0" startTime="133" endTime="160">
 		<SetupCall name="AddTextureLayer">
 			<Parameter string="noise" />
-			<Parameter float="35.0" />
-			<Parameter Color="DarkGray" />
-			<Parameter float="0.2" />
+			<Parameter float="15.0" />
+			<Parameter Color="255, 150, 50, 50" />
+			<Parameter float="0.5" />
 		</SetupCall>
 		<SetupCall name="AddTextureLayer">
 			<Parameter string="noise" />
-			<Parameter float="-34.0" />
-			<Parameter Color="50,50,120,255" />
-			<Parameter float="0.2" />
+			<Parameter float="-24.0" />
+			<Parameter Color="255,50,50,150" />
+			<Parameter float="0.5" />
 		</SetupCall>
 		<Parameter name="DrawOrder" int="0" />
 	</Effect>

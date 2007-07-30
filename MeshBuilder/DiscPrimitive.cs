@@ -109,7 +109,7 @@ namespace Dope.DDXX.MeshBuilder
                 }
                 for (int i = 0; i < segments; i++)
                 {
-                    vertices[i + 1].U = i / (float)segments;
+                    vertices[i + 1].U = 100 * i / (float)segments;
                     vertices[i + 1].V = 0;
                     vertices[i + 1 + segments].U = 0;
                     vertices[i + 1 + segments].V = 1;

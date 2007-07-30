@@ -29,7 +29,6 @@ namespace TiVi
 
         protected override void InitializeSpecific()
         {
-            CreateStandardSceneAndCamera(out scene, out camera, 10);
             camera.SetFOV((float)Math.PI / 2 * 0.7f);
 
             CreateSplines();

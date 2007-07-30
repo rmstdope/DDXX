@@ -18,8 +18,8 @@ namespace TiVi
             public Vector3 Velocity;
         };
 
-        private const int NUM_RINGS = 32;
-        private const int NUM_BLOCKS = 12;
+        private const int NUM_RINGS = 24;
+        private const int NUM_BLOCKS = 16;
 
         private List<Brick> fallingBricks = new List<Brick>();
         private TiVi tivi;
@@ -32,8 +32,6 @@ namespace TiVi
 
         protected override void InitializeSpecific()
         {
-            CreateStandardSceneAndCamera(out scene, out camera, 6);
-            camera.WorldState.MoveUp(1.5f);
             camera.SetFOV((float)Math.PI / 3);
 
             tivi = new TiVi(tiviNode, camera, StartTime);
@@ -48,7 +46,7 @@ namespace TiVi
             TiViMeshDirector director = 
                 new TiViMeshDirector(MeshBuilder, new MeshDirector(MeshBuilder), EffectFactory, Device);
             ModelNode node = director.CreateDiamondNode(0.2f);
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 5; i++)
             {
                 Diamond diamond = new Diamond();
                 diamond.Node = new ModelNode(i.ToString(), node.Model, node.EffectHandler, Device);
@@ -61,7 +59,7 @@ namespace TiVi
         private void CreateFallingBricks()
         {
             MeshBuilder.SetDiffuseTexture("Default1", "square.tga");
-            MeshBuilder.SetDiffuseColor("Default1", new ColorValue(0.8f, 0.8f, 0.8f, 0.8f));
+            MeshBuilder.SetDiffuseColor("Default1", new ColorValue(0.5f, 0.5f, 0.5f, 0.8f));
             director.CreateChamferBox(0.6f, 0.6f, 0.1f, 0.05f, 4);
             director.UvMapPlane(1, 1, 1);
             IModel model = director.Generate("Default1");
@@ -95,7 +93,8 @@ namespace TiVi
             {
                 diamond.Node.WorldState.Turn(Time.DeltaTime);
                 diamond.Node.Position += diamond.Velocity * Time.DeltaTime * 1.5f;
-                if (diamond.Node.Position.Length() > 3)
+                // Ignore Y
+                if (diamond.Node.Position.X * diamond.Node.Position.X + diamond.Node.Position.Z * diamond.Node.Position.Z > 9)
                     RestartDiamond(diamond);
             }
         }
@@ -183,7 +182,7 @@ namespace TiVi
                     model.WorldState.MoveUp(0 + 0.8f * j + upAdd);
                     model.WorldState.Tilt((float)Math.PI / 2);
                     model.WorldState.Roll((Time.StepTime - StartTime) / 1.0f + (float)Math.PI * 2 * i / NUM_BLOCKS);
-                    model.WorldState.MoveUp(-3.0f);
+                    model.WorldState.MoveUp(-2.5f);
                 }
             }
         }

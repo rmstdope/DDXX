@@ -40,6 +40,8 @@ namespace TiVi
         protected ModelNode tiviNode;
         private ModelNode stencilDisc;
         private MirrorNode mirrorNode;
+        private ModelNode whiteDisc1;
+        private ModelNode whiteDisc2;
 
         protected Interpolator<InterpolatedVector3> discInterpolator;
         protected Interpolator<InterpolatedVector3> cameraInterpolator;
@@ -55,6 +57,8 @@ namespace TiVi
         protected override void Initialize()
         {
             director = new MeshDirector(MeshBuilder);
+
+            CreateStandardSceneAndCamera(out scene, out camera, 10);
 
             CreateDiscs();
             CreateTiVi();
@@ -134,7 +138,7 @@ namespace TiVi
             ((tiviNode as ModelNode).Model as SkinnedModel).SetAnimationSet(0, StartTime, 1);
             //tiviNode.WorldState.Scale(0.7f);
             mirrorNode = new MirrorNode(tiviNode);
-            mirrorNode.Brightness = 0.4f;
+            mirrorNode.Brightness = 0.6f;
         }
 
         protected abstract string GetScreenTechnique();
@@ -150,12 +154,38 @@ namespace TiVi
             discModel.AddChild(CreateTorus(innerRadius, torusRadius, "Terrain"));
             discModel2 = CreateDisc(outerRadius * 0.95f, 0, "AlphaTest");
             discModel2.AddChild(CreateTorus(outerRadius * 0.95f, torusRadius, "Terrain"));
+
+            whiteDisc1 = CreateDisc(outerRadius + torusRadius * 20, outerRadius + torusRadius * 5, "NoTextureAmbient");
+            whiteDisc1.Model.CullMode = Cull.None;
+            whiteDisc1.Model.Materials[0].AmbientColor = new ColorValue(0.8f, 0.8f, 1.0f);
+            whiteDisc1.Model.Materials[0].DiffuseColor = new ColorValue(0.9f, 0.9f, 0.9f);
+            //discModel2.AddChild(whiteDisc1);
+            whiteDisc2 = CreateDisc(outerRadius + torusRadius * 20, outerRadius + torusRadius * 5, "NoTextureAmbient");
+            whiteDisc2.Model.CullMode = Cull.None;
+            whiteDisc2.Model.Materials[0].AmbientColor = new ColorValue(1.0f, 0.9f, 0.9f);
+            //whiteDisc2.Model.Materials[0].DiffuseColor = new ColorValue(2.9f, 2.9f, 2.9f);
+            //discModel2.AddChild(whiteDisc2);
+            scene.AddNode(whiteDisc1);
+            scene.AddNode(whiteDisc2);
         }
 
         private ModelNode CreateDisc(float outerRadius, float innerRadius, string technique)
         {
             MeshBuilder.SetDiffuseTexture("Default2", "noise");
             director.CreateDisc(outerRadius, innerRadius, 32);
+            IModel model = director.Generate("Default2");
+            model.Materials[0].AmbientColor = new ColorValue(0.2f, 0.2f, 0.2f);
+            model.Materials[0].DiffuseColor = new ColorValue(0.6f, 0.6f, 0.6f);
+            return new ModelNode("Terrain", model,
+                new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
+                delegate(int material) { return technique; }, model), Device);
+        }
+
+        private ModelNode CreateDiscStretched(float outerRadius, float innerRadius, float stretch, string technique)
+        {
+            MeshBuilder.SetDiffuseTexture("Default2", "noise");
+            director.CreateDisc(outerRadius, innerRadius, 32);
+            director.Scale(1, 1, stretch);
             IModel model = director.Generate("Default2");
             model.Materials[0].AmbientColor = new ColorValue(0.1f, 0.1f, 0.1f);
             model.Materials[0].DiffuseColor = new ColorValue(0.5f, 0.5f, 0.5f);
@@ -176,6 +206,19 @@ namespace TiVi
                 delegate(int material) { return technique; }, model), Device);
         }
 
+        private ModelNode CreateTorusStretched(float outerRadius, float torusRadius, float stretch, string technique)
+        {
+            MeshBuilder.SetDiffuseTexture("Default2", "noise");
+            director.CreateTorus(torusRadius, outerRadius, 32, 32);
+            director.Scale(1, 1, stretch);
+            IModel model = director.Generate("Default2");
+            model.Materials[0].AmbientColor = new ColorValue(0.1f, 0.1f, 0.1f);
+            model.Materials[0].DiffuseColor = new ColorValue(0.9f, 0.9f, 0.9f);
+            return new ModelNode("Torus", model,
+                new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"),
+                delegate(int material) { return technique; }, model), Device);
+        }
+
         private void StepDiscs()
         {
             float t = Time.StepTime - StartTime;
@@ -186,9 +229,19 @@ namespace TiVi
             discModel.WorldState.Position = discInterpolator.GetValue(t);
             discModel2.WorldState.Position = discInterpolator.GetValue(t);
             discModel.WorldState.MoveUp(0.40f);
-            tiviNode.Position = discModel2.Position + new Vector3(0, 0, 0);
+            tiviNode.Position = discModel2.Position + new Vector3(0, 0.04f, 0);
             stencilDisc.Position = discModel2.Position;
-            mirrorNode.Position = new Vector3(0, tiviNode.Position.Y * 2, 0);
+            mirrorNode.Position = new Vector3(0, (tiviNode.Position.Y - 0.04f) * 2, 0);
+            whiteDisc1.WorldState.Reset();
+            whiteDisc1.Position = discModel.Position;
+            whiteDisc1.WorldState.Turn(t * 0.7f);
+            whiteDisc1.WorldState.Tilt(t);
+            whiteDisc1.WorldState.Scale(new Vector3(1, 1, 2.0f + 0.5f * (float)Math.Sin(t * 0.8f)));
+            whiteDisc2.WorldState.Reset();
+            whiteDisc2.Position = discModel.Position;
+            whiteDisc2.WorldState.Turn(t * 0.8f + 2);
+            whiteDisc2.WorldState.Tilt(t * 0.9f + 1.5f);
+            whiteDisc2.WorldState.Scale(new Vector3(1, 1, 2.0f + 0.5f * (float)Math.Sin(t)));
 
             discModel.WorldState.Turn(t * 2);
             discModel.WorldState.Tilt(0.3f);

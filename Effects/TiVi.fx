@@ -4,6 +4,31 @@
 #include <Reflective.hlsl>
 #include <DepthOfField.hlsl>
  
+struct TerrainPixelInput
+{
+	float4 Position				:	POSITION;			// Vertex position 
+	float4 Color					: COLOR0;				// Vertex color
+	float2 TextureCoord		:	TEXCOORD0;		// Vertex texture coords 
+};
+
+struct DiamondPixelInput
+{
+	float4 Position				:	POSITION;			// Vertex position 
+	float4 DiffuseColor		: COLOR0;				// Vertex diffuse color
+	float4 SpecularColor	: COLOR1;				// Vertex specular color
+	float2 TextureCoord		:	TEXCOORD0;		// Vertex texture coords 
+};
+
+struct InputVS
+{
+	float4	Position			: POSITION;			// Vertex Position
+	float3	BlendWeights	: BLENDWEIGHT;	// Blend weight
+	int4		BlendIndices	: BLENDINDICES;	// Bland indices
+	float3	Normal				: NORMAL;				// Vertex Normal
+	float3	Tangent				: TANGENT;			// Vertex Tangent
+	float2	TextureCoord	: TEXCOORD0;		// Vertex Texture Coordinate
+};
+
 struct SolidPixelInput
 {
 	float4	Position			:	POSITION;
@@ -40,7 +65,19 @@ SolidPixelShader(SolidPixelInput input,
 float4
 WhitePixelShader(SolidPixelInput input) : COLOR0
 {
-	return 1;//float4(input.Diffuse, 1) * float4(input.Specular, 1);
+	return 1;
+}
+
+float4
+AmbientPixelShader(SolidPixelInput input) : COLOR0
+{
+	return AmbientColor;
+}
+
+float4
+NoTexturePixelShader(TerrainPixelInput input) : COLOR0
+{
+	return input.Color;
 }
 
 float4
@@ -190,31 +227,6 @@ technique LineDrawerSkinning
 	}
 }
 
-struct TerrainPixelInput
-{
-	float4 Position				:	POSITION;			// Vertex position 
-	float4 Color					: COLOR0;				// Vertex color
-	float2 TextureCoord		:	TEXCOORD0;		// Vertex texture coords 
-};
-
-struct DiamondPixelInput
-{
-	float4 Position				:	POSITION;			// Vertex position 
-	float4 DiffuseColor		: COLOR0;				// Vertex diffuse color
-	float4 SpecularColor	: COLOR1;				// Vertex specular color
-	float2 TextureCoord		:	TEXCOORD0;		// Vertex texture coords 
-};
-
-struct InputVS
-{
-	float4	Position			: POSITION;			// Vertex Position
-	float3	BlendWeights	: BLENDWEIGHT;	// Blend weight
-	int4		BlendIndices	: BLENDINDICES;	// Bland indices
-	float3	Normal				: NORMAL;				// Vertex Normal
-	float3	Tangent				: TANGENT;			// Vertex Tangent
-	float2	TextureCoord	: TEXCOORD0;		// Vertex Texture Coordinate
-};
-
 float3 lightDir = normalize(float3(1, 1, 0));
 
 TerrainPixelInput
@@ -328,6 +340,36 @@ technique Terrain
 	}
 }
 
+technique NoTexture
+<
+	bool NormalMapping = false;
+>
+{
+	pass BasePass
+	{
+		VertexShader			= compile vs_2_0 TerrainVertexShader(0);
+		PixelShader				= compile ps_2_0 NoTexturePixelShader();
+		AlphaBlendEnable	= false;
+		ZEnable						=	true;
+		ZFunc							= Less;
+	}
+}
+
+technique NoTextureAmbient
+<
+	bool NormalMapping = false;
+>
+{
+	pass BasePass
+	{
+		VertexShader			= compile vs_2_0 TerrainVertexShader(0);
+		PixelShader				= compile ps_2_0 AmbientPixelShader();
+		AlphaBlendEnable	= false;
+		ZEnable						=	true;
+		ZFunc							= Less;
+	}
+}
+
 technique Bricks
 <
 	bool NormalMapping = false;
@@ -381,10 +423,10 @@ technique Diamond
 	{
 		VertexShader			= compile vs_2_0 DiamondVertexShader(0);
 		PixelShader				= compile ps_2_0 DiamondPixelShader();
-		AlphaBlendEnable	= true;
-		BlendOp						= Add;
-		SrcBlend					= SrcAlpha;
-		DestBlend					= One;
+		AlphaBlendEnable	= false;
+		//BlendOp						= Add;
+		//SrcBlend					= SrcAlpha;
+		//DestBlend					= One;
 		ZEnable						=	true;
 		ZFunc							= Less;
 	}
