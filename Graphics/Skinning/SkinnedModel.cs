@@ -18,7 +18,7 @@ namespace Dope.DDXX.Graphics
 
         private IAnimationRootFrame rootFrame;
         private IAnimationSet animationSet;
-        private const int MAX_NUM_BONES = 60;
+        private const int MAX_NUM_BONES = 40;
         private IFrame frame;
         private IMesh mesh;
         private int numBones;

@@ -93,7 +93,7 @@ shared texture1D AttenuationTextureZ;
 /**
  * Animation matrices. One for each bone 
  */
-shared float4x4 AnimationMatrices[60];
+shared float4x4 AnimationMatrices[40];
 
 
 /** World * View * Projection matrix transposed*/

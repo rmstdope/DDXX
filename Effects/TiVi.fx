@@ -121,8 +121,6 @@ technique TiViReflectiveSkinning
 {
 	pass BasePass
 	{
-		//VertexShader			= compile vs_2_0 SolidVertexShader(4);
-		//PixelShader				= compile ps_2_0 SolidPixelShader(BaseTextureSamplerBordered);
 		VertexShader			= compile vs_2_0 ReflectiveVertexShader(4);
 		PixelShader				= compile ps_2_0 ReflectivePixelShader();
 		AlphaTestEnable		= false;
