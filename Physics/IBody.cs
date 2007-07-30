@@ -10,6 +10,7 @@ namespace Dope.DDXX.Physics
         void AddParticle(IPhysicalParticle particle);
         Vector3 Gravity { get; set; }
         void Step();
+        void Step(float time);
         List<IPhysicalParticle> Particles { get; }
         List<IConstraint> Constraints { get; }
         void ApplyForce(Vector3 vector3);

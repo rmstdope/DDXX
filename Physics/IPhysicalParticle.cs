@@ -8,7 +8,7 @@ namespace Dope.DDXX.Physics
         float DragCoefficient { get; set; }
         Vector3 Position { get; set; }
         Vector3 OldPosition { get; set; }
-        void Step(Vector3 gravity);
+        void Step(float time, Vector3 gravity);
         void ApplyForce(Vector3 force);
         void Reset();
     }

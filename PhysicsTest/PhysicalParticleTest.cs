@@ -33,7 +33,7 @@ namespace Dope.DDXX.Physics
         {
             PhysicalParticle particle1 = new PhysicalParticle(new Vector3(0, 0, 0), 1, 0);
             Time.SetDeltaTimeForTest(1.0f);
-            particle1.Step(new Vector3(0, 0, 0));
+            particle1.Step(1.0f, new Vector3(0, 0, 0));
             Assert.AreEqual(new Vector3(0, 0, 0), particle1.Position, "Position should be (0, 0, 0).");
         }
 
@@ -42,10 +42,10 @@ namespace Dope.DDXX.Physics
         {
             PhysicalParticle particle1 = new PhysicalParticle(new Vector3(0, 0, 0), 1, 0);
             Time.SetDeltaTimeForTest(3.0f);
-            particle1.Step(new Vector3(2, 4, 6));
+            particle1.Step(3.0f, new Vector3(2, 4, 6));
             Assert.AreEqual(new Vector3(9, 18, 27), particle1.Position, "Position should be a*t*t/2 (9, 18, 27).");
             Time.SetDeltaTimeForTest(1.0f);
-            particle1.Step(new Vector3(2, 4, 8));
+            particle1.Step(1.0f, new Vector3(2, 4, 8));
             Assert.AreEqual(new Vector3(9 + 3 + 1, 18 + 6 + 2, 27 + 9 + 4), particle1.Position, "Position should be s + v*t + a*t*t/2 (13, 26, 40).");
         }
 
@@ -56,9 +56,9 @@ namespace Dope.DDXX.Physics
             Time.SetDeltaTimeForTest(1.0f);
             particle1.ApplyForce(new Vector3(-1, -1, -1));
             particle1.ApplyForce(new Vector3(-1, -3, -5));
-            particle1.Step(new Vector3(2, 4, 6));
+            particle1.Step(1.0f, new Vector3(2, 4, 6));
             Assert.AreEqual(new Vector3(0, 0, 0), particle1.Position, "Position should be (0, 0, 0).");
-            particle1.Step(new Vector3(2, 4, 6));
+            particle1.Step(1.0f, new Vector3(2, 4, 6));
             Assert.AreEqual(new Vector3(1, 2, 3), particle1.Position, "Position should be (0, 0, 0).");
         }
 
@@ -69,9 +69,9 @@ namespace Dope.DDXX.Physics
             Time.SetDeltaTimeForTest(1.0f);
             particle1.ApplyForce(new Vector3(-2, -2, -2));
             particle1.ApplyForce(new Vector3(-2, -6, -10));
-            particle1.Step(new Vector3(2, 4, 6));
+            particle1.Step(1.0f, new Vector3(2, 4, 6));
             Assert.AreEqual(new Vector3(0, 0, 0), particle1.Position, "Position should be (0, 0, 0).");
-            particle1.Step(new Vector3(2, 4, 6));
+            particle1.Step(1.0f, new Vector3(2, 4, 6));
             Assert.AreEqual(new Vector3(1, 2, 3), particle1.Position, "Position should be (0, 0, 0).");
         }
 
@@ -80,9 +80,9 @@ namespace Dope.DDXX.Physics
         {
             PhysicalParticle particle1 = new PhysicalParticle(new Vector3(0, 0, 0), 1, 0.5f);
             Time.SetDeltaTimeForTest(1.0f);
-            particle1.Step(new Vector3(2, 4, 6));
+            particle1.Step(1.0f, new Vector3(2, 4, 6));
             Assert.AreEqual(new Vector3(1, 2, 3), particle1.Position, "Position should be a*t*t/2 (1, 2, 3).");
-            particle1.Step(new Vector3(0, 0, 0));
+            particle1.Step(1.0f, new Vector3(0, 0, 0));
             Assert.AreEqual(new Vector3(1 + 0.5f, 2 + 1, 3 + 1.5f), particle1.Position, "Position should be s + v*t + a*t*t/2 (1.5, 3, 4.5).");
         }
 

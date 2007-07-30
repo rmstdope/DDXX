@@ -71,7 +71,7 @@ namespace Dope.DDXX.Physics
             }
         }
 
-        public void Step(Vector3 gravity)
+        public void Step(float time, Vector3 gravity)
         {
             throw new Exception("The method or operation is not implemented.");
         }

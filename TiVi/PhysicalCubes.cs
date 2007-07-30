@@ -67,15 +67,11 @@ namespace TiVi
         protected Interpolator<InterpolatedVector3> cameraTargetInterpolator;
         protected Interpolator<InterpolatedVector3> focalTargetInterpolator;
         private IEffect effect;
-        private float focalDistance;
         private float hyperfocalDistance;
         private float loopTime;
-
-        public float FocalDistance
-        {
-            get { return focalDistance; }
-            set { focalDistance = value; }
-        }
+        private float dragCoefficient;
+        private float stepSize;
+        private float cubeDistortion;
 
         public float HyperfocalDistance
         {
@@ -83,12 +79,35 @@ namespace TiVi
             set { hyperfocalDistance = value; }
         }
 
+        public float DragCoefficient
+        {
+            get { return dragCoefficient; }
+            set { dragCoefficient = value; }
+        }
+
+        public float StepSize
+        {
+            get { return stepSize; }
+            set { stepSize = value; }
+        }
+
+        public float CubeDistortion
+        {
+            get { return cubeDistortion; }
+            set { cubeDistortion = value; }
+        }
+
         public PhysicalCubes(string name, float start, float end)
             : base(name, start, end)
         {
-            focalDistance = 40;
             hyperfocalDistance = 0.1f;
+            dragCoefficient = 0.05f;
+            stepSize = 0.04f;
+            cubeDistortion = 0.1f;
             SetStepSize(GetTweakableNumber("HyperfocalDistance"), 0.01f);
+            SetStepSize(GetTweakableNumber("DragCoefficient"), 0.01f);
+            SetStepSize(GetTweakableNumber("StepSize"), 0.01f);
+            SetStepSize(GetTweakableNumber("CubeDistortion"), 0.01f);
         }
 
         private Vector4 celMapCallback(Vector2 texCoord, Vector2 texelSize)
@@ -113,6 +132,18 @@ namespace TiVi
             for (int i = 0; i < GetMaxNumCubes(); i++)
                 cubes.Add(CreateBox(new Vector3(1000, 0, 0)));
             ResetText(0);
+            Vector3 origo;
+            foreach (PhysicalCube cube in cubes)
+            {
+                GetBodyBase(cube, out origo);
+                UpdateNode(cube, origo);
+            }
+            foreach (PhysicalCube cube in cubes)
+            {
+                LimitNodeToFloor(cube);
+                CheckColidingCubes(cube);
+                UpdateBody(cube);
+            }
 
             CreateLights();
             CreateSplines();
@@ -212,7 +243,7 @@ namespace TiVi
             foreach (IPhysicalParticle particle in body.Particles)
                 body.AddConstraint(new YPosConstraint(0, particle));
 
-            body.Gravity = new Vector3(0, -100.0f, 0);
+            body.Gravity = new Vector3(0, -200.0f, 0);
 
             MeshDirector director = new MeshDirector(MeshBuilder);
             //director.CreateChamferBox(2, 2, 2, 0.6f, 4);
@@ -245,23 +276,44 @@ namespace TiVi
             float t = (Time.StepTime - StartTime) % loopTime;
             int loop = (int)((Time.StepTime - StartTime) / loopTime);
             if (t > loopTime - 2)
+            {
                 ResetText(loop + 1);
+                foreach (PhysicalCube cube in cubes)
+                {
+                    GetBodyBase(cube, out origo);
+                    UpdateNode(cube, origo);
+                }
+                foreach (PhysicalCube cube in cubes)
+                {
+                    //LimitNodeToFloor(cube);
+                    CheckColidingCubes(cube);
+                    UpdateBody(cube);
+                }
+            }
             else if (t > 2.5f)
             {
-                foreach (PhysicalCube cube in cubes)
-                    if (cube.active)
-                        cube.body.Step();
-            }
-            foreach (PhysicalCube cube in cubes)
-            {
-                GetBodyBase(cube, out origo);
-                UpdateNode(cube, origo);
-            }
-            foreach (PhysicalCube cube in cubes)
-            {
-                LimitNodeToFloor(cube);
-                CheckColidingCubes(cube);
-                UpdateBody(cube);
+                float delta = Time.DeltaTime;
+                while (delta > 0)
+                {
+                    float time = stepSize;
+                    if (time > delta)
+                        time = delta;
+                    foreach (PhysicalCube cube in cubes)
+                        if (cube.active)
+                            cube.body.Step(time);
+                    foreach (PhysicalCube cube in cubes)
+                    {
+                        GetBodyBase(cube, out origo);
+                        UpdateNode(cube, origo);
+                    }
+                    foreach (PhysicalCube cube in cubes)
+                    {
+                        LimitNodeToFloor(cube);
+                        CheckColidingCubes(cube);
+                        UpdateBody(cube);
+                    }
+                    delta -= time;
+                }
             }
 
             camera.WorldState.Position = cameraInterpolator.GetValue(t);
@@ -287,7 +339,6 @@ namespace TiVi
             string text = GetText(num);
             float xLength = GetXLength(text);
             float yLength = GetYLength(text);
-            const float epsilon = 0.01f;
             int cubeNum = 0;
             int yPos = 0;
             int xPos = 0;
@@ -321,8 +372,8 @@ namespace TiVi
                         foreach (IPhysicalParticle particle in particles)
                         {
                             particle.OldPosition = particle.Position;
-                            particle.Position += new Vector3(0, 0, Rand.Float(0, epsilon));
-                            particle.DragCoefficient = 0.05f;
+                            particle.Position += new Vector3(0, 0, Rand.Float(-cubeDistortion, cubeDistortion));
+                            particle.DragCoefficient = dragCoefficient;
                         }
                         cubes[cubeNum].floorContact = false;
                         cubes[cubeNum].active = true;

@@ -273,8 +273,10 @@
 	</Effect>
 	<Effect class="PhysicalCubes" track="0" startTime="227" endTime="260">
 		<Parameter name="DrawOrder" int="0" />
-		<Parameter name="FocalDistance" float="40" />
 		<Parameter name="HyperfocalDistance" float="0.18" />
+		<Parameter name="DragCoefficient" float="0" />
+		<Parameter name="StepSize" float="0.05" />
+		<Parameter name="CubeDistortion" float="0.01000001" />
 	</Effect>
 	<PostEffect class="DepthOfFieldPostEffect" track="0" startTime="227" endTime="260">
 		<Parameter name="DrawOrder" int="0" />

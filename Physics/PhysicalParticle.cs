@@ -75,28 +75,28 @@ namespace Dope.DDXX.Physics
             set { dragCoefficient = value; }
         }
 
-        public void Step(Vector3 gravity)
+        public void Step(float time, Vector3 gravity)
         {
-            UpdatePosition(GetVelocity(), GetVelocityChange(gravity));
-            UpdateLastDelta();
+            UpdatePosition(time, GetVelocity(), GetVelocityChange(time, gravity));
+            UpdateLastDelta(time);
             externalForces = new Vector3(0, 0, 0);
         }
 
-        private void UpdateLastDelta()
+        private void UpdateLastDelta(float time)
         {
-            lastDeltaTime = Time.DeltaTime;
+            lastDeltaTime = time;
         }
 
-        private void UpdatePosition(Vector3 velocity, Vector3 velocityMod)
+        private void UpdatePosition(float time, Vector3 velocity, Vector3 velocityMod)
         {
             oldPosition = position;
-            position += (velocity + velocityMod * 0.5f) * Time.DeltaTime;
+            position += (velocity + velocityMod * 0.5f) * time;
             this.lastVelocity = velocity;
         }
 
-        private Vector3 GetVelocityChange(Vector3 gravity)
+        private Vector3 GetVelocityChange(float time, Vector3 gravity)
         {
-            return GetAcceleration(gravity) * Time.DeltaTime;
+            return GetAcceleration(gravity) * time;
         }
 
         private Vector3 GetAcceleration(Vector3 gravity)

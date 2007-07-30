@@ -133,5 +133,15 @@ namespace Dope.DDXX.MeshBuilder
         }
 
         #endregion
+
+        #region IBody Members
+
+
+        public void Step(float time)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
     }
 }

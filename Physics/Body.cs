@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.DirectX;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.Physics
 {
@@ -58,7 +59,19 @@ namespace Dope.DDXX.Physics
 
         public void Step()
         {
-            StepParticles();
+            float totalTime = Time.DeltaTime;
+            while (totalTime > 0.02f)
+            {
+                float time = 0.04f;
+                StepParticles(time);
+                StepConstraints();
+                totalTime -= time;
+            }
+        }
+
+        public void Step(float time)
+        {
+            StepParticles(time);
             StepConstraints();
         }
 
@@ -70,10 +83,10 @@ namespace Dope.DDXX.Physics
 
         }
 
-        private void StepParticles()
+        private void StepParticles(float time)
         {
             foreach (IPhysicalParticle particle in particles)
-                particle.Step(gravity);
+                particle.Step(time, gravity);
         }
 
         public void ApplyForce(Vector3 force)
