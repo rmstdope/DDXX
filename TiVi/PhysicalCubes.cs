@@ -72,6 +72,7 @@ namespace TiVi
         private float dragCoefficient;
         private float stepSize;
         private float cubeDistortion;
+        PointLightNode[] lights = new PointLightNode[2];
 
         public float HyperfocalDistance
         {
@@ -145,11 +146,11 @@ namespace TiVi
                 UpdateBody(cube);
             }
 
-            CreateLights();
             CreateSplines();
 
             effect = EffectFactory.CreateFromFile("TiVi.fxo");
             chessBoard = new ChessBoard(scene, MeshBuilder, effect, Device, 10);
+            CreateLights();
         }
 
         private void CreateSplines()
@@ -193,15 +194,16 @@ namespace TiVi
 
         private void CreateLights()
         {
-            PointLightNode[] lights = new PointLightNode[2];
             lights[0] = new PointLightNode("");
-            lights[0].Position = new Vector3(-20, 8, 0);
-            lights[0].DiffuseColor = new ColorValue(1.0f, 0.7f, 0.7f, 1.0f);
-            lights[0].Range = 0.0003f;
+            lights[0].SetRenderParameters(Device, GraphicsFactory.CreateSprite(Device), TextureFactory.CreateFromFile("flare.dds"));
+            lights[0].Position = new Vector3(-20, 10, 0);
+            lights[0].DiffuseColor = new ColorValue(2.0f, 1.4f, 1.4f, 1.0f);
+            lights[0].Range = 0.00003f;
             scene.AddNode(lights[0]);
             lights[1] = new PointLightNode("");
-            lights[1].Position = new Vector3(20, 8, 0);
-            lights[1].DiffuseColor = new ColorValue(0.7f, 0.7f, 1.0f, 1.0f);
+            lights[1].SetRenderParameters(Device, GraphicsFactory.CreateSprite(Device), TextureFactory.CreateFromFile("flare.dds"));
+            lights[1].Position = new Vector3(20, 10, 0);
+            lights[1].DiffuseColor = new ColorValue(1.4f, 1.4f, 2.0f, 1.0f);
             lights[1].Range = 0.0003f;
             scene.AddNode(lights[1]);
         }
