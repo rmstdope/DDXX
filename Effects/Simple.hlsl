@@ -52,6 +52,31 @@ technique Simple
 	}
 }
 
+technique SimpleWithAlpha
+<
+	bool NormalMapping = false;
+	bool Skinning = false;
+>
+{
+	pass BasePass
+	{
+		VertexShader			= compile vs_2_0 SimpleVertexShader(0);
+		PixelShader				= compile ps_2_0 SimplePixelShader(BaseTextureSampler);
+		AlphaTestEnable		= false;
+		AlphaBlendEnable	= true;
+		FillMode					= Solid;
+		ZEnable						=	true;
+		ZWriteEnable			= false;
+		ZFunc							= Less;
+		StencilEnable			= false;
+		CullMode					= CCW;
+		BlendOp						= Add;
+		SrcBlend					= SrcColor;
+		DestBlend					= InvSrcColor;
+		//BlendFactor				= 0x80808080;
+	}
+}
+
 technique SimpleMirroredTexture
 <
 	bool NormalMapping = false;

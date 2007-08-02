@@ -127,7 +127,7 @@ float ReflectiveFactor;
 sampler BaseTextureSampler = sampler_state
 {
     Texture = (BaseTexture);
-    MipFilter = Point;
+    MipFilter = Linear;
     MinFilter = Linear;
     MagFilter = Linear;
     AddressU	= Wrap;//Mirror;

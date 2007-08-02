@@ -8,6 +8,7 @@ using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX;
+using System.Drawing;
 
 namespace TiVi
 {
@@ -72,6 +73,7 @@ namespace TiVi
             new PieceMovement("d5", "d1"),
             new PieceMovement("g6", "g7"),
         };
+        // Kasparov är vit och vinner partiet
 
         private IScene scene;
         private CameraNode camera;
@@ -116,15 +118,20 @@ namespace TiVi
             XLoader.AddToScene(tempScene);
             ChessPiece piece;
 
+            MeshDirector director = new MeshDirector(MeshBuilder);
+            director.CreatePlane(1, 1, 1, 1, true);
+            IModel model = director.Generate("Default1");
+            model.Materials[0].Ambient = Color.FromArgb(128, 255, 255, 255);
+            ModelNode textModel = CreateSimpleModelNode(model, "TiVi.fxo", "SimpleWithAlpha");
             foreach (PieceInfo info in pieceInfo)
             {
                 piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
-                    info.Type, info.Color, info.Position);
+                    info.Type, info.Color, info.Position, textModel);
                 info.Piece = piece;
                 chessPieces.Add(piece);
             }
 
-            float time = 1;
+            float time = 5;
             foreach (PieceMovement movement in pieceMovement)
             {
                 PieceInfo movePiece = null;
@@ -144,6 +151,11 @@ namespace TiVi
                     removePiece.Position = "--";
                 }
                 time += 4;
+            }
+            foreach (PieceInfo info in pieceInfo)
+            {
+                if (info.Position != "--" && info.Type != ChessPiece.PieceType.King)
+                    info.Piece.AddPosition(time, 4, info.Position + "-", 1);
             }
         }
 
@@ -172,12 +184,14 @@ namespace TiVi
         public override void Render()
         {
             scene.SetEffectParameters();
-            chessBoard.Render(scene);
-            foreach (ChessPiece piece in chessPieces)
-                piece.RenderMirror(scene);
+            //chessBoard.Render(scene);
+            //foreach (ChessPiece piece in chessPieces)
+            //    piece.RenderMirror(scene);
             scene.Render();
             foreach (ChessPiece piece in chessPieces)
                 piece.Render(scene, Time.StepTime - StartTime);
+            foreach (ChessPiece piece in chessPieces)
+                piece.RenderText(scene, Time.StepTime - StartTime);
         }
     }
 }

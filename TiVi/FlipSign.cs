@@ -129,7 +129,7 @@ namespace TiVi
         private void CreateCameraInterpolator()
         {
             ClampedCubicSpline<InterpolatedVector3> spline = new ClampedCubicSpline<InterpolatedVector3>(new InterpolatedVector3(), new InterpolatedVector3());
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(0, new InterpolatedVector3(new Vector3(0, -1, -6))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(0, new InterpolatedVector3(new Vector3(0, 0, -6))));
             spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(2, new InterpolatedVector3(new Vector3(5, 4, -8))));
             spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(4, new InterpolatedVector3(new Vector3(-4, 3, -12))));
             spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(6, new InterpolatedVector3(new Vector3(2, -5, -7))));
@@ -137,7 +137,7 @@ namespace TiVi
             spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(10, new InterpolatedVector3(new Vector3(-7, 6, -8))));
             spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(12, new InterpolatedVector3(new Vector3(2, -3, -12))));
             spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(14, new InterpolatedVector3(new Vector3(5, 4, -8))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(16, new InterpolatedVector3(new Vector3(0, -1, -6))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(16, new InterpolatedVector3(new Vector3(0, 0, -6))));
             spline.Calculate();
             interpolator = new Interpolator<InterpolatedVector3>();
             interpolator.AddSpline(spline);
@@ -188,7 +188,7 @@ namespace TiVi
 
             Mixer.ClearColor = Color.Black;
             //camera.WorldState.Position = new Vector3(0, 3, -10);
-            camera.WorldState.Position = interpolator.GetValue(Time.StepTime % 16);
+            camera.WorldState.Position = interpolator.GetValue(Time.StepTime % 16);// +platformInterpolator.GetValue(Time.StepTime);
             //camera.WorldState.Position = new Vector3((float)Math.Sin(Time.StepTime * 0.2f), 0.2f, (float)Math.Cos(Time.StepTime * 0.2f)) * 8;
             Vector3 at = interpolator.GetValue((Time.StepTime + 3) % 8);
             at *= 0.5f;

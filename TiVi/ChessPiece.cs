@@ -53,28 +53,44 @@ namespace TiVi
         private List<PositionInfo> positions = new List<PositionInfo>();
         private const float ROPE_LENGTH = 2.0f;
         private TextFadingEffect textFade;
+        private PieceColor color;
+        private Vector3 distortion;
+        private static int direction = 0;
+        private ITexture texture;
+        private IDevice device;
+        private Vector3 textPosition;
+        private ModelNode textNode;
+        private bool doText;
+        private int alpha;
 
         public ChessPiece(IScene scene, IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, 
-            IDevice device, PieceType type, PieceColor color, string startPosition)
+            IDevice device, PieceType type, PieceColor color, string startPosition, ModelNode textModel)
         {
             ModelNode originalNode = GetModel(scene, type);
             IModel model = originalNode.Model.Clone();
             ModifyMaterial(textureFactory, color, model);
             modelNode = new ModelNode("", model, originalNode.EffectHandler, device);
             SetRotationAndScaling(type);
-            AddPosition(-1000, 0, startPosition, 0);
+            AddPosition(-2, 4, startPosition, 5);
             CreateLineNode(graphicsFactory, device);
             CreateMirrorNode();
+            texture = (color == PieceColor.Black) ? 
+                textureFactory.CreateFromFile("ChessTextDeepBlue.jpg") :
+                textureFactory.CreateFromFile("ChessTextKasparov.jpg");
+            this.device = device;
 
             textFade = new TextFadingEffect("text", 0, 0);
             textFade.FadeInLength = 1;
             textFade.FadeOutLength = 1;
-            textFade.FontHeight = 0.22f;
-            textFade.FontName = "Alba";
+            textFade.FontHeight = 0.15f;
+            textFade.FontName = "Curier New";
             textFade.Text = (color == PieceColor.Black) ? ".KASPAROV" : ".DEEP BLUE";
             textFade.TextColor = (color == PieceColor.Black) ? Color.FromArgb(180, 150, 150) : Color.FromArgb(150, 150, 180);
-            textFade.TextPosition = (color == PieceColor.Black) ? new Vector3(0.3f, 0.8f, 0) : new Vector3(0.7f, 0.8f, 0);
             textFade.Initialize(graphicsFactory, null, device, null, null);
+            this.color = color;
+            distortion = new Vector3(0/*Rand.Float(0.1f, 0.3f)*/, (float)(direction * Math.PI / 2), 0);
+            direction+=3;
+            textNode = textModel;
         }
 
         private void CreateLineNode(IGraphicsFactory graphicsFactory, IDevice device)
@@ -156,6 +172,7 @@ namespace TiVi
 
         public void Step(float time)
         {
+            doText = false;
             Vector3 oldPos = new Vector3();
             foreach (PositionInfo info in positions)
             {
@@ -180,10 +197,29 @@ namespace TiVi
                 // Set text fading parameters
                 if (time >= info.StartTime - 1 && time <= info.StartTime - 1 + 5)
                 {
-                    if (info.Position.Y != 10)
+                    if (info.Position.Y != 10 && info.StartTime >= 0)
                     {
                         textFade.StartTime = info.StartTime - 1 + (Time.StepTime - time);
                         textFade.EndTime = info.StartTime - 1 + 5 + (Time.StepTime - time);
+                        Vector3 posAdd = new Vector3((float)Math.Sin(distortion.X * time + distortion.Y),
+                                                     (float)Math.Cos(distortion.X * time + distortion.Y), 
+                                                     3);
+                        posAdd *= (time - info.StartTime) * 0.01f;
+                        textFade.TextPosition = (color == PieceColor.Black) ? 
+                            new Vector3(0.3f, 0.8f, 0) + posAdd:
+                            new Vector3(0.7f, 0.8f, 0) + posAdd;
+                        textPosition = (color == PieceColor.Black) ? 
+                            new Vector3(0.3f, 0.8f, 0) + posAdd:
+                            new Vector3(0.7f, 0.8f, 0) + posAdd;
+                        doText = true;
+                        alpha = 255;
+                        float t = time - (info.StartTime - 1);
+                        if (t < 1.0f)
+                            alpha = (int)(255 * (t / 1.0f));
+                        t = time - (info.StartTime - 1 + 5 - 1);
+                        if (t > 0)
+                            alpha = 254 - (int)(255 * (t / 1.0));
+                        alpha = Math.Min(255, Math.Max(0, alpha));
                     }
                 }
             }
@@ -198,7 +234,25 @@ namespace TiVi
         public void Render(IScene scene, float time)
         {
             lineNode.Render(scene);
-            textFade.Render();
+            //textFade.Render();
+        }
+        public void RenderText(IScene scene, float time)
+        {
+            if (doText)
+            {
+                textNode.Model.Materials[0].DiffuseTexture = texture;
+                textNode.Model.Materials[0].Ambient = (color == PieceColor.Black) ?
+                    Color.FromArgb(0, (alpha * 200) / 255, (alpha * 200) / 255, (alpha * 255) / 255) :
+                    Color.FromArgb(0, (alpha * 255) / 255, (alpha * 200) / 255, (alpha * 200) / 255);
+                textNode.WorldState.Reset();
+                textNode.WorldState.Scale(new Vector3(0.45f, 0.45f * texture.GetLevelDescription(0).Height / texture.GetLevelDescription(0).Width, 0));
+                textNode.WorldState.Rotation = scene.ActiveCamera.WorldState.Rotation;
+                textNode.WorldState.Position = scene.ActiveCamera.WorldState.Position + scene.ActiveCamera.WorldState.Forward;
+                textNode.WorldState.Position += scene.ActiveCamera.WorldState.Right * (textPosition.X - 0.5f);
+                textNode.WorldState.Position += scene.ActiveCamera.WorldState.Up * (0.5f - textPosition.Y);
+                textNode.WorldState.Position -= scene.ActiveCamera.WorldState.Forward * (textPosition.Z);
+                textNode.Render(scene);
+            }
         }
     }
 }
