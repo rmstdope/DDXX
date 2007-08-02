@@ -11,16 +11,17 @@ Tunnel1&2
 - Skruvade filmrullar
 
 Chess
-- Slide:a kasparov och deep blue
-- Bugg i Kasparov
+x Slide:a kasparov och deep blue
+x Bugg i Kasparov
 - Inflygning i ansiktet
 - Shadening på stol
 - Kanske text vid stolscenen
-- Trådarna
-- Schackpjär framför text
-- Vem är vit och svart
-- Berätta vem som vann
-- Pjäserna försvinner och kommer fram
+x Trådarna
+x Schackpjäser framför text
+x Vem är vit och svart
+x Berätta vem som vann
+x Pjäserna kommer fram
+x Pjäserna försvinner
 
 Tunnel2
 - Kamerarörelser

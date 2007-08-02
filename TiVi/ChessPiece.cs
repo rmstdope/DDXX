@@ -97,7 +97,7 @@ namespace TiVi
         {
             ILine line = graphicsFactory.CreateLine(device);
             line.Antialias = true;
-            lineNode = new LineNode("", line, new Vector3(0, 0, 0), new Vector3(0, -ROPE_LENGTH, 0), Color.Gray);
+            lineNode = new LineNode("", line, new Vector3(0, 0, 0), new Vector3(0, 0/*-ROPE_LENGTH*/, 0), Color.Gray);
             modelNode.Position = new Vector3(0, -ROPE_LENGTH, 0);
             lineNode.AddChild(modelNode);
         }

@@ -154,7 +154,7 @@ namespace TiVi
             }
             foreach (PieceInfo info in pieceInfo)
             {
-                if (info.Position != "--" && info.Type != ChessPiece.PieceType.King)
+                if (info.Position != "--")// && info.Type != ChessPiece.PieceType.King)
                     info.Piece.AddPosition(time, 4, info.Position + "-", 1);
             }
         }
