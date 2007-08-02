@@ -8,7 +8,7 @@
 	<Texture name="noise" generator="noise"></Texture>
 
 
-		<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="280">
+		<!--<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="280">
 		<Parameter name="Width" float="16" />
 		<Parameter name="Height" float="9" />
 		<Parameter name="SubtractNoise" bool="true" />
@@ -317,7 +317,7 @@
 		<Parameter name="FadeInLength" float="0.5" />
 		<Parameter name="FadeOutLength" float="2" />
 		<Parameter name="FadeColor" Color="Black" />
-	</PostEffect>
+	</PostEffect>-->
 
 
 	<Effect class="ThinkTank" track="0" startTime="150" endTime="155">
@@ -334,10 +334,20 @@
 		<Parameter name="TimeShift1" Vector3="0.115, 0.07099999, 0" />
 		<Parameter name="TimeShift2" Vector3="-0.036, -0.053, 0" />
 	</Effect>
-	<Effect class="ChessScene" track="0" startTime="155" endTime="190">
+	<Effect class="ChessScene" track="0" startTime="155" endTime="200">
 		<Parameter name="DrawOrder" int="0" />
 	</Effect>
-		<PostEffect class="GlowPostEffect" name="ChessGlow" track="0" startTime="150" endTime="190">
+	<Effect class="TextFadingEffect" name="winner" startTime="196" endTime="200">
+		<Parameter name="FadeOutLength" float="1" />
+		<Parameter name="FadeInLength" float="1" />
+		<Parameter name="TextColor" Color="255, 255, 200, 200" />
+		<Parameter name="Text" string="Kasparov Wins" />
+		<Parameter name="FontHeight" float="0.2" />
+		<Parameter name="FontName" string="Times New Roman" />
+		<Parameter name="DrawOrder" int="1" />
+		<Parameter name="TextPosition" Vector3="0.5, 0.8299997, 0" />
+	</Effect>
+	<PostEffect class="GlowPostEffect" name="ChessGlow" track="0" startTime="150" endTime="200">
 		<Parameter name="BloomScale" float="1.7" />
 		<Parameter name="Exposure" float="1" />
 		<Parameter name="DrawOrder" int="1" />
@@ -346,7 +356,7 @@
 		<Parameter name="DownSamples" int="1" />
 		<Parameter name="AdvancedGlow" bool="true" />
 	</PostEffect>
-	<PostEffect class="ColorFader" name="ChessFader" startTime="189.5" endTime="192.5">
+	<PostEffect class="ColorFader" name="ChessFader" startTime="199.5" endTime="202.5">
 		<Parameter name="DrawOrder" int="3" />
 		<Parameter name="FadeInLength" float="0.5" />
 		<Parameter name="FadeOutLength" float="2" />
@@ -354,7 +364,7 @@
 	</PostEffect>
 
 
-	<Effect class="TunnelFlight2" track="0" startTime="190" endTime="217">
+	<!--<Effect class="TunnelFlight2" track="0" startTime="190" endTime="217">
 		<Parameter name="DrawOrder" int="0" />
 	</Effect>
 	<PostEffect class="GlowPostEffect" name="Tunnel2Glow" track="0" startTime="190" endTime="217">
@@ -450,7 +460,7 @@
 		<Parameter name="Luminance" float="0.5099998" />
 		<Parameter name="DownSamples" int="2" />
 		<Parameter name="AdvancedGlow" bool="false" />
-	</PostEffect>
+	</PostEffect>-->
 
 
 	<!--After this line is only test stuff-->
