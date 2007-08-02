@@ -8,7 +8,7 @@
 	<Texture name="noise" generator="noise"></Texture>
 
 
-		<!--<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="280">
+		<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="280">
 		<Parameter name="Width" float="16" />
 		<Parameter name="Height" float="9" />
 		<Parameter name="SubtractNoise" bool="true" />
@@ -20,18 +20,8 @@
 	</PostEffect>
 
   
-	<Effect class="CreationScene" track="0" startTime="7" endTime="42">
-		<Parameter name="BaseMesh" string="TiVi-Creation.x" />
-		<Parameter name="FlareSize" float="3" />
-		<Parameter name="StartVertex" int="10" />
-		<Parameter name="SegmentLength" float="0.32" />
-		<Parameter name="DrawOrder" int="0" />
-		<Parameter name="BodyCameraStart1" float="7" />
-		<Parameter name="HandCameraStart" float="14" />
-		<Parameter name="LegCameraStart" float="21" />
-		<Parameter name="BodyCameraStart2" float="28" />
-	</Effect>
-	<PostEffect class="GlowPostEffect" name="CreationGlow1" track="0" startTime="7" endTime="14">
+	
+	<PostEffect class="GlowPostEffect" name="Creati§onGlow1" track="0" startTime="7" endTime="14">
 		<Parameter name="BloomScale" float="1.2" />
 		<Parameter name="Exposure" float="0.622" />
 		<Parameter name="DrawOrder" int="1" />
@@ -317,7 +307,7 @@
 		<Parameter name="FadeInLength" float="0.5" />
 		<Parameter name="FadeOutLength" float="2" />
 		<Parameter name="FadeColor" Color="Black" />
-	</PostEffect>-->
+	</PostEffect>
 
 
 	<Effect class="ThinkTank" track="0" startTime="150" endTime="155">
@@ -364,7 +354,7 @@
 	</PostEffect>
 
 
-	<!--<Effect class="TunnelFlight2" track="0" startTime="190" endTime="217">
+	<Effect class="TunnelFlight2" track="0" startTime="190" endTime="217">
 		<Parameter name="DrawOrder" int="0" />
 	</Effect>
 	<PostEffect class="GlowPostEffect" name="Tunnel2Glow" track="0" startTime="190" endTime="217">
@@ -383,7 +373,7 @@
 		<Parameter name="FadeColor" Color="Black" />
 	</PostEffect>
 
-	<Effect class="TextFadingEffect" name="respect" startTime="214" endTime="217">
+	<Effect class="TextFadingEffect" name="respect" startTime="214" endTime="219">
 		<Parameter name="FadeOutLength" float="0" />
 		<Parameter name="FadeInLength" float="1" />
 		<Parameter name="TextColor" Color="White" />
@@ -460,7 +450,7 @@
 		<Parameter name="Luminance" float="0.5099998" />
 		<Parameter name="DownSamples" int="2" />
 		<Parameter name="AdvancedGlow" bool="false" />
-	</PostEffect>-->
+	</PostEffect>
 
 
 	<!--After this line is only test stuff-->

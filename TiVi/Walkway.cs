@@ -122,7 +122,8 @@ namespace TiVi
             tiviNode.Model.Materials[0].AmbientColor = new ColorValue(0.3f, 0.3f, 0.3f, 0.5f);
             tiviNode.Model.Materials[0].DiffuseColor = new ColorValue(0.5f, 0.5f, 0.5f, 0.5f);
             tiviNode.Model.Materials[0].ReflectiveFactor = 0.1f;
-            (tiviNode.Model as SkinnedModel).SetAnimationSet(0, StartTime, 1.03f);
+            float timeScale = 1.045f;
+            (tiviNode.Model as SkinnedModel).SetAnimationSet(0, StartTime, timeScale);
             scene.ActiveCamera = scene.GetNodeByName("Camera01") as CameraNode;
             tiviNode.Model.Materials[1].DiffuseTexture = screenTexture;
 

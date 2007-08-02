@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.DemoFramework;
 using Dope.DDXX.SceneGraph;
+using Dope.DDXX.Graphics;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Utility;
@@ -45,6 +46,8 @@ namespace TiVi
             tivi.Model.Materials[0].AmbientColor = new ColorValue(0.3f, 0.3f, 0.3f, 0.3f);
             tivi.Model.Materials[0].DiffuseColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
             tivi.Model.Materials[0].ReflectiveFactor = 0.1f;
+            float timeScale = 1.348f;
+            ((tivi as ModelNode).Model as SkinnedModel).SetAnimationSet(0, StartTime, timeScale);
 
             lights[0] = new PointLightNode("Light1");
             lights[0].Position = new Vector3(0, 0, -2);
