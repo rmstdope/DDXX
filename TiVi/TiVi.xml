@@ -7,7 +7,7 @@
 	</Generator>
 	<Texture name="noise" generator="noise"></Texture>
 
-
+<!--
 	<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="280">
 		<Parameter name="Width" float="16" />
 		<Parameter name="Height" float="9" />
@@ -104,7 +104,6 @@
 		<Parameter name="DrawOrder" int="0" />
 		<Parameter name="BlurColor" Color="255, 119, 118, 112" />
 	</PostEffect>
-
   
 	<Effect class="DiscoFever" name="WalkwayFever" track="0" startTime="42" endTime="44">
 		<Parameter name="DrawOrder" int="0" />
@@ -461,7 +460,7 @@
 		<Parameter name="DownSamples" int="2" />
 		<Parameter name="AdvancedGlow" bool="false" />
 	</PostEffect>
-
+-->
 
 	<!--After this line is only test stuff-->
 	
@@ -519,15 +518,15 @@
 		<Parameter name="CloudColor1" Color="255, 10, 10, 20" />
 		<Parameter name="CloudColor2" Color="255, 10, 10, 20" />
 	</Effect>-->
-	<!--<Effect class="FilmRoll" track="0" startTime="42" endTime="300">
+	<Effect class="FilmRoll" track="0" startTime="42" endTime="300">
 		<Parameter name="FilmRounding" float="0.02000001" />
 		<Parameter name="FilmWidth" float="0.65" />
 		<Parameter name="DrawOrder" int="1" />
 		<Parameter name="PerforationWidth" float="0.09" />
 		<Parameter name="PerforationHeight" float="0.06999999" />
 		<Parameter name="PerforationDistance" float="0.06999999" />
-		<Parameter name="SlowDown" int="64" />
-	</Effect>-->
+		<Parameter name="SlowDown" int="18" />
+	</Effect>
 	<!--<PostEffect class="OverlayPostEffect" track="0" startTime="42" endTime="300.0">
 		<Parameter name="AddNoise" bool="true" />
 		<Parameter name="Filename" string="Noise2.jpg" />

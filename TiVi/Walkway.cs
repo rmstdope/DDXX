@@ -203,7 +203,7 @@ namespace TiVi
             else
                 scene.ActiveCamera = scene.GetNodeByName("Camera01") as IRenderableCamera;
             scene.ActiveCamera.SetClippingPlanes(0.01f, 1000);
-            scene.ActiveCamera.SetFOV((float)Math.PI / 3);
+            //scene.ActiveCamera.SetFOV((float)Math.PI / 3);
             StepScreen();
             StepDiamonds();
             StepWalkway();

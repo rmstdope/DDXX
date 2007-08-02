@@ -112,9 +112,15 @@ namespace Dope.DDXX.DemoFramework
 
         protected ModelNode CreateSimpleModelNode(IModel model, string effectFileName, string techniqueName)
         {
-            IEffectHandler effectHandler = new EffectHandler(EffectFactory.CreateFromFile(effectFileName),
+            return CreateSimpleModelNode(model, effectFileName, techniqueName, EffectFactory, Device);
+        }
+
+        public static ModelNode CreateSimpleModelNode(IModel model, string effectFileName, string techniqueName, 
+            IEffectFactory effectFactory, IDevice device)
+        {
+            IEffectHandler effectHandler = new EffectHandler(effectFactory.CreateFromFile(effectFileName),
                 delegate(int material) { return techniqueName; }, model);
-            return new ModelNode("", model, effectHandler, Device);
+            return new ModelNode("", model, effectHandler, device);
         }
 
         protected abstract void Initialize();
