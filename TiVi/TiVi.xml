@@ -7,7 +7,7 @@
 	</Generator>
 	<Texture name="noise" generator="noise"></Texture>
 
-	<!--<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="280">
+	<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="280">
 		<Parameter name="Width" float="16" />
 		<Parameter name="Height" float="9" />
 		<Parameter name="SubtractNoise" bool="true" />
@@ -104,7 +104,7 @@
 	<PostEffect class="RadialBlurPostEffect" startTime="7" endTime="42">
 		<Parameter name="DrawOrder" int="0" />
 		<Parameter name="BlurColor" Color="255, 119, 118, 112" />
-	</PostEffect>-->
+	</PostEffect>
   
 	<Effect class="DiscoFever" name="WalkwayFever" track="0" startTime="42" endTime="44">
 		<Parameter name="DrawOrder" int="0" />
@@ -145,7 +145,7 @@
 	</PostEffect>
 
 
-	<!--<Effect class="SpaceTravel" track="0" startTime="83" endTime="122">
+	<Effect class="SpaceTravel" track="0" startTime="83" endTime="122">
 		<Parameter name="DrawOrder" int="1" />
 	</Effect>
 	<Effect class="TextFadingEffect" name="code" startTime="88" endTime="92">
@@ -270,10 +270,10 @@
 	<PostEffect class="RadialBlurPostEffect" name="SpaceRadialBlur" startTime="83" endTime="122">
 		<Parameter name="DrawOrder" int="0" />
 		<Parameter name="BlurColor" Color="50, 40, 40, 190" />
-	</PostEffect>-->
+	</PostEffect>
 
   
-	<!--<Effect class="SpinningBackgroundEffect" name="Tunnel1Spin" track="0" startTime="122" endTime="150">
+	<Effect class="SpinningBackgroundEffect" name="Tunnel1Spin" track="0" startTime="122" endTime="150">
 		<SetupCall name="AddTextureLayer">
 			<Parameter string="noise" />
 			<Parameter float="15.0" />
@@ -301,13 +301,13 @@
 		<Parameter name="Luminance" float="0.5099998" />
 		<Parameter name="DownSamples" int="1" />
 		<Parameter name="AdvancedGlow" bool="false" />
-	</PostEffect>-->
-	<!--<PostEffect class="ColorFader" name="Tunnel1Fader" startTime="149.5" endTime="152.5">
+	</PostEffect>
+	<PostEffect class="ColorFader" name="Tunnel1Fader" startTime="149.5" endTime="152.5">
 		<Parameter name="DrawOrder" int="3" />
 		<Parameter name="FadeInLength" float="0.5" />
 		<Parameter name="FadeOutLength" float="2" />
 		<Parameter name="FadeColor" Color="Black" />
-	</PostEffect>-->
+	</PostEffect>
 
 
   <Effect class="SpinningBackgroundEffect" name="ChessSpin" track="0" startTime="150" endTime="155">
