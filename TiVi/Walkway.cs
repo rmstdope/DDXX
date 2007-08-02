@@ -114,10 +114,16 @@ namespace TiVi
             XLoader.AddToScene(scene);
             walkwayPlane = scene.GetNodeByName("Walkway") as ModelNode;
             walkwayStencilPlane = CreateStencilNodeOfNode(walkwayPlane);
-            GraphicsStream stream = ShaderLoader.CompileShaderFromFile("Imaginations.psh", "CreateCloudTexture", null, "tx_1_0", ShaderFlags.None);
-            ITexture tex = GraphicsFactory.CreateTexture(Device, 256, 256, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
-            TextureLoader.FillTexture((Texture)((tex as TextureAdapter).BaseTextureDX), new TextureShader(stream));
-            walkwayPlane.Model.Materials[0].DiffuseTexture = tex;
+
+            TextureDirector textureDirector = new TextureDirector(TextureBuilder);
+            textureDirector.CreatePerlinNoise(10, 12, 0.5f);
+            textureDirector.Madd(1.0f, -0.4f);
+            ITexture texture = textureDirector.Generate(256, 256, 1, Format.A8R8G8B8);
+            //GraphicsStream stream = ShaderLoader.CompileShaderFromFile("Imaginations.psh", "CreateCloudTexture", null, "tx_1_0", ShaderFlags.None);
+            //ITexture tex = GraphicsFactory.CreateTexture(Device, 256, 256, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
+            //TextureLoader.FillTexture((Texture)((tex as TextureAdapter).BaseTextureDX), new TextureShader(stream));
+
+            walkwayPlane.Model.Materials[0].DiffuseTexture = texture;
             scene.RemoveNode(scene.GetNodeByName("Walkway"));
             tiviNode = (ModelNode)scene.GetNodeByName("TiVi");
             tiviNode.Model.Materials[0].ReflectiveTexture = TextureFactory.CreateCubeFromFile("rnl_cross.dds");
@@ -125,6 +131,8 @@ namespace TiVi
             tiviNode.Model.Materials[0].AmbientColor = new ColorValue(0.3f, 0.3f, 0.3f, 0.5f);
             tiviNode.Model.Materials[0].DiffuseColor = new ColorValue(0.5f, 0.5f, 0.5f, 0.5f);
             tiviNode.Model.Materials[0].ReflectiveFactor = 0.1f;
+            tiviNode.Model.Materials[1].AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
+            scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
             float timeScale = 1.045f;
             (tiviNode.Model as SkinnedModel).SetAnimationSet(0, StartTime, timeScale);
             scene.ActiveCamera = scene.GetNodeByName("Camera01") as CameraNode;

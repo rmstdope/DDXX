@@ -60,8 +60,8 @@ namespace TiVi
 
         //private ILine line;
         private IScene scene;
-        private ISprite sprite;
-        private ITexture texture;
+        //private ISprite sprite;
+        //private ITexture texture;
         private CameraNode camera;
         private List<PhysicalCube> cubes = new List<PhysicalCube>();
         private ChessBoard chessBoard;
@@ -162,8 +162,8 @@ namespace TiVi
             chessBoard = new ChessBoard(scene, MeshBuilder, effect, Device, 10, 0.1f);
             CreateLights();
 
-            sprite = GraphicsFactory.CreateSprite(Device);
-            texture = TextureFactory.CreateFromFile("RepectToText_3.jpg");
+            //sprite = GraphicsFactory.CreateSprite(Device);
+            //texture = TextureFactory.CreateFromFile("RepectToText_3.jpg");
         }
 
         private void CreateSplines()

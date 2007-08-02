@@ -203,7 +203,7 @@ technique TvScreenSkinning
 	pass BasePass
 	{
 		VertexShader			= compile vs_2_0 SolidVertexShader(4);
-		PixelShader				= compile ps_2_0 SolidPixelShader2();
+		PixelShader				= compile ps_2_0 SimplePixelShader(BaseTextureSamplerBordered);
 		AlphaTestEnable		= false;
 		AlphaBlendEnable	= false;
 		FillMode					= Solid;
