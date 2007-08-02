@@ -184,9 +184,9 @@ namespace TiVi
         public override void Render()
         {
             scene.SetEffectParameters();
-            //chessBoard.Render(scene);
-            //foreach (ChessPiece piece in chessPieces)
-            //    piece.RenderMirror(scene);
+            chessBoard.Render(scene);
+            foreach (ChessPiece piece in chessPieces)
+                piece.RenderMirror(scene);
             scene.Render();
             foreach (ChessPiece piece in chessPieces)
                 piece.Render(scene, Time.StepTime - StartTime);
