@@ -306,7 +306,7 @@ namespace Dope.DDXX.DemoFramework
                 }
                 else
                 {
-                    throw new DDXXException("Unknown tag in XML file.");
+                    throw new DDXXException("Unknown tag '" + node.Name + "' in XML file.");
                 }
             }
         }

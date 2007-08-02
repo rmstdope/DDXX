@@ -7,6 +7,7 @@ using Dope.DDXX.Utility;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX;
 using System.Drawing;
+using Dope.DDXX.DemoEffects;
 
 namespace TiVi
 {
@@ -51,6 +52,7 @@ namespace TiVi
         private LineNode lineNode;
         private List<PositionInfo> positions = new List<PositionInfo>();
         private const float ROPE_LENGTH = 2.0f;
+        private TextFadingEffect textFade;
 
         public ChessPiece(IScene scene, IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, 
             IDevice device, PieceType type, PieceColor color, string startPosition)
@@ -63,6 +65,16 @@ namespace TiVi
             AddPosition(-1000, 0, startPosition, 0);
             CreateLineNode(graphicsFactory, device);
             CreateMirrorNode();
+
+            textFade = new TextFadingEffect("text", 0, 0);
+            textFade.FadeInLength = 1;
+            textFade.FadeOutLength = 1;
+            textFade.FontHeight = 0.22f;
+            textFade.FontName = "Alba";
+            textFade.Text = (color == PieceColor.Black) ? ".KASPAROV" : ".DEEP BLUE";
+            textFade.TextColor = (color == PieceColor.Black) ? Color.FromArgb(180, 150, 150) : Color.FromArgb(150, 150, 180);
+            textFade.TextPosition = (color == PieceColor.Black) ? new Vector3(0.3f, 0.8f, 0) : new Vector3(0.7f, 0.8f, 0);
+            textFade.Initialize(graphicsFactory, null, device, null, null);
         }
 
         private void CreateLineNode(IGraphicsFactory graphicsFactory, IDevice device)
@@ -164,6 +176,16 @@ namespace TiVi
                     lineNode.WorldState.Roll((float)Math.Sin(Time.StepTime * 4.0f) * 0.2f * d);
                 }
                 oldPos = lineNode.Position;
+
+                // Set text fading parameters
+                if (time >= info.StartTime - 1 && time <= info.StartTime - 1 + 5)
+                {
+                    if (info.Position.Y != 10)
+                    {
+                        textFade.StartTime = info.StartTime - 1 + (Time.StepTime - time);
+                        textFade.EndTime = info.StartTime - 1 + 5 + (Time.StepTime - time);
+                    }
+                }
             }
             lineNode.Position += new Vector3(0, ROPE_LENGTH, 0);
         }
@@ -173,9 +195,10 @@ namespace TiVi
             mirrorNode.Render(scene);
         }
 
-        public void Render(IScene scene)
+        public void Render(IScene scene, float time)
         {
             lineNode.Render(scene);
+            textFade.Render();
         }
     }
 }

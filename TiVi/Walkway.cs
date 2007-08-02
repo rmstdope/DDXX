@@ -31,10 +31,33 @@ namespace TiVi
         //private ModelNode cylinder;
         private ITexture screenTexture;
         private IDemoEffect subEffect;
+        private float camera02Start;
+        private float camera03Start;
+        private float camera04Start;
+
+        public float Camera04Start
+        {
+            get { return camera04Start; }
+            set { camera04Start = value; }
+        }
+
+        public float Camera03Start
+        {
+            get { return camera03Start; }
+            set { camera03Start = value; }
+        }
+
+        public float Camera02Start
+        {
+            get { return camera02Start; }
+            set { camera02Start = value; }
+        }
 
         public Walkway(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
         {
+            camera02Start = 14;
+            camera03Start = 21;
         }
 
         protected override void Initialize()
@@ -77,7 +100,7 @@ namespace TiVi
                                 if (material == 1)
                                     return "TvScreen";
                                 else
-                                    return "Solid";
+                                    return "TiViReflective";
                             };
                         case "Walkway":
                             return TechniqueChooser.MaterialPrefix("TiViWalkwayMirror");
@@ -94,9 +117,13 @@ namespace TiVi
             walkwayPlane.Model.Materials[0].DiffuseTexture = tex;
             scene.RemoveNode(scene.GetNodeByName("Walkway"));
             tiviNode = (ModelNode)scene.GetNodeByName("TiVi");
+            tiviNode.Model.Materials[0].ReflectiveTexture = TextureFactory.CreateCubeFromFile("rnl_cross.dds");
+            tiviNode.Model.Materials[0].DiffuseTexture = TextureFactory.CreateFromFile("marble.jpg");
+            tiviNode.Model.Materials[0].AmbientColor = new ColorValue(0.3f, 0.3f, 0.3f, 0.5f);
+            tiviNode.Model.Materials[0].DiffuseColor = new ColorValue(0.5f, 0.5f, 0.5f, 0.5f);
+            tiviNode.Model.Materials[0].ReflectiveFactor = 0.1f;
             (tiviNode.Model as SkinnedModel).SetAnimationSet(0, StartTime, 1.03f);
             scene.ActiveCamera = scene.GetNodeByName("Camera01") as CameraNode;
-            scene.ActiveCamera.SetClippingPlanes(0.01f, 1000);
             tiviNode.Model.Materials[1].DiffuseTexture = screenTexture;
 
             CreateMirrorOfNode(scene.GetNodeByName("Cylinder01"), 0.2f);
@@ -165,7 +192,17 @@ namespace TiVi
 
         public override void Step()
         {
-            //Time.CurrentTime = 42.5f;
+            float t = Time.StepTime - StartTime;
+            if (t < camera02Start)
+                scene.ActiveCamera = scene.GetNodeByName("Camera01") as IRenderableCamera;
+            else if (t < camera03Start)
+                scene.ActiveCamera = scene.GetNodeByName("Camera02") as IRenderableCamera;
+            else if (t < camera04Start)
+                scene.ActiveCamera = scene.GetNodeByName("Camera03") as IRenderableCamera;
+            else
+                scene.ActiveCamera = scene.GetNodeByName("Camera01") as IRenderableCamera;
+            scene.ActiveCamera.SetClippingPlanes(0.01f, 1000);
+            scene.ActiveCamera.SetFOV((float)Math.PI / 3);
             StepScreen();
             StepDiamonds();
             StepWalkway();

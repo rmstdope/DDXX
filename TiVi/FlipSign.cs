@@ -87,13 +87,18 @@ namespace TiVi
                         if (material == 1)
                             return "TvScreen";
                         else
-                            return "Solid";
+                            return "TiViReflective";
                     };
                 });
-            INode node = XLoader.GetNodeHierarchy()[0].Children[1];
-            node.WorldState.Turn((float)Math.PI * 1.2f);
-            node.WorldState.Position = new Vector3(0, 0.25f, 0);
-            platform.AddChild(node);
+            ModelNode tivi = XLoader.GetNodeHierarchy()[0].Children[1] as ModelNode;
+            tivi.WorldState.Turn((float)Math.PI * 1.2f);
+            tivi.WorldState.Position = new Vector3(0, 0.25f, 0);
+            tivi.Model.Materials[0].ReflectiveTexture = TextureFactory.CreateCubeFromFile("rnl_cross.dds");
+            tivi.Model.Materials[0].DiffuseTexture = TextureFactory.CreateFromFile("marble.jpg");
+            tivi.Model.Materials[0].AmbientColor = new ColorValue(0.3f, 0.3f, 0.3f, 0.3f);
+            tivi.Model.Materials[0].DiffuseColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
+            tivi.Model.Materials[0].ReflectiveFactor = 0.1f;
+            platform.AddChild(tivi);
             scene.HandleHierarchy(XLoader.RootFrame);
 
             ClampedCubicSpline<InterpolatedVector3> spline = new ClampedCubicSpline<InterpolatedVector3>(new InterpolatedVector3(), new InterpolatedVector3());
@@ -124,15 +129,15 @@ namespace TiVi
         private void CreateCameraInterpolator()
         {
             ClampedCubicSpline<InterpolatedVector3> spline = new ClampedCubicSpline<InterpolatedVector3>(new InterpolatedVector3(), new InterpolatedVector3());
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(0, new InterpolatedVector3(new Vector3(0, -2, -16))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(2, new InterpolatedVector3(new Vector3(3, 3, -18))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(4, new InterpolatedVector3(new Vector3(-2, 3, -18))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(6, new InterpolatedVector3(new Vector3(2, -4, -22))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(8, new InterpolatedVector3(new Vector3(0, -2, -16))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(10, new InterpolatedVector3(new Vector3(-2, 3, -18))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(12, new InterpolatedVector3(new Vector3(2, -3, -18))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(14, new InterpolatedVector3(new Vector3(2, 4, -22))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(16, new InterpolatedVector3(new Vector3(0, -2, -16))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(0, new InterpolatedVector3(new Vector3(0, -1, -6))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(2, new InterpolatedVector3(new Vector3(5, 4, -8))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(4, new InterpolatedVector3(new Vector3(-4, 3, -12))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(6, new InterpolatedVector3(new Vector3(2, -5, -7))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(8, new InterpolatedVector3(new Vector3(0, -2, -6))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(10, new InterpolatedVector3(new Vector3(-7, 6, -8))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(12, new InterpolatedVector3(new Vector3(2, -3, -12))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(14, new InterpolatedVector3(new Vector3(5, 4, -8))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(16, new InterpolatedVector3(new Vector3(0, -1, -6))));
             spline.Calculate();
             interpolator = new Interpolator<InterpolatedVector3>();
             interpolator.AddSpline(spline);
@@ -144,7 +149,7 @@ namespace TiVi
             MeshBuilder.SetAmbientColor("Default1", new ColorValue(0.4f, 0.6f, 0.7f));
             MeshBuilder.SetDiffuseTexture("Default1", "screenshot0.jpg");
             MeshBuilder.SetReflectiveTexture("Default1", "rnl_cross.dds");
-            MeshBuilder.SetReflectiveFactor("Default1", 0.15f);
+            MeshBuilder.SetReflectiveFactor("Default1", 0.1f);
             meshDirector = new MeshDirector(MeshBuilder);
             meshDirector.CreatePlane(1, 1, 1, 1, true);
             float uAdd = 1.0f / NUM_SIGNS_X;

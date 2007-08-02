@@ -101,7 +101,7 @@ namespace Dope.DDXX.DemoEffects
         {
             TestInitializeArial25();
 
-            textFadingEffect.TextPosition = new Vector2(0.5f, 0.5f);
+            textFadingEffect.TextPosition = new Vector3(0.5f, 0.5f, 0);
             Expect.Once.On(sprite).Method("Begin").With(SpriteFlags.AlphaBlend);
             Expect.Once.On(font).Method("DrawText").
                 With(Is.EqualTo(sprite), Is.Anything, Is.EqualTo(new Rectangle(VIEWPORT_WIDTH / 2 - 500, VIEWPORT_HEIGHT / 2 - 500, 1000, 1000)),
@@ -116,7 +116,7 @@ namespace Dope.DDXX.DemoEffects
         {
             TestInitializeArial25();
 
-            textFadingEffect.TextPosition = new Vector2(0.0f, 0.0f);
+            textFadingEffect.TextPosition = new Vector3(0.0f, 0.0f, 0);
             Expect.Once.On(sprite).Method("Begin").With(SpriteFlags.AlphaBlend);
             Expect.Once.On(font).Method("DrawText").
                 With(Is.EqualTo(sprite), Is.Anything, Is.EqualTo(new Rectangle(-500, -500, 1000, 1000)),
@@ -131,7 +131,7 @@ namespace Dope.DDXX.DemoEffects
         {
             TestInitializeArial25();
 
-            textFadingEffect.TextPosition = new Vector2(1.0f, 1.0f);
+            textFadingEffect.TextPosition = new Vector3(1.0f, 1.0f, 0);
             Expect.Once.On(sprite).Method("Begin").With(SpriteFlags.AlphaBlend);
             Expect.Once.On(font).Method("DrawText").
                 With(Is.EqualTo(sprite), Is.Anything, Is.EqualTo(new Rectangle(VIEWPORT_WIDTH - 500, VIEWPORT_HEIGHT - 500, 1000, 1000)), 

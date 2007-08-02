@@ -369,5 +369,20 @@ namespace Dope.DDXX.SceneGraph
         }
 
         #endregion
+
+        #region IRenderableCamera Members
+
+
+        public void SetFOV(float fov)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public float GetFOV()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
     }
 }

@@ -34,7 +34,7 @@
 		<Parameter name="TextColor" Color="White" />
 		<Parameter name="Text" string=".dope" />
 	</Effect-->
-	<!--<Effect class="TextWave" track="0" startTime="0" endTime="300" />-->
+	<Effect class="TextWave" track="0" startTime="0" endTime="300" />
 	<!--<Effect class="TestEffect" track="0" startTime="0" endTime="300" />-->
 	<!--<Effect class="TerrainFlyover" track="0" startTime="0" endTime="300" />-->
   <!--Effect name="TimeSyncEffect" track="0" startTime="0" endTime="300" /-->

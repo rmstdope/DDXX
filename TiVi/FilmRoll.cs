@@ -33,7 +33,7 @@ namespace EngineTest {
         private float perforationWidth = 0.05f;
         private float perforationHeight = 0.03f;
         private float perforationDistance = 0.03f;
-        private const int squareCount = 10;
+        private const int squareCount = 8;
         private const int textureCount = squareCount + 2;
         private const int heightSegments = 5;
         float[] yValues = new float[squareCount * heightSegments + 1];
@@ -45,6 +45,8 @@ namespace EngineTest {
         private float curveOffset;
         const int textureWidth = 128;
         const int textureHeight = 128;
+        IAnimationRootFrame animationRootFrame;
+        List<INode> animationNodes;
 
         public FilmRoll(string name, float start, float end)
             : base(name, start, end) {
@@ -66,6 +68,14 @@ namespace EngineTest {
             CreateFilmSquareTexture();
             CreateFilmPerforationTexture();
 
+            XLoader.Load("filmanimation.X", EffectFactory.CreateFromFile("TiVi.fxo"),
+    delegate(string name)
+    {
+                return TechniqueChooser.MaterialPrefix("FilmRoll");
+    });
+            animationRootFrame = XLoader.RootFrame;
+            animationNodes = XLoader.GetNodeHierarchy();
+            
             CreateStandardSceneAndCamera(out scene, out camera, 15);
             film = new DummyNode("Film roll");
 
@@ -127,8 +137,8 @@ namespace EngineTest {
 
         private void CalculateCoordinates() {
             for (int i = 0; i <= squareCount * heightSegments; i++) {
-                yValues[i] = i * squareHeight / heightSegments - (squareCount * squareHeight / 2);
-                zValues[i] = (float)(0.5 * Math.Sin(curveOffset + ((float)i / zValues.Length) * Math.PI * 2 * 4));
+                //yValues[i] = i * squareHeight / heightSegments - (squareCount * squareHeight / 2);
+                //zValues[i] = (float)(0.5 * Math.Sin(curveOffset + ((float)i / zValues.Length) * Math.PI * 2 * 4));
             }
         }
 
@@ -201,7 +211,7 @@ namespace EngineTest {
                     int vertexOffset = squareIndex * (heightSegments + 1) * 2;
                     for (int i = 0; i <= heightSegments; i++) {
                         float tv = yOffset + (float)i / (heightSegments*textureCount);
-                        tv += filmOffset / (squareHeight*textureCount);
+                        //tv += filmOffset / (squareHeight*textureCount);
                         verts[vertexOffset + i * 2].Tv = tv;
                         verts[vertexOffset + i * 2 + 1].Tv = tv;
                     }
@@ -314,6 +324,93 @@ namespace EngineTest {
             SetStillFilmTextureCoordinates();
             SetVertices();
             scene.Step();
+            StepAnimation();
+        }
+
+        private void StepAnimation()
+        {
+            StepAnimation2();
+            UpdateFrameMatrices(animationRootFrame.FrameHierarchy, Matrix.Identity);
+
+            //List<Matrix> matrices = new List<Matrix>();
+            //IFrame frame = animationRootFrame.FrameHierarchy;
+            //matrices.Add(frame.TransformationMatrix);
+            //while (frame.FrameFirstChild != null)
+            //{
+            //    frame = frame.FrameFirstChild;
+            //    matrices.Add(frame.TransformationMatrix);
+            //}
+            //for (int i = 0; i <= squareCount * heightSegments; i++) {
+            //    //yValues[i] = i * squareHeight / heightSegments - (squareCount * squareHeight / 2);
+            //    int s = i / heightSegments;
+            //    if (s < matrices.Count) {
+            //        zValues[i] = (matrices[s/heightSegments].M23-0.7f) * 10.0f;
+            //    }
+            //}
+            List<Vector3> positions = new List<Vector3>();
+            List<string> names = new List<string>();
+            INode node = animationNodes[0].Children[3];
+            if (node != null)
+            {
+                positions.Add(node.Position);
+                names.Add(node.Name);
+                while (node.Children.Count >= 1)
+                {
+                    positions.Add(node.Children[0].Position);
+                    names.Add(node.Children[0].Name);
+                    node = node.Children[0];
+                }
+            }
+            for (int i = 0; i < squareCount; i++)
+            {
+                for (int j = 0; j <= heightSegments; j++)
+                {
+                    //yValues[i] = i * squareHeight / heightSegments - (squareCount * squareHeight / 2);
+                    Vector3 pos = new Vector3();
+                    if (i < positions.Count)
+                    {
+                        pos = positions[i];
+                    }
+                    yValues[i * heightSegments + j] = (pos.Z * 2.0f*squareHeight + j * squareHeight / heightSegments);// -(squareCount * squareHeight / 2);
+                    zValues[i * heightSegments + j] = -(pos.Y*squareHeight);
+                }
+            }
+        }
+
+        private void UpdateFrameMatrices(IFrame frame, Matrix parentMatrix)
+        {
+            frame.CombinedTransformationMatrix = frame.TransformationMatrix * parentMatrix;
+
+            if (frame.FrameSibling != null)
+            {
+                UpdateFrameMatrices(frame.FrameSibling, parentMatrix);
+            }
+
+            if (frame.FrameFirstChild != null)
+            {
+                UpdateFrameMatrices(frame.FrameFirstChild, frame.CombinedTransformationMatrix);
+            }
+        }
+
+        private void StepAnimation2()
+        {
+            IAnimationController controller = animationRootFrame.AnimationController;
+            float animationStartTime = 0;
+            float animationSpeed = 7;
+            if (controller != null)
+            {
+                IAnimationSet animationSet = animationRootFrame.AnimationController.GetAnimationSet(0);
+                double rewindTime = animationSet.Period - (controller.Time % animationSet.Period);
+                if (rewindTime < 0)
+                    rewindTime += animationSet.Period;
+                double forwardTime = (Time.StepTime - animationStartTime) * animationSpeed;
+                int num = (int)(forwardTime / animationSet.Period);
+                forwardTime = forwardTime % animationSet.Period;
+                double time = rewindTime + forwardTime;
+                if (time < 0)
+                    time += animationSet.Period;
+                controller.AdvanceTime(time);
+            }
         }
 
         public int SlowDown {

@@ -16,12 +16,12 @@ namespace TiVi
         private ModelNode boardStencilNode;
         private DummyNode rootNode;
 
-        public ChessBoard(IScene scene, MeshBuilder meshBuilder, IEffect effect, IDevice device, float scale)
+        public ChessBoard(IScene scene, MeshBuilder meshBuilder, IEffect effect, IDevice device, float scale, float reflective)
         {
             rootNode = new DummyNode("Root");
             meshBuilder.SetDiffuseTexture("Default1", "Square.tga");
             meshBuilder.SetReflectiveTexture("Default1", "rnl_cross.dds");
-            meshBuilder.SetReflectiveFactor("Default1", 0.4f);
+            meshBuilder.SetReflectiveFactor("Default1", reflective);
             MeshDirector meshDirector = new MeshDirector(meshBuilder);
             meshDirector.CreatePlane(1, 1, 1, 1, true);
             meshDirector.Rotate((float)Math.PI / 2, 0, 0);
@@ -38,9 +38,9 @@ namespace TiVi
                     node.Model.Materials[0].AmbientColor = new ColorValue(0.02f, 0.02f, 0.02f, 0.02f);
                     node.Model.Materials[0].DiffuseColor = new ColorValue(color, color, color, color);
                     if (c == 0)
-                        node.Model.Materials[0].ReflectiveFactor = 0.7f;
+                        node.Model.Materials[0].ReflectiveFactor = reflective;//0.7f;
                     else
-                        node.Model.Materials[0].ReflectiveFactor = 0.1f;
+                        node.Model.Materials[0].ReflectiveFactor = reflective / 7.0f;// 0.1f;
                     c = 1 - c;
                     signs[y * NUM_SIGNS_X + x] = node;
                     rootNode.AddChild(node);

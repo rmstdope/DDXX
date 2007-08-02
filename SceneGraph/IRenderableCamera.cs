@@ -16,5 +16,7 @@ namespace Dope.DDXX.SceneGraph
             get;
         }
         void SetClippingPlanes(float near, float far);
+        void SetFOV(float fov);
+        float GetFOV();
     }
 }

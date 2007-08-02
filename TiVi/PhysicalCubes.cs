@@ -72,7 +72,14 @@ namespace TiVi
         private float dragCoefficient;
         private float stepSize;
         private float cubeDistortion;
+        private float cubeReflectivness;
         PointLightNode[] lights = new PointLightNode[2];
+
+        public float CubeReflectivness
+        {
+            get { return cubeReflectivness; }
+            set { cubeReflectivness = value; }
+        }
 
         public float HyperfocalDistance
         {
@@ -105,6 +112,7 @@ namespace TiVi
             dragCoefficient = 0.05f;
             stepSize = 0.04f;
             cubeDistortion = 0.1f;
+            cubeReflectivness = 0.2f;
             SetStepSize(GetTweakableNumber("HyperfocalDistance"), 0.01f);
             SetStepSize(GetTweakableNumber("DragCoefficient"), 0.01f);
             SetStepSize(GetTweakableNumber("StepSize"), 0.01f);
@@ -149,7 +157,7 @@ namespace TiVi
             CreateSplines();
 
             effect = EffectFactory.CreateFromFile("TiVi.fxo");
-            chessBoard = new ChessBoard(scene, MeshBuilder, effect, Device, 10);
+            chessBoard = new ChessBoard(scene, MeshBuilder, effect, Device, 10, 0.1f);
             CreateLights();
         }
 
@@ -257,7 +265,7 @@ namespace TiVi
             //model.Materials[0].AmbientColor = new ColorValue(0.1f, 0.1f, 0.6f);
             model.Materials[0].AmbientColor = new ColorValue(0.3f, 0.3f, 0.3f, 0.3f);
             model.Materials[0].DiffuseColor = new ColorValue(0.8f, 0.8f, 0.8f, 0.8f);
-            model.Materials[0].ReflectiveFactor = 0.4f;
+            model.Materials[0].ReflectiveFactor = cubeReflectivness;
             model.Materials[0].ReflectiveTexture = TextureFactory.CreateCubeFromFile("rnl_cross.dds");
             //cube.model = CreateSimpleModelNode(model, "TiVi.fxo", "CelWithDoF");
             cube.model = CreateSimpleModelNode(model, "TiVi.fxo", "TiviChessPiece");
@@ -462,6 +470,18 @@ namespace TiVi
             "  *   *   * *    x" +
             "  *   ****  *****x" +
             "xxxx",
+
+            "  *   * ***** **** x" +
+            "  ** ** *   * *   *x" +
+            "  * * * ***** *   *x" +
+            "  *   * *   * *   *x" +
+            "  *   * *   * **** x" +
+            "x" +
+            "*   * * *** *** **  **  ***x" +
+            "*   * *   * * * * * * *   *x" +
+            "* * * *  *  *** **  * *  * x" +
+            "** ** * *   * * * * * * *  x" +
+            "*   * * *** * * * * **  ***",
 
             };
 

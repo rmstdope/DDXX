@@ -91,7 +91,7 @@ namespace TiVi
             CreatePieces();
             CreateCameraInterpolator();
             CreateLights();
-            chessBoard = new ChessBoard(scene, MeshBuilder, EffectFactory.CreateFromFile("TiVi.fxo"), Device, 1);
+            chessBoard = new ChessBoard(scene, MeshBuilder, EffectFactory.CreateFromFile("TiVi.fxo"), Device, 1, 0.4f);
         }
 
         private void CreateLights()
@@ -175,9 +175,9 @@ namespace TiVi
             chessBoard.Render(scene);
             foreach (ChessPiece piece in chessPieces)
                 piece.RenderMirror(scene);
-            foreach (ChessPiece piece in chessPieces)
-                piece.Render(scene);
             scene.Render();
+            foreach (ChessPiece piece in chessPieces)
+                piece.Render(scene, Time.StepTime - StartTime);
         }
     }
 }

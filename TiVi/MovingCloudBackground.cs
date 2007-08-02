@@ -9,6 +9,7 @@ using Dope.DDXX.Utility;
 using System.Drawing;
 using Dope.DDXX.SceneGraph;
 using Dope.DDXX.MeshBuilder;
+using Microsoft.DirectX;
 
 namespace TiVi
 {
@@ -25,6 +26,20 @@ namespace TiVi
         private int baseFrequency = 16;
         private int numOctaves = 6;
         private float persistance = 0.5f;
+        private Vector3 timeShift1;
+        private Vector3 timeShift2;
+
+        public Vector3 TimeShift1
+        {
+            get { return timeShift1; }
+            set { timeShift1 = value; }
+        }
+
+        public Vector3 TimeShift2
+        {
+            get { return timeShift2; }
+            set { timeShift2 = value; }
+        }
 
         public float Persistance
         {
@@ -61,9 +76,13 @@ namespace TiVi
             : base(name, startTime, endTime)
         {
             SetStepSize(GetTweakableNumber("Persistance"), 0.01f);
+            SetStepSize(GetTweakableNumber("TimeShift1"), 0.01f);
+            SetStepSize(GetTweakableNumber("TimeShift2"), 0.01f);
             skyColor = Color.FromArgb(50, 50, 100);
             cloudColor1 = Color.FromArgb(206, 206, 156);
             cloudColor2 = Color.FromArgb(206, 206, 156);
+            timeShift1 = new Vector3(0.035f, 0.041f, 0);
+            timeShift2 = new Vector3(0.024f, 0.037f, 0);
         }
 
         protected override void Initialize()
@@ -80,7 +99,6 @@ namespace TiVi
             scene.AddNode(node);
 
             GeneratePerlinNoise();
-
         }
 
         private void SetEffectParametrers()
@@ -114,12 +132,13 @@ namespace TiVi
         public override void Step()
         {
             float[] f = new float[] { 
-                Time.StepTime * 0.035f, 
-                Time.StepTime * 0.041f, 
-                Time.StepTime * 0.024f, 
-                Time.StepTime * 0.037f 
+                Time.StepTime * timeShift1.X,
+                Time.StepTime * timeShift1.Y,
+                Time.StepTime * timeShift2.X,
+                Time.StepTime * timeShift2.Y,
             };
             EffectFactory.CreateFromFile("TiVi.fxo").SetValue(EffectHandle.FromString("AtmosphereTime"), f);
+            SetEffectParametrers();
             scene.Step();
         }
 

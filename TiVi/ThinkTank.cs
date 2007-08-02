@@ -44,14 +44,20 @@ namespace TiVi
                             if (material == 1)
                                 return "TvScreen";
                             else
-                                return "Solid";
+                                return "TiViReflective";
                         };
                     }
                     else
                         return TechniqueChooser.MaterialPrefix("Terrain");
                 });
             XLoader.AddToScene(scene);
-            tivi = new TiVi(scene.GetNodeByName("TiVi") as ModelNode, camera, StartTime);
+            ModelNode tiviNode = scene.GetNodeByName("TiVi") as ModelNode;
+            tivi = new TiVi(tiviNode, camera, StartTime);
+            tiviNode.Model.Materials[0].ReflectiveTexture = TextureFactory.CreateCubeFromFile("rnl_cross.dds");
+            tiviNode.Model.Materials[0].DiffuseTexture = TextureFactory.CreateFromFile("marble.jpg");
+            tiviNode.Model.Materials[0].AmbientColor = new ColorValue(0.5f, 0.5f, 0.5f, 0.5f);
+            tiviNode.Model.Materials[0].DiffuseColor = new ColorValue(0.5f, 0.5f, 0.5f, 0.5f);
+            tiviNode.Model.Materials[0].ReflectiveFactor = 0.2f;
 
             cameraInterpolator = new Interpolator<InterpolatedVector3>();
             ClampedCubicSpline<InterpolatedVector3> spline = new ClampedCubicSpline<InterpolatedVector3>(

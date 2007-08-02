@@ -10,7 +10,8 @@ using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Utility;
 
 namespace TiVi {
-    class DiscoFever : BaseDemoEffect {
+    public class DiscoFever : BaseDemoEffect 
+    {
         private IScene scene;
         private CameraNode camera;
         private INode room;
@@ -18,9 +19,26 @@ namespace TiVi {
         private int redOffset;
         private int greenOffset;
         private int blueOffset;
+        private int colorAdd;
+        private int colorDiv;
+
+        public int ColorDiv
+        {
+            get { return colorDiv; }
+            set { colorDiv = value; }
+        }
+
+        public int ColorAdd
+        {
+            get { return colorAdd; }
+            set { colorAdd = value; }
+        }
 
         public DiscoFever(string name, float startTime, float endTime)
-            : base(name, startTime, endTime) {
+            : base(name, startTime, endTime) 
+        {
+            colorDiv = 3;
+            colorAdd = 80;
         }
 
         const int Nx = 8;
@@ -81,6 +99,9 @@ namespace TiVi {
             int r = Ramp((int)(redOffset + 2*i * (256 / Nx) + j * (256 / Ny) + k * (256 / Nz)), 256);
             int g = Ramp((int)(greenOffset + i * (256 / Nx) + 2*j * (256 / Ny) + k * (256 / Nz)), 256);
             int b = Ramp((int)(blueOffset + i * (256 / Nx) + j * (256 / Ny) + 2*k * (256 / Nz)), 256);
+            r = Math.Min(255, Math.Max(0, r / colorDiv + colorAdd));
+            g = Math.Min(255, Math.Max(0, g / colorDiv + colorAdd));
+            b = Math.Min(255, Math.Max(0, b / colorDiv + colorAdd));
             Color color = Color.FromArgb(r, g, b);
             IModel model = squares[i, j, k].Model;
             model.Materials[0].AmbientColor = ColorValue.FromColor(color);

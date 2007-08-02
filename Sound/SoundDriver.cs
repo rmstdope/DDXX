@@ -126,8 +126,8 @@ namespace Dope.DDXX.Sound
 
             result = system.SetPosition(channel, (uint)(s * 1000), TIMEUNIT.MS);
 
-            if (result != RESULT.OK)
-                throw new DDXXException("Could not set FMOD channel position.");
+            //if (result != RESULT.OK)
+            //    throw new DDXXException("Could not set FMOD channel position.");
         }
     }
 }

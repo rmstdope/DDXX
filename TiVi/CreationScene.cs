@@ -36,10 +36,12 @@ namespace TiVi
         private CameraNode headCamera;
         private CameraNode bodyCamera1;
         private CameraNode handCamera;
+        private CameraNode legCamera;
         private CameraNode bodyCamera2;
         private float bodyCameraStart1 = 7.0f;
         private float handCameraStart = 14.0f;
-        private float bodyCameraStart2 = 21.0f;
+        private float legCameraStart = 21.0f;
+        private float bodyCameraStart2 = 28.0f;
         private float solidStart = 35.0f;
         private static float segmentLength = 0.45f;
 
@@ -82,6 +84,11 @@ namespace TiVi
         {
             get { return handCameraStart; }
             set { handCameraStart = value; }
+        }
+        public float LegCameraStart
+        {
+            get { return legCameraStart; }
+            set { legCameraStart = value; }
         }
         public float BodyCameraStart2
         {
@@ -133,6 +140,9 @@ namespace TiVi
 
             bodyCamera2 = new CameraNode("FullsizeCamera2");
             scene.AddNode(bodyCamera2);
+
+            legCamera = new CameraNode("LegCamera");
+            scene.AddNode(legCamera);
 
             headCamera = new CameraNode("HeadCamera");
             scene.AddNode(headCamera);
@@ -358,10 +368,15 @@ namespace TiVi
             bodyCamera1.WorldState.MoveUp(1);
 
             handCamera.WorldState.Reset();
-            handCamera.WorldState.Turn(0.3f - t / 7.0f);
-            handCamera.WorldState.MoveUp(1.0f);
-            handCamera.WorldState.MoveForward(-2.0f);//.Position = new Vector3(2, 2, 0);
+            handCamera.WorldState.Turn(-1.1f - (t - handCameraStart) / 4.0f);
+            handCamera.WorldState.MoveUp(1.0f - (t - handCameraStart) / 7.0f);
+            handCamera.WorldState.MoveForward(-1.0f - (t - handCameraStart) / 7.0f);//.Position = new Vector3(2, 2, 0);
             handCamera.LookAt(new Vector3(0, 1.0f, 0), new Vector3(0, 1, 0));
+
+            legCamera.WorldState.Reset();
+            legCamera.WorldState.MoveForward(-0.5f - (t - legCameraStart) / 14.0f);
+            legCamera.WorldState.MoveUp(0.2f);
+            legCamera.WorldState.MoveRight(0.1f);
 
             bodyCamera2.WorldState.Reset();
             bodyCamera2.WorldState.MoveForward(-(1.0f + t / 10.0f));
@@ -377,14 +392,19 @@ namespace TiVi
                 modelTiVi.SetAnimationSet("ArmsCrossed", StartTime + bodyCameraStart1, 1);
                 scene.ActiveCamera = bodyCamera1;
             }
-            else if (t < bodyCameraStart2)
+            else if (t < legCameraStart)
             {
                 modelTiVi.SetAnimationSet("LookArm", StartTime + handCameraStart, 1);
                 scene.ActiveCamera = handCamera;
             }
+            else if (t < bodyCameraStart2)
+            {
+                modelTiVi.SetAnimationSet("LookArm", StartTime + legCameraStart, 1);
+                scene.ActiveCamera = legCamera;
+            }
             else
             {
-                modelTiVi.SetAnimationSet("ArmsCrossed", StartTime + bodyCameraStart2, 1);
+                modelTiVi.SetAnimationSet("ArmsCrossed", StartTime + bodyCameraStart2 - 4, 1);
                 scene.ActiveCamera = bodyCamera2;
             }
 

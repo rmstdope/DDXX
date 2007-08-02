@@ -15,8 +15,8 @@ namespace Dope.DDXX.DemoEffects
         private ISprite sprite;
         private IFont font;
         private string fontName;
-        private int fontHeight;
-        private Vector2 textPosition;
+        private float fontHeight;
+        private Vector3 textPosition;
         private string text;
         private Color textColor;
         private float fadeInLength;
@@ -46,13 +46,13 @@ namespace Dope.DDXX.DemoEffects
             set { text = value; }
         }
 
-        public Vector2 TextPosition
+        public Vector3 TextPosition
         {
             get { return textPosition; }
             set { textPosition = value; }
         }
 
-        public int FontHeight
+        public float FontHeight
         {
             get { return fontHeight; }
             set 
@@ -83,11 +83,15 @@ namespace Dope.DDXX.DemoEffects
         public TextFadingEffect(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
         {
-            TextPosition = new Vector2(0.5f, 0.5f);
+            TextPosition = new Vector3(0.5f, 0.5f, 0);
             Text = "Default";
-            FontHeight = 50;
+            FontHeight = 0.1f;
             FontName = "Arial";
             textColor = Color.White;
+            SetStepSize(GetTweakableNumber("TextPosition"), 0.01f);
+            SetStepSize(GetTweakableNumber("FontHeight"), 0.01f);
+            SetStepSize(GetTweakableNumber("FadeInLength"), 0.1f);
+            SetStepSize(GetTweakableNumber("FadeOutLength"), 0.1f);
         }
 
         protected override void Initialize()
@@ -100,8 +104,9 @@ namespace Dope.DDXX.DemoEffects
         {
             FontDescription description = new FontDescription();
             description.FaceName = fontName;
-            description.Height = fontHeight;
+            description.Height = (int)(fontHeight * Device.Viewport.Height);
             description.Quality = FontQuality.AntiAliased;
+            description.Weight = FontWeight.ExtraBold;
 
             font = GraphicsFactory.CreateFont(Device, description);
         }
@@ -112,6 +117,8 @@ namespace Dope.DDXX.DemoEffects
 
         public override void Render()
         {
+            if (Time.StepTime > EndTime || Time.StepTime < StartTime)
+                return;
             int alpha = GetFadeAlpha();
             Rectangle textRectangle = GetTextRectangle();
             sprite.Begin(SpriteFlags.AlphaBlend);
