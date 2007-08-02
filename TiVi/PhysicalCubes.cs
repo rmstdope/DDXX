@@ -256,7 +256,7 @@ namespace TiVi
             body.Gravity = new Vector3(0, -200.0f, 0);
 
             MeshDirector director = new MeshDirector(MeshBuilder);
-            //director.CreateChamferBox(2, 2, 2, 0.6f, 4);
+            //director.CreateChamferBox(2, 2, 2, 0.2f, 4);
             director.CreateBox(2, 2, 2);
             IModel model = director.Generate("Default1");
             model.Mesh.ComputeNormals();

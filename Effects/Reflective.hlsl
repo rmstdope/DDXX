@@ -16,9 +16,12 @@ ReflectiveVertexShader(VertexShaderInput input,
 	ReflectivePixelInput output;
 
 	float3 n = input.Normal;
+	float3 weights = float3(1, 0, 0);
+	if (numWeights > 1)
+		weights = input.BlendWeights;
 
 	// Transform the position from object space to homogeneous projection space
-	AnimatedVertex_PN animated = AnimateVertex(input.Position, input.Normal, input.BlendIndices, input.BlendWeights, numWeights);
+	AnimatedVertex_PN animated = AnimateVertex(input.Position, input.Normal, input.BlendIndices, weights, numWeights);
 
 	// Transform position and normal to world space
 	float4 worldPosition = mul(animated.Position, WorldT);

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--<Demo>-->
-<Demo song="scanner-dopeasm2007-v1.mp3">
+<Demo song="scanner-dopeasm2007-v2.mp3">
 	<!--Textures-->
 	<Generator name="noise" class="PerlinNoise">
 		<Parameter name="BaseFrequency" int="64" />

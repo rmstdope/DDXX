@@ -169,6 +169,25 @@ technique TiViReflectiveSkinning
 	}
 }
 
+technique BallzieReflectiveSkinning
+<
+	bool NormalMapping = false;
+	bool Skinning = true;
+>
+{
+	pass BasePass
+	{
+		VertexShader			= compile vs_2_0 ReflectiveVertexShader(1);
+		PixelShader				= compile ps_2_0 ReflectivePixelShader();
+		AlphaTestEnable		= false;
+		AlphaBlendEnable	= false;
+		FillMode					= Solid;
+		ZEnable						=	true;
+		ZWriteEnable			= true;
+		ZFunc							= Less;
+	}
+}
+
 technique TvScreenSkinning
 <
 	bool NormalMapping = false;

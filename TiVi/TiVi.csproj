@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BallzieDance.cs" />
     <Compile Include="ChessBoard.cs" />
     <Compile Include="ChessPiece.cs" />
     <Compile Include="ChessScene.cs" />
