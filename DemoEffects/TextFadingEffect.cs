@@ -21,6 +21,13 @@ namespace Dope.DDXX.DemoEffects
         private Color textColor;
         private float fadeInLength;
         private float fadeOutLength;
+        private Vector3 velocity;
+
+        public Vector3 Velocity
+        {
+            get { return velocity; }
+            set { velocity = value; }
+        }
 
         public float FadeOutLength
         {
@@ -92,6 +99,7 @@ namespace Dope.DDXX.DemoEffects
             SetStepSize(GetTweakableNumber("FontHeight"), 0.01f);
             SetStepSize(GetTweakableNumber("FadeInLength"), 0.1f);
             SetStepSize(GetTweakableNumber("FadeOutLength"), 0.1f);
+            SetStepSize(GetTweakableNumber("Velocity"), 0.01f);
         }
 
         protected override void Initialize()
@@ -129,9 +137,10 @@ namespace Dope.DDXX.DemoEffects
 
         private Rectangle GetTextRectangle()
         {
-            int x = (int)(textPosition.X * Device.Viewport.Width - 500);
-            int y = (int)(textPosition.Y * Device.Viewport.Height - 500);
-            Rectangle textRectangle = new Rectangle(x, y, 1000, 1000);
+            Vector3 pos = textPosition + velocity * (Time.StepTime - StartTime);
+            int x = (int)(pos.X * Device.Viewport.Width - 5000);
+            int y = (int)(pos.Y * Device.Viewport.Height - 5000);
+            Rectangle textRectangle = new Rectangle(x, y, 10000, 10000);
             return textRectangle;
         }
 

@@ -34,7 +34,7 @@ namespace Dope.DDXX.DemoEffects
             texture2 = mockery.NewMock<ITexture>();
             outputTexture = mockery.NewMock<ITexture>();
             effect = new RingsPostEffect("", 1.0f, 2.0f);
-            effect.Initialize(postProcessor, null, null, null);
+            effect.Initialize(null, postProcessor, null, null, null);
             Time.Initialize();
             Time.Pause();
         }

@@ -29,7 +29,7 @@ namespace Dope.DDXX.DemoEffects
             texture2 = mockery.NewMock<ITexture>();
             outputTexture = mockery.NewMock<ITexture>();
             effect = new RadialBlurPostEffect("", 1.0f, 2.0f);
-            effect.Initialize(postProcessor, null, null, null);
+            effect.Initialize(null, postProcessor, null, null, null);
         }
 
         [TearDown]

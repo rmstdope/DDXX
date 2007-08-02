@@ -46,8 +46,10 @@ namespace TiVi
             int i1 = 0;
             int i2 = 1;
             int i3 = 2;
+            Time.Pause();
             Time.CurrentTime = time;
             node.Step(null);
+            Time.Resume();
             upperLeft = GetScreenPosition(new Vector2(0, 0), vertices[indices[i1]], vertices[indices[i2]], vertices[indices[i3]], model.GetBoneMatrices(0)[0]);
             upperRight = GetScreenPosition(new Vector2(1, 0), vertices[indices[i1]], vertices[indices[i2]], vertices[indices[i3]], model.GetBoneMatrices(0)[0]);
             lowerLeft = GetScreenPosition(new Vector2(0, 1), vertices[indices[i1]], vertices[indices[i2]], vertices[indices[i3]], model.GetBoneMatrices(0)[0]);

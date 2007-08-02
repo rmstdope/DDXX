@@ -42,5 +42,6 @@ namespace TiVi
             diamondNum++;
             return node;
         }
+
     }
 }

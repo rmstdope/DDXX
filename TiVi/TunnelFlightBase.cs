@@ -42,6 +42,8 @@ namespace TiVi
         private MirrorNode mirrorNode;
         private ModelNode whiteDisc1;
         private ModelNode whiteDisc2;
+        private float timeScale;
+        private float timeDelta;
 
         protected Interpolator<InterpolatedVector3> discInterpolator;
         protected Interpolator<InterpolatedVector3> cameraInterpolator;
@@ -49,9 +51,34 @@ namespace TiVi
         protected Interpolator<InterpolatedVector3> cameraUpInterpolator;
         private List<PointLightNode> lights = new List<PointLightNode>();
 
+        public float TimeScale
+        {
+            get { return timeScale; }
+            set 
+            { 
+                timeScale = value; 
+                if (tiviNode != null)
+                    ((tiviNode as ModelNode).Model as SkinnedModel).SetAnimationSet(0, StartTime + timeDelta, timeScale);
+            }
+        }
+
+        public float TimeDelta
+        {
+            get { return timeDelta; }
+            set 
+            { 
+                timeDelta = value;
+                if (tiviNode != null)
+                    ((tiviNode as ModelNode).Model as SkinnedModel).SetAnimationSet(0, StartTime + timeDelta, timeScale);
+            }
+        }
+
         public TunnelFlightBase(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
         {
+            timeScale = 1.348f;
+            SetStepSize(GetTweakableNumber("TimeScale"), 0.001f);
+            SetStepSize(GetTweakableNumber("TimeDelta"), 0.001f);
         }
 
         protected override void Initialize()
@@ -135,7 +162,6 @@ namespace TiVi
             tiviNode.Model.Materials[0].AmbientColor = new ColorValue(0.5f, 0.5f, 0.5f, 0.5f);
             tiviNode.Model.Materials[0].DiffuseColor = new ColorValue(0.5f, 0.5f, 0.5f, 0.5f);
             tiviNode.Model.Materials[0].ReflectiveFactor = 0.2f;
-            float timeScale = 1.348f;
             ((tiviNode as ModelNode).Model as SkinnedModel).SetAnimationSet(0, StartTime, timeScale);
             //tiviNode.WorldState.Scale(0.7f);
             mirrorNode = new MirrorNode(tiviNode);

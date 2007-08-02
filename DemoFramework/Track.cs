@@ -155,7 +155,7 @@ namespace Dope.DDXX.DemoFramework
                 effect.Initialize(graphicsFactory, effectFactory, 
                     device, mixer, postProcessor);
             foreach (IDemoPostEffect effect in postEffects)
-                effect.Initialize(postProcessor, textureFactory, textureBuilder, device);
+                effect.Initialize(graphicsFactory, postProcessor, textureFactory, textureBuilder, device);
         }
 
         public void Step()

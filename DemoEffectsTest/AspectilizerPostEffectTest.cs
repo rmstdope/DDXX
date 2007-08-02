@@ -56,7 +56,7 @@ namespace Dope.DDXX.DemoEffects
             Expect.Once.On(textureBuilder).Method("Generate").
                 With(Is.Anything, Is.EqualTo(viewport.Width), Is.EqualTo(viewport.Height), Is.EqualTo(1), Is.EqualTo(Format.A8R8G8B8)).
                 Will(Return.Value(texture));
-            aspectilizer.Initialize(postProcessor, textureFactory, textureBuilder, device);
+            aspectilizer.Initialize(null, postProcessor, textureFactory, textureBuilder, device);
         }
 
         /// <summary>

@@ -94,6 +94,7 @@
     <Compile Include="SpaceTravel.cs" />
     <Compile Include="SunEffect.cs" />
     <Compile Include="TestEffect.cs" />
+    <Compile Include="TexturePostEffect.cs" />
     <Compile Include="ThinkTank.cs" />
     <Compile Include="TiVi.cs" />
     <Compile Include="TiViMain.cs" />

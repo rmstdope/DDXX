@@ -17,7 +17,20 @@ namespace Dope.DDXX.DemoEffects
         private float blendFactor = 1.0f;
         private bool addNoise = false;
         private bool subtractNoise = false;
+        private float fadeInLength;
+        private float fadeOutLength;
 
+        public float FadeOutLength
+        {
+            get { return fadeOutLength; }
+            set { fadeOutLength = value; }
+        }
+
+        public float FadeInLength
+        {
+            get { return fadeInLength; }
+            set { fadeInLength = value; }
+        }
         public bool SubtractNoise
         {
             get { return subtractNoise; }
@@ -51,6 +64,8 @@ namespace Dope.DDXX.DemoEffects
             : base(name, start, end)
         {
             SetStepSize(GetTweakableNumber("BlendFactor"), 0.01f);
+            SetStepSize(GetTweakableNumber("FadeInLength"), 0.1f);
+            SetStepSize(GetTweakableNumber("FadeOutLength"), 0.1f);
         }
 
         protected override void Initialize()
@@ -75,9 +90,22 @@ namespace Dope.DDXX.DemoEffects
                 PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.InvSourceColor, Color.White);
             if (subtractNoise)
                 PostProcessor.SetBlendParameters(BlendOperation.RevSubtract, Blend.One, Blend.One, Color.White);
-            PostProcessor.SetValue("Color", new float[] { BlendFactor, BlendFactor, BlendFactor, BlendFactor });
+            float factor = BlendFactor * GetFadeAlpha();
+            PostProcessor.SetValue("Color", new float[] { factor, factor, factor, factor});
 
             PostProcessor.Process("Blend", texture, PostProcessor.OutputTexture);
+        }
+
+        private float GetFadeAlpha()
+        {
+            float alpha = 1;
+            float time = Time.StepTime - StartTime;
+            if (time < FadeInLength)
+                alpha = time / FadeInLength;
+            time = Time.StepTime - (EndTime - FadeOutLength);
+            if (time > 0)
+                alpha = 1 - time / FadeOutLength;
+            return alpha;
         }
     }
 }

@@ -154,7 +154,7 @@ sampler BaseTextureSamplerBordered = sampler_state
     MagFilter = Point;
     AddressU	= Border;
     AddressV	= Border;
-		BorderColor = 0;
+	BorderColor = 0;
 };
 
 samplerCUBE ReflectiveTextureSampler = sampler_state

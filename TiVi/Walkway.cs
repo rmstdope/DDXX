@@ -72,6 +72,9 @@ namespace TiVi
             CreateTiVi();
 
             subEffect = new DiscoFever("screeneffect", StartTime, EndTime);
+    		(subEffect as DiscoFever).ColorAdd = 21;
+    		(subEffect as DiscoFever).ColorDiv = 2;
+
             subEffect.Initialize(GraphicsFactory, EffectFactory, Device, Mixer, PostProcessor);
 
             scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);

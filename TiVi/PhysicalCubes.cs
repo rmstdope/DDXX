@@ -60,6 +60,8 @@ namespace TiVi
 
         //private ILine line;
         private IScene scene;
+        private ISprite sprite;
+        private ITexture texture;
         private CameraNode camera;
         private List<PhysicalCube> cubes = new List<PhysicalCube>();
         private ChessBoard chessBoard;
@@ -159,6 +161,9 @@ namespace TiVi
             effect = EffectFactory.CreateFromFile("TiVi.fxo");
             chessBoard = new ChessBoard(scene, MeshBuilder, effect, Device, 10, 0.1f);
             CreateLights();
+
+            sprite = GraphicsFactory.CreateSprite(Device);
+            texture = TextureFactory.CreateFromFile("RepectToText_3.jpg");
         }
 
         private void CreateSplines()
@@ -619,6 +624,28 @@ namespace TiVi
             }
             scene.Render();
         }
+        //    if (Time.StepTime - StartTime < 2)
+        //    {
+        //        int alpha = GetFadeAlpha();
+        //        sprite.Begin(SpriteFlags.AlphaBlend);
+        //        Device.RenderState.SourceBlend = Blend.SourceColor;
+        //        Device.RenderState.DestinationBlend = Blend.One;
+        //        Device.RenderState.ZBufferEnable = false;
+        //        SizeF size = new SizeF(0.2f * Device.Viewport.Width, 0.2f * Device.Viewport.Height * texture.GetLevelDescription(0).Height / (float)texture.GetLevelDescription(0).Width);
+        //        sprite.Draw2D(texture, Rectangle.Empty, size, new PointF(100, 100), Color.FromArgb(0, 255, 255, 255));
+        //        sprite.End();
+        //    }
+        //}
+
+        //private int GetFadeAlpha()
+        //{
+        //    int alpha = 255;
+        //    float time = Time.StepTime - StartTime;
+        //    time = (Time.StepTime - StartTime - 1);
+        //    if (time > 0)
+        //        alpha = 254 - (int)(255 * (time / 1));
+        //    return alpha;
+        //}
 
         private void DrawLineCube(PhysicalCube cube)
         {

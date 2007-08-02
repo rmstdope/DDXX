@@ -63,6 +63,12 @@ SolidPixelShader(SolidPixelInput input,
 }
 
 float4
+SolidPixelShader2(SolidPixelInput input) : COLOR0
+{
+	return float4(input.Diffuse, 1) * tex2D(BaseTextureSamplerBordered, input.TexCoords) + float4(input.Specular, 1);
+}
+
+float4
 WhitePixelShader(SolidPixelInput input) : COLOR0
 {
 	return 1;
@@ -197,7 +203,7 @@ technique TvScreenSkinning
 	pass BasePass
 	{
 		VertexShader			= compile vs_2_0 SolidVertexShader(4);
-		PixelShader				= compile ps_2_0 SolidPixelShader(BaseTextureSamplerBordered);
+		PixelShader				= compile ps_2_0 SolidPixelShader2();
 		AlphaTestEnable		= false;
 		AlphaBlendEnable	= false;
 		FillMode					= Solid;

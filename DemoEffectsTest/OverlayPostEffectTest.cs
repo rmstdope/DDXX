@@ -49,7 +49,7 @@ namespace Dope.DDXX.DemoEffects
 
             overlay.AddNoise = true;
             overlay.Filename = "file1";
-            overlay.Initialize(postProcessor, textureFactory, null, null);
+            overlay.Initialize(null, postProcessor, textureFactory, null, null);
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Dope.DDXX.DemoEffects
 
             overlay.AddNoise = true;
             overlay.Filename = "file2";
-            overlay.Initialize(postProcessor, textureFactory, null, null);
+            overlay.Initialize(null, postProcessor, textureFactory, null, null);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Dope.DDXX.DemoEffects
         [ExpectedException(typeof(DDXXException))]
         public void TestInitializeFail1()
         {
-            overlay.Initialize(postProcessor, textureFactory, null, null);
+            overlay.Initialize(null, postProcessor, textureFactory, null, null);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Dope.DDXX.DemoEffects
         public void TestInitializeFail2()
         {
             overlay.Filename = "file2";
-            overlay.Initialize(postProcessor, textureFactory, null, null);
+            overlay.Initialize(null, postProcessor, textureFactory, null, null);
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace Dope.DDXX.DemoEffects
         {
             overlay.Texture = texture;
             overlay.SubtractNoise = true;
-            overlay.Initialize(postProcessor, textureFactory, null, null);
+            overlay.Initialize(null, postProcessor, textureFactory, null, null);
         }
 
         /// <summary>
