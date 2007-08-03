@@ -177,7 +177,7 @@ namespace TiVi
                 //yValues[i] = i * squareHeight / heightSegments - (squareCount * squareHeight / 2);
                 //zValues[i] = (float)(0.5 * Math.Sin(curveOffset + ((float)i / zValues.Length) * Math.PI * 2 * 4));
                 float u = i / (float)(squareCount * heightSegments);
-                u += curveOffset;
+                //u += curveOffset;
                 Vector3 forward = filmSpline.GetDerivative(u);
                 forward.Normalize();
                 Vector3 right = Vector3.Cross(lastUp, forward);

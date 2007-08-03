@@ -79,10 +79,10 @@ namespace TiVi
             amigaRoller.Initialize(MeshBuilder, GraphicsFactory, EffectFactory, Device);
             pcRoller.Initialize(MeshBuilder, GraphicsFactory, EffectFactory, Device);
 
-            CreateSpiralSpline(c64Roller);
-            CreateSpiralSpline(atariRoller);
-            CreateSpiralSpline(amigaRoller);
-            CreateSpiralSpline(pcRoller);
+            CreateSpline(c64Roller);
+            CreateSpline(atariRoller);
+            CreateSpline(amigaRoller);
+            CreateSpline(pcRoller);
 
             CreateStandardSceneAndCamera(out scene, out camera, 15);
 
@@ -113,44 +113,70 @@ namespace TiVi
 
         }
 
-        private void CreateSpiralSpline(FilmRoller roller)
+        //private void CreateSpiralSpline(FilmRoller roller)
+        //{
+        //    ISpline<InterpolatedVector3> path = new NaturalCubicSpline<InterpolatedVector3>();
+        //    path.AddKeyFrame(roller.GetKeyFrame(0, 0, 0, 0));
+        //    path.AddKeyFrame(roller.GetKeyFrame(5.0f, 0, 4, 0));
+        //    path.AddKeyFrame(roller.GetKeyFrame(10.0f, 0, 8, 0));
+        //    path.Calculate();
+        //    ISpline<InterpolatedVector3> spline = new NaturalCubicSpline<InterpolatedVector3>();
+        //    Vector3 lastUp = new Vector3(0, 0, 1);
+        //    for (double b = 0; b < 10.0f; b += 1.0f)
+        //    {
+        //        for (double a = 0; a < 4 * Math.PI; a += Math.PI / 8)
+        //        {
+        //            float u = (float)(a / (4 * Math.PI));
+
+        //            Vector3 forward = path.GetDerivative((float)(b + u));
+        //            forward.Normalize();
+        //            Vector3 right = Vector3.Cross(lastUp, forward);
+        //            right.Normalize();
+        //            Vector3 up = Vector3.Cross(forward, right);
+        //            up.Normalize();
+        //            lastUp = up;
+
+        //            float x = (float)(1.5f * Math.Sin(a));
+        //            float y = u;
+        //            //y *= roller.Height;
+        //            float z = (float)(1.5f * Math.Cos(a));
+        //            forward.Multiply(z);
+        //            right.Multiply(x);
+        //            up.Multiply(y);
+        //            Vector3 pos = forward + right + up;
+        //            pos += path.GetValue((float)(b+u));
+        //            spline.AddKeyFrame(roller.GetKeyFrame((float)(b + u), pos.X, pos.Y, pos.Z));
+        //        }
+        //    }
+        //    spline.Calculate();
+        //    roller.FilmSpline = spline;
+        //}
+
+        private void CreateSpline(FilmRoller roller)
         {
-            ISpline<InterpolatedVector3> path = new NaturalCubicSpline<InterpolatedVector3>();
-            path.AddKeyFrame(roller.GetKeyFrame(0, 0, 0, 0));
-            path.AddKeyFrame(roller.GetKeyFrame(5.0f, 0, 4, 0));
-            path.AddKeyFrame(roller.GetKeyFrame(10.0f, 0, 8, 0));
-            path.Calculate();
             ISpline<InterpolatedVector3> spline = new NaturalCubicSpline<InterpolatedVector3>();
-            Vector3 lastUp = new Vector3(0, 0, 1);
-            for (double b = 0; b < 10.0f; b += 1.0f)
+            for (double a = 0; a < 4 * Math.PI; a += Math.PI / 8)
             {
-                for (double a = 0; a < 4 * Math.PI; a += Math.PI / 8)
-                {
-                    float u = (float)(a / (4 * Math.PI));
+                float u = (float)(a / (4 * Math.PI));
 
-                    Vector3 forward = path.GetDerivative((float)(b + u));
-                    forward.Normalize();
-                    Vector3 right = Vector3.Cross(lastUp, forward);
-                    right.Normalize();
-                    Vector3 up = Vector3.Cross(forward, right);
-                    up.Normalize();
-                    lastUp = up;
-
-                    float x = (float)(1.5f * Math.Sin(a));
-                    float y = u;
-                    //y *= roller.Height;
-                    float z = (float)(1.5f * Math.Cos(a));
-                    forward.Multiply(z);
-                    right.Multiply(x);
-                    up.Multiply(y);
-                    Vector3 pos = forward + right + up;
-                    pos += path.GetValue((float)(b+u));
-                    spline.AddKeyFrame(roller.GetKeyFrame((float)(b + u), pos.X, pos.Y, pos.Z));
-                }
+                float x = (float)(1.5f * Math.Sin(a));
+                float y = u;
+                y *= roller.Height;
+                float z = (float)(1.5f * Math.Cos(a));
+                spline.AddKeyFrame(roller.GetKeyFrame(u, x, y, z));
             }
             spline.Calculate();
             roller.FilmSpline = spline;
         }
+
+        //private void CreateSpline(FilmRoller roller)
+        //{
+        //    ISpline<InterpolatedVector3> spline = new NaturalCubicSpline<InterpolatedVector3>();
+        //    spline.AddKeyFrame(roller.GetKeyFrame(0.0f, 0, 0, 0));
+        //    spline.AddKeyFrame(roller.GetKeyFrame(1.0f, 0, roller.Height, 0));
+        //    spline.Calculate();
+        //    //roller.FilmSpline = spline;
+        //}
 
         public override void Step()
         {
