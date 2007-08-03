@@ -38,7 +38,7 @@ namespace TiVi
         private float curveOffset;
         public const int TextureWidth = 128;
         public const int TextureHeight = 128;
-        private int slowDown = 64;
+        private int slowDown = 16;
         private int currentFilmTexture;
         private float filmOffset;
         private const float zDelta = 0.01f;
@@ -131,7 +131,7 @@ namespace TiVi
             SetStillFilmTextureCoordinates();
 
             // TODO: why doesn't this draw the blue film frames and perforations?
-            DrawEmptyFilmTextures();
+            DrawAllFilmTextures();
         }
 
         public INode FilmNode
@@ -410,7 +410,7 @@ namespace TiVi
         {
             sprite.Begin(SpriteFlags.AlphaBlend);
             sprite.Draw2D(filmSquareTexture, Rectangle.Empty, SizeF.Empty,
-                new PointF(0, 0), Color.Blue);
+                new PointF(0, 0), Color.Black);
             sprite.End();
         }
 
@@ -432,14 +432,44 @@ namespace TiVi
                 {
                     device.SetRenderTarget(0, surface);
                     DrawSubEffect();
+                    //filmRenderTarget.Save("c:/filmrendertarget1.dds", ImageFileFormat.Dds);
                     DrawFilmFrame();
+                    //filmRenderTarget.Save("c:/filmrendertarget2.dds", ImageFileFormat.Dds);
                     DrawPerforations();
+                    //filmRenderTarget.Save("c:/filmrendertarget3.dds", ImageFileFormat.Dds);
                     device.SetRenderTarget(0, original);
                     CopySurfaceToFilmTexture(surface, currentFilmTexture);
                     if (currentFilmTexture == 0)
                         CopySurfaceToFilmTexture(surface, textureCount - 1);
                 }
             }
+            //filmRenderTarget.Save("c:/filmrendertarget.dds", ImageFileFormat.Dds);
+        }
+
+        private void DrawAllFilmTextures()
+        {
+            using (ISurface original = device.GetRenderTarget(0))
+            {
+                using (ISurface surface = filmRenderTarget.GetSurfaceLevel(0))
+                {
+                    device.SetRenderTarget(0, surface);
+                    for (int textureIndex = 0; textureIndex < textureCount-1; textureIndex++)
+                    {
+                        subEffect.Step();
+                        DrawSubEffect();
+                        //filmRenderTarget.Save("c:/filmrendertarget1.dds", ImageFileFormat.Dds);
+                        DrawFilmFrame();
+                        //filmRenderTarget.Save("c:/filmrendertarget2.dds", ImageFileFormat.Dds);
+                        DrawPerforations();
+                        //filmRenderTarget.Save("c:/filmrendertarget3.dds", ImageFileFormat.Dds);
+                        CopySurfaceToFilmTexture(surface, textureIndex);
+                        if (textureIndex == 0)
+                            CopySurfaceToFilmTexture(surface, textureCount - 1);
+                    }
+                    device.SetRenderTarget(0, original);
+                }
+            }
+            //filmRenderTarget.Save("c:/filmrendertarget.dds", ImageFileFormat.Dds);
         }
 
         private void DrawEmptyFilmTextures()
@@ -463,17 +493,17 @@ namespace TiVi
 
         private void DrawSubEffect()
         {
+            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.FromArgb(0xff, Color.Black), 1.0f, 0);
             device.BeginScene();
-            device.Clear(ClearFlags.Target, Color.FromArgb(0xff, Color.Black), 0, 0);
             subEffect.Render();
             device.EndScene();
         }
 
         private void DrawBlackScreen()
         {
-            device.BeginScene();
-            device.Clear(ClearFlags.Target, Color.FromArgb(0xff, Color.Black), 0, 0);
-            device.EndScene();
+            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.FromArgb(0xff, Color.Black), 1.0f, 0);
+            //device.BeginScene();
+            //device.EndScene();
         }
 
 
@@ -486,6 +516,7 @@ namespace TiVi
                 device.StretchRectangle(surface, new Rectangle(0, 0, TextureWidth, TextureHeight),
                     destSurface, destRectangle, TextureFilter.None);
             }
+            //filmTexture.Save("c:/filmtexture.dds", ImageFileFormat.Dds);
         }
     }
 }

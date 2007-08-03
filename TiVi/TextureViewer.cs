@@ -84,7 +84,12 @@ namespace TiVi
         public override void Render()
         {
             sprite.Begin(SpriteFlags.None);
+            Device.RenderState.ZBufferEnable = false;
+            Device.RenderState.StencilEnable = false;
+            Device.RenderState.AlphaBlendEnable = false;
             sprite.Draw2D(textures[textureIndex], Rectangle.Empty, new SizeF(TargetWidth, TargetHeight), PointF.Empty, Color.White);
+            //textures[textureIndex].Save("c:/textureindex.dds", ImageFileFormat.Dds);
+
             sprite.End();
         }
 

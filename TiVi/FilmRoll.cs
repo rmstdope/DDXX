@@ -23,7 +23,7 @@ namespace TiVi
         private TextureViewer c64Viewer;
         private TextureViewer atariViewer;
         private TextureViewer pcViewer;
-        private const int squareCount = 10;
+        private const int squareCount = 20;
         private const int heightSegments = 6;
         private FilmRoller c64Roller;
         private FilmRoller atariRoller;
@@ -84,7 +84,7 @@ namespace TiVi
             CreateSpline(amigaRoller);
             CreateSpline(pcRoller);
 
-            CreateStandardSceneAndCamera(out scene, out camera, 15);
+            CreateStandardSceneAndCamera(out scene, out camera, 20);
 
             //MeshBuilder.SetDiffuseTexture("Default1", "FLOWER6P.jpg");
 
@@ -93,11 +93,17 @@ namespace TiVi
             INode amigaNode = amigaRoller.FilmNode;
             INode pcNode = pcRoller.FilmNode;
             c64Node.WorldState.MoveRight(6.0f);
+            c64Node.WorldState.MoveForward(-6.0f);
+            c64Node.WorldState.MoveUp(-3.0f);
             atariNode.WorldState.MoveRight(6.0f);
             atariNode.WorldState.MoveForward(6.0f);
+            atariNode.WorldState.MoveUp(0.0f);
             amigaNode.WorldState.MoveRight(-6.0f);
             amigaNode.WorldState.MoveForward(6.0f);
+            amigaNode.WorldState.MoveUp(3.0f);
             pcNode.WorldState.MoveRight(-6.0f);
+            pcNode.WorldState.MoveForward(-6.0f);
+            pcNode.WorldState.MoveUp(-2.0f);
             //film.WorldState.Turn(-(float)(-Math.PI / 4));
             //film.WorldState.Tilt(-(float)(-Math.PI / 3));
             //film.WorldState.MoveUp(-5);
