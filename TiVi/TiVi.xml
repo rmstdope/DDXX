@@ -152,7 +152,7 @@
 		<Parameter name="FadeInLength" float="0.5" />
 		<Parameter name="FadeOutLength" float="2" />
 		<Parameter name="FadeColor" Color="Black" />
-	</PostEffect>
+	</PostEffect>-->
 
 
 	<Effect class="SpaceTravel" track="0" startTime="83" endTime="122">
@@ -164,7 +164,7 @@
 		<Parameter name="TextColor" Color="White" />
 		<Parameter name="Text" string=".code/design " />
 		<Parameter name="FontHeight" float="0.15" />
-		<Parameter name="FontName" string="Curier New" />
+		<Parameter name="FontName" string="Times New Roman" />
 		<Parameter name="DrawOrder" int="1" />
 		<Parameter name="TextPosition" Vector3="0.3200001, 0.2000002, 0" />
 		<Parameter name="Velocity" Vector3="-0.02, 0, 0" />
@@ -173,9 +173,9 @@
 		<Parameter name="FadeOutLength" float="2" />
 		<Parameter name="FadeInLength" float="1" />
 		<Parameter name="TextColor" Color="White" />
-		<Parameter name="Text" string=".rolemaster " />
+		<Parameter name="Text" string=".rolemaster" />
 		<Parameter name="FontHeight" float="0.15" />
-		<Parameter name="FontName" string="Curier New" />
+		<Parameter name="FontName" string="Times New Roman" />
 		<Parameter name="DrawOrder" int="1" />
 		<Parameter name="TextPosition" Vector3="0.3100002, 0.3400001, 0" />
 		<Parameter name="Velocity" Vector3="0.02, 0, 0" />
@@ -186,7 +186,7 @@
 		<Parameter name="TextColor" Color="White" />
 		<Parameter name="Text" string=".music " />
 		<Parameter name="FontHeight" float="0.15" />
-		<Parameter name="FontName" string="Curier New" />
+		<Parameter name="FontName" string="Times New Roman" />
 		<Parameter name="DrawOrder" int="1" />
 		<Parameter name="TextPosition" Vector3="0.6400002, 0.6400001, 0" />
 		<Parameter name="Velocity" Vector3="0, 0.02, 0" />
@@ -197,7 +197,7 @@
 		<Parameter name="TextColor" Color="White" />
 		<Parameter name="Text" string=".scanner/.aav " />
 		<Parameter name="FontHeight" float="0.15" />
-		<Parameter name="FontName" string="Curier New" />
+		<Parameter name="FontName" string="Times New Roman" />
 		<Parameter name="DrawOrder" int="1" />
 		<Parameter name="TextPosition" Vector3="0.5700003, 0.79, 0" />
 		<Parameter name="Velocity" Vector3="0, -0.02, 0" />
@@ -208,7 +208,7 @@
 		<Parameter name="TextColor" Color="White" />
 		<Parameter name="Text" string=".3d character " />
 		<Parameter name="FontHeight" float="0.15" />
-		<Parameter name="FontName" string="Curier New" />
+		<Parameter name="FontName" string="Times New Roman" />
 		<Parameter name="DrawOrder" int="1" />
 		<Parameter name="TextPosition" Vector3="0.3500001, 0.1300003, 0" />
 		<Parameter name="Velocity" Vector3="0, 0.02, 0" />
@@ -219,7 +219,7 @@
 		<Parameter name="TextColor" Color="White" />
 		<Parameter name="Text" string=".pzychaoz / leion " />
 		<Parameter name="FontHeight" float="0.15" />
-		<Parameter name="FontName" string="Curier New" />
+		<Parameter name="FontName" string="Times New Roman" />
 		<Parameter name="DrawOrder" int="1" />
 		<Parameter name="TextPosition" Vector3="0.4300002, 0.2600004, 0" />
 		<Parameter name="Velocity" Vector3="0.02, 0, 0" />
@@ -230,7 +230,7 @@
 		<Parameter name="TextColor" Color="White" />
 		<Parameter name="Text" string=".additional code " />
 		<Parameter name="FontHeight" float="0.15" />
-		<Parameter name="FontName" string="Curier New" />
+		<Parameter name="FontName" string="Times New Roman" />
 		<Parameter name="DrawOrder" int="1" />
 		<Parameter name="TextPosition" Vector3="0.3300006, 0.73, 0" />
 		<Parameter name="Velocity" Vector3="0.03, 0, 0" />
@@ -241,7 +241,7 @@
 		<Parameter name="TextColor" Color="White" />
 		<Parameter name="Text" string=".poseidon " />
 		<Parameter name="FontHeight" float="0.15" />
-		<Parameter name="FontName" string="Curier New" />
+		<Parameter name="FontName" string="Times New Roman" />
 		<Parameter name="DrawOrder" int="1" />
 		<Parameter name="TextPosition" Vector3="0.3500005, 0.8599999, 0" />
 		<Parameter name="Velocity" Vector3="0, -0.03, 0" />
@@ -283,7 +283,7 @@
 	</PostEffect>
 
   
-	<Effect class="SpinningBackgroundEffect" name="Tunnel1Spin" track="0" startTime="122" endTime="150">
+	<!--<Effect class="SpinningBackgroundEffect" name="Tunnel1Spin" track="0" startTime="122" endTime="150">
 		<SetupCall name="AddTextureLayer">
 			<Parameter string="noise" />
 			<Parameter float="15.0" />

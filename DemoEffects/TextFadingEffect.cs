@@ -111,10 +111,11 @@ namespace Dope.DDXX.DemoEffects
         private void CreateFont()
         {
             FontDescription description = new FontDescription();
+            description.OutputPrecision = Precision.Raster;
             description.FaceName = fontName;
             description.Height = (int)(fontHeight * Device.Viewport.Height);
-            description.Quality = FontQuality.AntiAliased;
-            description.Weight = FontWeight.ExtraBold;
+            description.Quality = FontQuality.AntiAliased | FontQuality.ClearType;
+            description.Weight = FontWeight.UltraLight;
 
             font = GraphicsFactory.CreateFont(Device, description);
         }
