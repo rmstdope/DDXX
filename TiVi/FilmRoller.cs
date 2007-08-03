@@ -38,7 +38,7 @@ namespace TiVi
         private float curveOffset;
         public const int TextureWidth = 128;
         public const int TextureHeight = 128;
-        private int slowDown = 16;
+        private int slowDown = 40;
         private int currentFilmTexture;
         private float filmOffset;
         private const float zDelta = 0.01f;
