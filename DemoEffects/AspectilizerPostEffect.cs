@@ -47,7 +47,7 @@ namespace Dope.DDXX.DemoEffects
             {
                 Viewport viewport = Device.Viewport;
                 float ratio = (height / width) * (viewport.Width / (float)viewport.Height);
-                IGenerator rect = new RoundedRectangle(new Vector2(1.0f, ratio), new Vector2(0.5f, 0.5f), rounding);
+                IGenerator rect = new RoundedRectangle(new Vector2(0.95f, ratio * 0.95f), new Vector2(0.5f, 0.5f), rounding);
                 Texture = TextureBuilder.Generate(rect, viewport.Width, viewport.Height, 1, Format.A8R8G8B8);
             }
         }

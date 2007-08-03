@@ -67,6 +67,7 @@ namespace TiVi
                         return TechniqueChooser.MaterialPrefix("Terrain");
                 });
             XLoader.AddToScene(scene);
+            (scene.GetNodeByName("Plane01") as ModelNode).Model.Materials[0].DiffuseTexture = TextureFactory.CreateFromFile("CrystalDreams2.jpg");
             ModelNode tiviNode = scene.GetNodeByName("TiVi") as ModelNode;
             tivi = new TiVi(tiviNode, camera, StartTime);
             tiviNode.Model.Materials[0].ReflectiveTexture = TextureFactory.CreateCubeFromFile("rnl_cross.dds");
@@ -74,13 +75,15 @@ namespace TiVi
             tiviNode.Model.Materials[0].AmbientColor = new ColorValue(0.8f, 0.8f, 0.8f, 0.8f);
             tiviNode.Model.Materials[0].DiffuseColor = new ColorValue(0.5f, 0.5f, 0.5f, 0.5f);
             tiviNode.Model.Materials[0].ReflectiveFactor = 0.3f;
+            tiviNode.Model.Materials[1].AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
 
             cameraInterpolator = new Interpolator<InterpolatedVector3>();
             ClampedCubicSpline<InterpolatedVector3> spline = new ClampedCubicSpline<InterpolatedVector3>(
                 new InterpolatedVector3(), new InterpolatedVector3());
             spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(0, new InterpolatedVector3(new Vector3(0.0f, 2.0f, -3.0f))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(3, new InterpolatedVector3(new Vector3(2.0f, 1.0f, -2.0f))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(5, new InterpolatedVector3(tivi.DestinationPos)));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(4, new InterpolatedVector3(new Vector3(1.0f, 1.5f, -2.0f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(7, new InterpolatedVector3(new Vector3(3.0f, 1.0f, 0.0f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(10, new InterpolatedVector3(tivi.DestinationPos)));
             spline.Calculate();
             cameraInterpolator.AddSpline(spline);
 
@@ -88,8 +91,8 @@ namespace TiVi
             spline = new ClampedCubicSpline<InterpolatedVector3>(
                 new InterpolatedVector3(), new InterpolatedVector3());
             spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(0, new InterpolatedVector3(new Vector3(-6.0f, 1.0f, 0.0f))));
-            //spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(3, new InterpolatedVector3(new Vector3(2.0f, 1.0f, -2.0f))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(5, new InterpolatedVector3(tivi.Center)));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(5, new InterpolatedVector3(new Vector3(-1.0f, 1.0f, 5.0f))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(8, new InterpolatedVector3(tivi.Center)));
             spline.Calculate();
             targetInterpolator.AddSpline(spline);
 

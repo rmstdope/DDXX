@@ -196,10 +196,11 @@ namespace TiVi
             {
                 PointLightNode light = new PointLightNode("");
                 light.DiffuseColor = new ColorValue(0.3f + 0.7f * (1 - i), 0.3f + 0.7f * i, 1.0f, 1.0f);
-                light.Position = new Vector3(0, 0, 0);
                 scene.AddNode(light);
                 lights.Add(light);
             }
+            lights[0].Position = new Vector3(0, 0, 0);
+            lights[1].Position = new Vector3(20, 0, 0);
         }
 
         public override void Step()

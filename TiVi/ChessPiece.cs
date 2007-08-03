@@ -52,7 +52,6 @@ namespace TiVi
         private LineNode lineNode;
         private List<PositionInfo> positions = new List<PositionInfo>();
         private const float ROPE_LENGTH = 2.0f;
-        private TextFadingEffect textFade;
         private PieceColor color;
         private Vector3 distortion;
         private static int direction = 0;
@@ -79,14 +78,6 @@ namespace TiVi
                 textureFactory.CreateFromFile("ChessTextKasparov.jpg");
             this.device = device;
 
-            textFade = new TextFadingEffect("text", 0, 0);
-            textFade.FadeInLength = 1;
-            textFade.FadeOutLength = 1;
-            textFade.FontHeight = 0.15f;
-            textFade.FontName = "Curier New";
-            textFade.Text = (color == PieceColor.Black) ? ".KASPAROV" : ".DEEP BLUE";
-            textFade.TextColor = (color == PieceColor.Black) ? Color.FromArgb(180, 150, 150) : Color.FromArgb(150, 150, 180);
-            textFade.Initialize(graphicsFactory, null, device, null, null);
             this.color = color;
             distortion = new Vector3(0/*Rand.Float(0.1f, 0.3f)*/, (float)(direction * Math.PI / 2), 0);
             direction+=3;
@@ -199,18 +190,13 @@ namespace TiVi
                 {
                     if (info.Position.Y != 10 && info.StartTime >= 0)
                     {
-                        textFade.StartTime = info.StartTime - 1 + (Time.StepTime - time);
-                        textFade.EndTime = info.StartTime - 1 + 5 + (Time.StepTime - time);
                         Vector3 posAdd = new Vector3((float)Math.Sin(distortion.X * time + distortion.Y),
                                                      (float)Math.Cos(distortion.X * time + distortion.Y), 
                                                      3);
                         posAdd *= (time - info.StartTime) * 0.01f;
-                        textFade.TextPosition = (color == PieceColor.Black) ? 
-                            new Vector3(0.3f, 0.8f, 0) + posAdd:
-                            new Vector3(0.7f, 0.8f, 0) + posAdd;
                         textPosition = (color == PieceColor.Black) ? 
-                            new Vector3(0.3f, 0.8f, 0) + posAdd:
-                            new Vector3(0.7f, 0.8f, 0) + posAdd;
+                            new Vector3(0.3f, 0.7f, 0) + posAdd:
+                            new Vector3(0.7f, 0.7f, 0) + posAdd;
                         doText = true;
                         alpha = 255;
                         float t = time - (info.StartTime - 1);
@@ -234,7 +220,6 @@ namespace TiVi
         public void Render(IScene scene, float time)
         {
             lineNode.Render(scene);
-            //textFade.Render();
         }
         public void RenderText(IScene scene, float time)
         {

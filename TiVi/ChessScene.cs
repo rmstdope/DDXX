@@ -80,6 +80,10 @@ namespace TiVi
         private Interpolator<InterpolatedVector3> interpolator;
         private List<ChessPiece> chessPieces = new List<ChessPiece>();
         private ChessBoard chessBoard;
+        private float winnerTime;
+        private ModelNode textNode;
+        private ITexture winnerTexture;
+        private ITexture startTexture;
 
         public ChessScene(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
@@ -94,6 +98,8 @@ namespace TiVi
             CreateCameraInterpolator();
             CreateLights();
             chessBoard = new ChessBoard(scene, MeshBuilder, EffectFactory.CreateFromFile("TiVi.fxo"), Device, 1, 0.4f);
+            startTexture = TextureFactory.CreateFromFile("ChessText1997.jpg");
+            winnerTexture = TextureFactory.CreateFromFile("ChessTextWinner.jpg");
         }
 
         private void CreateLights()
@@ -122,11 +128,11 @@ namespace TiVi
             director.CreatePlane(1, 1, 1, 1, true);
             IModel model = director.Generate("Default1");
             model.Materials[0].Ambient = Color.FromArgb(128, 255, 255, 255);
-            ModelNode textModel = CreateSimpleModelNode(model, "TiVi.fxo", "SimpleWithAlpha");
+            textNode = CreateSimpleModelNode(model, "TiVi.fxo", "SimpleWithAlpha");
             foreach (PieceInfo info in pieceInfo)
             {
                 piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
-                    info.Type, info.Color, info.Position, textModel);
+                    info.Type, info.Color, info.Position, textNode);
                 info.Piece = piece;
                 chessPieces.Add(piece);
             }
@@ -152,6 +158,7 @@ namespace TiVi
                 }
                 time += 4;
             }
+            winnerTime = time;
             foreach (PieceInfo info in pieceInfo)
             {
                 if (info.Position != "--")// && info.Type != ChessPiece.PieceType.King)
@@ -192,6 +199,45 @@ namespace TiVi
                 piece.Render(scene, Time.StepTime - StartTime);
             foreach (ChessPiece piece in chessPieces)
                 piece.RenderText(scene, Time.StepTime - StartTime);
+            if (Time.StepTime - StartTime < 4)
+            {
+                textNode.Model.Materials[0].DiffuseTexture = startTexture;
+                int alpha = GetAlpha(StartTime);
+                textNode.Model.Materials[0].Ambient = Color.FromArgb(0, (alpha * 200) / 255, (alpha * 200) / 255, (alpha * 200) / 255);
+                textNode.WorldState.Reset();
+                textNode.WorldState.Scale(new Vector3(0.45f, 0.45f * startTexture.GetLevelDescription(0).Height / startTexture.GetLevelDescription(0).Width, 0));
+                textNode.WorldState.Rotation = scene.ActiveCamera.WorldState.Rotation;
+                textNode.WorldState.Position = scene.ActiveCamera.WorldState.Position + scene.ActiveCamera.WorldState.Forward;
+                textNode.WorldState.Position += scene.ActiveCamera.WorldState.Up * (Time.StepTime - StartTime) * 0.03f;
+                textNode.WorldState.Position -= scene.ActiveCamera.WorldState.Forward * (Time.StepTime - StartTime) * 0.04f;
+                textNode.Render(scene);
+            }
+            if (Time.StepTime - StartTime > winnerTime)
+            {
+                textNode.Model.Materials[0].DiffuseTexture = winnerTexture;
+                int alpha = GetAlpha(winnerTime + StartTime);
+                textNode.Model.Materials[0].Ambient = Color.FromArgb(0, (alpha * 255) / 255, (alpha * 200) / 255, (alpha * 200) / 255);
+                textNode.WorldState.Reset();
+                textNode.WorldState.Scale(new Vector3(0.45f, 0.45f * winnerTexture.GetLevelDescription(0).Height / winnerTexture.GetLevelDescription(0).Width, 0));
+                textNode.WorldState.Rotation = scene.ActiveCamera.WorldState.Rotation;
+                textNode.WorldState.Position = scene.ActiveCamera.WorldState.Position + scene.ActiveCamera.WorldState.Forward;
+                textNode.WorldState.Position += scene.ActiveCamera.WorldState.Up * (Time.StepTime - (winnerTime + StartTime) - 10) * 0.03f;
+                textNode.WorldState.Position -= scene.ActiveCamera.WorldState.Forward * (Time.StepTime - (winnerTime + StartTime)) * 0.04f;
+                textNode.Render(scene);
+            }
+        }
+
+        private int GetAlpha(float startTime)
+        {
+            int alpha = 255;
+            float t = Time.StepTime - startTime;
+            if (t < 1.0f)
+                alpha = (int)(255 * (t / 1.0f));
+            t = Time.StepTime - (startTime + 3);
+            if (t > 0)
+                alpha = 254 - (int)(255 * (t / 1.0));
+            alpha = Math.Min(255, Math.Max(0, alpha));
+            return alpha;
         }
     }
 }

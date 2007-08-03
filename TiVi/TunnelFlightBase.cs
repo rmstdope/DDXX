@@ -162,7 +162,7 @@ namespace TiVi
             tiviNode.Model.Materials[0].AmbientColor = new ColorValue(0.5f, 0.5f, 0.5f, 0.5f);
             tiviNode.Model.Materials[0].DiffuseColor = new ColorValue(0.5f, 0.5f, 0.5f, 0.5f);
             tiviNode.Model.Materials[0].ReflectiveFactor = 0.2f;
-            ((tiviNode as ModelNode).Model as SkinnedModel).SetAnimationSet(0, StartTime, timeScale);
+            ((tiviNode as ModelNode).Model as SkinnedModel).SetAnimationSet(0, StartTime + timeDelta, timeScale);
             //tiviNode.WorldState.Scale(0.7f);
             mirrorNode = new MirrorNode(tiviNode);
             mirrorNode.Brightness = 0.6f;
