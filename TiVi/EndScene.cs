@@ -32,6 +32,8 @@ namespace TiVi
         private float turnFactor;
         private float tiltFactor;
         private List<Diamond> diamonds = new List<Diamond>();
+        private ModelNode textNode;
+        private ITexture[] textTextures = new ITexture[4];
 
         public float CameraDist
         {
@@ -121,6 +123,16 @@ namespace TiVi
                     diamond.Node.Position -= film.WorldState.Forward * 0.5f;
                 diamond.Speed = Rand.Float(0.25f, 0.45f);
             }
+
+            director.CreatePlane(1, 1, 1, 1, true);
+            IModel textModel = director.Generate("Default1");
+            textModel.Materials[0].Ambient = Color.FromArgb(128, 255, 255, 255);
+            textNode = CreateSimpleModelNode(textModel, "TiVi.fxo", "SimpleWithAlpha");
+
+            textTextures[0] = TextureFactory.CreateFromFile("YouHaveBeenWatching.jpg");
+            textTextures[1] = TextureFactory.CreateFromFile("TiViByDope.jpg");
+            textTextures[2] = TextureFactory.CreateFromFile("ReleasedAtAssembly2007.jpg");
+            textTextures[3] = TextureFactory.CreateFromFile("DopeDontTryThisAtHome.jpg");
         }
 
         public override void Step()
@@ -161,8 +173,46 @@ namespace TiVi
 
         public override void Render()
         {
+            float[] startTimes = new float[] { 6, 12, 18, 24 };
+            Vector2[] positions = new Vector2[] {
+                new Vector2(0.2f, 0.2f),
+                new Vector2(-0.2f, 0.2f),
+                new Vector2(0.2f, -0.2f),
+                new Vector2(-0.2f, -0.2f)
+            };
+            float length = 4;
+
             scene.Render();
+
+            for (int i = 0; i < startTimes.Length; i++)
+            {
+                float d = Time.StepTime - StartTime - startTimes[i];
+                if (d > 0 && d < length)
+                {
+                    textNode.Model.Materials[0].DiffuseTexture = textTextures[i];
+                    int alpha = GetAlpha(d, length);
+                    textNode.Model.Materials[0].Ambient = Color.FromArgb(0, (alpha * 180) / 255, (alpha * 180) / 255, (alpha * 220) / 255);
+                    textNode.WorldState.Reset();
+                    textNode.WorldState.Scale(new Vector3(0.45f, 0.45f * textTextures[i].GetLevelDescription(0).Height / textTextures[i].GetLevelDescription(0).Width, 0));
+                    textNode.WorldState.Rotation = scene.ActiveCamera.WorldState.Rotation;
+                    textNode.WorldState.Position = scene.ActiveCamera.WorldState.Position + scene.ActiveCamera.WorldState.Forward;
+                    textNode.WorldState.Position += scene.ActiveCamera.WorldState.Up * (d * 0.01f + positions[i].X);
+                    textNode.WorldState.Position += scene.ActiveCamera.WorldState.Right * positions[i].Y;
+                    textNode.WorldState.Position -= scene.ActiveCamera.WorldState.Forward * d * 0.02f;
+                    textNode.Render(scene);
+                }
+            }
         }
 
+        private int GetAlpha(float t, float length)
+        {
+            int alpha = 255;
+            if (t < 1.0f)
+                alpha = (int)(255 * (t / 1.0f));
+            if (t > length - 1)
+                alpha = 254 - (int)(255 * ((t - length + 1) / 1.0));
+            alpha = Math.Min(255, Math.Max(0, alpha));
+            return alpha;
+        }
     }
 }

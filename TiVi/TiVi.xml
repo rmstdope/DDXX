@@ -7,7 +7,7 @@
 	</Generator>
 	<Texture name="noise" generator="noise"></Texture>
 
-	<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="280">
+	<!--<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="311">
 		<Parameter name="Width" float="16" />
 		<Parameter name="Height" float="9" />
 		<Parameter name="SubtractNoise" bool="true" />
@@ -458,7 +458,7 @@
 		<Parameter name="FadeInLength" float="0.5" />
 		<Parameter name="FadeOutLength" float="2" />
 		<Parameter name="FadeColor" Color="Black" />
-	</PostEffect>
+	</PostEffect>-->
 
 
 	<Effect class="EndScene" track="0" startTime="274" endTime="311">
@@ -491,6 +491,10 @@
 		<Parameter name="Luminance" float="0.5099998" />
 		<Parameter name="DownSamples" int="2" />
 		<Parameter name="AdvancedGlow" bool="false" />
+	</PostEffect>
+	<PostEffect class="RadialBlurPostEffect" startTime="274" endTime="311">
+		<Parameter name="DrawOrder" int="0" />
+		<Parameter name="BlurColor" Color="255, 60, 60, 90" />
 	</PostEffect>
 	<PostEffect class="ColorFader" name="EndFader" startTime="309" endTime="311">
 		<Parameter name="DrawOrder" int="3" />
