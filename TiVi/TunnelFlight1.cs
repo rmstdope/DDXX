@@ -147,7 +147,7 @@ namespace TiVi
             cameraUpInterpolator = new Interpolator<InterpolatedVector3>();
             spline = new ClampedCubicSpline<InterpolatedVector3>(new InterpolatedVector3(), new InterpolatedVector3());
             spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(0, new InterpolatedVector3(tivi.DestinationUp)));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(10, new InterpolatedVector3(new Vector3(0, 1, 0))));
+            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(2, new InterpolatedVector3(new Vector3(0, 1, 0))));
             //spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(EndTime - StartTime, new InterpolatedVector3(tivi2.DestinationUp)));
             spline.Calculate();
             cameraUpInterpolator.AddSpline(spline);
