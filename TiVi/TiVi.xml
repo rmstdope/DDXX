@@ -195,7 +195,7 @@
 		<Parameter name="FadeOutLength" float="2" />
 		<Parameter name="FadeInLength" float="1" />
 		<Parameter name="TextColor" Color="White" />
-		<Parameter name="Text" string=".scanner " />
+		<Parameter name="Text" string=".scanner/.aav " />
 		<Parameter name="FontHeight" float="0.15" />
 		<Parameter name="FontName" string="Curier New" />
 		<Parameter name="DrawOrder" int="1" />
@@ -453,8 +453,56 @@
     <Parameter name="DownSamples" int="2" />
     <Parameter name="AdvancedGlow" bool="false" />
   </PostEffect>
-	
-<!--After this line is only test stuff-->
+	<PostEffect class="ColorFader" name="SignFader" startTime="273.5" endTime="276.5">
+		<Parameter name="DrawOrder" int="3" />
+		<Parameter name="FadeInLength" float="0.5" />
+		<Parameter name="FadeOutLength" float="2" />
+		<Parameter name="FadeColor" Color="Black" />
+	</PostEffect>
+
+
+	<Effect class="EndScene" track="0" startTime="274" endTime="311">
+		<Parameter name="DrawOrder" int="1" />
+		<Parameter name="RollFactor" float="0.34" />
+		<Parameter name="TurnFactor" float="0.18" />
+		<Parameter name="TiltFactor" float="0.25" />
+		<Parameter name="CameraDist" float="1.6" />
+	</Effect>
+	<Effect class="SpinningBackgroundEffect" name="EndSpin" track="0" startTime="274" endTime="311">
+		<SetupCall name="AddTextureLayer">
+			<Parameter string="noise" />
+			<Parameter float="55.0" />
+			<Parameter Color="DarkGray" />
+			<Parameter float="0.04" />
+		</SetupCall>
+		<SetupCall name="AddTextureLayer">
+			<Parameter string="noise" />
+			<Parameter float="-44.0" />
+			<Parameter Color="50,50,120,255" />
+			<Parameter float="0.06" />
+		</SetupCall>
+		<Parameter name="DrawOrder" int="0" />
+	</Effect>
+	<PostEffect class="GlowPostEffect" name="EndGlow" track="0" startTime="274" endTime="311">
+		<Parameter name="BloomScale" float="1.3" />
+		<Parameter name="Exposure" float="0.9000002" />
+		<Parameter name="DrawOrder" int="1" />
+		<Parameter name="WhiteCutoff" float="0.21" />
+		<Parameter name="Luminance" float="0.5099998" />
+		<Parameter name="DownSamples" int="2" />
+		<Parameter name="AdvancedGlow" bool="false" />
+	</PostEffect>
+	<PostEffect class="ColorFader" name="EndFader" startTime="309" endTime="311">
+		<Parameter name="DrawOrder" int="3" />
+		<Parameter name="FadeInLength" float="2" />
+		<Parameter name="FadeOutLength" float="0" />
+		<Parameter name="FadeColor" Color="Black" />
+	</PostEffect>
+
+
+
+
+	<!--After this line is only test stuff-->
 
 
 <!--<Effect class="SpinningBackgroundEffect" track="0" startTime="0" endTime="299">
@@ -534,7 +582,7 @@
 		<Parameter name="Texture" string="pc_5_planet_risk.jpg" />
 	</Effect>-->
 	
-		<Effect class="FilmRoll" track="0" startTime="42" endTime="300">
+		<!--<Effect class="FilmRoll" track="0" startTime="42" endTime="300">
 		<Parameter name="DrawOrder" int="1" />
 	</Effect>-->
 <!--<PostEffect class="OverlayPostEffect" track="0" startTime="42" endTime="300.0">

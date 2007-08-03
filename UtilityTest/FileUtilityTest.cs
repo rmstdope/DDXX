@@ -30,22 +30,22 @@ namespace Dope.DDXX.Utility
             Assert.AreEqual(new string[] { "ccc", "ddd", "eee" }, FileUtility.GetLoadPaths());
         }
         
-        [Test]
-        public void TestBlockFile()
-        {
-            FileUtility.SetBlockFile("aaa");
-            Assert.AreEqual("aaa", FileUtility.GetBlockFile());
+        //[Test]
+        //public void TestBlockFile()
+        //{
+        //    FileUtility.SetBlockFile("aaa");
+        //    Assert.AreEqual("aaa", FileUtility.GetBlockFile());
 
-            FileUtility.SetBlockFile("eee");
-            Assert.AreEqual("eee", FileUtility.GetBlockFile());
-        }
+        //    FileUtility.SetBlockFile("eee");
+        //    Assert.AreEqual("eee", FileUtility.GetBlockFile());
+        //}
 
         [Test]
         public void TestOpenStreamFileOK1()
         {
             FileUtility.SetLoadPaths("../", "../../");
             FileUtility.SetBlockFile("invalidblockfile");
-            FileStream stream = FileUtility.OpenStream("FileUtilityTest.cs");
+            Stream stream = FileUtility.OpenStream("FileUtilityTest.cs");
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace Dope.DDXX.Utility
         {
             FileUtility.SetLoadPaths();
             FileUtility.SetBlockFile("");
-            FileStream stream = FileUtility.OpenStream("FileUtilityTest.cs");
+            Stream stream = FileUtility.OpenStream("FileUtilityTest.cs");
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace Dope.DDXX.Utility
         {
             FileUtility.SetLoadPaths("../", "../../");
             FileUtility.SetBlockFile("invalidblockfile");
-            FileStream stream = FileUtility.OpenStream("invalidfile");
+            Stream stream = FileUtility.OpenStream("invalidfile");
         }
 
         [Test]

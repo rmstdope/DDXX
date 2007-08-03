@@ -74,7 +74,7 @@ namespace Dope.DDXX.Graphics
 
         public IMesh MeshFromFile(IDevice device, string fileName, out EffectInstance[] effectInstance)
         {
-            FileStream stream = FileUtility.OpenStream(fileName);
+            Stream stream = FileUtility.OpenStream(fileName);
             IMesh mesh = new MeshAdapter(Mesh.FromStream(stream, MeshFlags.Managed, ((DeviceAdapter)device).DXDevice, out effectInstance));
             stream.Close();
             return mesh;
@@ -82,7 +82,7 @@ namespace Dope.DDXX.Graphics
 
         public IMesh MeshFromFile(IDevice device, string fileName, out ExtendedMaterial[] materials)
         {
-            FileStream stream = FileUtility.OpenStream(fileName);
+            Stream stream = FileUtility.OpenStream(fileName);
             IMesh mesh = new MeshAdapter(Mesh.FromStream(stream, MeshFlags.Managed, ((DeviceAdapter)device).DXDevice, out materials));
             stream.Close();
             return mesh;
@@ -95,7 +95,7 @@ namespace Dope.DDXX.Graphics
 
         public IAnimationRootFrame SkinnedMeshFromFile(IDevice device, string fileName, AllocateHierarchy allocHierarchy)
         {
-            FileStream stream = FileUtility.OpenStream(fileName);
+            Stream stream = FileUtility.OpenStream(fileName);
             IAnimationRootFrame rootFrame = new AnimationRootFrameAdapter(Mesh.LoadHierarchy(stream, MeshFlags.Managed, ((DeviceAdapter)device).DXDevice, allocHierarchy, null));
             stream.Close();
             return rootFrame;
@@ -103,7 +103,7 @@ namespace Dope.DDXX.Graphics
 
         public IAnimationRootFrame LoadHierarchy(string fileName, IDevice device, AllocateHierarchy allocHierarchy, LoadUserData loadUserData)
         {
-            FileStream stream = FileUtility.OpenStream(fileName);
+            Stream stream = FileUtility.OpenStream(fileName);
             IAnimationRootFrame rootFrame = new AnimationRootFrameAdapter(Mesh.LoadHierarchy(stream, MeshFlags.Managed, ((DeviceAdapter)device).DXDevice, allocHierarchy, loadUserData));
             stream.Close();
             return rootFrame;
@@ -111,7 +111,7 @@ namespace Dope.DDXX.Graphics
 
         public IEffect EffectFromFile(IDevice device, string sourceDataFile, Include includeFile, string skipConstants, ShaderFlags flags, EffectPool pool)
         {
-            FileStream stream = FileUtility.OpenStream(sourceDataFile);
+            Stream stream = FileUtility.OpenStream(sourceDataFile);
             IEffect effect = new EffectAdapter(Effect.FromStream(((DeviceAdapter)device).DXDevice, stream, includeFile, skipConstants, flags, pool));
             stream.Close();
             return effect;
@@ -119,7 +119,7 @@ namespace Dope.DDXX.Graphics
 
         public ITexture TextureFromFile(IDevice device, string srcFile, int width, int height, int mipLevels, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey)
         {
-            FileStream stream = FileUtility.OpenStream(srcFile);
+            Stream stream = FileUtility.OpenStream(srcFile);
             ITexture texture = new TextureAdapter(TextureLoader.FromStream(((DeviceAdapter)device).DXDevice, stream, width, height, mipLevels, usage, format, pool, filter, mipFilter, colorKey));
             stream.Close();
             return texture;
@@ -127,7 +127,7 @@ namespace Dope.DDXX.Graphics
 
         public ICubeTexture CubeTextureFromFile(IDevice device, string fileName)
         {
-            FileStream stream = FileUtility.OpenStream(fileName);
+            Stream stream = FileUtility.OpenStream(fileName);
             ICubeTexture texture = new CubeTextureAdapter(TextureLoader.FromCubeStream(((DeviceAdapter)device).DXDevice, stream));
             stream.Close();
             return texture;
@@ -135,7 +135,7 @@ namespace Dope.DDXX.Graphics
 
         public ICubeTexture CubeTextureFromFile(IDevice device, string fileName, int size, int mipLevels, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey)
         {
-            FileStream stream = FileUtility.OpenStream(fileName);
+            Stream stream = FileUtility.OpenStream(fileName);
             ICubeTexture texture = new CubeTextureAdapter(TextureLoader.FromCubeStream(((DeviceAdapter)device).DXDevice, stream, size, mipLevels, usage, format, pool, filter, mipFilter, colorKey));
             stream.Close();
             return texture;

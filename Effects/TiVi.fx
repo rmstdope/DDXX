@@ -636,3 +636,45 @@ technique TiViChessBoard
 		ColorWriteEnable	= 0x8;
 	}
 }
+
+texture FilmRollTexture;
+sampler FilmTextureSampler = sampler_state
+{
+    Texture = (FilmRollTexture);
+    MipFilter = Linear;
+    MinFilter = Linear;
+    MagFilter = Linear;
+    AddressU	= Wrap;
+    AddressV	= Wrap;
+};
+
+float4
+FilmPixelShader(TerrainPixelInput input) : COLOR0
+{
+	float4 baseColor = tex2D(BaseTextureSampler, input.TextureCoord.xy);
+	float4 rollColor = tex2D(FilmTextureSampler, input.TextureCoord.xy);
+	return float4(input.Color.rgb * baseColor.rgb * rollColor.rgb, rollColor.a);
+}
+
+
+technique EndFilm
+<
+	bool NormalMapping = false;
+	bool Skinning = false;
+>
+{
+	pass BasePass
+	{
+		VertexShader			= compile vs_2_0 TerrainVertexShader(0);
+		PixelShader				= compile ps_2_0 FilmPixelShader();
+		AlphaTestEnable		= false;
+		AlphaBlendEnable	= true;
+		BlendOp						= Add;
+		SrcBlend					= InvSrcAlpha;
+		DestBlend					= SrcAlpha;
+		ZEnable						=	true;
+		ZWriteEnable			= true;
+		ZFunc							= Less;
+		CullMode					= None;
+	}
+}

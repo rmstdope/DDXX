@@ -24,6 +24,8 @@ namespace TiVi
 
             try
             {
+                FileUtility.SetBlockFile("TiVi.dope");
+
                 // Run setup form
                 SetupLogic setupLogic = new SetupLogic();
                 SetupDialog setupDialog = new SetupDialog(setupLogic);
@@ -34,7 +36,8 @@ namespace TiVi
                     DeviceDescription desc;
                     SetupFramework(setupLogic, out window, out executer, out desc);
                     desc.useStencil = true;
-                    FileUtility.SetLoadPaths("../../Data/",
+                    FileUtility.SetLoadPaths("./",
+                                             "../../Data/",
                                              "../../../Effects/",
                                              "../../");
 
@@ -46,6 +49,7 @@ namespace TiVi
                         "TiVi.xml");
 
                     executer.Run();
+                    //FileUtility.SaveBlockFile("TiVi.dope");
                     window.CleanUp();
                 }
             }

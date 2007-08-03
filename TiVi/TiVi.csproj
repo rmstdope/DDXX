@@ -63,6 +63,7 @@
     <Compile Include="DiamondBelt.cs" />
     <Compile Include="DiscoFever.cs" />
     <Compile Include="EmptyEffect.cs" />
+    <Compile Include="EndScene.cs" />
     <Compile Include="FadeBitmap.cs" />
     <Compile Include="FadeTransition.cs" />
     <Compile Include="FilmRoller.cs" />
