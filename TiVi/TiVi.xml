@@ -7,7 +7,7 @@
 	</Generator>
 	<Texture name="noise" generator="noise"></Texture>
 
-	<!--<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="280">
+	<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="280">
 		<Parameter name="Width" float="16" />
 		<Parameter name="Height" float="9" />
 		<Parameter name="SubtractNoise" bool="true" />
@@ -104,7 +104,7 @@
 	<PostEffect class="RadialBlurPostEffect" startTime="7" endTime="42">
 		<Parameter name="DrawOrder" int="0" />
 		<Parameter name="BlurColor" Color="255, 119, 118, 112" />
-	</PostEffect>-->
+	</PostEffect>
   
 	<Effect class="DiscoFever" name="WalkwayFever" track="0" startTime="42" endTime="44">
 		<Parameter name="DrawOrder" int="0" />
@@ -116,13 +116,13 @@
       <Parameter string="noise" />
       <Parameter float="55.0" />
       <Parameter Color="DarkGray" />
-      <Parameter float="0.4" />
+      <Parameter float="0.3" />
     </SetupCall>
     <SetupCall name="AddTextureLayer">
       <Parameter string="noise" />
       <Parameter float="-44.0" />
-      <Parameter Color="50,50,120,255" />
-      <Parameter float="0.8" />
+      <Parameter Color="255,100,100,100" />
+      <Parameter float="0.4" />
     </SetupCall>
     <Parameter name="DrawOrder" int="0" />
   </Effect>
@@ -131,6 +131,12 @@
 		<Parameter name="Camera02Start" float="11" />
 		<Parameter name="Camera03Start" float="18" />
 		<Parameter name="Camera04Start" float="33" />
+		<Parameter name="TubeReflective" float="0" />
+		<Parameter name="TubeAmbient" Color="0, 54, 29, 90" />
+		<Parameter name="TubeDiffuse" Color="0, 147, 132, 159" />
+		<Parameter name="TiviReflective" float="0.1" />
+		<Parameter name="TiviAmbient" Color="255, 75, 75, 128" />
+		<Parameter name="TiviDiffuse" Color="255, 128, 128, 128" />
 	</Effect>
 	<PostEffect class="GlowPostEffect" name="WalkwayGlow" track="0" startTime="42" endTime="83">
 		<Parameter name="BloomScale" float="1.5" />
@@ -435,7 +441,7 @@
     </SetupCall>
     <Parameter name="DrawOrder" int="0" />
   </Effect>
-  <Effect class="FlipSign" track="0" startTime="262" endTime="274">
+  <Effect class="FlipSign" track="0" startTime="254" endTime="274">
     <Parameter name="DrawOrder" int="1" />
   </Effect>
   <PostEffect class="GlowPostEffect" name="SignGlow" track="0" startTime="254" endTime="274">
