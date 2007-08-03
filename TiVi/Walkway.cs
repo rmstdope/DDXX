@@ -34,6 +34,89 @@ namespace TiVi
         private float camera02Start;
         private float camera03Start;
         private float camera04Start;
+        private Color tiviDiffuse;
+        private Color tiviAmbient;
+        private float tiviReflective;
+        private Color tubeDiffuse;
+        private Color tubeAmbient;
+        private float tubeReflective;
+        private ModelNode tube1;
+        private ModelNode tube2;
+
+        public float TubeReflective
+        {
+            get { return tubeReflective; }
+            set
+            {
+                tubeReflective = value;
+                if (tube1 != null)
+                {
+                    tube1.Model.Materials[0].ReflectiveFactor = tubeReflective;
+                    tube2.Model.Materials[0].ReflectiveFactor = tubeReflective;
+                }
+            }
+        }
+
+        public Color TubeAmbient
+        {
+            get { return tubeAmbient; }
+            set
+            {
+                tubeAmbient = value;
+                if (tube1 != null)
+                {
+                    tube1.Model.Materials[0].Ambient = tubeAmbient;
+                    tube2.Model.Materials[0].Ambient = tubeAmbient;
+                }
+            }
+        }
+
+        public Color TubeDiffuse
+        {
+            get { return tubeDiffuse; }
+            set
+            {
+                tubeDiffuse = value;
+                if (tube1 != null)
+                {
+                    tube1.Model.Materials[0].Diffuse = tubeDiffuse;
+                    tube2.Model.Materials[0].Diffuse = tubeDiffuse;
+                }
+            }
+        }
+
+        public float TiviReflective
+        {
+            get { return tiviReflective; }
+            set
+            {
+                tiviReflective = value;
+                if (tiviNode != null)
+                    tiviNode.Model.Materials[0].ReflectiveFactor = tiviReflective;
+            }
+        }
+
+        public Color TiviAmbient
+        {
+            get { return tiviAmbient; }
+            set 
+            { 
+                tiviAmbient = value;
+                if (tiviNode != null)
+                    tiviNode.Model.Materials[0].Ambient = tiviAmbient;
+            }
+        }
+
+        public Color TiviDiffuse
+        {
+            get { return tiviDiffuse; }
+            set 
+            { 
+                tiviDiffuse = value;
+                if (tiviNode != null)
+                    tiviNode.Model.Materials[0].Diffuse = tiviDiffuse;
+            }
+        }
 
         public float Camera04Start
         {
@@ -58,6 +141,9 @@ namespace TiVi
         {
             camera02Start = 14;
             camera03Start = 21;
+            tiviAmbient = Color.FromArgb(255, 75, 75, 128);
+            tiviDiffuse = Color.FromArgb(255, 128, 128, 128);
+            tiviReflective = 0.1f;
         }
 
         protected override void Initialize()
@@ -114,6 +200,8 @@ namespace TiVi
             XLoader.AddToScene(scene);
             walkwayPlane = scene.GetNodeByName("Walkway") as ModelNode;
             walkwayStencilPlane = CreateStencilNodeOfNode(walkwayPlane);
+            tube1 = scene.GetNodeByName("Cylinder01") as ModelNode;
+            tube2 = scene.GetNodeByName("Cylinder02") as ModelNode;
 
             TextureDirector textureDirector = new TextureDirector(TextureBuilder);
             textureDirector.CreatePerlinNoise(10, 12, 0.5f);
@@ -128,11 +216,11 @@ namespace TiVi
             tiviNode = (ModelNode)scene.GetNodeByName("TiVi");
             tiviNode.Model.Materials[0].ReflectiveTexture = TextureFactory.CreateCubeFromFile("rnl_cross.dds");
             tiviNode.Model.Materials[0].DiffuseTexture = TextureFactory.CreateFromFile("marble.jpg");
-            tiviNode.Model.Materials[0].AmbientColor = new ColorValue(0.3f, 0.3f, 0.3f, 0.5f);
-            tiviNode.Model.Materials[0].DiffuseColor = new ColorValue(0.5f, 0.5f, 0.5f, 0.5f);
-            tiviNode.Model.Materials[0].ReflectiveFactor = 0.1f;
+            tiviNode.Model.Materials[0].Ambient = tiviAmbient;
+            tiviNode.Model.Materials[0].Diffuse = tiviDiffuse;
+            tiviNode.Model.Materials[0].ReflectiveFactor = tiviReflective;
             tiviNode.Model.Materials[1].AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
-            scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
+            //scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
             float timeScale = 1.045f;
             (tiviNode.Model as SkinnedModel).SetAnimationSet(0, StartTime, timeScale);
             scene.ActiveCamera = scene.GetNodeByName("Camera01") as CameraNode;
@@ -179,8 +267,16 @@ namespace TiVi
             for (int i = 0; i < NUM_DIAMONDS; i++)
             {
                 ModelNode node1 = new ModelNode("", model.Clone(), handler, Device);
-                node1.WorldState.MoveUp(Rand.Float(0, 4));
-                node1.WorldState.MoveRight(Rand.Float(-5, 5));
+                // Remove diamonds from the path where TiVi walks
+                float up = 1.0f;
+                float right = -0.5f;
+                while (right > -1.1f && right < 0.2f && up < 2.0f)
+                {
+                    up = Rand.Float(0, 4);
+                    right = Rand.Float(-5, 5);
+                }
+                node1.WorldState.MoveUp(up);
+                node1.WorldState.MoveRight(right);
                 node1.WorldState.MoveForward(Rand.Float(-15, 15));
                 float t = Rand.Float(Math.PI);
                 node1.WorldState.Turn(t);
@@ -198,6 +294,7 @@ namespace TiVi
                 light.DiffuseColor = new ColorValue(0.3f + 0.7f * (1 - i), 0.3f + 0.7f * i, 1.0f, 1.0f);
                 scene.AddNode(light);
                 lights.Add(light);
+                //light.SetRenderParameters(Device, GraphicsFactory.CreateSprite(Device), TextureFactory.CreateFromFile("flare.dds"));
             }
             lights[0].Position = new Vector3(0, 0, 0);
             lights[1].Position = new Vector3(20, 0, 0);
@@ -206,6 +303,7 @@ namespace TiVi
         public override void Step()
         {
             float t = Time.StepTime - StartTime;
+            float sceneProgress = t / (EndTime - StartTime);
             if (t < camera02Start)
                 scene.ActiveCamera = scene.GetNodeByName("Camera01") as IRenderableCamera;
             else if (t < camera03Start)
@@ -214,6 +312,10 @@ namespace TiVi
                 scene.ActiveCamera = scene.GetNodeByName("Camera03") as IRenderableCamera;
             else
                 scene.ActiveCamera = scene.GetNodeByName("Camera01") as IRenderableCamera;
+            lights[0].Position = new Vector3(18.0f*sceneProgress, 1.5f+(float)Math.Sin(Time.StepTime*0.7f), -5.0f);
+            lights[1].Position = new Vector3(18.0f * sceneProgress + 2.0f + (float)Math.Sin(Time.StepTime * 0.4f), 
+                                             1.5f,
+                                             3.0f*(float)Math.Cos(Time.StepTime * 0.4f));
             scene.ActiveCamera.SetClippingPlanes(0.01f, 1000);
             //scene.ActiveCamera.SetFOV((float)Math.PI / 3);
             StepScreen();
