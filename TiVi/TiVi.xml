@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--<Demo>-->
-<Demo song="scanner-dopeasm2007-v2.mp3">
+<Demo song="scanner_and_aav-tivi-rc1-320.mp3">
 	<!--Textures-->
 	<Generator name="noise" class="PerlinNoise">
 		<Parameter name="BaseFrequency" int="64" />
 	</Generator>
 	<Texture name="noise" generator="noise"></Texture>
 
-	<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="280">
+	<!--<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="280">
 		<Parameter name="Width" float="16" />
 		<Parameter name="Height" float="9" />
 		<Parameter name="SubtractNoise" bool="true" />
@@ -104,7 +104,7 @@
 	<PostEffect class="RadialBlurPostEffect" startTime="7" endTime="42">
 		<Parameter name="DrawOrder" int="0" />
 		<Parameter name="BlurColor" Color="255, 119, 118, 112" />
-	</PostEffect>
+	</PostEffect>-->
   
   
 	<Effect class="DiscoFever" name="WalkwayFever" track="0" startTime="42" endTime="44">
