@@ -48,7 +48,7 @@ namespace TiVi
         private TextureViewer c64Viewer;
         private TextureViewer atariViewer;
         private TextureViewer pcViewer;
-        private const int squareCount = 20;
+        private const int squareCount = 14;
         private const int heightSegments = 6;
         private FilmRoller c64Roller;
         private FilmRoller atariRoller;
