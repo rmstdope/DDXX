@@ -181,7 +181,21 @@ namespace TiVi
 
         public override void Step()
         {
-            camera.WorldState.Position = new Vector3((float)Math.Sin(Time.StepTime * 0.2f), 0.2f, (float)Math.Cos(Time.StepTime * 0.2f)) * 8;
+            float timeInEffect = Time.StepTime - StartTime;
+            float angularVelocity = 0.25f;
+            float angle;
+            if (timeInEffect < 0.5f)
+            {
+                angle = timeInEffect * timeInEffect * angularVelocity;
+            }
+            else
+            {
+                angle = (timeInEffect - 0.25f) * angularVelocity;
+            }
+            camera.WorldState.Position =
+                    new Vector3((float)Math.Sin(angle), 
+                                (float)(1.0f - Math.Cos(timeInEffect * 0.12f)) * 0.2f + 0.2f, 
+                                (float)Math.Cos(angle)) * 8;
             camera.LookAt(new Vector3(0, 0, 0), new Vector3(0, 1, 0));
             foreach (ChessPiece piece in chessPieces)
                 piece.Step(Time.StepTime - StartTime);
