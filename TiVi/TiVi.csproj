@@ -65,6 +65,7 @@
     <Compile Include="EmptyEffect.cs" />
     <Compile Include="FadeBitmap.cs" />
     <Compile Include="FadeTransition.cs" />
+    <Compile Include="FilmRoller.cs" />
     <Compile Include="GiantDiamond.cs" />
     <Compile Include="FilmRoll.cs" />
     <Compile Include="HoneyComb.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="SpaceTravel.cs" />
     <Compile Include="SunEffect.cs" />
     <Compile Include="TestEffect.cs" />
+    <Compile Include="TextureViewer.cs" />
     <Compile Include="ThinkTank.cs" />
     <Compile Include="TiVi.cs" />
     <Compile Include="TiViMain.cs" />

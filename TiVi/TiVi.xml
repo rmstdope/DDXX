@@ -106,7 +106,6 @@
 		<Parameter name="BlurColor" Color="255, 119, 118, 112" />
 	</PostEffect>-->
   
-  
 	<Effect class="DiscoFever" name="WalkwayFever" track="0" startTime="42" endTime="44">
 		<Parameter name="DrawOrder" int="0" />
 		<Parameter name="ColorDiv" int="2" />
@@ -448,7 +447,7 @@
     <Parameter name="DownSamples" int="2" />
     <Parameter name="AdvancedGlow" bool="false" />
   </PostEffect>
-
+	
 <!--After this line is only test stuff-->
 
 
@@ -505,14 +504,32 @@
 		<Parameter name="CloudColor1" Color="255, 10, 10, 20" />
 		<Parameter name="CloudColor2" Color="255, 10, 10, 20" />
 	</Effect>-->
-<!--<Effect class="FilmRoll" track="0" startTime="42" endTime="300">
-		<Parameter name="FilmRounding" float="0.02000001" />
-		<Parameter name="FilmWidth" float="0.65" />
+	<!--<Effect class="TextureViewer" track="0" startTime="0" endTime="300">
+		<Parameter name="WaitCount" int="30" />
+		<Parameter name="Texture" string="amiga_1_red_sector_mega_demo.jpg" />
+		<Parameter name="Texture" string="amiga_2_enigma.jpg" />
+		<Parameter name="Texture" string="amiga_3_hardwired.jpg" />
+		<Parameter name="Texture" string="amiga_4_state_of_the_art.jpg" />
+		<Parameter name="Texture" string="amiga_5_silkcut.jpg" />
+		<Parameter name="Texture" string="c64_1_en_rutig_banan.png" />
+		<Parameter name="Texture" string="c64_2_ko_opperation.png" />
+		<Parameter name="Texture" string="c64_3_brutality.png" />
+		<Parameter name="Texture" string="c64_4_coma_light_eight.png" />
+		<Parameter name="Texture" string="c64_5_wonderland_x.jpg" />
+		<Parameter name="Texture" string="atari_1_big_demo.jpg" />
+		<Parameter name="Texture" string="atari_2_union_demo.png" />
+		<Parameter name="Texture" string="atari_3_cuddly_demos.jpg" />
+		<Parameter name="Texture" string="atari_4_mindbomb.jpg" />
+		<Parameter name="Texture" string="atari_5_virtual_escape.jpg" />
+		<Parameter name="Texture" string="pc_1_crystal_dreams_2.jpg" />
+		<Parameter name="Texture" string="pc_2_second_reality.png" />
+		<Parameter name="Texture" string="pc_3_popular_demo.jpg" />
+		<Parameter name="Texture" string="pc_4_we_cell.jpg" />
+		<Parameter name="Texture" string="pc_5_planet_risk.jpg" />
+	</Effect>-->
+	
+		<Effect class="FilmRoll" track="0" startTime="42" endTime="300">
 		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="PerforationWidth" float="0.09" />
-		<Parameter name="PerforationHeight" float="0.06999999" />
-		<Parameter name="PerforationDistance" float="0.06999999" />
-		<Parameter name="SlowDown" int="18" />
 	</Effect>-->
 <!--<PostEffect class="OverlayPostEffect" track="0" startTime="42" endTime="300.0">
 		<Parameter name="AddNoise" bool="true" />
