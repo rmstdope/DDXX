@@ -42,7 +42,7 @@ namespace TiVi
                                              "../../");
 
                     DevicePrerequisits prerequisits = new DevicePrerequisits();
-                    window.Initialize("Engine Test", desc, prerequisits);
+                    window.Initialize("TiVi by Dope", desc, prerequisits);
                     executer.Initialize(D3DDriver.GetInstance().Device,
                         D3DDriver.GraphicsFactory, D3DDriver.TextureFactory, D3DDriver.EffectFactory, 
                         new TextureBuilder(D3DDriver.TextureFactory),
