@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using NMock2;
-using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.DemoFramework
@@ -54,7 +53,7 @@ namespace Dope.DDXX.DemoFramework
             PostProcessor postProcessor = new PostProcessor();
             TestPostEffect effect = new TestPostEffect("", 0.0f, 10.0f);
 
-            effect.Initialize(null, postProcessor, null, null, null);
+            effect.Initialize(null, postProcessor, null, null);
         }
 
         [Test]

@@ -4,12 +4,10 @@ using System.Text;
 using NUnit.Framework;
 using NMock2;
 using Dope.DDXX.Graphics;
-using Microsoft.DirectX.Direct3D;
 using System.IO;
-using System.Drawing;
 using Dope.DDXX.Utility;
-using Microsoft.DirectX.DirectInput;
 using Dope.DDXX.Input;
+using Microsoft.Xna.Framework.Input;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -55,7 +53,7 @@ namespace Dope.DDXX.DemoFramework
         {
             Expect.Once.On(userInterface).
                 Method("Initialize");
-            tweaker.Initialize(registrator);
+            tweaker.Initialize(registrator, graphicsFactory, textureFactory);
         }
 
         [Test]
@@ -65,17 +63,17 @@ namespace Dope.DDXX.DemoFramework
                 tracks.Add(new Track());
             TestInitialize();
             Assert.AreEqual(0, tweaker.CurrentTrack);
-            ExpectKey(Key.DownArrow);
+            ExpectKey(Keys.Down);
             tweaker.HandleInput(inputDriver);
             Assert.AreEqual(1, tweaker.CurrentTrack);
-            ExpectKey(Key.DownArrow);
+            ExpectKey(Keys.Down);
             tweaker.HandleInput(inputDriver);
-            ExpectKey(Key.DownArrow);
+            ExpectKey(Keys.Down);
             tweaker.HandleInput(inputDriver);
-            ExpectKey(Key.DownArrow);
+            ExpectKey(Keys.Down);
             tweaker.HandleInput(inputDriver);
             Assert.AreEqual(4, tweaker.CurrentTrack);
-            ExpectKey(Key.DownArrow);
+            ExpectKey(Keys.Down);
             tweaker.HandleInput(inputDriver);
             Assert.AreEqual(4, tweaker.CurrentTrack);
         }
@@ -100,16 +98,16 @@ namespace Dope.DDXX.DemoFramework
             ExpectDraw("TestDraw5Tracks1");
             tweaker.Draw();
 
-            ExpectKey(Key.DownArrow);
+            ExpectKey(Keys.Down);
             tweaker.HandleInput(inputDriver);
             ExpectDraw("TestDraw5Tracks2");
             tweaker.Draw();
 
-            ExpectKey(Key.DownArrow);
+            ExpectKey(Keys.Down);
             tweaker.HandleInput(inputDriver);
-            ExpectKey(Key.DownArrow);
+            ExpectKey(Keys.Down);
             tweaker.HandleInput(inputDriver);
-            ExpectKey(Key.DownArrow);
+            ExpectKey(Keys.Down);
             tweaker.HandleInput(inputDriver);
             ExpectDraw("TestDraw5Tracks3");
             tweaker.Draw();
@@ -138,18 +136,18 @@ namespace Dope.DDXX.DemoFramework
             tracks.Add(new Track());
             TestInitialize();
 
-            ExpectKey(Key.Unlabeled);
+            ExpectKey(Keys.Zoom);
             Assert.IsFalse(tweaker.HandleInput(inputDriver));
-            ExpectKey(Key.UpArrow);
+            ExpectKey(Keys.Up);
             Assert.IsTrue(tweaker.HandleInput(inputDriver));
-            ExpectKey(Key.DownArrow);
+            ExpectKey(Keys.Down);
             Assert.IsTrue(tweaker.HandleInput(inputDriver));
         }
 
-        private void ExpectKey(Key key)
+        private void ExpectKey(Keys key)
         {
-            Key[] keys = { Key.UpArrow, Key.DownArrow };
-            foreach (Key currentKey in keys)
+            Keys[] keys = { Keys.Up, Keys.Down };
+            foreach (Keys currentKey in keys)
             {
                 bool pressed = false;
                 if (key == currentKey)
@@ -210,16 +208,16 @@ namespace Dope.DDXX.DemoFramework
                         Assert.AreEqual(15, mainBox.Children[1].Children[0].Children.Count);
                         Assert.AreEqual("Track 0", ((TextControl)mainBox.Children[1].Children[0].Children[12].Children[0]).Text);
                         Assert.AreEqual(settings.TextAlpha, ((TextControl)mainBox.Children[1].Children[0].Children[12].Children[0]).Alpha);
-                        Assert.AreEqual(settings.SelectedColor, ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Color);
-                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Alpha);
+                        Assert.AreEqual(settings.SelectedColor.ToVector3(), ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Color.ToVector3());
+                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Color.A);
                         Assert.AreEqual("Track 1", ((TextControl)mainBox.Children[1].Children[0].Children[13].Children[0]).Text);
                         Assert.AreEqual(settings.TextAlpha, ((TextControl)mainBox.Children[1].Children[0].Children[13].Children[0]).Alpha);
-                        Assert.AreEqual(settings.UnselectedColor, ((BoxControl)mainBox.Children[1].Children[0].Children[13]).Color);
-                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[13]).Alpha);
+                        Assert.AreEqual(settings.UnselectedColor.ToVector3(), ((BoxControl)mainBox.Children[1].Children[0].Children[13]).Color.ToVector3());
+                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[13]).Color.A);
                         Assert.AreEqual("Track 2", ((TextControl)mainBox.Children[1].Children[0].Children[14].Children[0]).Text);
                         Assert.AreEqual(settings.TextAlpha, ((TextControl)mainBox.Children[1].Children[0].Children[14].Children[0]).Alpha);
-                        Assert.AreEqual(settings.UnselectedColor, ((BoxControl)mainBox.Children[1].Children[0].Children[14]).Color);
-                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[14]).Alpha);
+                        Assert.AreEqual(settings.UnselectedColor.ToVector3(), ((BoxControl)mainBox.Children[1].Children[0].Children[14]).Color.ToVector3());
+                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[14]).Color.A);
                         break;
                     case "TestDraw5Tracks2":
                         // mainWindow
@@ -237,16 +235,16 @@ namespace Dope.DDXX.DemoFramework
                         Assert.AreEqual(15, mainBox.Children[1].Children[0].Children.Count);
                         Assert.AreEqual("Track 0", ((TextControl)mainBox.Children[1].Children[0].Children[12].Children[0]).Text);
                         Assert.AreEqual(settings.TextAlpha, ((TextControl)mainBox.Children[1].Children[0].Children[12].Children[0]).Alpha);
-                        Assert.AreEqual(settings.UnselectedColor, ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Color);
-                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Alpha);
+                        Assert.AreEqual(settings.UnselectedColor.ToVector3(), ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Color.ToVector3());
+                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Color.A);
                         Assert.AreEqual("Track 1", ((TextControl)mainBox.Children[1].Children[0].Children[13].Children[0]).Text);
                         Assert.AreEqual(settings.TextAlpha, ((TextControl)mainBox.Children[1].Children[0].Children[13].Children[0]).Alpha);
-                        Assert.AreEqual(settings.SelectedColor, ((BoxControl)mainBox.Children[1].Children[0].Children[13]).Color);
-                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[13]).Alpha);
+                        Assert.AreEqual(settings.SelectedColor.ToVector3(), ((BoxControl)mainBox.Children[1].Children[0].Children[13]).Color.ToVector3());
+                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[13]).Color.A);
                         Assert.AreEqual("Track 2", ((TextControl)mainBox.Children[1].Children[0].Children[14].Children[0]).Text);
                         Assert.AreEqual(settings.TextAlpha, ((TextControl)mainBox.Children[1].Children[0].Children[14].Children[0]).Alpha);
-                        Assert.AreEqual(settings.UnselectedColor, ((BoxControl)mainBox.Children[1].Children[0].Children[14]).Color);
-                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[14]).Alpha);
+                        Assert.AreEqual(settings.UnselectedColor.ToVector3(), ((BoxControl)mainBox.Children[1].Children[0].Children[14]).Color.ToVector3());
+                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[14]).Color.A);
                         break;
                     case "TestDraw5Tracks3":
                         // mainWindow
@@ -264,16 +262,16 @@ namespace Dope.DDXX.DemoFramework
                         Assert.AreEqual(15, mainBox.Children[1].Children[0].Children.Count);
                         Assert.AreEqual("Track 2", ((TextControl)mainBox.Children[1].Children[0].Children[12].Children[0]).Text);
                         Assert.AreEqual(settings.TextAlpha, ((TextControl)mainBox.Children[1].Children[0].Children[12].Children[0]).Alpha);
-                        Assert.AreEqual(settings.UnselectedColor, ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Color);
-                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Alpha);
+                        Assert.AreEqual(settings.UnselectedColor.ToVector3(), ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Color.ToVector3());
+                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Color.A);
                         Assert.AreEqual("Track 3", ((TextControl)mainBox.Children[1].Children[0].Children[13].Children[0]).Text);
                         Assert.AreEqual(settings.TextAlpha, ((TextControl)mainBox.Children[1].Children[0].Children[13].Children[0]).Alpha);
-                        Assert.AreEqual(settings.UnselectedColor, ((BoxControl)mainBox.Children[1].Children[0].Children[13]).Color);
-                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[13]).Alpha);
+                        Assert.AreEqual(settings.UnselectedColor.ToVector3(), ((BoxControl)mainBox.Children[1].Children[0].Children[13]).Color.ToVector3());
+                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[13]).Color.A);
                         Assert.AreEqual("Track 4", ((TextControl)mainBox.Children[1].Children[0].Children[14].Children[0]).Text);
                         Assert.AreEqual(settings.TextAlpha, ((TextControl)mainBox.Children[1].Children[0].Children[14].Children[0]).Alpha);
-                        Assert.AreEqual(settings.SelectedColor, ((BoxControl)mainBox.Children[1].Children[0].Children[14]).Color);
-                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[14]).Alpha);
+                        Assert.AreEqual(settings.SelectedColor.ToVector3(), ((BoxControl)mainBox.Children[1].Children[0].Children[14]).Color.ToVector3());
+                        Assert.AreEqual(settings.Alpha, ((BoxControl)mainBox.Children[1].Children[0].Children[14]).Color.A);
                         break;
                     case "TestDrawEffects":
                         // mainWindow
@@ -307,13 +305,9 @@ namespace Dope.DDXX.DemoFramework
 
         private void ExpectDraw(string name)
         {
-            Expect.Once.On(device).
-                Method("BeginScene");
             Expect.Once.On(userInterface).
                 Method("DrawControl").
                 With(new ControlMatcher(name, settings));
-            Expect.Once.On(device).
-                Method("EndScene");
         }
 
     }

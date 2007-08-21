@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using NUnit.Framework;
-using Microsoft.CSharp;
 using System.CodeDom.Compiler;
 using System.Reflection;
+using NUnit.Framework;
+using Microsoft.CSharp;
 using Microsoft.Win32;
 using Dope.DDXX.Utility;
 
@@ -16,13 +16,13 @@ namespace Dope.DDXX.DemoFramework
         string source = @"
 using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Graphics;
-using Microsoft.DirectX;
+using Microsoft.Xna.Framework;
 public class FooEffect : TweakableContainer, IDemoEffect 
 {
   protected float start; protected float end; protected int drawOrder; 
   public FooEffect(string s1, float f1, float f2) : base(s1) { start = f1; end = f2;}
   public int DrawOrder { get { return drawOrder;} set { drawOrder = value; } }
-  public void Step() {} public void Render() {} public void Initialize(IGraphicsFactory graphicsFactory, IEffectFactory effectFactory, IDevice device, IDemoMixer mixer) {} 
+  public void Step() {} public void Render() {} public void Initialize(IGraphicsFactory graphicsFactory, IEffectFactory effectFactory, ITextureFactory textureFactory, IDemoMixer mixer, IPostProcessor postProcessor) {} 
   public float StartTime { get { return start;} set { start = value;} }
   public float EndTime { get { return end;} set { end = value;} }
 }
@@ -147,13 +147,11 @@ public class Dummy {}
         private Assembly SetupAssembly(string source)
         {
             CSharpCodeProvider provider = new CSharpCodeProvider();
-            //string windir = (string)Registry.GetIntValue("HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Windows", "Directory", "");
             string[] sysdir = Environment.SystemDirectory.Split('\\');
             string assemblyDir = string.Join("\\", sysdir, 0, sysdir.Length - 1) + "\\assembly\\";
             AssemblyName[] referenced = Assembly.GetExecutingAssembly().GetReferencedAssemblies();
-            string d3dAssembly = Assembly.GetAssembly(typeof(Microsoft.DirectX.Vector3)).CodeBase;
+            string d3dAssembly = Assembly.GetAssembly(typeof(Microsoft.Xna.Framework.Vector3)).CodeBase;
             d3dAssembly = d3dAssembly.Remove(0, 8);
-            //string d3dAssembly = assemblyDir + "Microsoft.DirectX.Direct3D.dll";
             CompilerParameters cp = new CompilerParameters(new string[] { "Dope.DDXX.DemoFramework.dll", "Dope.DDXX.Graphics.dll", d3dAssembly });
             results = provider.CompileAssemblyFromSource(cp, source);
             if (results.Errors.HasErrors)

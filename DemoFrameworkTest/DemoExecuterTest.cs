@@ -1,17 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using System.Text;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.CodeDom.Compiler;
 using System.IO;
-using System.Drawing;
 using Microsoft.CSharp;
-using Microsoft.DirectX;
-using Microsoft.DirectX.DirectInput;
-using Microsoft.DirectX.Direct3D;
-using FMOD;
 using NUnit.Framework;
 using NMock2;
 using Dope.DDXX.Graphics;
@@ -19,6 +13,9 @@ using Dope.DDXX.Input;
 using Dope.DDXX.Sound;
 using Dope.DDXX.Utility;
 using Dope.DDXX.TextureBuilder;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -32,13 +29,12 @@ namespace Dope.DDXX.DemoFramework
         private IInputDriver inputDriver;
         private IEffectChangeListener effectChangeListener;
         private ITextureBuilder textureBuilder;
-        private FMOD.Sound sound;
-        private FMOD.Channel channel;
+        private ICue sound;
         private List<ITrack> tracks;
         private int numTracksRegistered;
         private IDemoEffectTypes effectTypes;
-        private ITexture backBuffer1;
-        private ITexture backBuffer2;
+        private IRenderTarget2D renderTarget2;
+        private IRenderTarget2D renderTarget3;
 
         [SetUp]
         public override void SetUp()
@@ -47,8 +43,7 @@ namespace Dope.DDXX.DemoFramework
 
             Time.Initialize();
 
-            sound = new FMOD.Sound();
-            channel = new FMOD.Channel();
+            sound = mockery.NewMock<ICue>();
 
             soundDriver = mockery.NewMock<ISoundDriver>();
             inputDriver = mockery.NewMock<IInputDriver>();
@@ -57,12 +52,14 @@ namespace Dope.DDXX.DemoFramework
             tweaker = mockery.NewMock<IDemoTweaker>();
             executer.Tweaker = tweaker;
             textureBuilder = mockery.NewMock<ITextureBuilder>();
-            backBuffer1 = mockery.NewMock<ITexture>();
-            backBuffer2 = mockery.NewMock<ITexture>();
+            renderTarget2 = mockery.NewMock<IRenderTarget2D>();
+            renderTarget3 = mockery.NewMock<IRenderTarget2D>();
 
             effectChangeListener = mockery.NewMock<IEffectChangeListener>();
 
-            Stub.On(inputDriver).Method("KeyPressedNoRepeat").With(Key.Space).Will(Return.Value(false));
+            Stub.On(inputDriver).Method("KeyPressedNoRepeat").With(Keys.Space).Will(Return.Value(false));
+            Stub.On(graphicsFactory).Method("CreateSpriteBatch").Will(Return.Value(spriteBatch));
+            Stub.On(textureFactory).Method("CreateFullsizeRenderTarget").Will(Return.Value(renderTarget));
 
             numTracksRegistered = 0;
             tracks = new List<ITrack>();
@@ -150,6 +147,8 @@ namespace Dope.DDXX.DemoFramework
         {
             EnsureNumTracks(2);
 
+            Expect.Once.On(inputDriver).
+                Method("Step");
             Expect.Once.On(tracks[0]).
                 Method("Step");
             Expect.Once.On(tracks[1]).
@@ -187,12 +186,12 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestInitializeOKSong()
         {
-            executer.SetSong("Dope.DDXX.DemoFramework.dll");
+            executer.SetSong("Song");
             FileUtility.SetLoadPaths(new string[] { "./" });
             ExpectSoundInitialize();
             Expect.Once.On(soundDriver).
-                Method("CreateSound").
-                With("Dope.DDXX.DemoFramework.dll").
+                Method("PlaySound").
+                With("Song").
                 Will(Return.Value(sound));
             ExpectPostProcessorInitialize();
             ExpectTweakerInitialize();
@@ -204,6 +203,9 @@ namespace Dope.DDXX.DemoFramework
         public void TestInitializeOKEffects()
         {
             EnsureNumTracks(50);
+
+            for (int i = 0; i < 50; i++)
+                Stub.On(tracks[i]).GetProperty("StartTime").Will(Return.Value(0.0f));
 
             ExpectSoundInitialize();
             ExpectPostProcessorInitialize();
@@ -223,14 +225,17 @@ namespace Dope.DDXX.DemoFramework
             IDemoTransition t1 = RegisterTransition("name1", 0, 1, 2);
             IDemoTransition t2 = RegisterTransition("name2", 49, 2, 3);
 
+            for (int i = 0; i < 50; i++)
+                Stub.On(tracks[i]).GetProperty("StartTime").Will(Return.Value(0.0f));
+
             ExpectSoundInitialize();
             ExpectPostProcessorInitialize();
             ExpectTweakerInitialize();
 
             Expect.Once.On(t1).
-                Method("Initialize").With(device, postProcessor);
+                Method("Initialize").With(postProcessor);
             Expect.Once.On(t2).
-                Method("Initialize").With(device, postProcessor);
+                Method("Initialize").With(postProcessor);
 
             executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, textureBuilder);
         }
@@ -261,106 +266,86 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
-        public void TestRunNoEffect()
+        public void TestRenderNoEffect()
         {
             TestInitializeOKSong();
 
-            ExpectStepCalled(new int[] { });
-
-            Expect.Once.On(soundDriver).
-                Method("PlaySound").Will(Return.Value(channel));
-            Expect.Once.On(soundDriver).
-                Method("SetPosition").With(Is.EqualTo(channel), Is.Anything);
-            
-            //ExpectCopyToBackBuffer();
+            Expect.Once.On(inputDriver).Method("KeyPressedNoRepeat").With(Keys.F12).Will(Return.Value(false));
 
             Expect.Once.On(tweaker).
                 Method("Draw");
             Expect.Once.On(device).
                 Method("Present");
 
-            Time.CurrentTime = 2.0f;
-            Time.SetDeltaTimeForTest(1.0f);
-
-            Stub.On(tweaker).
-                GetProperty("Quit").Will(Return.Value(false));
-            executer.Run();
-            Assert.Greater(Time.StepTime, 2.0f);
-            Time.UnSetDeltaTimeForTest();
+            executer.Render();
         }
 
-        private void ExpectCopyToBackBuffer(ITexture sourceTexture)
+        private void ExpectCopyToBackBuffer(IRenderTarget2D sourceTexture)
         {
-            Expect.Once.On(sourceTexture).
-                Method("GetSurfaceLevel").With(0).Will(Return.Value(surface));
-            Expect.Once.On(device).
-                Method("GetRenderTarget").With(0).Will(Return.Value(surface));
-            Expect.Once.On(device).
-                Method("StretchRectangle");
+            Expect.Once.On(device).Method("SetRenderTarget").With(0, null);
+            Expect.Once.On(spriteBatch).Method("Begin").
+                With(SpriteBlendMode.None, SpriteSortMode.Immediate, SaveStateMode.None);
+            Expect.Once.On(spriteBatch).Method("Draw").
+                With(texture, new Rectangle(0, 0, presentParameters.BackBufferWidth, presentParameters.BackBufferHeight), Color.White);
+            Expect.Once.On(spriteBatch).Method("End");
         }
 
         [Test]
-        public void TestRun1Track()
+        public void TestDraw1Track()
         {
             TestInitializeOKNoSong1();
+
+            Expect.Once.On(inputDriver).Method("KeyPressedNoRepeat").With(Keys.F12).Will(Return.Value(false));
 
             EnsureNumTracks(1);
             Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(1000.0f));
 
             executer.ClearColor = Color.DarkSlateBlue;
-            ExpectStepCalled(new int[] { 0 });
 
-            List<ITexture> textures = new List<ITexture>();
-            textures.Add(backBuffer1);
-            Expect.Once.On(postProcessor).Method("GetTemporaryTextures").
-                With(1, false).Will(Return.Value(textures));
             Expect.Once.On(tracks[0]).Method("Render").
-                With(device, backBuffer1, Color.DarkSlateBlue).Will(Return.Value(backBuffer1));
-            ExpectCopyToBackBuffer(backBuffer1);
+                With(device, renderTarget, Color.DarkSlateBlue).Will(Return.Value(renderTarget2));
+            Expect.Once.On(renderTarget2).Method("GetTexture").Will(Return.Value(texture));
+            ExpectCopyToBackBuffer(renderTarget2);
             Expect.Once.On(tweaker).
                 Method("Draw");
             Expect.Once.On(device).
                 Method("Present");
 
-            LimitRunLoop(1);
-
-            executer.Run();
+            executer.Render();
         }
 
         [Test]
-        public void TestRun2TracksNoTransition()
+        public void TestDraw2TracksNoTransition()
         {
             TestInitializeOKNoSong1();
+
+            Expect.Once.On(inputDriver).Method("KeyPressedNoRepeat").With(Keys.F12).Will(Return.Value(false));
 
             EnsureNumTracks(2);
             Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(1000.0f));
             Stub.On(tracks[1]).GetProperty("EndTime").Will(Return.Value(1000.0f));
 
             executer.ClearColor = Color.DarkSlateBlue;
-            ExpectStepCalled(new int[] { 0, 1 });
 
-            List<ITexture> textures = new List<ITexture>();
-            textures.Add(backBuffer1);
-            Expect.Once.On(postProcessor).Method("GetTemporaryTextures").
-                With(1, false).Will(Return.Value(textures));
             Expect.Once.On(tracks[0]).Method("Render").
-                With(device, backBuffer1, Color.DarkSlateBlue).Will(Return.Value(backBuffer2));
-            ExpectCopyToBackBuffer(backBuffer2);
+                With(device, renderTarget, Color.DarkSlateBlue).Will(Return.Value(renderTarget2));
+            Expect.Once.On(renderTarget2).Method("GetTexture").Will(Return.Value(texture));
+            ExpectCopyToBackBuffer(renderTarget2);
             Expect.Once.On(tweaker).
                 Method("Draw");
             Expect.Once.On(device).
                 Method("Present");
 
-            LimitRunLoop(1);
-
-            executer.Run();
+            executer.Render();
         }
-        
+
         [Test]
-        public void TestRun2TracksTransition()
+        public void TestRender2TracksTransition()
         {
             ITexture newTexture = mockery.NewMock<ITexture>();
             TestInitializeOKNoSong1();
+
+            Expect.Once.On(inputDriver).Method("KeyPressedNoRepeat").With(Keys.F12).Will(Return.Value(false));
 
             EnsureNumTracks(2);
             IDemoTransition transition = RegisterTransition("name1", 1, 0, 10);
@@ -368,41 +353,37 @@ namespace Dope.DDXX.DemoFramework
             Stub.On(tracks[1]).GetProperty("EndTime").Will(Return.Value(1000.0f));
 
             executer.ClearColor = Color.DarkSlateBlue;
-            ExpectStepCalled(new int[] { 0, 1 });
 
-            List<ITexture> textures = new List<ITexture>();
-            textures.Add(backBuffer1);
-            Expect.Once.On(postProcessor).Method("GetTemporaryTextures").
-                With(1, false).Will(Return.Value(textures));
             Expect.Once.On(tracks[0]).Method("Render").
-                With(device, backBuffer1, Color.DarkSlateBlue).Will(Return.Value(backBuffer2));
-            textures = new List<ITexture>();
-            textures.Add(backBuffer2);
+                With(device, renderTarget, Color.DarkSlateBlue).Will(Return.Value(renderTarget2));
+            List<IRenderTarget2D> targets = new List<IRenderTarget2D>();
+            targets.Add(renderTarget3);
             Expect.Once.On(postProcessor).Method("GetTemporaryTextures").
-                With(1, false).Will(Return.Value(textures));
-            Expect.Once.On(postProcessor).Method("AllocateTexture").With(backBuffer2);
+                With(1, false).Will(Return.Value(targets));
+            Expect.Once.On(postProcessor).Method("AllocateTexture").With(renderTarget2);
             Expect.Once.On(tracks[1]).Method("Render").
-                With(device, backBuffer2, Color.DarkSlateBlue).Will(Return.Value(backBuffer1));
-            Expect.Once.On(postProcessor).Method("AllocateTexture").With(backBuffer1);
-            Expect.Once.On(transition).Method("Render").With(backBuffer2, backBuffer1).
-                Will(Return.Value(newTexture));
-            Expect.Once.On(postProcessor).Method("FreeTexture").With(backBuffer1);
-            Expect.Once.On(postProcessor).Method("FreeTexture").With(backBuffer2);
-            ExpectCopyToBackBuffer(newTexture);
+                With(device, renderTarget3, Color.DarkSlateBlue).Will(Return.Value(renderTarget));
+            //Expect.Once.On(postProcessor).Method("AllocateTexture").With(backBuffer1);
+            Expect.Once.On(transition).Method("Render").With(renderTarget2, renderTarget).
+                Will(Return.Value(renderTarget3));
+            Expect.Once.On(postProcessor).Method("FreeTexture").With(renderTarget2);
+            //Expect.Once.On(postProcessor).Method("FreeTexture").With(backBuffer2);
+            Expect.Once.On(renderTarget3).Method("GetTexture").Will(Return.Value(texture));
+            ExpectCopyToBackBuffer(renderTarget3);
             Expect.Once.On(tweaker).
                 Method("Draw");
             Expect.Once.On(device).
                 Method("Present");
 
-            LimitRunLoop(1);
-
-            executer.Run();
+            executer.Render();
         }
 
         [Test]
-        public void TestRun2TracksTransitionNotOnTime()
+        public void TestRender2TracksTransitionNotOnTime()
         {
             TestInitializeOKNoSong1();
+
+            Expect.Once.On(inputDriver).Method("KeyPressedNoRepeat").With(Keys.F12).Will(Return.Value(false));
 
             EnsureNumTracks(2);
             IDemoTransition transition = RegisterTransition("name1", 1, 0, 10);
@@ -411,23 +392,17 @@ namespace Dope.DDXX.DemoFramework
             Time.CurrentTime = 14;
 
             executer.ClearColor = Color.DarkSlateBlue;
-            ExpectStepCalled(new int[] { 0, 1 });
 
-            List<ITexture> textures = new List<ITexture>();
-            textures.Add(backBuffer1);
-            Expect.Once.On(postProcessor).Method("GetTemporaryTextures").
-                With(1, false).Will(Return.Value(textures));
             Expect.Once.On(tracks[1]).Method("Render").
-                With(device, backBuffer1, Color.DarkSlateBlue).Will(Return.Value(backBuffer2));
-            ExpectCopyToBackBuffer(backBuffer2);
+                With(device, renderTarget, Color.DarkSlateBlue).Will(Return.Value(renderTarget2));
+            Expect.Once.On(renderTarget2).Method("GetTexture").Will(Return.Value(texture));
+            ExpectCopyToBackBuffer(renderTarget2);
             Expect.Once.On(tweaker).
                 Method("Draw");
             Expect.Once.On(device).
                 Method("Present");
 
-            LimitRunLoop(1);
-
-            executer.Run();
+            executer.Render();
         }
 
         private void ExpectStepCalled(int[] trackNum)
@@ -460,8 +435,8 @@ namespace Dope.DDXX.DemoFramework
 <Effect class=""BarEffect"" name=""BarName"" startTime=""2.5"" endTime=""5.2"">
 <Parameter name=""Goo"" string=""string value"" />
 <Parameter name=""VecParam"" Vector3=""5.4, 4.3, 3.2"" />
-<Parameter name=""ColParam"" Color=""250, 101, 102, 103"" />
-<Parameter name=""ColParamNamed"" Color=""SlateBlue"" />
+<Parameter name=""ColParam"" Color=""101, 102, 103, 250"" />
+<Parameter name=""ColParamNamed"" Color=""1, 2, 3, 4"" />
 <SetupCall name=""Setup"">
 <Parameter string=""MethodCalled"" />
 </SetupCall>
@@ -488,8 +463,8 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(effectTypes).Method("CreateInstance").With("BarEffect", "BarName", 2.5f, 5.2f).Will(Return.Value(barEffect));
             Expect.Once.On(effectTypes).Method("SetProperty").With(barEffect, "Goo", "string value");
             Expect.Once.On(effectTypes).Method("SetProperty").With(barEffect, "VecParam", new Vector3(5.4f, 4.3f, 3.2f));
-            Expect.Once.On(effectTypes).Method("SetProperty").With(barEffect, "ColParam", Color.FromArgb(250, 101, 102, 103));
-            Expect.Once.On(effectTypes).Method("SetProperty").With(barEffect, "ColParamNamed", Color.SlateBlue);
+            Expect.Once.On(effectTypes).Method("SetProperty").With(barEffect, "ColParam", new Color(101, 102, 103, 250));
+            Expect.Once.On(effectTypes).Method("SetProperty").With(barEffect, "ColParamNamed", new Color(1, 2, 3, 4));
             param.Add("MethodCalled");
             Expect.Once.On(effectTypes).Method("CallSetup").With(barEffect, "Setup", param);
             Expect.Once.On(effectTypes).Method("CreateInstance").With("FooGlow", "GlowName", 3.4f, 4.5f).Will(Return.Value(fooGlow));
@@ -497,6 +472,8 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(effectTypes).Method("CreateInstance").With("FooTransition", "TransitionName", 4.0f, 5.0f).Will(Return.Value(fooTransition));
             Expect.Once.On(effectTypes).Method("SetProperty").With(fooTransition, "TransParameter", 3.4f);
 
+            for (int i = 0; i < 3; i++)
+                Stub.On(tracks[i]).GetProperty("StartTime").Will(Return.Value(0.0f));
             Expect.Once.On(tracks[0]).Method("Register").With(barEffect);
             Expect.Once.On(tracks[1]).Method("Register").With(fooEffect);
             Expect.Once.On(tracks[2]).Method("Register").With(fooGlow);
@@ -511,12 +488,12 @@ namespace Dope.DDXX.DemoFramework
         public void TestInitializeSongFromFile()
         {
             string songXml =
-@"<Demo song=""Dope.DDXX.DemoFramework.dll""></Demo>";
+@"<Demo song=""SongX""></Demo>";
             FileUtility.SetLoadPaths(new string[] { "./" });
             ExpectSoundInitialize();
             Expect.Once.On(soundDriver).
-                Method("CreateSound").
-                With("Dope.DDXX.DemoFramework.dll").
+                Method("PlaySound").
+                With("SongX").
                 Will(Return.Value(sound));
             ExpectPostProcessorInitialize();
             ExpectTweakerInitialize();
@@ -538,17 +515,17 @@ namespace Dope.DDXX.DemoFramework
 
         }
 
-        [Test]
-        public void TestResumeSong()
-        {
-            TestInitializeOKSong();
+        //[Test]
+        //public void TestResumeSong()
+        //{
+        //    TestInitializeOKSong();
 
-            Expect.Once.On(soundDriver).Method("SetPosition");
-            Expect.Once.On(soundDriver).Method("ResumeChannel");
-            Time.Pause();
-            executer.TogglePause();
-            Assert.IsFalse(Time.IsPaused());
-        }
+        //    Expect.Once.On(soundDriver).Method("SetPosition");
+        //    Expect.Once.On(soundDriver).Method("ResumeChannel");
+        //    Time.Pause();
+        //    executer.TogglePause();
+        //    Assert.IsFalse(Time.IsPaused());
+        //}
 
         [Test]
         public void TestResumeNoSong()
@@ -560,16 +537,16 @@ namespace Dope.DDXX.DemoFramework
             Assert.IsFalse(Time.IsPaused());
         }
 
-        [Test]
-        public void TestPauseSong()
-        {
-            TestInitializeOKSong();
+        //[Test]
+        //public void TestPauseSong()
+        //{
+        //    TestInitializeOKSong();
 
-            Expect.Once.On(soundDriver).Method("PauseChannel");
-            Time.Resume();
-            executer.TogglePause();
-            Assert.IsTrue(Time.IsPaused());
-        }
+        //    Expect.Once.On(soundDriver).Method("PauseChannel");
+        //    Time.Resume();
+        //    executer.TogglePause();
+        //    Assert.IsTrue(Time.IsPaused());
+        //}
 
         [Test]
         public void TestPauseNoSong()
@@ -581,27 +558,28 @@ namespace Dope.DDXX.DemoFramework
             Assert.IsTrue(Time.IsPaused());
         }
 
-        [Test]
-        public void TestJumpSong()
-        {
-            EnsureNumTracks(1);
-            Expect.Once.On(tracks[0]).Method("Initialize").WithAnyArguments();
-            Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(100.0f));
-            TestInitializeOKSong();
+        //[Test]
+        //public void TestJumpSong()
+        //{
+        //    EnsureNumTracks(1);
+        //    Expect.Once.On(tracks[0]).Method("Initialize").WithAnyArguments();
+        //    Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(100.0f));
+        //    TestInitializeOKSong();
 
-            Time.CurrentTime = 1.0f;
-            Time.Pause();
-            float t = Time.CurrentTime;
-            Expect.Once.On(soundDriver).Method("SetPosition");
-            executer.JumpInTime(5.0f);
-            Assert.AreEqual(6.0f, Time.CurrentTime, 0.00001f);
-        }
+        //    Time.CurrentTime = 1.0f;
+        //    Time.Pause();
+        //    float t = Time.CurrentTime;
+        //    Expect.Once.On(soundDriver).Method("SetPosition");
+        //    executer.JumpInTime(5.0f);
+        //    Assert.AreEqual(6.0f, Time.CurrentTime, 0.00001f);
+        //}
 
         [Test]
         public void TestJumpNoSong()
         {
             EnsureNumTracks(1);
             Expect.Once.On(tracks[0]).Method("Initialize").WithAnyArguments();
+            Stub.On(tracks[0]).GetProperty("StartTime").Will(Return.Value(0.0f));
             Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(100.0f));
             TestInitializeOKNoSong1();
 
@@ -617,13 +595,14 @@ namespace Dope.DDXX.DemoFramework
         {
             EnsureNumTracks(1);
             Expect.Once.On(tracks[0]).Method("Initialize").WithAnyArguments();
+            Stub.On(tracks[0]).GetProperty("StartTime").Will(Return.Value(0.0f));
             Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(100.0f));
-            TestInitializeOKSong();
+            TestInitializeOKNoSong1();
 
             Time.CurrentTime = 5.0f;
             Time.Pause();
             float t = Time.CurrentTime;
-            Expect.Once.On(soundDriver).Method("SetPosition");
+            //Expect.Once.On(soundDriver).Method("SetPosition");
             executer.JumpInTime(-10.0f);
             Assert.AreEqual(0.0f, Time.CurrentTime, 0.00001f);
         }
@@ -633,13 +612,14 @@ namespace Dope.DDXX.DemoFramework
         {
             EnsureNumTracks(1);
             Expect.Once.On(tracks[0]).Method("Initialize").WithAnyArguments();
+            Stub.On(tracks[0]).GetProperty("StartTime").Will(Return.Value(0.0f));
             Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(10.0f));
-            TestInitializeOKSong();
+            TestInitializeOKNoSong1();
 
             Time.CurrentTime = 5.0f;
             Time.Pause();
             float t = Time.CurrentTime;
-            Expect.Once.On(soundDriver).Method("SetPosition");
+            //Expect.Once.On(soundDriver).Method("SetPosition");
             executer.JumpInTime(10.0f);
             Assert.AreEqual(10.0f, Time.CurrentTime, 0.00001f);
         }
@@ -688,12 +668,12 @@ namespace Dope.DDXX.DemoFramework
         {
             TestInitializeOKSong();
             TestGenerator generator1 = new TestGenerator();
-            ITexture texture = mockery.NewMock<ITexture>();
+            ITexture2D texture = mockery.NewMock<ITexture2D>();
 
             Expect.Once.On(effectTypes).Method("CreateGenerator").With("className").Will(Return.Value(generator1));
             executer.AddGenerator("genName", "className");
             Expect.Once.On(textureBuilder).Method("Generate").
-                With(generator1, 1, 2, 3, Format.A8R8G8B8).Will(Return.Value(texture));
+                With(generator1, 1, 2, 3, SurfaceFormat.Color).Will(Return.Value(texture));
             Expect.Once.On(textureFactory).Method("RegisterTexture").
                 With("texName", texture);
             executer.AddTexture("texName", "genName", 1, 2, 3);
@@ -797,14 +777,14 @@ namespace Dope.DDXX.DemoFramework
         private void ExpectSoundInitialize()
         {
             Expect.Once.On(soundDriver).
-                 Method("Initialize");
+                 Method("Initialize").With("Test");
         }
 
         private void ExpectPostProcessorInitialize()
         {
             Expect.Once.On(postProcessor).
                 Method("Initialize").
-                With(device, textureFactory, effectFactory);
+                With(device, graphicsFactory, textureFactory, effectFactory);
         }
 
         private void ExpectTweakerInitialize()
@@ -904,7 +884,7 @@ namespace Dope.DDXX.DemoFramework
     public class FooTransition : BaseDemoTransition
     {
         public FooTransition(string name, float start, float end) : base(name, start, end) { }
-        public override ITexture Combine(ITexture fromTexture, ITexture toTexture)
+        public override IRenderTarget2D Combine(IRenderTarget2D fromTexture, IRenderTarget2D toTexture)
         {
             throw new Exception("The method or operation is not implemented.");
         }
@@ -913,7 +893,7 @@ namespace Dope.DDXX.DemoFramework
     {
         public IGenerator[] Inputs = new IGenerator[100];
 
-        public Vector4  GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        public Vector4  GetPixel(Vector2 textureCoordinate)
         {
             throw new Exception("The method or operation is not implemented.");
         }

@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.DemoFramework;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
-using Microsoft.DirectX;
 using Dope.DDXX.Utility;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.DemoEffects
 {
@@ -33,7 +32,7 @@ namespace Dope.DDXX.DemoEffects
 
         protected override void SetParameters()
         {
-            PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
+            PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);
             PostProcessor.SetValue("RingsDistance", distance);
             PostProcessor.SetValue("RingsScale", scale);
             float t = Time.CurrentTime;

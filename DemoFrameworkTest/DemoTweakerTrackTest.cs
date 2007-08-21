@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 using NUnit.Framework;
 using NMock2;
 using Dope.DDXX.Graphics;
-using Microsoft.DirectX.Direct3D;
-using System.IO;
-using System.Drawing;
 using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.DemoFramework
@@ -49,7 +47,7 @@ namespace Dope.DDXX.DemoFramework
         {
             Expect.Once.On(userInterface).
                 Method("Initialize");
-            tweaker.Initialize(registrator);
+            tweaker.Initialize(registrator, graphicsFactory, textureFactory);
         }
 
         private void InitializeEffects(int numEffects, int numPostEffects)
@@ -60,7 +58,7 @@ namespace Dope.DDXX.DemoFramework
                 track.Register(CreateMockPostEffect("name", 0.0f, 10.0f));
             Expect.Once.On(userInterface).
                 Method("Initialize");
-            tweaker.Initialize(registrator);
+            tweaker.Initialize(registrator, graphicsFactory, textureFactory);
         }
 
         [Test]
@@ -185,14 +183,14 @@ namespace Dope.DDXX.DemoFramework
                         Assert.AreEqual(1, mainBox.Children[1].Children.Count);
                         Assert.AreEqual(12 + 13, mainBox.Children[1].Children[0].Children.Count);
                         Assert.AreEqual("<--MockObject", ((TextControl)mainBox.Children[1].Children[0].Children[12].Children[0]).Text);
-                        Assert.AreEqual(settings.SelectedColor, ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Color);
+                        Assert.AreEqual(settings.SelectedColor.ToVector3(), ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Color.ToVector3());
                         for (int i = 0; i < 11; i++)
                         {
                             Assert.AreEqual("MockObject", ((TextControl)mainBox.Children[1].Children[0].Children[13 + i].Children[0]).Text);
-                            Assert.AreEqual(settings.UnselectedColor, ((BoxControl)mainBox.Children[1].Children[0].Children[13 + i]).Color);
+                            Assert.AreEqual(settings.UnselectedColor.ToVector3(), ((BoxControl)mainBox.Children[1].Children[0].Children[13 + i]).Color.ToVector3());
                         }
                         Assert.AreEqual("MockObject-->", ((TextControl)mainBox.Children[1].Children[0].Children[24].Children[0]).Text);
-                        Assert.AreEqual(settings.UnselectedColor, ((BoxControl)mainBox.Children[1].Children[0].Children[24]).Color);
+                        Assert.AreEqual(settings.UnselectedColor.ToVector3(), ((BoxControl)mainBox.Children[1].Children[0].Children[24]).Color.ToVector3());
                         break;
                     case "TestDraw13Effects2":
                         // mainWindow
@@ -208,14 +206,14 @@ namespace Dope.DDXX.DemoFramework
                         Assert.AreEqual(1, mainBox.Children[1].Children.Count);
                         Assert.AreEqual(12 + 13, mainBox.Children[1].Children[0].Children.Count);
                         Assert.AreEqual("<--MockObject", ((TextControl)mainBox.Children[1].Children[0].Children[12].Children[0]).Text);
-                        Assert.AreEqual(settings.UnselectedColor, ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Color);
+                        Assert.AreEqual(settings.UnselectedColor.ToVector3(), ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Color.ToVector3());
                         for (int i = 0; i < 11; i++)
                         {
                             Assert.AreEqual("MockObject", ((TextControl)mainBox.Children[1].Children[0].Children[13 + i].Children[0]).Text);
-                            Assert.AreEqual(settings.UnselectedColor, ((BoxControl)mainBox.Children[1].Children[0].Children[13 + i]).Color);
+                            Assert.AreEqual(settings.UnselectedColor.ToVector3(), ((BoxControl)mainBox.Children[1].Children[0].Children[13 + i]).Color.ToVector3());
                         }
                         Assert.AreEqual("MockObject-->", ((TextControl)mainBox.Children[1].Children[0].Children[24].Children[0]).Text);
-                        Assert.AreEqual(settings.SelectedColor, ((BoxControl)mainBox.Children[1].Children[0].Children[24]).Color);
+                        Assert.AreEqual(settings.SelectedColor.ToVector3(), ((BoxControl)mainBox.Children[1].Children[0].Children[24]).Color.ToVector3());
                         break;
                     default:
                         Assert.Fail();
@@ -227,13 +225,9 @@ namespace Dope.DDXX.DemoFramework
 
         private void ExpectDraw(string name)
         {
-            Expect.Once.On(device).
-                Method("BeginScene");
             Expect.Once.On(userInterface).
                 Method("DrawControl").
                 With(new ControlMatcher(name, settings));
-            Expect.Once.On(device).
-                Method("EndScene");
         }
 
     }

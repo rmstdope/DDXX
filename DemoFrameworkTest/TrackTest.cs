@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Dope.DDXX.Graphics;
 using NUnit.Framework;
 using NMock2;
+using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
 using Dope.DDXX.TextureBuilder;
-using System.Drawing;
-using Microsoft.DirectX.Direct3D;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -18,7 +17,6 @@ namespace Dope.DDXX.DemoFramework
         private IEffectChangeListener effectChangeListener;
         private ITextureBuilder textureBuilder;
         private IDemoMixer mixer;
-        private ISurface originalSurface;
 
         [SetUp]
         public override void SetUp()
@@ -29,7 +27,6 @@ namespace Dope.DDXX.DemoFramework
             effectChangeListener = mockery.NewMock<IEffectChangeListener>();
             textureBuilder = mockery.NewMock<ITextureBuilder>();
             mixer = mockery.NewMock<IDemoMixer>();
-            originalSurface = mockery.NewMock<ISurface>();
         }
 
         [TearDown]
@@ -245,8 +242,8 @@ namespace Dope.DDXX.DemoFramework
             track.Register(e1);
             IDemoPostEffect pe1 = CreateMockPostEffect("name", 5, 12);
             track.Register(pe1);
-            Expect.Once.On(e1).Method("Initialize").With(graphicsFactory, effectFactory, device, mixer);
-            Expect.Once.On(pe1).Method("Initialize").With(postProcessor, textureFactory, textureBuilder, device);
+            ExpectInitialize(e1);
+            ExpectInitialize(pe1);
             track.Initialize(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, mixer, postProcessor);
         }
 
@@ -257,10 +254,10 @@ namespace Dope.DDXX.DemoFramework
             {
                 IDemoEffect e1 = CreateMockEffect("name", 5, 10);
                 track.Register(e1);
-                Expect.Once.On(e1).Method("Initialize").With(graphicsFactory, effectFactory, device, mixer);
+                ExpectInitialize(e1);
                 IDemoPostEffect pe1 = CreateMockPostEffect("name", 5, 12);
                 track.Register(pe1);
-                Expect.Once.On(pe1).Method("Initialize").With(postProcessor, textureFactory, textureBuilder, device);
+                ExpectInitialize(pe1);
             }
             track.Initialize(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, mixer, postProcessor);
         }
@@ -311,12 +308,11 @@ namespace Dope.DDXX.DemoFramework
             using (mockery.Ordered)
             {
                 ExpectRenderStart(Color.Aquamarine);
-                Expect.Once.On(device).Method("BeginScene");
-                Expect.Once.On(device).Method("EndScene");
-                Expect.Once.On(postProcessor).Method("StartFrame").With(texture);
+                ExpectRenderEffectEnd();
+                Expect.Once.On(postProcessor).Method("StartFrame").With(renderTarget);
                 ExpectRenderEnd();
             }
-            Assert.AreSame(texture, track.Render(device, texture, Color.Aquamarine));
+            Assert.AreSame(renderTarget, track.Render(device, renderTarget, Color.Aquamarine));
         }
 
         [Test]
@@ -331,13 +327,12 @@ namespace Dope.DDXX.DemoFramework
             using (mockery.Ordered)
             {
                 ExpectRenderStart(Color.DarkSlateBlue);
-                Expect.Once.On(device).Method("BeginScene");
                 Expect.Once.On(e1).Method("Render");
-                Expect.Once.On(device).Method("EndScene");
-                Expect.Once.On(postProcessor).Method("StartFrame").With(texture);
+                ExpectRenderEffectEnd();
+                Expect.Once.On(postProcessor).Method("StartFrame").With(renderTarget);
                 ExpectRenderEnd();
             }
-            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
+            Assert.AreSame(renderTarget, track.Render(device, renderTarget, Color.DarkSlateBlue));
         }
 
         [Test]
@@ -355,14 +350,13 @@ namespace Dope.DDXX.DemoFramework
             using (mockery.Ordered)
             {
                 ExpectRenderStart(Color.DarkSlateBlue);
-                Expect.Once.On(device).Method("BeginScene");
                 Expect.Once.On(e1).Method("Render");
                 Expect.Once.On(e2).Method("Render");
-                Expect.Once.On(device).Method("EndScene");
-                Expect.Once.On(postProcessor).Method("StartFrame").With(texture);
+                ExpectRenderEffectEnd();
+                Expect.Once.On(postProcessor).Method("StartFrame").With(renderTarget);
                 ExpectRenderEnd();
             }
-            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
+            Assert.AreSame(renderTarget, track.Render(device, renderTarget, Color.DarkSlateBlue));
         }
 
         [Test]
@@ -380,14 +374,13 @@ namespace Dope.DDXX.DemoFramework
             using (mockery.Ordered)
             {
                 ExpectRenderStart(Color.DarkSlateBlue);
-                Expect.Once.On(device).Method("BeginScene");
                 Expect.Once.On(e2).Method("Render");
                 Expect.Once.On(e1).Method("Render");
-                Expect.Once.On(device).Method("EndScene");
-                Expect.Once.On(postProcessor).Method("StartFrame").With(texture);
+                ExpectRenderEffectEnd();
+                Expect.Once.On(postProcessor).Method("StartFrame").With(renderTarget);
                 ExpectRenderEnd();
             }
-            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
+            Assert.AreSame(renderTarget, track.Render(device, renderTarget, Color.DarkSlateBlue));
         }
 
         [Test]
@@ -402,13 +395,12 @@ namespace Dope.DDXX.DemoFramework
             using (mockery.Ordered)
             {
                 ExpectRenderStart(Color.DarkSlateBlue);
-                Expect.Once.On(device).Method("BeginScene");
-                Expect.Once.On(device).Method("EndScene");
-                Expect.Once.On(postProcessor).Method("StartFrame").With(texture);
+                ExpectRenderEffectEnd();
+                Expect.Once.On(postProcessor).Method("StartFrame").With(renderTarget);
                 Expect.Once.On(pe1).Method("Render");
                 ExpectRenderEnd();
             }
-            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
+            Assert.AreSame(renderTarget, track.Render(device, renderTarget, Color.DarkSlateBlue));
         }
 
         [Test]
@@ -426,14 +418,13 @@ namespace Dope.DDXX.DemoFramework
             using (mockery.Ordered)
             {
                 ExpectRenderStart(Color.DarkSlateBlue);
-                Expect.Once.On(device).Method("BeginScene");
-                Expect.Once.On(device).Method("EndScene");
-                Expect.Once.On(postProcessor).Method("StartFrame").With(texture);
+                ExpectRenderEffectEnd();
+                Expect.Once.On(postProcessor).Method("StartFrame").With(renderTarget);
                 Expect.Once.On(pe1).Method("Render");
                 Expect.Once.On(pe2).Method("Render");
                 ExpectRenderEnd();
             }
-            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
+            Assert.AreSame(renderTarget, track.Render(device, renderTarget, Color.DarkSlateBlue));
         }
 
         [Test]
@@ -451,14 +442,13 @@ namespace Dope.DDXX.DemoFramework
             using (mockery.Ordered)
             {
                 ExpectRenderStart(Color.DarkSlateBlue);
-                Expect.Once.On(device).Method("BeginScene");
-                Expect.Once.On(device).Method("EndScene");
-                Expect.Once.On(postProcessor).Method("StartFrame").With(texture);
+                ExpectRenderEffectEnd();
+                Expect.Once.On(postProcessor).Method("StartFrame").With(renderTarget);
                 Expect.Once.On(pe2).Method("Render");
                 Expect.Once.On(pe1).Method("Render");
                 ExpectRenderEnd();
             }
-            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
+            Assert.AreSame(renderTarget, track.Render(device, renderTarget, Color.DarkSlateBlue));
         }
 
         [Test]
@@ -478,16 +468,15 @@ namespace Dope.DDXX.DemoFramework
             using (mockery.Ordered)
             {
                 ExpectRenderStart(Color.DarkSlateBlue);
-                Expect.Once.On(device).Method("BeginScene");
-                Expect.Once.On(device).Method("EndScene");
-                Expect.Once.On(postProcessor).Method("StartFrame").With(texture);
+                ExpectRenderEffectEnd();
+                Expect.Once.On(postProcessor).Method("StartFrame").With(renderTarget);
                 for (int i = 0; i < 10; i++)
                 {
                     Expect.Once.On(postEffects[i]).Method("Render");
                 }
                 ExpectRenderEnd();
             }
-            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
+            Assert.AreSame(renderTarget, track.Render(device, renderTarget, Color.DarkSlateBlue));
         }
 
         [Test]
@@ -511,16 +500,15 @@ namespace Dope.DDXX.DemoFramework
             using (mockery.Ordered)
             {
                 ExpectRenderStart(Color.DarkSlateBlue);
-                Expect.Once.On(device).Method("BeginScene");
                 Expect.Once.On(e1).Method("Render");
                 Expect.Once.On(e2).Method("Render");
-                Expect.Once.On(device).Method("EndScene");
-                Expect.Once.On(postProcessor).Method("StartFrame").With(texture);
+                ExpectRenderEffectEnd();
+                Expect.Once.On(postProcessor).Method("StartFrame").With(renderTarget);
                 Expect.Once.On(pe1).Method("Render");
                 Expect.Once.On(pe2).Method("Render");
                 ExpectRenderEnd();
             }
-            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
+            Assert.AreSame(renderTarget, track.Render(device, renderTarget, Color.DarkSlateBlue));
         }
 
         [Test]
@@ -544,14 +532,13 @@ namespace Dope.DDXX.DemoFramework
             using (mockery.Ordered)
             {
                 ExpectRenderStart(Color.DarkSlateBlue);
-                Expect.Once.On(device).Method("BeginScene");
                 Expect.Once.On(e1).Method("Render");
-                Expect.Once.On(device).Method("EndScene");
-                Expect.Once.On(postProcessor).Method("StartFrame").With(texture);
+                ExpectRenderEffectEnd();
+                Expect.Once.On(postProcessor).Method("StartFrame").With(renderTarget);
                 Expect.Once.On(pe1).Method("Render");
                 ExpectRenderEnd();
             }
-            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
+            Assert.AreSame(renderTarget, track.Render(device, renderTarget, Color.DarkSlateBlue));
         }
 
         [Test]
@@ -653,19 +640,33 @@ namespace Dope.DDXX.DemoFramework
             Assert.IsFalse(track.IsPostEffectRegistered("unknownname", e1.GetType()));
         }
 
-        private void ExpectRenderEnd()
-        {
-            Expect.Once.On(device).Method("SetRenderTarget").With(0, originalSurface);
-            Expect.Once.On(originalSurface).Method("Dispose");
-            Expect.Once.On(postProcessor).GetProperty("OutputTexture").Will(Return.Value(texture));
-        }
-
         private void ExpectRenderStart(Color color)
         {
-            Expect.Once.On(device).Method("GetRenderTarget").With(0).Will(Return.Value(originalSurface));
-            Expect.Once.On(device).Method("SetRenderTarget").With(0, surface);
+            Expect.Once.On(device).Method("SetRenderTarget").With(0, renderTarget);
             Expect.Once.On(device).Method("Clear").
-                With(ClearFlags.Target | ClearFlags.ZBuffer, color, 1.0f, 0);
+                With(ClearOptions.Target | ClearOptions.DepthBuffer, color, 1.0f, 0);
+        }
+
+        private void ExpectRenderEffectEnd()
+        {
+            Expect.Once.On(device).Method("ResolveRenderTarget").With(0);
+        }
+
+        private void ExpectRenderEnd()
+        {
+            //Expect.Once.On(device).Method("SetRenderTarget").With(0, originalSurface);
+            //Expect.Once.On(originalSurface).Method("Dispose");
+            Expect.Once.On(postProcessor).GetProperty("OutputTexture").Will(Return.Value(renderTarget));
+        }
+
+        private void ExpectInitialize(IDemoPostEffect pe1)
+        {
+            Expect.Once.On(pe1).Method("Initialize").With(graphicsFactory, postProcessor, textureFactory, textureBuilder);
+        }
+
+        private void ExpectInitialize(IDemoEffect e1)
+        {
+            Expect.Once.On(e1).Method("Initialize").With(graphicsFactory, effectFactory, textureFactory, mixer, postProcessor);
         }
 
     }

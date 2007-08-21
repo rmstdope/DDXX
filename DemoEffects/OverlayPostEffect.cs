@@ -4,14 +4,13 @@ using System.Text;
 using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Utility;
 using Dope.DDXX.Graphics;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoEffects
 {
     public class OverlayPostEffect : BaseDemoPostEffect
     {
-        private ITexture texture;
+        private ITexture2D texture;
 
         private string filename;
         private float blendFactor = 1.0f;
@@ -55,7 +54,7 @@ namespace Dope.DDXX.DemoEffects
             set { filename = value; }
         }
 
-        public ITexture Texture
+        public ITexture2D Texture
         {
             set { texture = value; }
         }
@@ -87,9 +86,9 @@ namespace Dope.DDXX.DemoEffects
         public override void Render()
         {
             if (addNoise)
-                PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.InvSourceColor, Color.White);
+                PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.InverseSourceColor, Color.White);
             if (subtractNoise)
-                PostProcessor.SetBlendParameters(BlendOperation.RevSubtract, Blend.One, Blend.One, Color.White);
+                PostProcessor.SetBlendParameters(BlendFunction.ReverseSubtract, Blend.One, Blend.One, Color.White);
             float factor = BlendFactor * GetFadeAlpha();
             PostProcessor.SetValue("Color", new float[] { factor, factor, factor, factor});
 

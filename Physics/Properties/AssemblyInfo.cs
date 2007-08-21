@@ -5,12 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Phsyics")]
-[assembly: AssemblyDescription("The Physics parts of DDXX")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Dope Demo Productions")]
-[assembly: AssemblyProduct("Phsyics")]
-[assembly: AssemblyCopyright("Copyright © Dope 2006")]
+[assembly: AssemblyTitle("Physics")]
+[assembly: AssemblyProduct("Physics")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyCompany("Dope")]
+[assembly: AssemblyCopyright("Copyright © Dope 2007")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("4fc92b71-6625-429d-8c9f-edd83f1f96f1")]
+[assembly: Guid("a6f8482d-97aa-4a49-920d-7bd71849d4bd")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -29,7 +28,4 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-// You can specify all the values or you can default the Revision and Build Numbers 
-// by using the '*' as shown below:
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using NMock2;
-using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.DemoFramework

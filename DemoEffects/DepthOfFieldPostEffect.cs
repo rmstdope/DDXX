@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.DemoFramework;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
 using Dope.DDXX.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoEffects
 {
@@ -30,9 +29,9 @@ namespace Dope.DDXX.DemoEffects
             int numTextures = 1;
             if (numPasses > 1)
                 numTextures = 2;
-            List<ITexture> textures = PostProcessor.GetTemporaryTextures(numTextures, false);
+            List<IRenderTarget2D> textures = PostProcessor.GetTemporaryTextures(numTextures, false);
 
-            PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
+            PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);
             PostProcessor.Process("DepthOfField", PostProcessor.OutputTexture, textures[0]);
             for (int i = 0; i < numPasses - 1; i++)
             {
