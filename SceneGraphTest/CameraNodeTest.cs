@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using Microsoft.DirectX;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.SceneGraph
 {
@@ -39,8 +39,8 @@ namespace Dope.DDXX.SceneGraph
             float zNear2 = 0.5f;
             float zFar1 = 1000.0f;
             float zFar2 = 5000.0f;
-            Matrix exp1 = Matrix.PerspectiveFovLH(fov1, aspect1, zNear1, zFar1);
-            Matrix exp2 = Matrix.PerspectiveFovLH(fov2, aspect2, zNear2, zFar2);
+            Matrix exp1 = Matrix.CreatePerspectiveFieldOfView(fov1, aspect1, zNear1, zFar1);
+            Matrix exp2 = Matrix.CreatePerspectiveFieldOfView(fov2, aspect2, zNear2, zFar2);
 
             CameraNode c1 = new CameraNode("Name");
             Assert.IsTrue(exp1.Equals(c1.ProjectionMatrix));
@@ -62,11 +62,11 @@ namespace Dope.DDXX.SceneGraph
         {
             Vector3 vec = new Vector3(1, 2, 3);
             CameraNode c1 = new CameraNode("Name");
-            AssertVectors(new Vector3(1, 2, 3), Vector3.TransformCoordinate(vec, c1.ViewMatrix));
+            AssertVectors(new Vector3(1, 2, 3), Vector3.Transform(vec, c1.ViewMatrix));
 
             c1.WorldState.Position = new Vector3(100, 200, 300);
-            c1.WorldState.Rotation = Matrix.RotationY((float)Math.PI);
-            AssertVectors(new Vector3(99, -198, 297), Vector3.TransformCoordinate(vec, c1.ViewMatrix));
+            c1.WorldState.Rotation = Matrix.CreateRotationY((float)Math.PI);
+            AssertVectors(new Vector3(99, -198, 297), Vector3.Transform(vec, c1.ViewMatrix));
         }
 
         [Test]
