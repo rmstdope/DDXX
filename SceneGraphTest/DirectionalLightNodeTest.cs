@@ -4,6 +4,7 @@ using System.Text;
 using NUnit.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.SceneGraph
 {

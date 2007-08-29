@@ -63,10 +63,6 @@
       <XNAUseContentPipeline>false</XNAUseContentPipeline>
       <Name>DirectionalLightNodeTest</Name>
     </Compile>
-    <Compile Include="LightStateTest.cs">
-      <XNAUseContentPipeline>false</XNAUseContentPipeline>
-      <Name>LightStateTest</Name>
-    </Compile>
     <Compile Include="NodeBaseTest.cs">
       <XNAUseContentPipeline>false</XNAUseContentPipeline>
       <Name>NodeBaseTest</Name>
