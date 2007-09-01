@@ -4,107 +4,162 @@ using System.Text;
 using System.IO;
 using NUnit.Framework;
 using NMock2;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.SceneGraph
 {
     [TestFixture]
-    public class ModelNodeTest
+    public class ModelNodeTest : D3DMockTest
     {
-        private Mockery mockery;
-        private IMesh mesh;
-        private IEffect effect;
-        private IEffectHandler effectHandler;
+        private IModel model;
+        private IModelMesh modelMesh1;
+        private IModelMesh modelMesh2;
+        private IModelMeshPart modelMeshPart1;
+        private IModelMeshPart modelMeshPart2;
+        private IModelMeshPart modelMeshPart3;
         private IScene scene;
         private IRenderableCamera camera;
-        private IModel model;
-        private IDevice device;
-        private ModelMaterial[] materials;
+        private IMaterialHandler materialHandler1;
+        private IMaterialHandler materialHandler2;
+        private IMaterialHandler materialHandler3;
         private Matrix worldMatrix = Matrix.Identity;
-        private Matrix viewMatrix = Matrix.RotationX(4.0f);
-        private Matrix projectionMatrix = Matrix.RotationY(1.3f);
-        private ColorValue sceneAmbient = new ColorValue(0.1f, 0.2f, 0.3f);
+        private Matrix viewMatrix = Matrix.CreateRotationX(4.0f);
+        private Matrix projectionMatrix = Matrix.CreateRotationY(1.3f);
+        private Color sceneAmbient = new Color(1, 2, 3);
+        private LightState lightState = new LightState();
 
         private ModelNode node;
 
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
-            mockery = new Mockery();
-            mesh = mockery.NewMock<IMesh>();
-            effect = mockery.NewMock<IEffect>();
-            effectHandler = mockery.NewMock<IEffectHandler>();
+            base.SetUp();
+
+            model = mockery.NewMock<IModel>();
             scene = mockery.NewMock<IScene>();
             camera = mockery.NewMock<IRenderableCamera>();
-            model = mockery.NewMock<IModel>();
-            device = mockery.NewMock<IDevice>();
-            Material m = new Material();
-            m.AmbientColor = new ColorValue(1, 1, 1);
-            materials = new ModelMaterial[2];
-            materials[0] = new ModelMaterial(m, null);
-            materials[1] = new ModelMaterial(new Material(), null);
+            modelMesh1 = mockery.NewMock<IModelMesh>();
+            modelMesh2 = mockery.NewMock<IModelMesh>();
+            modelMeshPart1 = mockery.NewMock<IModelMeshPart>();
+            modelMeshPart2 = mockery.NewMock<IModelMeshPart>();
+            modelMeshPart3 = mockery.NewMock<IModelMeshPart>();
+            materialHandler1 = mockery.NewMock<IMaterialHandler>();
+            materialHandler2 = mockery.NewMock<IMaterialHandler>();
+            materialHandler3 = mockery.NewMock<IMaterialHandler>();
 
-            Stub.On(effectHandler).GetProperty("Effect").Will(Return.Value(effect));
             Stub.On(scene).GetProperty("ActiveCamera").Will(Return.Value(camera));
+            Stub.On(scene).GetProperty("AmbientColor").Will(Return.Value(sceneAmbient));
             Stub.On(camera).GetProperty("ViewMatrix").Will(Return.Value(viewMatrix));
             Stub.On(camera).GetProperty("ProjectionMatrix").Will(Return.Value(projectionMatrix));
-            Stub.On(scene).GetProperty("AmbientColor").Will(Return.Value(sceneAmbient));
-            Stub.On(model).GetProperty("Mesh").Will(Return.Value(mesh));
-            Stub.On(model).GetProperty("Materials").Will(Return.Value(materials));
 
-            node = new ModelNode("Name", model, effectHandler, device);
         }
 
         [TearDown]
-        public void TearDown()
+        public override void TearDown()
         {
-            mockery.VerifyAllExpectationsHaveBeenMet();
-        }
-
-        class MaterialMatcher : Matcher
-        {
-            private ModelMaterial material;
-
-            public MaterialMatcher(ModelMaterial material)
-            {
-                this.material = material;
-            }
-
-            public override bool Matches(object o)
-            {
-                if (!(o is ModelMaterial)) return false;
-                ModelMaterial m = (ModelMaterial)o;
-
-                if (m.Ambient == material.Ambient &&
-                    m.Diffuse == material.Diffuse &&
-                    m.NormalTexture == material.NormalTexture &&
-                    m.DiffuseTexture == m.DiffuseTexture)
-                    return true;
-
-                return false;
-            }
-
-            public override void DescribeTo(TextWriter writer)
-            {
-                writer.Write(material.ToString());
-            }
+            base.TearDown();
         }
 
         [Test]
-        public void RenderTestOK()
+        public void RenderOnePart()
         {
-            Expect.Once.On(model).Method("Render").With(device, effectHandler, sceneAmbient, worldMatrix, viewMatrix, projectionMatrix);
+            // Setup
+            CreateWithSinglePart();
+            Expect.Once.On(modelMeshPart1).GetProperty("Tag").Will(Return.Value(materialHandler1));
+            Expect.Once.On(materialHandler1).Method("SetupRendering").
+                With(worldMatrix, viewMatrix, projectionMatrix, sceneAmbient, null);
+            Expect.Once.On(renderState).SetProperty("CullMode").To(CullMode.CullCounterClockwiseFace);
+            Expect.Once.On(modelMesh1).Method("Draw");
+
+            // Exercise SUT
+            node.Render(scene);
+        }
+
+        [Test]
+        public void RenderOnePartWithLightState()
+        {
+            // Setup
+            CreateWithSinglePart();
+            node.SetLightState(lightState);
+            Expect.Once.On(modelMeshPart1).GetProperty("Tag").Will(Return.Value(materialHandler1));
+            Expect.Once.On(materialHandler1).Method("SetupRendering").
+                With(worldMatrix, viewMatrix, projectionMatrix, sceneAmbient, lightState);
+            Expect.Once.On(renderState).SetProperty("CullMode").To(CullMode.CullCounterClockwiseFace);
+            Expect.Once.On(modelMesh1).Method("Draw");
+
+            // Exercise SUT
+            node.Render(scene);
+        }
+
+        [Test]
+        public void RenderOnePartDifferentCullMode()
+        {
+            // Setup
+            CreateWithSinglePart();
+            node.CullMode = CullMode.None;
+            Expect.Once.On(modelMeshPart1).GetProperty("Tag").Will(Return.Value(materialHandler1));
+            Expect.Once.On(materialHandler1).Method("SetupRendering").
+                With(worldMatrix, viewMatrix, projectionMatrix, sceneAmbient, null);
+            Expect.Once.On(renderState).SetProperty("CullMode").To(CullMode.None);
+            Expect.Once.On(modelMesh1).Method("Draw");
+
+            // Exercise SUT
+            node.Render(scene);
+        }
+
+        [Test]
+        public void RenderThreeParts()
+        {
+            // Setup
+            CreateWithThreeParts();
+            Expect.Once.On(modelMeshPart1).GetProperty("Tag").Will(Return.Value(materialHandler1));
+            Expect.Once.On(modelMeshPart2).GetProperty("Tag").Will(Return.Value(materialHandler2));
+            Expect.Once.On(modelMeshPart3).GetProperty("Tag").Will(Return.Value(materialHandler3));
+            Expect.Once.On(materialHandler1).Method("SetupRendering").
+                With(worldMatrix, viewMatrix, projectionMatrix, sceneAmbient, null);
+            Expect.Once.On(materialHandler2).Method("SetupRendering").
+                With(worldMatrix, viewMatrix, projectionMatrix, sceneAmbient, null);
+            Expect.Once.On(materialHandler3).Method("SetupRendering").
+                With(worldMatrix, viewMatrix, projectionMatrix, sceneAmbient, null);
+            Expect.Exactly(2).On(renderState).SetProperty("CullMode").To(CullMode.CullCounterClockwiseFace);
+            Expect.Once.On(modelMesh1).Method("Draw");
+            Expect.Once.On(modelMesh2).Method("Draw");
+
+            // Exercise SUT
             node.Render(scene);
         }
 
         [Test]
         public void TestStep()
         {
-            Expect.Once.On(model).Method("Step");
-            node.Step(null);
+            // Setup
+            CreateWithSinglePart();
+
+            // Exercise SUT
+            node.Step();
         }
+
+        private void CreateWithSinglePart()
+        {
+            StubModelMesh(model, new IModelMesh[] { modelMesh1 });
+            StubModelMeshPart(modelMesh1, new IModelMeshPart[] { modelMeshPart1 });
+            Expect.Once.On(modelMeshPart1).SetProperty("Tag").To(Is.NotNull);
+            node = new ModelNode("Name", model, device);
+        }
+
+        private void CreateWithThreeParts()
+        {
+            StubModelMesh(model, new IModelMesh[] { modelMesh1, modelMesh2 });
+            StubModelMeshPart(modelMesh1, new IModelMeshPart[] { modelMeshPart1, modelMeshPart2 });
+            StubModelMeshPart(modelMesh2, new IModelMeshPart[] { modelMeshPart3 });
+            Expect.Once.On(modelMeshPart1).SetProperty("Tag").To(Is.NotNull);
+            Expect.Once.On(modelMeshPart2).SetProperty("Tag").To(Is.NotNull);
+            Expect.Once.On(modelMeshPart3).SetProperty("Tag").To(Is.NotNull);
+            node = new ModelNode("Name", model, device);
+        }
+
     }
 }
