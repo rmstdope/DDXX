@@ -68,7 +68,7 @@ namespace Dope.DDXX.SceneGraph
         {
             // Setup
             CreateWithSinglePart();
-            Expect.Once.On(modelMeshPart1).GetProperty("Tag").Will(Return.Value(materialHandler1));
+            Expect.Once.On(modelMeshPart1).GetProperty("MaterialHandler").Will(Return.Value(materialHandler1));
             Expect.Once.On(materialHandler1).Method("SetupRendering").
                 With(worldMatrix, viewMatrix, projectionMatrix, sceneAmbient, null);
             Expect.Once.On(renderState).SetProperty("CullMode").To(CullMode.CullCounterClockwiseFace);
@@ -84,7 +84,7 @@ namespace Dope.DDXX.SceneGraph
             // Setup
             CreateWithSinglePart();
             node.SetLightState(lightState);
-            Expect.Once.On(modelMeshPart1).GetProperty("Tag").Will(Return.Value(materialHandler1));
+            Expect.Once.On(modelMeshPart1).GetProperty("MaterialHandler").Will(Return.Value(materialHandler1));
             Expect.Once.On(materialHandler1).Method("SetupRendering").
                 With(worldMatrix, viewMatrix, projectionMatrix, sceneAmbient, lightState);
             Expect.Once.On(renderState).SetProperty("CullMode").To(CullMode.CullCounterClockwiseFace);
@@ -100,7 +100,7 @@ namespace Dope.DDXX.SceneGraph
             // Setup
             CreateWithSinglePart();
             node.CullMode = CullMode.None;
-            Expect.Once.On(modelMeshPart1).GetProperty("Tag").Will(Return.Value(materialHandler1));
+            Expect.Once.On(modelMeshPart1).GetProperty("MaterialHandler").Will(Return.Value(materialHandler1));
             Expect.Once.On(materialHandler1).Method("SetupRendering").
                 With(worldMatrix, viewMatrix, projectionMatrix, sceneAmbient, null);
             Expect.Once.On(renderState).SetProperty("CullMode").To(CullMode.None);
@@ -115,9 +115,9 @@ namespace Dope.DDXX.SceneGraph
         {
             // Setup
             CreateWithThreeParts();
-            Expect.Once.On(modelMeshPart1).GetProperty("Tag").Will(Return.Value(materialHandler1));
-            Expect.Once.On(modelMeshPart2).GetProperty("Tag").Will(Return.Value(materialHandler2));
-            Expect.Once.On(modelMeshPart3).GetProperty("Tag").Will(Return.Value(materialHandler3));
+            Expect.Once.On(modelMeshPart1).GetProperty("MaterialHandler").Will(Return.Value(materialHandler1));
+            Expect.Once.On(modelMeshPart2).GetProperty("MaterialHandler").Will(Return.Value(materialHandler2));
+            Expect.Once.On(modelMeshPart3).GetProperty("MaterialHandler").Will(Return.Value(materialHandler3));
             Expect.Once.On(materialHandler1).Method("SetupRendering").
                 With(worldMatrix, viewMatrix, projectionMatrix, sceneAmbient, null);
             Expect.Once.On(materialHandler2).Method("SetupRendering").
@@ -146,7 +146,6 @@ namespace Dope.DDXX.SceneGraph
         {
             StubModelMesh(model, new IModelMesh[] { modelMesh1 });
             StubModelMeshPart(modelMesh1, new IModelMeshPart[] { modelMeshPart1 });
-            Expect.Once.On(modelMeshPart1).SetProperty("Tag").To(Is.NotNull);
             node = new ModelNode("Name", model, device);
         }
 
@@ -155,9 +154,6 @@ namespace Dope.DDXX.SceneGraph
             StubModelMesh(model, new IModelMesh[] { modelMesh1, modelMesh2 });
             StubModelMeshPart(modelMesh1, new IModelMeshPart[] { modelMeshPart1, modelMeshPart2 });
             StubModelMeshPart(modelMesh2, new IModelMeshPart[] { modelMeshPart3 });
-            Expect.Once.On(modelMeshPart1).SetProperty("Tag").To(Is.NotNull);
-            Expect.Once.On(modelMeshPart2).SetProperty("Tag").To(Is.NotNull);
-            Expect.Once.On(modelMeshPart3).SetProperty("Tag").To(Is.NotNull);
             node = new ModelNode("Name", model, device);
         }
 
