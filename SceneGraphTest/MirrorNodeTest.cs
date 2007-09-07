@@ -10,10 +10,16 @@ using Microsoft.Xna.Framework;
 namespace Dope.DDXX.SceneGraph
 {
     [TestFixture]
-    public class MirrorNodeTest : IModel, IScene, INode, IModelMesh, IGraphicsDevice, IRenderState
+    public class MirrorNodeTest : IModel, IScene, INode, IModelMesh, IGraphicsDevice, IRenderState, IModelMeshPart, IMaterialHandler, IRenderableCamera
     {
         private string originalName;
         private CullMode newCulling;
+        private Color ambientColor;
+        private Color oldAmbientColor;
+        private Color diffuseColor;
+        private Color oldDiffuseColor;
+        private Color specularColor;
+        private Color oldSpecularColor;
 
         [Test]
         public void NodeName()
@@ -91,6 +97,48 @@ namespace Dope.DDXX.SceneGraph
             Assert.AreEqual(CullMode.CullClockwiseFace, newCulling);
         }
 
+        [Test]
+        public void ColorModulationBrightness05()
+        {
+            // Setup
+            ModelNode modelNode = new ModelNode("", this, this);
+            MirrorNode node = new MirrorNode(modelNode);
+            ambientColor = new Color(2, 2, 2);
+            diffuseColor = new Color(4, 4, 4);
+            specularColor = new Color(6, 6, 6);
+            node.Brightness = 0.5f;
+            // Exercise SUT
+            node.Render(this);
+            // Verify
+            Assert.AreEqual(new Color(2, 2, 2), ambientColor);
+            Assert.AreEqual(new Color(4, 4, 4), diffuseColor);
+            Assert.AreEqual(new Color(6, 6, 6), specularColor);
+            Assert.AreEqual(new Color(1, 1, 1), oldAmbientColor);
+            Assert.AreEqual(new Color(2, 2, 2), oldDiffuseColor);
+            Assert.AreEqual(new Color(3, 3, 3), oldSpecularColor);
+        }
+
+        [Test]
+        public void ColorModulationBrightness2()
+        {
+            // Setup
+            ModelNode modelNode = new ModelNode("", this, this);
+            MirrorNode node = new MirrorNode(modelNode);
+            ambientColor = new Color(20, 20, 20);
+            diffuseColor = new Color(40, 40, 40);
+            specularColor = new Color(60, 60, 60);
+            node.Brightness = 2;
+            // Exercise SUT
+            node.Render(this);
+            // Verify
+            Assert.AreEqual(new Color(20, 20, 20), ambientColor);
+            Assert.AreEqual(new Color(40, 40, 40), diffuseColor);
+            Assert.AreEqual(new Color(60, 60, 60), specularColor);
+            Assert.AreEqual(new Color(40, 40, 40), oldAmbientColor);
+            Assert.AreEqual(new Color(80, 80, 80), oldDiffuseColor);
+            Assert.AreEqual(new Color(120, 120, 120), oldSpecularColor);
+        }
+
         #region IModel Members
 
         public ModelBoneCollection Bones
@@ -148,7 +196,7 @@ namespace Dope.DDXX.SceneGraph
         {
             get
             {
-                throw new Exception("The method or operation is not implemented.");
+                return this;
             }
             set
             {
@@ -160,11 +208,12 @@ namespace Dope.DDXX.SceneGraph
         {
             get
             {
-                throw new Exception("The method or operation is not implemented.");
+                return ambientColor;
             }
             set
             {
-                throw new Exception("The method or operation is not implemented.");
+                oldAmbientColor = ambientColor;
+                ambientColor = value;
             }
         }
 
@@ -283,7 +332,12 @@ namespace Dope.DDXX.SceneGraph
 
         public ReadOnlyCollection<IModelMeshPart> MeshParts
         {
-            get { return new ReadOnlyCollection<IModelMeshPart>(new List<IModelMeshPart>()); }
+            get 
+            {
+                List<IModelMeshPart> list = new List<IModelMeshPart>();
+                list.Add(this);
+                return new ReadOnlyCollection<IModelMeshPart>(list); 
+            }
         }
 
         public ModelBone ParentBone
@@ -1691,6 +1745,129 @@ namespace Dope.DDXX.SceneGraph
                 ResourceCreated(null, null);
                 ResourceDestroyed(null, null);
             }
+        }
+
+        #endregion
+
+        #region IModelMeshPart Members
+
+        public int BaseVertex
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public IEffect Effect
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public int NumVertices
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public int PrimitiveCount
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public int StartIndex
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public int StreamOffset
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public int VertexStride
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public IMaterialHandler MaterialHandler
+        {
+            get { return this; }
+        }
+
+        #endregion
+
+        #region IMaterialHandler Members
+
+        public void SetupRendering(Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrx, Color ambientLight, LightState lightState)
+        {
+        }
+
+        public Color DiffuseColor
+        {
+            get
+            {
+                return diffuseColor;
+            }
+            set
+            {
+                oldDiffuseColor = diffuseColor;
+                diffuseColor = value;
+            }
+        }
+
+        public Color SpecularColor
+        {
+            get
+            {
+                return specularColor;
+            }
+            set
+            {
+                oldSpecularColor = specularColor;
+                specularColor = value;
+            }
+        }
+
+        public float SpecularPower
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        public float Shininess
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        #endregion
+
+        #region IRenderableCamera Members
+
+        public Matrix ProjectionMatrix
+        {
+            get { return new Matrix(); }
+        }
+
+        public Matrix ViewMatrix
+        {
+            get { return new Matrix(); }
         }
 
         #endregion
