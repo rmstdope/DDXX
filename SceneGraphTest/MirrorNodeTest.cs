@@ -325,7 +325,7 @@ namespace Dope.DDXX.SceneGraph
             get { throw new Exception("The method or operation is not implemented."); }
         }
 
-        public IndexBuffer IndexBuffer
+        public IIndexBuffer IndexBuffer
         {
             get { throw new Exception("The method or operation is not implemented."); }
         }
@@ -345,7 +345,7 @@ namespace Dope.DDXX.SceneGraph
             get { throw new Exception("The method or operation is not implemented."); }
         }
 
-        public VertexBuffer VertexBuffer
+        public IVertexBuffer VertexBuffer
         {
             get { throw new Exception("The method or operation is not implemented."); }
         }
@@ -405,7 +405,7 @@ namespace Dope.DDXX.SceneGraph
             get { throw new Exception("The method or operation is not implemented."); }
         }
 
-        public IndexBuffer Indices
+        public IIndexBuffer Indices
         {
             get
             {
@@ -483,7 +483,7 @@ namespace Dope.DDXX.SceneGraph
             get { throw new Exception("The method or operation is not implemented."); }
         }
 
-        public VertexDeclaration VertexDeclaration
+        public IVertexDeclaration VertexDeclaration
         {
             get
             {
@@ -517,7 +517,7 @@ namespace Dope.DDXX.SceneGraph
             get { throw new Exception("The method or operation is not implemented."); }
         }
 
-        public VertexStreamCollection Vertices
+        public IVertexStreamCollection Vertices
         {
             get { throw new Exception("The method or operation is not implemented."); }
         }
