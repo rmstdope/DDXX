@@ -64,6 +64,17 @@ namespace Dope.DDXX.SceneGraph
         }
 
         [Test]
+        public void SetGet()
+        {
+            // Setup
+            node = new ModelNode("", null, device);
+            // Exersise SUT
+            node.Model = model;
+            // Verify
+            Assert.AreEqual(model, node.Model);
+        }
+
+        [Test]
         public void RenderOnePart()
         {
             // Setup

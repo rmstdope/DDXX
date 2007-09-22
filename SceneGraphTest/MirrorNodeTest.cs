@@ -22,6 +22,26 @@ namespace Dope.DDXX.SceneGraph
         private Color oldSpecularColor;
 
         [Test]
+        public void StepNode()
+        {
+            //Setup
+            MirrorNode node = new MirrorNode(this);
+            // Exercise SUT
+            node.Step();
+        }
+
+        [Test]
+        public void Getters()
+        {
+            //Setup
+            MirrorNode node = new MirrorNode(this);
+            // Exercise SUT
+            node.Brightness = 2.5f;
+            // Verify
+            Assert.AreEqual(2.5f, node.Brightness);
+        }
+
+        [Test]
         public void NodeName()
         {
             //Setup
