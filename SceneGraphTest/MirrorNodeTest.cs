@@ -393,7 +393,7 @@ namespace Dope.DDXX.SceneGraph
             get { throw new Exception("The method or operation is not implemented."); }
         }
 
-        public DepthStencilBuffer DepthStencilBuffer
+        public IDepthStencilBuffer DepthStencilBuffer
         {
             get
             {
