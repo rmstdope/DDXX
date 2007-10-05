@@ -1944,5 +1944,22 @@ namespace Dope.DDXX.SceneGraph
         }
 
         #endregion
+
+        #region IRenderableCamera Members
+
+
+        public float AspectRatio
+        {
+            get
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            set
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+        }
+
+        #endregion
     }
 }

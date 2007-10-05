@@ -108,7 +108,8 @@ namespace Dope.DDXX.SceneGraph
                 }
                 i++;
             }
-            Expect.Once.On(vertexBuffer).Method("SetData").With(new MatchListAndArray(vertexList));
+            Expect.Once.On(vertexBuffer).Method("SetData").
+                With(new MatchListAndArray(vertexList), Is.EqualTo(0), Is.EqualTo(4), Is.EqualTo(SetDataOptions.Discard));
             // Exercise SUT
             system.Step();
             // Verify SUT
@@ -127,7 +128,8 @@ namespace Dope.DDXX.SceneGraph
                 Stub.On(system.SpawnedParticles[i]).Method("IsDead").Will(Return.Value(false));
                 Expect.Once.On(system.SpawnedParticles[i]).Method("Step").Will(new VertexCopyAction(vertexList));
             }
-            Expect.Once.On(vertexBuffer).Method("SetData").With(new MatchListAndArray(vertexList));
+            Expect.Once.On(vertexBuffer).Method("SetData").
+                With(new MatchListAndArray(vertexList), Is.EqualTo(0), Is.EqualTo(2), Is.EqualTo(SetDataOptions.Discard));
             // Exercise SUT
             system.Step();
             // Verify SUT
@@ -145,7 +147,8 @@ namespace Dope.DDXX.SceneGraph
                 Stub.On(system.SpawnedParticles[i]).Method("IsDead").Will(Return.Value(false));
                 Expect.Once.On(system.SpawnedParticles[i]).Method("Step").Will(new VertexCopyAction(vertexList));
             }
-            Expect.Once.On(vertexBuffer).Method("SetData").With(new MatchListAndArray(vertexList));
+            Expect.Once.On(vertexBuffer).Method("SetData").
+                With(new MatchListAndArray(vertexList), Is.EqualTo(0), Is.EqualTo(20), Is.EqualTo(SetDataOptions.Discard));
             // Exercise SUT
             system.Step();
             // Verify
@@ -165,7 +168,8 @@ namespace Dope.DDXX.SceneGraph
                 Stub.On(system.SpawnedParticles[i]).Method("IsDead").Will(Return.Value(false));
                 Expect.Once.On(system.SpawnedParticles[i]).Method("Step").Will(new VertexCopyAction(vertexList));
             }
-            Expect.Once.On(vertexBuffer).Method("SetData").With(new MatchListAndArray(vertexList));
+            Expect.Once.On(vertexBuffer).Method("SetData").
+                With(new MatchListAndArray(vertexList), Is.EqualTo(0), Is.EqualTo(3), Is.EqualTo(SetDataOptions.Discard));
             // Exercise SUT
             system.Step();
             // Verify
@@ -186,7 +190,8 @@ namespace Dope.DDXX.SceneGraph
                 Stub.On(system.SpawnedParticles[i]).Method("IsDead").Will(Return.Value(false));
                 Expect.Once.On(system.SpawnedParticles[i]).Method("Step").Will(new VertexCopyAction(vertexList));
             }
-            Expect.Once.On(vertexBuffer).Method("SetData").With(new MatchListAndArray(vertexList));
+            Expect.Once.On(vertexBuffer).Method("SetData").
+                With(new MatchListAndArray(vertexList), Is.EqualTo(0), Is.EqualTo(5), Is.EqualTo(SetDataOptions.Discard));
             // Exercise SUT
             system.Step();
             // Verify
@@ -278,7 +283,7 @@ namespace Dope.DDXX.SceneGraph
         private void ExpectVertexBuffer(int num)
         {
             Expect.Once.On(graphicsFactory).Method("CreateVertexBuffer").
-                With(typeof(float), num, ResourceUsage.WriteOnly).// | ResourceUsage.Dynamic).
+                With(typeof(float), num, ResourceUsage.WriteOnly | ResourceUsage.Dynamic, ResourceManagementMode.Manual).
                 Will(Return.Value(vertexBuffer));
             Expect.Once.On(graphicsFactory).Method("CreateVertexDeclaration").
                 With(new VertexElement[] { new VertexElement(0, 1, VertexElementFormat.Byte4, VertexElementMethod.LookUpPresampled, VertexElementUsage.TessellateFactor, 2) }).

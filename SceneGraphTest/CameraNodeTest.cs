@@ -33,11 +33,11 @@ namespace Dope.DDXX.SceneGraph
         {
             float fov1 = (float)Math.PI / 4;
             float fov2 = (float)Math.PI / 2;
-            float aspect1 = 4.0f / 3.0f;
-            float aspect2 = 16.0f / 9.0f;
+            float aspect1 = 16.0f / 9.0f;
+            float aspect2 = 4.0f / 3.0f;
             float zNear1 = 0.01f;
             float zNear2 = 0.5f;
-            float zFar1 = 1000.0f;
+            float zFar1 = 10000.0f;
             float zFar2 = 5000.0f;
             Matrix exp1 = Matrix.CreatePerspectiveFieldOfView(fov1, aspect1, zNear1, zFar1);
             Matrix exp2 = Matrix.CreatePerspectiveFieldOfView(fov2, aspect2, zNear2, zFar2);
@@ -46,7 +46,7 @@ namespace Dope.DDXX.SceneGraph
             Assert.IsTrue(exp1.Equals(c1.ProjectionMatrix));
             c1.SetFOV(fov2);
             c1.SetClippingPlanes(zNear2, zFar2);
-            c1.SetAspect(aspect2);
+            c1.AspectRatio = aspect2;
             Assert.IsTrue(exp2.Equals(c1.ProjectionMatrix));
         }
 
