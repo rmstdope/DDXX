@@ -5,10 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TextureBuilderTest")]
-[assembly: AssemblyProduct("TextureBuilderTest")]
+[assembly: AssemblyTitle("TextureBuilder")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyCompany("Dope")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("Dope Demo Productions")]
+[assembly: AssemblyProduct("DDXX")]
 [assembly: AssemblyCopyright("Copyright © Dope 2007")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("f5bffb6e-beb9-4cfb-9576-34ab74ba7c8d")]
+[assembly: Guid("a12690eb-76f5-4b8e-9116-778ad394702b")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -28,4 +29,7 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
+// You can specify all the values or you can default the Revision and Build Numbers 
+// by using the '*' as shown below:
 [assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

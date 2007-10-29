@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.DemoFramework;
+using Microsoft.DirectX.Direct3D;
+using System.Drawing;
 using Dope.DDXX.Graphics;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoEffects
 {
@@ -24,10 +25,10 @@ namespace Dope.DDXX.DemoEffects
 
         public override void Render()
         {
-            List<IRenderTarget2D> textures = PostProcessor.GetTemporaryTextures(2, false);
+            List<ITexture> textures = PostProcessor.GetTemporaryTextures(2, false);
 
             PostProcessor.SetValue("BloomScale", 1.0f);
-            PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);
+            PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
             PostProcessor.Process("HorizontalBloom", PostProcessor.OutputTexture, textures[0]);
             PostProcessor.Process("VerticalBloom", textures[0], textures[1]);
             for (int i = 0; i < numPasses - 1; i++)

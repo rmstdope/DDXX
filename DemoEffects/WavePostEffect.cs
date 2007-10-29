@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.DemoFramework;
+using Microsoft.DirectX.Direct3D;
+using System.Drawing;
+using Microsoft.DirectX;
 using Dope.DDXX.Utility;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoEffects
 {
@@ -32,7 +33,7 @@ namespace Dope.DDXX.DemoEffects
 
         protected override void SetParameters()
         {
-            PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);
+            PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
             PostProcessor.SetValue("WaveStrength", strength);
             PostProcessor.SetValue("WaveScale", scale);
             float t = Time.CurrentTime;

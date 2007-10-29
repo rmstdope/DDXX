@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using NMock2;
 using Dope.DDXX.Utility;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using Microsoft.DirectX;
+using System.Drawing;
+using NMock2;
 
 namespace Dope.DDXX.DemoFramework
 {

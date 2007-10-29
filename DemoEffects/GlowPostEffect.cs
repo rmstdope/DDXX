@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+
 using Dope.DDXX.DemoFramework;
+using Microsoft.DirectX.Direct3D;
+using System.Drawing;
 using Dope.DDXX.Graphics;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoEffects
 {
@@ -68,14 +70,14 @@ namespace Dope.DDXX.DemoEffects
 
         public override void Render()
         {
-            IRenderTarget2D startTexture = PostProcessor.OutputTexture;
-            List<IRenderTarget2D> textures = PostProcessor.GetTemporaryTextures(2, true);
+            ITexture startTexture = PostProcessor.OutputTexture;
+            List<ITexture> textures = PostProcessor.GetTemporaryTextures(2, true);
 
             PostProcessor.SetValue("Luminance", luminance);
             PostProcessor.SetValue("Exposure", exposure);
             PostProcessor.SetValue("WhiteCutoff", whiteCutoff);
             PostProcessor.SetValue("BloomScale", bloomScale);
-            PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);
+            PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
             if (downSamples == 1)
                 PostProcessor.Process("DownSample4x", startTexture, textures[1]);
             else
@@ -94,13 +96,13 @@ namespace Dope.DDXX.DemoEffects
             PostProcessor.Process("VerticalBloom", textures[1], textures[0]);
             if (downSamples == 1)
             {
-                PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.One, Color.Black);
+                PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.One, Color.Black);
                 PostProcessor.Process("UpSample4x", textures[0], startTexture);
             }
             else
             {
                 PostProcessor.Process("UpSample4x", textures[0], textures[1]);
-                PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.One, Color.Black);
+                PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.One, Color.Black);
                 PostProcessor.Process("UpSample4x", textures[1], startTexture);
             }
             //PostProcessor.Process("Copy", temp[0], startTexture);

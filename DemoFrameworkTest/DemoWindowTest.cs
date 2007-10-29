@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using NUnit.Framework;
-using NMock2;
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
+using Microsoft.DirectX.DirectInput;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Input;
 using Dope.DDXX.Utility;
+using NUnit.Framework;
+using NMock2;
 
 namespace Dope.DDXX.DemoFramework
 {

@@ -18,7 +18,7 @@ namespace Dope.DDXX.DemoEffects
 
         public override void Render()
         {
-            List<IRenderTarget2D> textures = PostProcessor.GetTemporaryTextures(1, false);
+            List<ITexture> textures = PostProcessor.GetTemporaryTextures(1, false);
 
             SetParameters();
             PostProcessor.Process(TechniqueName, PostProcessor.OutputTexture, textures[0]);
