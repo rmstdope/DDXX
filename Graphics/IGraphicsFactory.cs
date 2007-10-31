@@ -36,5 +36,7 @@ namespace Dope.DDXX.Graphics
         IFont CreateFont(IDevice device, FontDescription description);
         IFont CreateFont(IDevice device, System.Drawing.Font font);
         IFont CreateFont(IDevice device, int height, int width, FontWeight weight, int miplevels, bool italic, CharacterSet charset, Precision outputPrecision, FontQuality quality, PitchAndFamily pitchFamily, string faceName);
+        ISurface CreateRenderTarget(IDevice device, int width, int height, Format format, MultiSampleType multiSample, int multiSampleQuality, bool lockable);
+        ISurface CreateDepthStencilSurface(IDevice device, int width, int height, DepthFormat format, MultiSampleType multiSample, int multiSampleQuality, bool discard);
     }
 }

@@ -51,38 +51,38 @@ namespace Dope.DDXX.DemoFramework
 
         public bool HandleInput(IInputDriver inputDriver)
         {
-            if (Enabled)
-            {
-                if (tweakers[currentTweaker].HandleInput(inputDriver))
-                    return true;
-            }
+            //if (Enabled)
+            //{
+            //    if (tweakers[currentTweaker].HandleInput(inputDriver))
+            //        return true;
+            //}
 
-            if (inputDriver.KeyPressedNoRepeat(Key.RightArrow))
-            {
-                context.JumpInTime(5.0f);
-            }
+            //if (inputDriver.KeyPressedNoRepeat(Key.RightArrow))
+            //{
+            //    context.JumpInTime(5.0f);
+            //}
 
-            if (inputDriver.KeyPressedNoRepeat(Key.LeftArrow))
-            {
-                context.JumpInTime(-5.0f);
-            }
+            //if (inputDriver.KeyPressedNoRepeat(Key.LeftArrow))
+            //{
+            //    context.JumpInTime(-5.0f);
+            //}
 
-            if (inputDriver.KeyPressedNoRepeat(Key.Space))
-            {
-                context.TogglePause();
-            }
+            //if (inputDriver.KeyPressedNoRepeat(Key.Space))
+            //{
+            //    context.TogglePause();
+            //}
 
-            if (inputDriver.KeyPressedNoRepeat(Key.Return))
-            {
-                if (currentTweaker < tweakers.Length - 1)
-                {
-                    saveNeeded = true;
-                    if (currentTweaker != -1)
-                        tweakers[currentTweaker + 1].IdentifierFromParent(tweakers[currentTweaker].IdentifierToChild());
-                    currentTweaker++;
-                }
-                return true;
-            }
+            //if (inputDriver.KeyPressedNoRepeat(Key.Return))
+            //{
+            //    if (currentTweaker < tweakers.Length - 1)
+            //    {
+            //        saveNeeded = true;
+            //        if (currentTweaker != -1)
+            //            tweakers[currentTweaker + 1].IdentifierFromParent(tweakers[currentTweaker].IdentifierToChild());
+            //        currentTweaker++;
+            //    }
+            //    return true;
+            //}
 
             if (inputDriver.KeyPressedNoRepeat(Key.Escape))
             {
@@ -90,20 +90,20 @@ namespace Dope.DDXX.DemoFramework
                 return true;
             }
 
-            if (inputDriver.KeyPressedNoRepeat(Key.F1))
-                visable = !visable;
+            //if (inputDriver.KeyPressedNoRepeat(Key.F1))
+            //    visable = !visable;
 
-            if (inputDriver.KeyPressedNoRepeat(Key.F2))
-                Settings.SetTransparency(Transparency.Low);
-            if (inputDriver.KeyPressedNoRepeat(Key.F3))
-                Settings.SetTransparency(Transparency.Medium);
-            if (inputDriver.KeyPressedNoRepeat(Key.F4))
-                Settings.SetTransparency(Transparency.High);
+            //if (inputDriver.KeyPressedNoRepeat(Key.F2))
+            //    Settings.SetTransparency(Transparency.Low);
+            //if (inputDriver.KeyPressedNoRepeat(Key.F3))
+            //    Settings.SetTransparency(Transparency.Medium);
+            //if (inputDriver.KeyPressedNoRepeat(Key.F4))
+            //    Settings.SetTransparency(Transparency.High);
 
-            if (inputDriver.KeyPressedNoRepeat(Key.F5))
-                Settings.NextColorSchema();
-            if (inputDriver.KeyPressedNoRepeat(Key.F6))
-                Settings.PreviousColorSchema();
+            //if (inputDriver.KeyPressedNoRepeat(Key.F5))
+            //    Settings.NextColorSchema();
+            //if (inputDriver.KeyPressedNoRepeat(Key.F6))
+            //    Settings.PreviousColorSchema();
 
             return true;
         }

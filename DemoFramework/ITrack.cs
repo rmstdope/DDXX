@@ -21,7 +21,7 @@ namespace Dope.DDXX.DemoFramework
         IDemoPostEffect[] PostEffects { get; }
         void Register(IDemoPostEffect postEffect);
         void Register(IDemoEffect effect);
-        ITexture Render(IDevice device, ITexture renderTarget, Color backgroundColor);
+        ITexture Render(IDevice device, ISurface renderTarget, ISurface depthStencil, ITexture resolveTarget, Color backgroundColor);
         void Step();
         void UpdateListener(IEffectChangeListener effectChangeListener);
         bool IsEffectRegistered(string name, Type type);

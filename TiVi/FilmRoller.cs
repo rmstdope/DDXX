@@ -38,7 +38,7 @@ namespace TiVi
         private float curveOffset;
         public const int TextureWidth = 128;
         public const int TextureHeight = 128;
-        private int slowDown = 46;
+        private int slowDown = 6;
         private int currentFilmTexture;
         private float filmOffset;
         private const float zDelta = 0.01f;
@@ -426,6 +426,7 @@ namespace TiVi
 
         private void DrawIntoFilmTexture()
         {
+            device.BeginScene();
             using (ISurface original = device.GetRenderTarget(0))
             {
                 using (ISurface surface = filmRenderTarget.GetSurfaceLevel(0))
@@ -443,11 +444,13 @@ namespace TiVi
                         CopySurfaceToFilmTexture(surface, textureCount - 1);
                 }
             }
+            device.EndScene();
             //filmRenderTarget.Save("c:/filmrendertarget.dds", ImageFileFormat.Dds);
         }
 
         private void DrawAllFilmTextures()
         {
+            device.BeginScene();
             using (ISurface original = device.GetRenderTarget(0))
             {
                 using (ISurface surface = filmRenderTarget.GetSurfaceLevel(0))
@@ -469,11 +472,13 @@ namespace TiVi
                     device.SetRenderTarget(0, original);
                 }
             }
+            device.EndScene();
             //filmRenderTarget.Save("c:/filmrendertarget.dds", ImageFileFormat.Dds);
         }
 
         private void DrawEmptyFilmTextures()
         {
+            device.BeginScene();
             using (ISurface original = device.GetRenderTarget(0))
             {
                 using (ISurface surface = filmRenderTarget.GetSurfaceLevel(0))
@@ -489,21 +494,18 @@ namespace TiVi
                     device.SetRenderTarget(0, original);
                 }
             }
+            device.EndScene();
         }
 
         private void DrawSubEffect()
         {
-            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.FromArgb(0xff, Color.Black), 1.0f, 0);
-            device.BeginScene();
+            device.Clear(ClearFlags.Target /*| ClearFlags.ZBuffer*/, Color.FromArgb(0xff, Color.Black), 1.0f, 0);
             subEffect.Render();
-            device.EndScene();
         }
 
         private void DrawBlackScreen()
         {
-            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.FromArgb(0xff, Color.Black), 1.0f, 0);
-            //device.BeginScene();
-            //device.EndScene();
+            device.Clear(ClearFlags.Target/* | ClearFlags.ZBuffer*/, Color.FromArgb(0xff, Color.Black), 1.0f, 0);
         }
 
 

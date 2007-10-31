@@ -38,7 +38,7 @@ namespace Dope.DDXX.Utility
                 blockReader = new BinaryReader(blockReadStream);
                 LoadBlockFileLayout();
             }
-            catch (FileNotFoundException exception)
+            catch (FileNotFoundException)
             {
             }
         }

@@ -77,7 +77,10 @@ namespace Dope.DDXX.Graphics
             }
             set
             {
-                device.DepthStencilSurface = value.DXSurface;
+                if (value == null)
+                    device.DepthStencilSurface = null;
+                else
+                    device.DepthStencilSurface = value.DXSurface;
             }
         }
 

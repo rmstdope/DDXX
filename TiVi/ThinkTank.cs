@@ -108,12 +108,20 @@ namespace TiVi
             {
                 using (ISurface surface = screenTexture.GetSurfaceLevel(0))
                 {
+                    D3DDriver driver = D3DDriver.GetInstance();
+                    ISurface depthStencil = GraphicsFactory.CreateDepthStencilSurface(Device,
+                        driver.Description.width, driver.Description.height,
+                        driver.Description.depthFormat,
+                        MultiSampleType.None, 0, false);
                     Device.SetRenderTarget(0, surface);
+                    Device.DepthStencilSurface = depthStencil;
                     Device.BeginScene();
                     Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer | ClearFlags.Stencil, Color.Black, 1, 0);
                     subEffect.Render();
                     Device.EndScene();
                     Device.SetRenderTarget(0, original);
+                    Device.DepthStencilSurface = null;
+                    depthStencil.Dispose();
                 }
             }
             Time.Resume();

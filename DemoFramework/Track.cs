@@ -165,14 +165,12 @@ namespace Dope.DDXX.DemoFramework
                     effect.Step();
         }
 
-        public ITexture Render(IDevice device, ITexture renderTarget, Color backgroundColor)
+        public ITexture Render(IDevice device, ISurface renderTarget, ISurface depthStencil, ITexture resolveTarget, Color backgroundColor)
         {
             using (ISurface originalTarget = device.GetRenderTarget(0))
             {
-                using (ISurface currentRenderTarget = renderTarget.GetSurfaceLevel(0))
-                {
-                    device.SetRenderTarget(0, currentRenderTarget);
-                }
+                device.SetRenderTarget(0, renderTarget);
+                device.DepthStencilSurface = depthStencil;
                 
                 if (D3DDriver.GetInstance().Description.useStencil)
                     device.Clear(ClearFlags.Target | ClearFlags.ZBuffer | ClearFlags.Stencil, backgroundColor, 1.0f, 0);
@@ -181,7 +179,13 @@ namespace Dope.DDXX.DemoFramework
 
                 RenderEffects(device);
 
-                postProcessor.StartFrame(renderTarget);
+                using (ISurface destSurface = resolveTarget.GetSurfaceLevel(0))
+                {
+                    device.StretchRectangle(renderTarget, new Rectangle(0, 0, renderTarget.Description.Width, renderTarget.Description.Height),
+                        destSurface, new Rectangle(0, 0, destSurface.Description.Width, destSurface.Description.Height), TextureFilter.None);
+                }
+                device.DepthStencilSurface = null;
+                postProcessor.StartFrame(resolveTarget);
                 RenderPostEffects();
 
                 device.SetRenderTarget(0, originalTarget);

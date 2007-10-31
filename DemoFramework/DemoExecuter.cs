@@ -29,6 +29,8 @@ namespace Dope.DDXX.DemoFramework
         private ITextureBuilder textureBuilder;
         private IPostProcessor postProcessor;
         private IDemoTweaker tweaker;
+        private ISurface renderTarget;
+        private ISurface depthStencil;
 
         private IInputDriver inputDriver;
         private List<ITrack> tracks = new List<ITrack>();
@@ -129,6 +131,16 @@ namespace Dope.DDXX.DemoFramework
             InitializeFromFile(xmlFile);
 
             InitializeSound();
+
+            D3DDriver driver = D3DDriver.GetInstance();
+            renderTarget = graphicsFactory.CreateRenderTarget(device,
+                driver.Description.width, driver.Description.height,
+                driver.Description.colorFormat,
+                driver.Description.multiSampleType, 0, false);
+            depthStencil = graphicsFactory.CreateDepthStencilSurface(device,
+                driver.Description.width, driver.Description.height,
+                driver.Description.depthFormat,
+                driver.Description.multiSampleType, 0, false);
 
             postProcessor.Initialize(device, textureFactory, effectFactory);
 
@@ -283,12 +295,12 @@ namespace Dope.DDXX.DemoFramework
             ITexture finalTexture = null;
             if (tracks.Count != 0)
             {
-                finalTexture = GetActiveTrack().Render(device, postProcessor.GetTemporaryTextures(1, false)[0], clearColor);
+                finalTexture = GetActiveTrack().Render(device, renderTarget, depthStencil, postProcessor.GetTemporaryTextures(1, false)[0], clearColor);
                 IDemoTransition transition = GetActiveTransition();
                 if (transition != null)
                 {
                     postProcessor.AllocateTexture(finalTexture);
-                    ITexture finalTexture2 = tracks[transition.DestinationTrack].Render(device, postProcessor.GetTemporaryTextures(1, false)[0], clearColor);
+                    ITexture finalTexture2 = tracks[transition.DestinationTrack].Render(device, renderTarget, depthStencil, postProcessor.GetTemporaryTextures(1, false)[0], clearColor);
                     postProcessor.AllocateTexture(finalTexture2);
                     ITexture newFinalTexture = transition.Render(finalTexture, finalTexture2);
                     postProcessor.FreeTexture(finalTexture);

@@ -176,7 +176,16 @@ namespace Dope.DDXX.Graphics
             return new FontAdapter(new Microsoft.DirectX.Direct3D.Font(((DeviceAdapter)device).DXDevice, height, width, weight, miplevels, italic, charset, outputPrecision, quality, pitchFamily, faceName));
         }
 
-        #endregion
+        public ISurface CreateRenderTarget(IDevice device, int width, int height, Format format, MultiSampleType multiSample, int multiSampleQuality, bool lockable)
+        {
+            return device.CreateRenderTarget(width, height, format, multiSample, multiSampleQuality, lockable);
+        }
 
+        public ISurface CreateDepthStencilSurface(IDevice device, int width, int height, DepthFormat format, MultiSampleType multiSample, int multiSampleQuality, bool discard)
+        {
+            return device.CreateDepthStencilSurface(width, height, format, multiSample, multiSampleQuality, discard);
+        }
+
+        #endregion
     }
 }

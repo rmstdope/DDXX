@@ -11,7 +11,7 @@ using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.Graphics
 {
-    public struct DeviceDescription
+    public class DeviceDescription
     {
         public int width;
         public int height;
@@ -20,6 +20,8 @@ namespace Dope.DDXX.Graphics
         public bool useDepth;
         public bool useStencil;
         public DeviceType deviceType;
+        public MultiSampleType multiSampleType;
+        public DepthFormat depthFormat;
     }
 
     public class D3DDriver
@@ -159,8 +161,26 @@ namespace Dope.DDXX.Graphics
             //present.MultiSampleQuality = 1;
 
             SetDepthStencil(desc, present);
+            SetMultiSample(desc, present);
 
             return present;
+        }
+
+        private void SetMultiSample(DeviceDescription desc, PresentParameters present)
+        {
+            MultiSampleType[] multiSampleTypes = new MultiSampleType[] {
+                MultiSampleType.NineSamples, MultiSampleType.FourSamples, 
+                MultiSampleType.ThreeSamples, MultiSampleType.TwoSamples };
+            foreach (MultiSampleType multiSampleType in multiSampleTypes)
+            {
+                if (manager.CheckDeviceMultiSampleType(0, desc.deviceType, desc.colorFormat, desc.windowed, multiSampleType) &&
+                    manager.CheckDeviceMultiSampleType(0, desc.deviceType, (Format)desc.depthFormat, desc.windowed, multiSampleType))
+                {
+                    desc.multiSampleType = multiSampleType;
+                    return;
+                }
+            }
+            desc.multiSampleType = MultiSampleType.None;
         }
 
         private void SetDepthStencil(DeviceDescription desc, PresentParameters present)
@@ -174,7 +194,7 @@ namespace Dope.DDXX.Graphics
                 if (desc.useStencil)
                     formats = stencilFormats;
 
-                present.EnableAutoDepthStencil = true;
+                present.EnableAutoDepthStencil = false;
                 present.AutoDepthStencilFormat = DepthFormat.Unknown;
 
                 foreach (DepthFormat format in formats)
@@ -183,7 +203,8 @@ namespace Dope.DDXX.Graphics
                         manager.CheckDepthStencilMatch(0, desc.deviceType,
                         displayMode.Format, displayMode.Format, format))
                     {
-                        present.AutoDepthStencilFormat = format;
+                        //present.AutoDepthStencilFormat = format;
+                        desc.depthFormat = format;
                         break;
                     }
                 }

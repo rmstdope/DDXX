@@ -316,7 +316,7 @@ namespace Dope.DDXX.DemoFramework
                 Expect.Once.On(postProcessor).Method("StartFrame").With(texture);
                 ExpectRenderEnd();
             }
-            Assert.AreSame(texture, track.Render(device, texture, Color.Aquamarine));
+            Assert.AreSame(texture, track.Render(device, null, null, texture, Color.Aquamarine));
         }
 
         [Test]
@@ -337,7 +337,7 @@ namespace Dope.DDXX.DemoFramework
                 Expect.Once.On(postProcessor).Method("StartFrame").With(texture);
                 ExpectRenderEnd();
             }
-            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
+            Assert.AreSame(texture, track.Render(device, null, null, texture, Color.DarkSlateBlue));
         }
 
         [Test]
@@ -362,7 +362,7 @@ namespace Dope.DDXX.DemoFramework
                 Expect.Once.On(postProcessor).Method("StartFrame").With(texture);
                 ExpectRenderEnd();
             }
-            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
+            Assert.AreSame(texture, track.Render(device, null, null, texture, Color.DarkSlateBlue));
         }
 
         [Test]
@@ -387,7 +387,7 @@ namespace Dope.DDXX.DemoFramework
                 Expect.Once.On(postProcessor).Method("StartFrame").With(texture);
                 ExpectRenderEnd();
             }
-            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
+            Assert.AreSame(texture, track.Render(device, null, null, texture, Color.DarkSlateBlue));
         }
 
         [Test]
@@ -408,7 +408,7 @@ namespace Dope.DDXX.DemoFramework
                 Expect.Once.On(pe1).Method("Render");
                 ExpectRenderEnd();
             }
-            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
+            Assert.AreSame(texture, track.Render(device, null, null, texture, Color.DarkSlateBlue));
         }
 
         [Test]
@@ -433,7 +433,7 @@ namespace Dope.DDXX.DemoFramework
                 Expect.Once.On(pe2).Method("Render");
                 ExpectRenderEnd();
             }
-            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
+            Assert.AreSame(texture, track.Render(device, null, null, texture, Color.DarkSlateBlue));
         }
 
         [Test]
@@ -458,7 +458,7 @@ namespace Dope.DDXX.DemoFramework
                 Expect.Once.On(pe1).Method("Render");
                 ExpectRenderEnd();
             }
-            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
+            Assert.AreSame(texture, track.Render(device, null, null, texture, Color.DarkSlateBlue));
         }
 
         [Test]
@@ -487,7 +487,7 @@ namespace Dope.DDXX.DemoFramework
                 }
                 ExpectRenderEnd();
             }
-            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
+            Assert.AreSame(texture, track.Render(device, null, null, texture, Color.DarkSlateBlue));
         }
 
         [Test]
@@ -520,7 +520,7 @@ namespace Dope.DDXX.DemoFramework
                 Expect.Once.On(pe2).Method("Render");
                 ExpectRenderEnd();
             }
-            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
+            Assert.AreSame(texture, track.Render(device, null, null, texture, Color.DarkSlateBlue));
         }
 
         [Test]
@@ -551,7 +551,7 @@ namespace Dope.DDXX.DemoFramework
                 Expect.Once.On(pe1).Method("Render");
                 ExpectRenderEnd();
             }
-            Assert.AreSame(texture, track.Render(device, texture, Color.DarkSlateBlue));
+            Assert.AreSame(texture, track.Render(device, null, null, texture, Color.DarkSlateBlue));
         }
 
         [Test]

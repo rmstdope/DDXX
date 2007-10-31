@@ -1171,5 +1171,25 @@ namespace Dope.DDXX.Graphics
         }
 
         #endregion
+
+        #region IGraphicsFactory Members
+
+
+        public ISurface CreateRenderTarget(IDevice device, int width, int height, Format format, MultiSampleType multiSample, int multiSampleQuality, bool lockable)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
+
+        #region IGraphicsFactory Members
+
+
+        public ISurface CreateDepthStencilSurface(IDevice device, int width, int height, DepthFormat format, MultiSampleType multiSample, int multiSampleQuality, bool discard)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
     }
 }

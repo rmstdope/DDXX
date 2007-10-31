@@ -450,7 +450,7 @@ namespace TiVi
                 {
                     Device.SetRenderTarget(0, surface);
                     Device.BeginScene();
-                    Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1, 0);
+                    Device.Clear(ClearFlags.Target /*| ClearFlags.ZBuffer*/, Color.Black, 1, 0);
                     subEffect.Render();
                     Device.EndScene();
                     Device.SetRenderTarget(0, original);
