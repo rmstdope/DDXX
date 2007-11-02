@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using Microsoft.Xna.Framework;
+using Microsoft.DirectX;
 
 namespace Dope.DDXX.SceneGraph
 {
@@ -33,20 +33,20 @@ namespace Dope.DDXX.SceneGraph
         {
             float fov1 = (float)Math.PI / 4;
             float fov2 = (float)Math.PI / 2;
-            float aspect1 = 16.0f / 9.0f;
-            float aspect2 = 4.0f / 3.0f;
+            float aspect1 = 4.0f / 3.0f;
+            float aspect2 = 16.0f / 9.0f;
             float zNear1 = 0.01f;
             float zNear2 = 0.5f;
-            float zFar1 = 10000.0f;
+            float zFar1 = 1000.0f;
             float zFar2 = 5000.0f;
-            Matrix exp1 = Matrix.CreatePerspectiveFieldOfView(fov1, aspect1, zNear1, zFar1);
-            Matrix exp2 = Matrix.CreatePerspectiveFieldOfView(fov2, aspect2, zNear2, zFar2);
+            Matrix exp1 = Matrix.PerspectiveFovLH(fov1, aspect1, zNear1, zFar1);
+            Matrix exp2 = Matrix.PerspectiveFovLH(fov2, aspect2, zNear2, zFar2);
 
             CameraNode c1 = new CameraNode("Name");
             Assert.IsTrue(exp1.Equals(c1.ProjectionMatrix));
             c1.SetFOV(fov2);
             c1.SetClippingPlanes(zNear2, zFar2);
-            c1.AspectRatio = aspect2;
+            c1.SetAspect(aspect2);
             Assert.IsTrue(exp2.Equals(c1.ProjectionMatrix));
         }
 
@@ -62,11 +62,11 @@ namespace Dope.DDXX.SceneGraph
         {
             Vector3 vec = new Vector3(1, 2, 3);
             CameraNode c1 = new CameraNode("Name");
-            AssertVectors(new Vector3(1, 2, 3), Vector3.Transform(vec, c1.ViewMatrix));
+            AssertVectors(new Vector3(1, 2, 3), Vector3.TransformCoordinate(vec, c1.ViewMatrix));
 
             c1.WorldState.Position = new Vector3(100, 200, 300);
-            c1.WorldState.Rotation = Matrix.CreateRotationY((float)Math.PI);
-            AssertVectors(new Vector3(99, -198, 297), Vector3.Transform(vec, c1.ViewMatrix));
+            c1.WorldState.Rotation = Matrix.RotationY((float)Math.PI);
+            AssertVectors(new Vector3(99, -198, 297), Vector3.TransformCoordinate(vec, c1.ViewMatrix));
         }
 
         [Test]

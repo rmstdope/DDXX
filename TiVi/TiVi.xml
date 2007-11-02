@@ -104,7 +104,7 @@
 	<PostEffect class="RadialBlurPostEffect" startTime="7" endTime="42">
 		<Parameter name="DrawOrder" int="0" />
 		<Parameter name="BlurColor" Color="255, 119, 118, 112" />
-	</PostEffect>-->
+	</PostEffect>
   
 	<Effect class="DiscoFever" name="WalkwayFever" track="0" startTime="42" endTime="44">
 		<Parameter name="DrawOrder" int="0" />
@@ -317,7 +317,7 @@
 		<Parameter name="FadeInLength" float="0.5" />
 		<Parameter name="FadeOutLength" float="2" />
 		<Parameter name="FadeColor" Color="Black" />
-	</PostEffect>
+	</PostEffect>-->
 
 
   <Effect class="SpinningBackgroundEffect" name="ChessSpin" track="0" startTime="150" endTime="160">
@@ -359,7 +359,7 @@
 	</PostEffect>
 
 
-	<Effect class="TunnelFlight2" track="0" startTime="205" endTime="217">
+	<!--<Effect class="TunnelFlight2" track="0" startTime="205" endTime="217">
 		<Parameter name="DrawOrder" int="0" />
 		<Parameter name="DiffuseLuminance" float="0.15" />
 		<Parameter name="TimeScale" float="0.34165" />
@@ -501,6 +501,6 @@
 		<Parameter name="FadeInLength" float="2" />
 		<Parameter name="FadeOutLength" float="0" />
 		<Parameter name="FadeColor" Color="Black" />
-	</PostEffect>
+	</PostEffect>-->
 </Demo>
 

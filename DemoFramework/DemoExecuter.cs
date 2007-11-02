@@ -135,7 +135,7 @@ namespace Dope.DDXX.DemoFramework
             D3DDriver driver = D3DDriver.GetInstance();
             renderTarget = graphicsFactory.CreateRenderTarget(device,
                 driver.Description.width, driver.Description.height,
-                driver.Description.colorFormat,
+                Format.A8R8G8B8,
                 driver.Description.multiSampleType, 0, false);
             depthStencil = graphicsFactory.CreateDepthStencilSurface(device,
                 driver.Description.width, driver.Description.height,

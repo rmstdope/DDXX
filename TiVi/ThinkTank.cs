@@ -142,7 +142,7 @@ namespace TiVi
             ModelNode baseDiamond = meshDirector.CreateDiamondNode(0.4f);
             for (int y = -15; y < 16; y++)
             {
-                for (int x = -10; x < 11; x++)
+                for (int x = -10; x < 8; x++)
                 {
                     ModelNode diamond = new ModelNode(baseDiamond.Name + "Clone", baseDiamond.Model, baseDiamond.EffectHandler, Device);
                     diamonds.Add(diamond);
@@ -151,20 +151,20 @@ namespace TiVi
                     diamond.WorldState.Turn(y / 5.0f + x / 4.0f + Rand.Float(0, Math.PI / 4));
                 }
             }
+            //for (int y = -15; y < 16; y++)
+            //{
+            //    for (int x = -10; x < 11; x++)
+            //    {
+            //        ModelNode diamond = new ModelNode(baseDiamond.Name + "Clone", baseDiamond.Model, baseDiamond.EffectHandler, Device);
+            //        diamonds.Add(diamond);
+            //        scene.AddNode(diamond);
+            //        diamond.Position = new Vector3(4, y * 0.6f, x * 0.4f);
+            //        diamond.WorldState.Turn(y / 5.0f + x / 4.0f + Rand.Float(0, Math.PI / 4));
+            //    }
+            //}
             for (int y = -15; y < 16; y++)
             {
-                for (int x = -10; x < 11; x++)
-                {
-                    ModelNode diamond = new ModelNode(baseDiamond.Name + "Clone", baseDiamond.Model, baseDiamond.EffectHandler, Device);
-                    diamonds.Add(diamond);
-                    scene.AddNode(diamond);
-                    diamond.Position = new Vector3(4, y * 0.6f, x * 0.4f);
-                    diamond.WorldState.Turn(y / 5.0f + x / 4.0f + Rand.Float(0, Math.PI / 4));
-                }
-            }
-            for (int y = -15; y < 16; y++)
-            {
-                for (int x = -10; x < 11; x++)
+                for (int x = -8; x < 11; x++)
                 {
                     ModelNode diamond = new ModelNode(baseDiamond.Name + "Clone", baseDiamond.Model, baseDiamond.EffectHandler, Device);
                     diamonds.Add(diamond);
