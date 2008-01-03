@@ -13,7 +13,7 @@ namespace EngineTest
 {
     public class ModelEffect : BaseDemoEffect
     {
-        private ModelNode box;
+        private ModelNode node;
         private float xAngle;
         private float yAngle;
         private float zAngle;
@@ -27,16 +27,32 @@ namespace EngineTest
 
         protected override void Initialize()
         {
-            CreateStandardSceneAndCamera(out scene, out camera, 3);
+            CreateStandardSceneAndCamera(out scene, out camera, 10);
 
-            MeshBuilder.SetDiffuseTexture("Default1", "FLOWER6P.jpg");
+            MeshBuilder.SetDiffuseTexture("Default1", "wings.bmp");
             MeshDirector meshDirector = new MeshDirector(MeshBuilder);
             meshDirector.CreateBox(2, 2, 2);
             IModel model = meshDirector.Generate("Default1");
-            box = CreateSimpleModelNode(model, "PosseTest.fxo", "Tex");
-            scene.AddNode(box);
+            node = CreateSimpleModelNode(model, "PosseTest.fxo", "Tex");
+            scene.AddNode(node);
             scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
             scene.Validate();
+
+
+            //scene = new Scene();
+
+            //IModel model = ModelFactory.FromFile("airplane 2.x", ModelOptions.EnsureTangents);
+            //IEffect effect = EffectFactory.CreateFromFile("Test.fxo");
+            //EffectHandler effectHandler = new EffectHandler(effect,
+            //    delegate(int material) { return "Transparent"; }, model);
+            //node = new ModelNode("Test Model", model, effectHandler, Device);
+            //scene.AddNode(node);
+
+            //// Create camera
+            //CameraNode camera = new CameraNode("Test Camera");
+            //camera.WorldState.MoveForward(-10);
+            //scene.AddNode(camera);
+            //scene.ActiveCamera = camera;
         }
 
         public float XAngle
@@ -59,11 +75,11 @@ namespace EngineTest
 
         public override void Step()
         {
-            //Microsoft.DirectX.Matrix rot = node.WorldState.Rotation;
-            //rot.X = XAngle;
-            //rot.Y = YAngle;
-            //rot.Z = ZAngle;
-            //node.WorldState.Rotation = rot;
+            Microsoft.DirectX.Matrix rot = node.WorldState.Rotation;
+            rot.RotateX(xAngle);
+            rot.RotateY(yAngle);
+            rot.RotateZ(zAngle);
+            node.WorldState.Rotation = rot;
             scene.Step();
         }
 

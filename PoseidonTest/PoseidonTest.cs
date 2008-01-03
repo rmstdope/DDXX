@@ -43,8 +43,7 @@ namespace PoseidonTest
 
                     FileUtility.SetLoadPaths("../../Data/",
                                              "../../../Effects/",
-                                             "../../",
-                                             "../../../EngineTest/Data");
+                                             "../../");
                     DevicePrerequisits prerequisits = new DevicePrerequisits();
 
                     window.Initialize("PoseidonTest", desc, prerequisits);
