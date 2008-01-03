@@ -100,7 +100,6 @@ AnimateVertex(float4	position,
     lastWeight = 1.0f - lastWeight; 
 		weightedMatrix += AnimationMatrices[blendIndices[numWeights - 1]] * lastWeight;
 		output.Position = mul(position, weightedMatrix);
-		//output.Position.w = 1;
 		output.Normal		= normalize(mul(normal, (float3x3)weightedMatrix));
 	} else {
 		output.Position	= position;

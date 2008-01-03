@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.Graphics
 {
@@ -21,15 +20,15 @@ namespace Dope.DDXX.Graphics
         }
 
         private IGraphicsFactory factory;
-        private IDevice device;
+        private IGraphicsDevice device;
         private List<FileEntry> files = new List<FileEntry>();
-        private EffectPool pool;
+        //private EffectPool pool;
 
-        public EffectFactory(IDevice device, IGraphicsFactory factory)
+        public EffectFactory(IGraphicsDevice device, IGraphicsFactory factory)
         {
             this.device = device;
             this.factory = factory;
-            pool = new EffectPool();
+            //pool = new EffectPool();
         }
 
         public IEffect CreateFromFile(string file)
@@ -44,13 +43,10 @@ namespace Dope.DDXX.Graphics
             });
             if (result != null)
             {
-                return result.effect;
+                return result.effect.Clone(result.effect.GraphicsDevice);
+                //return result.effect;
             }
-            ShaderFlags flags = ShaderFlags.None;
-#if DEBUG
-            flags |= (ShaderFlags.Debug | ShaderFlags.SkipOptimization);
-#endif
-            IEffect effect = factory.EffectFromFile(device, file, null, "", flags, pool);
+            IEffect effect = factory.EffectFromFile(file);
             needle.effect = effect;
             files.Add(needle);
             return effect;

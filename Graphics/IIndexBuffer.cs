@@ -1,100 +1,106 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.DirectX.Direct3D;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.Graphics
 {
-    public interface IIndexBuffer : IDisposable
+    public interface IIndexBuffer : IGraphicsResource
     {
         // Summary:
-        //     Retrieves a description of the index buffer resource.
-        IndexBufferDescription Description { get; }
+        //     Gets the state of the related BufferUsage enumeration.
+        //
+        // Returns:
+        //     Indicates how the application uses buffer contents.
+        BufferUsage BufferUsage { get; }
+        // Summary:
+        //     Gets or sets a value indicating the size of this index element.
+        //
+        // Returns:
+        //     The size of this index element.
+        IndexElementSize IndexElementSize { get; }
+        //
+        // Summary:
+        //     Gets the size, in bytes, of this IndexBuffer.
+        //
+        // Returns:
+        //     The size, in bytes, of this IndexBuffer.
         int SizeInBytes { get; }
         //
         // Summary:
-        //     Locks a range of index data and obtains a pointer to the index buffer memory.
-        //
-        // Parameters:
-        //   offsetToLock:
-        //     [in] Offset into the index data to lock, in bytes. To lock the entire index
-        //     buffer, specify 0 for the sizeToLock and offsetToLock parameters.
-        //
-        //   flags:
-        //     [in] Zero or more LockFlags that describe the type of lock to perform. For
-        //     this method, the valid flags are Discard, NoDirtyUpdate, NoSystemLock, NoOverwrite,
-        //     and ReadOnly.
-        //
-        // Returns:
-        //     An Array that represents the locked index buffer.
-        Array Lock(int offsetToLock, LockFlags flags);
-        //
-        // Summary:
-        //     Locks a range of index data and obtains a pointer to the index buffer memory.
-        //
-        // Parameters:
-        //   offsetToLock:
-        //     [in] Offset into the index data to lock, in bytes. To lock the entire index
-        //     buffer, specify 0 for the sizeToLock and offsetToLock parameters.
-        //
-        //   sizeToLock:
-        //     [in] Size of the index data to lock, in bytes. To lock the entire index buffer,
-        //     specify 0 for the param_Int32_sizeToLock and param_Int32_offsetToLock parameters.
-        //
-        //   flags:
-        //     [in] Zero or more LockFlags that describe the type of lock to perform. For
-        //     this method, the valid flags are Discard, NoDirtyUpdate, NoSystemLock, NoOverwrite,
-        //     and ReadOnly.
-        //
-        // Returns:
-        //     A GraphicsStream object that represents the locked index buffer.
-        IGraphicsStream Lock(int offsetToLock, int sizeToLock, LockFlags flags);
-        //
-        // Summary:
-        //     Locks a range of index data and obtains a pointer to the index buffer memory.
-        //
-        // Parameters:
-        //   offsetToLock:
-        //     [in] Offset into the index data to lock, in bytes. To lock the entire index
-        //     buffer, specify 0 for the sizeToLock and offsetToLock parameters.
-        //
-        //   typeIndex:
-        //     A Type object that indicates the type of array data to return. This can be
-        //     a value type or any type that contains only value types.
-        //
-        //   flags:
-        //     [in] Zero or more LockFlags that describe the type of lock to perform. For
-        //     this method, the valid flags are Discard, NoDirtyUpdate, NoSystemLock, NoOverwrite,
-        //     and ReadOnly.
-        //
-        //   ranks:
-        //     [in] Array of 1 to 3 Int32 values that indicate the dimensions of the returning
-        //     Array.
-        //
-        // Returns:
-        //     An Array that represents the locked index buffer.
-        Array Lock(int offsetToLock, Type typeIndex, LockFlags flags, params int[] ranks);
-        //
-        // Summary:
-        //     Locks, sets, and unlocks a range of vertex data.
+        //     Copies the index buffer into an array.
         //
         // Parameters:
         //   data:
-        //     [in] An Object that contains the data to copy into the index buffer.
-        //
-        //   lockAtOffset:
-        //     [in] Offset to set in the index buffer. To set the entire buffer, set this
-        //     parameter to 0.
-        //
-        //   flags:
-        //     [in] Zero or more LockFlags locking flags that describe the type of lock
-        //     to perform when setting the buffer. For this method, the valid flags are
-        //     Discard, NoDirtyUpdate, NoSystemLock, ReadOnly, and NoOverWrite. For a description
-        //     of the flags, see LockFlags.
-        void SetData(object data, int lockAtOffset, LockFlags flags);
+        //     The array to receive index buffer data.
+        void GetData<T>(T[] data) where T : struct;
         //
         // Summary:
-        //     Unlocks index data.
-        void Unlock();
+        //     Copies the index buffer into an array.
+        //
+        // Parameters:
+        //   data:
+        //     The array to receive index buffer data.
+        //
+        //   startIndex:
+        //     The index of the element in the array at which to start copying.
+        //
+        //   elementCount:
+        //     The number of elements to copy.
+        void GetData<T>(T[] data, int startIndex, int elementCount) where T : struct;
+        //
+        // Summary:
+        //     Copies the index buffer into an array.
+        //
+        // Parameters:
+        //   offsetInBytes:
+        //     The number of bytes into the index buffer where copying will start.
+        //
+        //   data:
+        //     The array to receive index buffer data.
+        //
+        //   startIndex:
+        //     The index of the element in the array at which to start copying.
+        //
+        //   elementCount:
+        //     The number of elements to copy.
+        void GetData<T>(int offsetInBytes, T[] data, int startIndex, int elementCount) where T : struct;
+        //
+        // Summary:
+        //     Copies array data to the index buffer.
+        //
+        // Parameters:
+        //   data:
+        //     The array of data to copy.
+        void SetData<T>(T[] data) where T : struct;
+        //
+        // Summary:
+        //     Copies array data to the index buffer.
+        //
+        // Parameters:
+        //   data:
+        //     The array of data to copy.
+        //
+        //   startIndex:
+        //     The index of the element in the array at which to start copying.
+        //
+        //   elementCount:
+        //     The number of elements to copy.
+        void SetData<T>(T[] data, int startIndex, int elementCount) where T : struct;
+        //
+        // Summary:
+        //     Copies array data to the index buffer.
+        //
+        // Parameters:
+        //   offsetInBytes:
+        //     The number of bytes into the index buffer where copying will start.
+        //
+        //   data:
+        //     The array of data to copy.
+        //
+        //   startIndex:
+        //     The index of the element in the array at which to start copying.
+        //
+        //   elementCount:
+        //     The number of elements to copy.
+        void SetData<T>(int offsetInBytes, T[] data, int startIndex, int elementCount) where T : struct;
     }
 }

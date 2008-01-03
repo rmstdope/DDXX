@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.Utility
 {
@@ -15,10 +15,6 @@ namespace Dope.DDXX.Utility
         public InterpolatedVector3(Vector3 value)
         {
             this.value = value;
-        }
-        public InterpolatedVector3(float x, float y, float z)
-        {
-            this.value = new Vector3(x, y, z);
         }
         public static implicit operator Vector3(InterpolatedVector3 f)
         {

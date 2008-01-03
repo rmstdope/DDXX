@@ -2,26 +2,35 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
-using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Physics;
-using System.Drawing;
-using Microsoft.DirectX;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.SceneGraph
 {
-    public class ParticleSystemNode : NodeBase
+    public abstract class ParticleSystemNode<T> : NodeBase
+        where T : struct
     {
-        private IDevice device;
-        private IVertexBuffer vertexBuffer;
-        private IEffectHandler effectHandler;
-        private List<ISystemParticle> particles;
-        private ModelMaterial material;
-        static private Random rand = new Random();
-        private ISystemParticleSpawner particleSpawner;
+        protected T[] vertices;
+        private IGraphicsDevice device;
+        protected IVertexBuffer vertexBuffer;
+        protected List<ISystemParticle<T>> particles;
 
-        public IEffectHandler EffectHandler
+        protected abstract IMaterialHandler CreateDefaultMaterial(IGraphicsFactory graphicsFactory);
+        protected abstract int NumInitialSpawns { get; }
+        protected abstract ISystemParticle<T> Spawn();
+        protected abstract bool ShouldSpawn();
+        protected int maxNumParticles;
+        private IMaterialHandler material;
+        protected abstract int VertexSizeInBytes { get; }
+        protected abstract VertexElement[] VertexElements { get; }
+        private IVertexDeclaration vertexDeclaration;
+
+        public IMaterialHandler Material
         {
-            set { effectHandler = value; }
+            get { return material; }
+            set { material = value; }
         }
 
         public int ActiveParticles
@@ -32,9 +41,68 @@ namespace Dope.DDXX.SceneGraph
         public ParticleSystemNode(string name)
             : base(name)
         {
-            Material dxMaterial = new Material();
-            dxMaterial.Ambient = Color.Black;
-            material = new ModelMaterial(dxMaterial);
+        }
+
+        public void Initialize(IGraphicsDevice device, IGraphicsFactory graphicsFactory, int maxNumParticles)
+        {
+            this.device = device;
+            this.maxNumParticles = maxNumParticles;
+            particles = new List<ISystemParticle<T>>();
+            material = CreateDefaultMaterial(graphicsFactory);
+
+#if !XBOX
+            vertexBuffer = graphicsFactory.CreateVertexBuffer(typeof(T), maxNumParticles, /*BufferUsage.WriteOnly |*/ BufferUsage.WriteOnly);
+#endif
+            vertexDeclaration = graphicsFactory.CreateVertexDeclaration(VertexElements);
+
+            for (int i = 0; i < NumInitialSpawns; i++)
+                particles.Add(Spawn());
+            
+            vertices = new T[maxNumParticles];
+        }
+
+        protected override void StepNode()
+        {
+            particles.RemoveAll(delegate(ISystemParticle<T> particle) { if (particle.IsDead()) return true; else return false; });
+            while (maxNumParticles != ActiveParticles && ShouldSpawn())
+            {
+                particles.Add(Spawn());
+            }
+
+            for (int i = 0; i < ActiveParticles; i++)
+            {
+                particles[i].Step(ref vertices[i]);
+            }
+
+#if !XBOX
+            vertexBuffer.SetData<T>(vertices, 0, ActiveParticles);
+#endif
+        }
+
+        protected override void RenderNode(IScene scene)
+        {
+            if (ActiveParticles == 0)
+                return;
+
+            material.SetupRendering(new Matrix[] { WorldMatrix }, scene.ActiveCamera.ViewMatrix, scene.ActiveCamera.ProjectionMatrix, scene.AmbientColor, new LightState());
+
+#if !XBOX
+            device.Vertices[0].SetSource(vertexBuffer, 0, VertexSizeInBytes);
+            device.VertexDeclaration = vertexDeclaration;
+#endif
+
+            material.Effect.Begin();
+            foreach (IEffectPass pass in material.Effect.CurrentTechnique.Passes)
+            {
+                pass.Begin();
+#if !XBOX
+                device.DrawPrimitives(PrimitiveType.PointList, 0, ActiveParticles);
+#else
+                device.DrawUserPrimitives<T>(PrimitiveType.PointList, vertices, 0, ActiveParticles);
+#endif
+                pass.End();
+            }
+            material.Effect.End();
         }
 
         protected Vector3 RandomPositionInSphere(float radius)
@@ -42,73 +110,12 @@ namespace Dope.DDXX.SceneGraph
             Vector3 pos;
             do
             {
-                pos = new Vector3((float)(((rand.NextDouble() * 2) - 1) * radius),
-                                  (float)(((rand.NextDouble() * 2) - 1) * radius),
-                                  (float)(((rand.NextDouble() * 2) - 1) * radius));
+                pos = new Vector3(Rand.Float(-radius, radius),
+                                  Rand.Float(-radius, radius),
+                                  Rand.Float(-radius, radius));
             } while (pos.Length() > radius);
             return pos;
         }
 
-        public void Initialize(ISystemParticleSpawner spawner, IDevice device,
-            IGraphicsFactory graphicsFactory, IEffectFactory effectFactory, ITexture texture)
-        {
-            particleSpawner = spawner;
-
-            this.device = device;
-            particles = new List<ISystemParticle>();
-
-            IEffect effect = effectFactory.CreateFromFile("ParticleSystem.fxo");
-            effectHandler = new EffectHandler(effect);
-
-            vertexBuffer = graphicsFactory.CreateVertexBuffer(particleSpawner.VertexType, particleSpawner.MaxNumParticles, device, Usage.WriteOnly | Usage.Dynamic, VertexFormats.None, Pool.Default);
-
-            material.DiffuseTexture = texture;
-            effectHandler.Techniques = new EffectHandle[] { EffectHandle.FromString(spawner.GetTechniqueName(texture != null)) };
-
-            for (int i = 0; i < particleSpawner.NumInitialSpawns; i++)
-                particles.Add(particleSpawner.Spawn(new CameraNode("")));
-        }
-
-        protected override void StepNode(IRenderableCamera camera)
-        {
-            particles.RemoveAll(delegate(ISystemParticle particle) { if (particle.IsDead()) return true; else return false; });
-            while (particleSpawner.MaxNumParticles != particles.Count && particleSpawner.ShouldSpawn())
-                particles.Add(particleSpawner.Spawn(camera));
-            using (IGraphicsStream stream = vertexBuffer.Lock(0, 0, LockFlags.Discard))
-            {
-                foreach (ISystemParticle particle in particles)
-                {
-                    particle.StepAndWrite(stream, camera);
-                }
-                vertexBuffer.Unlock();
-            }
-        }
-
-        protected override void RenderNode(IScene scene)
-        {
-            if (particles.Count == 0)
-                return;
-            effectHandler.SetNodeConstants(WorldMatrix, scene.ActiveCamera.ViewMatrix, scene.ActiveCamera.ProjectionMatrix);
-            effectHandler.SetMaterialConstants(scene.AmbientColor, material, 0);
-
-            int passes = effectHandler.Effect.Begin(FX.None);
-
-            for (int i = 0; i < passes; i++)
-            {
-                effectHandler.Effect.BeginPass(i);
-
-                device.RenderState.AlphaBlendEnable = true;
-                device.RenderState.BlendOperation = particleSpawner.BlendOperation;
-                device.RenderState.SourceBlend = particleSpawner.SourceBlend;
-                device.RenderState.DestinationBlend = particleSpawner.DestinationBlend;
-                device.SetStreamSource(0, vertexBuffer, 0);
-                device.VertexDeclaration = particleSpawner.VertexDeclaration;
-                device.DrawPrimitives(PrimitiveType.PointList, 0, ActiveParticles);
-
-                effectHandler.Effect.EndPass();
-            }
-
-            effectHandler.Effect.End();
-        }
     }
 }

@@ -1,42 +1,26 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Text;
-using Microsoft.DirectX.Direct3D;
-using System.Windows.Forms;
 using Dope.DDXX.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.Graphics
 {
     public interface IGraphicsFactory
     {
-        IManager Manager { get; }
-        ISphericalHarmonics SphericalHarmonics { get; }
-        IDevice CreateDevice(int adapter, DeviceType deviceType, Control renderWindow, CreateFlags behaviorFlags, PresentParameters presentationParameters);
-        ITexture CreateTexture(IDevice device, Bitmap image, Usage usage, Pool pool);
-        ITexture CreateTexture(IDevice device, Stream data, Usage usage, Pool pool);
-        ITexture CreateTexture(IDevice device, int width, int height, int numLevels, Usage usage, Format format, Pool pool);
-        ICubeTexture CreateCubeTexture(IDevice device, int edgeLength, int levels, Usage usage, Format format, Pool pool);
-        IMesh CreateMesh(int numFaces, int numVertices, MeshFlags options, VertexElement[] declaration, IDevice device);
-        IMesh CreateMesh(int numFaces, int numVertices, MeshFlags options, VertexFormats vertexFormat, IDevice device);
-        IMesh MeshFromFile(IDevice device, string fileName, out EffectInstance[] effectInstance);
-        IMesh MeshFromFile(IDevice device, string fileName, out ExtendedMaterial[] materials);
-        IAnimationRootFrame SkinnedMeshFromFile(IDevice device, string fileName, AllocateHierarchy allocHierarchy);
-        IAnimationRootFrame LoadHierarchy(string fileName, IDevice device, AllocateHierarchy allocHierarchy, LoadUserData loadUserData);
-        IMesh CreateBoxMesh(IDevice device, float width, float height, float depth);
-        IEffect EffectFromFile(IDevice device, string sourceDataFile, Include includeFile, string skipConstants, ShaderFlags flags, EffectPool pool);
-        ITexture TextureFromFile(IDevice device, string srcFile, int width, int height, int mipLevels, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey);
-        ICubeTexture CubeTextureFromFile(IDevice device, string fileName);
-        ICubeTexture CubeTextureFromFile(IDevice device, string fileName, int size, int mipLevels, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey);
-        ISprite CreateSprite(IDevice device);
-        IVertexBuffer CreateVertexBuffer(Type typeVertexType, int numVerts, IDevice device, Usage usage, VertexFormats vertexFormat, Pool pool);
-        ILine CreateLine(IDevice device);
-        VertexDeclaration CreateVertexDeclaration(IDevice device, VertexElement[] elements);
-        IFont CreateFont(IDevice device, FontDescription description);
-        IFont CreateFont(IDevice device, System.Drawing.Font font);
-        IFont CreateFont(IDevice device, int height, int width, FontWeight weight, int miplevels, bool italic, CharacterSet charset, Precision outputPrecision, FontQuality quality, PitchAndFamily pitchFamily, string faceName);
-        ISurface CreateRenderTarget(IDevice device, int width, int height, Format format, MultiSampleType multiSample, int multiSampleQuality, bool lockable);
-        ISurface CreateDepthStencilSurface(IDevice device, int width, int height, DepthFormat format, MultiSampleType multiSample, int multiSampleQuality, bool discard);
+        IDeviceManager GraphicsDeviceManager { get; }
+        IRenderTarget2D CreateRenderTarget2D(int width, int height, int numLevels, SurfaceFormat format, MultiSampleType multiSampleType, int multiSampleQuality);
+        ITexture2D CreateTexture2D(int width, int height, int numLevels, TextureUsage usage, SurfaceFormat format);
+        IDepthStencilBuffer CreateDepthStencilBuffer(int width, int height, DepthFormat format, MultiSampleType multiSampleType);
+        ITexture2D Texture2DFromFile(string name);
+        ITextureCube TextureCubeFromFile(string name);
+        IVertexBuffer CreateVertexBuffer(Type typeVertexType, int numVerts, BufferUsage usage);
+        ISpriteBatch CreateSpriteBatch();
+        IEffect EffectFromFile(string name);
+        ISpriteFont SpriteFontFromFile(string name);
+        IModel ModelFromFile(string name);
+        IIndexBuffer CreateIndexBuffer(Type indexType, int elementCount, BufferUsage usage);
+        IVertexDeclaration CreateVertexDeclaration(VertexElement[] vertexElement);
     }
 }

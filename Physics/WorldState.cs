@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.Physics
 {
@@ -23,20 +23,12 @@ namespace Dope.DDXX.Physics
             this.scaling = scaling;
         }
 
-        public Vector3 Forward
-        {
-            get { return new Vector3(rotation.M31, rotation.M32, rotation.M33); }
-        }
-
-        public Vector3 Up
-        {
-            get { return new Vector3(rotation.M21, rotation.M22, rotation.M23); }
-        }
-
-        public Vector3 Right
-        {
-            get { return new Vector3(rotation.M11, rotation.M12, rotation.M13); }
-        }
+        public Vector3 Forward { get { return rotation.Forward; } }
+        public Vector3 Backward { get { return rotation.Backward; } }
+        public Vector3 Up { get { return rotation.Up; } }
+        public Vector3 Down { get { return rotation.Down; } }
+        public Vector3 Right { get { return rotation.Right; } }
+        public Vector3 Left { get { return rotation.Left; } }
 
         public Vector3 Position
         {
@@ -66,14 +58,29 @@ namespace Dope.DDXX.Physics
             MoveDelta(Forward * delta);
         }
 
+        public void MoveBackward(float delta)
+        {
+            MoveForward(-delta);
+        }
+
         public void MoveRight(float delta)
         {
             MoveDelta(Right * delta);
         }
 
+        public void MoveLeft(float delta)
+        {
+            MoveRight(-delta);
+        }
+
         public void MoveUp(float delta)
         {
             MoveDelta(Up * delta);
+        }
+
+        public void MoveDown(float delta)
+        {
+            MoveUp(-delta);
         }
 
         public void Scale(Vector3 scale)
@@ -90,8 +97,8 @@ namespace Dope.DDXX.Physics
 
         public virtual Matrix GetWorldMatrix()
         {
-            Matrix scale = Matrix.Scaling(scaling);
-            Matrix trans = Matrix.Translation(position);
+            Matrix scale = Matrix.CreateScale(scaling);
+            Matrix trans = Matrix.CreateTranslation(position);
             return scale * rotation * trans;
         }
 
@@ -117,22 +124,22 @@ namespace Dope.DDXX.Physics
             position = new Vector3(0, 0, 0);
         }
 
-        public void Turn(float angle)
+        public void Turn(double angle)
         {
-            Matrix m = Matrix.RotationY(angle);
-            rotation = Matrix.Multiply(m, rotation);
+            Matrix m = Matrix.CreateRotationY((float)angle);
+            rotation = m * rotation;
         }
 
-        public void Tilt(float angle)
+        public void Tilt(double angle)
         {
-            Matrix m = Matrix.RotationX(angle);
-            rotation = Matrix.Multiply(m, rotation);
+            Matrix m = Matrix.CreateRotationX((float)angle);
+            rotation = m * rotation;
         }
 
-        public void Roll(float angle)
+        public void Roll(double angle)
         {
-            Matrix m = Matrix.RotationZ(angle);
-            rotation = Matrix.Multiply(m, rotation);
+            Matrix m = Matrix.CreateRotationZ((float)angle);
+            rotation = m * rotation;
         }
     }
 }

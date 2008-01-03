@@ -3,39 +3,35 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using NMock2;
-using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.DemoFramework;
-using System.Drawing;
 using Dope.DDXX.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoEffects
 {
     [TestFixture]
-    public class GlowPostEffectTest
+    public class GlowPostEffectTest : DemoMockTest
     {
-        private Mockery mockery;
-        private GlowPostEffect effect;
-        private IPostProcessor postProcessor;
-        private ITexture outputTexture;
-        private ITexture texture1;
-        private ITexture texture2;
+        private GlowPostEffect sut;
+        private IRenderTarget2D outputTexture;
+        private IRenderTarget2D texture1;
+        private IRenderTarget2D texture2;
 
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
-            mockery = new Mockery();
-            postProcessor = mockery.NewMock<IPostProcessor>();
-            outputTexture = mockery.NewMock<ITexture>();
-            texture1 = mockery.NewMock<ITexture>();
-            texture2 = mockery.NewMock<ITexture>();
-            effect = new GlowPostEffect("", 1.0f, 2.0f);
-            effect.Initialize(null, postProcessor, null, null, null);
+            base.SetUp();
+            outputTexture = mockery.NewMock<IRenderTarget2D>();
+            texture1 = mockery.NewMock<IRenderTarget2D>();
+            texture2 = mockery.NewMock<IRenderTarget2D>();
+            sut = new GlowPostEffect("", 1.0f, 2.0f);
+            sut.Initialize(graphicsFactory, postProcessor, textureFactory, textureBuilder);
         }
 
         [TearDown]
-        public void TearDown()
+        public override void TearDown()
         {
-            mockery.VerifyAllExpectationsHaveBeenMet();
+            base.TearDown();
         }
 
         [Test]
@@ -56,9 +52,9 @@ namespace Dope.DDXX.DemoEffects
             TestRenderTwoDownsamples(outputTexture, texture1, texture2, true);
         }
 
-        private void TestRenderOneDownsample(ITexture startTexture, ITexture tempTexture1, ITexture tempTexture2)
+        private void TestRenderOneDownsample(IRenderTarget2D startTexture, IRenderTarget2D tempTexture1, IRenderTarget2D tempTexture2)
         {
-            List<ITexture> textures = new List<ITexture>();
+            List<IRenderTarget2D> textures = new List<IRenderTarget2D>();
             textures.Add(tempTexture1);
             textures.Add(tempTexture2);
             Stub.On(postProcessor).
@@ -66,11 +62,11 @@ namespace Dope.DDXX.DemoEffects
                 Will(Return.Value(startTexture));
             using (mockery.Ordered)
             {
-                effect.Luminance = 0.06f;
-                effect.Exposure = 0.18f;
-                effect.WhiteCutoff = 0.1f;
-                effect.BloomScale = 1.5f;
-                effect.DownSamples = 1;
+                sut.Luminance = 0.06f;
+                sut.Exposure = 0.18f;
+                sut.WhiteCutoff = 0.1f;
+                sut.BloomScale = 1.5f;
+                sut.DownSamples = 1;
                 Expect.Once.On(postProcessor).
                     Method("GetTemporaryTextures").
                     With(2, true).Will(Return.Value(textures));
@@ -88,7 +84,7 @@ namespace Dope.DDXX.DemoEffects
                     With("BloomScale", 1.5f);
                 Expect.Once.On(postProcessor).
                     Method("SetBlendParameters").
-                    With(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
+                    With(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);
                 Expect.Once.On(postProcessor).
                     Method("Process").
                     With("DownSample4x", startTexture, tempTexture2);
@@ -106,17 +102,17 @@ namespace Dope.DDXX.DemoEffects
                 }
                 Expect.Once.On(postProcessor).
                     Method("SetBlendParameters").
-                    With(BlendOperation.Add, Blend.One, Blend.One, Color.Black);
+                    With(BlendFunction.Add, Blend.One, Blend.One, Color.Black);
                 Expect.Once.On(postProcessor).
                     Method("Process").
                     With("UpSample4x", tempTexture1, startTexture);
             }
-            effect.Render();
+            sut.Render();
         }
 
-        private void TestRenderTwoDownsamples(ITexture startTexture, ITexture tempTexture1, ITexture tempTexture2, bool advancedBrighten)
+        private void TestRenderTwoDownsamples(IRenderTarget2D startTexture, IRenderTarget2D tempTexture1, IRenderTarget2D tempTexture2, bool advancedBrighten)
         {
-            List<ITexture> textures = new List<ITexture>();
+            List<IRenderTarget2D> textures = new List<IRenderTarget2D>();
             textures.Add(tempTexture1);
             textures.Add(tempTexture2);
             Stub.On(postProcessor).
@@ -124,12 +120,12 @@ namespace Dope.DDXX.DemoEffects
                 Will(Return.Value(startTexture));
             using (mockery.Ordered)
             {
-                effect.Luminance = 0.06f;
-                effect.Exposure = 0.18f;
-                effect.WhiteCutoff = 0.1f;
-                effect.BloomScale = 1.5f;
-                effect.DownSamples = 2;
-                effect.AdvancedGlow = advancedBrighten;
+                sut.Luminance = 0.06f;
+                sut.Exposure = 0.18f;
+                sut.WhiteCutoff = 0.1f;
+                sut.BloomScale = 1.5f;
+                sut.DownSamples = 2;
+                sut.AdvancedGlow = advancedBrighten;
                 Expect.Once.On(postProcessor).
                     Method("GetTemporaryTextures").
                     With(2, true).Will(Return.Value(textures));
@@ -147,7 +143,7 @@ namespace Dope.DDXX.DemoEffects
                     With("BloomScale", 1.5f);
                 Expect.Once.On(postProcessor).
                     Method("SetBlendParameters").
-                    With(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
+                    With(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);
                 Expect.Once.On(postProcessor).
                     Method("Process").
                     With("DownSample4x", startTexture, tempTexture1);
@@ -176,12 +172,12 @@ namespace Dope.DDXX.DemoEffects
                     With("UpSample4x", tempTexture1, tempTexture2);
                 Expect.Once.On(postProcessor).
                     Method("SetBlendParameters").
-                    With(BlendOperation.Add, Blend.One, Blend.One, Color.Black);
+                    With(BlendFunction.Add, Blend.One, Blend.One, Color.Black);
                 Expect.Once.On(postProcessor).
                     Method("Process").
                     With("UpSample4x", tempTexture2, startTexture);
             }
-            effect.Render();
+            sut.Render();
         }
 
     }

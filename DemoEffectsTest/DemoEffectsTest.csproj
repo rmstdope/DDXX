@@ -1,80 +1,127 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
+    <ProjectGuid>{18A1C251-BBD1-4289-9CEF-B387B7B0B414}</ProjectGuid>
+    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{99DE9411-D541-4A74-9E16-C522EC103507}</ProjectGuid>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Dope.DDXX.DemoEffects</RootNamespace>
     <AssemblyName>Dope.DDXX.DemoEffectsTest</AssemblyName>
+    <XnaFrameworkVersion>v2.0</XnaFrameworkVersion>
+    <XnaPlatform>Windows</XnaPlatform>
+    <Thumbnail>
+    </Thumbnail>
+    <XnaCrossPlatformGroupID>{60a9fd6a-77e6-4a69-a644-575661f81291}</XnaCrossPlatformGroupID>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\x86\Debug</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\x86\Release</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2911.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="Microsoft.Xna.Framework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="NMock2, Version=1.0.2313.18049, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="nunit.framework, Version=2.4.1.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml" />
+    <Reference Include="nunit.framework, Version=2.4.3.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AspectilizerPostEffectTest.cs" />
-    <Compile Include="BlurPostEffectTest.cs" />
-    <Compile Include="DepthOfFieldPostEffectTest.cs" />
-    <Compile Include="GlowPostEffectTest.cs" />
-    <Compile Include="MonochromePostEffectTest.cs" />
-    <Compile Include="OverlayPostEffectTest.cs" />
+    <Compile Include="AspectilizerPostEffectTest.cs">
+      <Name>AspectilizerPostEffectTest</Name>
+    </Compile>
+    <Compile Include="BlurPostEffectTest.cs">
+      <Name>BlurPostEffectTest</Name>
+    </Compile>
+    <Compile Include="DepthOfFieldPostEffectTest.cs">
+      <Name>DepthOfFieldPostEffectTest</Name>
+    </Compile>
+    <Compile Include="GlowPostEffectTest.cs">
+      <Name>GlowPostEffectTest</Name>
+    </Compile>
+    <Compile Include="MonochromePostEffectTest.cs">
+      <Name>MonochromePostEffectTest</Name>
+    </Compile>
+    <Compile Include="OverlayPostEffectTest.cs">
+      <Name>OverlayPostEffectTest</Name>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RadialBlurPostEffectTest.cs" />
-    <Compile Include="RingsPostEffectTest.cs" />
-    <Compile Include="SpinningBackgroundEffectTest.cs" />
-    <Compile Include="TextFadingEffectTest.cs" />
-    <Compile Include="WavePostEffectTest.cs" />
+    <Compile Include="RadialBlurPostEffectTest.cs">
+      <Name>RadialBlurPostEffectTest</Name>
+    </Compile>
+    <Compile Include="RingsPostEffectTest.cs">
+      <Name>RingsPostEffectTest</Name>
+    </Compile>
+    <Compile Include="SpinningBackgroundEffectTest.cs">
+      <Name>SpinningBackgroundEffectTest</Name>
+    </Compile>
+    <Compile Include="TextFadingEffectTest.cs">
+      <Name>TextFadingEffectTest</Name>
+    </Compile>
+    <Compile Include="WavePostEffectTest.cs">
+      <Name>WavePostEffectTest</Name>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <NestedContentProject Include="Content.contentproj">
+      <Project>{edadb3bd-6702-45bf-8abf-b2c24de4d61c}</Project>
+      <Visible>False</Visible>
+    </NestedContentProject>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DemoEffects\DemoEffects.csproj">
-      <Project>{971A8760-50EE-4932-99F3-D226081FBD53}</Project>
+      <Project>{D8A4AD1F-20EA-42E8-9F24-15D339A60448}</Project>
       <Name>DemoEffects</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DemoFrameworkTest\DemoFrameworkTest.csproj">
+      <Project>{374D0305-E7B6-425E-810D-7E1D67CE7AEF}</Project>
+      <Name>DemoFrameworkTest</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DemoFramework\DemoFramework.csproj">
-      <Project>{DBD3FD0B-0B65-4626-BABA-3C46457B1185}</Project>
+      <Project>{0E899EC0-D2E2-47EE-A46D-53E037C3F52F}</Project>
       <Name>DemoFramework</Name>
     </ProjectReference>
     <ProjectReference Include="..\GraphicsTest\GraphicsTest.csproj">
-      <Project>{72977C86-9996-46A8-B6F4-468133639BE9}</Project>
+      <Project>{292A547D-05A7-4C2A-AC8E-C3F9FFD41F6D}</Project>
       <Name>GraphicsTest</Name>
     </ProjectReference>
     <ProjectReference Include="..\Graphics\Graphics.csproj">
-      <Project>{B64087ED-595E-4597-84D8-D273FF00B2DA}</Project>
+      <Project>{797591FA-968E-41D7-BFEF-85E13FCCA4CF}</Project>
       <Name>Graphics</Name>
     </ProjectReference>
     <ProjectReference Include="..\TextureBuilder\TextureBuilder.csproj">
-      <Project>{712F1F16-E7BC-4D96-8B1A-AEA31365FD95}</Project>
+      <Project>{7DCF0749-447D-4D64-A1A2-2560C03A072E}</Project>
       <Name>TextureBuilder</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utility\Utility.csproj">
-      <Project>{31D76405-2DD3-436A-BE65-963DE822511E}</Project>
+      <Project>{70F76E25-311C-4DFC-9412-89470F537BDF}</Project>
       <Name>Utility</Name>
     </ProjectReference>
   </ItemGroup>
@@ -86,4 +133,6 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v2.0\Microsoft.Xna.GameStudio.Common.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v2.0\Microsoft.Xna.GameStudio.NestedContent.targets" />
 </Project>

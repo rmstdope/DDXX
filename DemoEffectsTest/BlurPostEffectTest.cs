@@ -2,38 +2,34 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using Dope.DDXX.DemoFramework;
 using NMock2;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
+using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoEffects
 {
     [TestFixture]
-    public class BlurPostEffectTest
+    public class BlurPostEffectTest : DemoMockTest
     {
-        private Mockery mockery;
-        private BlurPostEffect effect;
-        private IPostProcessor postProcessor;
-        private ITexture outputTexture;
-        private ITexture texture1;
+        private BlurPostEffect sut;
+        private IRenderTarget2D outputTexture;
+        private IRenderTarget2D texture1;
 
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
-            mockery = new Mockery();
-            postProcessor = mockery.NewMock<IPostProcessor>();
-            outputTexture = mockery.NewMock<ITexture>();
-            texture1 = mockery.NewMock<ITexture>();
-            effect = new BlurPostEffect("", 1.0f, 2.0f);
-            effect.Initialize(null, postProcessor, null, null, null);
+            base.SetUp();
+            outputTexture = mockery.NewMock<IRenderTarget2D>();
+            texture1 = mockery.NewMock<IRenderTarget2D>();
+            sut = new BlurPostEffect("", 1.0f, 2.0f);
+            sut.Initialize(graphicsFactory, postProcessor, textureFactory, textureBuilder);
         }
 
         [TearDown]
-        public void TearDown()
+        public override void TearDown()
         {
-            mockery.VerifyAllExpectationsHaveBeenMet();
+            base.TearDown();
         }
 
         /// <summary>
@@ -51,10 +47,10 @@ namespace Dope.DDXX.DemoEffects
         [Test]
         public void TestThreePasses()
         {
-            List<ITexture> textures = new List<ITexture>();
+            List<IRenderTarget2D> textures = new List<IRenderTarget2D>();
             textures.Add(texture1);
             textures.Add(outputTexture);
-            effect.NumPasses = 3;
+            sut.NumPasses = 3;
             Stub.On(postProcessor).
                 GetProperty("OutputTexture").
                 Will(Return.Value(outputTexture));
@@ -69,7 +65,7 @@ namespace Dope.DDXX.DemoEffects
                     With("BloomScale", 1.0f);
                 Expect.Once.On(postProcessor).
                     Method("SetBlendParameters").
-                    With(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
+                    With(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);
             }
             for (int i = 0; i < 3; i++)
             {
@@ -83,13 +79,13 @@ namespace Dope.DDXX.DemoEffects
                         With("VerticalBloom", texture1, outputTexture);
                 }
             }
-            effect.Render();
+            sut.Render();
         }
 
 
-        private void TestRender(ITexture startTexture, ITexture tempTexture1)
+        private void TestRender(IRenderTarget2D startTexture, IRenderTarget2D tempTexture1)
         {
-            List<ITexture> textures = new List<ITexture>();
+            List<IRenderTarget2D> textures = new List<IRenderTarget2D>();
             textures.Add(tempTexture1);
             textures.Add(startTexture);
             Stub.On(postProcessor).
@@ -105,7 +101,7 @@ namespace Dope.DDXX.DemoEffects
                     With("BloomScale", 1.0f);
                 Expect.Once.On(postProcessor).
                     Method("SetBlendParameters").
-                    With(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
+                    With(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);
                 Expect.Once.On(postProcessor).
                     Method("Process").
                     With("HorizontalBloom", startTexture, tempTexture1);
@@ -113,7 +109,7 @@ namespace Dope.DDXX.DemoEffects
                     Method("Process").
                     With("VerticalBloom", tempTexture1, startTexture);
             }
-            effect.Render();
+            sut.Render();
         }
     }
 }

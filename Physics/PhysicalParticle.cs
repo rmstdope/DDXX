@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX;
 using Dope.DDXX.Utility;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.Physics
 {
-    public class PhysicalParticle : IPhysicalParticle
+    public class PhysicalParticle : Dope.DDXX.Physics.IPhysicalParticle
     {
         private Vector3 position;
         private Vector3 oldPosition;
@@ -40,15 +40,8 @@ namespace Dope.DDXX.Physics
             this.invMass = 1 / mass;
             this.lastVelocity = new Vector3(0, 0, 0);
             this.dragCoefficient = dragCoefficient;
-            lastDeltaTime = 0.002f;
+            lastDeltaTime = 1.0f;
             externalForces = new Vector3(0, 0, 0);
-        }
-
-        public void Reset()
-        {
-            lastDeltaTime = 0.002f;
-            externalForces = new Vector3(0, 0, 0);
-            this.lastVelocity = new Vector3(0, 0, 0);
         }
 
         public Vector3 Position
@@ -57,46 +50,34 @@ namespace Dope.DDXX.Physics
             set { position = value; }
         }
 
-        public Vector3 OldPosition
-        {
-            get { return oldPosition; }
-            set { oldPosition = value; }
-        }
-
         public float InvMass
         {
             get { return invMass; }
             set { invMass = value; }
         }
 
-        public float DragCoefficient
+        public void Step(Vector3 gravity)
         {
-            get { return dragCoefficient; }
-            set { dragCoefficient = value; }
-        }
-
-        public void Step(float time, Vector3 gravity)
-        {
-            UpdatePosition(time, GetVelocity(), GetVelocityChange(time, gravity));
-            UpdateLastDelta(time);
+            UpdatePosition(GetVelocity(), GetVelocityChange(gravity));
+            UpdateLastDelta();
             externalForces = new Vector3(0, 0, 0);
         }
 
-        private void UpdateLastDelta(float time)
+        private void UpdateLastDelta()
         {
-            lastDeltaTime = time;
+            lastDeltaTime = Time.DeltaTime;
         }
 
-        private void UpdatePosition(float time, Vector3 velocity, Vector3 velocityMod)
+        private void UpdatePosition(Vector3 velocity, Vector3 velocityMod)
         {
             oldPosition = position;
-            position += (velocity + velocityMod * 0.5f) * time;
+            position += (velocity + velocityMod * 0.5f) * Time.DeltaTime;
             this.lastVelocity = velocity;
         }
 
-        private Vector3 GetVelocityChange(float time, Vector3 gravity)
+        private Vector3 GetVelocityChange(Vector3 gravity)
         {
-            return GetAcceleration(gravity) * time;
+            return GetAcceleration(gravity) * Time.DeltaTime;
         }
 
         private Vector3 GetAcceleration(Vector3 gravity)
@@ -107,11 +88,7 @@ namespace Dope.DDXX.Physics
         private Vector3 GetVelocity()
         {
             // Calculate the average velocity last update
-            Vector3 velocity;
-            if (lastDeltaTime > 0)
-                velocity = (position - oldPosition) * (1 / lastDeltaTime);
-            else
-                velocity = new Vector3();
+            Vector3 velocity = (position - oldPosition) * (1 / lastDeltaTime);
             // Add drag coefficient
             return velocity * (1 - dragCoefficient);
         }

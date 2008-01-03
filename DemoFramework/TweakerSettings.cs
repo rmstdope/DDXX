@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Drawing;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
     public class TweakerSettings : ITweakerSettings
     {
-        private float alpha;
-        private float textAlpha;
+        private byte alpha;
+        private byte textAlpha;
         private Color titleColor;
         private Color timeColor;
         private Color selectedColor;
@@ -39,11 +39,11 @@ namespace Dope.DDXX.DemoFramework
             set { titleColor = value; }
         }
 
-        public float TextAlpha
+        public byte TextAlpha
         {
             get { return textAlpha; }
         }
-        public float Alpha
+        public byte Alpha
         {
             get { return alpha; }
         }
@@ -66,10 +66,10 @@ namespace Dope.DDXX.DemoFramework
                     selectedColor = Color.DarkBlue;
                     break;
                 case ColorSchema.Gray:
-                    titleColor = Color.FromArgb(50, 50, 50);
-                    timeColor = Color.FromArgb(70, 70, 70);
-                    selectedColor = Color.FromArgb(100, 100, 100);
-                    unselectedColor = Color.FromArgb(50, 50, 50);
+                    titleColor = new Color(50, 50, 50);
+                    timeColor = new Color(70, 70, 70);
+                    selectedColor = new Color(100, 100, 100);
+                    unselectedColor = new Color(50, 50, 50);
                     break;
                 case ColorSchema.Original:
                     titleColor = Color.Aquamarine;
@@ -85,16 +85,16 @@ namespace Dope.DDXX.DemoFramework
             switch (transparency)
             {
                 case Transparency.High:
-                    alpha = 0.15f;
-                    textAlpha = 0.3f;
+                    alpha = 40;
+                    textAlpha = 80;
                     break;
                 case Transparency.Medium:
-                    alpha = 0.3f;
-                    textAlpha = 0.5f;
+                    alpha = 80;
+                    textAlpha = 128;
                     break;
                 case Transparency.Low:
-                    alpha = 0.5f;
-                    textAlpha = 0.8f;
+                    alpha = 128;
+                    textAlpha = 200;
                     break;
             }
         }

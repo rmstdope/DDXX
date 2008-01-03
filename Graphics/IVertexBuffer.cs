@@ -1,122 +1,112 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX.Direct3D;
-using Microsoft.DirectX;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.Graphics
 {
-    public interface IVertexBuffer : IDisposable
+    public interface IVertexBuffer : IGraphicsResource
     {
         // Summary:
-        //     Retrieves a description of the vertex buffer resource.
-        VertexBufferDescription Description { get; }
+        //     Gets the state of the related BufferUsage enumeration.
+        //
+        // Returns:
+        //     Indicates how the application uses buffer contents.
+        BufferUsage BufferUsage { get; }
         //
         // Summary:
-        //     Gets a value that indicates whether the object is disposed.
-        bool Disposed { get; }
+        //     Gets the size, in bytes, of this vertex buffer.
         //
-        // Summary:
-        //     Retrieves the size of the Microsoft.DirectX.Direct3D.VertexBuffer data, in
-        //     bytes.
+        // Returns:
+        //     The size, in bytes, of the vertex buffer.
         int SizeInBytes { get; }
         //
         // Summary:
-        //     Locks a range of vertex data and obtains the vertex buffer memory.
-        //
-        // Parameters:
-        //   offsetToLock:
-        //     Offset into the vertex data to lock, in bytes. To lock the entire vertex
-        //     buffer, specify 0 for both Microsoft.DirectX.Direct3D.VertexBuffer.Lock()
-        //     and Microsoft.DirectX.Direct3D.VertexBuffer.Lock().
-        //
-        //   flags:
-        //     Zero or more Microsoft.DirectX.Direct3D.LockFlags locking flags that describe
-        //     the type of lock to perform. For this method, the valid flags are Microsoft.DirectX.Direct3D.LockFlags.Discard,
-        //     Microsoft.DirectX.Direct3D.LockFlags.NoDirtyUpdate, Microsoft.DirectX.Direct3D.LockFlags.NoSystemLock,
-        //     Microsoft.DirectX.Direct3D.LockFlags.ReadOnly, and Microsoft.DirectX.Direct3D.LockFlags.
-        //     For a description of the flags, see Microsoft.DirectX.Direct3D.LockFlags.
-        //
-        // Returns:
-        //     An System.Array that represents the locked vertex buffer.
-        Array Lock(int offsetToLock, LockFlags flags);
-        //
-        // Summary:
-        //     Locks a range of vertex data and obtains the vertex buffer memory.
-        //
-        // Parameters:
-        //   offsetToLock:
-        //     Offset into the vertex data to lock, in bytes. To lock the entire vertex
-        //     buffer, specify 0 for both Microsoft.DirectX.Direct3D.VertexBuffer.Lock()
-        //     and Microsoft.DirectX.Direct3D.VertexBuffer.Lock().
-        //
-        //   sizeToLock:
-        //     Size of the vertex data to lock, in bytes. To lock the entire vertex buffer,
-        //     specify 0 for both Microsoft.DirectX.Direct3D.VertexBuffer.Lock() and Microsoft.DirectX.Direct3D.VertexBuffer.Lock().
-        //
-        //   flags:
-        //     Zero or more Microsoft.DirectX.Direct3D.LockFlags locking flags that describe
-        //     the type of lock to perform. For this method, the valid flags are Microsoft.DirectX.Direct3D.LockFlags.Discard,
-        //     Microsoft.DirectX.Direct3D.LockFlags.NoDirtyUpdate, Microsoft.DirectX.Direct3D.LockFlags.NoSystemLock,
-        //     Microsoft.DirectX.Direct3D.LockFlags.ReadOnly, and Microsoft.DirectX.Direct3D.LockFlags.
-        //     For a description of the flags, see Microsoft.DirectX.Direct3D.LockFlags.
-        //
-        // Returns:
-        //     A Microsoft.DirectX.GraphicsStream object that represents the locked vertex
-        //     buffer.
-        IGraphicsStream Lock(int offsetToLock, int sizeToLock, LockFlags flags);
-        //
-        // Summary:
-        //     Locks a range of vertex data and obtains the vertex buffer memory.
-        //
-        // Parameters:
-        //   offsetToLock:
-        //     Offset into the vertex data to lock, in bytes. To lock the entire vertex
-        //     buffer, specify 0 for both Microsoft.DirectX.Direct3D.VertexBuffer.Lock()
-        //     and Microsoft.DirectX.Direct3D.VertexBuffer.Lock().
-        //
-        //   typeVertex:
-        //     A System.Type object that indicates the type of array data to return. This
-        //     can be a value type or any type that contains only value types.
-        //
-        //   flags:
-        //     Zero or more Microsoft.DirectX.Direct3D.LockFlags locking flags that describe
-        //     the type of lock to perform. For this method, the valid flags are Microsoft.DirectX.Direct3D.LockFlags.Discard,
-        //     Microsoft.DirectX.Direct3D.LockFlags.NoDirtyUpdate, Microsoft.DirectX.Direct3D.LockFlags.NoSystemLock,
-        //     Microsoft.DirectX.Direct3D.LockFlags.ReadOnly, and Microsoft.DirectX.Direct3D.LockFlags.
-        //     For a description of the flags, see Microsoft.DirectX.Direct3D.LockFlags.
-        //
-        //   ranks:
-        //     Array of one to three System.Int32 values that indicate the dimensions of
-        //     the returning System.Array.
-        //
-        // Returns:
-        //     An System.Array that represents the locked vertex buffer.
-        Array Lock(int offsetToLock, Type typeVertex, LockFlags flags, params int[] ranks);
-        //
-        // Summary:
-        //     Locks, sets, and unlocks a range of vertex data.
+        //     Gets a copy of the vertex buffer data.
         //
         // Parameters:
         //   data:
-        //     An System.Object that contains the data to copy into the vertex buffer. This
-        //     can be any value type or any type that contains only value types.
-        //
-        //   lockAtOffset:
-        //     Offset in the vertex buffer to set. To set the entire buffer, set this parameter
-        //     to 0.
-        //
-        //   flags:
-        //     Zero or more Microsoft.DirectX.Direct3D.LockFlags locking flags that describe
-        //     the type of lock to perform when setting the buffer. For this method, the
-        //     valid flags are Microsoft.DirectX.Direct3D.LockFlags.Discard, Microsoft.DirectX.Direct3D.LockFlags.NoDirtyUpdate,
-        //     Microsoft.DirectX.Direct3D.LockFlags.NoSystemLock, Microsoft.DirectX.Direct3D.LockFlags.ReadOnly,
-        //     and Microsoft.DirectX.Direct3D.LockFlags. For a description of the flags,
-        //     see Microsoft.DirectX.Direct3D.LockFlags.
-        void SetData(object data, int lockAtOffset, LockFlags flags);
+        //     The array into which to copy the vertex buffer data.
+        void GetData<T>(T[] data) where T : struct;
         //
         // Summary:
-        //     Unlocks vertex data.
-        void Unlock();
+        //     Gets a copy of the vertex buffer data, specifying the start index and number
+        //     of elements in the vertex buffer.
+        //
+        // Parameters:
+        //   data:
+        //     The array into which to copy the vertex buffer data.
+        //
+        //   startIndex:
+        //     Index of the element in the array at which to start copying.
+        //
+        //   elementCount:
+        //     Number of elements in the array.
+        void GetData<T>(T[] data, int startIndex, int elementCount) where T : struct;
+        //
+        // Summary:
+        //     Gets a copy of the vertex buffer data, specifying the start index, starting
+        //     offset, number of elements, and size of the vertex buffer elements.
+        //
+        // Parameters:
+        //   offsetInBytes:
+        //     Starting offset.
+        //
+        //   data:
+        //     The array into which to copy the vertex buffer data.
+        //
+        //   startIndex:
+        //     Index of the element in the array at which to start copying.
+        //
+        //   elementCount:
+        //     Number of elements in the array.
+        //
+        //   vertexStride:
+        //     Size, in bytes, of an element in the vertex buffer.
+        void GetData<T>(int offsetInBytes, T[] data, int startIndex, int elementCount, int vertexStride) where T : struct;
+        //
+        // Summary:
+        //     Sets the vertex buffer data.
+        //
+        // Parameters:
+        //   data:
+        //     The array from which to copy the vertex buffer data.
+        void SetData<T>(T[] data) where T : struct;
+        //
+        // Summary:
+        //     Sets the vertex buffer data, specifying the start index and number of elements
+        //     in the vertex buffer.
+        //
+        // Parameters:
+        //   data:
+        //     The array from which to copy the vertex buffer data.
+        //
+        //   startIndex:
+        //     Index of the element in the array at which to start copying.
+        //
+        //   elementCount:
+        //     Number of elements in the array.
+        void SetData<T>(T[] data, int startIndex, int elementCount) where T : struct;
+        //
+        // Summary:
+        //     Sets the vertex buffer data, specifying the start index, starting offset,
+        //     number of elements, and size of the vertex buffer elements.
+        //
+        // Parameters:
+        //   offsetInBytes:
+        //     Starting offset.
+        //
+        //   data:
+        //     The array from which to copy the vertex buffer data.
+        //
+        //   startIndex:
+        //     Index of the element in the array at which to start copying.
+        //
+        //   elementCount:
+        //     Number of elements in the array.
+        //
+        //   vertexStride:
+        //     Size, in bytes, of an element in the vertex buffer.
+        void SetData<T>(int offsetInBytes, T[] data, int startIndex, int elementCount, int vertexStride) where T : struct;
     }
 }

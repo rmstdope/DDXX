@@ -202,7 +202,6 @@ technique PointSprite
 		PixelShader				= compile ps_2_0 SimplePixelShader(true);
 		CullMode					= None;
 		PointSpriteEnable = true;
-		ZEnable						=	true;
 		ZFunc							= Less;
 		ZWriteEnable			= false;
   }

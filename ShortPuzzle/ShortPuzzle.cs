@@ -48,7 +48,7 @@ namespace ShortPuzzle
                     executer.SetSong("scanner_of_dope-woo-192.mp3");
                     executer.Initialize(D3DDriver.GetInstance().Device, 
                         D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
-                        D3DDriver.EffectFactory, new TextureBuilder(D3DDriver.TextureFactory), "ShortPuzzle.xml");
+                        new TextureBuilder(D3DDriver.TextureFactory), "ShortPuzzle.xml");
                     executer.Run();
                     window.CleanUp();
                 }

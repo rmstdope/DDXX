@@ -36,33 +36,40 @@ namespace Dope.DDXX.DemoFramework
             {
                 if (assembly == null)
                     continue;
-                try
-                {
+                //try
+                //{
                     foreach (Type t in assembly.GetTypes())
                     {
-                        TypeFilter filter = new TypeFilter(delegate(Type ty, object comp)
+                        foreach (Type type in t.GetInterfaces())
                         {
-                            if (ty.FullName == (string)comp)
-                                return true;
-                            else
-                                return false;
-                        });
-                        Type[] interfaces = t.FindInterfaces(filter, "Dope.DDXX.DemoFramework.IRegisterable");
-                        if (interfaces.Length > 0)
-                        {
-                            iRegisterables.Add(t.Name, t);
+                            if (type.FullName == "Dope.DDXX.DemoFramework.IRegisterable")
+                                iRegisterables.Add(t.Name, t);
+                            if (type.FullName == "Dope.DDXX.TextureBuilder.IGenerator")
+                                iGenerators.Add(t.Name, t);
                         }
-                        interfaces = t.FindInterfaces(filter, "Dope.DDXX.TextureBuilder.IGenerator");
-                        if (interfaces.Length > 0)
-                        {
-                            iGenerators.Add(t.Name, t);
-                        }
+                        //TypeFilter filter = new TypeFilter(delegate(Type ty, object comp)
+                        //{
+                        //    if (ty.FullName == (string)comp)
+                        //        return true;
+                        //    else
+                        //        return false;
+                        //});
+                        //Type[] interfaces = t.FindInterfaces(filter, "Dope.DDXX.DemoFramework.IRegisterable");
+                        //if (interfaces.Length > 0)
+                        //{
+                        //    iRegisterables.Add(t.Name, t);
+                        //}
+                        //interfaces = t.FindInterfaces(filter, "Dope.DDXX.TextureBuilder.IGenerator");
+                        //if (interfaces.Length > 0)
+                        //{
+                        //    iGenerators.Add(t.Name, t);
+                        //}
                     }
-                }
-                catch (ReflectionTypeLoadException e)
-                {
-                    throw new DDXXException(e.ToString() + "LoaderExceptions:" + e.LoaderExceptions.ToString());
-                }
+                //}
+                //catch (ReflectionTypeLoadException e)
+                //{
+                //    throw new DDXXException(e.ToString() + "LoaderExceptions:" + e.LoaderExceptions.ToString());
+                //}
             }
         }
 
@@ -92,12 +99,22 @@ namespace Dope.DDXX.DemoFramework
 
         public void SetProperty(object asset, string name, object value)
         {
-            asset.GetType().InvokeMember(name, BindingFlags.SetProperty, null, asset, new object[] { value }, null, null, null);
+            Type t = asset.GetType();
+            PropertyInfo property = t.GetProperty(name);
+            if (property == null)
+                throw new DDXXException("Type " + t.Name + " does not contain a property named " + name);
+            MethodInfo method = property.GetSetMethod();
+            method.Invoke(asset, new object[] { value });
+            //t.InvokeMember(name, BindingFlags.SetProperty, null, asset, new object[] { value }, null, null, null);
         }
 
         public object GetProperty(IRegisterable ei, string name)
         {
-            return ei.GetType().InvokeMember(name, BindingFlags.GetProperty, null, ei, null, null, null, null);
+            Type t = ei.GetType();
+            PropertyInfo property = t.GetProperty(name);
+            MethodInfo method = property.GetGetMethod();
+            return method.Invoke(ei, new object[] { });
+            //return ei.GetType().InvokeMember(name, BindingFlags.GetProperty, null, ei, null, null, null, null);
         }
 
         public void CallSetup(object asset, string method, List<object> parameters)

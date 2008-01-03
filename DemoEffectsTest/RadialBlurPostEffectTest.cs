@@ -2,40 +2,36 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using Dope.DDXX.DemoFramework;
 using NMock2;
-using System.Drawing;
-using Microsoft.DirectX.Direct3D;
+using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoEffects
 {
     [TestFixture]
-    public class RadialBlurPostEffectTest
+    public class RadialBlurPostEffectTest : DemoMockTest
     {
-        private Mockery mockery;
-        private RadialBlurPostEffect effect;
-        private IPostProcessor postProcessor;
-        private ITexture texture1;
-        private ITexture texture2;
-        private ITexture outputTexture;
+        private RadialBlurPostEffect sut;
+        private IRenderTarget2D texture1;
+        private IRenderTarget2D texture2;
+        private IRenderTarget2D outputTexture;
 
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
-            mockery = new Mockery();
-            postProcessor = mockery.NewMock<IPostProcessor>();
-            texture1 = mockery.NewMock<ITexture>();
-            texture2 = mockery.NewMock<ITexture>();
-            outputTexture = mockery.NewMock<ITexture>();
-            effect = new RadialBlurPostEffect("", 1.0f, 2.0f);
-            effect.Initialize(null, postProcessor, null, null, null);
+            base.SetUp();
+            texture1 = mockery.NewMock<IRenderTarget2D>();
+            texture2 = mockery.NewMock<IRenderTarget2D>();
+            outputTexture = mockery.NewMock<IRenderTarget2D>();
+            sut = new RadialBlurPostEffect("", 1.0f, 2.0f);
+            sut.Initialize(graphicsFactory, postProcessor, textureFactory, textureBuilder);
         }
 
         [TearDown]
-        public void TearDown()
+        public override void TearDown()
         {
-            mockery.VerifyAllExpectationsHaveBeenMet();
+            base.TearDown();
         }
 
         [Test]
@@ -50,10 +46,10 @@ namespace Dope.DDXX.DemoEffects
             TestRender(outputTexture, texture1, texture2, Color.Blue);
         }
 
-        private void TestRender(ITexture startTexture, ITexture tempTexture1, ITexture tempTexture2, Color color)
+        private void TestRender(IRenderTarget2D startTexture, IRenderTarget2D tempTexture1, IRenderTarget2D tempTexture2, Color color)
         {
-            effect.BlurColor = color;
-            List<ITexture> textures = new List<ITexture>();
+            sut.BlurColor = color;
+            List<IRenderTarget2D> textures = new List<IRenderTarget2D>();
             textures.Add(texture1);
             textures.Add(texture2);
             Stub.On(postProcessor).
@@ -66,7 +62,7 @@ namespace Dope.DDXX.DemoEffects
                     With(2, true).Will(Return.Value(textures));
                 Expect.Once.On(postProcessor).
                     Method("SetBlendParameters").
-                    With(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
+                    With(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);
                 Expect.Once.On(postProcessor).
                     Method("SetValue").With("ZoomFactor", 0.20f);
                 Expect.Once.On(postProcessor).
@@ -97,10 +93,10 @@ namespace Dope.DDXX.DemoEffects
                     Method("Process").With("ZoomAdd", tempTexture2, tempTexture1);
                 Expect.Once.On(postProcessor).
                     Method("SetBlendParameters").
-                    With(BlendOperation.Add, Blend.BlendFactor, Blend.One, color);
+                    With(BlendFunction.Add, Blend.BlendFactor, Blend.One, color);
                 Expect.Once.On(postProcessor).
                     Method("Process").With("Copy", tempTexture1, startTexture);
-                effect.Render();
+                sut.Render();
             }
         }
     }

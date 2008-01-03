@@ -4,42 +4,38 @@ using System.Text;
 using NUnit.Framework;
 using NMock2;
 using Dope.DDXX.DemoFramework;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
 using Dope.DDXX.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoEffects
 {
     [TestFixture]
-    public class DepthOfFieldPostEffectTest
+    public class DepthOfFieldPostEffectTest : DemoMockTest
     {
-        private Mockery mockery;
-        private DepthOfFieldPostEffect effect;
-        private IPostProcessor postProcessor;
-        private ITexture texture1;
-        private ITexture outputTexture;
+        private DepthOfFieldPostEffect sut;
+        private IRenderTarget2D texture1;
+        private IRenderTarget2D outputTexture;
 
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
-            mockery = new Mockery();
-            postProcessor = mockery.NewMock<IPostProcessor>();
-            texture1 = mockery.NewMock<ITexture>();
-            outputTexture = mockery.NewMock<ITexture>();
-            effect = new DepthOfFieldPostEffect("", 1.0f, 2.0f);
-            effect.Initialize(null, postProcessor, null, null, null);
+            base.SetUp();
+            texture1 = mockery.NewMock<IRenderTarget2D>();
+            outputTexture = mockery.NewMock<IRenderTarget2D>();
+            sut = new DepthOfFieldPostEffect("", 1.0f, 2.0f);
+            sut.Initialize(graphicsFactory, postProcessor, textureFactory, textureBuilder);
         }
 
         [TearDown]
-        public void TearDown()
+        public override void TearDown()
         {
-            mockery.VerifyAllExpectationsHaveBeenMet();
+            base.TearDown();
         }
 
         [Test]
         public void TestRender1()
         {
-            List<ITexture> textures = new List<ITexture>();
+            List<IRenderTarget2D> textures = new List<IRenderTarget2D>();
             textures.Add(texture1);
             Expect.Once.On(postProcessor).
                 Method("GetTemporaryTextures").
@@ -49,11 +45,11 @@ namespace Dope.DDXX.DemoEffects
                 Will(Return.Value(outputTexture));
             Expect.Once.On(postProcessor).
                 Method("SetBlendParameters").
-                With(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
+                With(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);
             Expect.Once.On(postProcessor).
                 Method("Process").
                 With("DepthOfField", outputTexture, texture1);
-            effect.Render();
+            sut.Render();
         }
     }
 }

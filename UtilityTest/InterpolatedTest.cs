@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using Microsoft.DirectX;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.Utility
 {
@@ -61,5 +61,56 @@ namespace Dope.DDXX.Utility
             Assert.AreEqual((Vector3)v5, vec1 * 4.0f);
         }
 
+        [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        public void AddTypeMismatch1()
+        {
+            InterpolatedFloat f = new InterpolatedFloat();
+            InterpolatedVector3 v = new InterpolatedVector3();
+            f.Add(v);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        public void AddTypeMismatch2()
+        {
+            InterpolatedFloat f = new InterpolatedFloat();
+            InterpolatedVector3 v = new InterpolatedVector3();
+            v.Add(f);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        public void SubTypeMismatch1()
+        {
+            InterpolatedFloat f = new InterpolatedFloat();
+            InterpolatedVector3 v = new InterpolatedVector3();
+            f.Sub(v);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        public void SubTypeMismatch2()
+        {
+            InterpolatedFloat f = new InterpolatedFloat();
+            InterpolatedVector3 v = new InterpolatedVector3();
+            v.Sub(f);
+        }
+
+        [Test]
+        public void TestFloatZero()
+        {
+            InterpolatedFloat f = new InterpolatedFloat();
+            f = f.Zero() as InterpolatedFloat;
+            Assert.AreEqual(0.0f, (float)f);
+        }
+
+        [Test]
+        public void TestVector3Zero()
+        {
+            InterpolatedVector3 v = new InterpolatedVector3(new Vector3(1, 2, 3));
+            v = v.Zero() as InterpolatedVector3;
+            Assert.AreEqual(new Vector3(0, 0, 0), (Vector3)v);
+        }
     }
 }

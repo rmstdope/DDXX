@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 using NUnit.Framework;
 using NMock2;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
-using System.IO;
-using System.Drawing;
-using Microsoft.DirectX;
-using Microsoft.DirectX.DirectInput;
 using Dope.DDXX.Input;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -37,11 +37,25 @@ namespace Dope.DDXX.DemoFramework
                 set { floatType = value; }
             }
 
+            Vector2 vector2Type;
+            public Vector2 Vector2Type
+            {
+                get { return vector2Type; }
+                set { vector2Type = value; }
+            }
+
             Vector3 vector3Type;
             public Vector3 Vector3Type
             {
                 get { return vector3Type; }
                 set { vector3Type = value; }
+            }
+
+            Vector4 vector4Type;
+            public Vector4 Vector4Type
+            {
+                get { return vector4Type; }
+                set { vector4Type = value; }
             }
 
             //string stringType;
@@ -87,8 +101,6 @@ namespace Dope.DDXX.DemoFramework
             tweaker = new DemoTweakerEffect(settings);
             tweaker.IdentifierFromParent(tester);
             tweaker.UserInterface = userInterface;
-
-            Time.Initialize();
         }
 
         [TearDown]
@@ -102,59 +114,33 @@ namespace Dope.DDXX.DemoFramework
         {
             Expect.Once.On(userInterface).
                 Method("Initialize");
-            tweaker.Initialize(registrator);
+            tweaker.Initialize(registrator, graphicsFactory, textureFactory);
         }
 
         [Test]
         public void TestKeyDown()
         {
-            Assert.AreEqual(0, tweaker.CurrentVariable);
-            
-            ExpectKey(Key.DownArrow);
-            tweaker.HandleInput(inputDriver);
-            Assert.AreEqual(1, tweaker.CurrentVariable);
-
-            ExpectKey(Key.DownArrow);
-            tweaker.HandleInput(inputDriver);
-            Assert.AreEqual(2, tweaker.CurrentVariable);
-            
-            ExpectKey(Key.DownArrow);
-            tweaker.HandleInput(inputDriver);
-            Assert.AreEqual(3, tweaker.CurrentVariable);
-            
-            ExpectKey(Key.DownArrow);
-            tweaker.HandleInput(inputDriver);
-            Assert.AreEqual(4, tweaker.CurrentVariable);
-
-            ExpectKey(Key.DownArrow);
-            tweaker.HandleInput(inputDriver);
-            Assert.AreEqual(4, tweaker.CurrentVariable);
+            for (int i = 0; i < 7; i++)
+            {
+                Assert.AreEqual(i, tweaker.CurrentVariable);
+                ExpectKey(Keys.Down);
+                tweaker.HandleInput(inputDriver);
+            }
+            Assert.AreEqual(6, tweaker.CurrentVariable);
         }
 
         [Test]
         public void TestKeyUp()
         {
             TestKeyDown();
-            Assert.AreEqual(4, tweaker.CurrentVariable);
 
-            ExpectKey(Key.UpArrow);
-            tweaker.HandleInput(inputDriver);
-            Assert.AreEqual(3, tweaker.CurrentVariable);
+            for (int i = 6; i >= 0; i--)
+            {
+                Assert.AreEqual(i, tweaker.CurrentVariable);
+                ExpectKey(Keys.Up);
+                tweaker.HandleInput(inputDriver);
+            }
 
-            ExpectKey(Key.UpArrow);
-            tweaker.HandleInput(inputDriver);
-            Assert.AreEqual(2, tweaker.CurrentVariable);
-
-            ExpectKey(Key.UpArrow);
-            tweaker.HandleInput(inputDriver);
-            Assert.AreEqual(1, tweaker.CurrentVariable);
-
-            ExpectKey(Key.UpArrow);
-            tweaker.HandleInput(inputDriver);
-            Assert.AreEqual(0, tweaker.CurrentVariable);
-
-            ExpectKey(Key.UpArrow);
-            tweaker.HandleInput(inputDriver);
             Assert.AreEqual(0, tweaker.CurrentVariable);
         }
 
@@ -163,7 +149,7 @@ namespace Dope.DDXX.DemoFramework
         {
             tester.SetStepSize(0, 5);
             tester.IntType = 10;
-            ExpectKey(Key.PageUp);
+            ExpectKey(Keys.PageUp);
             tweaker.HandleInput(inputDriver);
             Assert.AreEqual(15, tester.IntType);
         }
@@ -176,72 +162,118 @@ namespace Dope.DDXX.DemoFramework
 
             tester.SetStepSize(1, 0.234f);
             tester.FloatType = 10;
-            ExpectKey(Key.PageUp);
+            ExpectKey(Keys.PageUp);
             tweaker.HandleInput(inputDriver);
             Assert.AreEqual(10.234f, tester.FloatType);
+        }
+
+        [Test]
+        public void TestKeyPgUpVector2()
+        {
+            // Goto Vector2 variable
+            GotoVariable(2);
+
+            tester.SetStepSize(1, 1);
+            tester.Vector2Type = new Vector2(1, 2);
+            ExpectKey(Keys.PageUp);
+            tweaker.HandleInput(inputDriver);
+            Assert.AreEqual(new Vector2(2, 2), tester.Vector2Type);
+            ExpectKey(Keys.Tab);
+            tweaker.HandleInput(inputDriver);
+            ExpectKey(Keys.PageUp);
+            tweaker.HandleInput(inputDriver);
+            Assert.AreEqual(new Vector2(2, 3), tester.Vector2Type);
         }
 
         [Test]
         public void TestKeyPgUpVector3()
         {
             // Goto Vector3 variable
-            GotoVariable(2);
+            GotoVariable(3);
 
             tester.SetStepSize(2, 1);
             tester.Vector3Type = new Vector3(1, 2, 3);
-            ExpectKey(Key.PageUp);
+            ExpectKey(Keys.PageUp);
             tweaker.HandleInput(inputDriver);
             Assert.AreEqual(new Vector3(2, 2, 3), tester.Vector3Type);
-            ExpectKey(Key.Tab);
+            ExpectKey(Keys.Tab);
             tweaker.HandleInput(inputDriver);
-            ExpectKey(Key.PageUp);
+            ExpectKey(Keys.PageUp);
             tweaker.HandleInput(inputDriver);
             Assert.AreEqual(new Vector3(2, 3, 3), tester.Vector3Type);
-            ExpectKey(Key.Tab);
+            ExpectKey(Keys.Tab);
             tweaker.HandleInput(inputDriver);
-            ExpectKey(Key.PageUp);
+            ExpectKey(Keys.PageUp);
             tweaker.HandleInput(inputDriver);
             Assert.AreEqual(new Vector3(2, 3, 4), tester.Vector3Type);
+        }
+
+        [Test]
+        public void TestKeyPgUpVector4()
+        {
+            // Goto Vector4 variable
+            GotoVariable(4);
+
+            tester.SetStepSize(2, 1);
+            tester.Vector4Type = new Vector4(1, 2, 3, 4);
+            ExpectKey(Keys.PageUp);
+            tweaker.HandleInput(inputDriver);
+            Assert.AreEqual(new Vector4(2, 2, 3, 4), tester.Vector4Type);
+            ExpectKey(Keys.Tab);
+            tweaker.HandleInput(inputDriver);
+            ExpectKey(Keys.PageUp);
+            tweaker.HandleInput(inputDriver);
+            Assert.AreEqual(new Vector4(2, 3, 3, 4), tester.Vector4Type);
+            ExpectKey(Keys.Tab);
+            tweaker.HandleInput(inputDriver);
+            ExpectKey(Keys.PageUp);
+            tweaker.HandleInput(inputDriver);
+            Assert.AreEqual(new Vector4(2, 3, 4, 4), tester.Vector4Type);
+            ExpectKey(Keys.Tab);
+            tweaker.HandleInput(inputDriver);
+            ExpectKey(Keys.PageUp);
+            tweaker.HandleInput(inputDriver);
+            Assert.AreEqual(new Vector4(2, 3, 4, 5), tester.Vector4Type);
         }
 
         [Test]
         public void TestKeyPgUpColor()
         {
             // Goto Color variable
-            GotoVariable(3);
+            GotoVariable(5);
 
-            tester.ColorType = Color.FromArgb(10, 20, 30, 40);
-            ExpectKey(Key.PageUp);
+            tester.ColorType = new Color(10, 20, 30, 40);
+            ExpectKey(Keys.PageUp);
             tweaker.HandleInput(inputDriver);
-            Assert.AreEqual(Color.FromArgb(10, 21, 30, 40), tester.ColorType);
-            ExpectKey(Key.Tab);
+            Assert.AreEqual(new Color(11, 20, 30, 40), tester.ColorType);
+            ExpectKey(Keys.Tab);
             tweaker.HandleInput(inputDriver);
-            ExpectKey(Key.PageUp);
+            ExpectKey(Keys.PageUp);
             tweaker.HandleInput(inputDriver);
-            Assert.AreEqual(Color.FromArgb(10, 21, 31, 40), tester.ColorType);
-            ExpectKey(Key.Tab);
+            Assert.AreEqual(new Color(11, 21, 30, 40), tester.ColorType);
+            ExpectKey(Keys.Tab);
             tweaker.HandleInput(inputDriver);
-            ExpectKey(Key.PageUp);
+            ExpectKey(Keys.PageUp);
             tweaker.HandleInput(inputDriver);
-            Assert.AreEqual(Color.FromArgb(10, 21, 31, 41), tester.ColorType);
-            ExpectKey(Key.Tab);
+            Assert.AreEqual(new Color(11, 21, 31, 40), tester.ColorType);
+            ExpectKey(Keys.Tab);
             tweaker.HandleInput(inputDriver);
-            ExpectKey(Key.PageUp);
+            ExpectKey(Keys.PageUp);
             tweaker.HandleInput(inputDriver);
-            Assert.AreEqual(Color.FromArgb(11, 21, 31, 41), tester.ColorType);
+            Assert.AreEqual(new Color(11, 21, 31, 41), tester.ColorType);
         }
 
         [Test]
         public void TestKeyPgUpBool()
         {
             // Goto float variable
-            GotoVariable(4);
+            GotoVariable(6);
 
             tester.BoolType = false;
-            ExpectKey(Key.PageUp);
+            ExpectKey(Keys.PageUp);
             tweaker.HandleInput(inputDriver);
             Assert.IsTrue(tester.BoolType);
-            ExpectKey(Key.PageUp);
+            ExpectKey(Keys.PageUp);
             tweaker.HandleInput(inputDriver);
             Assert.IsFalse(tester.BoolType);
         }
@@ -251,7 +283,7 @@ namespace Dope.DDXX.DemoFramework
         {
             tester.SetStepSize(0, 5);
             tester.IntType = 10;
-            ExpectKey(Key.PageDown);
+            ExpectKey(Keys.PageDown);
             tweaker.HandleInput(inputDriver);
             Assert.AreEqual(5, tester.IntType);
         }
@@ -264,7 +296,7 @@ namespace Dope.DDXX.DemoFramework
 
             tester.SetStepSize(1, 0.2f);
             tester.FloatType = 10;
-            ExpectKey(Key.PageDown);
+            ExpectKey(Keys.PageDown);
             tweaker.HandleInput(inputDriver);
             Assert.AreEqual(9.8f, tester.FloatType);
         }
@@ -273,21 +305,21 @@ namespace Dope.DDXX.DemoFramework
         public void TestKeyPgDownVector3()
         {
             // Goto Vector3 variable
-            GotoVariable(2);
+            GotoVariable(3);
 
             tester.SetStepSize(2, 1);
             tester.Vector3Type = new Vector3(1, 2, 3);
-            ExpectKey(Key.PageDown);
+            ExpectKey(Keys.PageDown);
             tweaker.HandleInput(inputDriver);
             Assert.AreEqual(new Vector3(0, 2, 3), tester.Vector3Type);
-            ExpectKey(Key.Tab);
+            ExpectKey(Keys.Tab);
             tweaker.HandleInput(inputDriver);
-            ExpectKey(Key.PageDown);
+            ExpectKey(Keys.PageDown);
             tweaker.HandleInput(inputDriver);
             Assert.AreEqual(new Vector3(0, 1, 3), tester.Vector3Type);
-            ExpectKey(Key.Tab);
+            ExpectKey(Keys.Tab);
             tweaker.HandleInput(inputDriver);
-            ExpectKey(Key.PageDown);
+            ExpectKey(Keys.PageDown);
             tweaker.HandleInput(inputDriver);
             Assert.AreEqual(new Vector3(0, 1, 2), tester.Vector3Type);
         }
@@ -296,40 +328,40 @@ namespace Dope.DDXX.DemoFramework
         public void TestKeyPgDownColor()
         {
             // Goto Color variable
-            GotoVariable(3);
+            GotoVariable(5);
 
-            tester.ColorType = Color.FromArgb(10, 20, 30, 40);
-            ExpectKey(Key.PageDown);
+            tester.ColorType = new Color(10, 20, 30, 40);
+            ExpectKey(Keys.PageDown);
             tweaker.HandleInput(inputDriver);
-            Assert.AreEqual(Color.FromArgb(10, 19, 30, 40), tester.ColorType);
-            ExpectKey(Key.Tab);
+            Assert.AreEqual(new Color(9, 20, 30, 40), tester.ColorType);
+            ExpectKey(Keys.Tab);
             tweaker.HandleInput(inputDriver);
-            ExpectKey(Key.PageDown);
+            ExpectKey(Keys.PageDown);
             tweaker.HandleInput(inputDriver);
-            Assert.AreEqual(Color.FromArgb(10, 19, 29, 40), tester.ColorType);
-            ExpectKey(Key.Tab);
+            Assert.AreEqual(new Color(9, 19, 30, 40), tester.ColorType);
+            ExpectKey(Keys.Tab);
             tweaker.HandleInput(inputDriver);
-            ExpectKey(Key.PageDown);
+            ExpectKey(Keys.PageDown);
             tweaker.HandleInput(inputDriver);
-            Assert.AreEqual(Color.FromArgb(10, 19, 29, 39), tester.ColorType);
-            ExpectKey(Key.Tab);
+            Assert.AreEqual(new Color(9, 19, 29, 40), tester.ColorType);
+            ExpectKey(Keys.Tab);
             tweaker.HandleInput(inputDriver);
-            ExpectKey(Key.PageDown);
+            ExpectKey(Keys.PageDown);
             tweaker.HandleInput(inputDriver);
-            Assert.AreEqual(Color.FromArgb(9, 19, 29, 39), tester.ColorType);
+            Assert.AreEqual(new Color(9, 19, 29, 39), tester.ColorType);
         }
 
         [Test]
         public void TestKeyPgDownBool()
         {
             // Goto float variable
-            GotoVariable(4);
+            GotoVariable(6);
 
             tester.BoolType = false;
-            ExpectKey(Key.PageDown);
+            ExpectKey(Keys.PageDown);
             tweaker.HandleInput(inputDriver);
             Assert.IsTrue(tester.BoolType);
-            ExpectKey(Key.PageDown);
+            ExpectKey(Keys.PageDown);
             tweaker.HandleInput(inputDriver);
             Assert.IsFalse(tester.BoolType);
         }
@@ -337,17 +369,17 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestInputReturn()
         {
-            ExpectKey(Key.Unlabeled);
+            ExpectKey(Keys.Zoom);
             Assert.IsFalse(tweaker.HandleInput(inputDriver));
-            ExpectKey(Key.UpArrow);
+            ExpectKey(Keys.Up);
             Assert.IsTrue(tweaker.HandleInput(inputDriver));
-            ExpectKey(Key.DownArrow);
+            ExpectKey(Keys.Down);
             Assert.IsTrue(tweaker.HandleInput(inputDriver));
-            ExpectKey(Key.PageUp);
+            ExpectKey(Keys.PageUp);
             Assert.IsTrue(tweaker.HandleInput(inputDriver));
-            ExpectKey(Key.PageDown);
+            ExpectKey(Keys.PageDown);
             Assert.IsTrue(tweaker.HandleInput(inputDriver));
-            ExpectKey(Key.Tab);
+            ExpectKey(Keys.Tab);
             Assert.IsTrue(tweaker.HandleInput(inputDriver));
         }
 
@@ -355,7 +387,7 @@ namespace Dope.DDXX.DemoFramework
         public void TestContainerChange()
         {
             // If we change container, effect number should be reset
-            ExpectKey(Key.DownArrow);
+            ExpectKey(Keys.Down);
             tweaker.HandleInput(inputDriver);
             Assert.AreEqual(1, tweaker.CurrentVariable);
             tweaker.CurrentContainer = tester;
@@ -389,35 +421,35 @@ namespace Dope.DDXX.DemoFramework
             tester.IntType = 0;
 
             // Set 98765
-            Key[] keys = new Key[] { Key.NumPad9, Key.NumPad8, Key.NumPad7, Key.NumPad6, Key.NumPad5 };
-            foreach (Key key in keys)
+            Keys[] keys = new Keys[] { Keys.NumPad9, Keys.NumPad8, Keys.NumPad7, Keys.NumPad6, Keys.NumPad5 };
+            foreach (Keys key in keys)
             {
                 ExpectKey(key);
                 tweaker.HandleInput(inputDriver);
             }
-            ExpectKey(Key.NumPadEnter);
+            ExpectKey(Keys.Enter);
             tweaker.HandleInput(inputDriver);
             Assert.AreEqual(98765, tester.IntType);
 
             // Set 43210
-            keys = new Key[] { Key.NumPad4, Key.NumPad3, Key.NumPad2, Key.NumPad1, Key.NumPad0 };
-            foreach (Key key in keys)
+            keys = new Keys[] { Keys.NumPad4, Keys.NumPad3, Keys.NumPad2, Keys.NumPad1, Keys.NumPad0 };
+            foreach (Keys key in keys)
             {
                 ExpectKey(key);
                 tweaker.HandleInput(inputDriver);
             }
-            ExpectKey(Key.NumPadEnter);
+            ExpectKey(Keys.Enter);
             tweaker.HandleInput(inputDriver);
             Assert.AreEqual(43210, tester.IntType);
 
             // Set -43210
-            keys = new Key[] { Key.NumPadMinus, Key.NumPad4, Key.NumPad3, Key.NumPad2, Key.NumPad1, Key.NumPad0 };
-            foreach (Key key in keys)
+            keys = new Keys[] { Keys.Subtract, Keys.NumPad4, Keys.NumPad3, Keys.NumPad2, Keys.NumPad1, Keys.NumPad0 };
+            foreach (Keys key in keys)
             {
                 ExpectKey(key);
                 tweaker.HandleInput(inputDriver);
             }
-            ExpectKey(Key.NumPadEnter);
+            ExpectKey(Keys.Enter);
             tweaker.HandleInput(inputDriver);
             Assert.AreEqual(-43210, tester.IntType);
         }
@@ -426,11 +458,11 @@ namespace Dope.DDXX.DemoFramework
         public void TestInvalidFormat()
         {
             tester.FloatType = 666;
-            ExpectKey(Key.NumPadMinus);
+            ExpectKey(Keys.Subtract);
             tweaker.HandleInput(inputDriver);
-            ExpectKey(Key.NumPadMinus);
+            ExpectKey(Keys.Subtract);
             tweaker.HandleInput(inputDriver);
-            ExpectKey(Key.NumPadEnter);
+            ExpectKey(Keys.Enter);
             tweaker.HandleInput(inputDriver);
             Assert.AreEqual(666, tester.FloatType);
         }
@@ -439,47 +471,47 @@ namespace Dope.DDXX.DemoFramework
         public void TestInputFloat()
         {
             tester.FloatType = 0;
-            ExpectKey(Key.DownArrow);
+            ExpectKey(Keys.Down);
             tweaker.HandleInput(inputDriver);
 
             // Set .98765
-            Key[] keys = new Key[] { Key.NumPadPeriod, Key.NumPad9, Key.NumPad8, Key.NumPad7, Key.NumPad6, Key.NumPad5 };
-            foreach (Key key in keys)
+            Keys[] keys = new Keys[] { Keys.Decimal, Keys.D9, Keys.D8, Keys.NumPad7, Keys.D6, Keys.D5 };
+            foreach (Keys key in keys)
             {
                 ExpectKey(key);
                 tweaker.HandleInput(inputDriver);
             }
-            ExpectKey(Key.NumPadEnter);
+            ExpectKey(Keys.Enter);
             tweaker.HandleInput(inputDriver);
             Assert.AreEqual(0.98765f, tester.FloatType);
 
             // Set 432.10
-            keys = new Key[] { Key.NumPad4, Key.NumPad3, Key.NumPad2, Key.NumPadPeriod, Key.NumPad1, Key.NumPad0 };
-            foreach (Key key in keys)
+            keys = new Keys[] { Keys.D4, Keys.D3, Keys.D2, Keys.Decimal, Keys.D1, Keys.D0 };
+            foreach (Keys key in keys)
             {
                 ExpectKey(key);
                 tweaker.HandleInput(inputDriver);
             }
-            ExpectKey(Key.NumPadEnter);
+            ExpectKey(Keys.Enter);
             tweaker.HandleInput(inputDriver);
             Assert.AreEqual(432.10f, tester.FloatType);
 
             // Set -4321.0
-            keys = new Key[] { Key.NumPadMinus, Key.NumPad4, Key.NumPad3, Key.NumPad2, Key.NumPad1, Key.NumPadPeriod, Key.NumPad0 };
-            foreach (Key key in keys)
+            keys = new Keys[] { Keys.OemMinus, Keys.D4, Keys.D3, Keys.D2, Keys.D1, Keys.OemPeriod, Keys.D0 };
+            foreach (Keys key in keys)
             {
                 ExpectKey(key);
                 tweaker.HandleInput(inputDriver);
             }
-            ExpectKey(Key.NumPadEnter);
+            ExpectKey(Keys.Enter);
             tweaker.HandleInput(inputDriver);
             Assert.AreEqual(-4321, tester.FloatType);
         }
 
-        private void ExpectKey(Key key)
+        private void ExpectKey(Keys key)
         {
-            Key[] noRepeatKeys = { Key.UpArrow, Key.DownArrow, Key.Tab, Key.NumPad0, Key.NumPad1, Key.NumPad2, Key.NumPad3, Key.NumPad4, Key.NumPad5, Key.NumPad6, Key.NumPad7, Key.NumPad8, Key.NumPad9, Key.NumPadPeriod, Key.NumPadMinus, Key.NumPadEnter };
-            Key[] slowRepeatKeys = { Key.PageDown, Key.PageUp };
+            Keys[] noRepeatKeys = { Keys.Up, Keys.Down, Keys.Tab, Keys.NumPad0, Keys.D0, Keys.NumPad1, Keys.D1, Keys.NumPad2, Keys.D2, Keys.NumPad3, Keys.D3, Keys.NumPad4, Keys.D4, Keys.NumPad5, Keys.D5, Keys.NumPad6, Keys.D6, Keys.NumPad7, Keys.D7, Keys.NumPad8, Keys.D8, Keys.NumPad9, Keys.D9, Keys.Decimal, Keys.OemPeriod, Keys.Subtract, Keys.OemMinus, Keys.Enter };
+            Keys[] slowRepeatKeys = { Keys.PageDown, Keys.PageUp };
             for (int i = 0; i < slowRepeatKeys.Length; i++)
             {
                 bool pressed = false;
@@ -499,10 +531,25 @@ namespace Dope.DDXX.DemoFramework
                 {
                     pressed = true;
                 }
-                Expect.Once.On(inputDriver).
-                    Method("KeyPressedNoRepeat").
-                    With(noRepeatKeys[i]).
-                    Will(Return.Value(pressed));
+                switch (noRepeatKeys[i])
+                {
+                    case Keys.Up:
+                        Expect.Once.On(inputDriver).
+                            Method("UpPressedNoRepeat").
+                            Will(Return.Value(pressed));
+                        break;
+                    case Keys.Down:
+                        Expect.Once.On(inputDriver).
+                            Method("DownPressedNoRepeat").
+                            Will(Return.Value(pressed));
+                        break;
+                    default:
+                        Expect.Once.On(inputDriver).
+                            Method("KeyPressedNoRepeat").
+                            With(noRepeatKeys[i]).
+                            Will(Return.Value(pressed));
+                        break;
+                }
                 if (pressed && i >= 3)
                     return;
             }
@@ -543,20 +590,28 @@ namespace Dope.DDXX.DemoFramework
                         //   2 Float value
                         //   3 Integer name
                         //   4 Integer value
-                        //   5 Vector3 name
-                        //   6 Vector3 value 1
-                        //   7 Vector3 value 2
-                        //   8 Vector3 value 3
-                        //   9 Color name
-                        //  10 Color value 1
-                        //  11 Color value 2
-                        //  12 Color value 3
-                        //  13 Color value 4
-                        //  14 Color value 5
-                        //  15 Color value 6
-                        //  16 Float name
-                        //  17 Float value
-                        Assert.AreEqual(18, mainBox.Children[1].Children.Count);
+                        //   5 Vector2 name
+                        //   6 Vector2 value 1
+                        //   7 Vector2 value 2
+                        //   8 Vector3 name
+                        //   9 Vector3 value 1
+                        //  10 Vector3 value 2
+                        //  11 Vector3 value 3
+                        //  12 Vector4 name
+                        //  13 Vector4 value 1
+                        //  14 Vector4 value 2
+                        //  15 Vector4 value 3
+                        //  16 Vector4 value 4
+                        //  17 Color name
+                        //  18 Color value 1
+                        //  19 Color value 2
+                        //  20 Color value 3
+                        //  21 Color value 4
+                        //  22 Color value 5
+                        //  23 Color value 6
+                        //  24 Float name
+                        //  25 Float value
+                        Assert.AreEqual(26, mainBox.Children[1].Children.Count);
                         //Assert.AreEqual(12 + 13, mainBox.Children[1].Children[0].Children.Count);
                         //Assert.AreEqual("<--MockObject", ((TextControl)mainBox.Children[1].Children[0].Children[12].Children[0]).Text);
                         //Assert.AreEqual(Color.Crimson, ((BoxControl)mainBox.Children[1].Children[0].Children[12]).Color);
@@ -601,20 +656,16 @@ namespace Dope.DDXX.DemoFramework
 
         private void ExpectDraw(string name)
         {
-            Expect.Once.On(device).
-                Method("BeginScene");
             Expect.Once.On(userInterface).
                 Method("DrawControl").
                 With(new ControlMatcher(name));
-            Expect.Once.On(device).
-                Method("EndScene");
         }
 
         private void GotoVariable(int variable)
         {
             for (int i = 0; i < variable; i++)
             {
-                ExpectKey(Key.DownArrow);
+                ExpectKey(Keys.Down);
                 tweaker.HandleInput(inputDriver);
             }
         }

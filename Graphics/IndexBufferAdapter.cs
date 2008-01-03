@@ -1,24 +1,30 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.DirectX.Direct3D;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.Graphics
 {
-    public class IndexBufferAdapter : IIndexBuffer
+    public class IndexBufferAdapter : GraphicsResourceAdapter, IIndexBuffer
     {
         private IndexBuffer indexBuffer;
 
-        public IndexBufferAdapter(IndexBuffer buffer)
+        public IndexBufferAdapter(IndexBuffer indexBuffer)
+            : base(indexBuffer)
         {
-            indexBuffer = buffer;
+            this.indexBuffer = indexBuffer;
         }
+
+        public IndexBuffer DxIndexBuffer { get { return indexBuffer; } }
 
         #region IIndexBuffer Members
 
-        public IndexBufferDescription Description
+        public IndexElementSize IndexElementSize
         {
-            get { return indexBuffer.Description; }
+            get { return indexBuffer.IndexElementSize; }
+        }
+
+        public BufferUsage BufferUsage
+        {
+            get { return indexBuffer.BufferUsage; }
         }
 
         public int SizeInBytes
@@ -26,40 +32,43 @@ namespace Dope.DDXX.Graphics
             get { return indexBuffer.SizeInBytes; }
         }
 
-        public Array Lock(int offsetToLock, LockFlags flags)
+        public void GetData<T>(T[] data)
+            where T : struct
         {
-            return indexBuffer.Lock(offsetToLock, flags);
+            indexBuffer.GetData<T>(data);
         }
 
-        public IGraphicsStream Lock(int offsetToLock, int sizeToLock, LockFlags flags)
+        public void GetData<T>(T[] data, int startIndex, int elementCount)
+            where T : struct
         {
-            return new GraphicsStreamAdapter(indexBuffer.Lock(offsetToLock, sizeToLock, flags));
+            indexBuffer.GetData<T>(data, startIndex, elementCount);
         }
 
-        public Array Lock(int offsetToLock, Type typeIndex, LockFlags flags, params int[] ranks)
+        public void GetData<T>(int offsetInBytes, T[] data, int startIndex, int elementCount)
+            where T : struct
         {
-            return indexBuffer.Lock(offsetToLock, typeIndex, flags, ranks);
+            indexBuffer.GetData<T>(offsetInBytes, data, startIndex, elementCount);
         }
 
-        public void SetData(object data, int lockAtOffset, LockFlags flags)
+        public void SetData<T>(T[] data)
+            where T : struct
         {
-            indexBuffer.SetData(data, lockAtOffset, flags);
+            indexBuffer.SetData<T>(data);
         }
 
-        public void Unlock()
+        public void SetData<T>(T[] data, int startIndex, int elementCount)
+            where T : struct
         {
-            indexBuffer.Unlock();
+            indexBuffer.SetData<T>(data, startIndex, elementCount);
+        }
+
+        public void SetData<T>(int offsetInBytes, T[] data, int startIndex, int elementCount)
+            where T : struct
+        {
+            indexBuffer.SetData<T>(offsetInBytes, data, startIndex, elementCount);
         }
 
         #endregion
 
-        #region IDisposable Members
-
-        public void Dispose()
-        {
-            indexBuffer.Dispose();
-        }
-
-        #endregion
     }
 }

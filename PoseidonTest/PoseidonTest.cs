@@ -43,32 +43,52 @@ namespace PoseidonTest
 
                     FileUtility.SetLoadPaths("../../Data/",
                                              "../../../Effects/",
-                                             "../../");
+                                             "../../",
+                                             "../../../EngineTest/Data");
                     DevicePrerequisits prerequisits = new DevicePrerequisits();
 
                     window.Initialize("PoseidonTest", desc, prerequisits);
+                    //executer.Initialize("" /* "dope-wanting_more-dhw2006-v2-320.mp3" */, 
+                    //    new Assembly[] { Assembly.GetExecutingAssembly() }, 
+                    //    "PoseidonTest.xml");
+                    RegisterEffects(executer);
                     executer.Initialize(D3DDriver.GetInstance().Device,
                         D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
-                        D3DDriver.EffectFactory, new TextureBuilder(D3DDriver.TextureFactory),
-                        "PoseidonTest.xml");
-
+                        new TextureBuilder(D3DDriver.TextureFactory),
+                        "");
                     executer.Run();
                     window.CleanUp();
                 }
             }
             catch (DDXXException exception)
             {
-                Cursor.Show();
                 if (DialogResult.Yes == MessageBox.Show(exception.ToString(), "It seems you are having problems...", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2))
                 {
-                    MessageBox.Show(exception.Callstack(), "Callstack");
+                    MessageBox.Show(exception.Callstack(), "Callstack"); 
                 }
             }
             catch (Exception exception)
             {
-                Cursor.Show();
                 MessageBox.Show(exception.ToString(), "Demo Error");
             }
+
+        }
+
+        private static void RegisterEffects(DemoExecuter executer)
+        {
+            float length = 65000.0f;
+            PosseTestEffect posseEffect = new PosseTestEffect(0.0f, length);
+            RealRenderPostEffect renderPostEffect = new RealRenderPostEffect(0.0f, length);
+            renderPostEffect.SetPosseTestEffect(posseEffect);
+            executer.Register(0, posseEffect);
+            executer.Register(0, renderPostEffect);
+            //MonochromePostEffect monochrome = new MonochromePostEffect(0.0f, length);
+            //executer.Register(0, monochrome);
+            //GlowPostEffect postEffect = new GlowPostEffect(0.0f, length);
+            //postEffect.Luminance = 0.06f;
+            //postEffect.Exposure = 0.1f;
+            //postEffect.WhiteCutoff = 0.2f;
+            //postEffect.BloomScale = 1.5f;
         }
 
         private static void SetupFramework(SetupLogic setup, out DemoWindow window, out DemoExecuter executer, out DeviceDescription desc)

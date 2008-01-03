@@ -1,110 +1,53 @@
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
-using System.Text;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.Graphics
 {
-    public class TextureAdapter : BaseTextureAdapter, ITexture
+    public class TextureAdapter : GraphicsResourceAdapter, ITexture
     {
         private Texture texture;
 
-        public TextureAdapter(Texture texture) : 
-            base(texture)
+        public TextureAdapter(Texture texture)
+            : base(texture)
         {
             this.texture = texture;
         }
 
-        public Texture TextureDX
-        {
-            get { return texture; }
-        }
+        public Texture DxTexture { get { return texture; } }
 
-        public static ITexture FromFile(Device device, string srcFile, int width, int height, int mipLevels, Usage usage, Format format, Pool pool, Filter filter, Filter mipFilter, int colorKey)
-        {
-            return new TextureAdapter(TextureLoader.FromFile(device, srcFile, width, height, mipLevels, usage, format, pool, filter, mipFilter, colorKey));
-        }
-
-        public void FillTexture(Fill2DTextureCallback callbackFunction)
-        {
-            TextureLoader.FillTexture(texture, callbackFunction);
-        }
-        
         #region ITexture Members
 
-        public bool Disposed
+        public int LevelCount
         {
-            get { return texture.Disposed; }
+            get { return texture.LevelCount; }
         }
 
-        public void AddDirtyRectangle()
+        public int LevelOfDetail
         {
-            texture.AddDirtyRectangle();
+            get
+            {
+                return texture.LevelOfDetail;
+            }
+            set
+            {
+                texture.LevelOfDetail = value;
+            }
         }
 
-        public void AddDirtyRectangle(Rectangle rect)
+        public void GenerateMipMaps(TextureFilter filterType)
         {
-            texture.AddDirtyRectangle(rect);
+            texture.GenerateMipMaps(filterType);
         }
 
-        public SurfaceDescription GetLevelDescription(int level)
+#if (!XBOX)
+        public void Save(string filename, ImageFileFormat format)
         {
-            return texture.GetLevelDescription(level);
+            texture.Save(filename, format);
         }
-
-        public ISurface GetSurfaceLevel(int level)
-        {
-            return new SurfaceAdapter(texture.GetSurfaceLevel(level));
-        }
-
-        public GraphicsStream LockRectangle(int level, LockFlags flags)
-        {
-            return texture.LockRectangle(level, flags);
-        }
-
-        public GraphicsStream LockRectangle(int level, LockFlags flags, out int pitch)
-        {
-            return texture.LockRectangle(level, flags, out pitch);
-        }
-
-        public GraphicsStream LockRectangle(int level, Rectangle rect, LockFlags flags)
-        {
-            return texture.LockRectangle(level, rect, flags);
-        }
-
-        public GraphicsStream LockRectangle(int level, Rectangle rect, LockFlags flags, out int pitch)
-        {
-            return texture.LockRectangle(level, rect, flags, out pitch);
-        }
-
-        public Array LockRectangle(Type typeLock, int level, LockFlags flags, params int[] ranks)
-        {
-            return texture.LockRectangle(typeLock, level, flags, ranks);
-        }
-
-        public Array LockRectangle(Type typeLock, int level, LockFlags flags, out int pitch, params int[] ranks)
-        {
-            return texture.LockRectangle(typeLock, level, flags, out pitch, ranks);
-        }
-
-        public Array LockRectangle(Type typeLock, int level, Rectangle rect, LockFlags flags, params int[] ranks)
-        {
-            return texture.LockRectangle(typeLock, level, rect, flags, ranks);
-        }
-
-        public Array LockRectangle(Type typeLock, int level, Rectangle rect, LockFlags flags, out int pitch, params int[] ranks)
-        {
-            return texture.LockRectangle(typeLock, level, rect, flags, out pitch, ranks);
-        }
-
-        public void UnlockRectangle(int level)
-        {
-            texture.UnlockRectangle(level);
-        }
+#endif
 
         #endregion
+
     }
 }

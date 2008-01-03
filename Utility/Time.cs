@@ -7,119 +7,38 @@ namespace Dope.DDXX.Utility
 {
     public class Time
     {
-        static bool initialized = false;
-        static long lastTime = 0;
-        static long startTime = 0;
-        static long frequency = 0;
+        static float lastTime = 0;
         static float deltaTime = 0;
         static bool paused = false;
-        static bool useConstantDelta = false;
-
-        [DllImport("Kernel32.dll")]
-        private static extern bool QueryPerformanceCounter(out long lpPerformanceCount);
-
-        [DllImport("Kernel32.dll")]
-        private static extern bool QueryPerformanceFrequency(out long lpFrequency);
-
-        public static float StepTime
-        {
-            get
-            {
-                if (!initialized)
-                    throw new InvalidOperationException("Time.Initialize() must be called first.");
-
-                return (float)lastTime / (float)frequency;
-            }
-        }
 
         public static float CurrentTime
         {
-            get
-            {
-                if (!initialized)
-                    throw new InvalidOperationException("Time.Initialize() must be called first.");
-                long time;
-                if (paused)
-                {
-                    return StepTime;
-                }
-                else
-                {
-                    QueryPerformanceCounter(out time);
-                    return (float)(time - startTime) / (float)frequency;
-                }
-            }
-            set
-            {
-                if (!initialized)
-                    throw new InvalidOperationException("Time.Initialize() must be called first.");
-                if (paused)
-                {
-                    lastTime = (long)(value * frequency);
-                }
-                else
-                {
-                    float delta = value - CurrentTime;
-                    startTime -= (long)(delta * frequency);
-                    lastTime = (long)(value * frequency);
-                }
-            }
+            get { return lastTime; }
+            set { lastTime = value; }
         }
 
         public static float DeltaTime
         {
-            get
-            {
-                if (!initialized)
-                    throw new InvalidOperationException("Time.Initialize() must be called first.");
-                return deltaTime;
-            }
+            get { return deltaTime; }
+            set { deltaTime = value; }
         }
 
-        public static void UnInitialize()
+        public static void Step(float delta)
         {
-        	initialized = false;
-        }
-        
-        public static void Initialize()
-        {
-            if (!initialized)
+            if (IsPaused())
             {
-                initialized = true;
-                QueryPerformanceFrequency(out frequency);
-                QueryPerformanceCounter(out startTime);
-                lastTime = 0;
-                deltaTime = 0.0f;
-                paused = false;
-            }
-        }
-
-        public static void Step()
-        {
-            long time;
-            if (useConstantDelta)
-            {
-                lastTime += (long)(deltaTime * frequency);
+                deltaTime = 0;
             }
             else
             {
-                if (paused)
-                {
-                    deltaTime = 0.0f;
-                }
-                else
-                {
-                    QueryPerformanceCounter(out time);
-                    deltaTime = (float)(time - lastTime - startTime) / (float)frequency;
-                    lastTime = time - startTime;
-                }
+                deltaTime = delta;
+                lastTime += delta;
             }
         }
 
-
         public static bool IsPaused()
         {
-            return Time.paused;
+            return paused;
         }
 
         public static void Pause()
@@ -129,22 +48,14 @@ namespace Dope.DDXX.Utility
 
         public static void Resume()
         {
-            if (paused)
-            {
-                paused = false;
-                CurrentTime = (float)lastTime / (float)frequency;
-            }
+            paused = false;
         }
 
-        public static void SetDeltaTimeForTest(float delta)
+        public static void Reset()
         {
-            useConstantDelta = true;
-            deltaTime = delta;
-        }
-
-        public static void UnSetDeltaTimeForTest()
-        {
-            useConstantDelta = false;
+            lastTime = 0;
+            deltaTime = 0;
+            paused = false;
         }
     }
 }

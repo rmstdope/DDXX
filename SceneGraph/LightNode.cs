@@ -1,35 +1,27 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX.Direct3D;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.SceneGraph
 {
     public abstract class LightNode : NodeBase
     {
-        private ColorValue diffuseColor;
-        private ColorValue specularColor;
+        private Color color;
 
         public LightNode(string name)
             : base(name)
         {
-            diffuseColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
-            specularColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
+            color = new Color(255, 255, 255, 255);
         }
 
-        public ColorValue DiffuseColor
+        public Color Color
         {
-            get { return diffuseColor; }
-            set { diffuseColor = value; }
+            get { return color; }
+            set { color = value; }
         }
 
-        public ColorValue SpecularColor
-        {
-            get { return specularColor; }
-            set { specularColor = value; }
-        }
-
-        protected override void StepNode(IRenderableCamera camera)
+        protected override void StepNode()
         {
         }
 

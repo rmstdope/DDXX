@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
 using NUnit.Framework;
 using NMock2;
 using Dope.DDXX.Utility;
@@ -10,382 +9,91 @@ using Dope.DDXX.Utility;
 namespace Dope.DDXX.Graphics
 {
     [TestFixture]
-    public class ModelFactoryTest
+    public class ModelFactoryTest : D3DMockTest
     {
-        ModelFactory modelFactory;
-        TextureFactory textureFactory;
-
-        Mockery mockery;
-        IGraphicsFactory graphicsFactory;
-        IMesh mesh;
-
-        VertexElement[] pntbxDeclaration = new VertexElement[]
-        {
-            new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
-            new VertexElement(0, 12, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Normal, 0),
-            new VertexElement(0, 24, DeclarationType.Float2, DeclarationMethod.Default, DeclarationUsage.TextureCoordinate, 0),
-            new VertexElement(0, 32, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Tangent, 0),
-            new VertexElement(0, 44, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.BiNormal, 0),
-            VertexElement.VertexDeclarationEnd,
-        };
-        VertexElement[] pntxDeclaration = new VertexElement[]
-        {
-            new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
-            new VertexElement(0, 12, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Normal, 0),
-            new VertexElement(0, 24, DeclarationType.Float2, DeclarationMethod.Default, DeclarationUsage.TextureCoordinate, 0),
-            new VertexElement(0, 32, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Tangent, 0),
-            VertexElement.VertexDeclarationEnd,
-        };
-        VertexElement[] pnxDeclaration = new VertexElement[]
-        {
-            new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
-            new VertexElement(0, 12, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Normal, 0),
-            new VertexElement(0, 24, DeclarationType.Float2, DeclarationMethod.Default, DeclarationUsage.TextureCoordinate, 0),
-            VertexElement.VertexDeclarationEnd,
-        };
-        VertexElement[] pnDeclaration = new VertexElement[]
-        {
-            new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
-            new VertexElement(0, 12, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Normal, 0),
-            VertexElement.VertexDeclarationEnd,
-        };
-        VertexElement[] pxDeclaration = new VertexElement[]
-        {
-            new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
-            new VertexElement(0, 12, DeclarationType.Float2, DeclarationMethod.Default, DeclarationUsage.TextureCoordinate, 0),
-            VertexElement.VertexDeclarationEnd,
-        };
-        VertexElement[] pDeclaration = new VertexElement[]
-        {
-            new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
-            VertexElement.VertexDeclarationEnd,
-        };
+        IModelFactory modelFactory;
+        IModel model;
+        IModelMesh modelMesh1;
+        IModelMesh modelMesh2;
+        IModelMeshPart modelMeshPart1;
+        IModelMeshPart modelMeshPart2;
+        IModelMeshPart modelMeshPart3;
+        IEffect effect2;
+        IEffect effect3;
+        IEffect oldEffect;
+        IEffect oldEffect2;
+        IEffect oldEffect3;
 
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
-            mockery = new Mockery();
-            graphicsFactory = mockery.NewMock<IGraphicsFactory>();
-            mesh = mockery.NewMock<IMesh>();
-            textureFactory = new TextureFactory(null, graphicsFactory, new PresentParameters());
-            modelFactory = new ModelFactory(null, graphicsFactory, textureFactory);
-            Stub.On(mesh).
-                GetProperty("NumberFaces").
-                Will(Return.Value(1));
+            base.SetUp();
+            model = mockery.NewMock<IModel>();
+            modelMesh1 = mockery.NewMock<IModelMesh>();
+            modelMesh2 = mockery.NewMock<IModelMesh>();
+            modelMeshPart1 = mockery.NewMock<IModelMeshPart>();
+            modelMeshPart2 = mockery.NewMock<IModelMeshPart>();
+            modelMeshPart3 = mockery.NewMock<IModelMeshPart>();
+            oldEffect = mockery.NewMock<IEffect>();
+            oldEffect2 = mockery.NewMock<IEffect>();
+            oldEffect3 = mockery.NewMock<IEffect>();
+            effect2 = mockery.NewMock<IEffect>();
+            effect3 = mockery.NewMock<IEffect>();
+
+            modelFactory = new ModelFactory(device, graphicsFactory, textureFactory);
         }
 
         [TearDown]
-        public void TearDown()
+        public override void TearDown()
         {
-            mockery.VerifyAllExpectationsHaveBeenMet();
-        }
-
-        internal class SetMaterial : IAction
-        {
-            private IMesh mesh;
-
-            public SetMaterial(IMesh mesh)
-            {
-                this.mesh = mesh;
-            }
-
-            #region IInvokable Members
-            public void Invoke(NMock2.Monitoring.Invocation invocation)
-            {
-                ExtendedMaterial[] materials = new ExtendedMaterial[2];
-                Material material = new Material();
-                invocation.Result = mesh;
-                material.AmbientColor = new ColorValue(1, 1, 1, 1);
-                material.DiffuseColor = new ColorValue(2, 2, 2, 2);
-                materials[0].Material3D = material;
-                materials[1].Material3D = material;
-                materials[0].TextureFilename = "TextureFileName";
-                invocation.Parameters[2] = materials;
-            }
-            #endregion
-            #region ISelfDescribing Members
-            void  ISelfDescribing.DescribeTo(System.IO.TextWriter writer)
-            {
-                writer.Write("Setting Material.");
-            }
-            #endregion
-        }
-
-        internal class SetOutAdjaceny : IAction
-        {
-            private IMesh mesh;
-
-            public SetOutAdjaceny(IMesh mesh)
-            {
-                this.mesh = mesh;
-            }
-
-            #region IInvokable Members
-            public void Invoke(NMock2.Monitoring.Invocation invocation)
-            {
-                invocation.Result = mesh;
-                invocation.Parameters[2] = null;
-            }
-            #endregion
-            #region ISelfDescribing Members
-            void ISelfDescribing.DescribeTo(System.IO.TextWriter writer)
-            {
-                writer.Write("Setting adjacencyOut.");
-            }
-            #endregion
+            base.TearDown();
         }
 
         [Test]
-        public void CreateBoxTest()
+        public void SingleEffectOnePart()
         {
-            Expect.Exactly(2).On(graphicsFactory).
-                Method("CreateBoxMesh").
-                WithAnyArguments().
-                Will(new SetMaterial(mesh));
-            IModel mesh1 = modelFactory.CreateBox(10.0f, 20.0f, 30.0f);
-            IModel mesh2 = modelFactory.CreateBox(10.0f, 20.0f, 30.0f);
-            IModel mesh3 = modelFactory.CreateBox(10.0f, 22.0f, 30.0f);
+            // Setup
+            StubModelMesh(model, new IModelMesh[] { modelMesh1 });
+            StubModelMeshPart(modelMesh1, new IModelMeshPart[] { modelMeshPart1 });
+            Expect.Once.On(graphicsFactory).Method("ModelFromFile").
+                With("File1").Will(Return.Value(model));
+            Expect.Once.On(graphicsFactory).Method("EffectFromFile").
+                With("Effect").Will(Return.Value(effect));
+            Expect.Once.On(modelMeshPart1).SetProperty("Effect").To(effect);
 
-            Assert.IsNotNull(mesh1);
-            Assert.IsNotNull(mesh3);
-            Assert.AreSame(mesh1, mesh2);
-            Assert.AreNotSame(mesh1, mesh3);
-            Assert.AreNotSame(mesh2, mesh3);
+            // Exercise SUT
+            IModel model1 = modelFactory.FromFile("File1", "Effect");
 
-            Assert.AreEqual(2, modelFactory.Count);
-            Assert.AreEqual(2, modelFactory.CountBoxes);
+            // Verify
+            Assert.AreSame(model, model1);
         }
 
         [Test]
-        public void FromFileTest()
+        public void SingleEffectMultipleParts()
         {
-            ITexture texture = mockery.NewMock<ITexture>();
-            Stub.On(mesh).
-                GetProperty("Declaration").
-                Will(Return.Value(pntxDeclaration));
-            Expect.Once.On(graphicsFactory).
-                Method("MeshFromFile").
-                WithAnyArguments().
-                Will(new SetMaterial(mesh));
-            Expect.Once.On(graphicsFactory).
-                Method("TextureFromFile").
-                WithAnyArguments().
-                Will(Return.Value(texture));
-            IModel model1 = modelFactory.FromFile("MeshFile1", ModelOptions.EnsureTangents | ModelOptions.NoOptimization);
-            Assert.AreEqual(2, model1.Materials.Length);
-            Assert.AreEqual(model1.Materials[0].Ambient, model1.Materials[0].Diffuse);
-            Assert.AreEqual(model1.Materials[1].Ambient, model1.Materials[1].Diffuse);
-            Assert.AreEqual(texture, model1.Materials[0].DiffuseTexture);
-            Assert.AreEqual(null, model1.Materials[1].DiffuseTexture);
-            Assert.IsNotNull(model1);
+            // Setup
+            StubModelMesh(model, new IModelMesh[] { modelMesh1, modelMesh2 });
+            StubModelMeshPart(modelMesh1, new IModelMeshPart[] { modelMeshPart1, modelMeshPart2 });
+            StubModelMeshPart(modelMesh2, new IModelMeshPart[] { modelMeshPart3 });
+            Expect.Once.On(graphicsFactory).Method("ModelFromFile").
+                With("File1").Will(Return.Value(model));
+            Expect.Once.On(graphicsFactory).Method("EffectFromFile").
+                With("Effect").Will(Return.Value(effect));
+            Expect.Once.On(graphicsFactory).Method("EffectFromFile").
+                With("Effect").Will(Return.Value(effect2));
+            Expect.Once.On(graphicsFactory).Method("EffectFromFile").
+                With("Effect").Will(Return.Value(effect3));
+
+            Expect.Once.On(modelMeshPart1).SetProperty("Effect").To(effect);
+            Expect.Once.On(modelMeshPart2).SetProperty("Effect").To(effect2);
+            Expect.Once.On(modelMeshPart3).SetProperty("Effect").To(effect3);
+
+            // Exercise SUT
+            IModel model1 = modelFactory.FromFile("File1", "Effect");
+
+            // Verify
+            Assert.AreSame(model, model1);
         }
 
-        [Test]
-        public void FromFileNoTangentsTest()
-        {
-            Stub.On(mesh).
-                GetProperty("Declaration").
-                Will(Return.Value(pnxDeclaration));
-            Expect.Once.On(graphicsFactory).
-                Method("MeshFromFile").
-                WithAnyArguments().
-                Will(new SetMaterial(mesh));
-            Expect.Once.On(graphicsFactory).
-                Method("TextureFromFile").
-                WithAnyArguments().
-                Will(Return.Value(null));
-            Expect.Once.On(mesh).
-                Method("Clone").
-                With(MeshFlags.Managed, pntbxDeclaration, null).
-                Will(Return.Value(mesh));
-            Expect.Once.On(mesh).
-                Method("Dispose");
-            Expect.Once.On(mesh).
-                Method("GenerateAdjacency").
-                WithAnyArguments();
-            Expect.Once.On(mesh).
-                Method("Clean").
-                With(Is.EqualTo(CleanType.BowTies | CleanType.BackFacing), Is.Anything, Is.Anything).
-                Will(new SetOutAdjaceny(mesh));
-            Expect.Once.On(mesh).
-                Method("ComputeTangent").
-                With(0, 0, 0, 0);
-            IModel mesh1 = modelFactory.FromFile("MeshFile1", ModelOptions.EnsureTangents | ModelOptions.NoOptimization);
-            Assert.IsNotNull(mesh1);
-        }
-
-        [Test]
-        public void FromFileNoNormalsTest1()
-        {
-            Stub.On(mesh).
-                GetProperty("Declaration").
-                Will(Return.Value(pxDeclaration));
-            Expect.Once.On(graphicsFactory).
-                Method("MeshFromFile").
-                WithAnyArguments().
-                Will(new SetMaterial(mesh));
-            Expect.Once.On(graphicsFactory).
-                Method("TextureFromFile").
-                WithAnyArguments().
-                Will(Return.Value(null));
-            //FIXME: Do the real test!
-            Expect.Once.On(mesh).
-                Method("Clone").
-                WithAnyArguments().//(MeshFlags.Managed, pnxDeclaration, null).
-                Will(Return.Value(mesh));
-            Expect.Once.On(mesh).
-                Method("Dispose");
-            Expect.Once.On(mesh).
-                Method("ComputeNormals");
-            IModel mesh1 = modelFactory.FromFile("MeshFile1", ModelOptions.NoOptimization);
-            Assert.IsNotNull(mesh1);
-        }
-
-        [Test]
-        public void FromFileNoNormalsTest2()
-        {
-            Stub.On(mesh).
-                GetProperty("Declaration").
-                Will(Return.Value(pxDeclaration));
-            Expect.Once.On(graphicsFactory).
-                Method("MeshFromFile").
-                WithAnyArguments().
-                Will(new SetMaterial(mesh));
-            Expect.Once.On(graphicsFactory).
-                Method("TextureFromFile").
-                WithAnyArguments().
-                Will(Return.Value(null));
-            Expect.Once.On(mesh).
-                Method("Clone").
-                With(MeshFlags.Managed, pntbxDeclaration, null).
-                Will(Return.Value(mesh));
-            Expect.Once.On(mesh).
-                Method("Dispose");
-            Expect.Once.On(mesh).
-                Method("ComputeNormals");
-            Expect.Once.On(mesh).
-                Method("ComputeTangentFrame").
-                With(TangentOptions.GenerateInPlace | TangentOptions.WeightEqual);
-            IModel mesh1 = modelFactory.FromFile("MeshFile1", ModelOptions.EnsureTangents | ModelOptions.NoOptimization);
-            Assert.IsNotNull(mesh1);
-        }
-
-        [Test]
-        public void FromFileNoNormalsNoTexTest1()
-        {
-            Stub.On(mesh).
-                GetProperty("Declaration").
-                Will(Return.Value(pDeclaration));
-            Expect.Once.On(graphicsFactory).
-                Method("MeshFromFile").
-                WithAnyArguments().
-                Will(new SetMaterial(mesh));
-            Expect.Once.On(graphicsFactory).
-                Method("TextureFromFile").
-                WithAnyArguments().
-                Will(Return.Value(null));
-            Expect.Once.On(mesh).
-                Method("Clone").
-                With(MeshFlags.Managed, pnDeclaration, null).
-                Will(Return.Value(mesh));
-            Expect.Once.On(mesh).
-                Method("Dispose");
-            Expect.Once.On(mesh).
-                Method("ComputeNormals");
-            IModel mesh1 = modelFactory.FromFile("MeshFile1", ModelOptions.NoOptimization);
-            Assert.IsNotNull(mesh1);
-        }
-
-        [Test]
-        public void FromFileOptimizeTest()
-        {
-            Stub.On(mesh).
-                GetProperty("Declaration").
-                Will(Return.Value(pntxDeclaration));
-            Expect.Once.On(graphicsFactory).
-                Method("MeshFromFile").
-                WithAnyArguments().
-                Will(new SetMaterial(mesh));
-            Expect.Once.On(graphicsFactory).
-                Method("TextureFromFile").
-                WithAnyArguments().
-                Will(Return.Value(null));
-            Expect.Once.On(mesh).
-                Method("GenerateAdjacency").
-                WithAnyArguments();
-            Expect.Once.On(mesh).
-                Method("OptimizeInPlace").
-                WithAnyArguments();
-            IModel mesh1 = modelFactory.FromFile("MeshFile1", ModelOptions.None);
-            Assert.IsNotNull(mesh1);
-        }
-
-        [Test]
-        public void MultipleFromFileTest()
-        {
-            Stub.On(mesh).
-                GetProperty("Declaration").
-                Will(Return.Value(pntxDeclaration));
-            Expect.Exactly(2).On(graphicsFactory).
-                Method("MeshFromFile").
-                WithAnyArguments().
-                Will(new SetMaterial(mesh));
-            Expect.Once.On(graphicsFactory).
-                Method("TextureFromFile").
-                WithAnyArguments().
-                Will(Return.Value(null));
-            Expect.Exactly(2).On(mesh).
-                Method("GenerateAdjacency").
-                WithAnyArguments();
-            Expect.Exactly(2).On(mesh).
-                Method("OptimizeInPlace").
-                WithAnyArguments();
-            IModel mesh1 = modelFactory.FromFile("MeshFile1", ModelOptions.None);
-            IModel mesh2 = modelFactory.FromFile("MeshFile1", ModelOptions.None);
-            IModel mesh3 = modelFactory.FromFile("MeshFile2", ModelOptions.None);
-
-            Assert.IsNotNull(mesh1);
-            Assert.IsNotNull(mesh3);
-            Assert.AreSame(mesh1, mesh2);
-            Assert.AreNotSame(mesh1, mesh3);
-            Assert.AreNotSame(mesh2, mesh3);
-
-            Assert.AreEqual(2, modelFactory.Count);
-            Assert.AreEqual(2, modelFactory.CountFiles);
-        }
-
-        [Test]
-        public void CreateFileOptionsTest()
-        {
-            Stub.On(mesh).
-                GetProperty("Declaration").
-                Will(Return.Value(pntxDeclaration));
-            Expect.Exactly(2).On(graphicsFactory).
-                Method("MeshFromFile").
-                WithAnyArguments().
-                Will(new SetMaterial(mesh));
-            Expect.Once.On(graphicsFactory).
-                Method("TextureFromFile").
-                WithAnyArguments().
-                Will(Return.Value(null));
-            Expect.Once.On(mesh).
-                Method("GenerateAdjacency").
-                WithAnyArguments();
-            Expect.Once.On(mesh).
-                Method("OptimizeInPlace").
-                WithAnyArguments();
-            IModel mesh1 = modelFactory.FromFile("MeshFile1", ModelOptions.None);
-            IModel mesh2 = modelFactory.FromFile("MeshFile1", ModelOptions.NoOptimization | ModelOptions.EnsureTangents);
-            IModel mesh3 = modelFactory.FromFile("MeshFile1", ModelOptions.NoOptimization | ModelOptions.EnsureTangents);
-
-            Assert.IsNotNull(mesh1);
-            Assert.IsNotNull(mesh2);
-            Assert.AreSame(mesh2, mesh3);
-            Assert.AreNotSame(mesh1, mesh2);
-            Assert.AreNotSame(mesh1, mesh3);
-
-            Assert.AreEqual(2, modelFactory.Count);
-            Assert.AreEqual(2, modelFactory.CountFiles);
-        }
     }
 }

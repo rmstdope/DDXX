@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using Microsoft.DirectX;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.Physics
 {

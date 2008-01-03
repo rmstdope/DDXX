@@ -4,14 +4,13 @@ using System.Text;
 using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Utility;
 using Dope.DDXX.Graphics;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoEffects
 {
     public class OverlayPostEffect : BaseDemoPostEffect
     {
-        private ITexture texture;
+        private ITexture2D texture;
 
         private string filename;
         private float blendFactor = 1.0f;
@@ -19,6 +18,13 @@ namespace Dope.DDXX.DemoEffects
         private bool subtractNoise = false;
         private float fadeInLength;
         private float fadeOutLength;
+        private string technique;
+
+        public string Technique
+        {
+            get { return technique; }
+            set { technique = value; }
+        }
 
         public float FadeOutLength
         {
@@ -55,7 +61,7 @@ namespace Dope.DDXX.DemoEffects
             set { filename = value; }
         }
 
-        public ITexture Texture
+        public ITexture2D Texture
         {
             set { texture = value; }
         }
@@ -66,6 +72,7 @@ namespace Dope.DDXX.DemoEffects
             SetStepSize(GetTweakableNumber("BlendFactor"), 0.01f);
             SetStepSize(GetTweakableNumber("FadeInLength"), 0.1f);
             SetStepSize(GetTweakableNumber("FadeOutLength"), 0.1f);
+            technique = "Blend";
         }
 
         protected override void Initialize()
@@ -79,30 +86,33 @@ namespace Dope.DDXX.DemoEffects
             if (addNoise && subtractNoise)
                 throw new DDXXException("AddNoise and SubtractNoise cen not both be set for OverlayPostEffect.");
 
-            if (texture == null)
+            if (texture == null && filename != "")
                 texture = TextureFactory.CreateFromFile(filename);
-
+            else
+                texture = TextureFactory.WhiteTexture;
         }
 
         public override void Render()
         {
             if (addNoise)
-                PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.InvSourceColor, Color.White);
+                PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.InverseSourceColor, Color.White);
             if (subtractNoise)
-                PostProcessor.SetBlendParameters(BlendOperation.RevSubtract, Blend.One, Blend.One, Color.White);
+                PostProcessor.SetBlendParameters(BlendFunction.ReverseSubtract, Blend.One, Blend.One, Color.White);
             float factor = BlendFactor * GetFadeAlpha();
             PostProcessor.SetValue("Color", new float[] { factor, factor, factor, factor});
 
-            PostProcessor.Process("Blend", texture, PostProcessor.OutputTexture);
+            //PostProcessor.OutputTexture.GetTexture().Save("before.jpg", ImageFileFormat.Jpg);
+            PostProcessor.Process(technique, texture, PostProcessor.OutputTexture);
+            //PostProcessor.OutputTexture.GetTexture().Save("after.jpg", ImageFileFormat.Jpg);
         }
 
         private float GetFadeAlpha()
         {
             float alpha = 1;
-            float time = Time.StepTime - StartTime;
+            float time = Time.CurrentTime - StartTime;
             if (time < FadeInLength)
                 alpha = time / FadeInLength;
-            time = Time.StepTime - (EndTime - FadeOutLength);
+            time = Time.CurrentTime - (EndTime - FadeOutLength);
             if (time > 0)
                 alpha = 1 - time / FadeOutLength;
             return alpha;

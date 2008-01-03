@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX;
-using System.Drawing;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.TextureBuilder
 {
@@ -11,17 +11,17 @@ namespace Dope.DDXX.TextureBuilder
         private int numInputPins;
         private IGenerator[] inputPins;
 
+        public int NumInputPins
+        {
+            get { return numInputPins; }
+        }
+
         public Generator(int numInputPins)
         {
             if (numInputPins < 0)
-                throw new ArgumentOutOfRangeException("numInputPins", numInputPins, "Must be greater or equal to zero.");
+                throw new ArgumentOutOfRangeException("numInputPins", "Must be greater or equal to zero. Was " + numInputPins);
             this.numInputPins = numInputPins;
             inputPins = new IGenerator[numInputPins];
-        }
-
-        public IGenerator GetInput(int pin)
-        {
-            return inputPins[pin];
         }
 
         protected Vector4 ColorToRgba(Color color1)
@@ -80,20 +80,28 @@ namespace Dope.DDXX.TextureBuilder
             inputPins[inputPin] = outputGenerator;
         }
 
-        protected Vector4 GetInput(int inputPin, Vector2 textureCoordinate)
+        public IGenerator GetInput(int inputPin)
         {
             ValidateInputPin(inputPin);
             if (inputPins[inputPin] == null)
                 throw new ArgumentException("Input " + inputPin + "has not been connected yet.");
-            return inputPins[inputPin].GetPixel(textureCoordinate, new Vector2());
+            return inputPins[inputPin];
+        }
+
+        protected Vector4 GetInputPixel(int inputPin, Vector2 textureCoordinate, Vector2 texelSize)
+        {
+            ValidateInputPin(inputPin);
+            if (inputPins[inputPin] == null)
+                throw new ArgumentException("Input " + inputPin + "has not been connected yet.");
+            return inputPins[inputPin].GetPixel(textureCoordinate, texelSize);
         }
 
         private void ValidateInputPin(int inputPin)
         {
             if (inputPin < 0)
-                throw new ArgumentOutOfRangeException("inputPin", inputPin, "Must not be negative.");
+                throw new ArgumentOutOfRangeException("inputPin", "Must not be negative. Was " + inputPin);
             if (inputPin >= numInputPins)
-                throw new ArgumentOutOfRangeException("inputPin", inputPin, "Must be less than number of input pins.");
+                throw new ArgumentOutOfRangeException("inputPin", "Must be less than number of input pins. Was " + inputPin);
         }
 
     }

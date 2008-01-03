@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
-using System.Drawing;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -13,83 +12,88 @@ namespace Dope.DDXX.DemoFramework
     {
         private class TextureContainer
         {
-            private ITexture texture;
-            public ITexture Texture
+            private IRenderTarget2D renderTarget;
+            private ITexture2D texture;
+
+            public IRenderTarget2D RenderTarget
             {
-                get { return texture; }
+                get { return renderTarget; }
+                set { renderTarget = value; }
+            }
+            public ITexture2D Texture
+            {
+                get { if (texture == null) return renderTarget.GetTexture(); else return texture; }
                 set { texture = value; }
             }
             public float scale;
             public bool allocated;
-            public TextureContainer(ITexture texture)
+            public TextureContainer(IRenderTarget2D texture)
             {
-                this.texture = texture;
+                this.renderTarget = texture;
                 scale = 1.0f;
             }
         }
-        private IDevice device;
+        private IGraphicsDevice device;
         private ITextureFactory textureFactory;
-        private ITexture lastUsedTexture;
+        private IRenderTarget2D lastUsedTexture;
         private TextureContainer inputTextureContainer = new TextureContainer(null);
         private TextureContainer sourceTextureContainer = new TextureContainer(null);
+        private ISpriteBatch spriteBatch;
         private IEffect effect;
-        private EffectHandle sourceTextureParameter;
-        private BlendOperation blendOperation = BlendOperation.Add;
+        private BlendFunction blendOperation = BlendFunction.Add;
         private Blend sourceBlend = Blend.One;
         private Blend destinatonBlend = Blend.Zero;
         private Color blendFactor = Color.Black;
-        private bool shouldClear;
+        //private bool shouldClear;
         private List<TextureContainer> textures = new List<TextureContainer>();
 
         public PostProcessor()
         {
         }
 
-        public void Initialize(IDevice device, ITextureFactory textureFactory, IEffectFactory effectFactory)
+        public void Initialize(IGraphicsDevice device, IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, IEffectFactory effectFactory)
         {
             this.device = device;
-            effect = effectFactory.CreateFromFile("PostEffects.fxo");
+            effect = effectFactory.CreateFromFile("Content\\effects\\PostEffects");
+            spriteBatch = graphicsFactory.CreateSpriteBatch();
             this.textureFactory = textureFactory;
-
-            sourceTextureParameter = effect.GetParameter(null, "SourceTexture");
 
             HandleAnnotations();
         }
 
         private void HandleAnnotations()
         {
-            for (int i = 0; i < effect.Description_Parameters; i++)
+            foreach (IEffectParameter parameterTo in effect.Parameters)
             {
-                EffectHandle parameterTo = effect.GetParameter(null, i);
-                EffectHandle annotation = effect.GetAnnotation(parameterTo, "ConvertPixelsToTexels");
+                IEffectAnnotation annotation = parameterTo.Annotations["ConvertPixelsToTexels"];
                 if (annotation != null)
                 {
-                    EffectHandle parameterFrom = effect.GetParameter(null, effect.GetValueString(annotation));
-                    int numElements = effect.GetParameterDescription_Elements(parameterFrom);
-                    float[] values = effect.GetValueFloatArray(parameterFrom, numElements * 2);
+                    IEffectParameter parameterFrom = effect.Parameters[annotation.GetValueString()];
+                    int numElements = parameterFrom.Elements.Count;
+                    float[] values = parameterFrom.GetValueSingleArray(numElements * 2);
                     for (int j = 0; j < numElements; j++)
                     {
                         values[j * 2 + 0] /= device.PresentationParameters.BackBufferWidth;
                         values[j * 2 + 1] /= device.PresentationParameters.BackBufferHeight;
                     }
-                    effect.SetValue(parameterTo, values);
+                    parameterTo.SetValue(values);
                 }
             }
         }
 
-        public ITexture OutputTexture
+        public IRenderTarget2D OutputTexture
         {
             get { return lastUsedTexture; }
         }
 
-        public void StartFrame(ITexture startTexture)
+        public void StartFrame(IRenderTarget2D startTexture)
         {
-            inputTextureContainer.Texture = startTexture;
+            inputTextureContainer.RenderTarget = startTexture;
             inputTextureContainer.scale = 1.0f;
             lastUsedTexture = startTexture;
         }
 
-        public void SetBlendParameters(BlendOperation blendOperation, Blend sourceBlend, Blend destinatonBlend, Color blendFactor)
+        public void SetBlendParameters(BlendFunction blendOperation, Blend sourceBlend, Blend destinatonBlend, Color blendFactor)
         {
             this.blendOperation = blendOperation;
             this.sourceBlend = sourceBlend;
@@ -97,67 +101,95 @@ namespace Dope.DDXX.DemoFramework
             this.blendFactor = blendFactor;
         }
 
-        public void Process(string technique, ITexture source, ITexture destination)
+        public void Process(string technique, IRenderTarget2D source, IRenderTarget2D destination)
         {
+            effect.Parameters["Time2D"].SetValue(new float[] { 
+                (1.23f * Time.CurrentTime * Time.CurrentTime) % 1,
+                (2.495f * Time.CurrentTime) % 1
+            });
             TextureContainer sourceContainer = GetContainer(source, true);
             TextureContainer destinationContainer = GetContainer(destination, false);
-            SetupProcessParameters(technique, sourceContainer, destinationContainer);
+            SetupProcessParameters(technique, destinationContainer);
 
-            device.BeginScene();
             ProcessPasses(technique, sourceContainer, destinationContainer);
-            device.EndScene();
 
+            device.SetRenderTarget(0, null);//.ResolveRenderTarget(0);
             lastUsedTexture = destination;
 
-            //sourceContainer.Texture.Save("source.dds", ImageFileFormat.Dds);
-            //destinationContainer.Texture.Save("destination.dds", ImageFileFormat.Dds);
+            //sourceContainer.Texture.GetTexture().Save("source.jpg", ImageFileFormat.Jpg);
+            //destinationContainer.Texture.GetTexture().Save("destination.jpg", ImageFileFormat.Jpg);
         }
 
-        private TextureContainer GetContainer(ITexture source, bool useSourceIfNotFound)
+        public void Process(string technique, ITexture2D source, IRenderTarget2D destination)
         {
-            if (source == inputTextureContainer.Texture)
+
+            sourceTextureContainer.Texture = source;
+            Process(technique, (IRenderTarget2D)null, destination);
+        }
+
+        private TextureContainer GetContainer(IRenderTarget2D source, bool useSourceIfNotFound)
+        {
+            if (source == inputTextureContainer.RenderTarget)
                 return inputTextureContainer;
             foreach (TextureContainer container in textures)
-                if (container.Texture == source)
+                if (container.RenderTarget == source)
                     return container;
             if (useSourceIfNotFound)
             {
-                sourceTextureContainer.Texture = source;
                 return sourceTextureContainer;
             }
             throw new DDXXException("Unknown texture");
         }
 
-        private void SetupProcessParameters(string technique, TextureContainer source, TextureContainer destination)
+        private void SetupProcessParameters(string technique, TextureContainer destination)
         {
-            using (ISurface renderTarget = destination.Texture.GetSurfaceLevel(0))
-            {
-                device.SetRenderTarget(0, renderTarget);
-                effect.SetValue(sourceTextureParameter, source.Texture);
-                effect.Technique = technique;
-                device.VertexFormat = CustomVertex.TransformedTextured.Format;
-            }
+            device.SetRenderTarget(0, destination.RenderTarget);
+            effect.CurrentTechnique = effect.Techniques[technique];
         }
 
         private void ProcessPasses(string technique, TextureContainer source, TextureContainer destination)
         {
-            int passes = effect.Begin(FX.None);
+            spriteBatch.Begin(SpriteBlendMode.None, SpriteSortMode.Immediate, SaveStateMode.None);
+            effect.Begin();
             SetupRenderState();
-            for (int pass = 0; pass < passes; pass++)
+            foreach (IEffectPass pass in effect.CurrentTechnique.Passes)
             {
-                CustomVertex.TransformedTextured[] vertices = CreateVertexStruct(technique, source, destination, pass);
-                effect.BeginPass(pass);
-                if (shouldClear)
-                    device.Clear(ClearFlags.Target, Color.Black, 0, 0);
-                device.DrawUserPrimitives(PrimitiveType.TriangleStrip, 2, vertices);
-                effect.EndPass();
+                pass.Begin();
+                float fromScale = source.scale;
+                float toScale;
+#if (XBOX)
+                // Workaround for bug in annotations
+                if (technique == "DownSample4x")
+                    toScale = fromScale * 0.25f;
+                else if (technique == "UpSample4x")
+                    toScale = fromScale * 4.0f;
+                else
+                    toScale = fromScale;
+#else
+                toScale = fromScale * pass.Annotations["Scale"].GetValueSingle();
+#endif
+                if (toScale > 1.0f)
+                    throw new DDXXException("Can not scale larger than back buffer size");
+                int destHeight = device.PresentationParameters.BackBufferHeight;
+                int destWidth = device.PresentationParameters.BackBufferWidth;
+                int sourceHeight = source.Texture.Height;
+                int sourceWidth = source.Texture.Width;
+                if (destination.scale < toScale)
+                    device.Clear(ClearOptions.Target, Color.Black, 0, 0);
+                destination.scale = toScale;
+                spriteBatch.Draw(source.Texture,
+                        new Rectangle(0, 0, (int)(destWidth * toScale), (int)(destHeight * toScale)),
+                        new Rectangle(0, 0, (int)(sourceWidth * fromScale), (int)(sourceHeight * fromScale)),
+                        Color.White);
+                spriteBatch.End();
+                pass.End();
             }
             effect.End();
         }
 
         private void SetupRenderState()
         {
-            if (BlendOperation.Add == blendOperation &&
+            if (BlendFunction.Add == blendOperation &&
                 Blend.One == sourceBlend &&
                 Blend.Zero == destinatonBlend)
             {
@@ -166,103 +198,105 @@ namespace Dope.DDXX.DemoFramework
             else
             {
                 device.RenderState.AlphaBlendEnable = true;
-                device.RenderState.BlendOperation = blendOperation;
+                device.RenderState.BlendFunction = blendOperation;
                 device.RenderState.SourceBlend = sourceBlend;
                 device.RenderState.DestinationBlend = destinatonBlend;
                 device.RenderState.BlendFactor = blendFactor;
             }
         }
 
-        private CustomVertex.TransformedTextured[] CreateVertexStruct(string technique, TextureContainer source, TextureContainer destination, int pass)
-        {
-            CustomVertex.TransformedTextured[] vertices = new CustomVertex.TransformedTextured[4];
-            float fromScale = source.scale;
-            float toScale = fromScale * effect.GetValueFloat(effect.GetAnnotation(effect.GetPass(technique, pass), "Scale"));
-            if (toScale > 1.0f)
-                throw new DDXXException("Can not scale larger than back buffer size");
-            int height = device.PresentationParameters.BackBufferHeight;
-            int width = device.PresentationParameters.BackBufferWidth;
-            vertices = new CustomVertex.TransformedTextured[4];
-            vertices[0] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, -0.5f, 1.0f, 1.0f), 0, 0);
-            vertices[1] = new CustomVertex.TransformedTextured(new Vector4(width * toScale - 0.5f, -0.5f, 1.0f, 1.0f), fromScale, 0);
-            vertices[2] = new CustomVertex.TransformedTextured(new Vector4(-0.5f, height * toScale - 0.5f, 1.0f, 1.0f), 0, fromScale);
-            vertices[3] = new CustomVertex.TransformedTextured(new Vector4(width * toScale - 0.5f, height * toScale - 0.5f, 1.0f, 1.0f), fromScale, fromScale);
-            if (destination.scale > toScale)
-                shouldClear = true;
-            else
-                shouldClear = false;
-            destination.scale = toScale;
-            return vertices;
-        }
+        //private VertexPositionTexture[] CreateVertexStruct(string technique, TextureContainer source, TextureContainer destination, IEffectPass pass)
+        //{
+        //    VertexPositionTexture[] vertices = new VertexPositionTexture[4];
+        //    float fromScale = source.scale;
+        //    float toScale = fromScale * pass.Annotations["Scale"].GetValueSingle();
+        //    if (toScale > 1.0f)
+        //        throw new DDXXException("Can not scale larger than back buffer size");
+        //    int height = device.PresentationParameters.BackBufferHeight;
+        //    int width = device.PresentationParameters.BackBufferWidth;
+        //    vertices = new VertexPositionTexture[4];
+        //    vertices[0] = new VertexPositionTexture(new Vector3(0, 0, 0.0f), new Vector2(0, 0));
+        //    vertices[1] = new VertexPositionTexture(new Vector3(width * toScale - 0.5f, -0.5f, 1.0f, 1.0f), new Vector2(fromScale, 0));
+        //    vertices[2] = new VertexPositionTexture(new Vector3(-0.5f, height * toScale - 0.5f, 1.0f, 1.0f), new Vector2(0, fromScale));
+        //    vertices[3] = new VertexPositionTexture(new Vector3(width * toScale - 0.5f, height * toScale - 0.5f, 1.0f, 1.0f), new Vector2(fromScale, fromScale));
+        //    if (destination.scale > toScale)
+        //        shouldClear = true;
+        //    else
+        //        shouldClear = false;
+        //    destination.scale = toScale;
+        //    return vertices;
+        //}
 
         public void DebugWriteAllTextures()
         {
+#if (!XBOX)
             for (int i = 0; i < textures.Count; i++)
-                textures[i].Texture.Save("Container" + i + ".jpg", ImageFileFormat.Jpg);
+                textures[i].RenderTarget.GetTexture().Save("Container" + i + ".jpg", ImageFileFormat.Jpg);
+#endif
         }
 
         public void SetValue(string name, float value)
         {
-            effect.SetValue(name, value);
+            effect.Parameters[name].SetValue(value);
         }
 
         public void SetValue(string name, float[] value)
         {
-            effect.SetValue(name, value);
+            effect.Parameters[name].SetValue(value);
         }
 
         public void SetValue(string name, Vector2 value)
         {
             float[] values = new float[] { value.X, value.Y };
-            effect.SetValue(name, values);
+            effect.Parameters[name].SetValue(values);
         }
 
         public void SetValue(string name, Vector4 value)
         {
-            effect.SetValue(name, value);
+            effect.Parameters[name].SetValue(value);
         }
 
-        public List<ITexture> GetTemporaryTextures(int num, bool skipOutput)
+        public List<IRenderTarget2D> GetTemporaryTextures(int num, bool skipOutput)
         {
-            List<ITexture> tempTextures = new List<ITexture>();
+            List<IRenderTarget2D> tempTextures = new List<IRenderTarget2D>();
             foreach (TextureContainer container in textures)
             {
                 if (!container.allocated)
                 {
-                    if (container.Texture == lastUsedTexture)
+                    if (container.RenderTarget == lastUsedTexture)
                     {
                         if (num != 1 && !skipOutput)
                         {
-                            tempTextures.Add(container.Texture);
+                            tempTextures.Add(container.RenderTarget);
                         }
                     }
                     else
                     {
-                        tempTextures.Add(container.Texture);
+                        tempTextures.Add(container.RenderTarget);
                     }
                 }
             }
             int numToAdd = num - tempTextures.Count;
             for (int i = 0; i < numToAdd; i++)
             {
-                ITexture newTexture = textureFactory.CreateFullsizeRenderTarget(Format.A8R8G8B8);
+                IRenderTarget2D newTexture = textureFactory.CreateFullsizeRenderTarget();
                 textures.Add(new TextureContainer(newTexture));
                 tempTextures.Add(newTexture);
             }
             if (tempTextures[0] == lastUsedTexture)
             {
-                ITexture temp = tempTextures[0];
+                IRenderTarget2D temp = tempTextures[0];
                 tempTextures[0] = tempTextures[1];
                 tempTextures[1] = temp;
             }
             return tempTextures;
         }
 
-        public void AllocateTexture(ITexture texture)
+        public void AllocateTexture(IRenderTarget2D texture)
         {
             foreach (TextureContainer container in textures)
             {
-                if (container.Texture == texture)
+                if (container.RenderTarget == texture)
                 {
                     if (container.allocated)
                         throw new DDXXException("Same texture allocated twice.");
@@ -273,11 +307,11 @@ namespace Dope.DDXX.DemoFramework
             throw new DDXXException("Texture not found.");
         }
 
-        public void FreeTexture(ITexture texture)
+        public void FreeTexture(IRenderTarget2D texture)
         {
             foreach (TextureContainer container in textures)
             {
-                if (container.Texture == texture)
+                if (container.RenderTarget == texture)
                 {
                     container.allocated = false;
                     return;

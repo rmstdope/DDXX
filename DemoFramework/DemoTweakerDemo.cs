@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
 using Dope.DDXX.Input;
-using Microsoft.DirectX.DirectInput;
 using Dope.DDXX.Utility;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -18,6 +18,11 @@ namespace Dope.DDXX.DemoFramework
         public void IdentifierFromParent(object id) { }
 
         public bool Quit
+        {
+            get { return false; }
+        }
+
+        public bool Exiting
         {
             get { return false; }
         }
@@ -51,12 +56,12 @@ namespace Dope.DDXX.DemoFramework
         {
             bool handled = false;
 
-            if (inputDriver.KeyPressedNoRepeat(Key.UpArrow))
+            if (inputDriver.UpPressedNoRepeat())
             {
                 KeyUp();
                 handled = true;
             }
-            if (inputDriver.KeyPressedNoRepeat(Key.DownArrow))
+            if (inputDriver.DownPressedNoRepeat())
             {
                 KeyDown();
                 handled = true;
@@ -71,9 +76,7 @@ namespace Dope.DDXX.DemoFramework
             BoxControl control = CreateTimeControls();
             CreateTracks(control);
 
-            D3DDriver.GetInstance().Device.BeginScene();
             UserInterface.DrawControl(MainWindow);
-            D3DDriver.GetInstance().Device.EndScene();
         }
 
         private void CreateTracks(BoxControl timelineWindow)
@@ -89,8 +92,8 @@ namespace Dope.DDXX.DemoFramework
                     color = Settings.SelectedColor;
                 else
                     color = Settings.UnselectedColor;
-                BoxControl trackWindow = new BoxControl(new RectangleF(0.0f, y, 1.0f, 0.25f), Settings.Alpha, color, timelineWindow);
-                new TextControl("Track " + i, new RectangleF(0.0f, 0.0f, 1.0f, 1.0f), DrawTextFormat.Top | DrawTextFormat.Left, Settings.TextAlpha, Color.White, trackWindow);
+                BoxControl trackWindow = new BoxControl(new Vector4(0, y, 1, 0.25f), Settings.Alpha, color, timelineWindow);
+                new TextControl("Track " + i, new Vector4(0, 0, 1, 1), TextFormatting.Top | TextFormatting.Left, Settings.TextAlpha, Color.White, trackWindow);
                 y += 0.35f;
                 DrawEffectsInTrack(i, trackWindow);
 
@@ -118,20 +121,20 @@ namespace Dope.DDXX.DemoFramework
             foreach (IRegisterable effect in allEffects)
             {
                 float ex1 = (effect.StartTime - StartTime) / TimeScale;
-                if (ex1 < 0.0f)
-                    ex1 = 0.0f;
+                if (ex1 < 0)
+                    ex1 = 0;
                 float ex2 = (effect.EndTime - StartTime) / TimeScale;
-                if (ex2 > 1.0f)
-                    ex2 = 1.0f;
-                new TextControl(effect.GetType().Name, new PointF(ex1, ey), DrawTextFormat.Bottom | DrawTextFormat.Left, Settings.Alpha, Color.SkyBlue, trackWindow);
-                new LineControl(new RectangleF(ex1, ey, ex2 - ex1, 0.0f), Settings.Alpha, Color.SkyBlue, trackWindow);
+                if (ex2 > 1)
+                    ex2 = 1;
+                new TextControl(effect.GetType().Name, new Vector2(ex1, ey), TextFormatting.Bottom | TextFormatting.Left, Settings.Alpha, Color.SkyBlue, trackWindow);
+                new LineControl(new Vector4(ex1, ey, ex2 - ex1, 0), Settings.Alpha, Color.SkyBlue, trackWindow);
                 ey += 0.14f;
-                if (ey > 1.0f)
-                    ey = 0.2f;
+                if (ey > 1)
+                    ey = 0.24f;
             }
         }
 
-        public bool ShouldSave(IInputDriver inputDriver)
+        public bool ShouldSave()
         {
             return true;
         }

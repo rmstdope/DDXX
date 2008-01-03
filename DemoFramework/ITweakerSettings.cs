@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Drawing;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -19,12 +19,12 @@ namespace Dope.DDXX.DemoFramework
 
     public interface ITweakerSettings
     {
-        float Alpha { get; }
+        byte Alpha { get; }
         Color SelectedColor { get; set; }
         void NextColorSchema();
         void PreviousColorSchema();
         void SetTransparency(Transparency transparency);
-        float TextAlpha { get; }
+        byte TextAlpha { get; }
         Color TimeColor { get; set; }
         Color TitleColor { get; set; }
         Color UnselectedColor { get; set; }

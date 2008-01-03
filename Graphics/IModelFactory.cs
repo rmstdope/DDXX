@@ -1,20 +1,26 @@
 ﻿using System;
 namespace Dope.DDXX.Graphics
 {
-    public enum ModelOptions
-    {
-        None = 0,
-        NoOptimization = 1,
-        EnsureTangents = 2
-        // Continue with 4, 8, 16, 32, etc.
-    }
+    //public delegate string MaterialEffectChooser(int material);
+    //public delegate MaterialEffectChooser MeshEffectChooser(string meshName);
+
+    //public class TechniqueChooser
+    //{
+    //    public static MaterialEffectChooser MaterialPrefix(string prefix)
+    //    {
+    //        return delegate(int material) { return prefix; };
+    //    }
+    //    public static MeshEffectChooser MeshPrefix(string prefix)
+    //    {
+    //        return delegate(string name) { return MaterialPrefix(prefix); };
+    //    }
+    //}
 
     public interface IModelFactory
     {
-        int Count { get; }
-        int CountBoxes { get; }
-        int CountFiles { get; }
-        IModel CreateBox(float width, float height, float depth);
-        IModel FromFile(string file, ModelOptions options);
+        IModel FromFile(string file, string effect);
+        //IModel FromFile(string file, MaterialEffectChooser techniqueChooser);
+        //IModel FromFile(string file, MeshEffectChooser techniqueChooser);
+
     }
 }

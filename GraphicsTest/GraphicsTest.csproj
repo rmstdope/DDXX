@@ -1,73 +1,100 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
+    <ProjectGuid>{292A547D-05A7-4C2A-AC8E-C3F9FFD41F6D}</ProjectGuid>
+    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{72977C86-9996-46A8-B6F4-468133639BE9}</ProjectGuid>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Dope.DDXX.Graphics</RootNamespace>
     <AssemblyName>Dope.DDXX.GraphicsTest</AssemblyName>
+    <XnaFrameworkVersion>v2.0</XnaFrameworkVersion>
+    <XnaPlatform>Windows</XnaPlatform>
+    <Thumbnail>
+    </Thumbnail>
+    <XnaCrossPlatformGroupID>{12ce7880-e0c2-4798-8773-d43abac0b9f1}</XnaCrossPlatformGroupID>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\x86\Debug</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\x86\Release</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2911.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="Microsoft.Xna.Framework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="NMock2, Version=1.0.2313.18049, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="nunit.framework, Version=2.4.1.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
-    <Reference Include="System" />
+    <Reference Include="nunit.framework, Version=2.4.3.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="D3DDriverTest.cs" />
-    <Compile Include="D3DMockTest.cs" />
-    <Compile Include="DdxxAllocateHierarchyTest.cs" />
-    <Compile Include="DevicePrerequisitsTest.cs" />
-    <Compile Include="EffectFactoryTest.cs" />
-    <Compile Include="ModelFactoryTest.cs" />
-    <Compile Include="ModelMaterialTest.cs" />
-    <Compile Include="ModelTest.cs" />
-    <Compile Include="PhysicalModelTest.cs" />
+    <Compile Include="CustomModelMeshPartTest.cs">
+      <Name>CustomModelMeshPartTest</Name>
+    </Compile>
+    <Compile Include="CustomModelMeshTest.cs">
+      <Name>CustomModelMeshTest</Name>
+    </Compile>
+    <Compile Include="CustomModelTest.cs">
+      <Name>CustomModelTest</Name>
+    </Compile>
+    <Compile Include="D3DMockTest.cs">
+      <Name>D3DMockTest</Name>
+    </Compile>
+    <Compile Include="EffectConverterTest.cs">
+      <Name>EffectConverterTest</Name>
+    </Compile>
+    <Compile Include="LightStateTest.cs">
+      <Name>LightStateTest</Name>
+    </Compile>
+    <Compile Include="MaterialHandlerTest.cs">
+      <Name>MaterialHandlerTest</Name>
+    </Compile>
+    <Compile Include="ModelFactoryTest.cs">
+      <Name>ModelFactoryTest</Name>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SkinnedFrameTest.cs" />
-    <Compile Include="SkinnedMeshContainerTest.cs" />
-    <Compile Include="SkinnedModelTest.cs" />
-    <Compile Include="TextureFactoryTest.cs" />
-    <Compile Include="UnindexedMeshTest.cs" />
-    <Compile Include="VertexElementArrayTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <NestedContentProject Include="Content.contentproj">
+      <Project>{b9e57ce5-b0ac-4d77-812a-4647660d10be}</Project>
+      <Visible>False</Visible>
+    </NestedContentProject>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Graphics\Graphics.csproj">
-      <Project>{B64087ED-595E-4597-84D8-D273FF00B2DA}</Project>
+      <Project>{797591FA-968E-41D7-BFEF-85E13FCCA4CF}</Project>
       <Name>Graphics</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Physics\Physics.csproj">
-      <Project>{6F7E70F2-FC19-4399-84BD-F60AC491E970}</Project>
-      <Name>Physics</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Utility\Utility.csproj">
-      <Project>{31D76405-2DD3-436A-BE65-963DE822511E}</Project>
+      <Project>{70F76E25-311C-4DFC-9412-89470F537BDF}</Project>
       <Name>Utility</Name>
     </ProjectReference>
   </ItemGroup>
@@ -79,4 +106,6 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v2.0\Microsoft.Xna.GameStudio.Common.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v2.0\Microsoft.Xna.GameStudio.NestedContent.targets" />
 </Project>

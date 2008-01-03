@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.DemoFramework;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
 using Dope.DDXX.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoEffects
 {
@@ -17,9 +16,9 @@ namespace Dope.DDXX.DemoEffects
 
         public override void Render()
         {
-            List<ITexture> textures = PostProcessor.GetTemporaryTextures(1, false);
+            List<IRenderTarget2D> textures = PostProcessor.GetTemporaryTextures(1, false);
 
-            PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
+            PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);
             PostProcessor.Process("Monochrome", PostProcessor.OutputTexture, textures[0]);
         }
 

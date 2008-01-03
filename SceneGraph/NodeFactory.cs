@@ -2,19 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
-using Microsoft.DirectX;
 
 namespace Dope.DDXX.SceneGraph
 {
     public class NodeFactory : INodeFactory
     {
         private ITextureFactory textureFactory;
-        private IDevice device;
 
-        public NodeFactory(IDevice device, ITextureFactory textureFactory)
+        public NodeFactory(ITextureFactory textureFactory)
         {
             this.textureFactory = textureFactory;
-            this.device = device;
         }
 
         public ModelNode CreateModelNode(IFrame frame, IEffect effect, MeshTechniqueChooser prefix)
@@ -26,17 +23,14 @@ namespace Dope.DDXX.SceneGraph
         public ModelNode CreateSkinnedModelNode(IAnimationRootFrame animationRootFrame, IFrame frame, IEffect effect, MeshTechniqueChooser prefix)
         {
             IModel model = new SkinnedModel(animationRootFrame, frame, textureFactory);
-            ModelNode node = CommonCreateModelNode(frame, effect, prefix, model);
-            node.EnableFrameHandling(null);
-            return node;
+            return CommonCreateModelNode(frame, effect, prefix, model);
         }
 
-        private ModelNode CommonCreateModelNode(IFrame frame, IEffect effect, MeshTechniqueChooser prefix, IModel model)
+        private static ModelNode CommonCreateModelNode(IFrame frame, IEffect effect, MeshTechniqueChooser prefix, IModel model)
         {
             IEffectHandler effectHandler = new EffectHandler(effect, 
                 prefix(frame.Name), model);
-            ModelNode node = new ModelNode(frame.Name, model, effectHandler, device);
-            //if (!(node is ModelNode))
+            ModelNode node = new ModelNode(frame.Name, model, effectHandler);
             node.EnableFrameHandling(frame);
             return node;
         }

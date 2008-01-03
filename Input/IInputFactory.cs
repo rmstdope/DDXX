@@ -1,16 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Windows.Forms;
-using Microsoft.DirectX.DirectInput;
+using Microsoft.Xna.Framework.Input;
 
 namespace Dope.DDXX.Input
 {
     public interface IInputFactory
     {
-        Device Keyboard { get; }
-        void SetCooperativeLevel(Device device, Control control, CooperativeLevelFlags cooperativeLevelFlags);
-        void Acquire(Device device);
-        bool KeyPressed(Device keyboard, Key key);
+        void Step();
+        bool KeyPressed(Keys key);
+        bool GamePadButtonA();
+        bool GamePadButtonB();
+        bool GamePadButtonX();
+        bool GamePadButtonY();
+        bool GamePadUp();
+        bool GamePadDown();
+        bool GamePadRight();
+        bool GamePadLeft();
     }
 }

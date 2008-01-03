@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.TextureBuilder
 {
@@ -9,16 +9,21 @@ namespace Dope.DDXX.TextureBuilder
     {
         private float factor;
 
-        public FactorBlend(float factor)
+        public float Factor
+        {
+            get { return factor; }
+            set { factor = value; }
+        }
+
+        public FactorBlend()
             : base(2)
         {
-            this.factor = factor;
         }
 
         public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
         {
-            return GetInput(1, textureCoordinate) * factor +
-                GetInput(0, textureCoordinate) * (1 - factor);
+            return GetInputPixel(1, textureCoordinate, texelSize) * factor +
+                GetInputPixel(0, textureCoordinate, texelSize) * (1 - factor);
         }
     }
 }

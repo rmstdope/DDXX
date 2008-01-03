@@ -2,33 +2,30 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using Dope.DDXX.Graphics;
 using NMock2;
 using Dope.DDXX.Utility;
-using System.Drawing;
-using Microsoft.DirectX.Direct3D;
+using Dope.DDXX.Graphics;
 using Dope.DDXX.DemoFramework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.DemoEffects
 {
     [TestFixture]
-    public class SpinningBackgroundEffectTest : D3DMockTest
+    public class SpinningBackgroundEffectTest : DemoMockTest
     {
         private SpinningBackgroundEffect spin;
-        private ISprite sprite;
-        private IDemoMixer mixer;
-        private IPostProcessor postProcessor;
+        private ITexture2D texture2;
+        private ITexture2D texture3;
 
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
-            Time.Initialize();
 
             spin = new SpinningBackgroundEffect("", 0, 10);
-            sprite = mockery.NewMock<ISprite>();
-            mixer = mockery.NewMock<IDemoMixer>();
-            postProcessor = mockery.NewMock<IPostProcessor>();
+            texture2 = mockery.NewMock<ITexture2D>();
+            texture3 = mockery.NewMock<ITexture2D>();
         }
 
         [TearDown]
@@ -41,58 +38,68 @@ namespace Dope.DDXX.DemoEffects
         public void TestInitialize()
         {
             ExpectSprite();
-            spin.Initialize(graphicsFactory, null, device, mixer, postProcessor);
+            spin.Initialize(graphicsFactory, effectFactory, textureFactory, mixer, postProcessor);
         }
 
         [Test]
         public void TestOneTextureLayer()
         {
-            Expect.Once.On(textureFactory).Method("CreateFromFile").With("file").Will(Return.Value(texture));
-            spin.AddTextureLayer(new SpinningBackgroundEffect.TextureLayer("file", 2 * (float)Math.PI, Color.Aqua, 0.2f));
+            Expect.Once.On(textureFactory).Method("CreateFromFile").With("file").Will(Return.Value(texture2D));
+            spin.AddTextureLayer(new SpinningBackgroundEffect.TextureLayer("file", 2 * (float)Math.PI, new Color(1, 2, 3, 4)));
 
             ExpectSprite();
-            spin.Initialize(graphicsFactory, null, device, mixer, postProcessor);
+            spin.Initialize(graphicsFactory, effectFactory, textureFactory, mixer, postProcessor);
         }
 
         [Test]
         public void TestThreeTextureLayer()
         {
-            Expect.Once.On(textureFactory).Method("CreateFromFile").With("file1").Will(Return.Value(texture));
-            Expect.Once.On(textureFactory).Method("CreateFromFile").With("file1").Will(Return.Value(texture));
-            Expect.Once.On(textureFactory).Method("CreateFromFile").With("file2").Will(Return.Value(texture));
-            spin.AddTextureLayer(new SpinningBackgroundEffect.TextureLayer("file1", 2, Color.Aqua, 0.2f));
-            spin.AddTextureLayer(new SpinningBackgroundEffect.TextureLayer("file1", 1, Color.Aquamarine, 0.3f));
-            spin.AddTextureLayer(new SpinningBackgroundEffect.TextureLayer("file2", -2, Color.Azure, 0.4f));
+            Expect.Once.On(textureFactory).Method("CreateFromFile").With("file1").Will(Return.Value(texture2D));
+            Expect.Once.On(textureFactory).Method("CreateFromFile").With("file1").Will(Return.Value(texture2));
+            Expect.Once.On(textureFactory).Method("CreateFromFile").With("file2").Will(Return.Value(texture3));
+            spin.AddTextureLayer(new SpinningBackgroundEffect.TextureLayer("file1", 2, new Color(1, 2, 3, 4)));
+            spin.AddTextureLayer(new SpinningBackgroundEffect.TextureLayer("file1", 1, new Color(4, 3, 2, 1)));
+            spin.AddTextureLayer(new SpinningBackgroundEffect.TextureLayer("file2", -2, new Color(5, 6, 7, 8)));
 
             ExpectSprite();
-            spin.Initialize(graphicsFactory, null, device, mixer, postProcessor);
+            spin.Initialize(graphicsFactory, effectFactory, textureFactory, mixer, postProcessor);
         }
 
         [Test]
         public void TestRender1()
         {
             ExpectSprite();
-            spin.Initialize(graphicsFactory, null, device, mixer, postProcessor);
-            Expect.Once.On(sprite).Method("Begin").With(SpriteFlags.AlphaBlend);
-            Expect.Once.On(renderStateManager).SetProperty("ZBufferEnable").To(false);
-            Expect.Once.On(sprite).Method("End");
+            spin.Initialize(graphicsFactory, effectFactory, textureFactory, mixer, postProcessor);
+            Expect.Once.On(spriteBatch).Method("Begin").With(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+            Expect.Once.On(renderState).SetProperty("DepthBufferEnable").To(false);
+            Expect.Once.On(spriteBatch).Method("End");
             spin.Render();
         }
 
         [Test]
         public void TestRender2()
         {
-            Time.Pause();
+            int bbWidth2 = presentParameters.BackBufferWidth * 2;
+            int bbHeight2 = presentParameters.BackBufferHeight * 2;
             Time.CurrentTime = 0.5f;
-            Expect.Once.On(sprite).Method("Begin").With(SpriteFlags.AlphaBlend);
-            Expect.Once.On(renderStateManager).SetProperty("ZBufferEnable").To(false);
-            Expect.Once.On(sprite).Method("Draw2D").
-                With(Is.EqualTo(texture), Is.EqualTo(Rectangle.Empty), Is.Anything, Is.Anything, new FloatMatcher((float)(Math.PI / 2.0f)), Is.Anything, Is.EqualTo(Color.FromArgb((int)(0.2f * 255), Color.Aqua)));
-            Expect.Once.On(sprite).Method("Draw2D").
-                With(Is.EqualTo(texture), Is.EqualTo(Rectangle.Empty), Is.Anything, Is.Anything, new FloatMatcher((float)Math.PI), Is.Anything, Is.EqualTo(Color.FromArgb((int)(0.3f * 255), Color.Aquamarine)));
-            Expect.Once.On(sprite).Method("Draw2D").
-                With(Is.EqualTo(texture), Is.EqualTo(Rectangle.Empty), Is.Anything, Is.Anything, new FloatMatcher((float)(-Math.PI / 2)), Is.Anything, Is.EqualTo(Color.FromArgb((int)(0.4f * 255), Color.Azure)));
-            Expect.Once.On(sprite).Method("End");
+            Expect.Once.On(spriteBatch).Method("Begin").With(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+            Expect.Once.On(renderState).SetProperty("DepthBufferEnable").To(false);
+            Expect.Once.On(spriteBatch).Method("Draw").
+                With(texture2D, new Rectangle(0, 0, bbWidth2, bbHeight2), new Rectangle(0, 0, 1, 10), new Color(1, 2, 3, 4), (float)(Math.PI / 2.0f), 
+                new Vector2(0.5f, 5.0f), SpriteEffects.None, 1.0f);
+            Expect.Once.On(spriteBatch).Method("Draw").
+                With(texture2, new Rectangle(0, 0, bbWidth2, bbHeight2), new Rectangle(0, 0, 2, 20), new Color(4, 3, 2, 1), (float)(Math.PI / 1.0f),
+                new Vector2(1.0f, 10.0f), SpriteEffects.None, 1.0f);
+            Expect.Once.On(spriteBatch).Method("Draw").
+                With(texture3, new Rectangle(0, 0, bbWidth2, bbHeight2), new Rectangle(0, 0, 3, 30), new Color(5, 6, 7, 8), (float)(-Math.PI / 2.0f),
+                new Vector2(1.5f, 15.0f), SpriteEffects.None, 1.0f);
+            Expect.Once.On(spriteBatch).Method("End");
+            Stub.On(texture2D).GetProperty("Width").Will(Return.Value(1));
+            Stub.On(texture2).GetProperty("Width").Will(Return.Value(2));
+            Stub.On(texture3).GetProperty("Width").Will(Return.Value(3));
+            Stub.On(texture2D).GetProperty("Height").Will(Return.Value(10));
+            Stub.On(texture2).GetProperty("Height").Will(Return.Value(20));
+            Stub.On(texture3).GetProperty("Height").Will(Return.Value(30));
             TestThreeTextureLayer();
             spin.Render();
         }
@@ -100,9 +107,8 @@ namespace Dope.DDXX.DemoEffects
         private void ExpectSprite()
         {
             Expect.Once.On(graphicsFactory).
-                Method("CreateSprite").
-                WithAnyArguments().
-                Will(Return.Value(sprite));
+                Method("CreateSpriteBatch").
+                Will(Return.Value(spriteBatch));
         }
 
     }

@@ -1,18 +1,20 @@
 ﻿using System;
-using Microsoft.DirectX.Direct3D;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.Graphics
 {
+    public delegate Vector4 Fill2DTextureCallback(Vector2 texCoord, Vector2 texelSize);
+
     public interface ITextureFactory
     {
-        ITexture CreateFromFile(string name);
-        ICubeTexture CreateCubeFromFile(string name);
-        ITexture CreateFullsizeRenderTarget(Format format);
-        ITexture CreateFullsizeRenderTarget();
-        ITexture CreateRenderTarget(int width, int height);
-        ITexture CreateRenderTarget(int width, int height, Format format);
-        ITexture CreateFromFunction(int width, int height, int numLevels, Usage usage, Format format, Pool pool, Fill2DTextureCallback callbackFunction);
-        void RegisterTexture(string name, ITexture texture);
-
+        ITexture2D CreateFromFile(string name);
+        ITextureCube CreateCubeFromFile(string name);
+        IRenderTarget2D CreateFullsizeRenderTarget(SurfaceFormat format, MultiSampleType multiSampleType, int multiSampleQuality);
+        IRenderTarget2D CreateFullsizeRenderTarget();
+        IDepthStencilBuffer CreateFullsizeDepthStencil(DepthFormat format, MultiSampleType multiSampleType);
+        ITexture2D CreateFromFunction(int width, int height, int numLevels, TextureUsage usage, SurfaceFormat format, Fill2DTextureCallback callbackFunction);
+        void RegisterTexture(string name, ITexture2D texture);
+        ITexture2D WhiteTexture { get; }
     }
 }

@@ -30,22 +30,22 @@ namespace Dope.DDXX.Utility
             Assert.AreEqual(new string[] { "ccc", "ddd", "eee" }, FileUtility.GetLoadPaths());
         }
         
-        //[Test]
-        //public void TestBlockFile()
-        //{
-        //    FileUtility.SetBlockFile("aaa");
-        //    Assert.AreEqual("aaa", FileUtility.GetBlockFile());
+        [Test]
+        public void TestBlockFile()
+        {
+            FileUtility.SetBlockFile("aaa");
+            Assert.AreEqual("aaa", FileUtility.GetBlockFile());
 
-        //    FileUtility.SetBlockFile("eee");
-        //    Assert.AreEqual("eee", FileUtility.GetBlockFile());
-        //}
+            FileUtility.SetBlockFile("eee");
+            Assert.AreEqual("eee", FileUtility.GetBlockFile());
+        }
 
         [Test]
         public void TestOpenStreamFileOK1()
         {
-            FileUtility.SetLoadPaths("../", "../../");
+            FileUtility.SetLoadPaths("../", "../../../");
             FileUtility.SetBlockFile("invalidblockfile");
-            Stream stream = FileUtility.OpenStream("FileUtilityTest.cs");
+            FileStream stream = FileUtility.OpenStream("FileUtilityTest.cs");
         }
 
         [Test]
@@ -54,24 +54,24 @@ namespace Dope.DDXX.Utility
         {
             FileUtility.SetLoadPaths();
             FileUtility.SetBlockFile("");
-            Stream stream = FileUtility.OpenStream("FileUtilityTest.cs");
+            FileStream stream = FileUtility.OpenStream("FileUtilityTest.cs");
         }
 
         [Test]
         [ExpectedException(typeof(DDXXException))]
         public void TestOpenStreamFileFail2()
         {
-            FileUtility.SetLoadPaths("../", "../../");
+            FileUtility.SetLoadPaths("../", "../../../");
             FileUtility.SetBlockFile("invalidblockfile");
-            Stream stream = FileUtility.OpenStream("invalidfile");
+            FileStream stream = FileUtility.OpenStream("invalidfile");
         }
 
         [Test]
         public void TestGetPathOK()
         {
-            FileUtility.SetLoadPaths("../", "../../");
+            FileUtility.SetLoadPaths("../", "../../../");
             FileUtility.SetBlockFile("invalidblockfile");
-            Assert.AreEqual("../../FileUtilityTest.cs", FileUtility.FilePath("FileUtilityTest.cs"));
+            Assert.AreEqual("../../../FileUtilityTest.cs", FileUtility.FilePath("FileUtilityTest.cs"));
         }
 
         [Test]

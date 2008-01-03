@@ -15,12 +15,17 @@ namespace Dope.DDXX.DemoFramework
         private IPostProcessor postProcessor;
         private ITextureFactory textureFactory;
         private ITextureBuilder textureBuilder;
-        private IDevice device;
+        //private IDevice device;
         private IGraphicsFactory graphicsFactory;
 
         protected IGraphicsFactory GraphicsFactory
         {
             get { return graphicsFactory; }
+        }
+
+        protected IGraphicsDevice GraphicsDevice
+        {
+            get { return graphicsFactory.GraphicsDeviceManager.GraphicsDevice; }
         }
 
         protected IPostProcessor PostProcessor
@@ -36,11 +41,6 @@ namespace Dope.DDXX.DemoFramework
         protected ITextureBuilder TextureBuilder
         {
             get { return textureBuilder; }
-        }
-
-        protected IDevice Device
-        {
-            get { return device; }
         }
 
         public int DrawOrder
@@ -83,13 +83,13 @@ namespace Dope.DDXX.DemoFramework
         {
         }
 
-        public void Initialize(IGraphicsFactory graphicsFactory, IPostProcessor postProcessor, ITextureFactory textureFactory, ITextureBuilder textureBuilder, IDevice device)
+        public void Initialize(IGraphicsFactory graphicsFactory, IPostProcessor postProcessor, ITextureFactory textureFactory, ITextureBuilder textureBuilder/*, IDevice device*/)
         {
             this.graphicsFactory = graphicsFactory;
             this.postProcessor = postProcessor;
             this.textureFactory = textureFactory;
             this.textureBuilder = textureBuilder;
-            this.device = device;
+            //this.device = device;
             Initialize();
         }
 

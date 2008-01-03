@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using Microsoft.DirectX;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.Physics
 {
@@ -73,14 +73,14 @@ namespace Dope.DDXX.Physics
         public void RotationOrderTest()
         {
             WorldState state1 = new WorldState();
-            Assert.AreEqual(Matrix.RotationYawPitchRoll(0, 0, 0), state1.Rotation);
-            WorldState state2 = new WorldState(new Vector3(1, 1, 1), 
-                                               Matrix.RotationYawPitchRoll((float)Math.PI, 0, 0), 
+            Assert.AreEqual(Matrix.CreateFromYawPitchRoll(0, 0, 0), state1.Rotation);
+            WorldState state2 = new WorldState(new Vector3(1, 1, 1),
+                                               Matrix.CreateFromYawPitchRoll((float)Math.PI, 0, 0), 
                                                new Vector3(1, 1, 1));
             state1.Turn((float)Math.PI);
             AssertMatrices(state1.Rotation, state2.Rotation);
 
-            state2.Rotation = Matrix.RotationYawPitchRoll(0, 0, (float)Math.PI);
+            state2.Rotation = Matrix.CreateFromYawPitchRoll(0, 0, (float)Math.PI);
             state1.Tilt((float)Math.PI);
             AssertMatrices(state1.Rotation, state2.Rotation);
 
@@ -93,23 +93,23 @@ namespace Dope.DDXX.Physics
         public void DirectionTest()
         {
             WorldState state = new WorldState();
-            AssertVectors(state.Forward, new Vector3(0, 0, 1)); // Left-handed system
-            AssertVectors(state.Up, new Vector3(0, 1, 0)); // Left-handed system
-            AssertVectors(state.Right, new Vector3(1, 0, 0)); // Left-handed system
+            AssertVectors(state.Forward, new Vector3(0, 0, -1)); // Right-handed system
+            AssertVectors(state.Up, new Vector3(0, 1, 0)); // Right-handed system
+            AssertVectors(state.Right, new Vector3(1, 0, 0)); // Right-handed system
 
-            state.Turn((float)Math.PI / 2);
+            state.Turn(-(float)Math.PI / 2);
             AssertVectors(state.Forward, new Vector3(1, 0, 0));
             AssertVectors(state.Up, new Vector3(0, 1, 0));
-            AssertVectors(state.Right, new Vector3(0, 0, -1));
+            AssertVectors(state.Right, new Vector3(0, 0, 1));
 
-            state.Tilt((float)Math.PI / 2);
+            state.Tilt(-(float)Math.PI / 2);
             AssertVectors(state.Forward, new Vector3(0, -1, 0));
             AssertVectors(state.Up, new Vector3(1, 0, 0));
-            AssertVectors(state.Right, new Vector3(0, 0, -1));
+            AssertVectors(state.Right, new Vector3(0, 0, 1));
 
             state.Roll((float)Math.PI / 2);
             AssertVectors(state.Forward, new Vector3(0, -1, 0));
-            AssertVectors(state.Up, new Vector3(0, 0, 1));
+            AssertVectors(state.Up, new Vector3(0, 0, -1));
             AssertVectors(state.Right, new Vector3(1, 0, 0));
         }
 
@@ -121,23 +121,23 @@ namespace Dope.DDXX.Physics
             Assert.AreEqual(Matrix.Identity, state1.GetWorldMatrix());
 
             state1.Position = new Vector3(100, 200, 300);
-            AssertVectors(new Vector3(101, 202, 303), Vector3.TransformCoordinate(vec, state1.GetWorldMatrix()));
+            AssertVectors(new Vector3(101, 202, 303), Vector3.Transform(vec, state1.GetWorldMatrix()));
 
             state1.Reset();
             Assert.AreEqual(Matrix.Identity, state1.GetWorldMatrix());
 
             // 1, 0, 0, 0 means rotate 180 deg around y axis (turn)
-            state1.Rotation = Matrix.RotationY((float)Math.PI);
-            AssertVectors(new Vector3(-1, 2, -3), Vector3.TransformCoordinate(vec, state1.GetWorldMatrix()));
+            state1.Rotation = Matrix.CreateRotationY((float)Math.PI);
+            AssertVectors(new Vector3(-1, 2, -3), Vector3.Transform(vec, state1.GetWorldMatrix()));
 
             state1.Reset();
             state1.Scaling = new Vector3(2, 3, 4);
-            AssertVectors(new Vector3(2, 6, 12), Vector3.TransformCoordinate(vec, state1.GetWorldMatrix()));
+            AssertVectors(new Vector3(2, 6, 12), Vector3.Transform(vec, state1.GetWorldMatrix()));
 
             state1.Position = new Vector3(100, 200, 300);
-            state1.Rotation = Matrix.RotationY((float)Math.PI);
+            state1.Rotation = Matrix.CreateRotationY((float)Math.PI);
             state1.Scaling = new Vector3(2, 3, 4);
-            AssertVectors(new Vector3(98, 206, 288), Vector3.TransformCoordinate(vec, state1.GetWorldMatrix()));
+            AssertVectors(new Vector3(98, 206, 288), Vector3.Transform(vec, state1.GetWorldMatrix()));
 
         }
     }

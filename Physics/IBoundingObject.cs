@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.DirectX;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.Physics
 {

@@ -1,32 +1,27 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX.Direct3D;
-using Microsoft.DirectX;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.Graphics
 {
-    public class VertexBufferAdapter :IVertexBuffer
+    public class VertexBufferAdapter : GraphicsResourceAdapter, IVertexBuffer
     {
         private VertexBuffer vertexBuffer;
 
-        public VertexBufferAdapter(VertexBuffer buffer)
+        public VertexBufferAdapter(VertexBuffer vertexBuffer)
+            : base(vertexBuffer)
         {
-            vertexBuffer = buffer;
+            this.vertexBuffer = vertexBuffer;
         }
 
-        public VertexBuffer DXVertexBuffer { get { return vertexBuffer; } }
+        public VertexBuffer DxVertexBuffer { get { return vertexBuffer; } }
 
         #region IVertexBuffer Members
 
-        public VertexBufferDescription Description
+        public BufferUsage BufferUsage
         {
-            get { return vertexBuffer.Description; }
-        }
-
-        public bool Disposed
-        {
-            get { return vertexBuffer.Disposed; }
+            get { return vertexBuffer.BufferUsage; }
         }
 
         public int SizeInBytes
@@ -34,38 +29,40 @@ namespace Dope.DDXX.Graphics
             get { return vertexBuffer.SizeInBytes; }
         }
 
-        public Array Lock(int offsetToLock, LockFlags flags)
+        public void GetData<T>(T[] data) 
+            where T:struct
         {
-            return vertexBuffer.Lock(offsetToLock, flags);
+            vertexBuffer.GetData<T>(data);
         }
 
-        public IGraphicsStream Lock(int offsetToLock, int sizeToLock, LockFlags flags)
+        public void GetData<T>(T[] data, int startIndex, int elementCount)
+            where T : struct
         {
-            return new GraphicsStreamAdapter(vertexBuffer.Lock(offsetToLock, sizeToLock, flags));
+            vertexBuffer.GetData<T>(data, startIndex, elementCount);
         }
 
-        public Array Lock(int offsetToLock, Type typeVertex, LockFlags flags, params int[] ranks)
+        public void GetData<T>(int offsetInBytes, T[] data, int startIndex, int elementCount, int vertexStride)
+            where T : struct
         {
-            return vertexBuffer.Lock(offsetToLock, typeVertex, flags, ranks);
+            vertexBuffer.GetData<T>(offsetInBytes, data, startIndex, elementCount, vertexStride);
         }
 
-        public void SetData(object data, int lockAtOffset, LockFlags flags)
+        public void SetData<T>(T[] data)
+            where T : struct
         {
-            vertexBuffer.SetData(data, lockAtOffset, flags);
+            vertexBuffer.SetData<T>(data);
         }
 
-        public void Unlock()
+        public void SetData<T>(T[] data, int startIndex, int elementCount)
+            where T : struct
         {
-            vertexBuffer.Unlock();
+            vertexBuffer.SetData<T>(data, startIndex, elementCount);
         }
 
-        #endregion
-
-        #region IDisposable Members
-
-        public void Dispose()
+        public void SetData<T>(int offsetInBytes, T[] data, int startIndex, int elementCount, int vertexStride)
+            where T : struct
         {
-            vertexBuffer.Dispose();
+            vertexBuffer.SetData<T>(offsetInBytes, data, startIndex, elementCount, vertexStride);
         }
 
         #endregion

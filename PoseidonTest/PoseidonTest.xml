@@ -1,14 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Demo song="">
-    <!--
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Effects>
   <Effect name="PosseTestEffect" track="0" startTime="0.0" endTime="65000.0">
   </Effect>
   <PostEffect name="RealRenderPostEffect" track="0" startTime="0.0" endTime="65000.0">
   </PostEffect>
-  -->
-    <Effect class="ModelEffect" track="0" startTime="0" endTime="65000">
-      <Parameter name="XAngle" float="0.35" />
-      <Parameter name="YAngle" float="0.25" />
-      <Parameter name="ZAngle" float="-0.15" />
-    </Effect>
-</Demo>
+</Effects>

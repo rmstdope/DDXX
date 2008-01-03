@@ -1,22 +1,20 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
-using System.Collections;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
     public class SetupLogic
     {
         private ISetupDialog dialog;
-        private D3DDriver driver;
         private bool ok;
 
         public SetupLogic()
         {
-            driver = D3DDriver.GetInstance();
         }
 
         public bool OK
@@ -30,6 +28,11 @@ namespace Dope.DDXX.DemoFramework
             set { dialog = value; }
         }
 
+        public DeviceParameters DeviceParameters
+        {
+            get { return new DeviceParameters(ResolutionWidth, ResolutionHeight, !dialog.Windowed, dialog.Reference, dialog.Multisampling, false); }
+        }
+
         public int ResolutionWidth
         {
             get { return Int32.Parse(dialog.SelectedResolution.Split('x')[0]); }
@@ -38,57 +41,6 @@ namespace Dope.DDXX.DemoFramework
         public int ResolutionHeight
         {
             get { return Int32.Parse(dialog.SelectedResolution.Split('x')[1]); }
-        }
-
-        public Format ColorFormat
-        {
-            get
-            {
-                DisplayMode[] modes = driver.GetDisplayModes(0,
-                    delegate(DisplayMode mode)
-                    {
-                        if (mode.Width == ResolutionWidth && mode.Height == ResolutionHeight)
-                        {
-                            switch (mode.Format)
-                            {
-                                case Format.R5G6B5:
-                                    if (dialog.Checked16Bit)
-                                        return true;
-                                    break;
-                                case Format.A8B8G8R8:
-                                case Format.X8B8G8R8:
-                                case Format.X8R8G8B8:
-                                case Format.A8R8G8B8:
-                                case Format.A2R10G10B10:
-                                    if (dialog.Checked32Bit)
-                                        return true;
-                                    break;
-                            }
-                        }
-                        return false;
-                    });
-                if (modes.Length == 0)
-                    return Format.Unknown;
-                return modes[0].Format;
-            }
-        }
-
-        public DeviceDescription DeviceDescription
-        {
-            get
-            {
-                DeviceDescription desc = new DeviceDescription();
-                if (dialog.REF)
-                    desc.deviceType = DeviceType.Reference;
-                else
-                    desc.deviceType = DeviceType.Hardware;
-                desc.windowed = dialog.Windowed;
-                desc.colorFormat = ColorFormat;
-                desc.width = ResolutionWidth;
-                desc.height = ResolutionHeight;
-                desc.useDepth = true;
-                return desc;
-            }
         }
 
         public void UpdateResolution(AspectRatio.Ratios ratio)
@@ -119,7 +71,15 @@ namespace Dope.DDXX.DemoFramework
 
         public DisplayMode[] GetDisplayModes(AspectRatio.Ratios ratio)
         {
-            return driver.GetDisplayModes(0, delegate(DisplayMode mode) { if (new AspectRatio(mode.Width, mode.Height).Ratio == ratio) return true; else return false; });
+            List<DisplayMode> list = new List<DisplayMode>();
+            foreach (DisplayMode mode in GraphicsAdapter.DefaultAdapter.SupportedDisplayModes)
+            {
+                if (new AspectRatio(mode.Width, mode.Height).Ratio == ratio)
+                {
+                    list.Add(mode);
+                }
+            }
+            return list.ToArray();
         }
         
         private static int CompareDM(DisplayMode m1, DisplayMode m2)
@@ -144,39 +104,6 @@ namespace Dope.DDXX.DemoFramework
             return m1.Height == m2.Height && m1.Width == m2.Width;
         }
 
-
-        public void ResolutionChanged()
-        {
-            string[] t = dialog.SelectedResolution.Split('x');
-            DisplayMode[] modes = driver.GetDisplayModes(0, delegate(DisplayMode mode) { if (mode.Width.ToString() == t[0] && mode.Height.ToString() == t[1]) return true; else return false; });
-            dialog.Enable16Bit = false;
-            dialog.Enable32Bit = false;
-            foreach (DisplayMode m in modes)
-            {
-                switch (m.Format)
-                {
-                    case Format.R5G6B5:
-                        dialog.Enable16Bit = true;
-                        break;
-                    case Format.A8B8G8R8:
-                    case Format.X8B8G8R8:
-                    case Format.X8R8G8B8:
-                    case Format.A8R8G8B8:
-                    case Format.A2R10G10B10:
-                        dialog.Enable32Bit = true;
-                        break;
-                    default:
-                        //MessageBox.Show("Unknown format : " + m.Format.ToString());
-                        break;
-                }
-            }
-
-            if (dialog.Enable32Bit)
-                dialog.Checked32Bit = true;
-            else
-                dialog.Checked16Bit = true;
-        }
-
         public void Initialize()
         {
             DisplayMode[] modes;
@@ -184,22 +111,23 @@ namespace Dope.DDXX.DemoFramework
             modes = GetDisplayModes(AspectRatio.Ratios.RATIO_4_3);
             if (modes.Length == 0)
                 dialog.EnableRadio4_3 = false;
-
-            modes = GetDisplayModes(AspectRatio.Ratios.RATIO_16_9);
-            if (modes.Length == 0)
-                dialog.EnableRadio16_9 = false;
+            else
+                dialog.CheckedRadio4_3 = true;
 
             modes = GetDisplayModes(AspectRatio.Ratios.RATIO_16_10);
             if (modes.Length == 0)
                 dialog.EnableRadio16_10 = false;
-
-            if (dialog.EnableRadio16_10)
-                dialog.CheckedRadio16_10 = true;
-            else if (dialog.EnableRadio16_9)
-                dialog.CheckedRadio16_9 = true;
             else
-                dialog.CheckedRadio3_4 = true;
+                dialog.CheckedRadio16_10 = true;
 
+            modes = GetDisplayModes(AspectRatio.Ratios.RATIO_16_9);
+            if (modes.Length == 0)
+                dialog.EnableRadio16_9 = false;
+            else
+                dialog.CheckedRadio16_9 = true;
+
+            dialog.Reference = false;
+            dialog.Windowed = true;
         }
     }
 }

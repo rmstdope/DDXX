@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.IO;
-using Microsoft.DirectX;
-using System.Drawing;
 using System.Collections;
 using Dope.DDXX.Utility;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
     public enum TweakableType
     {
-        Unknown = 0, Integer, Float, String, Vector3, Color, Bool
+        Unknown = 0, Integer, Float, String, Vector2, Vector3, Vector4, Color, Bool
     }
 
     public struct Parameter
@@ -38,9 +38,19 @@ namespace Dope.DDXX.DemoFramework
             get { return (float)value; }
         }
 
+        public Vector2 Vector2Value
+        {
+            get { return (Vector2)value; }
+        }
+
         public Vector3 Vector3Value
         {
             get { return (Vector3)value; }
+        }
+
+        public Vector4 Vector4Value
+        {
+            get { return (Vector4)value; }
         }
 
         public Color ColorValue
@@ -86,10 +96,10 @@ namespace Dope.DDXX.DemoFramework
 
         public void Read(string filename)
         {
-            this.filename = filename;
+            this.filename = FileUtility.FilePath(filename);
             doc = new XmlDocument();
             doc.PreserveWhitespace = true;
-            using (Stream inputStream = new FileStream(FileUtility.FilePath(filename), FileMode.Open))
+            using (Stream inputStream = new FileStream(this.filename, FileMode.Open))
             {
                 doc.Load(inputStream);
                 Parse(doc);
@@ -405,8 +415,14 @@ namespace Dope.DDXX.DemoFramework
                         case TweakableType.String:
                             parameters.Add(attr.Value);
                             break;
+                        case TweakableType.Vector2:
+                            parameters.Add(ParseVector2(attr.Value));
+                            break;
                         case TweakableType.Vector3:
                             parameters.Add(ParseVector3(attr.Value));
+                            break;
+                        case TweakableType.Vector4:
+                            parameters.Add(ParseVector4(attr.Value));
                             break;
                         case TweakableType.Color:
                             parameters.Add(ParseColor(attr.Value));
@@ -433,26 +449,38 @@ namespace Dope.DDXX.DemoFramework
             return false;
         }
 
+        private static Vector2 ParseVector2(string strval)
+        {
+            string[] s = strval.Split(new char[] { ',' });
+            Vector2 v = new Vector2(ParseFloat(s[0]), ParseFloat(s[1]));
+            return v;
+        }
+
         private static Vector3 ParseVector3(string strval)
         {
-            string[] s = strval.Split(new char[] { ',' }, 3);
+            string[] s = strval.Split(new char[] { ',' });
             Vector3 v = new Vector3(ParseFloat(s[0]), ParseFloat(s[1]), ParseFloat(s[2]));
+            return v;
+        }
+
+        private static Vector4 ParseVector4(string strval)
+        {
+            string[] s = strval.Split(new char[] { ',' });
+            Vector4 v = new Vector4(ParseFloat(s[0]), ParseFloat(s[1]), ParseFloat(s[2]), ParseFloat(s[3]));
             return v;
         }
 
         private static Color ParseColor(string strval)
         {
-            Color color = Color.FromName(strval);
+            Color color = new Color(0, 0, 0, 0);//.FromName(strval);
             if (color.A == 0 && color.R == 0 && color.G == 0 && color.B == 0)
             {
                 string[] s = strval.Split(new char[] { ',' });
-                int a = 255;
                 int i = 0;
                 if (s.Length == 4)
-                {
-                    a = int.Parse(s[i++]);
-                }
-                color = Color.FromArgb(a, int.Parse(s[i++]), int.Parse(s[i++]), int.Parse(s[i++]));
+                    color = new Color(byte.Parse(s[i++]), byte.Parse(s[i++]), byte.Parse(s[i++]), byte.Parse(s[i++]));
+                else
+                    color = new Color(byte.Parse(s[i++]), byte.Parse(s[i++]), byte.Parse(s[i++]), 255);
             }
             return color;
         }
@@ -470,8 +498,14 @@ namespace Dope.DDXX.DemoFramework
                 case TweakableType.String:
                     effectBuilder.AddStringParameter(parameterName, parameterValue);
                     break;
+                case TweakableType.Vector2:
+                    effectBuilder.AddVector2Parameter(parameterName, ParseVector2(parameterValue), parameterStep);
+                    break;
                 case TweakableType.Vector3:
                     effectBuilder.AddVector3Parameter(parameterName, ParseVector3(parameterValue), parameterStep);
+                    break;
+                case TweakableType.Vector4:
+                    effectBuilder.AddVector4Parameter(parameterName, ParseVector4(parameterValue), parameterStep);
                     break;
                 case TweakableType.Color:
                     effectBuilder.AddColorParameter(parameterName, ParseColor(parameterValue));
@@ -496,7 +530,9 @@ namespace Dope.DDXX.DemoFramework
                 case "int": return TweakableType.Integer;
                 case "float": return TweakableType.Float;
                 case "string": return TweakableType.String;
+                case "Vector2": return TweakableType.Vector2;
                 case "Vector3": return TweakableType.Vector3;
+                case "Vector4": return TweakableType.Vector4;
                 case "Color": return TweakableType.Color;
                 case "bool": return TweakableType.Bool;
                 default: return TweakableType.Unknown;
@@ -510,7 +546,9 @@ namespace Dope.DDXX.DemoFramework
                 case TweakableType.Integer: return "int";
                 case TweakableType.Float: return "float";
                 case TweakableType.String: return "string";
+                case TweakableType.Vector2: return "Vector2";
                 case TweakableType.Vector3: return "Vector3";
+                case TweakableType.Vector4: return "Vector4";
                 case TweakableType.Color: return "Color";
                 case TweakableType.Bool: return "bool";
                 default: return null;
@@ -520,7 +558,7 @@ namespace Dope.DDXX.DemoFramework
 
         public void Write()
         {
-            using (Stream outStream = new FileStream(FileUtility.FilePath(filename), FileMode.Create))
+            using (Stream outStream = new FileStream(FileUtility.FilePath("..\\..\\..\\" + filename), FileMode.Create))
                 doc.Save(outStream);
         }
 
@@ -652,6 +690,14 @@ namespace Dope.DDXX.DemoFramework
             attr.Value = value;
         }
 
+        public void SetVector2Param(string className, string effect, string param, Vector2 value)
+        {
+            XmlAttribute attr = GetParamValueAttr(className, effect, param, TweakableType.Vector2);
+            string strval = FloatToString(value.X) + ", " +
+                FloatToString(value.Y);
+            attr.Value = strval;
+        }
+
         public void SetVector3Param(string className, string effect, string param, Vector3 value)
         {
             XmlAttribute attr = GetParamValueAttr(className, effect, param, TweakableType.Vector3);
@@ -661,20 +707,30 @@ namespace Dope.DDXX.DemoFramework
             attr.Value = strval;
         }
 
+        public void SetVector4Param(string className, string effect, string param, Vector4 value)
+        {
+            XmlAttribute attr = GetParamValueAttr(className, effect, param, TweakableType.Vector4);
+            string strval = FloatToString(value.X) + ", " +
+                FloatToString(value.Y) + ", " +
+                FloatToString(value.Z) + ", " +
+                FloatToString(value.W);
+            attr.Value = strval;
+        }
+
         public void SetColorParam(string className, string effect, string param, Color value)
         {
             XmlAttribute attr = GetParamValueAttr(className, effect, param, TweakableType.Color);
             string strval;
-            if (value.IsNamedColor)
+            //if (value.IsNamedColor)
+            //{
+            //    strval = value.Name;
+            //}
+            //else
             {
-                strval = value.Name;
-            }
-            else
-            {
-                strval = FloatToString(value.A) + ", " +
-                    FloatToString(value.R) + ", " +
+                strval = FloatToString(value.R) + ", " +
                     FloatToString(value.G) + ", " +
-                    FloatToString(value.B);
+                    FloatToString(value.B) + ", " +
+                    FloatToString(value.A);
             }
             attr.Value = strval;
         }

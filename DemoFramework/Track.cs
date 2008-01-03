@@ -4,14 +4,15 @@ using System.Text;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
 using Dope.DDXX.TextureBuilder;
-using System.Drawing;
-using Microsoft.DirectX.Direct3D;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.DemoFramework
 {
     public class Track : ITrack
     {
         private IPostProcessor postProcessor;
+        private ISpriteBatch spriteBatch;
 
         List<IDemoEffect> effects = new List<IDemoEffect>();
         List<IDemoPostEffect> postEffects = new List<IDemoPostEffect>();
@@ -146,57 +147,58 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        public void Initialize(IGraphicsFactory graphicsFactory, IDevice device, 
+        public void Initialize(IGraphicsFactory graphicsFactory, IGraphicsDevice device, 
             ITextureFactory textureFactory, IEffectFactory effectFactory, 
             ITextureBuilder textureBuilder, IDemoMixer mixer, IPostProcessor postProcessor)
         {
+            this.spriteBatch = graphicsFactory.CreateSpriteBatch();
             this.postProcessor = postProcessor;
             foreach (IDemoEffect effect in effects)
-                effect.Initialize(graphicsFactory, effectFactory, 
-                    device, mixer, postProcessor);
+                effect.Initialize(graphicsFactory, effectFactory, textureFactory,
+                    mixer, postProcessor);
             foreach (IDemoPostEffect effect in postEffects)
-                effect.Initialize(graphicsFactory, postProcessor, textureFactory, textureBuilder, device);
+                effect.Initialize(graphicsFactory, postProcessor, textureFactory, textureBuilder);
         }
 
         public void Step()
         {
-            foreach (IDemoEffect effect in GetEffects(Time.StepTime))
+            foreach (IDemoEffect effect in GetEffects(Time.CurrentTime))
                 if (IsWithinTime(effect))
                     effect.Step();
         }
 
-        public ITexture Render(IDevice device, ISurface renderTarget, ISurface depthStencil, ITexture resolveTarget, Color backgroundColor)
+        public IRenderTarget2D Render(IGraphicsDevice device, IRenderTarget2D renderTarget, IRenderTarget2D renderTargetNoMultiSampling, IDepthStencilBuffer depthStencilBuffer, Color backgroundColor)
         {
-            using (ISurface originalTarget = device.GetRenderTarget(0))
+            device.SetRenderTarget(0, renderTarget);
+            device.DepthStencilBuffer = depthStencilBuffer;
+
+            //if (D3DDriver.GetInstance().Description.useStencil)
+            //    device.Clear(ClearFlags.Target | ClearFlags.ZBuffer | ClearFlags.Stencil, backgroundColor, 1.0f, 0);
+            //else
+            device.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, backgroundColor, 1.0f, 0);
+
+            RenderEffects(device);
+            device.SetRenderTarget(0, null);//.ResolveRenderTarget(0);
+            device.DepthStencilBuffer = null;
+            if (renderTargetNoMultiSampling != renderTarget)
             {
-                device.SetRenderTarget(0, renderTarget);
-                device.DepthStencilSurface = depthStencil;
-                
-                if (D3DDriver.GetInstance().Description.useStencil)
-                    device.Clear(ClearFlags.Target | ClearFlags.ZBuffer | ClearFlags.Stencil, backgroundColor, 1.0f, 0);
-                else
-                    device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, backgroundColor, 1.0f, 0);
-
-                RenderEffects(device);
-
-                using (ISurface destSurface = resolveTarget.GetSurfaceLevel(0))
-                {
-                    device.StretchRectangle(renderTarget, new Rectangle(0, 0, renderTarget.Description.Width, renderTarget.Description.Height),
-                        destSurface, new Rectangle(0, 0, destSurface.Description.Width, destSurface.Description.Height), TextureFilter.None);
-                }
-                device.DepthStencilSurface = null;
-                postProcessor.StartFrame(resolveTarget);
-                RenderPostEffects();
-
-                device.SetRenderTarget(0, originalTarget);
+                device.SetRenderTarget(0, renderTargetNoMultiSampling);
+                spriteBatch.Begin(SpriteBlendMode.None, SpriteSortMode.Immediate, SaveStateMode.None);
+                spriteBatch.Draw(renderTarget.GetTexture(), Vector2.Zero, Color.White);
+                spriteBatch.End();
+                device.SetRenderTarget(0, null);//.ResolveRenderTarget(0);
             }
+
+            postProcessor.StartFrame(renderTargetNoMultiSampling);
+            RenderPostEffects();
+
             return postProcessor.OutputTexture;
         }
 
-        private void RenderEffects(IDevice device)
+        private void RenderEffects(IGraphicsDevice device)
         {
-            device.BeginScene();
-            IDemoEffect[] activeEffects = GetEffects(Time.StepTime);
+            //device.BeginScene();
+            IDemoEffect[] activeEffects = GetEffects(Time.CurrentTime);
             int minOrder = 1000;
             int maxOrder = -1000;
             foreach (IDemoEffect effect in activeEffects)
@@ -210,12 +212,12 @@ namespace Dope.DDXX.DemoFramework
                 foreach (IDemoEffect effect in activeEffects)
                     if (effect.DrawOrder == i)
                         effect.Render();
-            device.EndScene();
+            //device.EndScene();
         }
 
         private void RenderPostEffects()
         {
-            IDemoPostEffect[] activePostEffects = GetPostEffects(Time.StepTime);
+            IDemoPostEffect[] activePostEffects = GetPostEffects(Time.CurrentTime);
             int minOrder = 1000;
             int maxOrder = -1000;
             foreach (IDemoPostEffect effect in activePostEffects)

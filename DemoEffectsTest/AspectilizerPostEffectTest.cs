@@ -2,45 +2,34 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
+using NMock2;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.DemoFramework;
-using NMock2;
 using Dope.DDXX.Utility;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
 using Dope.DDXX.TextureBuilder;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoEffects
 {
     [TestFixture]
-    public class AspectilizerPostEffectTest
+    public class AspectilizerPostEffectTest : DemoMockTest
     {
         private AspectilizerPostEffect aspectilizer;
-        private Mockery mockery;
-        private IPostProcessor postProcessor;
-        private ITextureFactory textureFactory;
-        private ITextureBuilder textureBuilder;
-        private ITexture texture;
-        private IDevice device;
-        private ITexture outputTexture;
+        private IRenderTarget2D outputTexture;
 
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
-            mockery = new Mockery();
+            base.SetUp();
             aspectilizer = new AspectilizerPostEffect("", 0, 10);
-            postProcessor = mockery.NewMock<IPostProcessor>();
-            textureFactory = mockery.NewMock<ITextureFactory>();
-            textureBuilder = mockery.NewMock<ITextureBuilder>();
-            texture = mockery.NewMock<ITexture>();
-            device = mockery.NewMock<IDevice>();
-            outputTexture = mockery.NewMock<ITexture>();
+            outputTexture = mockery.NewMock<IRenderTarget2D>();
+            Stub.On(textureFactory).GetProperty("WhiteTexture").Will(Return.Value(texture2D));
         }
 
         [TearDown]
-        public void TearDown()
+        public override void TearDown()
         {
-            mockery.VerifyAllExpectationsHaveBeenMet();
+            base.TearDown();
         }
 
         /// <summary>
@@ -49,14 +38,10 @@ namespace Dope.DDXX.DemoEffects
         [Test]
         public void TestInitialize1()
         {
-            Viewport viewport = new Viewport();
-            viewport.Height = 1;
-            viewport.Width = 2;
-            Expect.Once.On(device).GetProperty("Viewport").Will(Return.Value(viewport));
             Expect.Once.On(textureBuilder).Method("Generate").
-                With(Is.Anything, Is.EqualTo(viewport.Width), Is.EqualTo(viewport.Height), Is.EqualTo(1), Is.EqualTo(Format.A8R8G8B8)).
-                Will(Return.Value(texture));
-            aspectilizer.Initialize(null, postProcessor, textureFactory, textureBuilder, device);
+                With(Is.Anything, Is.EqualTo(presentParameters.BackBufferWidth), Is.EqualTo(presentParameters.BackBufferHeight), Is.EqualTo(1), Is.EqualTo(SurfaceFormat.Color)).
+                Will(Return.Value(texture2D));
+            aspectilizer.Initialize(graphicsFactory, postProcessor, textureFactory, textureBuilder);
         }
 
         /// <summary>
@@ -71,11 +56,11 @@ namespace Dope.DDXX.DemoEffects
                 GetProperty("OutputTexture").
                 Will(Return.Value(outputTexture));
             Expect.Once.On(postProcessor).Method("SetBlendParameters").
-                With(BlendOperation.Add, Blend.One, Blend.InvSourceColor, Color.White);
+                With(BlendFunction.Add, Blend.One, Blend.InverseSourceColor, Color.White);
             Expect.Once.On(postProcessor).Method("SetValue").
                 With("Color", new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
             Expect.Once.On(postProcessor).Method("Process").
-                With("Blend", texture, outputTexture);
+                With("Blend", texture2D, outputTexture);
 
             aspectilizer.Render();
         }
@@ -92,11 +77,11 @@ namespace Dope.DDXX.DemoEffects
                 GetProperty("OutputTexture").
                 Will(Return.Value(outputTexture));
             Expect.Once.On(postProcessor).Method("SetBlendParameters").
-                With(BlendOperation.RevSubtract, Blend.One, Blend.One, Color.White);
+                With(BlendFunction.ReverseSubtract, Blend.One, Blend.One, Color.White);
             Expect.Once.On(postProcessor).Method("SetValue").
                 With("Color", new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
             Expect.Once.On(postProcessor).Method("Process").
-                With("Blend", texture, outputTexture);
+                With("Blend", texture2D, outputTexture);
 
             aspectilizer.SubtractNoise = true;
             aspectilizer.Render();
@@ -115,11 +100,11 @@ namespace Dope.DDXX.DemoEffects
                 GetProperty("OutputTexture").
                 Will(Return.Value(outputTexture));
             Expect.Once.On(postProcessor).Method("SetBlendParameters").
-                With(BlendOperation.Add, Blend.One, Blend.InvSourceColor, Color.White);
+                With(BlendFunction.Add, Blend.One, Blend.InverseSourceColor, Color.White);
             Expect.Once.On(postProcessor).Method("SetValue").
                 With("Color", new float[] { 0.5f, 0.5f, 0.5f, 0.5f });
             Expect.Once.On(postProcessor).Method("Process").
-                With("Blend", texture, outputTexture);
+                With("Blend", texture2D, outputTexture);
 
             aspectilizer.Render();
         }

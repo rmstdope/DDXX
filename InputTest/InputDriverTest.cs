@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using NMock2;
-using Microsoft.DirectX.DirectInput;
 using Dope.DDXX.Utility;
+using Microsoft.Xna.Framework.Input;
 
 namespace Dope.DDXX.Input
 {
@@ -13,9 +13,7 @@ namespace Dope.DDXX.Input
     {
         private Mockery mockery;
         private IInputFactory factory;
-
         private InputDriver driver;
-        Device keyboard = new Device(SystemGuid.Keyboard);
 
         private float[] slowRepeatTimes = new float[] { 0.5f, 0.1f, 0.02f };
         private int[] slowRepeatNums = new int[] { 3, 12, 100 };
@@ -26,11 +24,9 @@ namespace Dope.DDXX.Input
             mockery = new Mockery();
             factory = mockery.NewMock<IInputFactory>();
 
-            InputDriver.Factory = factory;
             driver = InputDriver.GetInstance();
             driver.Reset();
-
-            Time.Initialize();
+            InputDriver.Factory = factory;
         }
 
         [TearDown]
@@ -47,102 +43,64 @@ namespace Dope.DDXX.Input
         }
 
         [Test]
-        public void TestInitFail()
-        {
-            DeviceInstance[] devices = { new DeviceInstance() };
-            Stub.On(factory).
-                GetProperty("Keyboard").
-                Will(Return.Value(null));
-
-            // No keyboard found
-            try
-            {
-                driver.Initialize(null);
-                Assert.Fail();
-            }
-            catch (DDXXException) { }
-        }
-
-        [Test]
-        public void TestInitOK()
-        {
-            Stub.On(factory).
-                GetProperty("Keyboard").
-                Will(Return.Value(keyboard));
-            Expect.Once.On(factory).
-                Method("SetCooperativeLevel").
-                With(keyboard, null, CooperativeLevelFlags.NonExclusive | CooperativeLevelFlags.Background);
-            Expect.Once.On(factory).
-                Method("Acquire").
-                With(keyboard);
-
-            driver.Initialize(null);
-        }
-
-        [Test]
         public void TestKeysRepeat()
         {
-            TestInitOK();
-
             Expect.Once.On(factory).
                 Method("KeyPressed").
-                With(keyboard, Key.Escape).
+                With(Keys.Escape).
                 Will(Return.Value(false));
-            Assert.IsFalse(driver.KeyPressed(Key.Escape));
+            Assert.IsFalse(driver.KeyPressed(Keys.Escape));
 
             Expect.Once.On(factory).
                 Method("KeyPressed").
-                With(keyboard, Key.Escape).
+                With(Keys.Escape).
                 Will(Return.Value(true));
-            Assert.IsTrue(driver.KeyPressed(Key.Escape));
+            Assert.IsTrue(driver.KeyPressed(Keys.Escape));
 
             Expect.Once.On(factory).
                 Method("KeyPressed").
-                With(keyboard, Key.Escape).
+                With(Keys.Escape).
                 Will(Return.Value(true));
-            Assert.IsTrue(driver.KeyPressed(Key.Escape));
+            Assert.IsTrue(driver.KeyPressed(Keys.Escape));
         }
 
         [Test]
         public void TestKeysNoRepeat()
         {
-            TestInitOK();
-
             Expect.Once.On(factory).
                 Method("KeyPressed").
-                With(keyboard, Key.Escape).
+                With(Keys.Escape).
                 Will(Return.Value(false));
-            Assert.IsFalse(driver.KeyPressedNoRepeat(Key.Escape));
+            Assert.IsFalse(driver.KeyPressedNoRepeat(Keys.Escape));
 
             Expect.Once.On(factory).
                 Method("KeyPressed").
-                With(keyboard, Key.Escape).
+                With(Keys.Escape).
                 Will(Return.Value(true));
-            Assert.IsTrue(driver.KeyPressedNoRepeat(Key.Escape));
+            Assert.IsTrue(driver.KeyPressedNoRepeat(Keys.Escape));
 
             Expect.Once.On(factory).
                 Method("KeyPressed").
-                With(keyboard, Key.Escape).
+                With(Keys.Escape).
                 Will(Return.Value(true));
-            Assert.IsFalse(driver.KeyPressedNoRepeat(Key.Escape));
+            Assert.IsFalse(driver.KeyPressedNoRepeat(Keys.Escape));
 
             Expect.Once.On(factory).
                 Method("KeyPressed").
-                With(keyboard, Key.Escape).
+                With(Keys.Escape).
                 Will(Return.Value(false));
-            Assert.IsFalse(driver.KeyPressedNoRepeat(Key.Escape));
+            Assert.IsFalse(driver.KeyPressedNoRepeat(Keys.Escape));
 
             Expect.Once.On(factory).
                 Method("KeyPressed").
-                With(keyboard, Key.Escape).
+                With(Keys.Escape).
                 Will(Return.Value(true));
-            Assert.IsTrue(driver.KeyPressedNoRepeat(Key.Escape));
+            Assert.IsTrue(driver.KeyPressedNoRepeat(Keys.Escape));
         }
 
         [Test]
         public void TestKeysSlowRepeatLongPress()
         {
-            TestInitOK();
             Time.Pause();
 
             float t = 0;
@@ -162,7 +120,6 @@ namespace Dope.DDXX.Input
         [Test]
         public void TestKeysSlowRepeatHaltedPress()
         {
-            TestInitOK();
             Time.Pause();
 
             // One keypress at time 0 (true)
@@ -172,8 +129,8 @@ namespace Dope.DDXX.Input
             // One keypress at time 1.0 (true)
             KeyPressAtTime(1.2f, true);
             // Reset presser
-            ExpectKeyPress(Key.Escape, false);
-            Assert.IsFalse(driver.KeyPressedSlowRepeat(Key.Escape));
+            ExpectKeyPress(Keys.Escape, false);
+            Assert.IsFalse(driver.KeyPressedSlowRepeat(Keys.Escape));
             // One keypress at time 1.5 (true)
             KeyPressAtTime(1.8f, true);
             // One keypress at time 1.9 (false)
@@ -183,16 +140,16 @@ namespace Dope.DDXX.Input
         private void KeyPressAtTime(float time, bool shouldBeTrue)
         {
             Time.CurrentTime = time;
-            ExpectKeyPress(Key.Escape, true);
-            Assert.AreEqual(shouldBeTrue, driver.KeyPressedSlowRepeat(Key.Escape),
+            ExpectKeyPress(Keys.Escape, true);
+            Assert.AreEqual(shouldBeTrue, driver.KeyPressedSlowRepeat(Keys.Escape),
                 "At time " + time + " KeyPressedSlowRepeat should return " + shouldBeTrue);
         }
 
-        private void ExpectKeyPress(Key key, bool returnValue)
+        private void ExpectKeyPress(Keys key, bool returnValue)
         {
             Expect.Once.On(factory).
                 Method("KeyPressed").
-                With(keyboard, key).
+                With(key).
                 Will(Return.Value(returnValue));
         }
     }

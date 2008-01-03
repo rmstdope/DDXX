@@ -1,36 +1,35 @@
 using System;
 using System.Collections.Generic;
 using System.Collections;
-using System.Drawing;
 using System.Text;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-using Microsoft.DirectX.DirectInput;
 using Dope.DDXX.Graphics;
-using FMOD;
 using Dope.DDXX.Input;
 using Dope.DDXX.Sound;
+using Dope.DDXX.TextureBuilder;
 using Dope.DDXX.Utility;
 using System.Reflection;
 using System.IO;
-using Dope.DDXX.TextureBuilder;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace Dope.DDXX.DemoFramework
 {
     public class DemoExecuter : IDemoEffectBuilder, IDemoRegistrator, IDemoTweakerContext, IDemoMixer
     {
         private ISoundDriver soundDriver;
-        private FMOD.Sound sound;
-        private FMOD.Channel channel;
+        private ICue song;
 
-        private IDevice device;
+        private IGraphicsDevice device;
         private IGraphicsFactory graphicsFactory;
         private ITextureFactory textureFactory;
         private ITextureBuilder textureBuilder;
         private IPostProcessor postProcessor;
         private IDemoTweaker tweaker;
-        private ISurface renderTarget;
-        private ISurface depthStencil;
+        private ISpriteBatch spriteBatch;
+        private IRenderTarget2D renderTarget;
+        private IRenderTarget2D renderTargetNoMultiSampling;
+        private IDepthStencilBuffer depthStencilBuffer;
 
         private IInputDriver inputDriver;
         private List<ITrack> tracks = new List<ITrack>();
@@ -40,7 +39,7 @@ namespace Dope.DDXX.DemoFramework
         private IDemoEffectTypes effectTypes;
         private TweakerSettings settings = new TweakerSettings();
         private DemoXMLReader xmlReader;
-        private Color clearColor = Color.FromArgb(0, 0, 0, 0);//50, 50, 50);//10, 10, 10);
+        private Color clearColor = new Color(0, 0, 0, 0);
         private Dictionary<string, IGenerator> generators = new Dictionary<string,IGenerator>();
 
         private string songFilename;
@@ -110,39 +109,34 @@ namespace Dope.DDXX.DemoFramework
             tweaker = new DemoTweakerMain(this, new IDemoTweaker[] { new DemoTweakerDemo(settings), new DemoTweakerTrack(settings), new DemoTweakerEffect(settings) }, settings);
         }
 
-        public void Initialize(IDevice device, IGraphicsFactory graphicsFactory,
+        public void Initialize(IGraphicsDevice device, IGraphicsFactory graphicsFactory,
             ITextureFactory textureFactory, IEffectFactory effectFactory,
-            ITextureBuilder textureBuilder)
+            ITextureBuilder textureBuilder, IDeviceParameters deviceParameters)
         {
-            this.Initialize(device, graphicsFactory, textureFactory, effectFactory, textureBuilder, "");
+            this.Initialize(device, graphicsFactory, textureFactory, effectFactory, textureBuilder, "", deviceParameters);
         }
 
-        public void Initialize(IDevice device, IGraphicsFactory graphicsFactory, 
-            ITextureFactory textureFactory, IEffectFactory effectFactory, 
-            ITextureBuilder textureBuilder, string xmlFile)
+        public void Initialize(IGraphicsDevice device, IGraphicsFactory graphicsFactory, 
+            ITextureFactory textureFactory, IEffectFactory effectFactory,
+            ITextureBuilder textureBuilder, string xmlFile, IDeviceParameters deviceParameters)
         {
             this.device = device;
             this.graphicsFactory = graphicsFactory;
             this.textureFactory = textureFactory;
             this.textureBuilder = textureBuilder;
-
-            Time.Initialize();
+            this.spriteBatch = graphicsFactory.CreateSpriteBatch();
+            this.renderTarget = textureFactory.CreateFullsizeRenderTarget(deviceParameters.RenderTargetFormat, deviceParameters.MultiSampleType, 0);
+            if (deviceParameters.MultiSampleType == MultiSampleType.None)
+                this.renderTargetNoMultiSampling = this.renderTarget;
+            else
+                this.renderTargetNoMultiSampling = textureFactory.CreateFullsizeRenderTarget();
+            this.depthStencilBuffer = textureFactory.CreateFullsizeDepthStencil(deviceParameters.DepthStencilFormat, deviceParameters.MultiSampleType);
 
             InitializeFromFile(xmlFile);
 
             InitializeSound();
 
-            D3DDriver driver = D3DDriver.GetInstance();
-            renderTarget = graphicsFactory.CreateRenderTarget(device,
-                driver.Description.width, driver.Description.height,
-                Format.A8R8G8B8,
-                driver.Description.multiSampleType, 0, false);
-            depthStencil = graphicsFactory.CreateDepthStencilSurface(device,
-                driver.Description.width, driver.Description.height,
-                driver.Description.depthFormat,
-                driver.Description.multiSampleType, 0, false);
-
-            postProcessor.Initialize(device, textureFactory, effectFactory);
+            postProcessor.Initialize(device, graphicsFactory, textureFactory, effectFactory);
 
             foreach (ITrack track in tracks)
             {
@@ -150,17 +144,22 @@ namespace Dope.DDXX.DemoFramework
             }
             foreach (IDemoTransition transition in transitions)
             {
-                transition.Initialize(device, postProcessor);
+                transition.Initialize(postProcessor);
             }
 
-            tweaker.Initialize(this);
+            tweaker.Initialize(this, graphicsFactory, textureFactory);
+
+            Time.CurrentTime = StartTime;
         }
 
         private void InitializeSound()
         {
-            soundDriver.Initialize();
             if (songFilename != null && songFilename != "")
-                sound = soundDriver.CreateSound(songFilename);
+            {
+                soundDriver.Initialize("Test");
+                song = soundDriver.PlaySound(songFilename);
+                //System.Diagnostics.Debug.WriteLine(song.GetVariable("Position"));
+            }
         }
 
         public void Register(int track, IDemoEffect effect)
@@ -214,109 +213,95 @@ namespace Dope.DDXX.DemoFramework
 
         public void Step()
         {
-            //Time.Pause();
-            //Time.CurrentTime = 132.999f;
-            Time.Step();
+            //System.Diagnostics.Debug.WriteLine(song.GetVariable("Position"));
+            inputDriver.Step();
+            soundDriver.Step();
+            tweaker.HandleInput(inputDriver);
 
             foreach (ITrack track in tracks)
             {
                 track.Step();
             }
-
-            tweaker.HandleInput(inputDriver);
         }
 
-        public void Run()
+        public void CleanUp()
         {
-            Time.CurrentTime = StartTime;
-
-            if (sound != null)
+            if (tweaker.ShouldSave() && xmlReader != null)
             {
-                channel = soundDriver.PlaySound(sound);
-                SynchronizeSong();
-            }
-
-            while (Time.StepTime <= EndTime + 2.0f && !tweaker.Quit)
-            {
-                Step();
-                
-                Render();
-            }
-
-            if (xmlReader != null)
-            {
-                if (tweaker.ShouldSave(inputDriver))
-                {
-                    Update(xmlReader);
-                    xmlReader.Write();
-                }
+                Update(xmlReader);
+                xmlReader.Write();
             }
         }
 
-        private void SynchronizeSong()
+        public bool IsRunning()
         {
-            if (sound != null)
-            {
-                soundDriver.SetPosition(channel, Time.CurrentTime);
-                //Time.CurrentTime = soundDriver.GetPosition(channel);
-                //System.Diagnostics.Debug.Write("Syncronizing sound: SoundTime=" + soundDriver.GetPosition(channel));
-                //System.Diagnostics.Debug.WriteLine(", ActualTime: " + Time.CurrentTime);
-            }
+            return !tweaker.Quit;
         }
 
+        //private void SynchronizeSong()
+        //{
+        //    if (sound != null)
+        //    {
+        //        soundDriver.SetPosition(channel, Time.CurrentTime);
+        //        //Time.CurrentTime = soundDriver.GetPosition(channel);
+        //        //System.Diagnostics.Debug.Write("Syncronizing sound: SoundTime=" + soundDriver.GetPosition(channel));
+        //        //System.Diagnostics.Debug.WriteLine(", ActualTime: " + Time.CurrentTime);
+        //    }
+        //}
+
+#if (!XBOX)
         private int screenshotNum = 0;
+#endif
         public void Render()
         {
-            ITexture renderedTexture = RenderTracks();
+            ITexture2D renderedTexture = RenderTracks();
 
-            if (inputDriver.KeyPressedNoRepeat(Key.F12))
+#if (!XBOX)
+            if (inputDriver.KeyPressedNoRepeat(Keys.F12))
                 renderedTexture.Save("Screenshot" + screenshotNum++ + ".jpg", ImageFileFormat.Jpg);
+#endif
 
             if (renderedTexture != null)
             {
-                using (ISurface source = renderedTexture.GetSurfaceLevel(0))
-                {
-                    using (ISurface destination = device.GetRenderTarget(0))
-                    {
-                        device.StretchRectangle(source, new Rectangle(0, 0, source.Description.Width, source.Description.Height),
-                                                destination, new Rectangle(0, 0, destination.Description.Width, destination.Description.Height),
-                                                TextureFilter.None);
-                    }
-                }
+                device.SetRenderTarget(0, null);
+                spriteBatch.Begin(SpriteBlendMode.None, SpriteSortMode.Immediate, SaveStateMode.None);
+                spriteBatch.Draw(renderedTexture, new Rectangle(0, 0, device.PresentationParameters.BackBufferWidth,
+                    device.PresentationParameters.BackBufferHeight), Color.White);
+                spriteBatch.End();
             }
-
+ 
             tweaker.Draw();
-
-            device.Present();
         }
 
-        private ITexture RenderTracks()
+        private ITexture2D RenderTracks()
         {
-            ITexture finalTexture = null;
+            IRenderTarget2D finalRenderTarget = null;
             if (tracks.Count != 0)
             {
-                finalTexture = GetActiveTrack().Render(device, renderTarget, depthStencil, postProcessor.GetTemporaryTextures(1, false)[0], clearColor);
+                finalRenderTarget = GetActiveTrack().Render(device, renderTarget, renderTargetNoMultiSampling, depthStencilBuffer, clearColor);
                 IDemoTransition transition = GetActiveTransition();
                 if (transition != null)
                 {
-                    postProcessor.AllocateTexture(finalTexture);
-                    ITexture finalTexture2 = tracks[transition.DestinationTrack].Render(device, renderTarget, depthStencil, postProcessor.GetTemporaryTextures(1, false)[0], clearColor);
-                    postProcessor.AllocateTexture(finalTexture2);
-                    ITexture newFinalTexture = transition.Render(finalTexture, finalTexture2);
-                    postProcessor.FreeTexture(finalTexture);
-                    postProcessor.FreeTexture(finalTexture2);
-                    finalTexture = newFinalTexture;
+                    postProcessor.AllocateTexture(finalRenderTarget);
+                    IRenderTarget2D finalRenderTarget2 = tracks[transition.DestinationTrack].Render(device, renderTarget, renderTargetNoMultiSampling, depthStencilBuffer, clearColor);
+                    //postProcessor.AllocateTexture(finalRenderTarget2);
+                    IRenderTarget2D newFinalRenderTarget = transition.Render(finalRenderTarget, finalRenderTarget2);
+                    postProcessor.FreeTexture(finalRenderTarget);
+                    //postProcessor.FreeTexture(finalRenderTarget2);
+                    finalRenderTarget = newFinalRenderTarget;
                 }
             }
-            return finalTexture;
+            if (finalRenderTarget == null)
+                return null;
+            return finalRenderTarget.GetTexture();
         }
 
         private IDemoTransition GetActiveTransition()
         {
             foreach (IDemoTransition transition in transitions)
             {
-                if (transition.StartTime <= Time.StepTime &&
-                    transition.EndTime > Time.StepTime)
+                if (transition.StartTime <= Time.CurrentTime &&
+                    transition.EndTime > Time.CurrentTime)
                     return transition;
             }
             return null;
@@ -327,7 +312,7 @@ namespace Dope.DDXX.DemoFramework
             int trackNum = 0;
             foreach (IDemoTransition transition in transitions)
             {
-                if (transition.EndTime <= Time.StepTime)
+                if (transition.EndTime <= Time.CurrentTime)
                     trackNum = transition.DestinationTrack;
             }
             return tracks[trackNum];
@@ -356,14 +341,22 @@ namespace Dope.DDXX.DemoFramework
 
         public void AddEffect(string className, string effectName, int effectTrack, float startTime, float endTime)
         {
-            IDemoEffect effect = (IDemoEffect)effectTypes.CreateInstance(className, effectName, startTime, endTime);
-            this.Register(effectTrack, effect);
-            lastAddedAsset = effect;
+            IRegisterable effect = effectTypes.CreateInstance(className, effectName, startTime, endTime);
+            if (!(effect is IDemoEffect))
+                throw new DDXXException("Tried to add a demo effect " + effectName + " of class " + className +
+                    "which was not of type IDemoEffect");
+            IDemoEffect demoEffect = (IDemoEffect)effect;
+            this.Register(effectTrack, demoEffect);
+            lastAddedAsset = demoEffect;
         }
 
         public void AddPostEffect(string className, string effectName, int effectTrack, float startTime, float endTime)
         {
-            IDemoPostEffect postEffect = (IDemoPostEffect)effectTypes.CreateInstance(className, effectName, startTime, endTime);
+            IRegisterable effect = effectTypes.CreateInstance(className, effectName, startTime, endTime);
+            if (!(effect is IDemoPostEffect))
+                throw new DDXXException("Tried to add a demo post effect " + effectName + " of class " + className +
+                    "which was not of type IDemoPostEffect");
+            IDemoPostEffect postEffect = (IDemoPostEffect)effect;
             this.Register(effectTrack, postEffect);
             lastAddedAsset = postEffect;
         }
@@ -387,7 +380,7 @@ namespace Dope.DDXX.DemoFramework
         {
             if (!generators.ContainsKey(generatorName))
                 throw new DDXXException("Generator " + generatorName + " has never been registered.");
-            ITexture texture = textureBuilder.Generate(generators[generatorName], width, height, mipLevels, Format.A8R8G8B8);
+            ITexture2D texture = textureBuilder.Generate(generators[generatorName], width, height, mipLevels, SurfaceFormat.Color);
             textureFactory.RegisterTexture(textureName, texture);
         }
 
@@ -414,7 +407,17 @@ namespace Dope.DDXX.DemoFramework
             AddParameter(name, value, 0);
         }
 
+        public void AddVector2Parameter(string name, Vector2 value, float stepSize)
+        {
+            AddParameter(name, value, stepSize);
+        }
+
         public void AddVector3Parameter(string name, Vector3 value, float stepSize)
+        {
+            AddParameter(name, value, stepSize);
+        }
+
+        public void AddVector4Parameter(string name, Vector4 value, float stepSize)
         {
             AddParameter(name, value, stepSize);
         }
@@ -462,30 +465,33 @@ namespace Dope.DDXX.DemoFramework
             if (Time.IsPaused())
             {
                 Time.Resume();
-                if (sound != null)
+                if (song != null)
                 {
-                    soundDriver.SetPosition(channel, Time.CurrentTime);
-                    soundDriver.ResumeChannel(channel);
+                    song.Resume();
+                    //soundDriver.SetPosition(channel, Time.CurrentTime);
+                    //soundDriver.ResumeChannel(channel);
                 }
             }
             else
             {
                 Time.Pause();
-                if (sound != null)
+                if (song != null)
                 {
-                    soundDriver.PauseChannel(channel);
+                    song.Pause();
+                    //soundDriver.PauseChannel(channel);
                 }
             }
         }
 
         public void JumpInTime(float time)
         {
+            Time.DeltaTime += time;
             Time.CurrentTime += time;
             if (Time.CurrentTime < StartTime)
                 Time.CurrentTime = StartTime;
             if (Time.CurrentTime > EndTime)
                 Time.CurrentTime = EndTime;
-            SynchronizeSong();
+            //SynchronizeSong();
         }
 
         #endregion

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX;
-using System.Drawing;
 using Dope.DDXX.Utility;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -14,7 +14,9 @@ namespace Dope.DDXX.DemoFramework
         int GetNumTweakables();
         int GetIntValue(int num);
         float GetFloatValue(int num);
+        Vector2 GetVector2Value(int num);
         Vector3 GetVector3Value(int num);
+        Vector4 GetVector4Value(int num);
         string GetStringValue(int num);
         Color GetColorValue(int num);
         bool GetBoolValue(int num);

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using Dope.DDXX.Utility;
-using Microsoft.DirectX;
-using System.Drawing;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -38,8 +38,12 @@ namespace Dope.DDXX.DemoFramework
                     return TweakableType.Integer;
                 case "Single":
                     return TweakableType.Float;
+                case "Vector2":
+                    return TweakableType.Vector2;
                 case "Vector3":
                     return TweakableType.Vector3;
+                case "Vector4":
+                    return TweakableType.Vector4;
                 case "Color":
                     return TweakableType.Color;
                 case "String":
@@ -77,9 +81,19 @@ namespace Dope.DDXX.DemoFramework
             return (float)properties[num].GetGetMethod().Invoke(this, null);
         }
 
+        public Vector2 GetVector2Value(int num)
+        {
+            return (Vector2)properties[num].GetGetMethod().Invoke(this, null);
+        }
+
         public Vector3 GetVector3Value(int num)
         {
             return (Vector3)properties[num].GetGetMethod().Invoke(this, null);
+        }
+
+        public Vector4 GetVector4Value(int num)
+        {
+            return (Vector4)properties[num].GetGetMethod().Invoke(this, null);
         }
 
         public string GetStringValue(int num)
@@ -141,9 +155,17 @@ namespace Dope.DDXX.DemoFramework
                             changeListener.SetStringParam(GetType().Name,
                                 name, GetTweakableName(i), GetStringValue(i));
                             break;
+                        case TweakableType.Vector2:
+                            changeListener.SetVector2Param(GetType().Name,
+                                name, GetTweakableName(i), GetVector2Value(i));
+                            break;
                         case TweakableType.Vector3:
                             changeListener.SetVector3Param(GetType().Name,
                                 name, GetTweakableName(i), GetVector3Value(i));
+                            break;
+                        case TweakableType.Vector4:
+                            changeListener.SetVector4Param(GetType().Name,
+                                name, GetTweakableName(i), GetVector4Value(i));
                             break;
                         case TweakableType.Color:
                             changeListener.SetColorParam(GetType().Name,
@@ -165,7 +187,9 @@ namespace Dope.DDXX.DemoFramework
             List<Type> validTypes = new List<Type>(new Type[] { 
                 typeof(int), 
                 typeof(float),
+                typeof(Vector2),
                 typeof(Vector3),
+                typeof(Vector4),
                 typeof(string),
                 typeof(Color),
                 typeof(bool)

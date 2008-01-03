@@ -3,13 +3,13 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.Xml;
+using System.Reflection;
 using NUnit.Framework;
 using NMock2;
-using System.Xml;
-using Microsoft.DirectX;
-using System.Reflection;
-using System.Drawing;
 using Dope.DDXX.Utility;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -150,9 +150,17 @@ namespace Dope.DDXX.DemoFramework
             {
                 AddParameter(name, new Parameter(name, TweakableType.String, value));
             }
+            public void AddVector2Parameter(string name, Vector2 value, float stepSize)
+            {
+                AddParameter(name, new Parameter(name, TweakableType.Vector2, value, stepSize));
+            }
             public void AddVector3Parameter(string name, Vector3 value, float stepSize)
             {
                 AddParameter(name, new Parameter(name, TweakableType.Vector3, value, stepSize));
+            }
+            public void AddVector4Parameter(string name, Vector4 value, float stepSize)
+            {
+                AddParameter(name, new Parameter(name, TweakableType.Vector4, value, stepSize));
             }
             public void AddColorParameter(string name, Color value)
             {
@@ -594,27 +602,31 @@ namespace Dope.DDXX.DemoFramework
 <Parameter name=""intparam"" int=""3"" />
 <Parameter name=""floatparam"" float=""4.3"" />
 <Parameter name=""strparam"" string=""foostr"" />
-<Parameter name=""colparamnamed"" Color=""SlateBlue"" />
-<Parameter name=""colparam"" Color=""SlateBlue"" />
+<Parameter name=""colparamnamed"" Color=""1, 2, 3, 4"" />
+<Parameter name=""colparam"" Color=""1, 2, 3, 4"" />
 <Parameter name=""boolparam"" bool=""true"" />
 <Parameter name=""floatstepparam"" float=""3.4"" step=""0.1"" />
 <SetupCall name=""AddTextureLayer"">
 <Parameter string=""BlurBackground.jpg"" />
 <Parameter float=""35.0"" />
-<Parameter Color=""Beige"" />
+<Parameter Color=""5, 6, 7, 8"" />
 <Parameter int=""2"" />
 </SetupCall>
 </Effect>
 <!-- Here is another comment -->
 <Effect class=""bareffect"" name=""barname"" endTime=""8.5"">
 <Parameter name=""goo"" string=""string value"" />
-<Parameter name=""background"" Color=""Black"" />
-<Parameter name=""vecparam"" Vector3=""5.4, 4.3, 3.2"" />
+<Parameter name=""background"" Color=""0, 0, 0, 0"" />
+<Parameter name=""vec2param"" Vector2=""5.4, 4.3"" />
+<Parameter name=""vec3param"" Vector3=""5.4, 4.3, 3.2"" />
+<Parameter name=""vec4param"" Vector4=""5.4, 4.3, 3.2, 2.1"" />
 </Effect>
 <!-- <PostEffect name=""fooglow"" track=""2""> -->
 <PostEffect class=""fooglow"" name=""glowname"" track=""2"" startTime=""2"" endTime=""5"">
 <Parameter name=""glowparam"" float=""5.4"" />
-<Parameter name=""glowdir"" Vector3=""1.1, 2.2, 3.3"" />
+<Parameter name=""glowdir2"" Vector2=""1.1, 2.2"" />
+<Parameter name=""glowdir3"" Vector3=""1.1, 2.2, 3.3"" />
+<Parameter name=""glowdir4"" Vector4=""1.1, 2.2, 3.3, 4.4"" />
 <!-- <Parameter name=""glowparam"" float=""5.4"" /> -->
 </PostEffect>
 <Transition class=""footrans"" name=""transname"" track=""1"" startTime=""8"" endTime=""9"">
@@ -707,11 +719,11 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual("fooglow", effectBuilder.PostEffectClass);
             Assert.AreEqual(2, effectBuilder.PostEffectTrack);
             Dictionary<string, Parameter> parameters = effectBuilder.GetPostEffectParameters();
-            Assert.AreEqual(2, parameters.Count);
+            Assert.AreEqual(4, parameters.Count);
             Parameter parameter;
             Assert.IsTrue(parameters.TryGetValue("glowparam", out parameter));
             Assert.AreEqual(TweakableType.Float, parameter.Type);
-            Assert.AreEqual(5.4, parameter.FloatValue);
+            Assert.AreEqual(5.4f, parameter.FloatValue);
             Assert.IsFalse(effectBuilder.NextPostEffect());
         }
 
@@ -838,7 +850,7 @@ namespace Dope.DDXX.DemoFramework
             Parameter parameter;
             Assert.IsTrue(parameters.TryGetValue("colparam", out parameter));
             Assert.AreEqual(TweakableType.Color, parameter.Type);
-            Assert.AreEqual(Color.SlateBlue, parameter.ColorValue);
+            Assert.AreEqual(new Color(1, 2, 3, 4), parameter.ColorValue);
         }
 
         [Test]
@@ -859,7 +871,22 @@ namespace Dope.DDXX.DemoFramework
             Assert.IsTrue(parameters.TryGetValue("floatstepparam", out parameter));
             Assert.AreEqual(TweakableType.Float, parameter.Type);
             Assert.AreEqual(3.4f, parameter.FloatValue);
-            Assert.AreEqual(0.1, parameter.StepSize);
+            Assert.AreEqual(0.1f, parameter.StepSize);
+        }
+
+        [Test]
+        public void TestVector2Param()
+        {
+            ReadXML(twoEffectContents);
+            effectBuilder.NextEffect();
+            effectBuilder.NextEffect();
+            Assert.AreEqual("bareffect", effectBuilder.EffectClass);
+            Dictionary<string, Parameter> parameters = effectBuilder.GetParameters();
+            Assert.AreEqual(5, parameters.Count);
+            Parameter parameter;
+            Assert.IsTrue(parameters.TryGetValue("vec2param", out parameter));
+            Assert.AreEqual(TweakableType.Vector2, parameter.Type);
+            Assert.AreEqual(new Vector2(5.4f, 4.3f), parameter.Vector2Value);
         }
 
         [Test]
@@ -870,11 +897,26 @@ namespace Dope.DDXX.DemoFramework
             effectBuilder.NextEffect();
             Assert.AreEqual("bareffect", effectBuilder.EffectClass);
             Dictionary<string, Parameter> parameters = effectBuilder.GetParameters();
-            Assert.AreEqual(3, parameters.Count);
+            Assert.AreEqual(5, parameters.Count);
             Parameter parameter;
-            Assert.IsTrue(parameters.TryGetValue("vecparam", out parameter));
+            Assert.IsTrue(parameters.TryGetValue("vec3param", out parameter));
             Assert.AreEqual(TweakableType.Vector3, parameter.Type);
             Assert.AreEqual(new Vector3(5.4f, 4.3f, 3.2f), parameter.Vector3Value);
+        }
+
+        [Test]
+        public void TestVector4Param()
+        {
+            ReadXML(twoEffectContents);
+            effectBuilder.NextEffect();
+            effectBuilder.NextEffect();
+            Assert.AreEqual("bareffect", effectBuilder.EffectClass);
+            Dictionary<string, Parameter> parameters = effectBuilder.GetParameters();
+            Assert.AreEqual(5, parameters.Count);
+            Parameter parameter;
+            Assert.IsTrue(parameters.TryGetValue("vec4param", out parameter));
+            Assert.AreEqual(TweakableType.Vector4, parameter.Type);
+            Assert.AreEqual(new Vector4(5.4f, 4.3f, 3.2f, 2.1f), parameter.Vector4Value);
         }
 
         [Test]
@@ -890,7 +932,7 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual(4, list.Count);
             Assert.AreEqual("BlurBackground.jpg", list[0]);
             Assert.AreEqual(35.0f, list[1]);
-            Assert.AreEqual(Color.Beige, list[2]);
+            Assert.AreEqual(new Color(5, 6, 7, 8), list[2]);
             Assert.AreEqual(2, list[3]);
         }
 
@@ -917,12 +959,14 @@ namespace Dope.DDXX.DemoFramework
         {
             DemoXMLReader reader = ReadXMLString(twoEffectContents);
             reader.SetColorParam("fooeffect", "fooname", "colparamnamed", Color.SpringGreen);
-            reader.SetColorParam("fooeffect", "fooname", "colparam", Color.FromArgb(255, 100, 101, 102));
+            reader.SetColorParam("fooeffect", "fooname", "colparam", new Color(255, 100, 101, 102));
             reader.SetFloatParam("fooeffect", "fooname", "floatparam", 8.6f);
             reader.SetBoolParam("fooeffect", "fooname", "boolparam", false);
             reader.SetIntParam("fooeffect", "fooname", "intparam", 7);
             reader.SetStringParam("bareffect", "barname", "goo", "goovalue");
-            reader.SetVector3Param("fooglow", "glowname", "glowdir", new Vector3(1.2f, 2.3f, 3.4f));
+            reader.SetVector2Param("fooglow", "glowname", "glowdir2", new Vector2(1.2f, 2.3f));
+            reader.SetVector3Param("fooglow", "glowname", "glowdir3", new Vector3(1.2f, 2.3f, 3.4f));
+            reader.SetVector4Param("fooglow", "glowname", "glowdir4", new Vector4(1.2f, 2.3f, 3.4f, 4.5f));
             reader.SetStartTime("fooeffect", "fooname", 15);
             reader.SetStartTime("bareffect", "barname", 4);
             reader.SetEndTime("bareffect", "barname", 19);
@@ -942,13 +986,13 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual(Color.SpringGreen, parameter.ColorValue);
             Assert.IsTrue(parameters.TryGetValue("colparam", out parameter));
             Assert.AreEqual(TweakableType.Color, parameter.Type);
-            Assert.AreEqual((object)Color.FromArgb(255, 100, 101, 102), (object)parameter.ColorValue);
+            Assert.AreEqual((object)new Color(255, 100, 101, 102), (object)parameter.ColorValue);
             Assert.IsTrue(parameters.TryGetValue("boolparam", out parameter));
             Assert.AreEqual(TweakableType.Bool, parameter.Type);
             Assert.AreEqual(false, (object)parameter.BoolValue);
             Assert.IsTrue(parameters.TryGetValue("floatparam", out parameter));
             Assert.AreEqual(TweakableType.Float, parameter.Type);
-            Assert.AreEqual(8.6, parameter.FloatValue);
+            Assert.AreEqual(8.6f, parameter.FloatValue);
             Assert.IsTrue(parameters.TryGetValue("intparam", out parameter));
             Assert.AreEqual(TweakableType.Integer, parameter.Type);
             Assert.AreEqual(7, parameter.IntValue);
@@ -963,9 +1007,15 @@ namespace Dope.DDXX.DemoFramework
             effectBuilder.NextPostEffect();
             parameters = effectBuilder.GetPostEffectParameters();
             Assert.AreEqual("fooglow", effectBuilder.PostEffectClass);
-            Assert.IsTrue(parameters.TryGetValue("glowdir", out parameter));
+            Assert.IsTrue(parameters.TryGetValue("glowdir2", out parameter));
+            Assert.AreEqual(TweakableType.Vector2, parameter.Type);
+            Assert.AreEqual(new Vector2(1.2f, 2.3f), parameter.Vector2Value);
+            Assert.IsTrue(parameters.TryGetValue("glowdir3", out parameter));
             Assert.AreEqual(TweakableType.Vector3, parameter.Type);
             Assert.AreEqual(new Vector3(1.2f, 2.3f, 3.4f), parameter.Vector3Value);
+            Assert.IsTrue(parameters.TryGetValue("glowdir4", out parameter));
+            Assert.AreEqual(TweakableType.Vector4, parameter.Type);
+            Assert.AreEqual(new Vector4(1.2f, 2.3f, 3.4f, 4.5f), parameter.Vector4Value);
         }
 
         [Test]

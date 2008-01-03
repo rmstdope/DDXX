@@ -1,49 +1,52 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Drawing;
 using Dope.DDXX.Graphics;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.DemoFramework
 {
     public class BoxControl : BaseControl
     {
-        public float Alpha;
         public Color Color;
+        public Color ShadowColor;
+        public Color OutlineColor;
 
-        public BoxControl(RectangleF rectangle, float alpha, Color color, BaseControl parent)
+        public BoxControl(Vector4 rectangle, byte alpha, Color color, BaseControl parent)
             : base(rectangle, parent)
         {
-            Alpha = alpha;
-            Color = color;
+            Color = new Color(color.R, color.G, color.B, alpha);
+            ShadowColor = new Color(0, 0, 0, alpha);
+            OutlineColor = new Color(255, 255, 255, alpha);
         }
-        
-        public override void Draw(ISprite sprite, ILine line, IFont font, ITexture whiteTexture)
+
+        public override void Draw(ISpriteBatch spriteBatch, ISpriteFont spriteFont, ITexture2D whiteTexture)
         {
-            if (Alpha == 0.0f)
+            if (Color.A == 0)
                 return;
 
-            sprite.Begin(SpriteFlags.AlphaBlend);
-            sprite.Draw2D(whiteTexture, Rectangle.Empty, new SizeF(GetWidth(), GetHeight()),
-                          new PointF(GetX1(), GetY1()), Color.FromArgb((int)(255 * Alpha), Color));
-            sprite.End();
+            int screenWidth = spriteBatch.GraphicsDevice.PresentationParameters.BackBufferWidth;
+            int screenHeight = spriteBatch.GraphicsDevice.PresentationParameters.BackBufferHeight;
+            int x1 = (int)(screenWidth * GetX1());
+            int y1 = (int)(screenHeight * GetY1());
+            int width = (int)(screenWidth * GetWidth());
+            int height = (int)(screenHeight * GetHeight());
+            spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+            spriteBatch.Draw(whiteTexture, new Rectangle(x1, y1, width, height), Color);
+            spriteBatch.End();
 
-            line.Begin();
-            line.Draw(new Vector2[] { new Vector2(GetX1() + 1, GetY1() + 1), 
-                                      new Vector2(GetX2() + 1, GetY1() + 1), 
-                                      new Vector2(GetX2() + 1, GetY2() + 1), 
-                                      new Vector2(GetX1() + 1, GetY2() + 1), 
-                                      new Vector2(GetX1() + 1, GetY1() + 1) },
-                                      Color.FromArgb((int)(255 * Alpha), Color.Black));
-            line.Draw(new Vector2[] { new Vector2(GetX1(), GetY1()), 
-                                      new Vector2(GetX2(), GetY1()), 
-                                      new Vector2(GetX2(), GetY2()), 
-                                      new Vector2(GetX1(), GetY2()), 
-                                      new Vector2(GetX1(), GetY1()) },
-                                      Color.FromArgb((int)(255 * Alpha), Color.White));
-            line.End();
+            spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+            DrawHorizontalLine(spriteBatch, whiteTexture, x1 + 1, y1 + 1, width, ShadowColor);
+            DrawHorizontalLine(spriteBatch, whiteTexture, x1 + 1, y1 + 1 + height, width, ShadowColor);
+            DrawVerticalLine(spriteBatch, whiteTexture, x1 + 1, y1 + 1, height, ShadowColor);
+            DrawVerticalLine(spriteBatch, whiteTexture, x1 + 1 + width, y1 + 1, height, ShadowColor);
+
+            DrawHorizontalLine(spriteBatch, whiteTexture, x1, y1, width, OutlineColor);
+            DrawHorizontalLine(spriteBatch, whiteTexture, x1, y1 + height, width, OutlineColor);
+            DrawVerticalLine(spriteBatch, whiteTexture, x1, y1, height, OutlineColor);
+            DrawVerticalLine(spriteBatch, whiteTexture, x1 + width, y1, height, OutlineColor);
+            spriteBatch.End();
         }
 
     }

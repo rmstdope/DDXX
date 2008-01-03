@@ -6,6 +6,9 @@ namespace Dope.DDXX.Sound
 {
     public interface ISoundFactory
     {
-        ISoundSystem CreateSystem();
+        void Initialize(string resourceName);
+        ICue CreateCue(string name);
+
+        void Step();
     }
 }

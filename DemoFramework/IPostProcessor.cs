@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
-using Microsoft.DirectX;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -15,27 +14,35 @@ namespace Dope.DDXX.DemoFramework
         /// Initializes the post processor by getting the needed DX objects.
         /// </summary>
         /// <param name="device"></param>
-        void Initialize(IDevice device, ITextureFactory textureFactory, IEffectFactory effectFactory);
+        void Initialize(IGraphicsDevice device, IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, IEffectFactory effectFactory);
 
         /// <summary>
         /// Get the ITexture of the texture that was last rendered.
         /// </summary>
-        ITexture OutputTexture { get; }
+        IRenderTarget2D OutputTexture { get; }
         
         /// <summary>
         /// Set the texture to use as startTexture. It is assumed that this texture is of full size.
         /// </summary>
         /// <param name="startTexture"></param>
-        void StartFrame(ITexture startTexture);
+        void StartFrame(IRenderTarget2D startTexture);
 
         /// <summary>
         /// Generate an output texture using an external texture as source.
         /// </summary>
         /// <param name="technique">The technique to use.</param>
-        /// <param name="sourceTextureId">The ITexture to use as source.</param>
-        /// <param name="destinationTextureId">The ID of the texture to use as destination. Can not be same as source.</param>
-        void Process(string technique, ITexture sourceTexture, ITexture destinationTexture);
-        
+        /// <param name="sourceTexture">The IRenderTarget2D to use as source.</param>
+        /// <param name="destinationTexture">The IRenderTarget2D to use as destination. Can not be same as source.</param>
+        void Process(string technique, IRenderTarget2D sourceTexture, IRenderTarget2D destinationTexture);
+
+        /// <summary>
+        /// Generate an output texture using an external texture as source.
+        /// </summary>
+        /// <param name="technique">The technique to use.</param>
+        /// <param name="sourceTexture">The ITexture2D to use as source.</param>
+        /// <param name="destinationTexture">The IRenderTarget2D to use as destination. Can not be same as source.</param>
+        void Process(string technique, ITexture2D sourceTexture, IRenderTarget2D destinationTexture);
+
         /// <summary>
         /// Set the blend parameters to use when processing.
         /// </summary>
@@ -43,7 +50,7 @@ namespace Dope.DDXX.DemoFramework
         /// <param name="sourceBlend">The blend technique for the source.</param>
         /// <param name="destinatonBlend">The blend technique for the destination.</param>
         /// <param name="blendFactor">The blend factor. Must be specified as 0xRRGGBBAA.</param>
-        void SetBlendParameters(BlendOperation blendOperation, Blend sourceBlend, Blend destinatonBlend, Color blendFactor);
+        void SetBlendParameters(BlendFunction blendFunctions, Blend sourceBlend, Blend destinatonBlend, Color blendFactor);
         
         /// <summary>
         /// Set the value of a parameter in the effects.
@@ -79,18 +86,18 @@ namespace Dope.DDXX.DemoFramework
         /// </summary>
         /// <param name="num">The number of textures to retrieve.</param>
         /// <returns>A list containing the textures</returns>
-        List<ITexture> GetTemporaryTextures(int num, bool skipOutput);
+        List<IRenderTarget2D> GetTemporaryTextures(int num, bool skipOutput);
 
         /// <summary>
         /// Allocates a full size texture exclusively until it is freed.
         /// </summary>
         /// <returns>The allocated texture.</returns>
-        void AllocateTexture(ITexture texture);
+        void AllocateTexture(IRenderTarget2D texture);
 
         /// <summary>
         /// Free an allocated texture for use.
         /// </summary>
         /// <param name="texture"></param>
-        void FreeTexture(ITexture texture);
+        void FreeTexture(IRenderTarget2D texture);
     }
 }

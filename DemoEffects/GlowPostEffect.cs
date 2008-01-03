@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-
 using Dope.DDXX.DemoFramework;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
 using Dope.DDXX.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoEffects
 {
@@ -70,42 +68,56 @@ namespace Dope.DDXX.DemoEffects
 
         public override void Render()
         {
-            ITexture startTexture = PostProcessor.OutputTexture;
-            List<ITexture> textures = PostProcessor.GetTemporaryTextures(2, true);
+            IRenderTarget2D startTexture = PostProcessor.OutputTexture;
+            List<IRenderTarget2D> textures = PostProcessor.GetTemporaryTextures(2, true);
 
             PostProcessor.SetValue("Luminance", luminance);
             PostProcessor.SetValue("Exposure", exposure);
             PostProcessor.SetValue("WhiteCutoff", whiteCutoff);
             PostProcessor.SetValue("BloomScale", bloomScale);
-            PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
+            PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);
+            IRenderTarget2D afterDownSample = textures[1];
             if (downSamples == 1)
                 PostProcessor.Process("DownSample4x", startTexture, textures[1]);
-            else
+            else if (downSamples > 1)
             {
                 PostProcessor.Process("DownSample4x", startTexture, textures[0]);
+                //textures[0].GetTexture().Save("save0.jpg", ImageFileFormat.Jpg);
                 PostProcessor.Process("DownSample4x", textures[0], textures[1]);
             }
-            //textures[1].Save("text.jpg", ImageFileFormat.Jpg);
+            else 
+                afterDownSample = startTexture;
+            //textures[1].GetTexture().Save("save1.jpg", ImageFileFormat.Jpg);
             if (advancedGlow)
-                PostProcessor.Process("AdvancedBrighten", textures[1], textures[0]);
+                PostProcessor.Process("AdvancedBrighten", afterDownSample, textures[0]);
             else
-                PostProcessor.Process("Brighten", textures[1], textures[0]);
+                PostProcessor.Process("Brighten", afterDownSample, textures[0]);
+            //textures[0].GetTexture().Save("save2.jpg", ImageFileFormat.Jpg);
             PostProcessor.Process("HorizontalBloom", textures[0], textures[1]);
             PostProcessor.Process("VerticalBloom", textures[1], textures[0]);
             PostProcessor.Process("HorizontalBloom", textures[0], textures[1]);
-            PostProcessor.Process("VerticalBloom", textures[1], textures[0]);
+            if (downSamples == 0)
+            {
+                PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.One, Color.Black);
+                PostProcessor.Process("VerticalBloom", textures[1], startTexture);
+            }
+            else
+                PostProcessor.Process("VerticalBloom", textures[1], textures[0]);
+            //textures[0].GetTexture().Save("save3.jpg", ImageFileFormat.Jpg);
             if (downSamples == 1)
             {
-                PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.One, Color.Black);
+                PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.One, Color.Black);
                 PostProcessor.Process("UpSample4x", textures[0], startTexture);
             }
-            else
+            else if (downSamples > 1)
             {
                 PostProcessor.Process("UpSample4x", textures[0], textures[1]);
-                PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.One, Color.Black);
+                //textures[1].GetTexture().Save("save4.jpg", ImageFileFormat.Jpg);
+                PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.One, Color.Black);
                 PostProcessor.Process("UpSample4x", textures[1], startTexture);
+                //t.Save("save9.jpg", ImageFileFormat.Jpg);
             }
-            //PostProcessor.Process("Copy", temp[0], startTexture);
+            //startTexture.GetTexture().Save("save5.jpg", ImageFileFormat.Jpg);
         }
 
         protected override void Initialize()

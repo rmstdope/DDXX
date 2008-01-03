@@ -1,124 +1,95 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX;
-using System.Drawing;
 using Dope.DDXX.SceneGraph;
 using Dope.DDXX.Utility;
-using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Graphics;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.ParticleSystems
 {
-    public class FloaterParticleSpawner : ISystemParticleSpawner
+    public class FloaterSystemNode : ParticleSystemNode<VertexPositionColorPoint>
     {
-        private VertexDeclaration vertexDeclaration;
         private float boundingRadius;
-        private int maxNumParticles;
+        private Color defaultColor = Color.White;
+        private float colorDeviation = 0.4f;
+        private float particleBaseSize;
+        private float particleSpeed;
 
-        public FloaterParticleSpawner(IGraphicsFactory graphicsFactory, IDevice device, int maxNumParticles, float boundingRadius)
+        public FloaterSystemNode(string name, float boundingRadius, float particleBaseSize, float particleSpeed)
+            : base(name)
         {
             this.boundingRadius = boundingRadius;
-            this.maxNumParticles = maxNumParticles;
-            VertexElement[] elements = new VertexElement[]
-            {
-                new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
-                new VertexElement(0, 12, DeclarationType.Float1, DeclarationMethod.Default, DeclarationUsage.PointSize, 0),
-                new VertexElement(0, 16, DeclarationType.Color, DeclarationMethod.Default, DeclarationUsage.Color, 0),
-                VertexElement.VertexDeclarationEnd 
-            };
-            // Use the vertex element array to create a vertex declaration.
-            vertexDeclaration = graphicsFactory.CreateVertexDeclaration(device, elements);
+            this.particleBaseSize = particleBaseSize;
+            this.particleSpeed = particleSpeed;
         }
 
-        public BlendOperation BlendOperation
-        {
-            get { return BlendOperation.Add; }
-        }
-
-        public Blend SourceBlend
-        {
-            get { return Blend.One; }
-        }
-
-        public Blend DestinationBlend
-        {
-            get { return Blend.One; }
-        }
-
-        public int MaxNumParticles
+        protected override int NumInitialSpawns
         {
             get { return maxNumParticles; }
         }
 
-        public ISystemParticle Spawn(IRenderableCamera camera)
+        protected override ISystemParticle<VertexPositionColorPoint> Spawn()
         {
-            return new FloaterParticle(RandomPositionInSphere(boundingRadius), Color.White, 10.0f);
+            return new FloaterParticle(RandomPositionInSphere(boundingRadius), CreateColor(), particleBaseSize, particleSpeed);
         }
 
-        protected Vector3 RandomPositionInSphere(float radius)
+        private Color CreateColor()
         {
-            Vector3 pos;
-            do
-            {
-                pos = new Vector3(Rand.Float(-radius, radius), 
-                    Rand.Float(-radius, radius), 
-                    Rand.Float(-radius, radius));
-            } while (pos.Length() > radius);
-            return pos;
+            return new Color(defaultColor.ToVector3() + 
+                Rand.Vector3(-colorDeviation, colorDeviation));
         }
 
-        public Type VertexType
-        {
-            get { return typeof(VertexColorPoint); }
-        }
-
-        public VertexDeclaration VertexDeclaration
-        {
-            get { return vertexDeclaration; }
-        }
-
-        public int NumInitialSpawns
-        {
-            get { return maxNumParticles;  }
-        }
-
-        public bool ShouldSpawn()
+        protected override bool ShouldSpawn()
         {
             return false;
         }
 
-        public string GetTechniqueName(bool textured)
+        protected override IMaterialHandler CreateDefaultMaterial(IGraphicsFactory graphicsFactory)
         {
-            if (textured)
-                return "PointSprite";
-            return "PointSpriteNoTexture";
+            IMaterialHandler material = new MaterialHandler(graphicsFactory.EffectFromFile("Content\\effects\\PointSpriteParticles"), new EffectConverter());
+            material.BlendFunction = BlendFunction.Add;
+            material.SourceBlend = Blend.One;
+            material.DestinationBlend = Blend.One;
+            return material;
         }
+
+        protected override int VertexSizeInBytes 
+        {
+            get { return VertexPositionColorPoint.SizeInBytes; }
+        }
+
+        protected override VertexElement[] VertexElements 
+        {
+            get { return VertexPositionColorPoint.VertexElements; }
+        }
+
     }
 
-    public class FloaterParticle : SystemParticle
+    public class FloaterParticle : SystemParticle<VertexPositionColorPoint>
     {
         private Vector3 phase;
         private Vector3 period;
         private Vector3 amplitude;
 
-        public FloaterParticle(Vector3 position, Color color, float size)
+        public FloaterParticle(Vector3 position, Color color, float size, float speed)
             : base(position, color, size)
         {
             phase = new Vector3(Rand.Float(0, 2 * Math.PI), Rand.Float(0, 2 * Math.PI), Rand.Float(0, 2 * Math.PI));
-            period = new Vector3(2, 2, 2) + new Vector3(Rand.Float(0, 4 * Math.PI), Rand.Float(0, 4 * Math.PI), Rand.Float(0, 4 * Math.PI));
-            amplitude = new Vector3(20, 20, 20) + new Vector3(Rand.Float(0, 60), Rand.Float(0, 60), Rand.Float(0, 60));
+            period = new Vector3(0.5f, 0.5f, 0.5f) + new Vector3(Rand.Float(0, 2 * Math.PI), Rand.Float(0, 2 * Math.PI), Rand.Float(0, 2 * Math.PI));
+            period /= speed;
+            amplitude = new Vector3(size * 1.0f, size * 1.0f, size * 1.0f) +
+                new Vector3(Rand.Float(0, size * 3.0f), Rand.Float(0, size * 3.0f), Rand.Float(0, size * 3.0f));
         }
 
-        public override void StepAndWrite(IGraphicsStream stream, IRenderableCamera camera)
+        public override void Step(ref VertexPositionColorPoint destinationVertex)
         {
-            VertexColorPoint vertex = new VertexColorPoint();
-            vertex.Position = Position + new Vector3(amplitude.X * (float)Math.Sin(Time.StepTime / period.X + phase.X),
-                                                     amplitude.Y * (float)Math.Sin(Time.StepTime / period.Y + phase.Y),
-                                                     amplitude.Z * (float)Math.Sin(Time.StepTime / period.Z + phase.Z));
-            vertex.Size = Size;
-            vertex.Color = Color.ToArgb();
-            stream.Write(vertex);
+            destinationVertex.Position = Position + new Vector3(amplitude.X * (float)Math.Sin(Time.CurrentTime / period.X + phase.X),
+                                                     amplitude.Y * (float)Math.Sin(Time.CurrentTime / period.Y + phase.Y),
+                                                     amplitude.Z * (float)Math.Sin(Time.CurrentTime / period.Z + phase.Z));
+            destinationVertex.PointSize = Size;
+            destinationVertex.Color = Color;
         }
 
     }

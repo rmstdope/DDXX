@@ -1,18 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.SceneGraph
 {
     public class ModelNode : NodeBase, IRenderableMesh
     {
         private IModel model;
-        private IEffectHandler effectHandler;
-        private IDevice device;
+        private LightState lightState;
+        private IGraphicsDevice device;
+        private CullMode cullMode = CullMode.CullCounterClockwiseFace;
 
         public IModel Model
         {
@@ -20,28 +21,47 @@ namespace Dope.DDXX.SceneGraph
             set { model = value; }
         }
 
-        public IEffectHandler EffectHandler
+        public CullMode CullMode
         {
-            get { return effectHandler; }
+            get { return cullMode; }
+            set { cullMode = value; }
         }
 
-        public ModelNode(string name, IModel model, IEffectHandler effectHandler, IDevice device) 
+        public ModelNode(string name, IModel model, IGraphicsDevice device) 
             : base(name)
         {
             this.model = model;
-            this.effectHandler = effectHandler;
             this.device = device;
         }
 
-        protected override void StepNode(IRenderableCamera camera)
+        protected override void SetLightStateNode(LightState state)
         {
-            model.Step();
+            lightState = state;
+        }
+
+        protected override void StepNode()
+        {
+            if (model.AnimationController != null)
+                model.AnimationController.Step(WorldMatrix);
         }
 
         protected override void RenderNode(IScene scene)
         {
-            model.Render(device, effectHandler, scene.AmbientColor, WorldMatrix,
-                scene.ActiveCamera.ViewMatrix, scene.ActiveCamera.ProjectionMatrix);
+            foreach (IModelMesh mesh in model.Meshes)
+            {
+                foreach (IModelMeshPart part in mesh.MeshParts)
+                {
+                    if (model.AnimationController == null)
+                        part.MaterialHandler.SetupRendering(new Matrix[] { WorldMatrix }, scene.ActiveCamera.ViewMatrix,
+                            scene.ActiveCamera.ProjectionMatrix, scene.AmbientColor, lightState);
+                    else
+                        part.MaterialHandler.SetupRendering(model.AnimationController.WorldMatrices, scene.ActiveCamera.ViewMatrix,
+                            scene.ActiveCamera.ProjectionMatrix, scene.AmbientColor, lightState);
+                }
+                device.RenderState.CullMode = cullMode;
+                mesh.Draw();
+            }
         }
+
     }
 }

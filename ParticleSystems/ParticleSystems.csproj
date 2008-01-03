@@ -1,67 +1,82 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
+    <ProjectGuid>{7FE16E46-C51A-403F-AF42-B6D757CC75A6}</ProjectGuid>
+    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{AA378577-B1F3-4C03-A968-C990445C7AC1}</ProjectGuid>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Dope.DDXX.ParticleSystems</RootNamespace>
     <AssemblyName>Dope.DDXX.ParticleSystems</AssemblyName>
+    <XnaFrameworkVersion>v2.0</XnaFrameworkVersion>
+    <XnaPlatform>Windows</XnaPlatform>
+    <Thumbnail>
+    </Thumbnail>
+    <XnaCrossPlatformGroupID>{6956b50b-583f-4e09-bdea-55081d4d1fc9}</XnaCrossPlatformGroupID>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\x86\Debug</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\x86\Release</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2911.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.Xna.Framework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CloudParticle.cs" />
-    <Compile Include="FallingSystemParticle.cs" />
-    <Compile Include="FloaterParticle.cs" />
-    <Compile Include="GlitterParticle.cs" />
+    <Compile Include="FloaterParticle.cs">
+      <Name>FloaterParticle</Name>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SphereParticle.cs" />
-    <Compile Include="SpiralParticle.cs" />
-    <Compile Include="SwirlParticle.cs" />
-    <Compile Include="Vertex.cs" />
+    <Compile Include="SpiralParticle.cs">
+      <Name>SpiralParticle</Name>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <NestedContentProject Include="Content.contentproj">
+      <Project>{0a407e00-e053-4327-8fe3-1a54c9424f0d}</Project>
+      <Visible>False</Visible>
+    </NestedContentProject>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Graphics\Graphics.csproj">
-      <Project>{B64087ED-595E-4597-84D8-D273FF00B2DA}</Project>
+      <Project>{797591FA-968E-41D7-BFEF-85E13FCCA4CF}</Project>
       <Name>Graphics</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Physics\Physics.csproj">
-      <Project>{6F7E70F2-FC19-4399-84BD-F60AC491E970}</Project>
-      <Name>Physics</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SceneGraph\SceneGraph.csproj">
-      <Project>{BF75F16E-5056-4484-BFE2-72F8733B8BF3}</Project>
+      <Project>{3876D35C-41A0-459E-819B-0354A2A75443}</Project>
       <Name>SceneGraph</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utility\Utility.csproj">
-      <Project>{31D76405-2DD3-436A-BE65-963DE822511E}</Project>
+      <Project>{70F76E25-311C-4DFC-9412-89470F537BDF}</Project>
       <Name>Utility</Name>
     </ProjectReference>
   </ItemGroup>
@@ -73,4 +88,6 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v2.0\Microsoft.Xna.GameStudio.Common.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v2.0\Microsoft.Xna.GameStudio.NestedContent.targets" />
 </Project>

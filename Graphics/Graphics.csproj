@@ -1,124 +1,352 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
+    <ProjectGuid>{797591FA-968E-41D7-BFEF-85E13FCCA4CF}</ProjectGuid>
+    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B64087ED-595E-4597-84D8-D273FF00B2DA}</ProjectGuid>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Dope.DDXX.Graphics</RootNamespace>
     <AssemblyName>Dope.DDXX.Graphics</AssemblyName>
+    <XnaFrameworkVersion>v2.0</XnaFrameworkVersion>
+    <XnaPlatform>Windows</XnaPlatform>
+    <Thumbnail>
+    </Thumbnail>
+    <XnaCrossPlatformGroupID>{cb1d778c-5a6b-4100-bd51-22b1f114095a}</XnaCrossPlatformGroupID>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\x86\Debug</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\x86\Release</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2911.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="System" />
+    <Reference Include="Microsoft.Xna.Framework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseTextureAdapter.cs" />
-    <Compile Include="CubeTextureAdapter.cs" />
-    <Compile Include="D3DDriver.cs" />
-    <Compile Include="GraphicsFactory.cs" />
-    <Compile Include="DeviceAdapter.cs" />
-    <Compile Include="DevicePrerequisits.cs" />
-    <Compile Include="EffectAdapter.cs" />
-    <Compile Include="EffectFactory.cs" />
-    <Compile Include="FontAdapter.cs" />
-    <Compile Include="IBaseTexture.cs" />
-    <Compile Include="ICubeTexture.cs" />
-    <Compile Include="GraphicsStreamAdapter.cs" />
-    <Compile Include="IDemoTweaker.cs" />
-    <Compile Include="IDevice.cs" />
-    <Compile Include="IEffect.cs" />
-    <Compile Include="IEffectFactory.cs" />
-    <Compile Include="IEffectHandler.cs" />
-    <Compile Include="IFont.cs" />
-    <Compile Include="IGraphicsFactory.cs" />
-    <Compile Include="IIndexBuffer.cs" />
-    <Compile Include="ILine.cs" />
-    <Compile Include="IGraphicsStream.cs" />
-    <Compile Include="IManager.cs" />
-    <Compile Include="IMesh.cs" />
-    <Compile Include="IModel.cs" />
-    <Compile Include="IModelFactory.cs" />
-    <Compile Include="IndexBufferAdapter.cs" />
-    <Compile Include="IPrerequisits.cs" />
-    <Compile Include="IRenderStateManager.cs" />
-    <Compile Include="ISphericalHarmonics.cs">
-      <SubType>Code</SubType>
+    <Compile Include="BasicDirectionalLightAdapter.cs">
+      <Name>BasicDirectionalLightAdapter</Name>
     </Compile>
-    <Compile Include="ISprite.cs" />
-    <Compile Include="ISurface.cs" />
-    <Compile Include="ITexture.cs" />
-    <Compile Include="ITextureFactory.cs" />
-    <Compile Include="LineAdapter.cs" />
-    <Compile Include="IVertexBuffer.cs" />
-    <Compile Include="ManagerAdapter.cs" />
-    <Compile Include="MeshAdapter.cs" />
-    <Compile Include="ModelBase.cs" />
-    <Compile Include="ModelFactory.cs" />
-    <Compile Include="ModelMaterial.cs" />
-    <Compile Include="Model.cs" />
-    <Compile Include="PhysicalModel.cs" />
+    <Compile Include="BasicEffectAdapter.cs">
+      <Name>BasicEffectAdapter</Name>
+    </Compile>
+    <Compile Include="ContentManagerAdapter.cs">
+      <Name>ContentManagerAdapter</Name>
+    </Compile>
+    <Compile Include="CustomModel.cs">
+      <Name>CustomModel</Name>
+    </Compile>
+    <Compile Include="CustomModelMesh.cs">
+      <Name>CustomModelMesh</Name>
+    </Compile>
+    <Compile Include="CustomModelMeshPart.cs">
+      <Name>CustomModelMeshPart</Name>
+    </Compile>
+    <Compile Include="DepthStencilBufferAdapter.cs">
+      <Name>DepthStencilBufferAdapter</Name>
+    </Compile>
+    <Compile Include="EffectAdapter.cs">
+      <Name>EffectAdapter</Name>
+    </Compile>
+    <Compile Include="EffectAnnotationAdapter.cs">
+      <Name>EffectAnnotationAdapter</Name>
+    </Compile>
+    <Compile Include="EffectAnnotationCollectionAdapter.cs">
+      <Name>EffectAnnotationCollectionAdapter</Name>
+    </Compile>
+    <Compile Include="EffectConverter.cs">
+      <Name>EffectConverter</Name>
+    </Compile>
+    <Compile Include="EffectFactory.cs">
+      <Name>EffectFactory</Name>
+    </Compile>
+    <Compile Include="EffectFunctionAdapter.cs">
+      <Name>EffectFunctionAdapter</Name>
+    </Compile>
+    <Compile Include="EffectFunctionCollectionAdapter.cs">
+      <Name>EffectFunctionCollectionAdapter</Name>
+    </Compile>
+    <Compile Include="EffectParameterAdapter.cs">
+      <Name>EffectParameterAdapter</Name>
+    </Compile>
+    <Compile Include="EffectParameterCollectionAdapter.cs">
+      <Name>EffectParameterCollectionAdapter</Name>
+    </Compile>
+    <Compile Include="EffectPassAdapter.cs">
+      <Name>EffectPassAdapter</Name>
+    </Compile>
+    <Compile Include="EffectPassCollectionAdapter.cs">
+      <Name>EffectPassCollectionAdapter</Name>
+    </Compile>
+    <Compile Include="EffectTechniqueAdapter.cs">
+      <Name>EffectTechniqueAdapter</Name>
+    </Compile>
+    <Compile Include="EffectTechniqueCollectionAdapter.cs">
+      <Name>EffectTechniqueCollectionAdapter</Name>
+    </Compile>
+    <Compile Include="GraphicsDeviceAdapter.cs">
+      <Name>GraphicsDeviceAdapter</Name>
+    </Compile>
+    <Compile Include="GraphicsDeviceManagerAdapter.cs">
+      <Name>GraphicsDeviceManagerAdapter</Name>
+    </Compile>
+    <Compile Include="GraphicsFactory.cs">
+      <Name>GraphicsFactory</Name>
+    </Compile>
+    <Compile Include="GraphicsResourceAdapter.cs">
+      <Name>GraphicsResourceAdapter</Name>
+    </Compile>
+    <Compile Include="IBasicDirectionalLight.cs">
+      <Name>IBasicDirectionalLight</Name>
+    </Compile>
+    <Compile Include="IBasicEffect.cs">
+      <Name>IBasicEffect</Name>
+    </Compile>
+    <Compile Include="ICollectionAdapter.cs">
+      <Name>ICollectionAdapter</Name>
+    </Compile>
+    <Compile Include="IContentManager.cs">
+      <Name>IContentManager</Name>
+    </Compile>
+    <Compile Include="IDepthStencilBuffer.cs">
+      <Name>IDepthStencilBuffer</Name>
+    </Compile>
+    <Compile Include="IEffect.cs">
+      <Name>IEffect</Name>
+    </Compile>
+    <Compile Include="IEffectAnnotation.cs">
+      <Name>IEffectAnnotation</Name>
+    </Compile>
+    <Compile Include="IEffectConverter.cs">
+      <Name>IEffectConverter</Name>
+    </Compile>
+    <Compile Include="IEffectFactory.cs">
+      <Name>IEffectFactory</Name>
+    </Compile>
+    <Compile Include="IEffectFunction.cs">
+      <Name>IEffectFunction</Name>
+    </Compile>
+    <Compile Include="IEffectParameter.cs">
+      <Name>IEffectParameter</Name>
+    </Compile>
+    <Compile Include="IEffectPass.cs">
+      <Name>IEffectPass</Name>
+    </Compile>
+    <Compile Include="IEffectTechnique.cs">
+      <Name>IEffectTechnique</Name>
+    </Compile>
+    <Compile Include="IGraphicsDevice.cs">
+      <Name>IGraphicsDevice</Name>
+    </Compile>
+    <Compile Include="IDeviceManager.cs">
+      <Name>IDeviceManager</Name>
+    </Compile>
+    <Compile Include="IGraphicsFactory.cs">
+      <Name>IGraphicsFactory</Name>
+    </Compile>
+    <Compile Include="IGraphicsResource.cs">
+      <Name>IGraphicsResource</Name>
+    </Compile>
+    <Compile Include="IIndexBuffer.cs">
+      <Name>IIndexBuffer</Name>
+    </Compile>
+    <Compile Include="IMaterialHandler.cs">
+      <Name>IMaterialHandler</Name>
+    </Compile>
+    <Compile Include="IModel.cs">
+      <Name>IModel</Name>
+    </Compile>
+    <Compile Include="IModelFactory.cs">
+      <Name>IModelFactory</Name>
+    </Compile>
+    <Compile Include="IModelMesh.cs">
+      <Name>IModelMesh</Name>
+    </Compile>
+    <Compile Include="IModelMeshPart.cs">
+      <Name>IModelMeshPart</Name>
+    </Compile>
+    <Compile Include="IndexBufferAdapter.cs">
+      <Name>IndexBufferAdapter</Name>
+    </Compile>
+    <Compile Include="IRenderState.cs">
+      <Name>IRenderState</Name>
+    </Compile>
+    <Compile Include="IRenderTarget.cs">
+      <Name>IRenderTarget</Name>
+    </Compile>
+    <Compile Include="IRenderTarget2D.cs">
+      <Name>IRenderTarget2D</Name>
+    </Compile>
+    <Compile Include="IRenderTargetCube.cs">
+      <Name>IRenderTargetCube</Name>
+    </Compile>
+    <Compile Include="IResolveTexture2D.cs" />
+    <Compile Include="ISpriteBatch.cs">
+      <Name>ISpriteBatch</Name>
+    </Compile>
+    <Compile Include="ISpriteFont.cs">
+      <Name>ISpriteFont</Name>
+    </Compile>
+    <Compile Include="ITexture.cs">
+      <Name>ITexture</Name>
+    </Compile>
+    <Compile Include="ITexture2D.cs">
+      <Name>ITexture2D</Name>
+    </Compile>
+    <Compile Include="ITexture3D.cs">
+      <Name>ITexture3D</Name>
+    </Compile>
+    <Compile Include="ITextureCube.cs">
+      <Name>ITextureCube</Name>
+    </Compile>
+    <Compile Include="ITextureFactory.cs">
+      <Name>ITextureFactory</Name>
+    </Compile>
+    <Compile Include="IVertexBuffer.cs">
+      <Name>IVertexBuffer</Name>
+    </Compile>
+    <Compile Include="IVertexDeclaration.cs">
+      <Name>IVertexDeclaration</Name>
+    </Compile>
+    <Compile Include="IVertexStream.cs">
+      <Name>IVertexStream</Name>
+    </Compile>
+    <Compile Include="IVertexStreamCollection.cs">
+      <Name>IVertexStreamCollection</Name>
+    </Compile>
+    <Compile Include="LightState.cs">
+      <Name>LightState</Name>
+    </Compile>
+    <Compile Include="MaterialHandler.cs">
+      <Name>MaterialHandler</Name>
+    </Compile>
+    <Compile Include="ModelAdapter.cs">
+      <Name>ModelAdapter</Name>
+    </Compile>
+    <Compile Include="ModelEffectCollectionAdapter.cs">
+      <Name>ModelEffectCollectionAdapter</Name>
+    </Compile>
+    <Compile Include="ModelFactory.cs">
+      <Name>ModelFactory</Name>
+    </Compile>
+    <Compile Include="ModelMeshAdapter.cs">
+      <Name>ModelMeshAdapter</Name>
+    </Compile>
+    <Compile Include="ModelMeshCollectionAdapter.cs">
+      <Name>ModelMeshCollectionAdapter</Name>
+    </Compile>
+    <Compile Include="ModelMeshPartAdapter.cs">
+      <Name>ModelMeshPartAdapter</Name>
+    </Compile>
+    <Compile Include="ModelMeshPartCollectionAdapter.cs">
+      <Name>ModelMeshPartCollectionAdapter</Name>
+    </Compile>
+    <Compile Include="RenderStateAdapter.cs">
+      <Name>RenderStateAdapter</Name>
+    </Compile>
+    <Compile Include="RenderTarget2DAdapter.cs">
+      <Name>RenderTarget2DAdapter</Name>
+    </Compile>
+    <Compile Include="RenderTargetAdapter.cs">
+      <Name>RenderTargetAdapter</Name>
+    </Compile>
+    <Compile Include="RenderTargetCubeAdapter.cs">
+      <Name>RenderTargetCubeAdapter</Name>
+    </Compile>
+    <Compile Include="ResolveTexture2DAdapter.cs" />
+    <Compile Include="SpriteBatchAdapter.cs">
+      <Name>SpriteBatchAdapter</Name>
+    </Compile>
+    <Compile Include="SpriteFontAdapter.cs">
+      <Name>SpriteFontAdapter</Name>
+    </Compile>
+    <Compile Include="Texture2DAdapter.cs">
+      <Name>Texture2DAdapter</Name>
+    </Compile>
+    <Compile Include="Texture3DAdapter.cs">
+      <Name>Texture3DAdapter</Name>
+    </Compile>
+    <Compile Include="TextureAdapter.cs">
+      <Name>TextureAdapter</Name>
+    </Compile>
+    <Compile Include="TextureCubeAdapter.cs">
+      <Name>TextureCubeAdapter</Name>
+    </Compile>
+    <Compile Include="TextureFactory.cs">
+      <Name>TextureFactory</Name>
+    </Compile>
+    <Compile Include="VertexBufferAdapter.cs">
+      <Name>VertexBufferAdapter</Name>
+    </Compile>
+    <Compile Include="VertexDeclarationAdapter.cs">
+      <Name>VertexDeclarationAdapter</Name>
+    </Compile>
+    <Compile Include="VertexPositionColorPoint.cs">
+      <Name>VertexPositionColorPoint</Name>
+    </Compile>
+    <Compile Include="VertexPositionNormal.cs">
+      <Name>VertexPositionNormal</Name>
+    </Compile>
+    <Compile Include="VertexPositionTangentTexture.cs">
+      <Name>VertexPositionTangentTexture</Name>
+    </Compile>
+    <Compile Include="VertexStreamAdapter.cs">
+      <Name>VertexStreamAdapter</Name>
+    </Compile>
+    <Compile Include="VertexStreamCollectionAdapter.cs">
+      <Name>VertexStreamCollectionAdapter</Name>
+    </Compile>
+    <Compile Include="VertexTransformedTexture.cs">
+      <Name>VertexTransformedTexture</Name>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RenderStateManagerAdapter.cs" />
-    <Compile Include="Skinning\AnimationControllerAdapter.cs" />
-    <Compile Include="Skinning\AnimationRootFrameAdapter.cs" />
-    <Compile Include="Skinning\AnimationSetAdapter.cs" />
-    <Compile Include="Skinning\FrameAdapter.cs" />
-    <Compile Include="Skinning\IAnimationController.cs" />
-    <Compile Include="Skinning\IAnimationRootFrame.cs" />
-    <Compile Include="Skinning\IAnimationSet.cs" />
-    <Compile Include="Skinning\IFrame.cs" />
-    <Compile Include="Skinning\IMeshContainer.cs" />
-    <Compile Include="Skinning\ISkinInformation.cs" />
-    <Compile Include="Skinning\MeshContainerAdapter.cs" />
-    <Compile Include="Skinning\MeshDataAdapter.cs" />
-    <Compile Include="Skinning\SkinInformationAdapter.cs" />
-    <Compile Include="Skinning\DdxxAllocateHierarchy.cs" />
-    <Compile Include="Skinning\SkinnedFrame.cs" />
-    <Compile Include="Skinning\SkinnedMeshContainer.cs" />
-    <Compile Include="Skinning\SkinnedModel.cs" />
-    <Compile Include="SphericalHarmonicsAdapter.cs" />
-    <Compile Include="SpriteAdapter.cs" />
-    <Compile Include="SurfaceAdapter.cs" />
-    <Compile Include="TextureAdapter.cs" />
-    <Compile Include="TextureFactory.cs" />
-    <Compile Include="UnindexedMesh.cs" />
-    <Compile Include="VertexBufferAdapter.cs" />
-    <Compile Include="VertexElementArray.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Physics\Physics.csproj">
-      <Project>{6F7E70F2-FC19-4399-84BD-F60AC491E970}</Project>
-      <Name>Physics</Name>
+    <NestedContentProject Include="Content.contentproj">
+      <Project>{13dbbc2c-e3f7-4951-8737-627505b88db0}</Project>
+      <Visible>False</Visible>
+    </NestedContentProject>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Animation\Animation.csproj">
+      <Project>{F5199C46-A0DF-4066-8EF9-A728F490DB80}</Project>
+      <Name>Animation</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utility\Utility.csproj">
-      <Project>{31D76405-2DD3-436A-BE65-963DE822511E}</Project>
+      <Project>{70F76E25-311C-4DFC-9412-89470F537BDF}</Project>
       <Name>Utility</Name>
     </ProjectReference>
   </ItemGroup>
@@ -130,4 +358,6 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v2.0\Microsoft.Xna.GameStudio.Common.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v2.0\Microsoft.Xna.GameStudio.NestedContent.targets" />
 </Project>

@@ -6,36 +6,29 @@ using NMock2;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
 using Dope.DDXX.DemoFramework;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoEffects
 {
     [TestFixture]
-    public class OverlayPostEffectTest
+    public class OverlayPostEffectTest : DemoMockTest
     {
         private OverlayPostEffect overlay;
-        private Mockery mockery;
-        private IPostProcessor postProcessor;
-        private ITextureFactory textureFactory;
-        private ITexture texture;
-        private ITexture outputTexture;
+        private IRenderTarget2D outputTexture;
 
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
-            mockery = new Mockery();
+            base.SetUp();
             overlay = new OverlayPostEffect("", 0, 10);
-            postProcessor = mockery.NewMock<IPostProcessor>();
-            textureFactory = mockery.NewMock<ITextureFactory>();
-            texture = mockery.NewMock<ITexture>();
-            outputTexture = mockery.NewMock<ITexture>();
+            outputTexture = mockery.NewMock<IRenderTarget2D>();
+            Stub.On(textureFactory).GetProperty("WhiteTexture").Will(Return.Value(texture2D));
         }
 
         [TearDown]
-        public void TearDown()
+        public override void TearDown()
         {
-            mockery.VerifyAllExpectationsHaveBeenMet();
+            base.TearDown();
         }
 
         /// <summary>
@@ -45,11 +38,11 @@ namespace Dope.DDXX.DemoEffects
         public void TestInitialize1()
         {
             Expect.Once.On(textureFactory).Method("CreateFromFile").
-                With("file1").Will(Return.Value(texture));
+                With("file1").Will(Return.Value(texture2D));
 
             overlay.AddNoise = true;
             overlay.Filename = "file1";
-            overlay.Initialize(null, postProcessor, textureFactory, null, null);
+            overlay.Initialize(graphicsFactory, postProcessor, textureFactory, textureBuilder);
         }
 
         /// <summary>
@@ -59,11 +52,11 @@ namespace Dope.DDXX.DemoEffects
         public void TestInitialize2()
         {
             Expect.Once.On(textureFactory).Method("CreateFromFile").
-                With("file2").Will(Return.Value(texture));
+                With("file2").Will(Return.Value(texture2D));
 
             overlay.AddNoise = true;
             overlay.Filename = "file2";
-            overlay.Initialize(null, postProcessor, textureFactory, null, null);
+            overlay.Initialize(graphicsFactory, postProcessor, textureFactory, textureBuilder);
         }
 
         /// <summary>
@@ -73,7 +66,7 @@ namespace Dope.DDXX.DemoEffects
         [ExpectedException(typeof(DDXXException))]
         public void TestInitializeFail1()
         {
-            overlay.Initialize(null, postProcessor, textureFactory, null, null);
+            overlay.Initialize(graphicsFactory, postProcessor, textureFactory, textureBuilder);
         }
 
         /// <summary>
@@ -84,7 +77,7 @@ namespace Dope.DDXX.DemoEffects
         public void TestInitializeFail2()
         {
             overlay.Filename = "file2";
-            overlay.Initialize(null, postProcessor, textureFactory, null, null);
+            overlay.Initialize(graphicsFactory, postProcessor, textureFactory, textureBuilder);
         }
 
         /// <summary>
@@ -93,9 +86,9 @@ namespace Dope.DDXX.DemoEffects
         [Test]
         public void TestInitializeTextureAlreadySet()
         {
-            overlay.Texture = texture;
+            overlay.Texture = texture2D;
             overlay.SubtractNoise = true;
-            overlay.Initialize(null, postProcessor, textureFactory, null, null);
+            overlay.Initialize(graphicsFactory, postProcessor, textureFactory, textureBuilder);
         }
 
         /// <summary>
@@ -110,11 +103,11 @@ namespace Dope.DDXX.DemoEffects
                 GetProperty("OutputTexture").
                 Will(Return.Value(outputTexture));
             Expect.Once.On(postProcessor).Method("SetBlendParameters").
-                With(BlendOperation.Add, Blend.One, Blend.InvSourceColor, Color.White);
+                With(BlendFunction.Add, Blend.One, Blend.InverseSourceColor, Color.White);
             Expect.Once.On(postProcessor).Method("SetValue").
                 With("Color", new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
             Expect.Once.On(postProcessor).Method("Process").
-                With("Blend", texture, outputTexture);
+                With("Blend", texture2D, outputTexture);
 
             overlay.Render();
         }
@@ -131,11 +124,11 @@ namespace Dope.DDXX.DemoEffects
                 GetProperty("OutputTexture").
                 Will(Return.Value(outputTexture));
             Expect.Once.On(postProcessor).Method("SetBlendParameters").
-                With(BlendOperation.RevSubtract, Blend.One, Blend.One, Color.White);
+                With(BlendFunction.ReverseSubtract, Blend.One, Blend.One, Color.White);
             Expect.Once.On(postProcessor).Method("SetValue").
                 With("Color", new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
             Expect.Once.On(postProcessor).Method("Process").
-                With("Blend", texture, outputTexture);
+                With("Blend", texture2D, outputTexture);
 
             overlay.AddNoise = false;
             overlay.SubtractNoise = true;
@@ -155,11 +148,11 @@ namespace Dope.DDXX.DemoEffects
                 GetProperty("OutputTexture").
                 Will(Return.Value(outputTexture));
             Expect.Once.On(postProcessor).Method("SetBlendParameters").
-                With(BlendOperation.Add, Blend.One, Blend.InvSourceColor, Color.White);
+                With(BlendFunction.Add, Blend.One, Blend.InverseSourceColor, Color.White);
             Expect.Once.On(postProcessor).Method("SetValue").
                 With("Color", new float[] { 0.5f, 0.5f, 0.5f, 0.5f });
             Expect.Once.On(postProcessor).Method("Process").
-                With("Blend", texture, outputTexture);
+                With("Blend", texture2D, outputTexture);
 
             overlay.Render();
         }

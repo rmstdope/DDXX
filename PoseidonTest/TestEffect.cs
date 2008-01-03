@@ -17,8 +17,8 @@ namespace PoseidonTest
     {
         //private Scene scene;
         private PosseTestEffect demoEffect;
-        public RealRenderPostEffect(string name, float startTime, float endTime)
-            : base(name, startTime, endTime)
+        public RealRenderPostEffect(float startTime, float endTime)
+            : base(startTime, endTime)
         {
         }
 
@@ -29,70 +29,69 @@ namespace PoseidonTest
 
         public override void Render()
         {
-            /// TODO: I have redesigned the PostProcessor interface and have not updated this code.
-            //TextureID tempTextureID = TextureID.FULLSIZE_TEXTURE_1;
-            //TextureID tempTextureID2 = TextureID.FULLSIZE_TEXTURE_2;
-            //if (PostProcessor.OutputTextureID == TextureID.FULLSIZE_TEXTURE_1)
-            //{
-            //    tempTextureID = TextureID.FULLSIZE_TEXTURE_3;
-            //}
-            //else if (PostProcessor.OutputTextureID == TextureID.FULLSIZE_TEXTURE_2)
-            //{
-            //    tempTextureID2 = TextureID.FULLSIZE_TEXTURE_3;
-            //}
+            TextureID tempTextureID = TextureID.FULLSIZE_TEXTURE_1;
+            TextureID tempTextureID2 = TextureID.FULLSIZE_TEXTURE_2;
+            if (PostProcessor.OutputTextureID == TextureID.FULLSIZE_TEXTURE_1)
+            {
+                tempTextureID = TextureID.FULLSIZE_TEXTURE_3;
+            }
+            else if (PostProcessor.OutputTextureID == TextureID.FULLSIZE_TEXTURE_2)
+            {
+                tempTextureID2 = TextureID.FULLSIZE_TEXTURE_3;
+            }
 
-            ////surfaceloader.fromsurface(temptexture.getsurfacelevel(0).dxsurface,
-            ////    postprocessor.outputtexture.getsurfacelevel(0).dxsurface,
-            ////    filter.none, 0);
+            //surfaceloader.fromsurface(temptexture.getsurfacelevel(0).dxsurface,
+            //    postprocessor.outputtexture.getsurfacelevel(0).dxsurface,
+            //    filter.none, 0);
 
-            ////demoEffect.SourceTexture = tempTexture;
+            //demoEffect.SourceTexture = tempTexture;
 
-            //PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
-            //PostProcessor.Process("DownSample4x", PostProcessor.OutputTextureID, tempTextureID);
-            //PostProcessor.Process("DownSample4x", tempTextureID, tempTextureID2);
+            PostProcessor.SetBlendParameters(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
+            PostProcessor.Process("DownSample4x", PostProcessor.OutputTextureID, tempTextureID);
+            PostProcessor.Process("DownSample4x", tempTextureID, tempTextureID2);
 
-            //PostProcessor.Process("DownSample4x", tempTextureID2, tempTextureID);
+            PostProcessor.Process("DownSample4x", tempTextureID2, tempTextureID);
 
-            //demoEffect.SourceTexture = PostProcessor.GetTexture(tempTextureID2);
+            demoEffect.SourceTexture = PostProcessor.GetTexture(tempTextureID2);
 
-            ////((PostProcessor)PostProcessor).DebugWriteAllTextures();
+            //((PostProcessor)PostProcessor).DebugWriteAllTextures();
             
-            //ISurface sourceSurface = PostProcessor.GetTexture(tempTextureID2).GetSurfaceLevel(0);
-            //SurfaceDescription description = sourceSurface.Description;
-            //using (ISurface offscreenTarget = demoEffect.GetDevice().CreateOffscreenPlainSurface(
-            //    description.Width, description.Height, description.Format, Pool.SystemMemory))
-            //{
-            //    demoEffect.GetDevice().GetRenderTargetData(sourceSurface, offscreenTarget);
+            ISurface sourceSurface = PostProcessor.GetTexture(tempTextureID2).GetSurfaceLevel(0);
+            SurfaceDescription description = sourceSurface.Description;
+            using (ISurface offscreenTarget = demoEffect.GetDevice().CreateOffscreenPlainSurface(
+                description.Width, description.Height, description.Format, Pool.SystemMemory))
+            {
+                demoEffect.GetDevice().GetRenderTargetData(sourceSurface, offscreenTarget);
 
-            //    int pitch;
-            //    GraphicsStream stream = offscreenTarget.LockRectangle(LockFlags.ReadOnly, out pitch);
-            //    byte[] buffer = new byte[description.Width * description.Height * 4];
-            //    stream.Read(buffer, 0, buffer.Length);
-            //    stream.Close();
-            //    offscreenTarget.UnlockRectangle();
-            //    for (int i = 0; i < demoEffect.HeightMapX; i++)
-            //    {
-            //        for (int j = 0; j < demoEffect.HeightMapY; j++)
-            //        {
-            //            int sourceIndex = j*pitch + i*4;
-            //            int destIndex = j*demoEffect.HeightMapX + i;
-            //            demoEffect.HeightMap[destIndex] = buffer[sourceIndex + 2];
-            //        }
-            //    }
-            //}
+                int pitch;
+                GraphicsStream stream = offscreenTarget.LockRectangle(LockFlags.ReadOnly, out pitch);
+                byte[] buffer = new byte[description.Width * description.Height * 4];
+                stream.Read(buffer, 0, buffer.Length);
+                stream.Close();
+                offscreenTarget.UnlockRectangle();
+                for (int i = 0; i < demoEffect.HeightMapX; i++)
+                {
+                    for (int j = 0; j < demoEffect.HeightMapY; j++)
+                    {
+                        int sourceIndex = j*pitch + i*4;
+                        int destIndex = j*demoEffect.HeightMapX + i;
+                        demoEffect.HeightMap[destIndex] = buffer[sourceIndex + 2];
+                    }
+                }
+            }
 
-            //using (ISurface oldTarget = demoEffect.GetDevice().GetRenderTarget(0))
-            //{
-            //    using (ISurface newTarget = PostProcessor.OutputTexture.GetSurfaceLevel(0))
-            //    {
-            //        demoEffect.GetDevice().SetRenderTarget(0, newTarget);
-            //        demoEffect.GetDevice().Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Blue, 1000, 0);
-            //        demoEffect.GetDevice().BeginScene();
-            //        demoEffect.RealRender();
-            //        demoEffect.GetDevice().EndScene();
-            //        demoEffect.GetDevice().SetRenderTarget(0, oldTarget);
-            //    }
-            //}
+            using (ISurface oldTarget = demoEffect.GetDevice().GetRenderTarget(0))
+            {
+                using (ISurface newTarget = PostProcessor.OutputTexture.GetSurfaceLevel(0))
+                {
+                    demoEffect.GetDevice().SetRenderTarget(0, newTarget);
+                    demoEffect.GetDevice().Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Blue, 1000, 0);
+                    demoEffect.GetDevice().BeginScene();
+                    demoEffect.RealRender();
+                    demoEffect.GetDevice().EndScene();
+                    demoEffect.GetDevice().SetRenderTarget(0, oldTarget);
+                }
+            }
         }
 
         protected override void Initialize()
@@ -120,8 +119,8 @@ namespace PoseidonTest
         int ymax;
         private float zScale = 0.003f;
 
-        public PosseTestEffect(string name, float startTime, float endTime)
-            : base(name, startTime, endTime)
+        public PosseTestEffect(float startTime, float endTime)
+            : base(startTime, endTime)
         {
             scene = new Scene();
             virtualScene = new Scene();
@@ -186,7 +185,7 @@ namespace PoseidonTest
             effect = EffectFactory.CreateFromFile("../../Effects/PosseTest.fxo");
             EffectHandler effectHandler = new EffectHandler(effect,
                 TechniqueChooser.MaterialPrefix("NoTex"), model);
-            virtualModelNode = new ModelNode("Mesh", model, effectHandler, Device);
+            virtualModelNode = new ModelNode("Mesh", model, effectHandler);
             virtualScene.AddNode(virtualModelNode);
             virtualScene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
             //Light dxLight = new Light();
@@ -205,15 +204,15 @@ namespace PoseidonTest
         {
             ModelMaterial material = new ModelMaterial(new Material());
             material.DiffuseTexture = TextureFactory.CreateFromFile("wings.bmp");
-            material.DiffuseColor = ColorValue.FromColor(Color.Gray);
-            material.Ambient = Color.MediumAquamarine;
+            material.DiffuseColor = ColorValue.FromColor(Color.Blue);
+            material.Ambient = Color.White;
             SourceTexture = material.DiffuseTexture;
             ModelMaterial[] modelMaterials = new ModelMaterial[] { material };
             IModel model = TexturedBox(ModelFactory.CreateBox(100, 100, 1), modelMaterials);
             IEffect effect = EffectFactory.CreateFromFile("../../Effects/PosseTest.fxo");
             EffectHandler effectHandler = new EffectHandler(effect,
                 TechniqueChooser.MaterialPrefix("Tex"), model);
-            modelNode = new ModelNode("Mesh", model, effectHandler, Device);
+            modelNode = new ModelNode("Mesh", model, effectHandler);
             modelNode.WorldState.Tilt(4.0f);
             //scene.AddNode(modelNode);
             scene.AmbientColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
@@ -231,16 +230,16 @@ namespace PoseidonTest
 
             DummyNode pinBoardNode = new DummyNode("PinBoard");
             int boxWidth = 2;
-            float boxSpace = 2.2f;
+            int boxSpace = 4;
             float zSize = 1.0f;
             IModel pinModel = TexturedBox(ModelFactory.CreateBox(boxWidth, boxWidth, zSize), modelMaterials, zSize/2.0f);
             for (int x = 0; x < xmax; x++)
             {
                 for (int y = 0; y < ymax; y++)
                 {
-                    ModelNode node = new ModelNode("PinModelNode", pinModel, effectHandler, Device);
-                    float posx = x * boxSpace - xmax * boxSpace / 2.0f;
-                    float posy = y * boxSpace - ymax * boxSpace / 2.0f;
+                    ModelNode node = new ModelNode("PinModelNode", pinModel, effectHandler);
+                    float posx = x * boxSpace - xmax * boxSpace / 2;
+                    float posy = y * boxSpace - ymax * boxSpace / 2;
                     heightMap[y * xmax + x] = 0;
                     node.WorldState.Position = new Vector3(posx, posy, 0);
                     modelNodes[x, y] = node;
@@ -267,19 +266,9 @@ namespace PoseidonTest
                 {
                     Vector3 scaling = modelNodes[x, y].WorldState.Scaling;
                     scaling.Z = ZScale * heightMap[y * xmax + x];
-                    if (scaling.Z < 0)
-                        scaling.Z = 0;
                     modelNodes[x, y].WorldState.Scaling = scaling;
                 }
             }
-            for (int x=0; x<xmax; x++)
-                for (int y = 0; y < ymax; y++)
-                {
-                    Vector3 scaling = modelNodes[x, y].WorldState.Scaling;
-                    scaling.Z = 15.0f + 15.0f * (float)Math.Sin(Time.StepTime*0.8 + 0.2f * x) + 
-                        15.0f + 15.0f * (float)Math.Cos(Time.StepTime + 0.3f * y);
-                    modelNodes[x, y].WorldState.Scaling = scaling;
-                }
         }
 
         private IMesh CreateBox()
@@ -336,7 +325,7 @@ namespace PoseidonTest
             IMesh texturedMesh = mesh.Clone(mesh.Options.Value,
                 VertexFormats.Position | VertexFormats.Normal |
                 VertexFormats.Texture0 | VertexFormats.Texture1,
-                mesh.Device);
+                new DeviceAdapter(mesh.Device));
             SetBoxCoordinates(texturedMesh, zOffset);
             return new Model(texturedMesh, materials);
         }

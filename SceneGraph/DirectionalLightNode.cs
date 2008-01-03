@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.SceneGraph
 {
@@ -12,18 +14,17 @@ namespace Dope.DDXX.SceneGraph
         public Vector3 Direction
         {
             get { return direction; }
-            set { value.Normalize();  direction = value; }
+            set { direction = value; direction.Normalize(); }
         }
 
         public DirectionalLightNode(string name)
             : base(name)
         {
-            Direction = new Vector3(1, 1, 1);
         }
 
         protected override void SetLightStateNode(LightState state)
         {
-            state.NewState(new Vector3(), Direction, 0, DiffuseColor, SpecularColor);
+            state.NewState(new Vector3(), Direction, Color);
         }
     }
 }

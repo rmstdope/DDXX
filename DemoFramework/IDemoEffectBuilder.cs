@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX;
-using System.Drawing;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -18,7 +18,9 @@ namespace Dope.DDXX.DemoFramework
         void AddFloatParameter(string name, float value, float stepSize);
         void AddIntParameter(string name, int value, float stepSize);
         void AddStringParameter(string name, string value);
+        void AddVector2Parameter(string name, Vector2 value, float stepSize);
         void AddVector3Parameter(string name, Vector3 value, float stepSize);
+        void AddVector4Parameter(string name, Vector4 value, float stepSize);
         void AddColorParameter(string parameterName, Color color);
         void AddBoolParameter(string parameterName, bool color);
 

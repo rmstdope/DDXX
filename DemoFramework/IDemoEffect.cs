@@ -10,7 +10,7 @@ namespace Dope.DDXX.DemoFramework
         int DrawOrder { get; set; }
         void Step();
         void Render();
-        void Initialize(IGraphicsFactory graphicsFactory, IEffectFactory effectFactory, 
-            IDevice device, IDemoMixer mixer, IPostProcessor postProcessor);
+        void Initialize(IGraphicsFactory graphicsFactory, IEffectFactory effectFactory, ITextureFactory textureFactory,
+            /*IGraphicsDevice device,*/ IDemoMixer mixer, IPostProcessor postProcessor);
     }
 }

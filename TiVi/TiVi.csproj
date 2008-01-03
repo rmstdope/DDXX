@@ -18,8 +18,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,18 +31,6 @@
     <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2911.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="NMock2, Version=1.0.2313.18049, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\TD.net\mock\bin\NMock2.dll</HintPath>
-    </Reference>
-    <Reference Include="NMock2.AcceptanceTests, Version=1.0.2313.18049, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\TD.net\mock\bin\NMock2.AcceptanceTests.dll</HintPath>
-    </Reference>
-    <Reference Include="NMock2.Test, Version=1.0.2313.18049, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\TD.net\mock\bin\NMock2.Test.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -53,26 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BallzieDance.cs" />
-    <Compile Include="ChessBoard.cs" />
-    <Compile Include="ChessPiece.cs" />
     <Compile Include="ChessScene.cs" />
     <Compile Include="ColorFader.cs" />
     <Compile Include="CreationScene.cs" />
-    <Compile Include="DanceCloseup.cs" />
-    <Compile Include="DiamondBelt.cs" />
-    <Compile Include="DiscoFever.cs" />
-    <Compile Include="EmptyEffect.cs" />
-    <Compile Include="EndScene.cs" />
-    <Compile Include="FadeBitmap.cs" />
-    <Compile Include="FadeTransition.cs" />
-    <Compile Include="FilmRoller.cs" />
-    <Compile Include="GiantDiamond.cs" />
-    <Compile Include="FilmRoll.cs" />
-    <Compile Include="HoneyComb.cs" />
-    <Compile Include="MovingCloudBackground.cs" />
-    <Compile Include="PhysicalCubes.cs" />
-    <Compile Include="FlipSign.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -82,7 +51,6 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -93,19 +61,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="SpaceTravel.cs" />
-    <Compile Include="SunEffect.cs" />
-    <Compile Include="TestEffect.cs" />
-    <Compile Include="TextureViewer.cs" />
-    <Compile Include="ThinkTank.cs" />
-    <Compile Include="TiVi.cs" />
     <Compile Include="TiViMain.cs" />
-    <Compile Include="TiViMeshDirector.cs" />
-    <Compile Include="TiViVertex.cs" />
-    <Compile Include="TunnelFlight1.cs" />
-    <Compile Include="TunnelFlight2.cs" />
-    <Compile Include="TunnelFlightBase.cs" />
-    <Compile Include="Walkway.cs" />
+    <Compile Include="TunnelFlight.cs" />
     <Compile Include="WhiteFlare.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -137,10 +94,6 @@
       <Project>{AA378577-B1F3-4C03-A968-C990445C7AC1}</Project>
       <Name>ParticleSystems</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Physics\Physics.csproj">
-      <Project>{6F7E70F2-FC19-4399-84BD-F60AC491E970}</Project>
-      <Name>Physics</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SceneGraph\SceneGraph.csproj">
       <Project>{BF75F16E-5056-4484-BFE2-72F8733B8BF3}</Project>
       <Name>SceneGraph</Name>
@@ -152,10 +105,6 @@
     <ProjectReference Include="..\TextureBuilder\TextureBuilder.csproj">
       <Project>{712F1F16-E7BC-4D96-8B1A-AEA31365FD95}</Project>
       <Name>TextureBuilder</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Utility\Utility.csproj">
-      <Project>{31D76405-2DD3-436A-BE65-963DE822511E}</Project>
-      <Name>Utility</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

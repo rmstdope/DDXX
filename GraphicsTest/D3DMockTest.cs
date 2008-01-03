@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
-using Dope.DDXX.Graphics;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
 using NMock2;
+using NUnit.Framework;
+using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.Graphics
 {
@@ -13,28 +14,31 @@ namespace Dope.DDXX.Graphics
     {
         protected Mockery mockery;
         protected IGraphicsFactory graphicsFactory;
-        protected IDevice device;
-        protected ITexture texture;
-        protected ISurface surface;
-        protected IManager manager;
-        protected IRenderStateManager renderStateManager;
-        protected IPrerequisits prerequisits;
-        protected DisplayMode displayMode = new DisplayMode();
-        protected PresentParameters presentParameters;
+        protected IGraphicsDevice device;
+        protected IRenderTarget2D renderTarget;
+        protected ITexture2D texture2D;
+        protected ITextureCube textureCube;
+        protected IDeviceManager manager;
+        protected PresentationParameters presentParameters;
         protected IEffectFactory effectFactory;
         protected ITextureFactory textureFactory;
         protected IEffect effect;
+        protected ISpriteBatch spriteBatch;
+        protected ISpriteFont spriteFont;
+        protected IRenderState renderState;
+        protected IVertexBuffer vertexBuffer;
+        protected IVertexDeclaration vertexDeclaration;
+        protected IVertexStream vertexStream;
+        protected IVertexStreamCollection vertexStreamCollection;
+        protected IDepthStencilBuffer depthStencilBuffer;
+        protected bool verifyExpectations;
 
         public virtual void SetUp()
         {
-            Caps caps;
+            verifyExpectations = true;
 
-            displayMode.Width = 800;
-            displayMode.Height = 600;
-            displayMode.Format = Format.R8G8B8;
-
-            presentParameters = new PresentParameters();
-            presentParameters.BackBufferFormat = Format.R32F;
+            presentParameters = new PresentationParameters();
+            presentParameters.BackBufferFormat = SurfaceFormat.Alpha8;
             presentParameters.BackBufferHeight = 200;
             presentParameters.BackBufferWidth = 400;
 
@@ -42,104 +46,72 @@ namespace Dope.DDXX.Graphics
             graphicsFactory = mockery.NewMock<IGraphicsFactory>();
             textureFactory = mockery.NewMock<ITextureFactory>();
             effectFactory = mockery.NewMock<IEffectFactory>();
-            device = mockery.NewMock<IDevice>();
-            manager = mockery.NewMock<IManager>();
-            texture = mockery.NewMock<ITexture>();
-            surface = mockery.NewMock<ISurface>();
-            renderStateManager = mockery.NewMock<IRenderStateManager>();
-            prerequisits = mockery.NewMock<IPrerequisits>();
+            device = mockery.NewMock<IGraphicsDevice>();
+            manager = mockery.NewMock<IDeviceManager>();
+            renderTarget = mockery.NewMock<IRenderTarget2D>();
             effect = mockery.NewMock<IEffect>();
+            spriteBatch = mockery.NewMock<ISpriteBatch>();
+            spriteFont = mockery.NewMock<ISpriteFont>();
+            renderState = mockery.NewMock<IRenderState>();
+            texture2D = mockery.NewMock<ITexture2D>();
+            textureCube = mockery.NewMock<ITextureCube>();
+            vertexBuffer = mockery.NewMock<IVertexBuffer>();
+            vertexDeclaration = mockery.NewMock<IVertexDeclaration>();
+            vertexStreamCollection = mockery.NewMock<IVertexStreamCollection>();
+            vertexStream = mockery.NewMock<IVertexStream>();
+            depthStencilBuffer = mockery.NewMock<IDepthStencilBuffer>();
 
-            Stub.On(graphicsFactory).
-                GetProperty("Manager").
-                Will(Return.Value(manager));
-            Stub.On(graphicsFactory).
-                Method("CreateDevice").
-                WithAnyArguments().
-                Will(Return.Value(device));
-            Stub.On(manager).
-                Method("GetDeviceCaps").With(0, DeviceType.Hardware).
-                Will(Return.Value(caps));
-            Stub.On(manager).
-                Method("CurrentDisplayMode").
-                With(0).
-                Will(Return.Value(displayMode));
-            Stub.On(device).
-                Method("Dispose");
-            Stub.On(texture).
-                Method("GetSurfaceLevel").
-                With(0).
-                Will(Return.Value(surface));
-            Stub.On(surface).
-                GetProperty("Description").
-                Will(Return.Value(new SurfaceDescription()));
-            Stub.On(device).
-                GetProperty("PresentationParameters").
-                Will(Return.Value(presentParameters));
-            Stub.On(device).
-                GetProperty("RenderState").
-                Will(Return.Value(renderStateManager));
-            Stub.On(surface).
-                Method("Dispose");
-
-            D3DDriver.GraphicsFactory = graphicsFactory;
-            D3DDriver.TextureFactory = textureFactory;
-            D3DDriver.EffectFactory = effectFactory;
-            D3DDriver.GetInstance().Device = device;
+            Stub.On(device).GetProperty("PresentationParameters").Will(Return.Value(presentParameters));
+            Stub.On(device).GetProperty("RenderState").Will(Return.Value(renderState));
+            Stub.On(graphicsFactory).GetProperty("GraphicsDeviceManager").Will(Return.Value(manager));
+            Stub.On(manager).GetProperty("GraphicsDevice").Will(Return.Value(device));
+            Stub.On(device).GetProperty("Vertices").Will(Return.Value(vertexStreamCollection));
+            Stub.On(vertexStreamCollection).Method("get_Item").With(0).Will(Return.Value(vertexStream));
+            Stub.On(effect).GetProperty("GraphicsDevice").Will(Return.Value(device));
         }
 
         public virtual void TearDown()
         {
-            D3DDriver.DestroyInstance();
-            mockery.VerifyAllExpectationsHaveBeenMet();
+            if (verifyExpectations)
+                mockery.VerifyAllExpectationsHaveBeenMet();
         }
 
-        private DeviceDescription CreateDescription()
+        protected void StubModelMesh(IModel model, IModelMesh[] modelMeshes)
         {
-            DeviceDescription desc = new DeviceDescription();
-            desc.width = 400;
-            desc.height = 200;
-            desc.colorFormat = Format.R32F;
-            return desc;
+            List<IModelMesh> modelMeshList = new List<IModelMesh>();
+            foreach (IModelMesh modelMesh in modelMeshes)
+                modelMeshList.Add(modelMesh);
+            ReadOnlyCollection<IModelMesh> modelMeshCollection =
+                new ReadOnlyCollection<IModelMesh>(modelMeshList);
+            Stub.On(model).GetProperty("Meshes").Will(Return.Value(modelMeshCollection));
         }
 
-        public void SetupTime()
+        protected void StubModelMeshPart(IModelMesh modelMesh, IModelMeshPart[] modelMeshParts)
         {
-            Time.Initialize();
+            List<IModelMeshPart> modelMeshPartList = new List<IModelMeshPart>();
+            foreach (IModelMeshPart part in modelMeshParts)
+                modelMeshPartList.Add(part);
+            ReadOnlyCollection<IModelMeshPart> modelMeshPartCollection =
+                new ReadOnlyCollection<IModelMeshPart>(modelMeshPartList);
+            Stub.On(modelMesh).GetProperty("MeshParts").Will(Return.Value(modelMeshPartCollection));
         }
-    }
 
-    public class FloatMatcher : Matcher
-    {
-        public float value;
-        public float epsilon;
-
-        public FloatMatcher(float value, float epsilon)
+        protected void ExpectForeachPass(IEffectTechnique technique, IEffectPass[] passes)
         {
-            this.value = value;
-            this.epsilon = epsilon;
+            ICollectionAdapter<IEffectPass> collection = mockery.NewMock<ICollectionAdapter<IEffectPass>>();
+            IEnumerator<IEffectPass> enumerator = mockery.NewMock<IEnumerator<IEffectPass>>();
+            Expect.Once.On(technique).GetProperty("Passes").
+                Will(Return.Value(collection));
+            Expect.Once.On(collection).Method("GetEnumerator").
+                Will(Return.Value(enumerator));
+            foreach (IEffectPass pass in passes)
+            {
+                Expect.Once.On(enumerator).Method("MoveNext").Will(Return.Value(true));
+                Expect.Once.On(enumerator).GetProperty("Current").Will(Return.Value(pass));
+            }
+            Expect.Once.On(enumerator).Method("Dispose");
+            Expect.Once.On(enumerator).Method("MoveNext").Will(Return.Value(false));
         }
 
-        public FloatMatcher(float value)
-        {
-            this.value = value;
-            this.epsilon = 0.00001f;
-        }
-
-        public override void DescribeTo(System.IO.TextWriter writer)
-        {
-            writer.WriteLine("Matching to " + value + " with epsilon " + epsilon);
-        }
-
-        public override bool Matches(object o)
-        {
-            if (!(o is float))
-                return false;
-            float f = (float)o;
-
-            if (f > value + epsilon || f < value - epsilon)
-                return false;
-            return true;
-        }
     }
 }

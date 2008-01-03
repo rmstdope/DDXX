@@ -1,25 +1,36 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.TextureBuilder
 {
     public class ColorBlend : Generator
     {
-        private Vector4 baseColor;
-        private Vector4 colorDiff;
+        private Vector4 zeroColor;
+        private Vector4 oneColor;
 
-        public ColorBlend(Vector4 zeroColor, Vector4 oneColor)
+        public Vector4 ZeroColor
+        {
+            get { return zeroColor; }
+            set { zeroColor = value; }
+        }
+
+        public Vector4 OneColor
+        {
+            get { return oneColor; }
+            set { oneColor = value; }
+        }
+
+        public ColorBlend()
             : base(1)
         {
-            baseColor = zeroColor;
-            colorDiff = oneColor - zeroColor;
         }
 
         public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
         {
-            return baseColor + colorDiff * GetInput(0, textureCoordinate).X;
+            Vector4 colorDiff = oneColor - zeroColor;
+            return zeroColor + colorDiff * GetInputPixel(0, textureCoordinate, texelSize).X;
         }
     }
 }

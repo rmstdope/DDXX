@@ -1,0 +1,36 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using Microsoft.Xna.Framework;
+
+namespace Dope.DDXX.TextureBuilder
+{
+    public class Square : Generator
+    {
+        private float size;
+
+        public float Size
+        {
+            get { return size; }
+            set { size = value; }
+        }
+
+        public Square()
+            : base(0)
+        {
+        }
+
+        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        {
+            if (textureCoordinate.X < (1 - size) / 2)
+                return Vector4.Zero;
+            if (textureCoordinate.Y < (1 - size) / 2)
+                return Vector4.Zero;
+            if (textureCoordinate.X > 1 - (1 - size) / 2)
+                return Vector4.Zero;
+            if (textureCoordinate.Y > 1 - (1 - size) / 2)
+                return Vector4.Zero;
+            return Vector4.One;
+        }
+    }
+}

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.Physics
 {
@@ -44,9 +44,9 @@ namespace Dope.DDXX.Physics
         private Vector3 MoveToSurface(Vector3 position)
         {
             position -= center;
-            position.Normalize();
             if (position == new Vector3(0, 0, 0))
                 position = new Vector3(1, 0, 0);
+            position.Normalize();
             return position * radius + center;
         }
     }

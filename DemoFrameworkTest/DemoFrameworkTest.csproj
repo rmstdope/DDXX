@@ -1,103 +1,158 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
+    <ProjectGuid>{374D0305-E7B6-425E-810D-7E1D67CE7AEF}</ProjectGuid>
+    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{1B05E2AD-B994-4988-81D5-9AB91ECEF67E}</ProjectGuid>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Dope.DDXX.DemoFramework</RootNamespace>
     <AssemblyName>Dope.DDXX.DemoFrameworkTest</AssemblyName>
+    <XnaFrameworkVersion>v2.0</XnaFrameworkVersion>
+    <XnaPlatform>Windows</XnaPlatform>
+    <Thumbnail>
+    </Thumbnail>
+    <XnaCrossPlatformGroupID>{202c821b-6da6-4fa9-af35-045d56da1bed}</XnaCrossPlatformGroupID>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\x86\Debug</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\x86\Release</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2911.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="Microsoft.DirectX.DirectInput, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="Microsoft.Xna.Framework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="NMock2, Version=1.0.2313.18049, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="nunit.framework, Version=2.4.1.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
+    <Reference Include="nunit.framework, Version=2.4.3.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseDemoEffectTest.cs" />
-    <Compile Include="BaseDemoPostEffectTest.cs" />
-    <Compile Include="DemoEffectTypesTest.cs" />
-    <Compile Include="DemoExecuterTest.cs" />
-    <Compile Include="DemoMockTest.cs" />
-    <Compile Include="DemoTweakerDemoTest.cs" />
-    <Compile Include="DemoTweakerEffectTest.cs" />
-    <Compile Include="DemoTweakerMainTest.cs" />
-    <Compile Include="DemoTweakerTrackTest.cs" />
-    <Compile Include="DemoWindowTest.cs" />
-    <Compile Include="DemoXMLReaderTest.cs" />
-    <Compile Include="PostProcessorTest.cs" />
+    <Compile Include="BaseDemoEffectTest.cs">
+      <SubType>Code</SubType>
+      <Name>BaseDemoEffectTest</Name>
+    </Compile>
+    <Compile Include="BaseDemoPostEffectTest.cs">
+      <SubType>Code</SubType>
+      <Name>BaseDemoPostEffectTest</Name>
+    </Compile>
+    <Compile Include="DemoEffectTypesTest.cs">
+      <SubType>Code</SubType>
+      <Name>DemoEffectTypesTest</Name>
+    </Compile>
+    <Compile Include="DemoExecuterTest.cs">
+      <Name>DemoExecuterTest</Name>
+    </Compile>
+    <Compile Include="DemoMockTest.cs">
+      <SubType>Code</SubType>
+      <Name>DemoMockTest</Name>
+    </Compile>
+    <Compile Include="DemoTweakerDemoTest.cs">
+      <Name>DemoTweakerDemoTest</Name>
+    </Compile>
+    <Compile Include="DemoTweakerEffectTest.cs">
+      <Name>DemoTweakerEffectTest</Name>
+    </Compile>
+    <Compile Include="DemoTweakerMainTest.cs">
+      <Name>DemoTweakerMainTest</Name>
+    </Compile>
+    <Compile Include="DemoTweakerTrackTest.cs">
+      <Name>DemoTweakerTrackTest</Name>
+    </Compile>
+    <Compile Include="DemoXMLReaderTest.cs">
+      <SubType>Code</SubType>
+      <Name>DemoXMLReaderTest</Name>
+    </Compile>
+    <Compile Include="PostProcessorTest.cs">
+      <SubType>Code</SubType>
+      <Name>PostProcessorTest</Name>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SetupLogicTest.cs" />
-    <Compile Include="TrackTest.cs" />
-    <Compile Include="TweakableContainerTest.cs" />
-    <Compile Include="UserInterfaceTest.cs" />
+    <Compile Include="SetupLogicTest.cs">
+      <Name>SetupLogicTest</Name>
+    </Compile>
+    <Compile Include="TrackTest.cs">
+      <Name>TrackTest</Name>
+    </Compile>
+    <Compile Include="TweakableContainerTest.cs">
+      <Name>TweakableContainerTest</Name>
+    </Compile>
+    <Compile Include="UserInterfaceTest.cs">
+      <Name>UserInterfaceTest</Name>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <NestedContentProject Include="Content.contentproj">
+      <Project>{0f08349f-67e3-4420-88b2-22f439631b03}</Project>
+      <Visible>False</Visible>
+    </NestedContentProject>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DemoFramework\DemoFramework.csproj">
-      <Project>{DBD3FD0B-0B65-4626-BABA-3C46457B1185}</Project>
+      <Project>{0E899EC0-D2E2-47EE-A46D-53E037C3F52F}</Project>
       <Name>DemoFramework</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FMOD\FMOD.csproj">
-      <Project>{1A7A1C62-87D6-4798-BBBD-8472DC2D755B}</Project>
-      <Name>FMOD</Name>
-    </ProjectReference>
     <ProjectReference Include="..\GraphicsTest\GraphicsTest.csproj">
-      <Project>{72977C86-9996-46A8-B6F4-468133639BE9}</Project>
+      <Project>{292A547D-05A7-4C2A-AC8E-C3F9FFD41F6D}</Project>
       <Name>GraphicsTest</Name>
     </ProjectReference>
     <ProjectReference Include="..\Graphics\Graphics.csproj">
-      <Project>{B64087ED-595E-4597-84D8-D273FF00B2DA}</Project>
+      <Project>{797591FA-968E-41D7-BFEF-85E13FCCA4CF}</Project>
       <Name>Graphics</Name>
     </ProjectReference>
     <ProjectReference Include="..\Input\Input.csproj">
-      <Project>{E2280509-C330-4684-90FD-336B8CD4D7EF}</Project>
+      <Project>{D8131D4F-45AF-4942-B77F-17714A6B64DF}</Project>
       <Name>Input</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MeshBuilder\MeshBuilder.csproj">
-      <Project>{CF2AB575-856D-4160-8DCD-7A5729579892}</Project>
-      <Name>MeshBuilder</Name>
+    <ProjectReference Include="..\ModelBuilder\ModelBuilder.csproj">
+      <Project>{2C34DF5D-D096-45DF-84C9-E78A3691F182}</Project>
+      <Name>ModelBuilder</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Physics\Physics.csproj">
+      <Project>{3925EBCA-3484-4349-BD1A-967D8FB9CE19}</Project>
+      <Name>Physics</Name>
     </ProjectReference>
     <ProjectReference Include="..\SceneGraph\SceneGraph.csproj">
-      <Project>{BF75F16E-5056-4484-BFE2-72F8733B8BF3}</Project>
+      <Project>{3876D35C-41A0-459E-819B-0354A2A75443}</Project>
       <Name>SceneGraph</Name>
     </ProjectReference>
     <ProjectReference Include="..\Sound\Sound.csproj">
-      <Project>{FFA67C42-A1E3-4C9F-887A-E5DEB52DDEB4}</Project>
+      <Project>{A99FE879-47B6-48B4-956C-EE082AC41817}</Project>
       <Name>Sound</Name>
     </ProjectReference>
     <ProjectReference Include="..\TextureBuilder\TextureBuilder.csproj">
-      <Project>{712F1F16-E7BC-4D96-8B1A-AEA31365FD95}</Project>
+      <Project>{7DCF0749-447D-4D64-A1A2-2560C03A072E}</Project>
       <Name>TextureBuilder</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utility\Utility.csproj">
-      <Project>{31D76405-2DD3-436A-BE65-963DE822511E}</Project>
+      <Project>{70F76E25-311C-4DFC-9412-89470F537BDF}</Project>
       <Name>Utility</Name>
     </ProjectReference>
   </ItemGroup>
@@ -109,4 +164,6 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v2.0\Microsoft.Xna.GameStudio.Common.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v2.0\Microsoft.Xna.GameStudio.NestedContent.targets" />
 </Project>

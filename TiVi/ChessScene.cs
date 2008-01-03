@@ -2,256 +2,189 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.DemoFramework;
-using Dope.DDXX.SceneGraph;
-using Dope.DDXX.MeshBuilder;
 using Dope.DDXX.Graphics;
-using Dope.DDXX.Utility;
-using Microsoft.DirectX.Direct3D;
+using Dope.DDXX.SceneGraph;
 using Microsoft.DirectX;
+using Dope.DDXX.Utility;
 using System.Drawing;
+using Microsoft.DirectX.Direct3D;
+using Dope.DDXX.MeshBuilder;
 
-namespace TiVi
+namespace EngineTest
 {
     public class ChessScene : BaseDemoEffect
     {
-        private class PieceInfo
-        {
-            public ChessPiece.PieceColor Color;
-            public ChessPiece.PieceType Type;
-            public string Position;
-            public ChessPiece Piece;
-            public PieceInfo(ChessPiece.PieceColor color, ChessPiece.PieceType type, string position)
-            {
-                Color = color;
-                Type = type;
-                Position = position;
-            }
-        }
+        Scene scene;
+        CameraNode camera;
+        LightNode[] lightNodes = new LightNode[2];
+        MeshBuilder builder;
+        List<ModelNode> chessNodes = new List<ModelNode>();
+        ModelNode planeNode;
+        ModelNode mirrorNode;
 
-        private class PieceMovement
-        {
-            public string StartPos;
-            public string EndPos;
-            public PieceMovement(string startPos, string endPos)
-            {
-                StartPos = startPos;
-                EndPos = endPos;
-            }
-        }
-
-        PieceInfo[] pieceInfo = new PieceInfo[] {
-            new PieceInfo(ChessPiece.PieceColor.White, ChessPiece.PieceType.Pawn, "g6"),
-            new PieceInfo(ChessPiece.PieceColor.White, ChessPiece.PieceType.Pawn, "f5"),
-            new PieceInfo(ChessPiece.PieceColor.White, ChessPiece.PieceType.Pawn, "b4"),
-            new PieceInfo(ChessPiece.PieceColor.White, ChessPiece.PieceType.Pawn, "a3"),
-            new PieceInfo(ChessPiece.PieceColor.White, ChessPiece.PieceType.Pawn, "c2"),
-            new PieceInfo(ChessPiece.PieceColor.White, ChessPiece.PieceType.Bishop, "c3"),
-            new PieceInfo(ChessPiece.PieceColor.White, ChessPiece.PieceType.Bishop, "h3"),
-            new PieceInfo(ChessPiece.PieceColor.White, ChessPiece.PieceType.King, "f2"),
-            new PieceInfo(ChessPiece.PieceColor.White, ChessPiece.PieceType.Rook, "g1"),
-            new PieceInfo(ChessPiece.PieceColor.White, ChessPiece.PieceType.Knight, "e3"),
-            new PieceInfo(ChessPiece.PieceColor.Black, ChessPiece.PieceType.Rook, "d8"),
-            new PieceInfo(ChessPiece.PieceColor.Black, ChessPiece.PieceType.Rook, "e8"),
-            new PieceInfo(ChessPiece.PieceColor.Black, ChessPiece.PieceType.Pawn, "a4"),
-            new PieceInfo(ChessPiece.PieceColor.Black, ChessPiece.PieceType.Pawn, "b5"),
-            new PieceInfo(ChessPiece.PieceColor.Black, ChessPiece.PieceType.Pawn, "c6"),
-            new PieceInfo(ChessPiece.PieceColor.Black, ChessPiece.PieceType.Pawn, "e4"),
-            new PieceInfo(ChessPiece.PieceColor.Black, ChessPiece.PieceType.Pawn, "g4"),
-            new PieceInfo(ChessPiece.PieceColor.Black, ChessPiece.PieceType.Knight, "e5"),
-            new PieceInfo(ChessPiece.PieceColor.Black, ChessPiece.PieceType.Bishop, "f3"),
-            new PieceInfo(ChessPiece.PieceColor.Black, ChessPiece.PieceType.King, "h6"),
-        };
-
-        PieceMovement[] pieceMovement = new PieceMovement[] {
-            new PieceMovement("h3", "g4"),
-            new PieceMovement("f3", "g4"),
-            new PieceMovement("e3", "g4"),
-            new PieceMovement("e5", "g4"),
-            new PieceMovement("g1", "g4"),
-            new PieceMovement("d8", "d5"),
-            new PieceMovement("f5", "f6"),
-            new PieceMovement("d5", "d1"),
-            new PieceMovement("g6", "g7"),
-        };
-        // Kasparov är vit och vinner partiet
-
-        private IScene scene;
-        private CameraNode camera;
-        private Interpolator<InterpolatedVector3> interpolator;
-        private List<ChessPiece> chessPieces = new List<ChessPiece>();
-        private ChessBoard chessBoard;
-        private float winnerTime;
-        private ModelNode textNode;
-        private ITexture winnerTexture;
-        private ITexture startTexture;
-
-        public ChessScene(string name, float startTime, float endTime)
-            : base(name, startTime, endTime)
+        public ChessScene(float startTime, float endTime)
+            : base(startTime, endTime)
         {
         }
 
         protected override void Initialize()
         {
-            IDevice device = Device;
-            CreateStandardSceneAndCamera(out scene, out camera, 15);
-            CreatePieces();
-            CreateCameraInterpolator();
-            CreateLights();
-            chessBoard = new ChessBoard(scene, MeshBuilder, EffectFactory.CreateFromFile("TiVi.fxo"), Device, 1, 0.4f);
-            startTexture = TextureFactory.CreateFromFile("ChessText1997.jpg");
-            winnerTexture = TextureFactory.CreateFromFile("ChessTextWinner.jpg");
-        }
+            builder = new MeshBuilder(D3DDriver.GraphicsFactory, D3DDriver.TextureFactory,
+                D3DDriver.GetInstance().Device);
+            scene = new Scene();
 
-        private void CreateLights()
-        {
-            PointLightNode[] lights = new PointLightNode[2];
-            lights[0] = new PointLightNode("");
-            lights[0].Position = new Vector3(-5, 4, 0);
-            lights[0].DiffuseColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
-            lights[0].Range = 0.02f;
-            scene.AddNode(lights[0]);
-            lights[1] = new PointLightNode("");
-            lights[1].Position = new Vector3(5, 4, 0);
-            lights[1].DiffuseColor = new ColorValue(1.0f, 1.0f, 1.0f, 1.0f);
-            lights[1].Range = 0.02f;
-            scene.AddNode(lights[1]);
+            CreatePlane();
+            CreateChessBoard();
+            CreatePieces();
+            CreateCamera();
+            CreateLights();
         }
 
         private void CreatePieces()
         {
-            IScene tempScene = new Scene();
-            XLoader.Load("ChessPieces2.X", EffectFactory.CreateFromFile("TiVi.fxo"), TechniqueChooser.MeshPrefix("TiviChessPiece"));
-            XLoader.AddToScene(tempScene);
-            ChessPiece piece;
+            IModel kingModel = ModelFactory.FromFile("King.X", ModelOptions.None);
+            kingModel.Materials[0].ReflectiveTexture = TextureFactory.CreateCubeFromFile("rnl_cross.dds");
+            kingModel.Materials[0].ReflectiveFactor = 0.02f;
+            kingModel.Materials[0].DiffuseColor = new ColorValue(0.3f, 0.3f, 0.3f);
+            ModelNode kingNode = new ModelNode("King", kingModel,
+                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
+                TechniqueChooser.MaterialPrefix("Glass"), kingModel));
+            scene.AddNode(kingNode);
+            ModelNode kingMirrorNode = CreateMirrorNode(kingNode);
+            scene.AddNode(kingMirrorNode);
+            kingNode.WorldState.MoveRight(1.9f * 3);
+            kingMirrorNode.WorldState.MoveRight(1.9f * 3);
 
-            MeshDirector director = new MeshDirector(MeshBuilder);
-            director.CreatePlane(1, 1, 1, 1, true);
-            IModel model = director.Generate("Default1");
-            model.Materials[0].Ambient = Color.FromArgb(128, 255, 255, 255);
-            textNode = CreateSimpleModelNode(model, "TiVi.fxo", "SimpleWithAlpha");
-            foreach (PieceInfo info in pieceInfo)
-            {
-                piece = new ChessPiece(tempScene, GraphicsFactory, TextureFactory, Device,
-                    info.Type, info.Color, info.Position, textNode);
-                info.Piece = piece;
-                chessPieces.Add(piece);
-            }
-
-            float time = 5;
-            foreach (PieceMovement movement in pieceMovement)
-            {
-                PieceInfo movePiece = null;
-                PieceInfo removePiece = null;
-                foreach (PieceInfo info in pieceInfo)
-                {
-                    if (info.Position == movement.StartPos)
-                        movePiece = info;
-                    if (info.Position == movement.EndPos)
-                        removePiece = info;
-                }
-                movePiece.Piece.AddPosition(time, 3, movement.EndPos, 1);
-                movePiece.Position = movement.EndPos;
-                if (removePiece != null)
-                {
-                    removePiece.Piece.AddPosition(time, 4, movement.EndPos + "-", 1);
-                    removePiece.Position = "--";
-                }
-                time += 4;
-            }
-            winnerTime = time;
-            foreach (PieceInfo info in pieceInfo)
-            {
-                if (info.Position != "--")// && info.Type != ChessPiece.PieceType.King)
-                    info.Piece.AddPosition(time, 4, info.Position + "-", 1);
-            }
+            //XLoader.Load("ChessPieces.x", EffectFactory.CreateFromFile("Test.fxo"), 
+            //    TechniqueChooser.MeshPrefix("Glass"));
+            //XLoader.AddToScene(scene);
         }
 
-        private void CreateCameraInterpolator()
+        private void CreatePlane()
         {
-            ClampedCubicSpline<InterpolatedVector3> spline = new ClampedCubicSpline<InterpolatedVector3>(new InterpolatedVector3(), new InterpolatedVector3());
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(0, new InterpolatedVector3(new Vector3(0, 2, -6))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(2, new InterpolatedVector3(new Vector3(3, 3, -8))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(4, new InterpolatedVector3(new Vector3(-2, 3, 8))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(6, new InterpolatedVector3(new Vector3(2, 4, 12))));
-            spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(9, new InterpolatedVector3(new Vector3(0, 2, -6))));
-            spline.Calculate();
-            interpolator = new Interpolator<InterpolatedVector3>();
-            interpolator.AddSpline(spline);
+            //builder.CreateChamferBox("Box", 2.0f, 2.0f, 0.5f, 0.2f, 6);
+            //builder.AssignMaterial("Box", "Default1");
+            //builder.SetDiffuseTexture("Default1", "red glass.jpg");
+            //builder.SetReflectiveTexture("Default1", "rnl_cross.dds");
+            //builder.SetReflectiveFactor("Default1", 0.02f);
+            //IModel boxModel = builder.CreateModel("Box");
+            //boxModel.Materials[0].Diffuse = Color.DarkGray;
+            //planeNode = new ModelNode("Box", boxModel,
+            //    new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
+            //    TechniqueChooser.MaterialPrefix("Glass"), boxModel));
+            //scene.AddNode(planeNode);
+            //mirrorNode = CreateMirrorNode(planeNode);
+            //scene.AddNode(mirrorNode);
+            //planeNode.WorldState.MoveUp(1f);
+            //mirrorNode.WorldState.MoveUp(-1f);
+        }
+
+        private ModelNode CreateMirrorNode(ModelNode originalNode)
+        {
+            IModel mirrorModel = originalNode.Model.Clone();
+            mirrorModel.Materials[0].Diffuse = Color.DarkGray;
+            mirrorModel.Materials[0].ReflectiveFactor = 0.0f;
+            ModelNode mirrorNode = new ModelNode("Box", mirrorModel,
+                new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
+                TechniqueChooser.MaterialPrefix("Glass"), mirrorModel));
+            mirrorNode.WorldState.Scale(new Vector3(1, -1, 1));
+            return mirrorNode;
+        }
+
+        private void CreateLights()
+        {
+            lightNodes[0] = new PointLightNode("Light0");
+            lightNodes[0].DiffuseColor = new ColorValue(0.8f, 0.6f, 0.2f, 1.0f);
+            scene.AddNode(lightNodes[0]);
+            lightNodes[1] = new PointLightNode("Light1");
+            lightNodes[1].DiffuseColor = new ColorValue(0.8f, 0.8f, 0.4f, 1.0f);
+            scene.AddNode(lightNodes[1]);
+        }
+
+        private void CreateCamera()
+        {
+            camera = new CameraNode("Camera");
+            camera.WorldState.MoveForward(-10);
+            camera.WorldState.MoveUp(2);
+            scene.AddNode(camera);
+            scene.ActiveCamera = camera;
+        }
+
+        private void CreateChessBoard()
+        {
+            IModel whiteModel = ModelFactory.FromFile("ChamferBox.X", ModelOptions.None);
+            whiteModel.Materials[0].ReflectiveTexture = TextureFactory.CreateCubeFromFile("rnl_cross.dds");
+            IModel blackModel = whiteModel.Clone();
+            whiteModel.Materials[0].ReflectiveFactor = 0.02f;
+            whiteModel.Materials[0].DiffuseColor = ColorValue.FromColor(Color.White);
+            blackModel.Materials[0].ReflectiveFactor = 0.002f;
+            blackModel.Materials[0].DiffuseColor = ColorValue.FromColor(Color.Black);
+            for (int y = 0; y < 8; y++)
+            {
+                for (int x = 0; x < 8; x++)
+                {
+                    IModel model = blackModel;
+                    if ((y & 1) == 1 && (x & 1) == 0)
+                        model = whiteModel;
+                    if ((y & 1) == 0 && (x & 1) == 1)
+                        model = whiteModel;
+                    ModelNode node = new ModelNode("FloorTile" + x + y, model,
+                        new EffectHandler(EffectFactory.CreateFromFile("Test.fxo"),
+                        TechniqueChooser.MaterialPrefix("Chess"), model));
+                    node.WorldState.Tilt((float)Math.PI / 2);
+                    node.WorldState.Position = new Vector3((x - 4) * 1.90f, 0, (y - 4) * 1.90f);
+                    chessNodes.Add(node);
+                    //scene.AddNode(nodeTiVi);
+                }
+            }
         }
 
         public override void Step()
         {
-            float timeInEffect = Time.StepTime - StartTime;
-            float angularVelocity = 0.25f;
-            float angle;
-            if (timeInEffect < 0.5f)
-            {
-                angle = timeInEffect * timeInEffect * angularVelocity;
-            }
-            else
-            {
-                angle = (timeInEffect - 0.25f) * angularVelocity;
-            }
-            camera.WorldState.Position =
-                    new Vector3((float)Math.Sin(angle), 
-                                (float)(1.0f - Math.Cos(timeInEffect * 0.12f)) * 0.2f + 0.2f, 
-                                (float)Math.Cos(angle)) * 8;
-            camera.LookAt(new Vector3(0, 0, 0), new Vector3(0, 1, 0));
-            foreach (ChessPiece piece in chessPieces)
-                piece.Step(Time.StepTime - StartTime);
+            MoveCamera();
+            MoveLights();
+
+            planeNode.WorldState.Tilt(Time.DeltaTime * 2);
+            mirrorNode.WorldState.Tilt(Time.DeltaTime * 2);
+
             scene.Step();
+        }
+
+        private void MoveLights()
+        {
+            lightNodes[0].Position = new Vector3(
+                7 * (float)Math.Cos(Time.CurrentTime / 2), 2.0f,
+                7 * (float)Math.Sin(Time.CurrentTime / 2));
+
+            lightNodes[1].Position = new Vector3(
+                3 * (float)Math.Cos(Time.CurrentTime / 1.2f), 2.0f,
+                3 * (float)Math.Sin(Time.CurrentTime / 1.2f));
+        }
+
+        private void MoveCamera()
+        {
+            float t = Time.CurrentTime;
+            camera.WorldState.Position =
+                new Vector3(10 * (float)Math.Sin(t),
+                3, 10 * (float)Math.Cos(t));
+            camera.WorldState.Rotation = Matrix.RotationYawPitchRoll((float)Math.PI + t, 0, 0);
         }
 
         public override void Render()
         {
-            scene.SetEffectParameters();
-            chessBoard.Render(scene);
-            foreach (ChessPiece piece in chessPieces)
-                piece.RenderMirror(scene);
             scene.Render();
-            foreach (ChessPiece piece in chessPieces)
-                piece.Render(scene, Time.StepTime - StartTime);
-            foreach (ChessPiece piece in chessPieces)
-                piece.RenderText(scene, Time.StepTime - StartTime);
-            if (Time.StepTime - StartTime < 4)
+            Vector3 cameraPosition = scene.ActiveCamera.Position;
+            chessNodes.Sort(delegate(ModelNode node1, ModelNode node2)
             {
-                textNode.Model.Materials[0].DiffuseTexture = startTexture;
-                int alpha = GetAlpha(StartTime);
-                textNode.Model.Materials[0].Ambient = Color.FromArgb(0, (alpha * 200) / 255, (alpha * 200) / 255, (alpha * 200) / 255);
-                textNode.WorldState.Reset();
-                textNode.WorldState.Scale(new Vector3(0.45f, 0.45f * startTexture.GetLevelDescription(0).Height / startTexture.GetLevelDescription(0).Width, 0));
-                textNode.WorldState.Rotation = scene.ActiveCamera.WorldState.Rotation;
-                textNode.WorldState.Position = scene.ActiveCamera.WorldState.Position + scene.ActiveCamera.WorldState.Forward;
-                textNode.WorldState.Position += scene.ActiveCamera.WorldState.Up * (Time.StepTime - StartTime) * 0.03f;
-                textNode.WorldState.Position -= scene.ActiveCamera.WorldState.Forward * (Time.StepTime - StartTime) * 0.04f;
-                textNode.Render(scene);
-            }
-            if (Time.StepTime - StartTime > winnerTime)
-            {
-                textNode.Model.Materials[0].DiffuseTexture = winnerTexture;
-                int alpha = GetAlpha(winnerTime + StartTime);
-                textNode.Model.Materials[0].Ambient = Color.FromArgb(0, (alpha * 255) / 255, (alpha * 200) / 255, (alpha * 200) / 255);
-                textNode.WorldState.Reset();
-                textNode.WorldState.Scale(new Vector3(0.45f, 0.45f * winnerTexture.GetLevelDescription(0).Height / winnerTexture.GetLevelDescription(0).Width, 0));
-                textNode.WorldState.Rotation = scene.ActiveCamera.WorldState.Rotation;
-                textNode.WorldState.Position = scene.ActiveCamera.WorldState.Position + scene.ActiveCamera.WorldState.Forward;
-                textNode.WorldState.Position += scene.ActiveCamera.WorldState.Up * (Time.StepTime - (winnerTime + StartTime) - 10) * 0.03f;
-                textNode.WorldState.Position -= scene.ActiveCamera.WorldState.Forward * (Time.StepTime - (winnerTime + StartTime)) * 0.04f;
-                textNode.Render(scene);
-            }
-        }
-
-        private int GetAlpha(float startTime)
-        {
-            int alpha = 255;
-            float t = Time.StepTime - startTime;
-            if (t < 1.0f)
-                alpha = (int)(255 * (t / 1.0f));
-            t = Time.StepTime - (startTime + 3);
-            if (t > 0)
-                alpha = 254 - (int)(255 * (t / 1.0));
-            alpha = Math.Min(255, Math.Max(0, alpha));
-            return alpha;
+                float length1 = (node1.Position - cameraPosition).Length();
+                float length2 = (node2.Position - cameraPosition).Length();
+                if (length1 < length2)
+                    return -1;
+                if (length1 > length2)
+                    return 1;
+                return 0;
+            });
+            chessNodes.ForEach(delegate (ModelNode node) { node.Render(scene); });
         }
     }
 }

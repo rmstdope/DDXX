@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using Microsoft.DirectX;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.TextureBuilder
 {
@@ -31,7 +31,7 @@ namespace Dope.DDXX.TextureBuilder
 
             public Vector4 CallGetInput(int inputPin)
             {
-                return GetInput(inputPin, new Vector2());
+                return GetInputPixel(inputPin, new Vector2(), Vector2.Zero);
             }
         }
 

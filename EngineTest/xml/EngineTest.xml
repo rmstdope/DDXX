@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Demo song="Assembly">
+	<Generator name="noise256" class="PerlinNoise">
+		<Parameter name="BaseFrequency" int="1024" />
+	</Generator>
+	<Texture name="noise256" generator="noise256" width="256" height="256" miplevels="1"></Texture>
+	<!--<PostEffect class="DepthOfFieldPostEffect" track="0" startTime="0" endTime="500">
+		<Parameter name="DrawOrder" int="0" />
+		<Parameter name="NumPasses" int="2" />
+	</PostEffect>-->
+	<!--<Effect class="BloodCell" startTime="0" endTime="500">
+		<Parameter name="DrawOrder" int="0" />
+	</Effect>
+	<PostEffect class="GlowPostEffect" startTime="0" endTime="500">
+  		<Parameter name="BloomScale" float="1.1" />
+  		<Parameter name="WhiteCutoff" float="1.639128E-07" />
+  		<Parameter name="Exposure" float="0.1" />
+  		<Parameter name="Luminance" float="0.2" />
+  		<Parameter name="DownSamples" int="2" />
+  		<Parameter name="AdvancedGlow" bool="false" />
+  		<Parameter name="DrawOrder" int="1" />
+	</PostEffect>
+	<PostEffect class="WavePostEffect" startTime="0" endTime="500">
+		<Parameter name="DrawOrder" int="2" />
+		<Parameter name="Scale" float="4" />
+	</PostEffect>
+	<PostEffect class="OverlayPostEffect" startTime="0" endTime="10000">
+		<Parameter name="Filename" string="noise256" />
+		<Parameter name="Technique" string="Noise" />
+		<Parameter name="AddNoise" bool="true" />
+		<Parameter name="FadeOutLength" float="0" />
+		<Parameter name="FadeInLength" float="0" />
+		<Parameter name="SubtractNoise" bool="false" />
+		<Parameter name="BlendFactor" float="0.2500002" />
+		<Parameter name="DrawOrder" int="7" />
+	</PostEffect>-->
+	<!--<PostEffect class="RadialBlurPostEffect" startTime="0" endTime="500">
+		<Parameter name="BlurColor" Color="100, 100, 150" />
+		<Parameter name="DrawOrder" int="0" />
+	</PostEffect>-->
+
+	<!--<Effect class="MorphEffect" startTime="0" endTime="500">
+		<Parameter name="DrawOrder" int="0" />
+	</Effect>-->
+	<PostEffect class="OverlayPostEffect" name="Logo" startTime="2" endTime="22">
+		<Parameter name="Filename" string="Content/textures/ARTery Glow" />
+		<Parameter name="AddNoise" bool="true"></Parameter>
+		<Parameter name="Technique" string="Blend" />
+		<Parameter name="FadeOutLength" float="5" />
+		<Parameter name="FadeInLength" float="5" />
+		<Parameter name="SubtractNoise" bool="false" />
+		<Parameter name="BlendFactor" float="0.5" />
+		<Parameter name="DrawOrder" int="0" />
+	</PostEffect>
+	<PostEffect class="WavePostEffect" startTime="0" endTime="500">
+		<Parameter name="DrawOrder" int="2" />
+		<Parameter name="Scale" float="4" />
+		<Parameter name="Strength" Vector4="9, 9, 11, 12" />
+	</PostEffect>
+	<PostEffect class="RadialBlurPostEffect" startTime="0" endTime="500">
+		<Parameter name="BlurColor" Color="250, 150, 50, 255" />
+		<Parameter name="DrawOrder" int="4" />
+	</PostEffect>
+	<PostEffect class="OverlayPostEffect" name="OverlayNoise" startTime="0" endTime="10000">
+		<Parameter name="Filename" string="noise256" />
+		<Parameter name="Technique" string="Noise" />
+		<Parameter name="AddNoise" bool="true" />
+		<Parameter name="FadeOutLength" float="0" />
+		<Parameter name="FadeInLength" float="0" />
+		<Parameter name="SubtractNoise" bool="false" />
+		<Parameter name="BlendFactor" float="0.2" />
+		<Parameter name="DrawOrder" int="10" />
+	</PostEffect>-
+	<!--<Effect class="GridEffect" startTime="0" endTime="500">
+		<Parameter name="DrawOrder" int="0" />
+	</Effect>-->
+</Demo>

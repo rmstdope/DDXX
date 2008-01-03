@@ -1,6 +1,6 @@
 namespace Dope.DDXX.DemoFramework
 {
-    partial class SetupDialog
+    partial class SetupForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@ namespace Dope.DDXX.DemoFramework
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SetupDialog));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SetupForm));
             this.resolution = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.radio_4_3 = new System.Windows.Forms.RadioButton();
@@ -36,10 +36,8 @@ namespace Dope.DDXX.DemoFramework
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.radio_16_10 = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.bit16fp = new System.Windows.Forms.RadioButton();
-            this.bit16 = new System.Windows.Forms.RadioButton();
-            this.bit32 = new System.Windows.Forms.RadioButton();
-            this.bit32fp = new System.Windows.Forms.RadioButton();
+            this.hal = new System.Windows.Forms.RadioButton();
+            this.reference = new System.Windows.Forms.RadioButton();
             this.ok = new System.Windows.Forms.Button();
             this.cancel = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -50,7 +48,7 @@ namespace Dope.DDXX.DemoFramework
             this.effect1 = new System.Windows.Forms.Label();
             this.effectBar = new System.Windows.Forms.TrackBar();
             this.windowed = new System.Windows.Forms.CheckBox();
-            this.refDriver = new System.Windows.Forms.CheckBox();
+            this.multisampling = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -64,7 +62,6 @@ namespace Dope.DDXX.DemoFramework
             this.resolution.Name = "resolution";
             this.resolution.Size = new System.Drawing.Size(264, 21);
             this.resolution.TabIndex = 3;
-            this.resolution.SelectedIndexChanged += new System.EventHandler(this.resolution_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -125,61 +122,36 @@ namespace Dope.DDXX.DemoFramework
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.bit16fp);
-            this.groupBox2.Controls.Add(this.bit16);
-            this.groupBox2.Controls.Add(this.bit32);
-            this.groupBox2.Controls.Add(this.bit32fp);
+            this.groupBox2.Controls.Add(this.hal);
+            this.groupBox2.Controls.Add(this.reference);
             this.groupBox2.Location = new System.Drawing.Point(15, 121);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(264, 42);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "and let the boxColor depth be...";
+            this.groupBox2.Text = "and use the following driver...";
             // 
-            // bit16fp
+            // hal
             // 
-            this.bit16fp.AutoSize = true;
-            this.bit16fp.Location = new System.Drawing.Point(131, 16);
-            this.bit16fp.Name = "bit16fp";
-            this.bit16fp.Size = new System.Drawing.Size(53, 17);
-            this.bit16fp.TabIndex = 3;
-            this.bit16fp.TabStop = true;
-            this.bit16fp.Text = "16 FP";
-            this.bit16fp.UseVisualStyleBackColor = true;
+            this.hal.AutoSize = true;
+            this.hal.Location = new System.Drawing.Point(6, 16);
+            this.hal.Name = "hal";
+            this.hal.Size = new System.Drawing.Size(46, 17);
+            this.hal.TabIndex = 2;
+            this.hal.TabStop = true;
+            this.hal.Text = "HAL";
+            this.hal.UseVisualStyleBackColor = true;
             // 
-            // bit16
+            // reference
             // 
-            this.bit16.AutoSize = true;
-            this.bit16.Location = new System.Drawing.Point(6, 16);
-            this.bit16.Name = "bit16";
-            this.bit16.Size = new System.Drawing.Size(37, 17);
-            this.bit16.TabIndex = 2;
-            this.bit16.TabStop = true;
-            this.bit16.Text = "16";
-            this.bit16.UseVisualStyleBackColor = true;
-            this.bit16.CheckedChanged += new System.EventHandler(this.bit16_CheckedChanged);
-            // 
-            // bit32
-            // 
-            this.bit32.AutoSize = true;
-            this.bit32.Location = new System.Drawing.Point(68, 16);
-            this.bit32.Name = "bit32";
-            this.bit32.Size = new System.Drawing.Size(37, 17);
-            this.bit32.TabIndex = 1;
-            this.bit32.TabStop = true;
-            this.bit32.Text = "32";
-            this.bit32.UseVisualStyleBackColor = true;
-            // 
-            // bit32fp
-            // 
-            this.bit32fp.AutoSize = true;
-            this.bit32fp.Location = new System.Drawing.Point(200, 16);
-            this.bit32fp.Name = "bit32fp";
-            this.bit32fp.Size = new System.Drawing.Size(53, 17);
-            this.bit32fp.TabIndex = 0;
-            this.bit32fp.TabStop = true;
-            this.bit32fp.Text = "32 FP";
-            this.bit32fp.UseVisualStyleBackColor = true;
+            this.reference.AutoSize = true;
+            this.reference.Location = new System.Drawing.Point(68, 16);
+            this.reference.Name = "reference";
+            this.reference.Size = new System.Drawing.Size(75, 17);
+            this.reference.TabIndex = 1;
+            this.reference.TabStop = true;
+            this.reference.Text = "Reference";
+            this.reference.UseVisualStyleBackColor = true;
             // 
             // ok
             // 
@@ -275,31 +247,34 @@ namespace Dope.DDXX.DemoFramework
             // windowed
             // 
             this.windowed.AutoSize = true;
+            this.windowed.Checked = true;
+            this.windowed.CheckState = System.Windows.Forms.CheckState.Checked;
             this.windowed.Location = new System.Drawing.Point(52, 285);
             this.windowed.Name = "windowed";
             this.windowed.Size = new System.Drawing.Size(194, 17);
             this.windowed.TabIndex = 6;
             this.windowed.Text = "I am too afraid to run in full screen...";
             this.windowed.UseVisualStyleBackColor = true;
-            this.windowed.CheckedChanged += new System.EventHandler(this.windowed_CheckedChanged);
             // 
-            // refDriver
+            // multisampling
             // 
-            this.refDriver.AutoSize = true;
-            this.refDriver.Location = new System.Drawing.Point(52, 308);
-            this.refDriver.Name = "refDriver";
-            this.refDriver.Size = new System.Drawing.Size(142, 17);
-            this.refDriver.TabIndex = 7;
-            this.refDriver.Text = "I only fancy REF driver...";
-            this.refDriver.UseVisualStyleBackColor = true;
+            this.multisampling.AutoSize = true;
+            this.multisampling.Checked = true;
+            this.multisampling.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.multisampling.Location = new System.Drawing.Point(52, 308);
+            this.multisampling.Name = "multisampling";
+            this.multisampling.Size = new System.Drawing.Size(165, 17);
+            this.multisampling.TabIndex = 7;
+            this.multisampling.Text = "Yes! Multisample is da thing...";
+            this.multisampling.UseVisualStyleBackColor = true;
             // 
-            // SetupDialog
+            // SetupForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
             this.ClientSize = new System.Drawing.Size(290, 395);
-            this.Controls.Add(this.refDriver);
+            this.Controls.Add(this.multisampling);
             this.Controls.Add(this.windowed);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.cancel);
@@ -313,10 +288,10 @@ namespace Dope.DDXX.DemoFramework
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "SetupDialog";
+            this.Name = "SetupForm";
             this.Text = "a Dope production -- setup";
             this.TopMost = true;
-            this.Load += new System.EventHandler(this.SetupDialog_Load);
+            this.Load += new System.EventHandler(this.SetupForm_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -340,10 +315,8 @@ namespace Dope.DDXX.DemoFramework
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button ok;
         private System.Windows.Forms.Button cancel;
-        private System.Windows.Forms.RadioButton bit16;
-        private System.Windows.Forms.RadioButton bit32;
-        private System.Windows.Forms.RadioButton bit32fp;
-        private System.Windows.Forms.RadioButton bit16fp;
+        private System.Windows.Forms.RadioButton hal;
+        private System.Windows.Forms.RadioButton reference;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label effect3;
         private System.Windows.Forms.Label effect2;
@@ -352,6 +325,6 @@ namespace Dope.DDXX.DemoFramework
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox windowed;
-        private System.Windows.Forms.CheckBox refDriver;
+        private System.Windows.Forms.CheckBox multisampling;
     }
 }

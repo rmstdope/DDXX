@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.Utility
 {
@@ -27,6 +28,16 @@ namespace Dope.DDXX.Utility
         public static int Int(int min, int max)
         {
             return random.Next(min, max);
+        }
+
+        public static Vector3 Vector3(double max)
+        {
+            return new Vector3(Float(max), Float(max), Float(max));
+        }
+
+        public static Vector3 Vector3(double min, double max)
+        {
+            return new Vector3(Float(min, max), Float(min, max), Float(min, max));
         }
     }
 }

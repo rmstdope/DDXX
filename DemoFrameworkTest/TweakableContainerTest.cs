@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using Dope.DDXX.Utility;
-using Microsoft.DirectX;
-using System.Drawing;
 using NMock2;
+using Dope.DDXX.Utility;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -41,11 +41,25 @@ namespace Dope.DDXX.DemoFramework
                 set { floatType = value; }
             }
 
+            private Vector2 vector2Type;
+            public Vector2 Vector2Type
+            {
+                get { return vector2Type; }
+                set { vector2Type = value; }
+            }
+
             private Vector3 vector3Type;
             public Vector3 Vector3Type
             {
                 get { return vector3Type; }
                 set { vector3Type = value; }
+            }
+
+            private Vector4 vector4Type;
+            public Vector4 Vector4Type
+            {
+                get { return vector4Type; }
+                set { vector4Type = value; }
             }
 
             private string stringType;
@@ -109,7 +123,9 @@ namespace Dope.DDXX.DemoFramework
         private float endTime;
         private int intType;
         private float floatType;
+        private Vector2 vector2Type;
         private Vector3 vector3Type;
+        private Vector4 vector4Type;
         private string stringType;
         private Color colorType;
         private bool boolType;
@@ -118,7 +134,9 @@ namespace Dope.DDXX.DemoFramework
         {
             INT_TYPE,
             FLOAT_TYPE,
+            VECTOR2_TYPE,
             VECTOR3_TYPE,
+            VECTOR4_TYPE,
             STRING_TYPE,
             COLOR_TYPE,
             BOOL_TYPE
@@ -132,7 +150,9 @@ namespace Dope.DDXX.DemoFramework
             endTime = -1;
             intType = -1;
             floatType = -1;
+            vector2Type = new Vector2();
             vector3Type = new Vector3();
+            vector4Type = new Vector4();
             stringType = null;
             colorType = new Color();
             boolType = false;
@@ -142,7 +162,7 @@ namespace Dope.DDXX.DemoFramework
         public void TestEnumeration()
         {
             // Check that only properties with get _and_ set is returned
-            Assert.AreEqual(8, container.GetNumTweakables());
+            Assert.AreEqual(10, container.GetNumTweakables());
         }
 
         [Test]
@@ -150,7 +170,9 @@ namespace Dope.DDXX.DemoFramework
         {
             Assert.AreEqual("IntType", container.GetTweakableName((int)Types.INT_TYPE));
             Assert.AreEqual("FloatType", container.GetTweakableName((int)Types.FLOAT_TYPE));
+            Assert.AreEqual("Vector2Type", container.GetTweakableName((int)Types.VECTOR2_TYPE));
             Assert.AreEqual("Vector3Type", container.GetTweakableName((int)Types.VECTOR3_TYPE));
+            Assert.AreEqual("Vector4Type", container.GetTweakableName((int)Types.VECTOR4_TYPE));
             Assert.AreEqual("StringType", container.GetTweakableName((int)Types.STRING_TYPE));
             Assert.AreEqual("ColorType", container.GetTweakableName((int)Types.COLOR_TYPE));
             Assert.AreEqual("BoolType", container.GetTweakableName((int)Types.BOOL_TYPE));
@@ -161,7 +183,9 @@ namespace Dope.DDXX.DemoFramework
         {
             Assert.AreEqual(TweakableType.Integer, container.GetTweakableType((int)Types.INT_TYPE));
             Assert.AreEqual(TweakableType.Float, container.GetTweakableType((int)Types.FLOAT_TYPE));
+            Assert.AreEqual(TweakableType.Vector2, container.GetTweakableType((int)Types.VECTOR2_TYPE));
             Assert.AreEqual(TweakableType.Vector3, container.GetTweakableType((int)Types.VECTOR3_TYPE));
+            Assert.AreEqual(TweakableType.Vector4, container.GetTweakableType((int)Types.VECTOR4_TYPE));
             Assert.AreEqual(TweakableType.String, container.GetTweakableType((int)Types.STRING_TYPE));
             Assert.AreEqual(TweakableType.Color, container.GetTweakableType((int)Types.COLOR_TYPE));
             Assert.AreEqual(TweakableType.Bool, container.GetTweakableType((int)Types.BOOL_TYPE));
@@ -186,12 +210,30 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
+        public void TestGetSetVector2()
+        {
+            container.SetValue((int)Types.VECTOR2_TYPE, new Vector2(1, 2));
+            Assert.AreEqual(new Vector2(1, 2), container.GetVector2Value((int)Types.VECTOR2_TYPE));
+            container.SetValue((int)Types.VECTOR2_TYPE, new Vector2(-1, -2));
+            Assert.AreEqual(new Vector2(-1, -2), container.GetVector2Value((int)Types.VECTOR2_TYPE));
+        }
+
+        [Test]
         public void TestGetSetVector3()
         {
             container.SetValue((int)Types.VECTOR3_TYPE, new Vector3(1, 2, 3));
             Assert.AreEqual(new Vector3(1, 2, 3), container.GetVector3Value((int)Types.VECTOR3_TYPE));
             container.SetValue((int)Types.VECTOR3_TYPE, new Vector3(-1, -2, -3));
             Assert.AreEqual(new Vector3(-1, -2, -3), container.GetVector3Value((int)Types.VECTOR3_TYPE));
+        }
+
+        [Test]
+        public void TestGetSetVector4()
+        {
+            container.SetValue((int)Types.VECTOR4_TYPE, new Vector4(1, 2, 3, 4));
+            Assert.AreEqual(new Vector4(1, 2, 3, 4), container.GetVector4Value((int)Types.VECTOR4_TYPE));
+            container.SetValue((int)Types.VECTOR4_TYPE, new Vector4(-1, -2, -3, -4));
+            Assert.AreEqual(new Vector4(-1, -2, -3, -4), container.GetVector4Value((int)Types.VECTOR4_TYPE));
         }
 
         [Test]
@@ -226,19 +268,25 @@ namespace Dope.DDXX.DemoFramework
         {
             Assert.AreEqual(1.0f, container.GetStepSize((int)Types.INT_TYPE));
             Assert.AreEqual(1.0f, container.GetStepSize((int)Types.FLOAT_TYPE));
+            Assert.AreEqual(1.0f, container.GetStepSize((int)Types.VECTOR2_TYPE));
             Assert.AreEqual(1.0f, container.GetStepSize((int)Types.VECTOR3_TYPE));
+            Assert.AreEqual(1.0f, container.GetStepSize((int)Types.VECTOR4_TYPE));
             Assert.AreEqual(1.0f, container.GetStepSize((int)Types.STRING_TYPE));
             Assert.AreEqual(1.0f, container.GetStepSize((int)Types.COLOR_TYPE));
             container.SetStepSize((int)Types.FLOAT_TYPE, -0.1f);
             container.SetStepSize((int)Types.INT_TYPE, -0.2f);
-            container.SetStepSize((int)Types.VECTOR3_TYPE, -0.3f);
-            container.SetStepSize((int)Types.STRING_TYPE, -0.4f);
-            container.SetStepSize((int)Types.COLOR_TYPE, -0.5f);
+            container.SetStepSize((int)Types.VECTOR2_TYPE, -0.3f);
+            container.SetStepSize((int)Types.VECTOR3_TYPE, -0.4f);
+            container.SetStepSize((int)Types.VECTOR4_TYPE, -0.5f);
+            container.SetStepSize((int)Types.STRING_TYPE, -0.6f);
+            container.SetStepSize((int)Types.COLOR_TYPE, -0.7f);
             Assert.AreEqual(-0.1f, container.GetStepSize((int)Types.FLOAT_TYPE));
             Assert.AreEqual(-0.2f, container.GetStepSize((int)Types.INT_TYPE));
-            Assert.AreEqual(-0.3f, container.GetStepSize((int)Types.VECTOR3_TYPE));
-            Assert.AreEqual(-0.4f, container.GetStepSize((int)Types.STRING_TYPE));
-            Assert.AreEqual(-0.5f, container.GetStepSize((int)Types.COLOR_TYPE));
+            Assert.AreEqual(-0.3f, container.GetStepSize((int)Types.VECTOR2_TYPE));
+            Assert.AreEqual(-0.4f, container.GetStepSize((int)Types.VECTOR3_TYPE));
+            Assert.AreEqual(-0.5f, container.GetStepSize((int)Types.VECTOR4_TYPE));
+            Assert.AreEqual(-0.6f, container.GetStepSize((int)Types.STRING_TYPE));
+            Assert.AreEqual(-0.7f, container.GetStepSize((int)Types.COLOR_TYPE));
         }
 
         [Test]
@@ -246,7 +294,9 @@ namespace Dope.DDXX.DemoFramework
         {
             Assert.AreEqual((int)Types.FLOAT_TYPE, container.GetTweakableNumber("FloatType"));
             Assert.AreEqual((int)Types.INT_TYPE, container.GetTweakableNumber("IntType"));
+            Assert.AreEqual((int)Types.VECTOR2_TYPE, container.GetTweakableNumber("Vector2Type"));
             Assert.AreEqual((int)Types.VECTOR3_TYPE, container.GetTweakableNumber("Vector3Type"));
+            Assert.AreEqual((int)Types.VECTOR4_TYPE, container.GetTweakableNumber("Vector4Type"));
             Assert.AreEqual((int)Types.STRING_TYPE, container.GetTweakableNumber("StringType"));
             Assert.AreEqual((int)Types.COLOR_TYPE, container.GetTweakableNumber("ColorType"));
             Assert.AreEqual((int)Types.BOOL_TYPE, container.GetTweakableNumber("BoolType"));
@@ -313,6 +363,18 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
+        public void TestUpdateVector2Parameter()
+        {
+            container.Vector2Type = new Vector2(1, 2);
+            container.UpdateListener(this);
+            Assert.AreEqual(new Vector2(1, 2), vector2Type);
+
+            container.Vector2Type = new Vector2(-1, -2);
+            container.UpdateListener(this);
+            Assert.AreEqual(new Vector2(-1, -2), vector2Type);
+        }
+
+        [Test]
         public void TestUpdateVector3Parameter()
         {
             container.Vector3Type = new Vector3(1, 2, 3);
@@ -322,6 +384,18 @@ namespace Dope.DDXX.DemoFramework
             container.Vector3Type = new Vector3(-1, -2, -3);
             container.UpdateListener(this);
             Assert.AreEqual(new Vector3(-1, -2, -3), vector3Type);
+        }
+
+        [Test]
+        public void TestUpdateVector4Parameter()
+        {
+            container.Vector4Type = new Vector4(1, 2, 3, 4);
+            container.UpdateListener(this);
+            Assert.AreEqual(new Vector4(1, 2, 3, 4), vector4Type);
+
+            container.Vector4Type = new Vector4(-1, -2, -3, -4);
+            container.UpdateListener(this);
+            Assert.AreEqual(new Vector4(-1, -2, -3, -4), vector4Type);
         }
 
         [Test]
@@ -396,12 +470,28 @@ namespace Dope.DDXX.DemoFramework
             stringType = value;
         }
 
+        public void SetVector2Param(string className, string effectName, string param, Vector2 value)
+        {
+            Assert.AreEqual("TestClass", className);
+            Assert.AreEqual("TestName", effectName);
+            Assert.AreEqual("Vector2Type", param);
+            vector2Type = value;
+        }
+
         public void SetVector3Param(string className, string effectName, string param, Vector3 value)
         {
             Assert.AreEqual("TestClass", className);
             Assert.AreEqual("TestName", effectName);
             Assert.AreEqual("Vector3Type", param);
             vector3Type = value;
+        }
+
+        public void SetVector4Param(string className, string effectName, string param, Vector4 value)
+        {
+            Assert.AreEqual("TestClass", className);
+            Assert.AreEqual("TestName", effectName);
+            Assert.AreEqual("Vector4Type", param);
+            vector4Type = value;
         }
 
         public void SetBoolParam(string className, string effectName, string param, bool value)

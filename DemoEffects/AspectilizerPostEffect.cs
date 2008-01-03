@@ -4,9 +4,9 @@ using System.Text;
 using Dope.DDXX.DemoEffects;
 using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Graphics;
-using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.TextureBuilder;
-using Microsoft.DirectX;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.DemoEffects
 {
@@ -43,12 +43,13 @@ namespace Dope.DDXX.DemoEffects
 
         private void CreateTexture()
         {
-            if (Device != null)
+            if (GraphicsDevice != null)
             {
-                Viewport viewport = Device.Viewport;
-                float ratio = (height / width) * (viewport.Width / (float)viewport.Height);
+                float ratio = (height / width) *
+                    (GraphicsDevice.PresentationParameters.BackBufferWidth / (float)GraphicsDevice.PresentationParameters.BackBufferHeight);
                 IGenerator rect = new RoundedRectangle(new Vector2(0.95f, ratio * 0.95f), new Vector2(0.5f, 0.5f), rounding);
-                Texture = TextureBuilder.Generate(rect, viewport.Width, viewport.Height, 1, Format.A8R8G8B8);
+                Texture = TextureBuilder.Generate(rect, GraphicsDevice.PresentationParameters.BackBufferWidth,
+                    GraphicsDevice.PresentationParameters.BackBufferHeight, 1, SurfaceFormat.Color);
             }
         }
 

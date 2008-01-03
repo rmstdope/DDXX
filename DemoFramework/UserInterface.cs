@@ -2,43 +2,35 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
-using System.Drawing;
-using Microsoft.DirectX.Direct3D;
-using Microsoft.DirectX;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.DemoFramework
 {
     public class UserInterface : IUserInterface
     {
-        private ILine line;
-        private ISprite sprite;
-        private ITexture whiteTexture;
-        private IFont font;
+        private ISpriteBatch spriteBatch;
+        private ITexture2D whiteTexture;
+        private ISpriteFont spriteFont;
 
         public UserInterface()
         {
         }
 
-        public void Initialize()
+        public void Initialize(IGraphicsFactory graphicsFactory, ITextureFactory textureFactory)
         {
-            IDevice device = D3DDriver.GetInstance().Device;
-
-            line = D3DDriver.GraphicsFactory.CreateLine(device);
-            line.Width = 1.0f;
-            line.Antialias = false;
-            
-            sprite = D3DDriver.GraphicsFactory.CreateSprite(device);
-
-            font = D3DDriver.GraphicsFactory.CreateFont(device, 16,  0, FontWeight.Bold,  1, false,  CharacterSet.Default, Precision.Default, FontQuality.ClearType, PitchAndFamily.DefaultPitch | PitchAndFamily.FamilyDoNotCare, "Times New Roman");
-            
-            whiteTexture = D3DDriver.GraphicsFactory.CreateTexture(device, 1, 1, 1, Usage.RenderTarget, Format.X8R8G8B8, Pool.Default);
-            using (ISurface renderTarget = whiteTexture.GetSurfaceLevel(0))
-                device.ColorFill(renderTarget, new Rectangle(0, 0, 1, 1), Color.White);
+            spriteBatch = graphicsFactory.CreateSpriteBatch();
+            spriteFont = graphicsFactory.SpriteFontFromFile("Content/fonts/TweakerFont");
+            whiteTexture = textureFactory.CreateFromFunction(1, 1, 1, TextureUsage.None, SurfaceFormat.Color, delegate (Vector2 x, Vector2 y) { return new Vector4(1, 1, 1, 1); });
         }
 
         public void DrawControl(BaseControl control)
         {
-            control.DrawControl(sprite, line, font, whiteTexture);
+            spriteBatch.GraphicsDevice.RenderState.AlphaBlendEnable = true;
+            spriteBatch.GraphicsDevice.RenderState.BlendFunction = BlendFunction.Add;
+            spriteBatch.GraphicsDevice.RenderState.SourceBlend = Blend.SourceAlpha;
+            spriteBatch.GraphicsDevice.RenderState.DestinationBlend = Blend.InverseSourceAlpha;
+            control.DrawControl(spriteBatch, spriteFont, whiteTexture);
         }
 
     }

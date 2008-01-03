@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX;
-using System.Drawing;
 using Dope.DDXX.Graphics;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.SceneGraph
 {
-    public abstract class SystemParticle : ISystemParticle
+    public abstract class SystemParticle<T> : ISystemParticle<T>
+        where T : struct
     {
         public Vector3 Position;
         public Color Color;
@@ -25,6 +26,7 @@ namespace Dope.DDXX.SceneGraph
             return false;
         }
 
-        public abstract void StepAndWrite(IGraphicsStream stream, IRenderableCamera camera);
+        public abstract void Step(ref T destinationVertex);
     }
+
 }

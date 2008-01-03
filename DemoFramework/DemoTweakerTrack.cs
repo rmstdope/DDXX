@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
 using Dope.DDXX.Input;
-using Microsoft.DirectX.DirectInput;
 using Dope.DDXX.Utility;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -33,6 +33,11 @@ namespace Dope.DDXX.DemoFramework
         }
 
         public bool Quit
+        {
+            get { return false; }
+        }
+
+        public bool Exiting
         {
             get { return false; }
         }
@@ -76,12 +81,12 @@ namespace Dope.DDXX.DemoFramework
         public bool HandleInput(IInputDriver inputDriver)
         {
             bool handled = false;
-            if (inputDriver.KeyPressedNoRepeat(Key.UpArrow))
+            if (inputDriver.UpPressedNoRepeat())
             {
                 KeyUp();
                 handled = true;
             }
-            if (inputDriver.KeyPressedNoRepeat(Key.DownArrow))
+            if (inputDriver.DownPressedNoRepeat())
             {
                 KeyDown();
                 handled = true;
@@ -95,9 +100,7 @@ namespace Dope.DDXX.DemoFramework
             BoxControl control = CreateTimeControls();
             CreateEffects(control);
 
-            D3DDriver.GetInstance().Device.BeginScene();
             UserInterface.DrawControl(MainWindow);
-            D3DDriver.GetInstance().Device.EndScene();
         }
 
         private void CreateEffects(BoxControl timelineWindow)
@@ -113,25 +116,25 @@ namespace Dope.DDXX.DemoFramework
                     continue;
                 GetColors(i, out boxColor, out textColor);
                 float ex1 = (allEffects[i].StartTime - StartTime) / timeScale;
-                if (ex1 < 0.0f)
-                    ex1 = 0.0f;
+                if (ex1 < 0)
+                    ex1 = 0;
                 float ex2 = (allEffects[i].EndTime - StartTime) / timeScale;
-                if (ex2 > 1.0f)
-                    ex2 = 1.0f;
-                if (ex1 < 1.0f && ex2 > 0.0f)
+                if (ex2 > 1)
+                    ex2 = 1;
+                if (ex1 < 1 && ex2 > 0)
                 {
-                    BoxControl trackWindow = new BoxControl(new RectangleF(ex1, y, ex2 - ex1, 0.05f), Settings.Alpha, boxColor, timelineWindow);
-                    new TextControl(allEffects[i].GetType().Name, new RectangleF(0.0f, 0.0f, 1.0f, 1.0f), DrawTextFormat.Center | DrawTextFormat.VerticalCenter, Settings.TextAlpha, textColor, trackWindow);
+                    BoxControl trackWindow = new BoxControl(new Vector4(ex1, y, ex2 - ex1, 0.05f), Settings.Alpha, boxColor, timelineWindow);
+                    new TextControl(allEffects[i].GetType().Name, new Vector4(0, 0, 1, 1), TextFormatting.Center | TextFormatting.VerticalCenter, Settings.TextAlpha, textColor, trackWindow);
                 }
                 else if (ex1 >= 1.0f)
                 {
-                    BoxControl trackWindow = new BoxControl(new RectangleF(0.0f, y, 1.0f, 0.05f), 0.0f, boxColor, timelineWindow);
-                    new TextControl(allEffects[i].GetType().Name + "-->", new RectangleF(0.0f, 0.0f, 1.0f, 1.0f), DrawTextFormat.Right | DrawTextFormat.VerticalCenter, Settings.TextAlpha, textColor, trackWindow);
+                    BoxControl trackWindow = new BoxControl(new Vector4(0, y, 1, 0.5f), 0, boxColor, timelineWindow);
+                    new TextControl(allEffects[i].GetType().Name + "-->", new Vector4(0, 0, 1, 1), TextFormatting.Right | TextFormatting.VerticalCenter, Settings.TextAlpha, textColor, trackWindow);
                 }
                 else
                 {
-                    BoxControl trackWindow = new BoxControl(new RectangleF(0.0f, y, 1.0f, 0.05f), 0.0f, boxColor, timelineWindow);
-                    new TextControl("<--" + allEffects[i].GetType().Name, new RectangleF(0.0f, 0.0f, 1.0f, 1.0f), DrawTextFormat.Left | DrawTextFormat.VerticalCenter, Settings.TextAlpha, textColor, trackWindow);
+                    BoxControl trackWindow = new BoxControl(new Vector4(0, y, 1, 0.05f), 0, boxColor, timelineWindow);
+                    new TextControl("<--" + allEffects[i].GetType().Name, new Vector4(0, 0, 1, 1), TextFormatting.Left | TextFormatting.VerticalCenter, Settings.TextAlpha, textColor, trackWindow);
                 }
                 y += 0.075f;
             }
@@ -171,7 +174,7 @@ namespace Dope.DDXX.DemoFramework
             return allEffects;
         }
 
-        public bool ShouldSave(IInputDriver inputDriver)
+        public bool ShouldSave()
         {
             return true;
         }

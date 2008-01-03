@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.TextureBuilder
 {
@@ -31,7 +31,7 @@ namespace Dope.DDXX.TextureBuilder
 
         public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
         {
-            return GetInput(0, textureCoordinate) * mul + 
+            return GetInputPixel(0, textureCoordinate, texelSize) * mul + 
                 new Vector4(add, add, add, add);
         }
     }

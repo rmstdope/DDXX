@@ -2,52 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.SceneGraph
 {
     public class Scene : IScene
     {
-        private IEffect effect;
-        private EffectHandle numLightsHandle;
-        private EffectHandle lightDiffuseHandle;
-        private EffectHandle lightSpecularHandle;
-        private EffectHandle lightPositionHandle;
-        private EffectHandle lightDirectionHandle;
-        private EffectHandle lightRangeHandle;
-        private EffectHandle eyePositionHandle;
-
         private NodeBase rootNode;
         private IRenderableCamera activeCamera;
-        private IDevice device;
-        private ColorValue ambientColor;
-        private List<IAnimationRootFrame> hierarchies = new List<IAnimationRootFrame>();
-        private LightState lightState = new LightState();
+        private Color ambientColor;
+        private LightState lightState;
 
         public Scene()
-            : this(D3DDriver.EffectFactory)
-        {
-        }
-
-        public Scene(IEffectFactory effectFactory)
         {
             rootNode = new DummyNode("Scene Root Node");
-            device = D3DDriver.GetInstance().Device;
-            ambientColor = new ColorValue(0.5f, 0.5f, 0.5f, 0.5f);
-            effect = effectFactory.CreateFromFile("PoolEffect.fxo");
-            numLightsHandle = effect.GetParameter(null, "NumLights");
-            lightDiffuseHandle = effect.GetParameter(null, "LightDiffuseColors");
-            lightSpecularHandle = effect.GetParameter(null, "LightSpecularColors");
-            lightPositionHandle = effect.GetParameter(null, "LightPositions");
-            lightDirectionHandle = effect.GetParameter(null, "LightDirections");
-            lightRangeHandle = effect.GetParameter(null, "LightRanges");
-            eyePositionHandle = effect.GetParameter(null, "EyePosition");
-
-            if (numLightsHandle == null || lightDiffuseHandle == null || lightSpecularHandle == null || lightPositionHandle == null || lightDirectionHandle == null || eyePositionHandle == null || lightRangeHandle == null)
-                throw new DDXXException("Can't find mandatory handles in PoolEffect");
+            ambientColor = new Color(200, 200, 200);
         }
 
         public int NumNodes
@@ -63,35 +35,14 @@ namespace Dope.DDXX.SceneGraph
             rootNode.AddChild(node);
         }
 
-        public void RemoveNode(INode node)
-        {
-            RemoveChild(rootNode, node);
-        }
-
-        private void RemoveChild(INode thisNode, INode removeNode)
-        {
-            thisNode.RemoveChild(removeNode);
-            foreach (INode child in thisNode.Children)
-            {
-                RemoveChild(child, removeNode);
-            }
-        }
-
         public void Step()
         {
-            foreach (IAnimationRootFrame hierarchy in hierarchies)
-            {
-                IAnimationController controller = hierarchy.AnimationController;
-                if (controller != null)
-                {
-                    controller.AdvanceTime(controller.GetAnimationSet(0).Period - (controller.Time % controller.GetAnimationSet(0).Period));
-                    controller.AdvanceTime(Time.StepTime);
-                }
-            }
-            rootNode.Step(ActiveCamera);
+            rootNode.Step();
 
             lightState = new LightState();
             rootNode.SetLightState(lightState);
+
+            Vector3 eyePos = ActiveCamera.Position;
         }
 
         public void Render()
@@ -99,22 +50,7 @@ namespace Dope.DDXX.SceneGraph
             if (ActiveCamera == null)
                 throw new DDXXException("Must have an active camera set before a scene can be rendered.");
 
-            SetEffectParameters();
-
             rootNode.Render(this);
-        }
-
-        public void SetEffectParameters()
-        {
-            effect.SetValue(numLightsHandle, lightState.NumLights);
-            effect.SetValue(lightDiffuseHandle, lightState.DiffuseColor);
-            effect.SetValue(lightSpecularHandle, lightState.SpecularColor);
-            effect.SetValue(lightPositionHandle, lightState.Positions);
-            effect.SetValue(lightDirectionHandle, lightState.Directions);
-            effect.SetValue(lightRangeHandle, lightState.Ranges);
-
-            Vector3 eyePos = ActiveCamera.Position;
-            effect.SetValue(eyePositionHandle, new Vector4(eyePos.X, eyePos.Y, eyePos.Z, 1.0f));
         }
 
         public IRenderableCamera ActiveCamera
@@ -123,13 +59,17 @@ namespace Dope.DDXX.SceneGraph
             set
             {
                 if (GetNodeByName(value.Name) != null)
+                {
                     activeCamera = value;
+                }
                 else
+                {
                     throw new DDXXException("The active camera must be part of the scene graph.");
+                }
             }
         }
 
-        public ColorValue AmbientColor
+        public Color AmbientColor
         {
             get { return ambientColor; }
             set { ambientColor = value; }
@@ -169,25 +109,21 @@ namespace Dope.DDXX.SceneGraph
             }
         }
 
-        public void DebugPrintGraph()
-        {
-            PrintNode(rootNode, 0);
-        }
+        //public void DebugPrintGraph()
+        //{
+        //    PrintNode(rootNode, 0);
+        //}
 
-        private void PrintNode(INode node, int indent)
-        {
-            for (int i = 0; i < indent; i++)
-                Debug.Write('|');
-            Debug.WriteLine(node.Name);
-            foreach (INode child in node.Children)
-            {
-                PrintNode(child, indent + 1);
-            }
-        }
+        //private void PrintNode(INode node, int indent)
+        //{
+        //    for (int i = 0; i < indent; i++)
+        //        Debug.Write('|');
+        //    Debug.WriteLine(node.Name);
+        //    foreach (INode child in node.Children)
+        //    {
+        //        PrintNode(child, indent + 1);
+        //    }
+        //}
 
-        public void HandleHierarchy(IAnimationRootFrame hierarchy)
-        {
-            hierarchies.Add(hierarchy);
-        }
     }
 }

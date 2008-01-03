@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Demo>
+	<Generator name="noise256" class="PerlinNoise">
+		<Parameter name="BaseFrequency" int="1024" />
+	</Generator>
+	<Texture name="noise256" generator="noise256" width="256" height="256" miplevels="1"></Texture>
+
+	<!--<PostEffect class="ColorFader" name="Fader1" startTime="0" endTime="5">
+		<Parameter name="DrawOrder" int="10" />
+		<Parameter name="FadeInLength" float="0" />
+		<Parameter name="FadeOutLength" float="5" />
+		<Parameter name="FadeColor" Color="0, 0, 0, 0" />
+	</PostEffect>-->
+	<!--<Effect class="ParticleSystemEffect" startTime="0" endTime="100">
+		<Parameter name="DrawOrder" int="1" />
+	</Effect>-->
+	<Effect class="CubeSystem" startTime="0" endTime="10000">
+		<Parameter name="DrawOrder" int="1" />
+	</Effect>
+	<!--<Effect class="GridEffect" startTime="10" endTime="500">
+		<Parameter name="DrawOrder" int="0" />
+	</Effect>-->
+	<PostEffect class="GlowPostEffect" startTime="0" endTime="10000">
+  		<Parameter name="BloomScale" float="1.4" />
+  		<Parameter name="WhiteCutoff" float="0.37" />
+  		<Parameter name="Exposure" float="0.1" />
+  		<Parameter name="Luminance" float="0.2" />
+  		<Parameter name="DownSamples" int="2" />
+  		<Parameter name="AdvancedGlow" bool="false" />
+  		<Parameter name="DrawOrder" int="5" />
+	</PostEffect>
+	<!--<PostEffect class="RadialBlurPostEffect" startTime="0" endTime="500">
+		<Parameter name="BlurColor" Color="160, 160, 245, 255" />
+		<Parameter name="DrawOrder" int="3" />
+	</PostEffect>-->
+	<PostEffect class="OverlayPostEffect" startTime="0" endTime="10000">
+		<Parameter name="Filename" string="noise256" />
+		<Parameter name="Technique" string="Noise" />
+		<Parameter name="AddNoise" bool="true" />
+		<Parameter name="FadeOutLength" float="0" />
+		<Parameter name="FadeInLength" float="0" />
+		<Parameter name="SubtractNoise" bool="false" />
+		<Parameter name="BlendFactor" float="0.2500002" />
+		<Parameter name="DrawOrder" int="7" />
+	</PostEffect>
+</Demo>

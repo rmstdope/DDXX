@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.DirectX.Direct3D;
-using Microsoft.DirectX;
 using Dope.DDXX.Graphics;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.SceneGraph
 {
@@ -26,7 +24,7 @@ namespace Dope.DDXX.SceneGraph
             brightness = 1;
         }
 
-        protected override void StepNode(IRenderableCamera camera)
+        protected override void StepNode()
         {
         }
 
@@ -53,16 +51,16 @@ namespace Dope.DDXX.SceneGraph
             if (node is ModelNode)
             {
                 ModelNode modelNode = node as ModelNode;
-                switch (modelNode.Model.CullMode)
+                switch (modelNode.CullMode)
                 {
-                    case Cull.Clockwise:
-                        modelNode.Model.CullMode = Cull.CounterClockwise;
+                    case CullMode.CullClockwiseFace:
+                        modelNode.CullMode = CullMode.CullCounterClockwiseFace;
                         break;
-                    case Cull.CounterClockwise:
-                        modelNode.Model.CullMode = Cull.Clockwise;
+                    case CullMode.CullCounterClockwiseFace:
+                        modelNode.CullMode = CullMode.CullClockwiseFace;
                         break;
                 }
-                modelNode.Model.UseStencil = !modelNode.Model.UseStencil;
+                //modelNode.Model.UseStencil = !modelNode.Model.UseStencil;
             }
             foreach (INode child in node.Children)
                 SwitchCulling(child);
@@ -73,17 +71,14 @@ namespace Dope.DDXX.SceneGraph
             if (node is ModelNode)
             {
                 ModelNode modelNode = node as ModelNode;
-                foreach (ModelMaterial material in modelNode.Model.Materials)
+                foreach (IModelMesh mesh in modelNode.Model.Meshes)
                 {
-                    material.SpecularColor = new ColorValue(
-                        material.SpecularColor.Red * value, material.SpecularColor.Green * value,
-                        material.SpecularColor.Blue * value, material.SpecularColor.Alpha);
-                    material.DiffuseColor = new ColorValue(
-                        material.DiffuseColor.Red * value, material.DiffuseColor.Green * value,
-                        material.DiffuseColor.Blue * value, material.DiffuseColor.Alpha);
-                    material.AmbientColor = new ColorValue(
-                        material.AmbientColor.Red * value, material.AmbientColor.Green * value,
-                        material.AmbientColor.Blue * value, material.AmbientColor.Alpha);
+                    foreach (IModelMeshPart part in mesh.MeshParts)
+                    {
+                        part.MaterialHandler.AmbientColor = new Color(part.MaterialHandler.AmbientColor.ToVector3() * value);
+                        part.MaterialHandler.DiffuseColor = new Color(part.MaterialHandler.DiffuseColor.ToVector3() * value);
+                        part.MaterialHandler.SpecularColor = new Color(part.MaterialHandler.SpecularColor.ToVector3() * value);
+                    }
                 }
             }
             foreach (INode child in node.Children)

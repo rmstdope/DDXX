@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX;
 using Dope.DDXX.Utility;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.TextureBuilder
 {
     public class Bricks : Generator
     {
+        private int numBricksX;
+        private int numBricksY;
         private float brickWidth;
         private float brickHeight;
         private float gapWidth;
@@ -20,24 +22,55 @@ namespace Dope.DDXX.TextureBuilder
             GAP
         }
 
-        public Bricks(int numBricksX, int numBricksY, float gapWidth)
+        public int NumBricksX
+        {
+            get { return numBricksX; }
+            set 
+            { 
+                numBricksX = value;
+                float width = 1.0f / numBricksX;
+                brickWidth = width - gapWidth;
+            }
+        }
+
+        public int NumBricksY
+        {
+            get { return numBricksY; }
+            set 
+            { 
+                numBricksY = value;
+                float height = 1.0f / numBricksY;
+                brickHeight = height - gapWidth;
+            }
+        }
+
+        public float GapWidth
+        {
+            get { return gapWidth; }
+            set 
+            { 
+                gapWidth = value;
+                NumBricksX = numBricksX;
+                NumBricksY = numBricksY;
+            }
+        }
+
+        public Bricks()
             : base(0)
         {
-            float width = 1.0f / numBricksX;
-            this.brickWidth = width - gapWidth;
-            float height = 1.0f / numBricksY;
-            this.brickHeight = height - gapWidth;
-            this.gapWidth = gapWidth;
+            GapWidth = 0.01f;
+            NumBricksX = 1;
+            NumBricksY = 1;
         }
 
         public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
         {
             PerlinNoise g = new PerlinNoise();
             g.NumOctaves = 2;
-            g.BaseFrequency = 8;
+            g.BaseFrequency = 4;
             g.Persistence = 0.5f;
-            textureCoordinate.X += 0.01f * g.GetPixel(textureCoordinate, texelSize).X;
-            textureCoordinate.Y += 0.01f * g.GetPixel(textureCoordinate, texelSize).X;
+            textureCoordinate.X += 0.03f * g.GetPixel(textureCoordinate, texelSize).X;
+            textureCoordinate.Y += 0.03f * g.GetPixel(textureCoordinate, texelSize).X;
             RowType row = GetRowType(textureCoordinate.Y);
             if (row == RowType.GAP)
                 return new Vector4();

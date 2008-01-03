@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Microsoft.DirectX;
 using Dope.DDXX.Physics;
 using Dope.DDXX.Utility;
 using Dope.DDXX.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.SceneGraph
 {
@@ -14,9 +13,9 @@ namespace Dope.DDXX.SceneGraph
         private WorldState worldState = new WorldState();
         private String name;
         private List<INode> children = new List<INode>();
-        private IFrame frame;
 
-        public NodeBase(String name) : base()
+        public NodeBase(String name)
+            : base()
         {
             this.name = name;
         }
@@ -25,7 +24,7 @@ namespace Dope.DDXX.SceneGraph
         {
         }
 
-        protected abstract void StepNode(IRenderableCamera camera);
+        protected abstract void StepNode();
         protected abstract void RenderNode(IScene scene);
 
         #region INode Members
@@ -35,7 +34,7 @@ namespace Dope.DDXX.SceneGraph
             get { return name; }
         }
 
-        public  INode Parent
+        public INode Parent
         {
             get { return parent; }
         }
@@ -50,26 +49,16 @@ namespace Dope.DDXX.SceneGraph
             get
             {
                 Matrix localMatrix;
-                if (frame != null)
-                {
-                    localMatrix = frame.TransformationMatrix;
-                }
-                else
-                    localMatrix = worldState.GetWorldMatrix();
+                localMatrix = WorldState.GetWorldMatrix();
                 if (parent != null)
                     return localMatrix * parent.WorldMatrix;
-                else
-                    return localMatrix;
+                return localMatrix;
             }
         }
 
         public WorldState WorldState
         {
-            get 
-            {
-                EnableFrameHandling(null);
-                return worldState; 
-            }
+            get { return worldState; }
         }
 
         public void AddChild(INode child)
@@ -102,13 +91,13 @@ namespace Dope.DDXX.SceneGraph
                 return false;
         }
 
-        public void Step(IRenderableCamera camera)
+        public void Step()
         {
-            StepNode(camera);
+            StepNode();
 
             foreach (INode node in children)
             {
-                node.Step(camera);
+                node.Step();
             }
         }
 
@@ -152,12 +141,7 @@ namespace Dope.DDXX.SceneGraph
             return num;
         }
 
-        public void EnableFrameHandling(IFrame frame)
-        {
-            this.frame = frame;
-        }
-
-        public Vector3 Position 
+        public Vector3 Position
         {
             get
             {

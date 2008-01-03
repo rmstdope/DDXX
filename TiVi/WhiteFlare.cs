@@ -30,8 +30,8 @@ namespace EngineTest
         private BlitCircle[] circles;
         private float majorScale = 0.5f;
 
-        public WhiteFlare(string name, float startTime, float endTime)
-            : base(name, startTime, endTime)
+        public WhiteFlare(float startTime, float endTime)
+            : base(startTime, endTime)
         {
         }
 
@@ -39,11 +39,11 @@ namespace EngineTest
         {
             Vector2 centered = texCoord - new Vector2(0.5f, 0.5f);
             float distance = centered.Length();
-            if (distance < 0.4f)
+            if (distance < 0.3f)
                 return new Vector4(1, 1, 1, 1);
             else if (distance < 0.5f)
             {
-                float scaled = (0.5f - distance) / 0.1f;
+                float scaled = (0.5f - distance) / 0.2f;
                 return new Vector4(scaled, scaled, scaled, 1);
             }
             return new Vector4(0, 0, 0, 0);
@@ -51,7 +51,7 @@ namespace EngineTest
 
         protected override void Initialize()
         {
-            circleTexture = TextureFactory.CreateFromFunction(256, 256, 0, Usage.None, Format.A8R8G8B8, Pool.Managed, circleCallback);
+            circleTexture = TextureFactory.CreateFromFunction(512, 512, 0, Usage.None, Format.A8R8G8B8, Pool.Managed, circleCallback);
             circleSprite = GraphicsFactory.CreateSprite(Device);
             circles = new BlitCircle[NUM_CIRCLES];
             Random rand = new Random();

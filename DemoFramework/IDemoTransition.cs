@@ -8,7 +8,7 @@ namespace Dope.DDXX.DemoFramework
     public interface IDemoTransition : IRegisterable, ITweakableContainer
     {
         int DestinationTrack { get; set; }
-        void Initialize(IDevice device, IPostProcessor postProcessor);
-        ITexture Render(ITexture fromTexture, ITexture toTexture);
+        void Initialize(/*IGraphicsDevice device,*/ IPostProcessor postProcessor);
+        IRenderTarget2D Render(IRenderTarget2D fromTexture, IRenderTarget2D toTexture);
     }
 }

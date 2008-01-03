@@ -1,62 +1,113 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
+    <ProjectGuid>{70f76e25-311c-4dfc-9412-89470f537bdf}</ProjectGuid>
+    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{31D76405-2DD3-436A-BE65-963DE822511E}</ProjectGuid>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Dope.DDXX.Utility</RootNamespace>
     <AssemblyName>Dope.DDXX.Utility</AssemblyName>
+    <XnaFrameworkVersion>v2.0</XnaFrameworkVersion>
+    <XnaPlatform>Windows</XnaPlatform>
+    <Thumbnail>
+    </Thumbnail>
+    <XnaCrossPlatformGroupID>{08b42ab6-20de-466a-af57-c9cbb712a83a}</XnaCrossPlatformGroupID>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\x86\Debug</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\x86\Release</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.Xna.Framework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AspectRatio.cs" />
-    <Compile Include="ClampedCubicSpline.cs" />
-    <Compile Include="CubicSplineBase.cs" />
-    <Compile Include="DDXXException.cs" />
-    <Compile Include="FileUtility.cs" />
-    <Compile Include="IArithmetic.cs" />
-    <Compile Include="InterpolatedFloat.cs" />
-    <Compile Include="InterpolatedVector2.cs" />
-    <Compile Include="InterpolatedVector3.cs" />
-    <Compile Include="Interpolator.cs" />
-    <Compile Include="ISpline.cs" />
-    <Compile Include="KeyFrame.cs" />
-    <Compile Include="LinearSpline.cs" />
-    <Compile Include="NaturalCubicSpline.cs" />
-    <Compile Include="Rand.cs" />
-    <Compile Include="SimpleCubicSpline.cs" />
-    <Compile Include="SmoothInterval.cs" />
-    <Compile Include="SplineBase.cs" />
-    <Compile Include="Time.cs" />
+    <Compile Include="AspectRatio.cs">
+      <Name>AspectRatio</Name>
+    </Compile>
+    <Compile Include="ClampedCubicSpline.cs">
+      <Name>ClampedCubicSpline</Name>
+    </Compile>
+    <Compile Include="CubicSplineBase.cs">
+      <Name>CubicSplineBase</Name>
+    </Compile>
+    <Compile Include="DDXXException.cs">
+      <SubType>Code</SubType>
+      <Name>DDXXException</Name>
+    </Compile>
+    <Compile Include="FileUtility.cs">
+      <Name>FileUtility</Name>
+    </Compile>
+    <Compile Include="IArithmetic.cs">
+      <Name>IArithmetic</Name>
+    </Compile>
+    <Compile Include="InterpolatedFloat.cs">
+      <Name>InterpolatedFloat</Name>
+    </Compile>
+    <Compile Include="InterpolatedVector3.cs">
+      <Name>InterpolatedVector3</Name>
+    </Compile>
+    <Compile Include="Interpolator.cs">
+      <Name>Interpolator</Name>
+    </Compile>
+    <Compile Include="ISpline.cs">
+      <Name>ISpline</Name>
+    </Compile>
+    <Compile Include="KeyFrame.cs">
+      <Name>KeyFrame</Name>
+    </Compile>
+    <Compile Include="LinearSpline.cs">
+      <Name>LinearSpline</Name>
+    </Compile>
+    <Compile Include="NaturalCubicSpline.cs">
+      <Name>NaturalCubicSpline</Name>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rand.cs">
+      <Name>Rand</Name>
+    </Compile>
+    <Compile Include="SplineBase.cs">
+      <Name>SplineBase</Name>
+    </Compile>
+    <Compile Include="Time.cs">
+      <Name>Time</Name>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <NestedContentProject Include="Content.contentproj">
+      <Project>{cc4e42c8-e3ea-48b2-aaad-a5d401025b59}</Project>
+      <Visible>False</Visible>
+    </NestedContentProject>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -66,4 +117,6 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v2.0\Microsoft.Xna.GameStudio.Common.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v2.0\Microsoft.Xna.GameStudio.NestedContent.targets" />
 </Project>

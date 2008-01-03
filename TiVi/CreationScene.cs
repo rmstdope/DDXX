@@ -20,11 +20,11 @@ namespace TiVi
         private UnindexedMesh lineTiViMesh;
         //private UnindexedMesh drawLineMesh;
         private IMesh originalTiViMesh;
-        private SkinnedModel modelTiVi;
+        private IModel modelTiVi;
         private ModelNode nodeTiVi;
-        private TiViVertex[] lineVertices;
+        private Vertex[] lineVertices;
         private List<TiViEdge> edges;
-        private TiViVertex[] allVertices;
+        private Vertex[] allVertices;
         private short[] indices;
         private ISprite sprite;
         private ITexture flareTexture;
@@ -36,13 +36,10 @@ namespace TiVi
         private CameraNode headCamera;
         private CameraNode bodyCamera1;
         private CameraNode handCamera;
-        private CameraNode legCamera;
         private CameraNode bodyCamera2;
-        private float bodyCameraStart1 = 7.0f;
-        private float handCameraStart = 14.0f;
-        private float legCameraStart = 21.0f;
-        private float bodyCameraStart2 = 28.0f;
-        private float solidStart = 35.0f;
+        private float bodyCameraStart1 = 6.0f;
+        private float handCameraStart = 12.0f;
+        private float bodyCameraStart2 = 19.0f;
         private static float segmentLength = 0.45f;
 
         public float FlareSize
@@ -50,16 +47,13 @@ namespace TiVi
             get { return flareSize; }
             set { flareSize = value; }
         }
+
         public float SegmentLength
         {
             get { return segmentLength; }
-            set 
-            { 
-                segmentLength = value;
-                if (lineTiViMesh != null)
-                    CreateLineMesh(startVertex);
-            }
+            set { segmentLength = value; }
         }
+
         public int StartVertex
         {
             get { return startVertex; }
@@ -70,49 +64,52 @@ namespace TiVi
                     CreateLineMesh(startVertex);
             }
         }
+
         public string BaseMesh
         {
             get { return baseMesh; }
             set { baseMesh = value; }
         }
-        public float BodyCameraStart1
-        {
-            get { return bodyCameraStart1; }
-            set { bodyCameraStart1 = value; }
-        }
-        public float HandCameraStart
-        {
-            get { return handCameraStart; }
-            set { handCameraStart = value; }
-        }
-        public float LegCameraStart
-        {
-            get { return legCameraStart; }
-            set { legCameraStart = value; }
-        }
-        public float BodyCameraStart2
-        {
-            get { return bodyCameraStart2; }
-            set { bodyCameraStart2 = value; }
-        }
 
-        public CreationScene(string name, float startTime, float endTime)
-            : base(name, startTime, endTime)
+        private struct Vertex
         {
-        }
-
-        private Vector4 circleCallback(Vector2 texCoord, Vector2 texelSize)
-        {
-            Vector2 centered = texCoord - new Vector2(0.5f, 0.5f);
-            float distance = centered.Length();
-            if (distance < 0.1f)
-                return new Vector4(1, 1, 1, 1);
-            else if (distance < 0.5f)
+            public Vertex(int i)
             {
-                float scaled = (0.5f - distance) / 0.4f;
-                return new Vector4(scaled, scaled, scaled, 1);
+                Position = new Vector3();
+                BlendWeight1 = 0;
+                BlendWeight2 = 0;
+                BlendWeight3 = 0;
+                BlendIndices = 0;
+                Normal = new Vector3();
+                U = 0;
+                V = 0;
+                //BiNormal = new Vector3();
+                //Tangent = new Vector3();
             }
-            return new Vector4(0, 0, 0, 0);
+            public VertexFormats VertexFormats
+            {
+                get
+                {
+                    return VertexFormats.PositionBlend4 | VertexFormats.LastBetaUByte4 |
+                        VertexFormats.Normal | VertexFormats.Texture0 | 
+                        (VertexFormats)(1 << (int)VertexFormats.TextureCountShift);
+                }
+            }
+            public Vector3 Position;
+            public float BlendWeight1;
+            public float BlendWeight2;
+            public float BlendWeight3;
+            public UInt32 BlendIndices;
+            public Vector3 Normal;
+            public float U;
+            public float V;
+            //public Vector3 BiNormal;
+            //public Vector3 Tangent;
+        }
+
+        public CreationScene(float startTime, float endTime)
+            : base(startTime, endTime)
+        {
         }
 
         protected override void Initialize()
@@ -124,8 +121,7 @@ namespace TiVi
             SetUpCamera();
 
             sprite = GraphicsFactory.CreateSprite(Device);
-            flareTexture = TextureFactory.CreateFromFunction(64, 64, 0, Usage.None, Format.A8R8G8B8, Pool.Managed, circleCallback);
-            //TextureFactory.CreateFromFile("Flare.dds");
+            flareTexture = TextureFactory.CreateFromFile("Flare.dds");
             whiteTexture = TextureFactory.CreateFromFunction(64, 64, 1, Usage.None,
                 Format.A8R8G8B8, Pool.Managed,
                 delegate(Vector2 coord, Vector2 texel) { return new Vector4(1, 1, 1, 1); });
@@ -141,16 +137,11 @@ namespace TiVi
             bodyCamera2 = new CameraNode("FullsizeCamera2");
             scene.AddNode(bodyCamera2);
 
-            legCamera = new CameraNode("LegCamera");
-            scene.AddNode(legCamera);
-
             headCamera = new CameraNode("HeadCamera");
             scene.AddNode(headCamera);
 
             handCamera = new CameraNode("HandCamera");
             scene.AddNode(handCamera);
-
-            scene.ActiveCamera = bodyCamera1;
         }
 
         private class TiViEdge
@@ -180,12 +171,6 @@ namespace TiVi
             {
                 StartTime = startTime;
                 Length = segmentLength + (float)(random.NextDouble() * segmentLength);
-                if (startTime < 7.0f)
-                    Length += 0.5f;
-                if (startTime > 21.0f)
-                    Length -= 0.15f;
-                //if (startTime == 0)
-                //    Length += 3;
             }
         }
 
@@ -206,8 +191,8 @@ namespace TiVi
 
         private void CreateLineMeshes()
         {
-            lineVertices = new TiViVertex[edges.Count * 2];
-            lineTiViMesh = new UnindexedMesh(GraphicsFactory, typeof(TiViVertex), lineVertices.Length,
+            lineVertices = new Vertex[edges.Count * 2];
+            lineTiViMesh = new UnindexedMesh(GraphicsFactory, typeof(Vertex), lineVertices.Length,
                 Device, Usage.WriteOnly | Usage.Dynamic, lineVertices[0].VertexFormats, Pool.Default);
 
             //drawLineMesh = new UnindexedMesh(GraphicsFactory, typeof(Vertex), MAX_NUM_DRAW_LINES * 2,
@@ -217,6 +202,7 @@ namespace TiVi
             //    new EffectHandler(EffectFactory.CreateFromFile("TiVi.fxo"), 
             //    TechniqueChooser.MaterialPrefix("Line"), model));
             //scene.AddNode(node);
+
         }
 
         private void LoadAnimation()
@@ -233,11 +219,8 @@ namespace TiVi
                     };
                 });
             XLoader.AddToScene(scene);
-            //IAnimationSet set = XLoader.RootFrame.AnimationController.GetAnimationSet(0);
-            //XLoader.RootFrame.AnimationController.SetTrackAnimationSet(0, set);
             nodeTiVi = (ModelNode)scene.GetNodeByName("TiVi");
-            nodeTiVi.Position = new Vector3();
-            modelTiVi = nodeTiVi.Model as SkinnedModel;
+            modelTiVi = nodeTiVi.Model;
             originalTiViMesh = modelTiVi.Mesh;
         }
 
@@ -251,7 +234,7 @@ namespace TiVi
         {
             using (IGraphicsStream stream = mesh.LockVertexBuffer(LockFlags.ReadOnly))
             {
-                allVertices = (TiViVertex[])stream.Read(typeof(TiViVertex), new int[] { mesh.NumberVertices });
+                allVertices = (Vertex[])stream.Read(typeof(Vertex), new int[] { mesh.NumberVertices });
                 mesh.UnlockVertexBuffer();
             }
         }
@@ -334,20 +317,17 @@ namespace TiVi
 
         public override void Step()
         {
-            float t = Time.StepTime - StartTime;
-
-            Mixer.ClearColor = Color.FromArgb(0, 0, 0, 0);
             if (nodeTiVi != null)
             {
                 int i;
                 flareIndices.Clear();
                 for (i = 0; i < edges.Count; i++)
                 {
-                    if (edges[i].StartTime > t)
+                    if (edges[i].StartTime > Time.CurrentTime)
                         break;
                     lineVertices[i * 2 + 0] = allVertices[edges[i].V1];
                     lineVertices[i * 2 + 1] = allVertices[edges[i].V2];
-                    float delta = (t - edges[i].StartTime) / edges[i].Length;
+                    float delta = (Time.CurrentTime - edges[i].StartTime) / edges[i].Length;
                     if (delta > 1.0f)
                         delta = 1.0f;
                     else
@@ -360,53 +340,31 @@ namespace TiVi
             }
 
             headCamera.WorldState.Reset();
-            headCamera.WorldState.MoveForward(-(1.0f + t / 8.0f));
+            headCamera.WorldState.MoveForward(-(1.0f + Time.StepTime / 8.0f));
             headCamera.WorldState.MoveUp(1.5f);
 
             bodyCamera1.WorldState.Reset();
-            bodyCamera1.WorldState.MoveForward(-(3.0f - t / 10.0f));
+            bodyCamera1.WorldState.MoveForward(-(3.0f - Time.StepTime / 10.0f));
             bodyCamera1.WorldState.MoveUp(1);
 
             handCamera.WorldState.Reset();
-            handCamera.WorldState.Turn(-1.1f - (t - handCameraStart) / 4.0f);
-            handCamera.WorldState.MoveUp(1.0f - (t - handCameraStart) / 7.0f);
-            handCamera.WorldState.MoveForward(-1.0f - (t - handCameraStart) / 7.0f);//.Position = new Vector3(2, 2, 0);
-            handCamera.LookAt(new Vector3(0, 1.0f, 0), new Vector3(0, 1, 0));
-
-            legCamera.WorldState.Reset();
-            legCamera.WorldState.MoveForward(-0.5f - (t - legCameraStart) / 14.0f);
-            legCamera.WorldState.MoveUp(0.2f);
-            legCamera.WorldState.MoveRight(0.1f);
+            handCamera.WorldState.Turn(1.0f - Time.StepTime / 7.0f);
+            handCamera.WorldState.MoveUp(1.0f);
+            handCamera.WorldState.MoveForward(-1.0f);//.Position = new Vector3(2, 2, 0);
+            handCamera.LookAt(new Vector3(0, 1.5f, 0), new Vector3(0, 1, 0));
 
             bodyCamera2.WorldState.Reset();
-            bodyCamera2.WorldState.MoveForward(-(1.0f + t / 10.0f));
+            bodyCamera2.WorldState.MoveForward(-(1.0f + Time.StepTime / 10.0f));
             bodyCamera2.WorldState.MoveUp(1);
 
-            if (t < bodyCameraStart1)
-            {
-                modelTiVi.SetAnimationSet("SkinPose", StartTime, 1);
+            if (Time.StepTime < bodyCameraStart1)
                 scene.ActiveCamera = headCamera;
-            }
-            else if (t < handCameraStart)
-            {
-                modelTiVi.SetAnimationSet("ArmsCrossed", StartTime + bodyCameraStart1, 1);
+            else if (Time.StepTime < handCameraStart)
                 scene.ActiveCamera = bodyCamera1;
-            }
-            else if (t < legCameraStart)
-            {
-                modelTiVi.SetAnimationSet("LookArm", StartTime + handCameraStart, 1);
+            else if (Time.StepTime < bodyCameraStart2)
                 scene.ActiveCamera = handCamera;
-            }
-            else if (t < bodyCameraStart2)
-            {
-                modelTiVi.SetAnimationSet("LookArm", StartTime + legCameraStart, 1);
-                scene.ActiveCamera = legCamera;
-            }
             else
-            {
-                modelTiVi.SetAnimationSet("ArmsCrossed", StartTime + bodyCameraStart2 - 4, 1);
                 scene.ActiveCamera = bodyCamera2;
-            }
 
             scene.Step();
         }
@@ -415,10 +373,8 @@ namespace TiVi
         {
             if (nodeTiVi != null)
             {
-                if (Time.CurrentTime > solidStart + StartTime)
+                if (Time.CurrentTime > 25.0f)
                 {
-                    nodeTiVi.EffectHandler.Techniques[0] = EffectHandle.FromString("SolidSkinning");
-                    nodeTiVi.EffectHandler.Techniques[1] = EffectHandle.FromString("TvScreenSkinning");
                     modelTiVi.Materials[0].AmbientColor = new ColorValue(0.2f, 0.2f, 0.2f);
                     modelTiVi.Materials[0].DiffuseColor = new ColorValue(1.0f, 1.0f, 1.0f);
                     modelTiVi.Materials[0].SpecularColor = new ColorValue(1.0f, 1.0f, 1.0f);
@@ -427,20 +383,25 @@ namespace TiVi
                 }
                 else
                 {
-                    nodeTiVi.EffectHandler.Techniques[0] = EffectHandle.FromString("LineDrawerSkinning");
-                    nodeTiVi.EffectHandler.Techniques[1] = EffectHandle.FromString("LineDrawerSkinning");
                     modelTiVi.Materials[0].AmbientColor = new ColorValue(0.4f, 0.4f, 0.4f);
                     modelTiVi.Materials[0].DiffuseColor = new ColorValue(0.7f, 0.7f, 0.3f);
-                    modelTiVi.Materials[0].SpecularColor = new ColorValue(1.0f, 1.0f, 1.0f);
-                    //modelTiVi.Materials[0].AmbientColor = new ColorValue(0.4f, 0.4f, 0.4f);
-                    //modelTiVi.Materials[0].DiffuseColor = new ColorValue(0.7f, 0.7f, 0.3f);
-                    //modelTiVi.Materials[0].SpecularColor = new ColorValue(0.5f, 0.5f, 0.5f);
-                    modelTiVi.Materials[0].Shininess = 16;
+                    modelTiVi.Materials[0].SpecularColor = new ColorValue(0.5f, 0.5f, 0.5f);
+                    modelTiVi.Materials[0].Shininess = 32;
                     modelTiVi.Mesh = lineTiViMesh;
                 }
             }
             scene.Render();
             DrawFlares();
+
+            DrawFlash();
+        }
+
+        private void DrawFlash()
+        {
+            //fader.SetLengths(0.5f, 0.5f, 2.0f);
+            //fader.Draw(bodyCameraStart1 - 0.5f);
+            //fader.Draw(handCameraStart - 0.5f);
+            //fader.Draw(bodyCameraStart2 - 0.5f);
         }
 
         private void DrawFlares()
@@ -449,17 +410,8 @@ namespace TiVi
             Matrix[] matrices = ((SkinnedModel)modelTiVi).GetBoneMatrices(0);
             for (int i = 0; i < flareIndices.Count; i++)
             {
-                TiViVertex v = lineVertices[flareIndices[i]];
-                Matrix matrix = new Matrix();
-                int shift = 0;
-                float[] weights = new float[] { v.BlendWeight1, v.BlendWeight2, v.BlendWeight3, 0 };
-                weights[3] = 1 - v.BlendWeight1 - v.BlendWeight2 - v.BlendWeight3;
-                for (int j = 0; j < 4; j++)
-                {
-                    matrix += MultiplyMatrix(matrices[(v.BlendIndices >> shift) & 0xFF], weights[j]);
-                    shift += 8;
-                }
-                matrix = matrix * scene.ActiveCamera.ViewMatrix * scene.ActiveCamera.ProjectionMatrix;
+                Vertex v = lineVertices[flareIndices[i]];
+                Matrix matrix = matrices[v.BlendIndices & 0xFF] * scene.ActiveCamera.ViewMatrix * scene.ActiveCamera.ProjectionMatrix;
                 Vector3 pos = v.Position;
                 pos.TransformCoordinate(matrix);
                 pos *= 0.5f;
@@ -468,35 +420,16 @@ namespace TiVi
                 pos.Y *= Device.Viewport.Height;
                 pos.Y = Device.Viewport.Height - pos.Y;
                 pos -= new Vector3(flareSize / 2.0f, flareSize / 2.0f, 0);
-                Device.RenderState.BlendOperation = BlendOperation.Max;
-                Device.RenderState.SourceBlend = Blend.One;
-                Device.RenderState.DestinationBlend = Blend.One;
                 sprite.Draw2D(flareTexture, Rectangle.Empty, new SizeF(flareSize, flareSize),
                     new PointF(pos.X, pos.Y), Color.White);
             }
             sprite.End();
         }
-
-        private Matrix MultiplyMatrix(Matrix matrix, float p)
-        {
-            Matrix newMatrix = new Matrix();
-            newMatrix.M11 = matrix.M11 * p;
-            newMatrix.M12 = matrix.M12 * p;
-            newMatrix.M13 = matrix.M13 * p;
-            newMatrix.M14 = matrix.M14 * p;
-            newMatrix.M21 = matrix.M21 * p;
-            newMatrix.M22 = matrix.M22 * p;
-            newMatrix.M23 = matrix.M23 * p;
-            newMatrix.M24 = matrix.M24 * p;
-            newMatrix.M31 = matrix.M31 * p;
-            newMatrix.M32 = matrix.M32 * p;
-            newMatrix.M33 = matrix.M33 * p;
-            newMatrix.M34 = matrix.M34 * p;
-            newMatrix.M41 = matrix.M41 * p;
-            newMatrix.M42 = matrix.M42 * p;
-            newMatrix.M43 = matrix.M43 * p;
-            newMatrix.M44 = matrix.M44 * p;
-            return newMatrix;
-        }
     }
 }
+
+// 3.6 - Head done
+// 4.8 - Arm starts
+// 10.8 - Fingers ends
+// 14 - All done
+

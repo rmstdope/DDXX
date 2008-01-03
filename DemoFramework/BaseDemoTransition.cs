@@ -11,7 +11,7 @@ namespace Dope.DDXX.DemoFramework
         private float endTime;
         private int destinationTrack;
         private IPostProcessor postProcessor;
-        private IDevice device;
+        //private IGraphicsDevice device;
 
         public int DestinationTrack
         {
@@ -31,23 +31,17 @@ namespace Dope.DDXX.DemoFramework
             EndTime = endTime;
         }
 
-        public void Initialize(IDevice device, IPostProcessor postProcessor)
+        public void Initialize(/*IDevice device, */IPostProcessor postProcessor)
         {
-            this.device = device;
+            //this.device = device;
             this.postProcessor = postProcessor;
         }
 
-        abstract public ITexture Combine(ITexture fromTexture, ITexture toTexture);
+        abstract public IRenderTarget2D Combine(IRenderTarget2D fromTexture, IRenderTarget2D toTexture);
 
-        public ITexture Render(ITexture fromTexture, ITexture toTexture)
+        public IRenderTarget2D Render(IRenderTarget2D fromTexture, IRenderTarget2D toTexture)
         {
-            ITexture result;
-            using (ISurface originalSurface = device.GetRenderTarget(0))
-            {
-                result = Combine(fromTexture, toTexture);
-                device.SetRenderTarget(0, originalSurface);
-            }
-            return result;
+            return Combine(fromTexture, toTexture);
         }
 
         public float StartTime

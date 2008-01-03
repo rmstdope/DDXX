@@ -1,14 +1,25 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Windows.Forms;
-using Microsoft.DirectX.DirectInput;
 using Dope.DDXX.Utility;
+using Microsoft.Xna.Framework.Input;
 
 namespace Dope.DDXX.Input
 {
     public class InputDriver : IInputDriver
     {
+        private enum Buttons
+        {
+            ButtonA,
+            ButtonB,
+            ButtonX,
+            ButtonY,
+            DPadRight,
+            DPadLeft,
+            DPadUp,
+            DPadDown
+        }
+
         private class KeyInfo
         {
             private float[] slowRepeatTimes = new float[] { 0.5f, 0.1f, 0.02f };
@@ -40,12 +51,11 @@ namespace Dope.DDXX.Input
             private float time;
             private int numRepeats;
         }
+
         private static InputDriver instance;
-        private static IInputFactory factory = new DirectInputFactory();
-
-        private Device keyboard;
-
-        private Dictionary<Key, KeyInfo> pressEntries;
+        private Dictionary<Keys, KeyInfo> keyEntries;
+        private Dictionary<Buttons, KeyInfo> buttonEntries;
+        private static IInputFactory factory = new InputFactory();
 
         private InputDriver()
         {
@@ -54,7 +64,6 @@ namespace Dope.DDXX.Input
 
         public static IInputFactory Factory
         {
-            get { return factory; }
             set { factory = value; }
         }
 
@@ -69,55 +78,49 @@ namespace Dope.DDXX.Input
 
         public void Reset()
         {
-            pressEntries = new Dictionary<Key, KeyInfo>();
+            keyEntries = new Dictionary<Keys, KeyInfo>();
+            buttonEntries  = new Dictionary<Buttons, KeyInfo>();
         }
 
-        public void Initialize(Control control)
+        public void Step()
         {
-            keyboard = factory.Keyboard;
-
-            if (keyboard == null)
-                throw new DDXXException("Could not enumerate any attached keyboard");
-
-            factory.SetCooperativeLevel(keyboard, control, CooperativeLevelFlags.NonExclusive | CooperativeLevelFlags.Background);
-
-            factory.Acquire(keyboard);
+            factory.Step();
         }
 
-        public bool KeyPressed(Key key)
+        public bool KeyPressed(Keys key)
         {
-            return factory.KeyPressed(keyboard, key);
+            return factory.KeyPressed(key);
         }
 
-        public bool KeyPressedNoRepeat(Key key)
+        public bool KeyPressedNoRepeat(Keys key)
         {
-            bool pressed = factory.KeyPressed(keyboard, key);
-            if (pressEntries.ContainsKey(key))
+            bool pressed = KeyPressed(key);
+            if (keyEntries.ContainsKey(key))
             {
                 if (!pressed)
-                    pressEntries.Remove(key);
+                    keyEntries.Remove(key);
             }
             else
             {
                 if (pressed)
                 {
-                    pressEntries.Add(key, new KeyInfo());
+                    keyEntries.Add(key, new KeyInfo());
                     return true;
                 }
             }
             return false;
         }
 
-        public bool KeyPressedSlowRepeat(Key key)
+        public bool KeyPressedSlowRepeat(Keys key)
         {
-            bool pressed = factory.KeyPressed(keyboard, key);
-            if (pressEntries.ContainsKey(key))
+            bool pressed = KeyPressed(key);
+            if (keyEntries.ContainsKey(key))
             {
                 if (!pressed)
-                    pressEntries.Remove(key);
+                    keyEntries.Remove(key);
                 else
                 {
-                    KeyInfo info = pressEntries[key];
+                    KeyInfo info = keyEntries[key];
                     return info.IsSlowRepeat();
                 }
             }
@@ -125,11 +128,149 @@ namespace Dope.DDXX.Input
             {
                 if (pressed)
                 {
-                    pressEntries.Add(key, new KeyInfo());
+                    keyEntries.Add(key, new KeyInfo());
                     return true;
                 }
             }
             return false;
         }
+
+        private bool ButtonPressed(Buttons button)
+        {
+            switch (button)
+            {
+                case Buttons.ButtonA:
+                    return factory.GamePadButtonA();
+                case Buttons.ButtonB:
+                    return factory.GamePadButtonB();
+                case Buttons.ButtonX:
+                    return factory.GamePadButtonX();
+                case Buttons.ButtonY:
+                    return factory.GamePadButtonY();
+                case Buttons.DPadDown:
+                    return factory.GamePadLeft();
+                case Buttons.DPadLeft:
+                    return factory.GamePadLeft();
+                case Buttons.DPadRight:
+                    return factory.GamePadRight();
+                case Buttons.DPadUp:
+                    return factory.GamePadUp();
+            }
+            return false;
+        }
+
+        private bool ButtonPressedNoRepeat(Buttons button)
+        {
+            bool pressed = ButtonPressed(button);
+            if (buttonEntries.ContainsKey(button))
+            {
+                if (!pressed)
+                    buttonEntries.Remove(button);
+            }
+            else
+            {
+                if (pressed)
+                {
+                    buttonEntries.Add(button, new KeyInfo());
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool ButtonPressedSlowRepeat(Buttons button)
+        {
+            bool pressed = ButtonPressed(button);
+            if (buttonEntries.ContainsKey(button))
+            {
+                if (!pressed)
+                    buttonEntries.Remove(button);
+                else
+                {
+                    KeyInfo info = buttonEntries[button];
+                    return info.IsSlowRepeat();
+                }
+            }
+            else
+            {
+                if (pressed)
+                {
+                    buttonEntries.Add(button, new KeyInfo());
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool OkPressed()
+        {
+            return ButtonPressed(Buttons.ButtonA) || KeyPressed(Keys.Enter);
+        }
+
+        public bool BackPressed()
+        {
+            return ButtonPressed(Buttons.ButtonB) || KeyPressed(Keys.Escape);
+        }
+
+        public bool PausePressed()
+        {
+            return ButtonPressed(Buttons.ButtonX) || KeyPressed(Keys.Space);
+        }
+
+        public bool RightPressed()
+        {
+            return ButtonPressed(Buttons.DPadRight) || KeyPressed(Keys.Right);
+        }
+
+        public bool LeftPressed()
+        {
+            return ButtonPressed(Buttons.DPadLeft) || KeyPressed(Keys.Left);
+        }
+
+        public bool UpPressed()
+        {
+            return ButtonPressed(Buttons.DPadUp) || KeyPressed(Keys.Up);
+        }
+
+        public bool DownPressed()
+        {
+            return ButtonPressed(Buttons.DPadDown) || KeyPressed(Keys.Down);
+        }
+
+        public bool OkPressedNoRepeat()
+        {
+            return ButtonPressedNoRepeat(Buttons.ButtonA) || KeyPressedNoRepeat(Keys.Enter);
+        }
+
+        public bool BackPressedNoRepeat()
+        {
+            return ButtonPressedNoRepeat(Buttons.ButtonB) || KeyPressedNoRepeat(Keys.Escape);
+        }
+
+        public bool PausePressedNoRepeat()
+        {
+            return ButtonPressedNoRepeat(Buttons.ButtonX) || KeyPressedNoRepeat(Keys.Space);
+        }
+
+        public bool RightPressedNoRepeat()
+        {
+            return ButtonPressedNoRepeat(Buttons.DPadRight) || KeyPressedNoRepeat(Keys.Right);
+        }
+
+        public bool LeftPressedNoRepeat()
+        {
+            return ButtonPressedNoRepeat(Buttons.DPadLeft) || KeyPressedNoRepeat(Keys.Left);
+        }
+
+        public bool UpPressedNoRepeat()
+        {
+            return ButtonPressedNoRepeat(Buttons.DPadUp) || KeyPressedNoRepeat(Keys.Up);
+        }
+
+        public bool DownPressedNoRepeat()
+        {
+            return ButtonPressedNoRepeat(Buttons.DPadDown) || KeyPressedNoRepeat(Keys.Down);
+        }
+
     }
 }

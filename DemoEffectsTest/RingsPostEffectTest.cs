@@ -2,47 +2,41 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using Dope.DDXX.DemoFramework;
 using NMock2;
-using System.Drawing;
-using Microsoft.DirectX.Direct3D;
-using Microsoft.DirectX;
+using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Utility;
 using Dope.DDXX.Graphics;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoEffects
 {
     [TestFixture]
-    public class RingsPostEffectTest
+    public class RingsPostEffectTest : DemoMockTest
     {
-        private Mockery mockery;
-        private RingsPostEffect effect;
-        private IPostProcessor postProcessor;
+        private RingsPostEffect sut;
         private Vector2 time;
         private float distance;
         private float scale;
-        private ITexture texture1;
-        private ITexture texture2;
-        private ITexture outputTexture;
+        private IRenderTarget2D texture1;
+        private IRenderTarget2D texture2;
+        private IRenderTarget2D outputTexture;
 
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
-            mockery = new Mockery();
-            postProcessor = mockery.NewMock<IPostProcessor>();
-            texture1 = mockery.NewMock<ITexture>();
-            texture2 = mockery.NewMock<ITexture>();
-            outputTexture = mockery.NewMock<ITexture>();
-            effect = new RingsPostEffect("", 1.0f, 2.0f);
-            effect.Initialize(null, postProcessor, null, null, null);
-            Time.Initialize();
-            Time.Pause();
+            base.SetUp();
+            texture1 = mockery.NewMock<IRenderTarget2D>();
+            texture2 = mockery.NewMock<IRenderTarget2D>();
+            outputTexture = mockery.NewMock<IRenderTarget2D>();
+            sut = new RingsPostEffect("", 1.0f, 2.0f);
+            sut.Initialize(graphicsFactory, postProcessor, textureFactory, textureBuilder);
         }
 
         [TearDown]
-        public void TearDown()
+        public override void TearDown()
         {
-            mockery.VerifyAllExpectationsHaveBeenMet();
+            base.TearDown();
         }
 
         [Test]
@@ -65,15 +59,15 @@ namespace Dope.DDXX.DemoEffects
             TestRender(texture1, texture2);
         }
 
-        private void TestRender(ITexture startTexture, ITexture endTexture)
+        private void TestRender(IRenderTarget2D startTexture, IRenderTarget2D endTexture)
         {
-            List<ITexture> textures = new List<ITexture>();
+            List<IRenderTarget2D> textures = new List<IRenderTarget2D>();
             textures.Add(endTexture);
             Stub.On(postProcessor).
                 GetProperty("OutputTexture").
                 Will(Return.Value(startTexture));
-            effect.Distance = distance;
-            effect.Scale = scale;
+            sut.Distance = distance;
+            sut.Scale = scale;
             using (mockery.Ordered)
             {
                 Expect.Once.On(postProcessor).
@@ -81,7 +75,7 @@ namespace Dope.DDXX.DemoEffects
                     With(1, false).Will(Return.Value(textures));
                 Expect.Once.On(postProcessor).
                     Method("SetBlendParameters").
-                    With(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
+                    With(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);
                 Expect.Once.On(postProcessor).
                     Method("SetValue").With("RingsDistance", distance);
                 Expect.Once.On(postProcessor).
@@ -90,7 +84,7 @@ namespace Dope.DDXX.DemoEffects
                     Method("SetValue").With(Is.EqualTo("WaveTime"), new Vector2Matcher(time));
                 Expect.Once.On(postProcessor).
                     Method("Process").With("Rings", startTexture, endTexture);
-                effect.Render();
+                sut.Render();
             }
         }
 

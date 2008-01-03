@@ -4,43 +4,37 @@ using System.Text;
 using NUnit.Framework;
 using Dope.DDXX.DemoFramework;
 using NMock2;
-using System.Drawing;
-using Microsoft.DirectX.Direct3D;
-using Microsoft.DirectX;
 using Dope.DDXX.Utility;
 using Dope.DDXX.Graphics;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoEffects
 {
     [TestFixture]
-    public class WavePostEffectTest
+    public class WavePostEffectTest : DemoMockTest
     {
-        private Mockery mockery;
-        private WavePostEffect effect;
-        private IPostProcessor postProcessor;
-        private ITexture outputTexture;
-        private ITexture texture1;
+        private WavePostEffect sut;
+        private IRenderTarget2D outputTexture;
+        private IRenderTarget2D texture1;
         private Vector4 strength;
         private Vector2 time;
         private float scale;
 
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
-            mockery = new Mockery();
-            postProcessor = mockery.NewMock<IPostProcessor>();
-            outputTexture = mockery.NewMock<ITexture>();
-            texture1 = mockery.NewMock<ITexture>();
-            effect = new WavePostEffect("", 1.0f, 2.0f);
-            effect.Initialize(null, postProcessor, null, null, null);
-            Time.Initialize();
-            Time.Pause();
+            base.SetUp();
+            outputTexture = mockery.NewMock<IRenderTarget2D>();
+            texture1 = mockery.NewMock<IRenderTarget2D>();
+            sut = new WavePostEffect("", 1.0f, 2.0f);
+            sut.Initialize(graphicsFactory, postProcessor, textureFactory, textureBuilder);
         }
 
         [TearDown]
-        public void TearDown()
+        public override void TearDown()
         {
-            mockery.VerifyAllExpectationsHaveBeenMet();
+            base.TearDown();
         }
 
         [Test]
@@ -63,15 +57,15 @@ namespace Dope.DDXX.DemoEffects
             TestRender(outputTexture, texture1);
         }
 
-        private void TestRender(ITexture startTexture, ITexture endTexture)
+        private void TestRender(IRenderTarget2D startTexture, IRenderTarget2D endTexture)
         {
-            List<ITexture> textures = new List<ITexture>();
+            List<IRenderTarget2D> textures = new List<IRenderTarget2D>();
             textures.Add(endTexture);
             Stub.On(postProcessor).
                 GetProperty("OutputTexture").
                 Will(Return.Value(startTexture));
-            effect.Strength = strength;
-            effect.Scale = scale;
+            sut.Strength = strength;
+            sut.Scale = scale;
             using (mockery.Ordered)
             {
                 Expect.Once.On(postProcessor).
@@ -79,7 +73,7 @@ namespace Dope.DDXX.DemoEffects
                     With(1, false).Will(Return.Value(textures));
                 Expect.Once.On(postProcessor).
                     Method("SetBlendParameters").
-                    With(BlendOperation.Add, Blend.One, Blend.Zero, Color.Black);
+                    With(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);
                 Expect.Once.On(postProcessor).
                     Method("SetValue").With("WaveStrength", strength);
                 Expect.Once.On(postProcessor).
@@ -88,7 +82,7 @@ namespace Dope.DDXX.DemoEffects
                     Method("SetValue").With(Is.EqualTo("WaveTime"), new Vector2Matcher(time));
                 Expect.Once.On(postProcessor).
                     Method("Process").With("Wave", startTexture, endTexture);
-                effect.Render();
+                sut.Render();
             }
         }
 

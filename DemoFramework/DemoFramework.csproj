@@ -1,147 +1,261 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
+    <ProjectGuid>{0E899EC0-D2E2-47EE-A46D-53E037C3F52F}</ProjectGuid>
+    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{DBD3FD0B-0B65-4626-BABA-3C46457B1185}</ProjectGuid>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Dope.DDXX.DemoFramework</RootNamespace>
     <AssemblyName>Dope.DDXX.DemoFramework</AssemblyName>
+    <XnaFrameworkVersion>v2.0</XnaFrameworkVersion>
+    <XnaPlatform>Windows</XnaPlatform>
+    <Thumbnail>
+    </Thumbnail>
+    <XnaCrossPlatformGroupID>{d38b9777-0d02-4a7d-a15e-92b46124f013}</XnaCrossPlatformGroupID>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\x86\Debug</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\x86\Release</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2911.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="Microsoft.DirectX.DirectInput, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <Reference Include="System" />
+    <Reference Include="Microsoft.Xna.Framework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseControl.cs" />
-    <Compile Include="BaseDemoEffect.cs" />
-    <Compile Include="BaseDemoPostEffect.cs" />
-    <Compile Include="BaseDemoTransition.cs" />
-    <Compile Include="BoxControl.cs" />
-    <Compile Include="DemoEffectTypes.cs" />
-    <Compile Include="DemoExecuter.cs" />
-    <Compile Include="DemoFactory.cs" />
-    <Compile Include="DemoTweakerBase.cs" />
-    <Compile Include="DemoTweakerDemo.cs" />
-    <Compile Include="DemoTweakerEffect.cs" />
-    <Compile Include="DemoTweakerMain.cs" />
-    <Compile Include="DemoTweakerTrack.cs" />
+    <Compile Include="BaseControl.cs">
+      <Name>BaseControl</Name>
+    </Compile>
+    <Compile Include="BaseDemoEffect.cs">
+      <Name>BaseDemoEffect</Name>
+    </Compile>
+    <Compile Include="BaseDemoPostEffect.cs">
+      <Name>BaseDemoPostEffect</Name>
+    </Compile>
+    <Compile Include="BaseDemoTransition.cs">
+      <Name>BaseDemoTransition</Name>
+    </Compile>
+    <Compile Include="BoxControl.cs">
+      <Name>BoxControl</Name>
+    </Compile>
+    <Compile Include="DemoEffectTypes.cs">
+      <Name>DemoEffectTypes</Name>
+    </Compile>
+    <Compile Include="DemoExecuter.cs">
+      <SubType>Code</SubType>
+      <Name>DemoExecuter</Name>
+    </Compile>
+    <Compile Include="DemoFactory.cs">
+      <Name>DemoFactory</Name>
+    </Compile>
+    <Compile Include="DemoTweakerBase.cs">
+      <Name>DemoTweakerBase</Name>
+    </Compile>
+    <Compile Include="DemoTweakerDemo.cs">
+      <Name>DemoTweakerDemo</Name>
+    </Compile>
+    <Compile Include="DemoTweakerEffect.cs">
+      <Name>DemoTweakerEffect</Name>
+    </Compile>
+    <Compile Include="DemoTweakerMain.cs">
+      <Name>DemoTweakerMain</Name>
+    </Compile>
+    <Compile Include="DemoTweakerTrack.cs">
+      <Name>DemoTweakerTrack</Name>
+    </Compile>
     <Compile Include="DemoWindow.cs">
-      <SubType>Form</SubType>
+      <Name>DemoWindow</Name>
     </Compile>
-    <Compile Include="IDemoEffect.cs" />
-    <Compile Include="IDemoEffectBuilder.cs" />
-    <Compile Include="IDemoEffectTypes.cs" />
-    <Compile Include="IDemoFactory.cs" />
-    <Compile Include="IDemoMixer.cs" />
-    <Compile Include="IDemoPostEffect.cs" />
-    <Compile Include="IDemoRegistrator.cs" />
-    <Compile Include="IDemoTransition.cs" />
-    <Compile Include="IDemoTweaker.cs" />
-    <Compile Include="IDemoTweakerContext.cs" />
-    <Compile Include="IEffectChangeListener.cs" />
-    <Compile Include="IPostProcessor.cs" />
-    <Compile Include="IRegisterable.cs" />
-    <Compile Include="ISetupDialog.cs" />
-    <Compile Include="ITrack.cs" />
-    <Compile Include="ITweakableContainer.cs" />
-    <Compile Include="ITweakerSettings.cs" />
-    <Compile Include="IUserInterface.cs" />
-    <Compile Include="LineControl.cs" />
-    <Compile Include="PostProcessor.cs" />
+    <Compile Include="DemoXMLReader.cs">
+      <Name>DemoXMLReader</Name>
+    </Compile>
+    <Compile Include="DeviceParameters.cs">
+      <Name>DeviceParameters</Name>
+    </Compile>
+    <Compile Include="IDemoEffect.cs">
+      <Name>IDemoEffect</Name>
+    </Compile>
+    <Compile Include="IDemoEffectBuilder.cs">
+      <Name>IDemoEffectBuilder</Name>
+    </Compile>
+    <Compile Include="IDemoEffectTypes.cs">
+      <Name>IDemoEffectTypes</Name>
+    </Compile>
+    <Compile Include="IDemoFactory.cs">
+      <Name>IDemoFactory</Name>
+    </Compile>
+    <Compile Include="IDemoMixer.cs">
+      <Name>IDemoMixer</Name>
+    </Compile>
+    <Compile Include="IDemoPostEffect.cs">
+      <Name>IDemoPostEffect</Name>
+    </Compile>
+    <Compile Include="IDemoRegistrator.cs">
+      <Name>IDemoRegistrator</Name>
+    </Compile>
+    <Compile Include="IDemoTransition.cs">
+      <Name>IDemoTransition</Name>
+    </Compile>
+    <Compile Include="IDemoTweaker.cs">
+      <Name>IDemoTweaker</Name>
+    </Compile>
+    <Compile Include="IDemoTweakerContext.cs">
+      <Name>IDemoTweakerContext</Name>
+    </Compile>
+    <Compile Include="IDeviceParameters.cs">
+      <Name>IDeviceParameters</Name>
+    </Compile>
+    <Compile Include="IEffectChangeListener.cs">
+      <Name>IEffectChangeListener</Name>
+    </Compile>
+    <Compile Include="IPostProcessor.cs">
+      <Name>IPostProcessor</Name>
+    </Compile>
+    <Compile Include="IRegisterable.cs">
+      <Name>IRegisterable</Name>
+    </Compile>
+    <Compile Include="ISetupDialog.cs">
+      <Name>ISetupDialog</Name>
+    </Compile>
+    <Compile Include="ITrack.cs">
+      <SubType>Code</SubType>
+      <Name>ITrack</Name>
+    </Compile>
+    <Compile Include="ITweakableContainer.cs">
+      <Name>ITweakableContainer</Name>
+    </Compile>
+    <Compile Include="ITweakerSettings.cs">
+      <Name>ITweakerSettings</Name>
+    </Compile>
+    <Compile Include="IUserInterface.cs">
+      <Name>IUserInterface</Name>
+    </Compile>
+    <Compile Include="LineControl.cs">
+      <Name>LineControl</Name>
+    </Compile>
+    <Compile Include="PostProcessor.cs">
+      <Name>PostProcessor</Name>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="SetupForm.cs">
       <SubType>Form</SubType>
+      <Name>SetupForm</Name>
     </Compile>
     <Compile Include="SetupForm.Designer.cs">
       <DependentUpon>SetupForm.cs</DependentUpon>
+      <Name>SetupForm.Designer</Name>
     </Compile>
-    <Compile Include="SetupLogic.cs" />
-    <Compile Include="TextControl.cs" />
-    <Compile Include="Track.cs" />
-    <Compile Include="DemoXMLReader.cs" />
-    <Compile Include="TweakableContainer.cs" />
-    <Compile Include="TweakerSettings.cs" />
-    <Compile Include="UserInterface.cs" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <SubType>Designer</SubType>
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <Compile Include="SetupLogic.cs">
+      <Name>SetupLogic</Name>
+    </Compile>
+    <Compile Include="TextControl.cs">
+      <Name>TextControl</Name>
+    </Compile>
+    <Compile Include="Track.cs">
+      <Name>Track</Name>
+    </Compile>
+    <Compile Include="TweakableContainer.cs">
+      <Name>TweakableContainer</Name>
+    </Compile>
+    <Compile Include="TweakerSettings.cs">
+      <Name>TweakerSettings</Name>
+    </Compile>
+    <Compile Include="UserInterface.cs">
+      <Name>UserInterface</Name>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="SetupForm.resx">
       <DependentUpon>SetupForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+      <Name>SetupForm</Name>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FMOD\FMOD.csproj">
-      <Project>{1A7A1C62-87D6-4798-BBBD-8472DC2D755B}</Project>
-      <Name>FMOD</Name>
+    <NestedContentProject Include="Content.contentproj">
+      <Project>{7d7cbffa-feea-4245-bea1-5d0db8435921}</Project>
+      <Visible>False</Visible>
+    </NestedContentProject>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ContentProcessor\ContentProcessor.csproj">
+      <Project>{01FF3AC6-34FA-4CD4-8F28-B7EFAC351F50}</Project>
+      <Name>ContentProcessor</Name>
     </ProjectReference>
     <ProjectReference Include="..\Graphics\Graphics.csproj">
-      <Project>{B64087ED-595E-4597-84D8-D273FF00B2DA}</Project>
+      <Project>{797591FA-968E-41D7-BFEF-85E13FCCA4CF}</Project>
       <Name>Graphics</Name>
     </ProjectReference>
     <ProjectReference Include="..\Input\Input.csproj">
-      <Project>{E2280509-C330-4684-90FD-336B8CD4D7EF}</Project>
+      <Project>{D8131D4F-45AF-4942-B77F-17714A6B64DF}</Project>
       <Name>Input</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MeshBuilder\MeshBuilder.csproj">
-      <Project>{CF2AB575-856D-4160-8DCD-7A5729579892}</Project>
-      <Name>MeshBuilder</Name>
+    <ProjectReference Include="..\ModelBuilder\ModelBuilder.csproj">
+      <Project>{2C34DF5D-D096-45DF-84C9-E78A3691F182}</Project>
+      <Name>ModelBuilder</Name>
     </ProjectReference>
     <ProjectReference Include="..\Physics\Physics.csproj">
-      <Project>{6F7E70F2-FC19-4399-84BD-F60AC491E970}</Project>
+      <Project>{3925EBCA-3484-4349-BD1A-967D8FB9CE19}</Project>
       <Name>Physics</Name>
     </ProjectReference>
     <ProjectReference Include="..\SceneGraph\SceneGraph.csproj">
-      <Project>{BF75F16E-5056-4484-BFE2-72F8733B8BF3}</Project>
+      <Project>{3876D35C-41A0-459E-819B-0354A2A75443}</Project>
       <Name>SceneGraph</Name>
     </ProjectReference>
     <ProjectReference Include="..\Sound\Sound.csproj">
-      <Project>{FFA67C42-A1E3-4C9F-887A-E5DEB52DDEB4}</Project>
+      <Project>{A99FE879-47B6-48B4-956C-EE082AC41817}</Project>
       <Name>Sound</Name>
     </ProjectReference>
     <ProjectReference Include="..\TextureBuilder\TextureBuilder.csproj">
-      <Project>{712F1F16-E7BC-4D96-8B1A-AEA31365FD95}</Project>
+      <Project>{7DCF0749-447D-4D64-A1A2-2560C03A072E}</Project>
       <Name>TextureBuilder</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utility\Utility.csproj">
-      <Project>{31D76405-2DD3-436A-BE65-963DE822511E}</Project>
+      <Project>{70F76E25-311C-4DFC-9412-89470F537BDF}</Project>
       <Name>Utility</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v2.0\Microsoft.Xna.GameStudio.Common.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v2.0\Microsoft.Xna.GameStudio.NestedContent.targets" />
 </Project>

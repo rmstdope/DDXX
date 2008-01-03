@@ -7,10 +7,8 @@
     <ProjectGuid>{FE296A3C-B69F-4236-BECE-94B38315B94C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PoseidonTest</RootNamespace>
+    <RootNamespace>EngineTest</RootNamespace>
     <AssemblyName>EngineTest</AssemblyName>
-    <StartupObject>
-    </StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,7 +39,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ModelEffect.cs" />
     <Compile Include="PoseidonTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -82,17 +79,9 @@
       <Project>{E2280509-C330-4684-90FD-336B8CD4D7EF}</Project>
       <Name>Input</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MeshBuilder\MeshBuilder.csproj">
-      <Project>{CF2AB575-856D-4160-8DCD-7A5729579892}</Project>
-      <Name>MeshBuilder</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ParticleSystems\ParticleSystems.csproj">
       <Project>{AA378577-B1F3-4C03-A968-C990445C7AC1}</Project>
       <Name>ParticleSystems</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Physics\Physics.csproj">
-      <Project>{6F7E70F2-FC19-4399-84BD-F60AC491E970}</Project>
-      <Name>Physics</Name>
     </ProjectReference>
     <ProjectReference Include="..\SceneGraph\SceneGraph.csproj">
       <Project>{BF75F16E-5056-4484-BFE2-72F8733B8BF3}</Project>
@@ -105,10 +94,6 @@
     <ProjectReference Include="..\TextureBuilder\TextureBuilder.csproj">
       <Project>{712F1F16-E7BC-4D96-8B1A-AEA31365FD95}</Project>
       <Name>TextureBuilder</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Utility\Utility.csproj">
-      <Project>{31D76405-2DD3-436A-BE65-963DE822511E}</Project>
-      <Name>Utility</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

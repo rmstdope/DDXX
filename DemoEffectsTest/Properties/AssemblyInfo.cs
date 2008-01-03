@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -6,10 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("DemoEffectsTest")]
+[assembly: AssemblyProduct("DemoEffectsTest")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Dope Demo Productions")]
-[assembly: AssemblyProduct("DDXX")]
+[assembly: AssemblyCompany("Dope")]
 [assembly: AssemblyCopyright("Copyright © Dope 2007")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("afe0be54-cba4-4079-9c67-d47d9f205ba5")]
+[assembly: Guid("a30a711f-d794-4f02-8013-55c332083c38")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -29,7 +28,4 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-// You can specify all the values or you can default the Revision and Build Numbers 
-// by using the '*' as shown below:
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]

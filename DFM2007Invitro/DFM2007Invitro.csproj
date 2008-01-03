@@ -1,0 +1,153 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{C05C2F12-7F2B-4AF8-8436-CE1045B33B59}</ProjectGuid>
+    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DFM2007Invitro</RootNamespace>
+    <AssemblyName>DFM2007Invitro</AssemblyName>
+    <XnaFrameworkVersion>v2.0</XnaFrameworkVersion>
+    <XnaPlatform>Windows</XnaPlatform>
+    <ApplicationIcon>Game.ico</ApplicationIcon>
+    <Thumbnail>GameThumbnail.png</Thumbnail>
+    <XnaCrossPlatformGroupID>{f0907ff5-fb84-40a0-8326-56f428f578e3}</XnaCrossPlatformGroupID>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\x86\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\x86\Release</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CubeSystem.cs">
+      <Name>CubeSystem</Name>
+    </Compile>
+    <Compile Include="GridEffect.cs">
+      <Name>GridEffect</Name>
+    </Compile>
+    <Compile Include="Invitro.cs">
+      <Name>Invitro</Name>
+    </Compile>
+    <Compile Include="ParticleSystemEffect.cs">
+      <Name>ParticleSystemEffect</Name>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\xml\DFM2007.xml">
+      <Name>DFM2007</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game.ico">
+      <Name>Game</Name>
+    </Content>
+    <Content Include="GameThumbnail.png">
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <NestedContentProject Include="Content.contentproj">
+      <Project>{963b6245-d09a-4eee-9cfe-0124877eab3f}</Project>
+      <Visible>False</Visible>
+    </NestedContentProject>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DemoEffects\DemoEffects.csproj">
+      <Project>{D8A4AD1F-20EA-42E8-9F24-15D339A60448}</Project>
+      <Name>DemoEffects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DemoFramework\DemoFramework.csproj">
+      <Project>{0E899EC0-D2E2-47EE-A46D-53E037C3F52F}</Project>
+      <Name>DemoFramework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Effects\Effects.csproj">
+      <Project>{F8F2B6F6-5D5B-4433-9FDF-2ACA99CF730C}</Project>
+      <Name>Effects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Graphics\Graphics.csproj">
+      <Project>{797591FA-968E-41D7-BFEF-85E13FCCA4CF}</Project>
+      <Name>Graphics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Input\Input.csproj">
+      <Project>{D8131D4F-45AF-4942-B77F-17714A6B64DF}</Project>
+      <Name>Input</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ModelBuilder\ModelBuilder.csproj">
+      <Project>{2C34DF5D-D096-45DF-84C9-E78A3691F182}</Project>
+      <Name>ModelBuilder</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ParticleSystems\ParticleSystems.csproj">
+      <Project>{7FE16E46-C51A-403F-AF42-B6D757CC75A6}</Project>
+      <Name>ParticleSystems</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Physics\Physics.csproj">
+      <Project>{3925EBCA-3484-4349-BD1A-967D8FB9CE19}</Project>
+      <Name>Physics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SceneGraph\SceneGraph.csproj">
+      <Project>{3876D35C-41A0-459E-819B-0354A2A75443}</Project>
+      <Name>SceneGraph</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sound\Sound.csproj">
+      <Project>{A99FE879-47B6-48B4-956C-EE082AC41817}</Project>
+      <Name>Sound</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TextureBuilder\TextureBuilder.csproj">
+      <Project>{7DCF0749-447D-4D64-A1A2-2560C03A072E}</Project>
+      <Name>TextureBuilder</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utility\Utility.csproj">
+      <Project>{70F76E25-311C-4DFC-9412-89470F537BDF}</Project>
+      <Name>Utility</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions>
+    <VisualStudio>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v2.0\Microsoft.Xna.GameStudio.Common.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v2.0\Microsoft.Xna.GameStudio.NestedContent.targets" />
+</Project>

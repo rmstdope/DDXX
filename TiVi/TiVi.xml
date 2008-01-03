@@ -1,506 +1,95 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!--<Demo>-->
-<Demo song="scanner_and_aav-tivi-final-320.mp3">
-	<!--Textures-->
-	<Generator name="noise" class="PerlinNoise">
-		<Parameter name="BaseFrequency" int="64" />
-	</Generator>
-	<Texture name="noise" generator="noise"></Texture>
-
-	<!--<PostEffect class="AspectilizerPostEffect" track="0" startTime="0" endTime="311">
+<Demo>
+	<!--This post effect will run the entire demo-->
+	<PostEffect name="AspectilizerPostEffect" track="0" startTime="0" endTime="3000">
 		<Parameter name="Width" float="16" />
 		<Parameter name="Height" float="9" />
 		<Parameter name="SubtractNoise" bool="true" />
 		<Parameter name="BlendFactor" float="1" />
-		<Parameter name="Rounding" float="0.04" />
+		<Parameter name="Rounding" float="0.02" />
 		<Parameter name="AddNoise" bool="false" />
 		<Parameter name="Filename" string="" />
 		<Parameter name="DrawOrder" int="4" />
-		<Parameter name="FadeOutLength" float="0" />
-		<Parameter name="FadeInLength" float="0" />
 	</PostEffect>
 
-  
-	<Effect class="CreationScene" track="0" startTime="7" endTime="42">
-		<Parameter name="BaseMesh" string="TiVi-Creation.x" />
-		<Parameter name="FlareSize" float="3" />
-		<Parameter name="StartVertex" int="10" />
-		<Parameter name="SegmentLength" float="0.32" />
-		<Parameter name="DrawOrder" int="0" />
-		<Parameter name="BodyCameraStart1" float="7" />
-		<Parameter name="HandCameraStart" float="14" />
-		<Parameter name="LegCameraStart" float="21" />
-		<Parameter name="BodyCameraStart2" float="28" />
+	<!--Creation scene and its post effects-->
+	<!--<Effect name="CreationScene" track="0" startTime="0" endTime="300">
+		<Parameter name="BaseMesh" string="Tivi-Creation.X" />
+		<Parameter name="FlareSize" float="35" />
+		<Parameter name="StartVertex" int="8" />
 	</Effect>
-	<PostEffect class="GlowPostEffect" name="CreationGlow1" track="0" startTime="7" endTime="14">
-		<Parameter name="BloomScale" float="1.2" />
-		<Parameter name="Exposure" float="0.622" />
-		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="WhiteCutoff" float="0.09999966" />
-		<Parameter name="Luminance" float="0.4999998" />
-		<Parameter name="DownSamples" int="1" />
-		<Parameter name="AdvancedGlow" bool="true" />
-	</PostEffect>
-	<PostEffect class="ColorFader" name="BlackFader1" startTime="13.5" endTime="16.5">
+	<PostEffect name="ColorFader" startTime="5.5" endTime="8.5">
 		<Parameter name="DrawOrder" int="3" />
 		<Parameter name="FadeInLength" float="0.5" />
 		<Parameter name="FadeOutLength" float="2" />
 		<Parameter name="FadeColor" Color="Black" />
 	</PostEffect>
-	<PostEffect class="GlowPostEffect" name="CreationGlow2" track="0" startTime="14" endTime="21">
-		<Parameter name="BloomScale" float="1.1" />
-		<Parameter name="Exposure" float="0.6200004" />
-		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="WhiteCutoff" float="0.13" />
-		<Parameter name="Luminance" float="0.6299998" />
-		<Parameter name="DownSamples" int="1" />
-		<Parameter name="AdvancedGlow" bool="true" />
-	</PostEffect>
-	<PostEffect class="ColorFader" name="BlackFader2" startTime="20.5" endTime="23.5">
+	<PostEffect name="ColorFader" startTime="11.5" endTime="14.5">
 		<Parameter name="DrawOrder" int="3" />
 		<Parameter name="FadeInLength" float="0.5" />
 		<Parameter name="FadeOutLength" float="2" />
 		<Parameter name="FadeColor" Color="Black" />
 	</PostEffect>
-	<PostEffect class="GlowPostEffect" name="CreationGlow3" track="0" startTime="21" endTime="28">
-		<Parameter name="BloomScale" float="0.9999999" />
-		<Parameter name="Exposure" float="1" />
-		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="WhiteCutoff" float="0.03" />
-		<Parameter name="Luminance" float="0.2" />
-		<Parameter name="DownSamples" int="1" />
-		<Parameter name="AdvancedGlow" bool="false" />
-	</PostEffect>
-	<PostEffect class="ColorFader" name="BlackFader3" startTime="27.5" endTime="30.5">
+	<PostEffect name="ColorFader" startTime="18.5" endTime="21.5">
 		<Parameter name="DrawOrder" int="3" />
 		<Parameter name="FadeInLength" float="0.5" />
 		<Parameter name="FadeOutLength" float="2" />
 		<Parameter name="FadeColor" Color="Black" />
 	</PostEffect>
-		<PostEffect class="ColorFader" name="BlackFader4" startTime="34.5" endTime="37.5">
-			<Parameter name="DrawOrder" int="3" />
-			<Parameter name="FadeInLength" float="0.5" />
-			<Parameter name="FadeOutLength" float="2" />
-			<Parameter name="FadeColor" Color="Black" />
-		</PostEffect>
-		<PostEffect class="GlowPostEffect" name="CreationGlow4" track="0" startTime="28" endTime="42">
-		<Parameter name="BloomScale" float="0.6999998" />
-		<Parameter name="Exposure" float="0.7900002" />
-		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="WhiteCutoff" float="0.03" />
-		<Parameter name="Luminance" float="0.22" />
-		<Parameter name="DownSamples" int="1" />
-		<Parameter name="AdvancedGlow" bool="false" />
+	<Effect name="WhiteFlare" startTime="20" endTime="25" />
+	<PostEffect name="RadialBlurPostEffect" startTime="0" endTime="25">
+		<Parameter name="DrawOrder" int="0" />   
 	</PostEffect>
-	<PostEffect class="ColorFader" name="WhiteFader" startTime="41.5" endTime="44.5">
+	<PostEffect name="ColorFader" startTime="24.5" endTime="27">
 		<Parameter name="DrawOrder" int="3" />
 		<Parameter name="FadeInLength" float="0.5" />
 		<Parameter name="FadeOutLength" float="2" />
 		<Parameter name="FadeColor" Color="White" />
 	</PostEffect>
-	<Effect class="WhiteFlare" startTime="37" endTime="42">
-		<Parameter name="DrawOrder" int="0" />
-	</Effect>
-	<PostEffect class="RadialBlurPostEffect" startTime="7" endTime="42">
-		<Parameter name="DrawOrder" int="0" />
-		<Parameter name="BlurColor" Color="255, 119, 118, 112" />
-	</PostEffect>
-  
-	<Effect class="DiscoFever" name="WalkwayFever" track="0" startTime="42" endTime="44">
-		<Parameter name="DrawOrder" int="0" />
-		<Parameter name="ColorDiv" int="2" />
-		<Parameter name="ColorAdd" int="21" />
-	</Effect>
-  <Effect class="SpinningBackgroundEffect" name="WalkwaySpin" track="0" startTime="44" endTime="83">
-    <SetupCall name="AddTextureLayer">
-      <Parameter string="noise" />
-      <Parameter float="55.0" />
-      <Parameter Color="DarkGray" />
-      <Parameter float="0.3" />
-    </SetupCall>
-    <SetupCall name="AddTextureLayer">
-      <Parameter string="noise" />
-      <Parameter float="-44.0" />
-      <Parameter Color="255,100,100,100" />
-      <Parameter float="0.4" />
-    </SetupCall>
-    <Parameter name="DrawOrder" int="0" />
-  </Effect>
-  <Effect class="Walkway" track="0" startTime="44" endTime="83">
-		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="Camera02Start" float="11" />
-		<Parameter name="Camera03Start" float="18" />
-		<Parameter name="Camera04Start" float="33" />
-		<Parameter name="TubeReflective" float="0" />
-		<Parameter name="TubeAmbient" Color="0, 54, 29, 90" />
-		<Parameter name="TubeDiffuse" Color="0, 147, 132, 159" />
-		<Parameter name="TiviReflective" float="0.1" />
-		<Parameter name="TiviAmbient" Color="255, 75, 75, 128" />
-		<Parameter name="TiviDiffuse" Color="255, 128, 128, 128" />
-	</Effect>
-	<PostEffect class="GlowPostEffect" name="WalkwayGlow" track="0" startTime="42" endTime="83">
-		<Parameter name="BloomScale" float="1.5" />
-		<Parameter name="Exposure" float="0.8000003" />
-		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="WhiteCutoff" float="0.2" />
-		<Parameter name="Luminance" float="0.4099998" />
-		<Parameter name="DownSamples" int="2" />
-		<Parameter name="AdvancedGlow" bool="false" />
-	</PostEffect>
-	<PostEffect class="ColorFader" name="WalkwayFader" startTime="82.5" endTime="85.5">
-		<Parameter name="DrawOrder" int="3" />
-		<Parameter name="FadeInLength" float="0.5" />
-		<Parameter name="FadeOutLength" float="2" />
-		<Parameter name="FadeColor" Color="Black" />
-	</PostEffect>
-
-
-	<Effect class="SpaceTravel" track="0" startTime="83" endTime="122">
-		<Parameter name="DrawOrder" int="1" />
-	</Effect>
-	<Effect class="TextFadingEffect" name="code" startTime="88" endTime="92">
-		<Parameter name="FadeOutLength" float="2" />
-		<Parameter name="FadeInLength" float="1" />
-		<Parameter name="TextColor" Color="White" />
-		<Parameter name="Text" string=".code/design " />
-		<Parameter name="FontHeight" float="0.15" />
-		<Parameter name="FontName" string="Times New Roman" />
-		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="TextPosition" Vector3="0.3200001, 0.2000002, 0" />
-		<Parameter name="Velocity" Vector3="-0.02, 0, 0" />
-	</Effect>
-	<Effect class="TextFadingEffect" name="rmst" startTime="89" endTime="93">
-		<Parameter name="FadeOutLength" float="2" />
-		<Parameter name="FadeInLength" float="1" />
-		<Parameter name="TextColor" Color="White" />
-		<Parameter name="Text" string=".rolemaster" />
-		<Parameter name="FontHeight" float="0.15" />
-		<Parameter name="FontName" string="Times New Roman" />
-		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="TextPosition" Vector3="0.3100002, 0.3400001, 0" />
-		<Parameter name="Velocity" Vector3="0.02, 0, 0" />
-	</Effect>
-	<Effect class="TextFadingEffect" name="music" startTime="93" endTime="97">
-		<Parameter name="FadeOutLength" float="2" />
-		<Parameter name="FadeInLength" float="1" />
-		<Parameter name="TextColor" Color="White" />
-		<Parameter name="Text" string=".music " />
-		<Parameter name="FontHeight" float="0.15" />
-		<Parameter name="FontName" string="Times New Roman" />
-		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="TextPosition" Vector3="0.6400002, 0.6400001, 0" />
-		<Parameter name="Velocity" Vector3="0, 0.02, 0" />
-	</Effect>
-	<Effect class="TextFadingEffect" name="scanner" startTime="94" endTime="98">
-		<Parameter name="FadeOutLength" float="2" />
-		<Parameter name="FadeInLength" float="1" />
-		<Parameter name="TextColor" Color="White" />
-		<Parameter name="Text" string=".scanner/.aav " />
-		<Parameter name="FontHeight" float="0.15" />
-		<Parameter name="FontName" string="Times New Roman" />
-		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="TextPosition" Vector3="0.5700003, 0.79, 0" />
-		<Parameter name="Velocity" Vector3="0, -0.02, 0" />
-	</Effect>
-	<Effect class="TextFadingEffect" name="char" startTime="98" endTime="102">
-		<Parameter name="FadeOutLength" float="2" />
-		<Parameter name="FadeInLength" float="1" />
-		<Parameter name="TextColor" Color="White" />
-		<Parameter name="Text" string=".3d character " />
-		<Parameter name="FontHeight" float="0.15" />
-		<Parameter name="FontName" string="Times New Roman" />
-		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="TextPosition" Vector3="0.3500001, 0.1300003, 0" />
-		<Parameter name="Velocity" Vector3="0, 0.02, 0" />
-	</Effect>
-	<Effect class="TextFadingEffect" name="landp" startTime="99" endTime="103">
-		<Parameter name="FadeOutLength" float="2" />
-		<Parameter name="FadeInLength" float="1" />
-		<Parameter name="TextColor" Color="White" />
-		<Parameter name="Text" string=".pzychaoz / leion " />
-		<Parameter name="FontHeight" float="0.15" />
-		<Parameter name="FontName" string="Times New Roman" />
-		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="TextPosition" Vector3="0.4300002, 0.2600004, 0" />
-		<Parameter name="Velocity" Vector3="0.02, 0, 0" />
-	</Effect>
-	<Effect class="TextFadingEffect" name="addcode" startTime="103" endTime="107">
-		<Parameter name="FadeOutLength" float="2" />
-		<Parameter name="FadeInLength" float="1" />
-		<Parameter name="TextColor" Color="White" />
-		<Parameter name="Text" string=".additional code " />
-		<Parameter name="FontHeight" float="0.15" />
-		<Parameter name="FontName" string="Times New Roman" />
-		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="TextPosition" Vector3="0.3300006, 0.73, 0" />
-		<Parameter name="Velocity" Vector3="0.03, 0, 0" />
-	</Effect>
-	<Effect class="TextFadingEffect" name="posse" startTime="104" endTime="108">
-		<Parameter name="FadeOutLength" float="2" />
-		<Parameter name="FadeInLength" float="1" />
-		<Parameter name="TextColor" Color="White" />
-		<Parameter name="Text" string=".poseidon / boni " />
-		<Parameter name="FontHeight" float="0.15" />
-		<Parameter name="FontName" string="Times New Roman" />
-		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="TextPosition" Vector3="0.3500005, 0.8599999, 0" />
-		<Parameter name="Velocity" Vector3="0, -0.03, 0" />
-	</Effect>
-	<Effect class="DiamondBelt" track="0" startTime="93" endTime="122">
-		<Parameter name="DrawOrder" int="0" />
-	</Effect>
-	<Effect class="GiantDiamond" track="0" startTime="102" endTime="122">
-		<Parameter name="DrawOrder" int="0" />
-		<Parameter name="PositionDelta" float="1000" />
-	</Effect>
-	<Effect class="SpinningBackgroundEffect" name="SpaceSpin" track="0" startTime="83" endTime="122">
-		<SetupCall name="AddTextureLayer">
-			<Parameter string="noise" />
-			<Parameter float="35.0" />
-			<Parameter Color="DarkGray" />
-			<Parameter float="0.2" />
-		</SetupCall>
-			<SetupCall name="AddTextureLayer">
-			<Parameter string="noise" />
-			<Parameter float="-34.0" />
-			<Parameter Color="50,50,120,255" />
-			<Parameter float="0.2" />
-		</SetupCall>
-		<Parameter name="DrawOrder" int="0" />
-	</Effect>
-	<PostEffect class="GlowPostEffect" name="SpaceGlow" track="0" startTime="83" endTime="122">
-		<Parameter name="BloomScale" float="1.2" />
-		<Parameter name="Exposure" float="0.9300001" />
-		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="WhiteCutoff" float="0.3699999" />
-		<Parameter name="Luminance" float="0.4399998" />
-		<Parameter name="DownSamples" int="1" />
-		<Parameter name="AdvancedGlow" bool="false" />
-	</PostEffect>
-	<PostEffect class="RadialBlurPostEffect" name="SpaceRadialBlur" startTime="83" endTime="122">
-		<Parameter name="DrawOrder" int="0" />
-		<Parameter name="BlurColor" Color="50, 40, 40, 190" />
-	</PostEffect>
-
-  
-	<Effect class="SpinningBackgroundEffect" name="Tunnel1Spin" track="0" startTime="122" endTime="150">
-		<SetupCall name="AddTextureLayer">
-			<Parameter string="noise" />
-			<Parameter float="15.0" />
-			<Parameter Color="255, 150, 50, 50" />
-			<Parameter float="0.5" />
-		</SetupCall>
-		<SetupCall name="AddTextureLayer">
-			<Parameter string="noise" />
-			<Parameter float="-24.0" />
-			<Parameter Color="255,50,50,150" />
-			<Parameter float="0.5" />
-		</SetupCall>
-		<Parameter name="DrawOrder" int="0" />
-	</Effect>
-	<Effect class="TunnelFlight1" track="0" startTime="122" endTime="150">
-		<Parameter name="DrawOrder" int="1" />
-    <Parameter name="TimeScale" float="1.365001" />
-  	<Parameter name="TimeDelta" float="0.2590002" />
-  </Effect>
-	<PostEffect class="GlowPostEffect" name="Tunnel1Glow" track="0" startTime="122" endTime="150">
-		<Parameter name="BloomScale" float="1.5" />
-		<Parameter name="Exposure" float="1" />
-		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="WhiteCutoff" float="0.5799998" />
-		<Parameter name="Luminance" float="0.5099998" />
-		<Parameter name="DownSamples" int="1" />
-		<Parameter name="AdvancedGlow" bool="false" />
-	</PostEffect>
-	<PostEffect class="ColorFader" name="Tunnel1Fader" startTime="149.5" endTime="152.5">
-		<Parameter name="DrawOrder" int="3" />
-		<Parameter name="FadeInLength" float="0.5" />
-		<Parameter name="FadeOutLength" float="2" />
-		<Parameter name="FadeColor" Color="Black" />
-	</PostEffect>-->
-
-
-  <Effect class="SpinningBackgroundEffect" name="ChessSpin" track="0" startTime="150" endTime="160">
-    <SetupCall name="AddTextureLayer">
-      <Parameter string="noise" />
-      <Parameter float="35.0" />
-      <Parameter Color="255, 150, 100, 100" />
-      <Parameter float="1" />
-    </SetupCall>
-    <SetupCall name="AddTextureLayer">
-      <Parameter string="noise" />
-      <Parameter float="-34.0" />
-      <Parameter Color="255, 100, 100, 150" />
-      <Parameter float="1" />
-    </SetupCall>
-    <Parameter name="DrawOrder" int="0" />
-  </Effect>
-  <Effect class="ThinkTank" track="0" startTime="150" endTime="160">
-		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="TurnSpeed" float="1.1" />
-	</Effect>
-	<Effect class="ChessScene" track="0" startTime="160" endTime="205">
-		<Parameter name="DrawOrder" int="0" />
-	</Effect>
-	<PostEffect class="GlowPostEffect" name="ChessGlow" track="0" startTime="150" endTime="205">
+	<PostEffect name="GlowPostEffect" track="0" startTime="0" endTime="300">
 		<Parameter name="BloomScale" float="1.7" />
 		<Parameter name="Exposure" float="1" />
 		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="WhiteCutoff" float="0.6999996" />
-		<Parameter name="Luminance" float="0.4399999" />
-		<Parameter name="DownSamples" int="1" />
-		<Parameter name="AdvancedGlow" bool="true" />
-	</PostEffect>
-	<PostEffect class="ColorFader" name="ChessFader" startTime="204.5" endTime="207.5">
-		<Parameter name="DrawOrder" int="3" />
-		<Parameter name="FadeInLength" float="0.5" />
-		<Parameter name="FadeOutLength" float="2" />
-		<Parameter name="FadeColor" Color="Black" />
-	</PostEffect>
-
-
-	<!--<Effect class="TunnelFlight2" track="0" startTime="205" endTime="217">
-		<Parameter name="DrawOrder" int="0" />
-		<Parameter name="DiffuseLuminance" float="0.15" />
-		<Parameter name="TimeScale" float="0.34165" />
-		<Parameter name="TimeDelta" float="0" />
-	</Effect>
-	<PostEffect class="GlowPostEffect" name="Tunnel2Glow" track="0" startTime="205" endTime="217">
-		<Parameter name="BloomScale" float="0.8999999" />
-		<Parameter name="Exposure" float="1" />
-		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="WhiteCutoff" float="0.38" />
-		<Parameter name="Luminance" float="0.5099998" />
-		<Parameter name="DownSamples" int="1" />
-		<Parameter name="AdvancedGlow" bool="false" />
-	</PostEffect>
-  <PostEffect class="RadialBlurPostEffect" name="Tunnel2RadialBlur" startTime="205" endTime="217">
-    <Parameter name="DrawOrder" int="0" />
-    <Parameter name="BlurColor" Color="50, 200, 200, 250" />
-  </PostEffect>
-  <PostEffect class="ColorFader" name="Tunnel2Fader" startTime="216.5" endTime="219.5">
-		<Parameter name="DrawOrder" int="3" />
-		<Parameter name="FadeInLength" float="0.5" />
-		<Parameter name="FadeOutLength" float="2" />
-		<Parameter name="FadeColor" Color="Black" />
-	</PostEffect>
-  
-  
-  <Effect class="MovingCloudBackground" name="CubesBackground" track="0" startTime="217" endTime="254">
-    <Parameter name="Persistance" float="0.5000001" />
-    <Parameter name="NumOctaves" int="12" />
-    <Parameter name="BaseFrequency" int="7" />
-    <Parameter name="DrawOrder" int="1" />
-    <Parameter name="SkyColor" Color="255, 0, 0, 0" />
-    <Parameter name="CloudColor1" Color="255, 10, 10, 20" />
-    <Parameter name="CloudColor2" Color="255, 10, 10, 20" />
-    <Parameter name="TimeShift1" Vector3="0.035, 0.041, 0" />
-    <Parameter name="TimeShift2" Vector3="0.024, 0.037, 0" />
-  </Effect>
-  <Effect class="PhysicalCubes" track="0" startTime="217" endTime="254">
-    <Parameter name="DrawOrder" int="0" />
-    <Parameter name="HyperfocalDistance" float="0.18" />
-    <Parameter name="DragCoefficient" float="0" />
-    <Parameter name="StepSize" float="0.05" />
-    <Parameter name="CubeDistortion" float="0.01000001" />
-    <Parameter name="CubeReflectivness" float="0.06" />
-  </Effect>
-  <PostEffect class="DepthOfFieldPostEffect" track="0" startTime="217" endTime="254">
-    <Parameter name="DrawOrder" int="0" />
-    <Parameter name="NumPasses" int="4" />
-  </PostEffect>
-  <PostEffect class="GlowPostEffect" name="CubesGlow" track="0" startTime="217" endTime="254">
-    <Parameter name="BloomScale" float="1.5" />
-    <Parameter name="Exposure" float="0.1900008" />
-    <Parameter name="DrawOrder" int="1" />
-    <Parameter name="WhiteCutoff" float="0.5999997" />
-    <Parameter name="Luminance" float="0.4099998" />
-    <Parameter name="DownSamples" int="1" />
-    <Parameter name="AdvancedGlow" bool="false" />
-  </PostEffect>
-  <PostEffect class="ColorFader" name="CubesFader" startTime="253.5" endTime="256.5">
-    <Parameter name="DrawOrder" int="3" />
-    <Parameter name="FadeInLength" float="0.5" />
-    <Parameter name="FadeOutLength" float="2" />
-    <Parameter name="FadeColor" Color="Black" />
-  </PostEffect>
-
-
-  <Effect class="SpinningBackgroundEffect" name="SignSpin" track="0" startTime="254" endTime="274">
-    <SetupCall name="AddTextureLayer">
-      <Parameter string="noise" />
-      <Parameter float="55.0" />
-      <Parameter Color="DarkGray" />
-      <Parameter float="0.4" />
-    </SetupCall>
-    <SetupCall name="AddTextureLayer">
-      <Parameter string="noise" />
-      <Parameter float="-44.0" />
-      <Parameter Color="50,50,120,255" />
-      <Parameter float="0.8" />
-    </SetupCall>
-    <Parameter name="DrawOrder" int="0" />
-  </Effect>
-  <Effect class="FlipSign" track="0" startTime="254" endTime="274">
-    <Parameter name="DrawOrder" int="1" />
-  </Effect>
-  <PostEffect class="GlowPostEffect" name="SignGlow" track="0" startTime="254" endTime="274">
-    <Parameter name="BloomScale" float="1.5" />
-    <Parameter name="Exposure" float="0.9000002" />
-    <Parameter name="DrawOrder" int="1" />
-    <Parameter name="WhiteCutoff" float="0.3199999" />
-    <Parameter name="Luminance" float="0.5099998" />
-    <Parameter name="DownSamples" int="2" />
-    <Parameter name="AdvancedGlow" bool="false" />
-  </PostEffect>
-	<PostEffect class="ColorFader" name="SignFader" startTime="273.5" endTime="276.5">
-		<Parameter name="DrawOrder" int="3" />
-		<Parameter name="FadeInLength" float="0.5" />
-		<Parameter name="FadeOutLength" float="2" />
-		<Parameter name="FadeColor" Color="Black" />
-	</PostEffect>
-
-
-	<Effect class="EndScene" track="0" startTime="274" endTime="311">
-		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="RollFactor" float="0.34" />
-		<Parameter name="TurnFactor" float="0.18" />
-		<Parameter name="TiltFactor" float="0.25" />
-		<Parameter name="CameraDist" float="1.6" />
-	</Effect>
-	<Effect class="SpinningBackgroundEffect" name="EndSpin" track="0" startTime="274" endTime="311">
+		<Parameter name="WhiteCutoff" float="0.16" />
+		<Parameter name="Luminance" float="0.2" />
+	</PostEffect>-->
+	
+	<!--Chess scene and its post effects-->
+	<Generator name="noise" class="PerlinNoise">
+		<Parameter name="BaseFrequency" int="64" />
+	</Generator>
+	<Texture name="noise" generator="noise"></Texture>
+	<Effect name="SpinningBackgroundEffect" track="0" startTime="0" endTime="299">
 		<SetupCall name="AddTextureLayer">
 			<Parameter string="noise" />
 			<Parameter float="55.0" />
-			<Parameter Color="DarkGray" />
-			<Parameter float="0.04" />
+			<Parameter Color="Beige" />
+			<Parameter float="0.1" />
 		</SetupCall>
 		<SetupCall name="AddTextureLayer">
 			<Parameter string="noise" />
 			<Parameter float="-44.0" />
-			<Parameter Color="50,50,120,255" />
-			<Parameter float="0.06" />
+			<Parameter Color="Coral" />
+			<Parameter float="0.1" />
 		</SetupCall>
-		<Parameter name="DrawOrder" int="0" />
 	</Effect>
-	<PostEffect class="GlowPostEffect" name="EndGlow" track="0" startTime="274" endTime="311">
-		<Parameter name="BloomScale" float="1.3" />
-		<Parameter name="Exposure" float="0.9000002" />
+	<Effect name="TunnelFlight" track="0" startTime="0" endTime="300" />
+	<PostEffect name="GlowPostEffect" track="0" startTime="0" endTime="300">
+		<Parameter name="BloomScale" float="1.6" />
+		<Parameter name="Exposure" float="1" />
 		<Parameter name="DrawOrder" int="1" />
-		<Parameter name="WhiteCutoff" float="0.21" />
-		<Parameter name="Luminance" float="0.5099998" />
-		<Parameter name="DownSamples" int="2" />
-		<Parameter name="AdvancedGlow" bool="false" />
+		<Parameter name="WhiteCutoff" float="0.3" />
+		<Parameter name="Luminance" float="0.2" />
 	</PostEffect>
-	<PostEffect class="RadialBlurPostEffect" name="EndRadialBlur" startTime="274" endTime="311">
-		<Parameter name="DrawOrder" int="0" />
-		<Parameter name="BlurColor" Color="255, 60, 60, 90" />
-	</PostEffect>
-	<PostEffect class="ColorFader" name="EndFader" startTime="309" endTime="311">
-		<Parameter name="DrawOrder" int="3" />
-		<Parameter name="FadeInLength" float="2" />
-		<Parameter name="FadeOutLength" float="0" />
-		<Parameter name="FadeColor" Color="Black" />
-	</PostEffect>-->
-</Demo>
 
+	<!--<Effect name="ChessScene" track="0" startTime="0.0" endTime="300.0"/>-->
+	<!--PostEffect name="OverlayPostEffect" track="0" startTime="0.0" endTime="300.0">
+    <Parameter name="AddNoise" bool="true" />
+    <Parameter name="Filename" string="Noise2.jpg" />
+    <Parameter name="BlendFactor" float="0.1" />
+  </PostEffect-->
+  <!--PostEffect name="RingsPostEffect" track="0" startTime="10.0" endTime="300.0">
+    <Parameter name="Distance" float="50" />
+    <Parameter name="Scale" float="10" />
+  </PostEffect-->
+</Demo>

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using Microsoft.DirectX;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.Physics
 {
@@ -71,7 +71,7 @@ namespace Dope.DDXX.Physics
             }
         }
 
-        public void Step(float time, Vector3 gravity)
+        public void Step(Vector3 gravity)
         {
             throw new Exception("The method or operation is not implemented.");
         }
@@ -105,50 +105,6 @@ namespace Dope.DDXX.Physics
             {
                 throw new Exception("The method or operation is not implemented.");
             }
-        }
-
-        #endregion
-
-        #region IPhysicalParticle Members
-
-
-        public Vector3 OldPosition
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
-
-        #endregion
-
-        #region IPhysicalParticle Members
-
-
-        public float DragCoefficient
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
-
-        #endregion
-
-        #region IPhysicalParticle Members
-
-
-        public void Reset()
-        {
-            throw new Exception("The method or operation is not implemented.");
         }
 
         #endregion

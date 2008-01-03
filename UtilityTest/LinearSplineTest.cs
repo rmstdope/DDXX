@@ -23,6 +23,7 @@ namespace Dope.DDXX.Utility
             spline.AddKeyFrame(new KeyFrame<InterpolatedFloat>(1.0f, new InterpolatedFloat(0.0f)));
             spline.AddKeyFrame(new KeyFrame<InterpolatedFloat>(2.0f, new InterpolatedFloat(100.0f)));
             spline.AddKeyFrame(new KeyFrame<InterpolatedFloat>(3.0f, new InterpolatedFloat(-100.0f)));
+            spline.Calculate();
 
             Assert.AreEqual(0.0f, (float)spline.GetValue(0.0f));
             Assert.AreEqual(0.0f, (float)spline.GetValue(1.0f));

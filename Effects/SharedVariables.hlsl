@@ -50,7 +50,7 @@ shared float4 LightPositions[5];
  * Light range
  * Used for point lights and spot lights
  */
-shared float LightRanges[5];
+shared float LightRange;
 
 /**
  * Light radius 
@@ -93,7 +93,7 @@ shared texture1D AttenuationTextureZ;
 /**
  * Animation matrices. One for each bone 
  */
-shared float4x4 AnimationMatrices[40];
+shared float4x4 AnimationMatrices[60];
 
 
 /** World * View * Projection matrix transposed*/
@@ -127,7 +127,7 @@ float ReflectiveFactor;
 sampler BaseTextureSampler = sampler_state
 {
     Texture = (BaseTexture);
-    MipFilter = Linear;
+    MipFilter = Point;
     MinFilter = Linear;
     MagFilter = Linear;
     AddressU	= Wrap;//Mirror;
@@ -135,26 +135,16 @@ sampler BaseTextureSampler = sampler_state
     //AddressW	= Wrap;//Mirror;
 };
 
-sampler BaseTextureSamplerMirrored = sampler_state
-{
-    Texture = (BaseTexture);
-    MipFilter = Point;
-    MinFilter = Linear;
-    MagFilter = Linear;
-    AddressU	= Mirror;
-    AddressV	= Mirror;
-};
-
-
 sampler BaseTextureSamplerBordered = sampler_state
 {
     Texture = (BaseTexture);
-    MipFilter = Point;
-    MinFilter = Point;
-    MagFilter = Point;
+    MipFilter = Linear;
+    MinFilter = Linear;
+    MagFilter = Linear;
     AddressU	= Border;
     AddressV	= Border;
-	BorderColor = 0;
+    AddressW	= Mirror;
+		BorderColor = 0;
 };
 
 samplerCUBE ReflectiveTextureSampler = sampler_state

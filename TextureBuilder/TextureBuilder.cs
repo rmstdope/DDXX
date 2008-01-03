@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
-using Microsoft.DirectX.Direct3D;
-using Microsoft.DirectX;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.TextureBuilder
 {
@@ -16,9 +15,9 @@ namespace Dope.DDXX.TextureBuilder
             this.textureFactory = textureFactory;
         }
 
-        public ITexture Generate(IGenerator generator, int width, int height, int numMipLevels, Format format)
+        public ITexture2D Generate(IGenerator generator, int width, int height, int numMipLevels, SurfaceFormat format)
         {
-            return textureFactory.CreateFromFunction(width, height, numMipLevels, Usage.None, format, Pool.Managed, generator.GetPixel);
+            return textureFactory.CreateFromFunction(width, height, numMipLevels, TextureUsage.None, format, generator.GetPixel);
         }
     }
 }

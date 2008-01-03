@@ -1,7 +1,7 @@
 ﻿using System;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.TextureBuilder;
-using System.Drawing;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -14,14 +14,14 @@ namespace Dope.DDXX.DemoFramework
         IDemoEffect[] GetEffects(float startTime, float endTime);
         IDemoPostEffect[] GetPostEffects(float startTime, float endTime);
         IDemoPostEffect[] GetPostEffects(float time);
-        void Initialize(IGraphicsFactory graphicsFactory, IDevice device, ITextureFactory textureFactory, 
+        void Initialize(IGraphicsFactory graphicsFactory, IGraphicsDevice device, ITextureFactory textureFactory, 
             IEffectFactory effectFactory, ITextureBuilder textureBuilder, IDemoMixer mixer, 
             IPostProcessor postProcessor);
         bool IsActive(float p);
         IDemoPostEffect[] PostEffects { get; }
         void Register(IDemoPostEffect postEffect);
         void Register(IDemoEffect effect);
-        ITexture Render(IDevice device, ISurface renderTarget, ISurface depthStencil, ITexture resolveTarget, Color backgroundColor);
+        IRenderTarget2D Render(IGraphicsDevice device, IRenderTarget2D renderTarget, IRenderTarget2D renderTargetNoMultiSampling, IDepthStencilBuffer depthStencilBuffer, Color backgroundColor);
         void Step();
         void UpdateListener(IEffectChangeListener effectChangeListener);
         bool IsEffectRegistered(string name, Type type);

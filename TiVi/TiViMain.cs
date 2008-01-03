@@ -24,8 +24,6 @@ namespace TiVi
 
             try
             {
-                FileUtility.SetBlockFile("TiVi.dope");
-
                 // Run setup form
                 SetupLogic setupLogic = new SetupLogic();
                 SetupDialog setupDialog = new SetupDialog(setupLogic);
@@ -35,21 +33,17 @@ namespace TiVi
                 {
                     DeviceDescription desc;
                     SetupFramework(setupLogic, out window, out executer, out desc);
-                    desc.useStencil = true;
-                    FileUtility.SetLoadPaths("./",
-                                             "../../Data/",
+                    FileUtility.SetLoadPaths("../../Data/",
                                              "../../../Effects/",
                                              "../../");
 
                     DevicePrerequisits prerequisits = new DevicePrerequisits();
-                    window.Initialize("TiVi by Dope", desc, prerequisits);
+                    window.Initialize("Engine Test", desc, prerequisits);
                     executer.Initialize(D3DDriver.GetInstance().Device,
-                        D3DDriver.GraphicsFactory, D3DDriver.TextureFactory, D3DDriver.EffectFactory, 
-                        new TextureBuilder(D3DDriver.TextureFactory),
+                        D3DDriver.GraphicsFactory, D3DDriver.TextureFactory, new TextureBuilder(D3DDriver.TextureFactory),
                         "TiVi.xml");
 
                     executer.Run();
-                    //FileUtility.SaveBlockFile("TiVi.dope");
                     window.CleanUp();
                 }
             }

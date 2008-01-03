@@ -5,9 +5,10 @@ using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.SceneGraph
 {
-    public interface ISystemParticle
+    public interface ISystemParticle<T>
+        where T : struct
     {
         bool IsDead();
-        void StepAndWrite(IGraphicsStream stream, IRenderableCamera camera);
+        void Step(ref T destinationVertex);
     }
 }

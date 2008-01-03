@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX;
 using Dope.DDXX.Physics;
 using Dope.DDXX.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.SceneGraph
 {
@@ -15,13 +15,12 @@ namespace Dope.DDXX.SceneGraph
         WorldState WorldState { get; }
         Matrix WorldMatrix { get; }
         void AddChild(INode child);
-        void RemoveChild(INode child);
         bool HasChild(INode node);
         void SetLightState(LightState state);
-        void Step(IRenderableCamera camera);
+        void Step();
         void Render(IScene scene);
         int CountNodes();
-        void EnableFrameHandling(IFrame frame);
-        Vector3 Position { get; set; }
+        //void EnableFrameHandling(IFrame frame);
+        Vector3 Position { get; }
     }
 }

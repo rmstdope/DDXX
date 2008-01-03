@@ -1,64 +1,39 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.SceneGraph;
-using Microsoft.DirectX;
-using System.Drawing;
 using Dope.DDXX.Utility;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.ParticleSystems
 {
-    public class SpiralParticleSpawner : ISystemParticleSpawner
+    public class SpiralSystemNode : ParticleSystemNode<VertexPositionColorPoint>
     {
-        private VertexDeclaration vertexDeclaration;
-        private int maxNumParticles;
-        private float nextTime = -10;
-        private BlendOperation blendOperation = BlendOperation.Add;
-        private Color color = Color.FromArgb(200, Color.White);
+        private float nextTime = -5;
+        private Color color = new Color(100, 80, 200, 200);
         private int colorDistortion;
         private float velocityXZ;
         private float velocityY;
         private float positionDistortion;
         private float timeBetweenSpawns;
+        private float scale;
 
-        public SpiralParticleSpawner(IGraphicsFactory graphicsFactory, IDevice device, int maxNumParticles)
+        public SpiralSystemNode(string name, float scale)
+            : base(name)
         {
-            this.maxNumParticles = maxNumParticles;
-            VertexElement[] elements = new VertexElement[]
-            {
-                new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
-                new VertexElement(0, 12, DeclarationType.Float1, DeclarationMethod.Default, DeclarationUsage.PointSize, 0),
-                new VertexElement(0, 16, DeclarationType.Color, DeclarationMethod.Default, DeclarationUsage.Color, 0),
-                VertexElement.VertexDeclarationEnd 
-            };
-            vertexDeclaration = graphicsFactory.CreateVertexDeclaration(device, elements);
-            velocityY = 10;
-            velocityXZ = 30;
-            positionDistortion = 20;
-            timeBetweenSpawns = 0.003f;
+            velocityY = 0.5f;
+            velocityXZ = 1.0f;
+            positionDistortion = 0.5f;
+            timeBetweenSpawns = 0.01f;
+            colorDistortion = 30;
+            this.scale = scale;
         }
 
         public float PositionDistortion
         {
             set { positionDistortion = value; }
-        }
-
-        public BlendOperation BlendOperation
-        {
-            get { return blendOperation; }
-            set { blendOperation = value; }
-        }
-
-        public Blend SourceBlend
-        {
-            get { return Blend.One; }//.SourceAlpha; }
-        }
-
-        public Blend DestinationBlend
-        {
-            get { return Blend.InvSourceColor; }//.InvSourceAlpha; }
         }
 
         public Color Color
@@ -90,104 +65,86 @@ namespace Dope.DDXX.ParticleSystems
             set { timeBetweenSpawns = value; }
         }
 
-        public ISystemParticle Spawn(IRenderableCamera camera)
+        protected override ISystemParticle<VertexPositionColorPoint> Spawn()
         {
             Vector3 position = new Vector3(Rand.Float(-1, 1), Rand.Float(-1, 1), Rand.Float(-1, 1));
             Vector3 velocity = new Vector3((float)Math.Sin(nextTime * 1.8f), -1.0f, (float)Math.Cos(nextTime * 1.8f));
-            position *= positionDistortion;
-            velocity.X *= velocityXZ;
-            velocity.Z *= velocityXZ;
-            velocity.Y *= velocityY;
-            velocity += new Vector3(Rand.Float(-1, 1), Rand.Float(-1, 1), Rand.Float(-1, 1)) * 1.4f;
-            Color createColor = Color.FromArgb(
-                color.R + Rand.Int(-colorDistortion, colorDistortion),
-                color.G + Rand.Int(-colorDistortion, colorDistortion),
-                color.B + Rand.Int(-colorDistortion, colorDistortion));
-            SpiralParticle particle = new SpiralParticle(position, velocity, Rand.Float(5, 10), createColor);
-            particle.Step(Time.StepTime - nextTime);
+            position *= positionDistortion * scale;
+            velocity.X *= velocityXZ * scale;
+            velocity.Z *= velocityXZ * scale;
+            velocity.Y *= velocityY * scale;
+            velocity += new Vector3(Rand.Float(-1, 1), Rand.Float(-1, 1), Rand.Float(-1, 1)) * 0.05f * scale;
+            Color createColor = new Color(
+                (byte)(color.R + Rand.Int(-colorDistortion, colorDistortion)),
+                (byte)(color.G + Rand.Int(-colorDistortion, colorDistortion)),
+                (byte)(color.B + Rand.Int(-colorDistortion, colorDistortion)));
+            SpiralParticle particle = new SpiralParticle(position, velocity, Rand.Float(scale * 0.3f, scale * 0.8f), createColor, nextTime);
+            particle.StepPosition(Time.CurrentTime - nextTime - Time.DeltaTime);
             nextTime += timeBetweenSpawns;
             return particle;
         }
 
-        public Type VertexType
-        {
-            get { return typeof(VertexColorPoint); }
-        }
-
-        public VertexDeclaration VertexDeclaration
-        {
-            get { return vertexDeclaration; }
-        }
-
-        public int NumInitialSpawns
+        protected override int NumInitialSpawns
         {
             get { return 0; }
         }
 
-        public int MaxNumParticles
+        protected override bool ShouldSpawn()
         {
-            get { return maxNumParticles; }
+            return (Time.CurrentTime > nextTime);
         }
 
-        public bool ShouldSpawn()
+        protected override IMaterialHandler CreateDefaultMaterial(IGraphicsFactory graphicsFactory)
         {
-            return (Time.StepTime > nextTime);
+            IMaterialHandler material = new MaterialHandler(graphicsFactory.EffectFromFile("Content\\effects\\PointSpriteParticles"), new EffectConverter());
+            material.BlendFunction = BlendFunction.Add;
+            material.SourceBlend = Blend.One;
+            material.DestinationBlend = Blend.InverseSourceColor;
+            return material;
         }
 
-        public string GetTechniqueName(bool textured)
+        protected override int VertexSizeInBytes
         {
-            if (textured)
-                return "PointSprite";
-            return "PointSpriteNoTexture";
+            get { return VertexPositionColorPoint.SizeInBytes; }
         }
+
+        protected override VertexElement[] VertexElements
+        {
+            get { return VertexPositionColorPoint.VertexElements; }
+        }
+
     }
 
-    public class SpiralParticle : SystemParticle
+    public class SpiralParticle : SystemParticle<VertexPositionColorPoint>
     {
         private Vector3 velocity;
         private float stopTime;
+        private float startTime;
 
-        public SpiralParticle(Vector3 position, Vector3 velocity, float size, Color color)
+        public SpiralParticle(Vector3 position, Vector3 velocity, float size, Color color, float startTime)
             : base(position, color, size)
         {
             this.velocity = velocity;
-            stopTime = 20;
+            this.startTime = startTime;
+            this.stopTime = 100 + startTime;
         }
 
-        public override void StepAndWrite(IGraphicsStream stream, IRenderableCamera camera)
+        public override void Step(ref VertexPositionColorPoint destinationVertex)
         {
-            VertexColorPoint vertex;
-
-            Step(Time.DeltaTime);
-            vertex.Position = Position;
-            vertex.Size = Size;
-            vertex.Color = Color.ToArgb();
-            stream.Write(vertex);
+            StepPosition(Time.DeltaTime);
+            destinationVertex.Position = Position;
+            destinationVertex.PointSize = Size;
+            destinationVertex.Color = Color;
         }
 
-        public void Step(float time)
+        public void StepPosition(float time)
         {
-            float newTime = time;
-            //if (stopTime <= 0)
-            //    newTime = 0;
-            //else if (stopTime - newTime <= 0)
-            //    newTime = stopTime;
-            //stopTime -= newTime;
-            Position += velocity * newTime;
-            //Position.Y += velocity.Y * (time - newTime);
-                //Vector2 xz = new Vector2(Position.X, Position.Z);
-                //float length = xz.Length();
-                //if (length > 100)
-                //{
-                //    xz *= 100 / length;
-                //    Position.X = xz.X;
-                //    Position.Z = xz.Y;
-                //}
+            Position += velocity * time;
         }
 
         public override bool  IsDead()
         {
-            if (stopTime <= 0)
+            if (Time.CurrentTime < startTime || Time.CurrentTime > stopTime)
                 return true;
             return false;
         }

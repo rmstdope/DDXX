@@ -1,0 +1,175 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{2C34DF5D-D096-45DF-84C9-E78A3691F182}</ProjectGuid>
+    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Dope.DDXX.ModelBuilder</RootNamespace>
+    <AssemblyName>Dope.DDXX.ModelBuilder</AssemblyName>
+    <XnaFrameworkVersion>v2.0</XnaFrameworkVersion>
+    <XnaPlatform>Windows</XnaPlatform>
+    <Thumbnail>
+    </Thumbnail>
+    <XnaCrossPlatformGroupID>{df1fcc82-967b-4d1f-82bc-f9209c17a99e}</XnaCrossPlatformGroupID>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\x86\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\x86\Release</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Amplitude.cs">
+      <Name>Amplitude</Name>
+    </Compile>
+    <Compile Include="BooleanUnion.cs">
+      <Name>BooleanUnion</Name>
+    </Compile>
+    <Compile Include="BoxPrimitive.cs">
+      <Name>BoxPrimitive</Name>
+    </Compile>
+    <Compile Include="ChamferBoxPrimitive.cs">
+      <Name>ChamferBoxPrimitive</Name>
+    </Compile>
+    <Compile Include="CylinderPrimitive.cs">
+      <Name>CylinderPrimitive</Name>
+    </Compile>
+    <Compile Include="DiscPrimitive.cs">
+      <Name>DiscPrimitive</Name>
+    </Compile>
+    <Compile Include="IModifier.cs">
+      <Name>IModifier</Name>
+    </Compile>
+    <Compile Include="IPrimitive.cs">
+      <Name>IPrimitive</Name>
+    </Compile>
+    <Compile Include="ModelBuilder.cs">
+      <SubType>Code</SubType>
+      <Name>ModelBuilder</Name>
+    </Compile>
+    <Compile Include="ModelDirector.cs">
+      <Name>ModelDirector</Name>
+    </Compile>
+    <Compile Include="ModifierBase.cs">
+      <Name>ModifierBase</Name>
+    </Compile>
+    <Compile Include="NormalFlip.cs">
+      <Name>NormalFlip</Name>
+    </Compile>
+    <Compile Include="PlanePrimitive.cs">
+      <Name>PlanePrimitive</Name>
+    </Compile>
+    <Compile Include="Primitive.cs">
+      <Name>Primitive</Name>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rotate.cs">
+      <Name>Rotate</Name>
+    </Compile>
+    <Compile Include="Scale.cs">
+      <Name>Scale</Name>
+    </Compile>
+    <Compile Include="SpherePrimitive.cs">
+      <Name>SpherePrimitive</Name>
+    </Compile>
+    <Compile Include="TerrainPrimitive.cs">
+      <Name>TerrainPrimitive</Name>
+    </Compile>
+    <Compile Include="TorusPrimitive.cs">
+      <Name>TorusPrimitive</Name>
+    </Compile>
+    <Compile Include="Translate.cs">
+      <Name>Translate</Name>
+    </Compile>
+    <Compile Include="TubePrimitive.cs">
+      <Name>TubePrimitive</Name>
+    </Compile>
+    <Compile Include="UvMapBox.cs">
+      <Name>UvMapBox</Name>
+    </Compile>
+    <Compile Include="UvMapPlane.cs">
+      <Name>UvMapPlane</Name>
+    </Compile>
+    <Compile Include="UvMapSphere.cs">
+      <Name>UvMapSphere</Name>
+    </Compile>
+    <Compile Include="UvRemap.cs">
+      <Name>UvRemap</Name>
+    </Compile>
+    <Compile Include="Vertex.cs">
+      <Name>Vertex</Name>
+    </Compile>
+    <Compile Include="Weld.cs">
+      <Name>Weld</Name>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <NestedContentProject Include="Content.contentproj">
+      <Project>{a624dc0d-f853-41f9-9dbc-2ea09502c4cb}</Project>
+      <Visible>False</Visible>
+    </NestedContentProject>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Graphics\Graphics.csproj">
+      <Project>{797591FA-968E-41D7-BFEF-85E13FCCA4CF}</Project>
+      <Name>Graphics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Physics\Physics.csproj">
+      <Project>{3925EBCA-3484-4349-BD1A-967D8FB9CE19}</Project>
+      <Name>Physics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TextureBuilder\TextureBuilder.csproj">
+      <Project>{7DCF0749-447D-4D64-A1A2-2560C03A072E}</Project>
+      <Name>TextureBuilder</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utility\Utility.csproj">
+      <Project>{70F76E25-311C-4DFC-9412-89470F537BDF}</Project>
+      <Name>Utility</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v2.0\Microsoft.Xna.GameStudio.Common.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v2.0\Microsoft.Xna.GameStudio.NestedContent.targets" />
+</Project>
