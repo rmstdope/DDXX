@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
 using TImport = Dope.DDXX.MidiProcessorLib.MidiSource;
 using System.IO;
+using Dope.DDXX.MidiExtractor;
 
 namespace Dope.DDXX.MidiProcessorLib
 {
@@ -29,7 +30,11 @@ namespace Dope.DDXX.MidiProcessorLib
 
         public TImport ImportFromStream(Stream midiStream)
         {
-            return new MidiSource();
+            MidiExtractor.MidiExtractor extractor = new MidiExtractor.MidiExtractor();
+            MThd header;
+            List<IMTrk> tracks;
+            extractor.Parse(midiStream, null, out header, out tracks);
+            return new MidiSource(header, tracks);
         }
     }
 }
