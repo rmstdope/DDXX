@@ -119,6 +119,7 @@
     <Compile Include="TubePrimitive.cs">
       <Name>TubePrimitive</Name>
     </Compile>
+    <Compile Include="TunnelPrimitive.cs" />
     <Compile Include="UvMapBox.cs">
       <Name>UvMapBox</Name>
     </Compile>

@@ -16,6 +16,7 @@ namespace EngineTest
         private IScene scene;
         private CameraNode camera;
         private List<ModelNode> cells = new List<ModelNode>();
+        private ModelNode artery;
 
         public BloodCell(string name, float start, float end)
             : base(name, start, end)
@@ -25,9 +26,34 @@ namespace EngineTest
         protected override void Initialize()
         {
             CreateStandardSceneAndCamera(out scene, out camera, 6);
-            InitializeSperms();
+            InitializeCells();
+            InitializeArtery();
             InitializeParticles();
+            PointLightNode light = new PointLightNode("Light");
+            scene.AddNode(light);
             scene.AmbientColor = new Color(30, 30, 30);
+        }
+
+        private void InitializeArtery()
+        {
+            TextureDirector.CreatePerlinNoise(64, 6, 0.5f);
+            ModelBuilder.SetDiffuseTexture("Default", TextureDirector.Generate(256, 256, 0, SurfaceFormat.Color));
+            TextureDirector.CreatePerlinNoise(64, 6, 0.5f);
+            TextureDirector.Madd(2.0f, 0);
+            TextureDirector.NormalMap();
+            TextureDirector.Madd(1, 1);
+            TextureDirector.Madd(0.5f, 0);
+            ModelBuilder.SetNormalTexture("Default", TextureDirector.Generate(256, 256, 0, SurfaceFormat.Color));
+            ModelBuilder.SetAmbientColor("Default", Color.Red);
+            ModelBuilder.SetDiffuseColor("Default", Color.Red);
+            ModelBuilder.SetSpecularColor("Default", new Color(255, 120, 120));
+            ModelBuilder.SetShininess("Default", 1.0f);
+            ModelBuilder.SetSpecularPower("Default", 32);
+            ModelBuilder.SetEffect("Default", "Content\\effects\\NormalMapping");
+            ModelDirector.CreateTunnel(2.0f, 32, 4, 20);
+            IModel model = ModelDirector.Generate("Default");
+            artery = new ModelNode("Artery", model, GraphicsDevice);
+            scene.AddNode(artery);
         }
 
         private void InitializeParticles()
@@ -42,7 +68,7 @@ namespace EngineTest
             scene.AddNode(floaterSystem);
         }
 
-        private void InitializeSperms()
+        private void InitializeCells()
         {
             TextureDirector.CreatePerlinNoise(1, 6, 0.5f);
             ModelBuilder.SetDiffuseTexture("Default", TextureDirector.Generate(64, 64, 0, SurfaceFormat.Color));
@@ -89,6 +115,7 @@ namespace EngineTest
                 if (cell.WorldState.Position.X > 8)
                     cell.WorldState.Position -= new Vector3(16, 0, 0);
             }
+            artery.WorldState.Tilt(Time.DeltaTime);
             scene.Step();
         }
 

@@ -143,6 +143,7 @@ namespace Dope.DDXX.ModelBuilder
             cylinder.HeightSegments = heightSegments;
             cylinder.Radius = radius;
             cylinder.Segments = segments;
+            cylinder.Lid = true;
             return cylinder.Generate();
         }
     }

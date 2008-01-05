@@ -13,6 +13,7 @@ namespace Dope.DDXX.ModelBuilder
         private float radius;
         private int segments;
         private int heightSegments;
+        private bool lid;
 
         public float Height
         {
@@ -38,6 +39,12 @@ namespace Dope.DDXX.ModelBuilder
             set { heightSegments = value; }
         }
 
+        public bool Lid
+        {
+            get { return lid; }
+            set { lid = value; }
+        }
+
         public CylinderPrimitive()
             : base(0)
         {
@@ -50,10 +57,18 @@ namespace Dope.DDXX.ModelBuilder
             if (heightSegments < 1)
                 throw new DDXXException("Cylinder must have at least one segments.");
 
-            Vertex[] vertices = new Vertex[(segments + 1) * (heightSegments + 1) + 2];
+            int numVertices = (segments + 1) * (heightSegments + 1);
+            int numIndices = 6 * segments * heightSegments;
+            if (lid)
+            {
+                numVertices += 2;
+                numIndices += 3 * 2 * segments;
+            }
+
+            Vertex[] vertices = new Vertex[numVertices];
             for (int i = 0; i < vertices.Length; i++)
                 vertices[i] = new Vertex();
-            short[] indices = new short[3 * 2 * segments + 6 * segments * heightSegments];
+            short[] indices = new short[numIndices];
 
             FillVertices(vertices);
 
@@ -65,11 +80,14 @@ namespace Dope.DDXX.ModelBuilder
         {
             int index = 0;
 
-            for (int i = 0; i < segments; i++)
+            if (lid)
             {
-                indices[index++] = 0;
-                indices[index++] = GetIndex(0, i);
-                indices[index++] = GetIndex(0, i + 1);
+                for (int i = 0; i < segments; i++)
+                {
+                    indices[index++] = 0;
+                    indices[index++] = GetIndex(0, i);
+                    indices[index++] = GetIndex(0, i + 1);
+                }
             }
 
             for (int i = 0; i < heightSegments; i++)
@@ -85,29 +103,36 @@ namespace Dope.DDXX.ModelBuilder
                 }
             }
 
-            for (int i = 0; i < segments; i++)
+            if (lid)
             {
-                indices[index++] = (short)(vertices.Length - 1);
-                indices[index++] = GetIndex(heightSegments, i + 1);
-                indices[index++] = GetIndex(heightSegments, i);
+                for (int i = 0; i < segments; i++)
+                {
+                    indices[index++] = (short)(vertices.Length - 1);
+                    indices[index++] = GetIndex(heightSegments, i + 1);
+                    indices[index++] = GetIndex(heightSegments, i);
+                }
             }
 
         }
 
         private short GetIndex(int segment, int side)
         {
-            //if (side > segments)
-            //    side -= segments;
-            return (short)(1 + segment * (segments + 1) + side);
+            short num = (short)(segment * (segments + 1) + side);
+            if (lid)
+                num += (short)1;
+            return num;
         }
 
         private void FillVertices(Vertex[] vertices)
         {
             int vertex = 0;
-            vertices[vertex].Position = new Vector3(0, height / 2, 0);
-            vertices[vertex].Normal = new Vector3(0, 1, 0);
-            vertices[vertex].U = 0;
-            vertices[vertex++].V = 0;
+            if (lid)
+            {
+                vertices[vertex].Position = new Vector3(0, height / 2, 0);
+                vertices[vertex].Normal = new Vector3(0, 1, 0);
+                vertices[vertex].U = 0;
+                vertices[vertex++].V = 0;
+            }
             for (int i = 0; i < heightSegments + 1; i++)
             {
                 float yPos = height / 2 - height * i / (float)heightSegments;
@@ -125,10 +150,13 @@ namespace Dope.DDXX.ModelBuilder
                     vertex++;
                 }
             }
-            vertices[vertex].Position = new Vector3(0, -height / 2, 0);
-            vertices[vertex].Normal = new Vector3(0, -1, 0);
-            vertices[vertex].U = 0;
-            vertices[vertex++].V = 10;
+            if (lid)
+            {
+                vertices[vertex].Position = new Vector3(0, -height / 2, 0);
+                vertices[vertex].Normal = new Vector3(0, -1, 0);
+                vertices[vertex].U = 0;
+                vertices[vertex++].V = 10;
+            }
         }
     }
 }

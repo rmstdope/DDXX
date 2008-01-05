@@ -98,14 +98,25 @@ namespace Dope.DDXX.ModelBuilder
             primitive = sphere;
         }
 
-        public void CreateCylinder(float radius, int segments, float height, int heightSegments)
+        public void CreateCylinder(float radius, int segments, float height, int heightSegments, bool lid)
         {
             CylinderPrimitive cylinder = new CylinderPrimitive();
             cylinder.Radius = radius;
             cylinder.Segments = segments;
             cylinder.Height = height;
             cylinder.HeightSegments = heightSegments;
+            cylinder.Lid = lid;
             primitive = cylinder;
+        }
+
+        public void CreateTunnel(float radius, int segments, float height, int heightSegments)
+        {
+            TunnelPrimitive tunnel = new TunnelPrimitive();
+            tunnel.Radius = radius;
+            tunnel.Segments = segments;
+            tunnel.Height = height;
+            tunnel.HeightSegments = heightSegments;
+            primitive = tunnel;
         }
 
         public void UvMapPlane(int alignToAxis, int tileU, int tileV)
@@ -185,7 +196,6 @@ namespace Dope.DDXX.ModelBuilder
         {
             return builder.CreateModel(primitive, materialName);
         }
-
 
     }
 }

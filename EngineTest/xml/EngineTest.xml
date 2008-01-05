@@ -8,10 +8,10 @@
 		<Parameter name="DrawOrder" int="0" />
 		<Parameter name="NumPasses" int="2" />
 	</PostEffect>-->
-	<!--<Effect class="BloodCell" startTime="0" endTime="500">
+	<Effect class="BloodCell" startTime="0" endTime="500">
 		<Parameter name="DrawOrder" int="0" />
 	</Effect>
-	<PostEffect class="GlowPostEffect" startTime="0" endTime="500">
+	<!--<PostEffect class="GlowPostEffect" startTime="0" endTime="500">
   		<Parameter name="BloomScale" float="1.1" />
   		<Parameter name="WhiteCutoff" float="1.639128E-07" />
   		<Parameter name="Exposure" float="0.1" />
@@ -42,7 +42,7 @@
 	<!--<Effect class="MorphEffect" startTime="0" endTime="500">
 		<Parameter name="DrawOrder" int="0" />
 	</Effect>-->
-	<PostEffect class="OverlayPostEffect" name="Logo" startTime="2" endTime="22">
+	<!--<PostEffect class="OverlayPostEffect" name="Logo" startTime="2" endTime="22">
 		<Parameter name="Filename" string="Content/textures/ARTery Glow" />
 		<Parameter name="AddNoise" bool="true"></Parameter>
 		<Parameter name="Technique" string="Blend" />
@@ -70,7 +70,7 @@
 		<Parameter name="SubtractNoise" bool="false" />
 		<Parameter name="BlendFactor" float="0.2" />
 		<Parameter name="DrawOrder" int="10" />
-	</PostEffect>-
+	</PostEffect>-->
 	<!--<Effect class="GridEffect" startTime="0" endTime="500">
 		<Parameter name="DrawOrder" int="0" />
 	</Effect>-->

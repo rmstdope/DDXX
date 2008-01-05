@@ -101,7 +101,8 @@ float4 PixelShader( VS_OUTPUT input ) : COLOR0
     // return the combined result.
     //float3 color = specular;
     float3 color = (diffuse + AmbientLightColor * AmbientColor) * diffuseTexture + specular;
-    return float4(color, 1);
+    //return float4(color, 1);
+    return float4(nDotL, nDotL, nDotL, nDotL);
 }
 
 Technique NormalMapping

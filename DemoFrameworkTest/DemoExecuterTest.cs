@@ -184,7 +184,7 @@ namespace Dope.DDXX.DemoFramework
             executer.SetSong("Song");
             FileUtility.SetLoadPaths(new string[] { "./" });
             Expect.Once.On(soundDriver).
-                 Method("Initialize").With("Test");
+                 Method("Initialize").With("Song");
             Expect.Once.On(soundDriver).
                 Method("PlaySound").
                 With("Song").
@@ -465,7 +465,7 @@ namespace Dope.DDXX.DemoFramework
 @"<Demo song=""SongX""></Demo>";
             FileUtility.SetLoadPaths(new string[] { "./" });
             Expect.Once.On(soundDriver).
-                 Method("Initialize").With("Test");
+                 Method("Initialize").With("SongX");
             Expect.Once.On(soundDriver).
                 Method("PlaySound").
                 With("SongX").
