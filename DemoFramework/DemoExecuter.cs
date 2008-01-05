@@ -156,7 +156,9 @@ namespace Dope.DDXX.DemoFramework
         {
             if (songFilename != null && songFilename != "")
             {
-                soundDriver.Initialize("Test");
+                // songFilename also used as wave bank name
+                // sound bank name and cue name!
+                soundDriver.Initialize(songFilename);
                 song = soundDriver.PlaySound(songFilename);
                 //System.Diagnostics.Debug.WriteLine(song.GetVariable("Position"));
             }
