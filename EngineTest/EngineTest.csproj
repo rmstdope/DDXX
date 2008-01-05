@@ -130,6 +130,10 @@
       <Project>{D8131D4F-45AF-4942-B77F-17714A6B64DF}</Project>
       <Name>Input</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MidiProcessorLib\MidiProcessorLib.csproj">
+      <Project>{8197CC1B-D3BF-4DCD-92DC-0ABE1BA1514A}</Project>
+      <Name>MidiProcessorLib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ModelBuilder\ModelBuilder.csproj">
       <Project>{2C34DF5D-D096-45DF-84C9-E78A3691F182}</Project>
       <Name>ModelBuilder</Name>

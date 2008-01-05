@@ -5,8 +5,8 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MidiProcessorLibTest</RootNamespace>
-    <AssemblyName>MidiProcessorLibTest</AssemblyName>
+    <RootNamespace>Dope.DDXX.MidiProcessorLibTest</RootNamespace>
+    <AssemblyName>Dope.DDXX.MidiProcessorLibTest</AssemblyName>
     <XnaFrameworkVersion>v2.0</XnaFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -66,13 +66,18 @@
       <Private>False</Private>
       <SpecificVersion>true</SpecificVersion>
     </Reference>
+    <Reference Include="NMock2, Version=1.0.2313.18049, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="nunit.framework, Version=2.4.3.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MidiImporterTest.cs" />
+    <Compile Include="MidiProcessorTest.cs" />
+    <Compile Include="MidiTypeWriterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

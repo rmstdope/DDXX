@@ -46,13 +46,10 @@
       <Project>{01FF3AC6-34FA-4CD4-8F28-B7EFAC351F50}</Project>
       <Name>ContentProcessor</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="sound\Test.xap">
-      <Name>Test</Name>
-      <Importer>XactImporter</Importer>
-      <Processor>XactProcessor</Processor>
-    </Compile>
+    <ProjectReference Include="..\MidiProcessorLib\MidiProcessorLib.csproj">
+      <Project>{8197CC1B-D3BF-4DCD-92DC-0ABE1BA1514A}</Project>
+      <Name>MidiProcessorLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="fonts\TweakerFont.spritefont">
@@ -144,6 +141,20 @@
       <Name>ARTery Glow</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="sound\music_machinefunk_loop.mid">
+      <Name>music_machinefunk_loop</Name>
+      <Importer>MidiImporter</Importer>
+      <Processor>MidiProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="sound\music_machinefunk_loop.xap">
+      <Name>music_machinefunk_loop</Name>
+      <Importer>XactImporter</Importer>
+      <Processor>XactProcessor</Processor>
     </Compile>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

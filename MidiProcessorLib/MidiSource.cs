@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Dope.DDXX.MidiExtractor;
+using System.Runtime.Serialization;
 
 namespace Dope.DDXX.MidiProcessorLib
 {
-    public class MidiSource
+    [Serializable]
+    public class MidiSource : ISerializable
     {
         private List<IMTrk> tracks = new List<IMTrk>();
         private MThd header;
@@ -26,5 +28,14 @@ namespace Dope.DDXX.MidiProcessorLib
             this.header = header;
             this.tracks = tracks;
         }
+
+        #region ISerializable Members
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
     }
 }

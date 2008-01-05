@@ -73,8 +73,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompiledMidi.cs" />
     <Compile Include="MidiImporter.cs" />
+    <Compile Include="MidiProcessor.cs" />
     <Compile Include="MidiSource.cs" />
+    <Compile Include="MidiTypeReader.cs" />
+    <Compile Include="MidiTypeWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

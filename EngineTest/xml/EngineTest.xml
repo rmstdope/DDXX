@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Demo song="Assembly">
+<Demo song="music_machinefunk_loop">
 	<Generator name="noise256" class="PerlinNoise">
 		<Parameter name="BaseFrequency" int="1024" />
 	</Generator>

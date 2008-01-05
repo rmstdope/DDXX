@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
-using TImport = Dope.DDXX.MidiProcessorLib.MidiSource;
 using System.IO;
 using Dope.DDXX.MidiExtractor;
 
@@ -19,21 +18,23 @@ namespace Dope.DDXX.MidiProcessorLib
     /// extension, display name, and default processor for this importer.
     /// </summary>
     [ContentImporter(".midi", ".mid", DisplayName = "MIDI Importer", 
-        DefaultProcessor = "MidiProcessor", CacheImportedData = true)]
-    public class MidiImporter : ContentImporter<TImport>
+        DefaultProcessor = "MidiProcessor", CacheImportedData = false)]
+    public class MidiImporter : ContentImporter<MidiSource>
     {
-        public override TImport Import(string filename, ContentImporterContext context)
+        public override MidiSource Import(string filename, ContentImporterContext context)
         {
-            // TODO: read the specified file into an instance of the imported type.
-            throw new NotImplementedException();
+            using (FileStream inputStream = new FileStream(filename, FileMode.Open))
+            {
+                return ImportFromStream(inputStream);
+            }
         }
 
-        public TImport ImportFromStream(Stream midiStream)
+        public MidiSource ImportFromStream(Stream midiStream)
         {
             MidiExtractor.MidiExtractor extractor = new MidiExtractor.MidiExtractor();
             MThd header;
             List<IMTrk> tracks;
-            extractor.Parse(midiStream, null, out header, out tracks);
+            extractor.Parse(midiStream, new EventParser(), out header, out tracks);
             return new MidiSource(header, tracks);
         }
     }

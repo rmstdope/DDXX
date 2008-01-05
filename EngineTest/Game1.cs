@@ -35,12 +35,12 @@ namespace EngineTest
         /// </summary>
         protected override void Initialize()
         {
-            AudioEngine audioEngine = new AudioEngine("Test.xgs");
+            AudioEngine audioEngine = new AudioEngine("music_machinefunk_loop.xgs");
             WaveBank waveBank = new WaveBank(audioEngine, "Wave Bank.xwb");
             SoundBank soundBank = new SoundBank(audioEngine, "Sound Bank.xsb");
 
-            Cue cue = soundBank.GetCue("Assembly");
-            //cue.Play();
+            Cue cue = soundBank.GetCue("music_machinefunk_loop");
+            cue.Play();
 
             base.Initialize();
         }
