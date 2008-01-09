@@ -366,22 +366,22 @@ namespace Dope.DDXX.DemoFramework
             Assert.IsFalse(tester.BoolType);
         }
 
-        [Test]
-        public void TestInputReturn()
-        {
-            ExpectKey(Keys.Zoom);
-            Assert.IsFalse(tweaker.HandleInput(inputDriver));
-            ExpectKey(Keys.Up);
-            Assert.IsTrue(tweaker.HandleInput(inputDriver));
-            ExpectKey(Keys.Down);
-            Assert.IsTrue(tweaker.HandleInput(inputDriver));
-            ExpectKey(Keys.PageUp);
-            Assert.IsTrue(tweaker.HandleInput(inputDriver));
-            ExpectKey(Keys.PageDown);
-            Assert.IsTrue(tweaker.HandleInput(inputDriver));
-            ExpectKey(Keys.Tab);
-            Assert.IsTrue(tweaker.HandleInput(inputDriver));
-        }
+        //[Test]
+        //public void TestInputReturn()
+        //{
+        //    ExpectKey(Keys.Zoom);
+        //    Assert.IsFalse(tweaker.HandleInput(inputDriver));
+        //    ExpectKey(Keys.Up);
+        //    Assert.IsTrue(tweaker.HandleInput(inputDriver));
+        //    ExpectKey(Keys.Down);
+        //    Assert.IsTrue(tweaker.HandleInput(inputDriver));
+        //    ExpectKey(Keys.PageUp);
+        //    Assert.IsTrue(tweaker.HandleInput(inputDriver));
+        //    ExpectKey(Keys.PageDown);
+        //    Assert.IsTrue(tweaker.HandleInput(inputDriver));
+        //    ExpectKey(Keys.Tab);
+        //    Assert.IsTrue(tweaker.HandleInput(inputDriver));
+        //}
 
         [Test]
         public void TestContainerChange()

@@ -11,7 +11,7 @@
 	<Effect class="BloodCell" startTime="0" endTime="500">
 		<Parameter name="DrawOrder" int="0" />
 	</Effect>
-	<!--<PostEffect class="GlowPostEffect" startTime="0" endTime="500">
+	<PostEffect class="GlowPostEffect" startTime="20" endTime="500">
   		<Parameter name="BloomScale" float="1.1" />
   		<Parameter name="WhiteCutoff" float="1.639128E-07" />
   		<Parameter name="Exposure" float="0.1" />
@@ -23,8 +23,9 @@
 	<PostEffect class="WavePostEffect" startTime="0" endTime="500">
 		<Parameter name="DrawOrder" int="2" />
 		<Parameter name="Scale" float="4" />
+		<Parameter name="Strength" Vector4="30, 20, 25, 27" />
 	</PostEffect>
-	<PostEffect class="OverlayPostEffect" startTime="0" endTime="10000">
+	<PostEffect class="OverlayPostEffect" startTime="0" endTime="20">
 		<Parameter name="Filename" string="noise256" />
 		<Parameter name="Technique" string="Noise" />
 		<Parameter name="AddNoise" bool="true" />
@@ -33,7 +34,7 @@
 		<Parameter name="SubtractNoise" bool="false" />
 		<Parameter name="BlendFactor" float="0.2500002" />
 		<Parameter name="DrawOrder" int="7" />
-	</PostEffect>-->
+	</PostEffect>
 	<!--<PostEffect class="RadialBlurPostEffect" startTime="0" endTime="500">
 		<Parameter name="BlurColor" Color="100, 100, 150" />
 		<Parameter name="DrawOrder" int="0" />
@@ -68,7 +69,7 @@
 		<Parameter name="FadeOutLength" float="0" />
 		<Parameter name="FadeInLength" float="0" />
 		<Parameter name="SubtractNoise" bool="false" />
-		<Parameter name="BlendFactor" float="0.2" />
+		<Parameter name="BlendFactor" float="0.15" />
 		<Parameter name="DrawOrder" int="10" />
 	</PostEffect>-->
 	<!--<Effect class="GridEffect" startTime="0" endTime="500">

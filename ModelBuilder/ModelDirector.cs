@@ -98,7 +98,7 @@ namespace Dope.DDXX.ModelBuilder
             primitive = sphere;
         }
 
-        public void CreateCylinder(float radius, int segments, float height, int heightSegments, bool lid)
+        public void CreateCylinder(float radius, int segments, float height, int heightSegments, bool lid, int wrapU, int wrapV)
         {
             CylinderPrimitive cylinder = new CylinderPrimitive();
             cylinder.Radius = radius;
@@ -106,16 +106,20 @@ namespace Dope.DDXX.ModelBuilder
             cylinder.Height = height;
             cylinder.HeightSegments = heightSegments;
             cylinder.Lid = lid;
+            cylinder.WrapU = wrapU;
+            cylinder.WrapV = wrapV;
             primitive = cylinder;
         }
 
-        public void CreateTunnel(float radius, int segments, float height, int heightSegments)
+        public void CreateTunnel(float radius, int segments, float height, int heightSegments, int wrapU, int wrapV)
         {
             TunnelPrimitive tunnel = new TunnelPrimitive();
             tunnel.Radius = radius;
             tunnel.Segments = segments;
             tunnel.Height = height;
             tunnel.HeightSegments = heightSegments;
+            tunnel.WrapU = wrapU;
+            tunnel.WrapV = wrapV;
             primitive = tunnel;
         }
 

@@ -10,22 +10,32 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public class DemoTweakerMain : DemoTweakerBase, IDemoTweaker
+    public class DemoTweakerHandler : IDemoTweakerHandler
     {
-        private int currentTweaker;
-        private IDemoTweaker[] tweakers;
+        private Stack<IDemoTweaker> tweakerStack;
+        private IDemoTweaker firstTweaker;
         private IDemoTweakerContext context;
+        private IUserInterface userInterface;
+        private IDemoRegistrator registrator;
+        private ITweakerSettings settings;
+        private BaseControl mainWindow;
         private bool visable;
         private bool saveNeeded;
         private bool saveDone;
         private bool shouldSave;
+        private bool exiting;
 
         public object IdentifierToChild() { return 0; }
         public void IdentifierFromParent(object id) { }
 
+        public IDemoTweaker Tweaker
+        {
+            get { if (tweakerStack.Count == 0) return null; return tweakerStack.Peek(); }
+        }
+
         public bool Enabled
         {
-            get { return currentTweaker > -1; }
+            get { return tweakerStack.Count > 0; }
         }
 
         public bool Quit 
@@ -35,40 +45,57 @@ namespace Dope.DDXX.DemoFramework
 
         public bool Exiting
         {
-            get { return currentTweaker < -1; }
+            get { return exiting; }
         }
 
-        public DemoTweakerMain(IDemoTweakerContext context, IDemoTweaker[] tweakers, ITweakerSettings settings)
-            : base(settings)
+        public DemoTweakerHandler(IDemoTweakerContext context, ITweakerSettings settings, ITweakable demoTweakable)
         {
-            currentTweaker = -1;
+            exiting = false;
+            tweakerStack = new Stack<IDemoTweaker>();
+            firstTweaker = new DemoTweaker(settings, demoTweakable);
             saveNeeded = false;
             saveDone = false;
             shouldSave = true;
-            this.tweakers = tweakers;
             this.context = context;
+            this.settings = settings;
             visable = true;
         }
 
-        public override void Initialize(IDemoRegistrator registrator, IGraphicsFactory graphicsFactory, ITextureFactory textureFactory)
+        public virtual void Initialize(IDemoRegistrator registrator, IUserInterface userInterface)
         {
-            base.Initialize(registrator, graphicsFactory, textureFactory);
+            this.registrator = registrator;
+            this.userInterface = userInterface;
 
-            foreach (IDemoTweaker tweaker in tweakers)
-                tweaker.Initialize(registrator, graphicsFactory, textureFactory);
+            CreateBaseControls();
+
+            firstTweaker.Initialize(registrator, userInterface);
         }
 
-        public bool HandleInput(IInputDriver inputDriver)
+        private void CreateBaseControls()
+        {
+            mainWindow = new BoxControl(new Vector4(0.05f, 0.05f, 0.90f, 0.90f), 0, Color.Black, null);
+
+            BaseControl titleWindow = new BoxControl(new Vector4(0, 0, 1, 0.05f),
+                settings.Alpha, settings.TitleColor, mainWindow);
+            int seconds = (int)Time.CurrentTime;
+            int hundreds = (int)((Time.CurrentTime - seconds) * 100);
+            string titleString = "DDXX Tweaker - " + seconds.ToString("D3") + "." + hundreds.ToString("D2");
+            BaseControl titleText = new TextControl(titleString, new Vector4(0, 0, 1, 1), TextFormatting.Center | TextFormatting.VerticalCenter,
+                settings.TextAlpha, Color.White, titleWindow);
+        }
+
+        public IDemoTweaker HandleInput(IInputDriver inputDriver)
         {
             if (Exiting)
             {
                 HandleExitInput(inputDriver);
-                return true;
+                return null;
             }
             if (Enabled)
             {
-                if (tweakers[currentTweaker].HandleInput(inputDriver))
-                    return true;
+                IDemoTweaker newTweaker = Tweaker.HandleInput(inputDriver);
+                if (newTweaker != null)
+                    tweakerStack.Push(newTweaker);
             }
 
             if (inputDriver.RightPressedNoRepeat())
@@ -88,38 +115,35 @@ namespace Dope.DDXX.DemoFramework
 
             if (inputDriver.OkPressedNoRepeat())
             {
-                if (currentTweaker < tweakers.Length - 1)
-                {
-                    saveNeeded = true;
-                    if (currentTweaker != -1)
-                        tweakers[currentTweaker + 1].IdentifierFromParent(tweakers[currentTweaker].IdentifierToChild());
-                    currentTweaker++;
-                }
-                return true;
+                saveNeeded = true;
+                if (Tweaker == null)
+                    tweakerStack.Push(firstTweaker);
             }
 
             if (inputDriver.BackPressedNoRepeat())
             {
-                currentTweaker--;
-                return true;
+                if (tweakerStack.Count > 0)
+                    tweakerStack.Pop();
+                else
+                    exiting = true;
             }
 
             if (inputDriver.KeyPressedNoRepeat(Keys.F1))
                 visable = !visable;
 
             if (inputDriver.KeyPressedNoRepeat(Keys.F2))
-                Settings.SetTransparency(Transparency.Low);
+                settings.SetTransparency(Transparency.Low);
             if (inputDriver.KeyPressedNoRepeat(Keys.F3))
-                Settings.SetTransparency(Transparency.Medium);
+                settings.SetTransparency(Transparency.Medium);
             if (inputDriver.KeyPressedNoRepeat(Keys.F4))
-                Settings.SetTransparency(Transparency.High);
+                settings.SetTransparency(Transparency.High);
 
             if (inputDriver.KeyPressedNoRepeat(Keys.F5))
-                Settings.NextColorSchema();
+                settings.NextColorSchema();
             if (inputDriver.KeyPressedNoRepeat(Keys.F6))
-                Settings.PreviousColorSchema();
+                settings.PreviousColorSchema();
 
-            return true;
+            return null;
         }
 
         private void HandleExitInput(IInputDriver inputDriver)
@@ -144,15 +168,14 @@ namespace Dope.DDXX.DemoFramework
 
             if (visable)
             {
-                tweakers[currentTweaker].Draw();
+                Tweaker.Draw();
             }
         }
 
         private void HandleExitDraw()
         {
-            CreateBaseControls();
             BoxControl tweakableWindow = new BoxControl(new Vector4(0, 0.05f, 1, 0.95f),
-                Settings.Alpha, Settings.TimeColor, MainWindow);
+                settings.Alpha, settings.TimeColor, mainWindow);
             new TextControl("Should old XML file be overwritten?", new Vector4(0, 0, 1, 0.90f), TextFormatting.VerticalCenter | TextFormatting.Center, 255, Color.White, tweakableWindow);
             Color yesColor = Color.DarkGray;
             Color noColor = Color.DarkGray;
@@ -163,7 +186,7 @@ namespace Dope.DDXX.DemoFramework
             new TextControl("Yes>>>", new Vector4(0, 0, 0.5f, 1), TextFormatting.Right | TextFormatting.VerticalCenter, 255, yesColor, tweakableWindow);
             new TextControl("<<<No", new Vector4(0.5f, 0, 0.5f, 1), TextFormatting.Left | TextFormatting.VerticalCenter, 255, noColor, tweakableWindow);
 
-            UserInterface.DrawControl(MainWindow);
+            userInterface.DrawControl(mainWindow);
         }
 
         public bool ShouldSave()

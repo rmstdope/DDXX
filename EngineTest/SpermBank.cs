@@ -47,7 +47,7 @@ namespace EngineTest
             for (int i = 0; i < 1; i++)
             {
                 ModelNode head = new ModelNode("Cell", model, GraphicsDevice);
-                ModelDirector.CreateCylinder(0.1f, 8, TailLength, 16, true);
+                ModelDirector.CreateCylinder(0.1f, 8, TailLength, 16, true, 1, 1);
                 ModelDirector.Rotate(0, 0, Math.PI / 2);
                 ModelDirector.Translate(-TailLength / 2 - 1.6f, 0, 0);
                 ModelDirector.Amplitude(tailFunction);

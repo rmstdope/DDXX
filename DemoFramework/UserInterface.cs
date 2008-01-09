@@ -21,7 +21,7 @@ namespace Dope.DDXX.DemoFramework
         {
             spriteBatch = graphicsFactory.CreateSpriteBatch();
             spriteFont = graphicsFactory.SpriteFontFromFile("Content/fonts/TweakerFont");
-            whiteTexture = textureFactory.CreateFromFunction(1, 1, 1, TextureUsage.None, SurfaceFormat.Color, delegate (Vector2 x, Vector2 y) { return new Vector4(1, 1, 1, 1); });
+            whiteTexture = textureFactory.WhiteTexture;
         }
 
         public void DrawControl(BaseControl control)

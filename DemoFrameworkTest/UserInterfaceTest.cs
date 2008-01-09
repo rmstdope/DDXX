@@ -41,8 +41,7 @@ namespace Dope.DDXX.DemoFramework
                 With("Content/fonts/TweakerFont").
                 Will(Return.Value(spriteFont));
             Expect.Once.On(textureFactory).
-                Method("CreateFromFunction").
-                WithAnyArguments().
+                GetProperty("WhiteTexture").
                 Will(Return.Value(texture2D));
 
             ui.Initialize(graphicsFactory, textureFactory);

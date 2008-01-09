@@ -52,6 +52,7 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
@@ -74,18 +75,7 @@
       <SubType>Code</SubType>
       <Name>DemoMockTest</Name>
     </Compile>
-    <Compile Include="DemoTweakerDemoTest.cs">
-      <Name>DemoTweakerDemoTest</Name>
-    </Compile>
-    <Compile Include="DemoTweakerEffectTest.cs">
-      <Name>DemoTweakerEffectTest</Name>
-    </Compile>
-    <Compile Include="DemoTweakerMainTest.cs">
-      <Name>DemoTweakerMainTest</Name>
-    </Compile>
-    <Compile Include="DemoTweakerTrackTest.cs">
-      <Name>DemoTweakerTrackTest</Name>
-    </Compile>
+    <Compile Include="DemoTweakerTest.cs" />
     <Compile Include="DemoXMLReaderTest.cs">
       <SubType>Code</SubType>
       <Name>DemoXMLReaderTest</Name>

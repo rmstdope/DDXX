@@ -128,19 +128,19 @@ namespace Dope.DDXX.DemoFramework
             tweaker.Draw();
         }
 
-        [Test]
-        public void TestInputReturn()
-        {
-            tracks.Add(new Track());
-            TestInitialize();
+        //[Test]
+        //public void TestInputReturn()
+        //{
+        //    tracks.Add(new Track());
+        //    TestInitialize();
 
-            ExpectKey(Keys.Zoom);
-            Assert.IsFalse(tweaker.HandleInput(inputDriver));
-            ExpectKey(Keys.Up);
-            Assert.IsTrue(tweaker.HandleInput(inputDriver));
-            ExpectKey(Keys.Down);
-            Assert.IsTrue(tweaker.HandleInput(inputDriver));
-        }
+        //    ExpectKey(Keys.Zoom);
+        //    Assert.IsFalse(tweaker.HandleInput(inputDriver));
+        //    ExpectKey(Keys.Up);
+        //    Assert.IsTrue(tweaker.HandleInput(inputDriver));
+        //    ExpectKey(Keys.Down);
+        //    Assert.IsTrue(tweaker.HandleInput(inputDriver));
+        //}
 
         private void ExpectKey(Keys key)
         {

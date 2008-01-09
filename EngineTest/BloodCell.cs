@@ -18,6 +18,12 @@ namespace EngineTest
         private List<ModelNode> cells = new List<ModelNode>();
         private ModelNode artery;
 
+        public IScene Scene
+        {
+            get { return scene; }
+            set { scene = value; }
+        }
+
         public BloodCell(string name, float start, float end)
             : base(name, start, end)
         {
@@ -44,13 +50,13 @@ namespace EngineTest
             TextureDirector.Madd(1, 1);
             TextureDirector.Madd(0.5f, 0);
             ModelBuilder.SetNormalTexture("Default", TextureDirector.Generate(256, 256, 0, SurfaceFormat.Color));
-            ModelBuilder.SetAmbientColor("Default", Color.Red);
+            ModelBuilder.SetAmbientColor("Default", Color.Black);
             ModelBuilder.SetDiffuseColor("Default", Color.Red);
-            ModelBuilder.SetSpecularColor("Default", new Color(255, 120, 120));
+            ModelBuilder.SetSpecularColor("Default", new Color(255, 160, 160));
             ModelBuilder.SetShininess("Default", 1.0f);
             ModelBuilder.SetSpecularPower("Default", 32);
             ModelBuilder.SetEffect("Default", "Content\\effects\\NormalMapping");
-            ModelDirector.CreateTunnel(2.0f, 32, 4, 20);
+            ModelDirector.CreateTunnel(2.0f, 32, 4, 20, 2, 1);
             IModel model = ModelDirector.Generate("Default");
             artery = new ModelNode("Artery", model, GraphicsDevice);
             scene.AddNode(artery);

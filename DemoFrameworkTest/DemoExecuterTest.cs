@@ -24,7 +24,7 @@ namespace Dope.DDXX.DemoFramework
     public class DemoExecuterTest : DemoMockTest, IDemoFactory
     {
         private DemoExecuter executer;
-        private IDemoTweaker tweaker;
+        private IDemoTweakerHandler tweakerHandler;
         private ISoundDriver soundDriver;
         private IInputDriver inputDriver;
         private IEffectChangeListener effectChangeListener;
@@ -47,8 +47,8 @@ namespace Dope.DDXX.DemoFramework
             inputDriver = mockery.NewMock<IInputDriver>();
             effectTypes = mockery.NewMock<IDemoEffectTypes>();
             executer = new DemoExecuter(this, soundDriver, inputDriver, postProcessor, effectTypes);
-            tweaker = mockery.NewMock<IDemoTweaker>();
-            executer.Tweaker = tweaker;
+            tweakerHandler = mockery.NewMock<IDemoTweakerHandler>();
+            executer.TweakerHandler = tweakerHandler;
             renderTarget2 = mockery.NewMock<IRenderTarget2D>();
             renderTarget3 = mockery.NewMock<IRenderTarget2D>();
             deviceParameters = mockery.NewMock<IDeviceParameters>();
@@ -57,6 +57,8 @@ namespace Dope.DDXX.DemoFramework
 
             Stub.On(inputDriver).Method("KeyPressedNoRepeat").With(Keys.Space).Will(Return.Value(false));
             Stub.On(graphicsFactory).Method("CreateSpriteBatch").Will(Return.Value(spriteBatch));
+            Stub.On(graphicsFactory).Method("SpriteFontFromFile").With("Content/fonts/TweakerFont").Will(Return.Value(null));
+            Stub.On(textureFactory).GetProperty("WhiteTexture").Will(Return.Value(null));
 
             numTracksRegistered = 0;
             tracks = new List<ITrack>();
@@ -152,9 +154,8 @@ namespace Dope.DDXX.DemoFramework
                 Method("Step");
             Expect.Once.On(tracks[1]).
                 Method("Step");
-            Expect.Once.On(tweaker).
-                Method("HandleInput").
-                Will(Return.Value(true));
+            Expect.Once.On(tweakerHandler).
+                Method("HandleInput");
             executer.Step();
         }
 
@@ -269,7 +270,7 @@ namespace Dope.DDXX.DemoFramework
 
             Expect.Once.On(inputDriver).Method("KeyPressedNoRepeat").With(Keys.F12).Will(Return.Value(false));
 
-            Expect.Once.On(tweaker).
+            Expect.Once.On(tweakerHandler).
                 Method("Draw");
 
             executer.Render();
@@ -301,7 +302,7 @@ namespace Dope.DDXX.DemoFramework
                 With(device, renderTarget, renderTarget, depthStencilBuffer, Color.DarkSlateBlue).Will(Return.Value(renderTarget2));
             Expect.Once.On(renderTarget2).Method("GetTexture").Will(Return.Value(texture2D));
             ExpectCopyToBackBuffer(renderTarget2);
-            Expect.Once.On(tweaker).
+            Expect.Once.On(tweakerHandler).
                 Method("Draw");
 
             executer.Render();
@@ -324,7 +325,7 @@ namespace Dope.DDXX.DemoFramework
                 With(device, renderTarget, renderTarget, depthStencilBuffer, Color.DarkSlateBlue).Will(Return.Value(renderTarget2));
             Expect.Once.On(renderTarget2).Method("GetTexture").Will(Return.Value(texture2D));
             ExpectCopyToBackBuffer(renderTarget2);
-            Expect.Once.On(tweaker).
+            Expect.Once.On(tweakerHandler).
                 Method("Draw");
 
             executer.Render();
@@ -359,7 +360,7 @@ namespace Dope.DDXX.DemoFramework
             //Expect.Once.On(postProcessor).Method("FreeTexture").With(backBuffer2);
             Expect.Once.On(renderTarget3).Method("GetTexture").Will(Return.Value(texture2D));
             ExpectCopyToBackBuffer(renderTarget3);
-            Expect.Once.On(tweaker).
+            Expect.Once.On(tweakerHandler).
                 Method("Draw");
 
             executer.Render();
@@ -384,7 +385,7 @@ namespace Dope.DDXX.DemoFramework
                 With(device, renderTarget, renderTarget, depthStencilBuffer, Color.DarkSlateBlue).Will(Return.Value(renderTarget2));
             Expect.Once.On(renderTarget2).Method("GetTexture").Will(Return.Value(texture2D));
             ExpectCopyToBackBuffer(renderTarget2);
-            Expect.Once.On(tweaker).
+            Expect.Once.On(tweakerHandler).
                 Method("Draw");
 
             executer.Render();
@@ -732,8 +733,8 @@ namespace Dope.DDXX.DemoFramework
                 Expect.Once.On(tracks[track]).
                     Method("Step");
             }
-            Expect.Once.On(tweaker).
-                Method("HandleInput").Will(Return.Value(true));
+            Expect.Once.On(tweakerHandler).
+                Method("HandleInput");
         }
 
         [Test]
@@ -812,8 +813,8 @@ namespace Dope.DDXX.DemoFramework
         private void LimitRunLoop(int numCalls)
         {
             if (numCalls > 0)
-                Expect.Exactly(numCalls).On(tweaker).GetProperty("Quit").Will(Return.Value(false));
-            Expect.Once.On(tweaker).GetProperty("Quit").Will(Return.Value(true));
+                Expect.Exactly(numCalls).On(tweakerHandler).GetProperty("Quit").Will(Return.Value(false));
+            Expect.Once.On(tweakerHandler).GetProperty("Quit").Will(Return.Value(true));
         }
 
         private void ExpectPostProcessorInitialize()
@@ -825,7 +826,7 @@ namespace Dope.DDXX.DemoFramework
 
         private void ExpectTweakerInitialize()
         {
-            Expect.Once.On(tweaker).
+            Expect.Once.On(tweakerHandler).
                 Method("Initialize");
         }
 

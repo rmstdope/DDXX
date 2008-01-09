@@ -101,5 +101,10 @@ namespace Dope.DDXX.DemoFramework
         {
             spriteBatch.Draw(whiteTexture, new Rectangle(x, y, width, 1), color);
         }
+
+        public void RemoveChildren()
+        {
+            Children = new List<BaseControl>();
+        }
     }
 }

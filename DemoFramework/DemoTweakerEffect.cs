@@ -309,7 +309,7 @@ namespace Dope.DDXX.DemoFramework
         private void DrawWindow()
         {
             const int NumVisableVariables = 13;
-            CreateBaseControls();
+            //CreateBaseControls();
             tweakableWindow = new BoxControl(new Vector4(0, 0.05f, 1, 0.90f),
                 Settings.Alpha, Settings.TimeColor, MainWindow);
 
@@ -398,37 +398,30 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        public bool HandleInput(IInputDriver inputDriver)
+        public IDemoTweaker HandleInput(IInputDriver inputDriver)
         {
-            bool handled = false;
             if (inputDriver.UpPressedNoRepeat())
             {
                 KeyUp();
-                handled = true;
             }
             if (inputDriver.DownPressedNoRepeat())
             {
                 KeyDown();
-                handled = true;
             }
             if (inputDriver.KeyPressedNoRepeat(Keys.Tab))
             {
                 KeyTab();
-                handled = true;
             }
             if (inputDriver.KeyPressedSlowRepeat(Keys.PageUp))
             {   
                 KeyPageUp();
-                handled = true;
             }
             if (inputDriver.KeyPressedSlowRepeat(Keys.PageDown))
             {
                 KeyPageDown();
-                handled = true;
             }
-            handled = CheckForInput(inputDriver) || handled;
-
-            return handled;
+            CheckForInput(inputDriver);
+            return null;
         }
 
         private bool CheckForInput(IInputDriver inputDriver)

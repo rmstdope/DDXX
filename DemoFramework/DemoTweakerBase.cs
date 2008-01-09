@@ -19,7 +19,10 @@ namespace Dope.DDXX.DemoFramework
         private BoxControl mainWindow;
         private BoxControl titleWindow;
         private TextControl titleText;
+        private BoxControl timelineWindow;
         protected BoxControl timeWindow;
+        protected IGraphicsFactory graphicsFactory;
+        protected ITextureFactory textureFactory;
 
         public IUserInterface UserInterface
         {
@@ -62,15 +65,18 @@ namespace Dope.DDXX.DemoFramework
             this.settings = settings;
         }
 
-        public virtual void Initialize(IDemoRegistrator registrator, IGraphicsFactory graphicsFactory, ITextureFactory textureFactory)
+        public virtual void Initialize(IDemoRegistrator registrator, IUserInterface userInterface)
         {
             this.registrator = registrator;
             startTime = registrator.StartTime;
 
             UserInterface.Initialize(graphicsFactory, textureFactory);
+
+            CreateBaseControls();
+            CreateTimeControls();
         }
 
-        protected void CreateBaseControls()
+        private void CreateBaseControls()
         {
             mainWindow = new BoxControl(new Vector4(0.05f, 0.05f, 0.90f, 0.90f), 0, Color.Black, null);
 
@@ -83,11 +89,11 @@ namespace Dope.DDXX.DemoFramework
                 Settings.TextAlpha, Color.White, titleWindow);
         }
 
-        protected BoxControl CreateTimeControls()
+        private BoxControl CreateTimeControls()
         {
             timeWindow = new BoxControl(new Vector4(0, 0.05f, 1, 0.95f),
                 Settings.Alpha, Settings.TimeColor, mainWindow);
-            BoxControl timelineWindow = new BoxControl(new Vector4(0.02f, 0.04f, 0.96f, 0.92f), 0, Color.Black, timeWindow);
+            timelineWindow = new BoxControl(new Vector4(0.02f, 0.04f, 0.96f, 0.92f), 0, Color.Black, timeWindow);
             CreateTimeLine(timelineWindow);
             return timelineWindow;
         }

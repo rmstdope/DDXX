@@ -15,7 +15,7 @@ namespace Dope.DDXX.DemoFramework
     [TestFixture]
     public class DemoTweakerMainTest : D3DMockTest
     {
-        private DemoTweakerMain tweaker;
+        private DemoTweakerHandler tweaker;
         private IDemoTweaker[] tweakers;
         private IInputDriver input;
         private IDemoTweakerContext context;
@@ -31,7 +31,7 @@ namespace Dope.DDXX.DemoFramework
             context = mockery.NewMock<IDemoTweakerContext>();
             settings = mockery.NewMock<ITweakerSettings>();
             tweakers = new IDemoTweaker[] { mockery.NewMock<IDemoTweaker>(), mockery.NewMock<IDemoTweaker>() };
-            tweaker = new DemoTweakerMain(context, tweakers, settings);
+            tweaker = new DemoTweakerHandler(context, tweakers, settings);
             input = mockery.NewMock<IInputDriver>();
             registrator = mockery.NewMock<IDemoRegistrator>();
             userInterface = mockery.NewMock<IUserInterface>();

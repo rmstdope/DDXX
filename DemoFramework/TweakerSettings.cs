@@ -86,15 +86,15 @@ namespace Dope.DDXX.DemoFramework
             {
                 case Transparency.High:
                     alpha = 40;
-                    textAlpha = 80;
+                    textAlpha = 120;
                     break;
                 case Transparency.Medium:
                     alpha = 80;
-                    textAlpha = 128;
+                    textAlpha = 200;
                     break;
                 case Transparency.Low:
                     alpha = 128;
-                    textAlpha = 200;
+                    textAlpha = 255;
                     break;
             }
         }

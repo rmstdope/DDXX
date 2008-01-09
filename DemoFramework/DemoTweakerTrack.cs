@@ -78,27 +78,24 @@ namespace Dope.DDXX.DemoFramework
                 currentEffect--;
         }
 
-        public bool HandleInput(IInputDriver inputDriver)
+        public IDemoTweaker HandleInput(IInputDriver inputDriver)
         {
-            bool handled = false;
             if (inputDriver.UpPressedNoRepeat())
             {
                 KeyUp();
-                handled = true;
             }
             if (inputDriver.DownPressedNoRepeat())
             {
                 KeyDown();
-                handled = true;
             }
-            return handled;
+            return null;
         }
 
         public void Draw()
         {
-            CreateBaseControls();
-            BoxControl control = CreateTimeControls();
-            CreateEffects(control);
+            //CreateBaseControls();
+            //BoxControl control = CreateTimeControls();
+            //CreateEffects(control);
 
             UserInterface.DrawControl(MainWindow);
         }

@@ -14,6 +14,8 @@ namespace Dope.DDXX.ModelBuilder
         private int segments;
         private int heightSegments;
         private bool lid;
+        private int wrapU;
+        private int wrapV;
 
         public float Height
         {
@@ -45,9 +47,23 @@ namespace Dope.DDXX.ModelBuilder
             set { lid = value; }
         }
 
+        public int WrapU
+        {
+            get { return wrapU; }
+            set { wrapU = value; }
+        }
+
+        public int WrapV
+        {
+            get { return wrapV; }
+            set { wrapV = value; }
+        }
+
         public CylinderPrimitive()
             : base(0)
         {
+            wrapU = 1;
+            wrapV = 1;
         }
 
         public override IPrimitive Generate()
@@ -144,8 +160,8 @@ namespace Dope.DDXX.ModelBuilder
                     position *= radius;
                     position.Y = yPos;
                     vertices[vertex].Position = position;
-                    vertices[vertex].U = j / (float)(segments);
-                    vertices[vertex].V = i / (float)heightSegments;
+                    vertices[vertex].U = wrapU * j / (float)(segments);
+                    vertices[vertex].V = wrapV * i / (float)heightSegments;
                     vertices[vertex].Normal = normal;
                     vertex++;
                 }

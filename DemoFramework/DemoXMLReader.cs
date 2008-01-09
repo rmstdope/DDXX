@@ -12,7 +12,16 @@ namespace Dope.DDXX.DemoFramework
 {
     public enum TweakableType
     {
-        Unknown = 0, Integer, Float, String, Vector2, Vector3, Vector4, Color, Bool
+        Unknown = 0, 
+        Integer, 
+        Float, 
+        String, 
+        Vector2, 
+        Vector3, 
+        Vector4, 
+        Color, 
+        Bool,
+        IScene
     }
 
     public struct Parameter
