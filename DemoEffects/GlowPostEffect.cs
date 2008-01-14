@@ -56,14 +56,14 @@ namespace Dope.DDXX.DemoEffects
             : base(name, startTime, endTime)
         {
             Luminance = 0.2f;
-            SetStepSize(GetTweakableNumber("Luminance"), 0.01f);
             Exposure = 0.1f;
-            SetStepSize(GetTweakableNumber("Exposure"), 0.01f);
             WhiteCutoff = 0.1f;
-            SetStepSize(GetTweakableNumber("WhiteCutoff"), 0.01f);
             BloomScale = 1.4f;
-            SetStepSize(GetTweakableNumber("BloomScale"), 0.1f);
             DownSamples = 1;
+            //SetStepSize(GetTweakableNumber("Luminance"), 0.01f);
+            //SetStepSize(GetTweakableNumber("Exposure"), 0.01f);
+            //SetStepSize(GetTweakableNumber("WhiteCutoff"), 0.01f);
+            //SetStepSize(GetTweakableNumber("BloomScale"), 0.1f);
         }
 
         public override void Render()

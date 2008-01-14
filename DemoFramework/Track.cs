@@ -235,10 +235,10 @@ namespace Dope.DDXX.DemoFramework
 
         public void UpdateListener(IEffectChangeListener effectChangeListener)
         {
-            foreach (IDemoEffect effect in effects)
-                (effect as TweakableContainer).UpdateListener(effectChangeListener);
-            foreach (IDemoPostEffect effect in postEffects)
-                (effect as TweakableContainer).UpdateListener(effectChangeListener);
+            //foreach (IDemoEffect effect in effects)
+            //    (effect as TweakableContainer).UpdateListener(effectChangeListener);
+            //foreach (IDemoPostEffect effect in postEffects)
+            //    (effect as TweakableContainer).UpdateListener(effectChangeListener);
         }
 
         public bool IsEffectRegistered(string name, Type type)
@@ -261,115 +261,5 @@ namespace Dope.DDXX.DemoFramework
             return false;
         }
 
-
-        private ITweakableObject[] GetAllTweakableObjects()
-        {
-            ITweakableObject[] allEffects = new ITweakableObject[effects.Count + postEffects.Count];
-            Array.Copy(effects.ToArray(), allEffects, effects.Count);
-            Array.Copy(postEffects.ToArray(), 0, allEffects, effects.Count, postEffects.Count);
-            return allEffects;
-        }
-
-        #region ITweakableObject Members
-
-        public int NumVisableVariables
-        {
-            get { return 13; }
-        }
-
-        public int NumVariables
-        {
-            get { return effects.Count + postEffects.Count; }
-        }
-
-        public string GetVariableName(int index)
-        {
-            return GetAllTweakableObjects()[index].GetType().Name;
-        }
-
-        public ITweakableObject GetVariable(int index)
-        {
-            return GetAllTweakableObjects()[index];
-        }
-
-        public void CreateVariableControl(TweakerStatus status, int index, float y, ITweakerSettings settings)
-        {
-            float height = status.VariableSpacing * 0.9f;
-            Color boxColor;
-            Color textColor;
-            ITweakableObject[] allTweakables = GetAllTweakableObjects();
-            GetColors(index, status.Selection, settings, out boxColor, out textColor);
-            float ex1 = ((allTweakables[index] as IRegisterable).StartTime - status.StartTime) / status.TimeScale;
-            if (ex1 < 0)
-                ex1 = 0;
-            float ex2 = ((allTweakables[index] as IRegisterable).EndTime - status.StartTime) / status.TimeScale;
-            if (ex2 > 1)
-                ex2 = 1;
-            if (ex1 < 1 && ex2 > 0)
-            {
-                BoxControl trackWindow = new BoxControl(new Vector4(ex1, y, ex2 - ex1, height), settings.Alpha, boxColor, status.RootControl);
-                new TextControl(allTweakables[index].GetType().Name, new Vector4(0, 0, 1, 1), TextFormatting.Center | TextFormatting.VerticalCenter, settings.TextAlpha, textColor, trackWindow);
-            }
-            else if (ex1 >= 1.0f)
-            {
-                BoxControl trackWindow = new BoxControl(new Vector4(0, y, 1, height), 0, boxColor, status.RootControl);
-                new TextControl(allTweakables[index].GetType().Name + "-->", new Vector4(0, 0, 1, 1), TextFormatting.Right | TextFormatting.VerticalCenter, settings.TextAlpha, textColor, trackWindow);
-            }
-            else
-            {
-                BoxControl trackWindow = new BoxControl(new Vector4(0, y, 1, height), 0, boxColor, status.RootControl);
-                new TextControl("<--" + allTweakables[index].GetType().Name, new Vector4(0, 0, 1, 1), TextFormatting.Left | TextFormatting.VerticalCenter, settings.TextAlpha, textColor, trackWindow);
-            }
-        }
-
-        private void GetColors(int i, int selection, ITweakerSettings settings, out Color boxColor, out Color textColor)
-        {
-            if (i == selection)
-            {
-                boxColor = settings.SelectedColor;
-                textColor = Color.White;
-            }
-            else
-            {
-                boxColor = settings.UnselectedColor;
-                textColor = Color.Gray;
-            }
-        }
-
-        private Color GetBoxColor(int index, int selection, ITweakerSettings settings)
-        {
-            if (index == selection)
-                return settings.SelectedColor;
-            return settings.UnselectedColor;
-        }
-
-        private Color GetTextColor(int index, int selection)
-        {
-            if (index == selection)
-                return Color.White;
-            return Color.Gray;
-        }
-
-        public void NextIndex(TweakerStatus status)
-        {
-        }
-
-        public void IncreaseValue(TweakerStatus status)
-        {
-        }
-
-        public void DecreaseValue(TweakerStatus status)
-        {
-        }
-
-        public void CreateBaseControls(TweakerStatus status, ITweakerSettings settings)
-        {
-        }
-
-        public void SetValue(TweakerStatus status)
-        {
-        }
-
-        #endregion
     }
 }

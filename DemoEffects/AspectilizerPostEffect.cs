@@ -38,7 +38,7 @@ namespace Dope.DDXX.DemoEffects
             : base(name, startTime, endTime)
         {
             AddNoise = true;
-            SetStepSize(GetTweakableNumber("Rounding"), 0.001f);
+            //SetStepSize(GetTweakableNumber("Rounding"), 0.001f);
         }
 
         private void CreateTexture()

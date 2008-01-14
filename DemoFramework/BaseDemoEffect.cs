@@ -11,11 +11,9 @@ using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public abstract class BaseDemoEffect : TweakableContainer, IDemoEffect
+    public abstract class BaseDemoEffect : Registerable, IDemoEffect
     {
         private int drawOrder;
-        private float startTime;
-        private float endTime;
         private IGraphicsFactory graphicsFactory;
         private IEffectFactory effectFactory;
         private ITextureFactory textureFactory;
@@ -28,10 +26,8 @@ namespace Dope.DDXX.DemoFramework
         private IPostProcessor postProcessor;
 
         protected BaseDemoEffect(string name, float startTime, float endTime)
-            : base(name)
+            : base(name, startTime, endTime)
         {
-            StartTime = startTime;
-            EndTime = endTime;
             drawOrder = 0;
         }
 
@@ -159,29 +155,9 @@ namespace Dope.DDXX.DemoFramework
 
         #region IDemoEffect Members
 
-        public float StartTime
-        {
-            get { return startTime; }
-            set { startTime = value; StartTimeUpdated();  }
-        }
-
-        public float EndTime
-        {
-            get { return endTime; }
-            set { endTime = value; EndTimeUpdated();  }
-        }
-
         public abstract void Step();
 
         public abstract void Render();
-
-        public virtual void StartTimeUpdated()
-        {
-        }
-
-        public virtual void EndTimeUpdated()
-        {
-        }
 
         public void Initialize(IGraphicsFactory graphicsFactory, IEffectFactory effectFactory, 
             ITextureFactory textureFactory, IDemoMixer mixer, IPostProcessor postProcessor)

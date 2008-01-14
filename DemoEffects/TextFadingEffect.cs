@@ -70,10 +70,10 @@ namespace Dope.DDXX.DemoEffects
             Text = "Default";
             FontName = "NoFont";
             textColor = Color.White;
-            SetStepSize(GetTweakableNumber("TextPosition"), 0.01f);
-            SetStepSize(GetTweakableNumber("FadeInLength"), 0.1f);
-            SetStepSize(GetTweakableNumber("FadeOutLength"), 0.1f);
-            SetStepSize(GetTweakableNumber("Velocity"), 0.01f);
+            //SetStepSize(GetTweakableNumber("TextPosition"), 0.01f);
+            //SetStepSize(GetTweakableNumber("FadeInLength"), 0.1f);
+            //SetStepSize(GetTweakableNumber("FadeOutLength"), 0.1f);
+            //SetStepSize(GetTweakableNumber("Velocity"), 0.01f);
         }
 
         protected override void Initialize()

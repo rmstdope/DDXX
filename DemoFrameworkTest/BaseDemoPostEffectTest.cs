@@ -9,9 +9,6 @@ namespace Dope.DDXX.DemoFramework
 {
     public class TestPostEffect : BaseDemoPostEffect
     {
-        public bool startCalled;
-        public bool endCalled;
-
         public TestPostEffect(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
         {
@@ -19,16 +16,6 @@ namespace Dope.DDXX.DemoFramework
 
         public override void Render()
         {
-        }
-
-        public override void StartTimeUpdated()
-        {
-            startCalled = true;
-        }
-
-        public override void EndTimeUpdated()
-        {
-            endCalled = true;
         }
 
         protected override void Initialize() { }
@@ -65,11 +52,8 @@ namespace Dope.DDXX.DemoFramework
 
             effect.StartTime = 1.0f;
             Assert.AreEqual(1.0f, effect.StartTime);
-            Assert.IsTrue(effect.startCalled);
             effect.EndTime = 11.0f;
             Assert.AreEqual(11.0f, effect.EndTime);
-            Assert.IsTrue(effect.endCalled);
-
         }
     }
 }

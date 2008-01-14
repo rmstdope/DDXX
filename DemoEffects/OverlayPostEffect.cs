@@ -69,9 +69,9 @@ namespace Dope.DDXX.DemoEffects
         public OverlayPostEffect(string name, float start, float end)
             : base(name, start, end)
         {
-            SetStepSize(GetTweakableNumber("BlendFactor"), 0.01f);
-            SetStepSize(GetTweakableNumber("FadeInLength"), 0.1f);
-            SetStepSize(GetTweakableNumber("FadeOutLength"), 0.1f);
+            //SetStepSize(GetTweakableNumber("BlendFactor"), 0.01f);
+            //SetStepSize(GetTweakableNumber("FadeInLength"), 0.1f);
+            //SetStepSize(GetTweakableNumber("FadeOutLength"), 0.1f);
             technique = "Blend";
         }
 

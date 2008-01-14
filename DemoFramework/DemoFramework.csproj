@@ -158,6 +158,7 @@
       <Name>PostProcessor</Name>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Registerable.cs" />
     <Compile Include="SetupForm.cs">
       <SubType>Form</SubType>
       <Name>SetupForm</Name>
@@ -177,14 +178,13 @@
     </Compile>
     <Compile Include="TweakableBoolean.cs" />
     <Compile Include="TweakableColor.cs" />
-    <Compile Include="TweakableContainer.cs">
-      <Name>TweakableContainer</Name>
-    </Compile>
     <Compile Include="TweakableInt32.cs" />
     <Compile Include="TweakableObjectBase.cs" />
     <Compile Include="TweakableDemo.cs" />
+    <Compile Include="TweakableRegisterable.cs" />
     <Compile Include="TweakableSingle.cs" />
     <Compile Include="TweakableString.cs" />
+    <Compile Include="TweakableTrack.cs" />
     <Compile Include="TweakableValueBase.cs" />
     <Compile Include="TweakableVector2.cs" />
     <Compile Include="TweakableVector3.cs" />

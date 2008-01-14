@@ -6,10 +6,10 @@ using Dope.DDXX.TextureBuilder;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public interface IDemoPostEffect : IRegisterable, ITweakableObject
+    public interface IDemoPostEffect : IRegisterable
     {
         int DrawOrder { get; set; }
-        void Initialize(IGraphicsFactory graphicsFactory, IPostProcessor postProcessor, ITextureFactory textureFactory, ITextureBuilder textureBuilder/*, IGraphicsDevice device*/);
+        void Initialize(IGraphicsFactory graphicsFactory, IPostProcessor postProcessor, ITextureFactory textureFactory, ITextureBuilder textureBuilder);
         void Render();
     }
 }

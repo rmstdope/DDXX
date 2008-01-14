@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public interface ITrack : ITweakableObject
+    public interface ITrack
     {
         IDemoEffect[] Effects { get; }
         float EndTime { get; }

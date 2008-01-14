@@ -5,12 +5,12 @@ using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public interface IDemoEffect : IRegisterable, ITweakableObject
+    public interface IDemoEffect : IRegisterable
     {
         int DrawOrder { get; set; }
         void Step();
         void Render();
         void Initialize(IGraphicsFactory graphicsFactory, IEffectFactory effectFactory, ITextureFactory textureFactory,
-            /*IGraphicsDevice device,*/ IDemoMixer mixer, IPostProcessor postProcessor);
+            IDemoMixer mixer, IPostProcessor postProcessor);
     }
 }

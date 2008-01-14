@@ -30,7 +30,7 @@ namespace Dope.DDXX.DemoFramework
 
         protected override ITweakableObject GetSpecificVariable(int index)
         {
-            return Target.Tracks[index];
+            return new TweakableTrack(Target.Tracks[index]);
         }
 
         protected override void CreateSpecificVariableControl(TweakerStatus status, int index, float y, ITweakerSettings settings)

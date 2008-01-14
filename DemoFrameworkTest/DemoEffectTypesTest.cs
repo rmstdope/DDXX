@@ -17,22 +17,18 @@ namespace Dope.DDXX.DemoFramework
 using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Graphics;
 using Microsoft.Xna.Framework;
-public class FooEffect : TweakableContainer, IDemoEffect 
+public class FooEffect : Registerable, IDemoEffect 
 {
-  protected float start; protected float end; protected int drawOrder; 
-  public FooEffect(string s1, float f1, float f2) : base(s1) { start = f1; end = f2;}
+  protected int drawOrder; 
+  public FooEffect(string s1, float f1, float f2) : base(s1, f1, f2) { }
   public int DrawOrder { get { return drawOrder;} set { drawOrder = value; } }
   public void Step() {} public void Render() {} public void Initialize(IGraphicsFactory graphicsFactory, IEffectFactory effectFactory, ITextureFactory textureFactory, IDemoMixer mixer, IPostProcessor postProcessor) {} 
-  public float StartTime { get { return start;} set { start = value;} }
-  public float EndTime { get { return end;} set { end = value;} }
 }
 public class BarEffect : FooEffect {
   private int intParam;
   private float floatParam;
   private Vector3 vector3Param;
   public BarEffect(string name, float start, float end) : base(name, start, end) { 
-    this.start = start;
-    this.end = end; 
   }
   public int IntParam { 
    get { return intParam; }

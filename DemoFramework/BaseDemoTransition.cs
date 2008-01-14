@@ -5,13 +5,10 @@ using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public abstract class BaseDemoTransition : TweakableContainer, IDemoTransition
+    public abstract class BaseDemoTransition : Registerable, IDemoTransition
     {
-        private float startTime;
-        private float endTime;
         private int destinationTrack;
         private IPostProcessor postProcessor;
-        //private IGraphicsDevice device;
 
         public int DestinationTrack
         {
@@ -25,10 +22,8 @@ namespace Dope.DDXX.DemoFramework
         }
 
         protected BaseDemoTransition(string name, float startTime, float endTime)
-            : base(name)
+            : base(name, startTime, endTime)
         {
-            StartTime = startTime;
-            EndTime = endTime;
         }
 
         public void Initialize(/*IDevice device, */IPostProcessor postProcessor)
@@ -42,18 +37,6 @@ namespace Dope.DDXX.DemoFramework
         public IRenderTarget2D Render(IRenderTarget2D fromTexture, IRenderTarget2D toTexture)
         {
             return Combine(fromTexture, toTexture);
-        }
-
-        public float StartTime
-        {
-            get { return startTime; }
-            set { startTime = value; }
-        }
-
-        public float EndTime
-        {
-            get { return endTime; }
-            set { endTime = value; }
         }
 
     }

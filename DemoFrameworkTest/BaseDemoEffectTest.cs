@@ -14,8 +14,6 @@ namespace Dope.DDXX.DemoFramework
     public class BaseDemoEffectTest : BaseDemoEffect, IGraphicsFactory, IEffectFactory, ITextureFactory,
         IDemoMixer, IEffect, IPostProcessor
     {
-        public bool startCalled;
-        public bool endCalled;
         public bool initializeCalled;
 
         public BaseDemoEffectTest()
@@ -26,8 +24,6 @@ namespace Dope.DDXX.DemoFramework
         [SetUp]
         public void SetUp()
         {
-            startCalled = false;
-            endCalled = false;
             initializeCalled = false;
         }
         
@@ -46,7 +42,6 @@ namespace Dope.DDXX.DemoFramework
         {
             StartTime = 1.0f;
             Assert.AreEqual(1.0f, StartTime);
-            Assert.IsTrue(startCalled);
         }
 
         [Test]
@@ -54,7 +49,6 @@ namespace Dope.DDXX.DemoFramework
         {
             EndTime = 11.0f;
             Assert.AreEqual(11.0f, EndTime);
-            Assert.IsTrue(endCalled);
         }
 
         [Test]
@@ -88,16 +82,6 @@ namespace Dope.DDXX.DemoFramework
         public override void Render()
         {
             throw new Exception("The method or operation is not implemented.");
-        }
-
-        public override void StartTimeUpdated()
-        {
-            startCalled = true;
-        }
-
-        public override void EndTimeUpdated()
-        {
-            endCalled = true;
         }
 
         #endregion

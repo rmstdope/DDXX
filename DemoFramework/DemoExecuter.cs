@@ -15,7 +15,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public class DemoExecuter : IDemoEffectBuilder, IDemoRegistrator, IDemoTweakerContext, IDemoMixer, ITweakable
+    public class DemoExecuter : IDemoEffectBuilder, IDemoRegistrator, IDemoTweakerContext, IDemoMixer
     {
         private ISoundDriver soundDriver;
         private ICue song;
@@ -393,9 +393,9 @@ namespace Dope.DDXX.DemoFramework
         private void AddParameter(string name, object value, float stepSize)
         {
             effectTypes.SetProperty(lastAddedAsset, name, value);
-            TweakableContainer container = lastAddedAsset as TweakableContainer;
-            if (stepSize > 0)
-                container.SetStepSize(container.GetTweakableNumber(name), stepSize);
+            //TweakableContainer container = lastAddedAsset as TweakableContainer;
+            //if (stepSize > 0)
+            //    container.SetStepSize(container.GetTweakableNumber(name), stepSize);
         }
 
         public void AddStringParameter(string name, string value)
@@ -504,95 +504,5 @@ namespace Dope.DDXX.DemoFramework
 
         #endregion
 
-
-        #region ITweakable Members
-
-        public int NumVisableVariables
-        {
-            get { return 3; }
-        }
-
-        public int NumVariables
-        {
-            get { return tracks.Count; }
-        }
-
-        public string GetVariableName(int entry)
-        {
-            return "Track " + entry;
-        }
-
-        public ITweakable GetVariable(int index)
-        {
-            return tracks[index];
-        }
-
-        public void CreateVariableControl(TweakerStatus status, int index, float y, ITweakerSettings settings)
-        {
-            float height = status.VariableSpacing * 0.9f;
-            BoxControl trackWindow = new BoxControl(new Vector4(0, y, 1, height), settings.Alpha, GetBoxColor(index, status.Selection, settings), status.RootControl);
-            new TextControl("Track #" + index, new Vector4(0, 0, 1, 1), TextFormatting.Top | TextFormatting.Left, settings.TextAlpha, GetTextColor(index, status.Selection), trackWindow);
-            CreateEffectControls(index, trackWindow, status.StartTime, status.TimeScale, settings);
-        }
-
-        private void CreateEffectControls(int track, BoxControl trackWindow, float startTime, float timeScale, ITweakerSettings settings)
-        {
-            IRegisterable[] effects = tracks[track].GetEffects(startTime, startTime + timeScale);
-            IRegisterable[] postEffects = tracks[track].GetPostEffects(startTime, startTime + timeScale);
-            IRegisterable[] allEffects = new IRegisterable[effects.Length + postEffects.Length];
-            Array.Copy(effects, allEffects, effects.Length);
-            Array.Copy(postEffects, 0, allEffects, effects.Length, postEffects.Length);
-            float ey = 0.24f;
-            foreach (IRegisterable effect in allEffects)
-            {
-                float ex1 = (effect.StartTime - startTime) / timeScale;
-                if (ex1 < 0)
-                    ex1 = 0;
-                float ex2 = (effect.EndTime - startTime) / timeScale;
-                if (ex2 > 1)
-                    ex2 = 1;
-                new TextControl(effect.GetType().Name, new Vector2(ex1, ey), TextFormatting.Bottom | TextFormatting.Left, settings.Alpha, Color.SkyBlue, trackWindow);
-                new LineControl(new Vector4(ex1, ey, ex2 - ex1, 0), settings.Alpha, Color.SkyBlue, trackWindow);
-                ey += 0.14f;
-                if (ey > 1)
-                    ey = 0.24f;
-            }
-        }
-
-        private Color GetBoxColor(int index, int selection, ITweakerSettings settings)
-        {
-            if (index == selection)
-                return settings.SelectedColor;
-            return settings.UnselectedColor;
-        }
-
-        private Color GetTextColor(int index, int selection)
-        {
-            if (index == selection)
-                return Color.White;
-            return Color.Gray;
-        }
-
-        public void NextIndex(TweakerStatus status)
-        {
-        }
-
-        public void IncreaseValue(TweakerStatus status)
-        {
-        }
-
-        public void DecreaseValue(TweakerStatus status)
-        {
-        }
-
-        public void CreateBaseControls(TweakerStatus status, ITweakerSettings settings)
-        {
-        }
-
-        public void SetValue(TweakerStatus status)
-        {
-        }
-
-        #endregion
     }
 }
