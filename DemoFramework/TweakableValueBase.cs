@@ -34,12 +34,12 @@ namespace Dope.DDXX.DemoFramework
 
         public void IncreaseValue(int index)
         {
-            ChangeValue(index, 1.0f);
+            ChangeValue(index, TweakStep);
         }
 
         public void DecreaseValue(int index)
         {
-            ChangeValue(index, -1.0f);
+            ChangeValue(index, -TweakStep);
         }
 
         protected byte GetAlpha(TweakerStatus status, int selection)
@@ -70,6 +70,19 @@ namespace Dope.DDXX.DemoFramework
         private void InvokeSetter(T value)
         {
             property.GetSetMethod().Invoke(target, new object[] { value });
+        }
+
+        private float TweakStep
+        {
+            get 
+            { 
+                foreach (TweakStepAttribute attribute in property.GetCustomAttributes(false))
+                {
+                    if (attribute != null)
+                        return attribute.Step;
+                }
+                return 1.0f;
+            }
         }
 
     }

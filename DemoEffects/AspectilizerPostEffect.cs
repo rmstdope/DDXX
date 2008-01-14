@@ -28,6 +28,7 @@ namespace Dope.DDXX.DemoEffects
             set { height = value; CreateTexture(); }
         }
 
+        [TweakStep(0.001f)]
         public float Rounding
         {
             get { return rounding; }
@@ -38,7 +39,6 @@ namespace Dope.DDXX.DemoEffects
             : base(name, startTime, endTime)
         {
             AddNoise = true;
-            //SetStepSize(GetTweakableNumber("Rounding"), 0.001f);
         }
 
         private void CreateTexture()

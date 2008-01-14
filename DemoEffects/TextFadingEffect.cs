@@ -21,18 +21,21 @@ namespace Dope.DDXX.DemoEffects
         private float fadeOutLength;
         private Vector3 velocity;
 
+        [TweakStep(0.01f)]
         public Vector3 Velocity
         {
             get { return velocity; }
             set { velocity = value; }
         }
 
+        [TweakStep(0.1f)]
         public float FadeOutLength
         {
             get { return fadeOutLength; }
             set { fadeOutLength = value; }
         }
 
+        [TweakStep(0.1f)]
         public float FadeInLength
         {
             get { return fadeInLength; }
@@ -51,6 +54,7 @@ namespace Dope.DDXX.DemoEffects
             set { text = value; }
         }
 
+        [TweakStep(0.01f)]
         public Vector3 TextPosition
         {
             get { return textPosition; }
@@ -70,10 +74,6 @@ namespace Dope.DDXX.DemoEffects
             Text = "Default";
             FontName = "NoFont";
             textColor = Color.White;
-            //SetStepSize(GetTweakableNumber("TextPosition"), 0.01f);
-            //SetStepSize(GetTweakableNumber("FadeInLength"), 0.1f);
-            //SetStepSize(GetTweakableNumber("FadeOutLength"), 0.1f);
-            //SetStepSize(GetTweakableNumber("Velocity"), 0.01f);
         }
 
         protected override void Initialize()

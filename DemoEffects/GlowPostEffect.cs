@@ -16,24 +16,28 @@ namespace Dope.DDXX.DemoEffects
         private int downSamples;
         private bool advancedGlow;
 
+        [TweakStep(0.1f)]
         public float BloomScale
         {
             get { return bloomScale; }
             set { bloomScale = value; }
         }
 
+        [TweakStep(0.01f)]
         public float WhiteCutoff
         {
             get { return whiteCutoff; }
             set { whiteCutoff = value; }
         }
 
+        [TweakStep(0.01f)]
         public float Exposure
         {
             get { return exposure; }
             set { exposure = value; }
         }
 
+        [TweakStep(0.01f)]
         public float Luminance
         {
             get { return luminance; }
@@ -60,10 +64,6 @@ namespace Dope.DDXX.DemoEffects
             WhiteCutoff = 0.1f;
             BloomScale = 1.4f;
             DownSamples = 1;
-            //SetStepSize(GetTweakableNumber("Luminance"), 0.01f);
-            //SetStepSize(GetTweakableNumber("Exposure"), 0.01f);
-            //SetStepSize(GetTweakableNumber("WhiteCutoff"), 0.01f);
-            //SetStepSize(GetTweakableNumber("BloomScale"), 0.1f);
         }
 
         public override void Render()

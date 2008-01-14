@@ -193,6 +193,7 @@
       <Name>TweakerSettings</Name>
     </Compile>
     <Compile Include="TweakerStatus.cs" />
+    <Compile Include="TweakStepAttribute.cs" />
     <Compile Include="UserInterface.cs">
       <Name>UserInterface</Name>
     </Compile>

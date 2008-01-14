@@ -26,12 +26,14 @@ namespace Dope.DDXX.DemoEffects
             set { technique = value; }
         }
 
+        [TweakStep(0.1f)]
         public float FadeOutLength
         {
             get { return fadeOutLength; }
             set { fadeOutLength = value; }
         }
 
+        [TweakStep(0.1f)]
         public float FadeInLength
         {
             get { return fadeInLength; }
@@ -49,6 +51,7 @@ namespace Dope.DDXX.DemoEffects
             set { addNoise = value; subtractNoise = !value; }
         }
 
+        [TweakStep(0.01f)]
         public float BlendFactor
         {
             get { return blendFactor; }
@@ -69,9 +72,6 @@ namespace Dope.DDXX.DemoEffects
         public OverlayPostEffect(string name, float start, float end)
             : base(name, start, end)
         {
-            //SetStepSize(GetTweakableNumber("BlendFactor"), 0.01f);
-            //SetStepSize(GetTweakableNumber("FadeInLength"), 0.1f);
-            //SetStepSize(GetTweakableNumber("FadeOutLength"), 0.1f);
             technique = "Blend";
         }
 
