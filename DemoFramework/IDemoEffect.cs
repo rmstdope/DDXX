@@ -5,7 +5,7 @@ using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public interface IDemoEffect : IRegisterable, ITweakableContainer, ITweakable
+    public interface IDemoEffect : IRegisterable, ITweakableObject
     {
         int DrawOrder { get; set; }
         void Step();

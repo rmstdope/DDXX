@@ -37,6 +37,7 @@ namespace EngineTest
             InitializeParticles();
             PointLightNode light = new PointLightNode("Light");
             scene.AddNode(light);
+            Mixer.ClearColor = Color.Coral;
             scene.AmbientColor = new Color(30, 30, 30);
         }
 
@@ -112,7 +113,6 @@ namespace EngineTest
 
         public override void Step()
         {
-            Mixer.ClearColor = Color.Coral;
             foreach (ModelNode cell in cells)
             {
                 cell.WorldState.Turn(Time.DeltaTime * 0.8f);

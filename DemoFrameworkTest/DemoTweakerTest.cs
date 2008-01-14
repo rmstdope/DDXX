@@ -9,7 +9,7 @@ using Dope.DDXX.Input;
 namespace Dope.DDXX.DemoFramework
 {
     [TestFixture]
-    public class DemoTweakerTest : ITweakable
+    public class DemoTweakerTest : ITweakableObject
     {
         private Mockery mockery;
         private TweakerSettings settings;
@@ -24,7 +24,7 @@ namespace Dope.DDXX.DemoFramework
         private string setValueExpectedString;
         private int numVisableVariables;
         private int numVariables;
-        private ITweakable getVariableReturn;
+        private ITweakableObject getVariableReturn;
 
         [SetUp]
         public void SetUp()
@@ -218,7 +218,7 @@ namespace Dope.DDXX.DemoFramework
         public void ChangeTweakerWithNesting()
         {
             // Setup
-            getVariableReturn = mockery.NewMock<ITweakable>();
+            getVariableReturn = mockery.NewMock<ITweakableObject>();
             Stub.On(getVariableReturn).GetProperty("NumVisableVariables").Will(Return.Value(1));
             Expect.Exactly(2).On(registrator).GetProperty("StartTime").Will(Return.Value(2.4f));
             demoTweaker = new DemoTweaker(settings, this);
@@ -275,7 +275,7 @@ namespace Dope.DDXX.DemoFramework
         }
 
 
-        #region ITweakable Members
+        #region ITweakableObject Members
 
         public int NumVisableVariables
         {
@@ -287,7 +287,7 @@ namespace Dope.DDXX.DemoFramework
             get { return numVariables; }
         }
 
-        public ITweakable GetVariable(int index)
+        public ITweakableObject GetVariable(int index)
         {
             return getVariableReturn;
         }
@@ -328,6 +328,11 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual(setValueExpectedString, status.InputString);
             setValueExpectedString = null;
             this.status = status;
+        }
+
+        public void UpdateListener(IEffectChangeListener changeListener)
+        {
+            throw new Exception("The method or operation is not implemented.");
         }
 
         #endregion

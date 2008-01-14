@@ -12,7 +12,7 @@ namespace Dope.DDXX.DemoFramework
 {
     public class DemoTweaker : IDemoTweaker
     {
-        private ITweakable container;
+        private ITweakableObject container;
         private TweakerStatus status;
         private ITweakerSettings settings;
         private IDemoRegistrator registrator;
@@ -20,7 +20,7 @@ namespace Dope.DDXX.DemoFramework
         private BaseControl mainWindow;
         private BaseControl timelineWindow;
 
-        public DemoTweaker(ITweakerSettings settings, ITweakable container)
+        public DemoTweaker(ITweakerSettings settings, ITweakableObject container)
         {
             this.container = container;
             this.settings = settings;
@@ -220,6 +220,14 @@ namespace Dope.DDXX.DemoFramework
                 status.InputString = "";
             }
         }
+
+        //public void Update(IEffectChangeListener effectChangeListener)
+        //{
+        //    foreach (ITrack track in tracks)
+        //    {
+        //        track.UpdateListener(effectChangeListener);
+        //    }
+        //}
 
     }
 }

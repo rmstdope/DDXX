@@ -9,7 +9,7 @@ using Dope.DDXX.SceneGraph;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public class TweakableContainer : ITweakableContainer, ITweakable
+    public class TweakableContainer : ITweakableObject
     {
         private string name;
         private List<PropertyInfo> properties;
@@ -212,7 +212,7 @@ namespace Dope.DDXX.DemoFramework
             return list;
         }
 
-        #region ITweakable Members
+        #region ITweakableObject Members
 
         public int NumVisableVariables
         {
@@ -229,7 +229,7 @@ namespace Dope.DDXX.DemoFramework
             return GetTweakableName(index);
         }
 
-        public ITweakable GetVariable(int index)
+        public ITweakableObject GetVariable(int index)
         {
             return null;
         }

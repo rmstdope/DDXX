@@ -106,7 +106,7 @@ namespace Dope.DDXX.DemoFramework
             this.inputDriver = inputDriver;
             this.postProcessor = postProcessor;
             this.effectTypes = effectTypes;
-            tweakerHandler = new DemoTweakerHandler(this, settings, this);
+            tweakerHandler = new DemoTweakerHandler(this, settings, new TweakableDemo(this));
         }
 
         public void Initialize(IGraphicsDevice device, IGraphicsFactory graphicsFactory,
@@ -232,7 +232,7 @@ namespace Dope.DDXX.DemoFramework
         {
             if (tweakerHandler.ShouldSave() && xmlReader != null)
             {
-                Update(xmlReader);
+                //Update(xmlReader);
                 xmlReader.Write();
             }
         }
@@ -332,14 +332,6 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        public void Update(IEffectChangeListener effectChangeListener)
-        {
-            foreach (ITrack track in tracks)
-            {
-                track.UpdateListener(effectChangeListener);
-            }
-        }
-
         #region IDemoEffectBuilder Members
         private object lastAddedAsset;
 
@@ -401,7 +393,7 @@ namespace Dope.DDXX.DemoFramework
         private void AddParameter(string name, object value, float stepSize)
         {
             effectTypes.SetProperty(lastAddedAsset, name, value);
-            ITweakableContainer container = lastAddedAsset as ITweakableContainer;
+            TweakableContainer container = lastAddedAsset as TweakableContainer;
             if (stepSize > 0)
                 container.SetStepSize(container.GetTweakableNumber(name), stepSize);
         }

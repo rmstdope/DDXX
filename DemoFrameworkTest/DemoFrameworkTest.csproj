@@ -91,9 +91,16 @@
     <Compile Include="TrackTest.cs">
       <Name>TrackTest</Name>
     </Compile>
+    <Compile Include="TweakableBooleanTest.cs" />
+    <Compile Include="TweakableColorTest.cs" />
     <Compile Include="TweakableContainerTest.cs">
       <Name>TweakableContainerTest</Name>
     </Compile>
+    <Compile Include="TweakableInt32Test.cs" />
+    <Compile Include="TweakableSingleTest.cs" />
+    <Compile Include="TweakableVector2Test.cs" />
+    <Compile Include="TweakableVector3Test.cs" />
+    <Compile Include="TweakableVector4Test.cs" />
     <Compile Include="UserInterfaceTest.cs">
       <Name>UserInterfaceTest</Name>
     </Compile>

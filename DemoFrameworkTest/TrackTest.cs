@@ -537,38 +537,38 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreSame(renderTarget, track.Render(device, renderTarget, renderTarget, depthStencilBuffer, Color.DarkSlateBlue));
         }
 
-        [Test]
-        public void TestUpdateListenerOneEffect()
-        {
-            IDemoEffect e1 = CreateMockEffect("name", 4, 10);
-            track.Register(e1);
-            Expect.Once.On(e1).Method("UpdateListener").With(effectChangeListener);
-            track.UpdateListener(effectChangeListener);
-        }
+        //[Test]
+        //public void TestUpdateListenerOneEffect()
+        //{
+        //    IDemoEffect e1 = CreateMockEffect("name", 4, 10);
+        //    track.Register(e1);
+        //    Expect.Once.On(e1).Method("UpdateListener").With(effectChangeListener);
+        //    track.UpdateListener(effectChangeListener);
+        //}
 
-        [Test]
-        public void TestUpdateListenerOnePostEffect()
-        {
-            IDemoPostEffect pe1 = CreateMockPostEffect("name", 4, 10);
-            track.Register(pe1);
-            Expect.Once.On(pe1).Method("UpdateListener").With(effectChangeListener);
-            track.UpdateListener(effectChangeListener);
-        }
+        //[Test]
+        //public void TestUpdateListenerOnePostEffect()
+        //{
+        //    IDemoPostEffect pe1 = CreateMockPostEffect("name", 4, 10);
+        //    track.Register(pe1);
+        //    Expect.Once.On(pe1).Method("UpdateListener").With(effectChangeListener);
+        //    track.UpdateListener(effectChangeListener);
+        //}
 
-        [Test]
-        public void TestUpdateListenerMoreEffect()
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                IDemoEffect e1 = CreateMockEffect("name", 4, 10);
-                track.Register(e1);
-                Expect.Once.On(e1).Method("UpdateListener").With(effectChangeListener);
-                IDemoPostEffect pe1 = CreateMockPostEffect("name", 4, 10);
-                track.Register(pe1);
-                Expect.Once.On(pe1).Method("UpdateListener").With(effectChangeListener);
-            }
-            track.UpdateListener(effectChangeListener);
-        }
+        //[Test]
+        //public void TestUpdateListenerMoreEffect()
+        //{
+        //    for (int i = 0; i < 10; i++)
+        //    {
+        //        IDemoEffect e1 = CreateMockEffect("name", 4, 10);
+        //        track.Register(e1);
+        //        Expect.Once.On(e1).Method("UpdateListener").With(effectChangeListener);
+        //        IDemoPostEffect pe1 = CreateMockPostEffect("name", 4, 10);
+        //        track.Register(pe1);
+        //        Expect.Once.On(pe1).Method("UpdateListener").With(effectChangeListener);
+        //    }
+        //    track.UpdateListener(effectChangeListener);
+        //}
 
         [Test]
         public void IsEffectRegisteredTrue()

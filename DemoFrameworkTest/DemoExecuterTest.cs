@@ -481,16 +481,16 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual(0, executer.NumTracks);
         }
 
-        [Test]
-        public void TestXMLUpdate()
-        {
-            TestInitializeFromFile();
+        //[Test]
+        //public void TestXMLUpdate()
+        //{
+        //    TestInitializeFromFile();
 
-            for (int i = 0; i < 3; i++)
-                Expect.Once.On(tracks[i]).Method("UpdateListener").With(effectChangeListener);
-            executer.Update(effectChangeListener);
+        //    for (int i = 0; i < 3; i++)
+        //        Expect.Once.On(tracks[i]).Method("UpdateListener").With(effectChangeListener);
+        //    executer.Update(effectChangeListener);
 
-        }
+        //}
 
         //[Test]
         //public void TestResumeSong()

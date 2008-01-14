@@ -5,7 +5,7 @@ using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public interface IDemoTransition : IRegisterable, ITweakableContainer, ITweakable
+    public interface IDemoTransition : IRegisterable, ITweakableObject
     {
         int DestinationTrack { get; set; }
         void Initialize(/*IGraphicsDevice device,*/ IPostProcessor postProcessor);

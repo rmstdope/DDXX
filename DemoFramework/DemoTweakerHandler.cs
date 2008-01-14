@@ -48,7 +48,7 @@ namespace Dope.DDXX.DemoFramework
             get { return exiting; }
         }
 
-        public DemoTweakerHandler(IDemoTweakerContext context, ITweakerSettings settings, ITweakable demoTweakable)
+        public DemoTweakerHandler(IDemoTweakerContext context, ITweakerSettings settings, ITweakableObject demoTweakable)
         {
             exiting = false;
             tweakerStack = new Stack<IDemoTweaker>();

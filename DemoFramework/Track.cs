@@ -236,9 +236,9 @@ namespace Dope.DDXX.DemoFramework
         public void UpdateListener(IEffectChangeListener effectChangeListener)
         {
             foreach (IDemoEffect effect in effects)
-                effect.UpdateListener(effectChangeListener);
+                (effect as TweakableContainer).UpdateListener(effectChangeListener);
             foreach (IDemoPostEffect effect in postEffects)
-                effect.UpdateListener(effectChangeListener);
+                (effect as TweakableContainer).UpdateListener(effectChangeListener);
         }
 
         public bool IsEffectRegistered(string name, Type type)
@@ -262,15 +262,15 @@ namespace Dope.DDXX.DemoFramework
         }
 
 
-        private ITweakable[] GetAllTweakables()
+        private ITweakableObject[] GetAllTweakableObjects()
         {
-            ITweakable[] allEffects = new ITweakable[effects.Count + postEffects.Count];
+            ITweakableObject[] allEffects = new ITweakableObject[effects.Count + postEffects.Count];
             Array.Copy(effects.ToArray(), allEffects, effects.Count);
             Array.Copy(postEffects.ToArray(), 0, allEffects, effects.Count, postEffects.Count);
             return allEffects;
         }
 
-        #region ITweakable Members
+        #region ITweakableObject Members
 
         public int NumVisableVariables
         {
@@ -284,12 +284,12 @@ namespace Dope.DDXX.DemoFramework
 
         public string GetVariableName(int index)
         {
-            return GetAllTweakables()[index].GetType().Name;
+            return GetAllTweakableObjects()[index].GetType().Name;
         }
 
-        public ITweakable GetVariable(int index)
+        public ITweakableObject GetVariable(int index)
         {
-            return GetAllTweakables()[index];
+            return GetAllTweakableObjects()[index];
         }
 
         public void CreateVariableControl(TweakerStatus status, int index, float y, ITweakerSettings settings)
@@ -297,7 +297,7 @@ namespace Dope.DDXX.DemoFramework
             float height = status.VariableSpacing * 0.9f;
             Color boxColor;
             Color textColor;
-            ITweakable[] allTweakables = GetAllTweakables();
+            ITweakableObject[] allTweakables = GetAllTweakableObjects();
             GetColors(index, status.Selection, settings, out boxColor, out textColor);
             float ex1 = ((allTweakables[index] as IRegisterable).StartTime - status.StartTime) / status.TimeScale;
             if (ex1 < 0)

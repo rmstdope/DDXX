@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public interface ITrack : ITweakable
+    public interface ITrack : ITweakableObject
     {
         IDemoEffect[] Effects { get; }
         float EndTime { get; }
@@ -23,7 +23,7 @@ namespace Dope.DDXX.DemoFramework
         void Register(IDemoEffect effect);
         IRenderTarget2D Render(IGraphicsDevice device, IRenderTarget2D renderTarget, IRenderTarget2D renderTargetNoMultiSampling, IDepthStencilBuffer depthStencilBuffer, Color backgroundColor);
         void Step();
-        void UpdateListener(IEffectChangeListener effectChangeListener);
+        //void UpdateListener(IEffectChangeListener effectChangeListener);
         bool IsEffectRegistered(string name, Type type);
         bool IsPostEffectRegistered(string p, Type type);
     }
