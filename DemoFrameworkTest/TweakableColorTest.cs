@@ -39,14 +39,23 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
+        public void SetAllIndices()
+        {
+            // Setup
+            target.Variable = new Color(1, 2, 3, 4);
+            // Exercise SUT
+            tweakable.SetFromString("4, 3, 2, 1");
+            // Verify
+            Assert.AreEqual(new Color(4, 3, 2, 1), target.Variable);
+        }
+
+        [Test]
         public void SetFirstIndex()
         {
             // Setup
-            status.InputString = "23";
-            status.Index = 0;
             target.Variable = new Color(1, 2, 3, 4);
             // Exercise SUT
-            tweakable.SetFromInputString(status);
+            tweakable.SetFromString(0, "23");
             // Verify
             Assert.AreEqual(new Color(23, 2, 3, 4), target.Variable);
         }
@@ -55,11 +64,9 @@ namespace Dope.DDXX.DemoFramework
         public void SetSecondIndex()
         {
             // Setup
-            status.InputString = "6";
-            status.Index = 1;
             target.Variable = new Color(1, 2, 3, 4);
             // Exercise SUT
-            tweakable.SetFromInputString(status);
+            tweakable.SetFromString(1, "6");
             // Verify
             Assert.AreEqual(new Color(1, 6, 3, 4), target.Variable);
         }
@@ -68,11 +75,9 @@ namespace Dope.DDXX.DemoFramework
         public void SetThirdIndex()
         {
             // Setup
-            status.InputString = "42";
-            status.Index = 2;
             target.Variable = new Color(1, 2, 3, 4);
             // Exercise SUT
-            tweakable.SetFromInputString(status);
+            tweakable.SetFromString(2, "42");
             // Verify
             Assert.AreEqual(new Color(1, 2, 42, 4), target.Variable);
         }
@@ -81,11 +86,9 @@ namespace Dope.DDXX.DemoFramework
         public void SetFourthIndex()
         {
             // Setup
-            status.InputString = "17";
-            status.Index = 3;
             target.Variable = new Color(1, 2, 3, 4);
             // Exercise SUT
-            tweakable.SetFromInputString(status);
+            tweakable.SetFromString(3, "17");
             // Verify
             Assert.AreEqual(new Color(1, 2, 3, 17), target.Variable);
         }

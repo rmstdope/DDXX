@@ -30,9 +30,9 @@ namespace Dope.DDXX.DemoFramework
             return;
         }
 
-        public override void SetFromInputString(TweakerStatus status)
+        public override void SetFromString(int index, string value)
         {
-            Value = status.InputString;
+            Value = value;
         }
     }
 }

@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml;
 
 namespace Dope.DDXX.DemoFramework
 {
     public class TweakableRegisterable : TweakableObjectBase<IRegisterable>
     {
-        public TweakableRegisterable(IRegisterable target)
-            : base(target)
+        public TweakableRegisterable(IRegisterable target, ITweakableFactory factory)
+            : base(target, factory)
         {
         }
 
@@ -21,11 +22,6 @@ namespace Dope.DDXX.DemoFramework
             get { return 0; }
         }
 
-        protected override string SpecificVariableName(int index)
-        {
-            throw new Exception("The method should never be called.");
-        }
-
         protected override ITweakableObject GetSpecificVariable(int index)
         {
             throw new Exception("The method should never be called.");
@@ -34,6 +30,18 @@ namespace Dope.DDXX.DemoFramework
         protected override void CreateSpecificVariableControl(TweakerStatus status, int index, float y, ITweakerSettings settings)
         {
             throw new Exception("The method should never be called.");
+        }
+
+        public override void ReadFromXmlFile(XmlNode node)
+        {
+            foreach (XmlNode child in node.ChildNodes)
+            {
+                foreach (ITweakableValue handler in PropertyHandlers)
+                {
+                    if (child.Name == handler.Property.Name)
+                        handler.SetFromString(child.InnerText);
+                }
+            }
         }
     }
 }

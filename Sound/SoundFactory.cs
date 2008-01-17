@@ -25,7 +25,8 @@ namespace Dope.DDXX.Sound
 
         public void Step()
         {
-            audioEngine.Update();
+            if (audioEngine != null)
+                audioEngine.Update();
         }
     }
 }

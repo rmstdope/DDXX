@@ -1,16 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml;
+using System.IO;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Input;
 using Dope.DDXX.Utility;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Reflection;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public class DemoTweakerHandler : IDemoTweakerHandler
+    public class DemoTweakerHandler : IDemoTweakerHandler, ITweakableFactory
     {
         private Stack<IDemoTweaker> tweakerStack;
         private IDemoTweaker firstTweaker;
@@ -24,6 +27,9 @@ namespace Dope.DDXX.DemoFramework
         private bool saveDone;
         private bool shouldSave;
         private bool exiting;
+        private string xmlFileName;
+        private XmlDocument doc;
+        private List<KeyValuePair<Type, Type>> typeTweakableMapping;
 
         public object IdentifierToChild() { return 0; }
         public void IdentifierFromParent(object id) { }
@@ -48,21 +54,36 @@ namespace Dope.DDXX.DemoFramework
             get { return exiting; }
         }
 
-        public DemoTweakerHandler(IDemoTweakerContext context, ITweakerSettings settings, ITweakableObject demoTweakable)
+        public ITweakableFactory Factory
+        {
+            get { return this; }
+        }
+
+        public DemoTweakerHandler(IDemoTweakerContext context, ITweakerSettings settings)
         {
             exiting = false;
             tweakerStack = new Stack<IDemoTweaker>();
-            firstTweaker = new DemoTweaker(settings, demoTweakable);
             saveNeeded = false;
             saveDone = false;
             shouldSave = true;
             this.context = context;
             this.settings = settings;
             visable = true;
+
+            typeTweakableMapping = new List<KeyValuePair<Type, Type>>();
+            foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
+            {
+                if (type.GetInterface("ITweakableValue") != null && !type.IsAbstract)
+                {
+                    Type wrappedType = type.BaseType.GetGenericArguments()[0];
+                    typeTweakableMapping.Add(new KeyValuePair<Type, Type>(wrappedType, type));
+                }
+            }
         }
 
-        public virtual void Initialize(IDemoRegistrator registrator, IUserInterface userInterface)
+        public virtual void Initialize(IDemoRegistrator registrator, IUserInterface userInterface, ITweakableObject demoTweakable)
         {
+            this.firstTweaker = new DemoTweaker(settings, demoTweakable);
             this.registrator = registrator;
             this.userInterface = userInterface;
 
@@ -194,5 +215,41 @@ namespace Dope.DDXX.DemoFramework
             return shouldSave && saveNeeded;
         }
 
+        public void ReadFromXmlFile(string xmlFileName)
+        {
+            this.xmlFileName = FileUtility.FilePath(xmlFileName);
+            doc = new XmlDocument();
+            doc.PreserveWhitespace = true;
+            using (Stream inputStream = new FileStream(this.xmlFileName, FileMode.Open))
+            {
+                doc.Load(inputStream);
+                firstTweaker.ReadFromXmlFile(doc.DocumentElement);
+            }
+        }
+
+        public void WriteToXmlFile()
+        {
+            //throw new Exception("The method or operation is not implemented.");
+        }
+
+        #region ITweakableFactory Members
+
+        public ITweakableValue CreateTweakableValue(PropertyInfo property, object target)
+        {
+            foreach (KeyValuePair<Type, Type> pair in typeTweakableMapping)
+            {
+                if (pair.Key == property.PropertyType)
+                    return pair.Value.GetConstructor(new Type[] { typeof(PropertyInfo), typeof(object) }).
+                        Invoke(new object[] { property, target }) as ITweakableValue;
+            }
+            return null;
+        }
+
+        public ITweakableObject CreateTweakableObject(object target)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
     }
 }

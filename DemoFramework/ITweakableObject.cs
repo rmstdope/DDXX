@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -8,12 +9,12 @@ namespace Dope.DDXX.DemoFramework
     {
         int NumVisableVariables { get; }
         int NumVariables { get; }
-        ITweakableObject GetVariable(int index);
+        ITweakable GetTweakableChild(int index);
         void CreateBaseControls(TweakerStatus status, ITweakerSettings settings);
         void NextIndex(TweakerStatus status);
         void IncreaseValue(TweakerStatus status);
         void DecreaseValue(TweakerStatus status);
         void SetValue(TweakerStatus status);
-        void UpdateListener(IEffectChangeListener changeListener);
+        void ReadFromXmlFile(XmlNode node);
     }
 }

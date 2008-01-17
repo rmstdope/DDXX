@@ -38,13 +38,13 @@ namespace Dope.DDXX.DemoFramework
                 index == 3 ? (byte)Math.Max(0, Math.Min(Value.A + delta, 255)) : Value.A);
         }
 
-        public override void SetFromInputString(TweakerStatus status)
+        public override void SetFromString(int index, string value)
         {
-            byte byteValue = byte.Parse(status.InputString, System.Globalization.NumberFormatInfo.InvariantInfo);
-            Value = new Color(status.Index == 0 ? byteValue : Value.R,
-                              status.Index == 1 ? byteValue : Value.G,
-                              status.Index == 2 ? byteValue : Value.B,
-                              status.Index == 3 ? byteValue : Value.A);
+            byte byteValue = byte.Parse(value, System.Globalization.NumberFormatInfo.InvariantInfo);
+            Value = new Color(index == 0 ? byteValue : Value.R,
+                              index == 1 ? byteValue : Value.G,
+                              index == 2 ? byteValue : Value.B,
+                              index == 3 ? byteValue : Value.A);
         }
     }
 }

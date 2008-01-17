@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Reflection;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -9,6 +10,8 @@ namespace Dope.DDXX.DemoFramework
         int Dimension { get; }
         void IncreaseValue(int index);
         void DecreaseValue(int index);
-        void SetFromInputString(TweakerStatus status);
+        void SetFromString(string value);
+        void SetFromString(int index, string value);
+        PropertyInfo Property { get; }
     }
 }

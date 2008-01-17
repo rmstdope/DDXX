@@ -39,14 +39,23 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
+        public void SetAllIndices()
+        {
+            // Setup
+            target.Variable = new Vector3(1, 2, 3);
+            // Exercise SUT
+            tweakable.SetFromString("3, 2, 1");
+            // Verify
+            Assert.AreEqual(new Vector3(3, 2, 1), target.Variable);
+        }
+
+        [Test]
         public void SetFirstIndex()
         {
             // Setup
-            status.InputString = "23.4";
-            status.Index = 0;
             target.Variable = new Vector3(1, 2, 3);
             // Exercise SUT
-            tweakable.SetFromInputString(status);
+            tweakable.SetFromString(0, "23.4");
             // Verify
             Assert.AreEqual(new Vector3(23.4f, 2, 3), target.Variable);
         }
@@ -55,11 +64,9 @@ namespace Dope.DDXX.DemoFramework
         public void SetSecondIndex()
         {
             // Setup
-            status.InputString = "6.2";
-            status.Index = 1;
             target.Variable = new Vector3(1, 2, 3);
             // Exercise SUT
-            tweakable.SetFromInputString(status);
+            tweakable.SetFromString(1, "6.2");
             // Verify
             Assert.AreEqual(new Vector3(1, 6.2f, 3), target.Variable);
         }
@@ -68,11 +75,9 @@ namespace Dope.DDXX.DemoFramework
         public void SetThirdIndex()
         {
             // Setup
-            status.InputString = "42.1";
-            status.Index = 2;
             target.Variable = new Vector3(1, 2, 3);
             // Exercise SUT
-            tweakable.SetFromInputString(status);
+            tweakable.SetFromString(2, "42.1");
             // Verify
             Assert.AreEqual(new Vector3(1, 2, 42.1f), target.Variable);
         }

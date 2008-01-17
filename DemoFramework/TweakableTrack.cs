@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using System.Xml;
 
 namespace Dope.DDXX.DemoFramework
 {
     public class TweakableTrack : TweakableObjectBase<ITrack>
     {
-        public TweakableTrack(ITrack target)
-            : base(target)
+        public TweakableTrack(ITrack target, ITweakableFactory factory)
+            : base(target, factory)
         {
         }
 
@@ -23,14 +24,9 @@ namespace Dope.DDXX.DemoFramework
             get { return GetAllRegisterables().Length; }
         }
 
-        protected override string SpecificVariableName(int index)
-        {
-            return GetAllRegisterables()[index].GetType().Name;
-        }
-
         protected override ITweakableObject GetSpecificVariable(int index)
         {
-            return new TweakableRegisterable(GetAllRegisterables()[index]);
+            return Factory.CreateTweakableObject(GetAllRegisterables()[index]);
         }
 
         protected override void CreateSpecificVariableControl(TweakerStatus status, int index, float y, ITweakerSettings settings)
@@ -70,5 +66,14 @@ namespace Dope.DDXX.DemoFramework
             return allEffects;
         }
 
+        public override void ReadFromXmlFile(XmlNode node)
+        {
+            IRegisterable[] allEffects = GetAllRegisterables();
+            for (int i = 0; i < allEffects.Length; i++)
+            {
+                if (allEffects[i].Name == GetStringAttribute(node, "name"))
+                    (GetTweakableChild(i) as ITweakableObject).ReadFromXmlFile(node);
+            }
+        }
     }
 }

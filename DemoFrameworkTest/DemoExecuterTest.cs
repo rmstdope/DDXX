@@ -394,91 +394,77 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void TestInitializeFromFile()
         {
-            FooEffect fooEffect = new FooEffect("", 0, 0);
-            BarEffect barEffect = new BarEffect("", 0, 0);
-            FooGlow fooGlow = new FooGlow("", 0, 0);
-            FooTransition fooTransition = new FooTransition("", 0, 0);
-            List<object> param = new List<object>();
-
-            string twoEffectContents =
-@"<Demo>
-<Effect class=""FooEffect"" name=""FooName"" track=""1"" endTime=""6.5"">
-<Parameter name=""FooParam"" int=""3"" />
-<Parameter name=""BarParam"" float=""4.3"" />
-<Parameter name=""StrParam"" string=""foostr"" />
-</Effect>
-<Effect class=""BarEffect"" name=""BarName"" startTime=""2.5"" endTime=""5.2"">
-<Parameter name=""Goo"" string=""string value"" />
-<Parameter name=""VecParam"" Vector3=""5.4, 4.3, 3.2"" />
-<Parameter name=""ColParam"" Color=""101, 102, 103, 250"" />
-<Parameter name=""ColParamNamed"" Color=""1, 2, 3, 4"" />
-<SetupCall name=""Setup"">
-<Parameter string=""MethodCalled"" />
-</SetupCall>
-</Effect>
-<PostEffect class=""FooGlow"" name=""GlowName"" track=""2"" startTime=""3.4"" endTime=""4.5"">
-<Parameter name=""GlowParam"" float=""5.4"" />
-</PostEffect>
-<Transition class=""FooTransition"" name=""TransitionName"" destinationTrack=""1"" startTime=""4"" endTime=""5"">
-<Parameter name=""TransParameter"" float=""3.4"" />
-</Transition>
-</Demo>
-";
-            StubTrackForRegisteredEffects();
+            // Setup
             ExpectRenderTargetInitialize(SurfaceFormat.Bgra4444, DepthFormat.Depth24, MultiSampleType.SevenSamples);
             ExpectPostProcessorInitialize();
             ExpectTweakerInitialize();
+            Expect.Once.On(tweakerHandler).Method("ReadFromXmlFile").With("XmlFileName");
+            // Exercise SUT
+            executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, textureBuilder, "XmlFileName", deviceParameters);
 
-            DemoXMLReaderTest.TempFiles tempFiles = new DemoXMLReaderTest.TempFiles();
-            FileUtility.SetLoadPaths(new string[] { "" });
-            Expect.Once.On(effectTypes).Method("CreateInstance").With("FooEffect", "FooName", 0.0f, 6.5f).Will(Return.Value(fooEffect));
-            Expect.Once.On(effectTypes).Method("SetProperty").With(fooEffect, "FooParam", 3);
-            Expect.Once.On(effectTypes).Method("SetProperty").With(fooEffect, "BarParam", 4.3f);
-            Expect.Once.On(effectTypes).Method("SetProperty").With(fooEffect, "StrParam", "foostr");
-            Expect.Once.On(effectTypes).Method("CreateInstance").With("BarEffect", "BarName", 2.5f, 5.2f).Will(Return.Value(barEffect));
-            Expect.Once.On(effectTypes).Method("SetProperty").With(barEffect, "Goo", "string value");
-            Expect.Once.On(effectTypes).Method("SetProperty").With(barEffect, "VecParam", new Vector3(5.4f, 4.3f, 3.2f));
-            Expect.Once.On(effectTypes).Method("SetProperty").With(barEffect, "ColParam", new Color(101, 102, 103, 250));
-            Expect.Once.On(effectTypes).Method("SetProperty").With(barEffect, "ColParamNamed", new Color(1, 2, 3, 4));
-            param.Add("MethodCalled");
-            Expect.Once.On(effectTypes).Method("CallSetup").With(barEffect, "Setup", param);
-            Expect.Once.On(effectTypes).Method("CreateInstance").With("FooGlow", "GlowName", 3.4f, 4.5f).Will(Return.Value(fooGlow));
-            Expect.Once.On(effectTypes).Method("SetProperty").With(fooGlow, "GlowParam", 5.4f);
-            Expect.Once.On(effectTypes).Method("CreateInstance").With("FooTransition", "TransitionName", 4.0f, 5.0f).Will(Return.Value(fooTransition));
-            Expect.Once.On(effectTypes).Method("SetProperty").With(fooTransition, "TransParameter", 3.4f);
+//            FooEffect fooEffect = new FooEffect("", 0, 0);
+//            BarEffect barEffect = new BarEffect("", 0, 0);
+//            FooGlow fooGlow = new FooGlow("", 0, 0);
+//            FooTransition fooTransition = new FooTransition("", 0, 0);
+//            List<object> param = new List<object>();
 
-            for (int i = 0; i < 3; i++)
-                Stub.On(tracks[i]).GetProperty("StartTime").Will(Return.Value(0.0f));
-            Expect.Once.On(tracks[0]).Method("Register").With(barEffect);
-            Expect.Once.On(tracks[1]).Method("Register").With(fooEffect);
-            Expect.Once.On(tracks[2]).Method("Register").With(fooGlow);
-            Expect.Once.On(tracks[0]).Method("Initialize").With(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, executer, postProcessor);
-            Expect.Once.On(tracks[1]).Method("Initialize").With(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, executer, postProcessor);
-            Expect.Once.On(tracks[2]).Method("Initialize").With(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, executer, postProcessor);
-            executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, textureBuilder, tempFiles.New(twoEffectContents), deviceParameters);
-            Assert.AreEqual(3, executer.NumTracks);
-        }
+//            string twoEffectContents =
+//@"<Demo>
+//<Effect class=""FooEffect"" name=""FooName"" track=""1"" endTime=""6.5"">
+//<Parameter name=""FooParam"" int=""3"" />
+//<Parameter name=""BarParam"" float=""4.3"" />
+//<Parameter name=""StrParam"" string=""foostr"" />
+//</Effect>
+//<Effect class=""BarEffect"" name=""BarName"" startTime=""2.5"" endTime=""5.2"">
+//<Parameter name=""Goo"" string=""string value"" />
+//<Parameter name=""VecParam"" Vector3=""5.4, 4.3, 3.2"" />
+//<Parameter name=""ColParam"" Color=""101, 102, 103, 250"" />
+//<Parameter name=""ColParamNamed"" Color=""1, 2, 3, 4"" />
+//<SetupCall name=""Setup"">
+//<Parameter string=""MethodCalled"" />
+//</SetupCall>
+//</Effect>
+//<PostEffect class=""FooGlow"" name=""GlowName"" track=""2"" startTime=""3.4"" endTime=""4.5"">
+//<Parameter name=""GlowParam"" float=""5.4"" />
+//</PostEffect>
+//<Transition class=""FooTransition"" name=""TransitionName"" destinationTrack=""1"" startTime=""4"" endTime=""5"">
+//<Parameter name=""TransParameter"" float=""3.4"" />
+//</Transition>
+//</Demo>
+//";
+//            StubTrackForRegisteredEffects();
+//            ExpectRenderTargetInitialize(SurfaceFormat.Bgra4444, DepthFormat.Depth24, MultiSampleType.SevenSamples);
+//            ExpectPostProcessorInitialize();
+//            ExpectTweakerInitialize();
 
-        [Test]
-        public void TestInitializeSongFromFile()
-        {
-            string songXml =
-@"<Demo song=""SongX""></Demo>";
-            FileUtility.SetLoadPaths(new string[] { "./" });
-            Expect.Once.On(soundDriver).
-                 Method("Initialize").With("SongX");
-            Expect.Once.On(soundDriver).
-                Method("PlaySound").
-                With("SongX").
-                Will(Return.Value(sound));
-            ExpectRenderTargetInitialize(SurfaceFormat.Bgra4444, DepthFormat.Depth24, MultiSampleType.SevenSamples);
-            ExpectPostProcessorInitialize();
-            ExpectTweakerInitialize();
+//            DemoXMLReaderTest.TempFiles tempFiles = new DemoXMLReaderTest.TempFiles();
+//            FileUtility.SetLoadPaths(new string[] { "" });
+//            Expect.Once.On(effectTypes).Method("CreateInstance").With("FooEffect", "FooName", 0.0f, 6.5f).Will(Return.Value(fooEffect));
+//            Expect.Once.On(effectTypes).Method("SetProperty").With(fooEffect, "FooParam", 3);
+//            Expect.Once.On(effectTypes).Method("SetProperty").With(fooEffect, "BarParam", 4.3f);
+//            Expect.Once.On(effectTypes).Method("SetProperty").With(fooEffect, "StrParam", "foostr");
+//            Expect.Once.On(effectTypes).Method("CreateInstance").With("BarEffect", "BarName", 2.5f, 5.2f).Will(Return.Value(barEffect));
+//            Expect.Once.On(effectTypes).Method("SetProperty").With(barEffect, "Goo", "string value");
+//            Expect.Once.On(effectTypes).Method("SetProperty").With(barEffect, "VecParam", new Vector3(5.4f, 4.3f, 3.2f));
+//            Expect.Once.On(effectTypes).Method("SetProperty").With(barEffect, "ColParam", new Color(101, 102, 103, 250));
+//            Expect.Once.On(effectTypes).Method("SetProperty").With(barEffect, "ColParamNamed", new Color(1, 2, 3, 4));
+//            param.Add("MethodCalled");
+//            Expect.Once.On(effectTypes).Method("CallSetup").With(barEffect, "Setup", param);
+//            Expect.Once.On(effectTypes).Method("CreateInstance").With("FooGlow", "GlowName", 3.4f, 4.5f).Will(Return.Value(fooGlow));
+//            Expect.Once.On(effectTypes).Method("SetProperty").With(fooGlow, "GlowParam", 5.4f);
+//            Expect.Once.On(effectTypes).Method("CreateInstance").With("FooTransition", "TransitionName", 4.0f, 5.0f).Will(Return.Value(fooTransition));
+//            Expect.Once.On(effectTypes).Method("SetProperty").With(fooTransition, "TransParameter", 3.4f);
 
-            DemoXMLReaderTest.TempFiles tempFiles = new DemoXMLReaderTest.TempFiles();
-            FileUtility.SetLoadPaths(new string[] { "" });
-            executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, textureBuilder, tempFiles.New(songXml), deviceParameters);
-            Assert.AreEqual(0, executer.NumTracks);
+//            for (int i = 0; i < 3; i++)
+//                Stub.On(tracks[i]).GetProperty("StartTime").Will(Return.Value(0.0f));
+//            Expect.Once.On(tracks[0]).Method("Register").With(barEffect);
+//            Expect.Once.On(tracks[1]).Method("Register").With(fooEffect);
+//            Expect.Once.On(tracks[2]).Method("Register").With(fooGlow);
+//            Expect.Once.On(tracks[0]).Method("Initialize").With(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, executer, postProcessor);
+//            Expect.Once.On(tracks[1]).Method("Initialize").With(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, executer, postProcessor);
+//            Expect.Once.On(tracks[2]).Method("Initialize").With(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, executer, postProcessor);
+//            executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, textureBuilder, tempFiles.New(twoEffectContents), deviceParameters);
+//            Assert.AreEqual(3, executer.NumTracks);
         }
 
         //[Test]
@@ -828,6 +814,8 @@ namespace Dope.DDXX.DemoFramework
         {
             Expect.Once.On(tweakerHandler).
                 Method("Initialize");
+            Expect.Once.On(tweakerHandler).
+                GetProperty("Factory").Will(Return.Value(null));
         }
 
 

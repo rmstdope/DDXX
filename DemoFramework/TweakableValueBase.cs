@@ -15,7 +15,7 @@ namespace Dope.DDXX.DemoFramework
         protected abstract void CreateValueControls(TweakerStatus status, int index, float x, float y, float w, float h);
         public abstract int Dimension { get; }
         protected abstract void ChangeValue(int index, float delta);
-        public abstract void SetFromInputString(TweakerStatus status);
+        public abstract void SetFromString(int index, string value);
 
         protected TweakableValueBase(PropertyInfo property, object target)
         {
@@ -40,6 +40,18 @@ namespace Dope.DDXX.DemoFramework
         public void DecreaseValue(int index)
         {
             ChangeValue(index, -TweakStep);
+        }
+
+        public PropertyInfo Property
+        {
+            get { return property; }
+        }
+
+        public void SetFromString(string value)
+        {
+            string[] values = value.Split(',');
+            for (int i = 0; i < values.Length; i++)
+                SetFromString(i, values[i]);
         }
 
         protected byte GetAlpha(TweakerStatus status, int selection)

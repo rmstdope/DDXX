@@ -30,9 +30,9 @@ namespace Dope.DDXX.DemoFramework
             Value += (int)delta;
         }
 
-        public override void SetFromInputString(TweakerStatus status)
+        public override void SetFromString(int index, string value)
         {
-            Value = int.Parse(status.InputString, System.Globalization.NumberFormatInfo.InvariantInfo);
+            Value = int.Parse(value, System.Globalization.NumberFormatInfo.InvariantInfo);
         }
     }
 }

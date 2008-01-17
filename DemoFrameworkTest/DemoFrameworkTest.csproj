@@ -75,6 +75,7 @@
       <SubType>Code</SubType>
       <Name>DemoMockTest</Name>
     </Compile>
+    <Compile Include="DemoTweakerHandlerTest.cs" />
     <Compile Include="DemoTweakerTest.cs" />
     <Compile Include="DemoXMLReaderTest.cs">
       <SubType>Code</SubType>
@@ -93,8 +94,10 @@
     </Compile>
     <Compile Include="TweakableBooleanTest.cs" />
     <Compile Include="TweakableColorTest.cs" />
+    <Compile Include="TweakableDemoTest.cs" />
     <Compile Include="TweakableInt32Test.cs" />
     <Compile Include="TweakableSingleTest.cs" />
+    <Compile Include="TweakableStringTest.cs" />
     <Compile Include="TweakableVector2Test.cs" />
     <Compile Include="TweakableVector3Test.cs" />
     <Compile Include="TweakableVector4Test.cs" />

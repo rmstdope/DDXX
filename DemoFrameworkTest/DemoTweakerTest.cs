@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml;
 using NUnit.Framework;
 using NMock2;
 using Microsoft.Xna.Framework.Input;
 using Dope.DDXX.Input;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -25,6 +27,8 @@ namespace Dope.DDXX.DemoFramework
         private int numVisableVariables;
         private int numVariables;
         private ITweakableObject getVariableReturn;
+        private bool readFromXmlExpected;
+        private XmlNode node;
 
         [SetUp]
         public void SetUp()
@@ -42,6 +46,7 @@ namespace Dope.DDXX.DemoFramework
             decreaseValueExpected = false;
             setValueExpectedString = null;
             getVariableReturn = null;
+            readFromXmlExpected = false;
         }
 
         [TearDown]
@@ -51,6 +56,7 @@ namespace Dope.DDXX.DemoFramework
             Assert.IsFalse(increaseValueExpected);
             Assert.IsFalse(decreaseValueExpected);
             Assert.IsNull(setValueExpectedString);
+            Assert.IsFalse(readFromXmlExpected);
             mockery.VerifyAllExpectationsHaveBeenMet();
         }
 
@@ -229,6 +235,37 @@ namespace Dope.DDXX.DemoFramework
             Assert.IsNotNull(newTeaker);
         }
 
+        [Test]
+        public void ReadFromXml()
+        {
+            // Setup
+            readFromXmlExpected = true;
+            demoTweaker = new DemoTweaker(settings, this);
+            XmlNode node = CreateXmlNode("<Demo/>");
+            // Exercise SUT
+            demoTweaker.ReadFromXmlFile(node);
+            // Verify
+            Assert.AreEqual(this.node, node);
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void ReadFromXmlFailure()
+        {
+            // Setup
+            demoTweaker = new DemoTweaker(settings, this);
+            XmlNode node = CreateXmlNode("<DemoX/>");
+            // Exercise SUT
+            demoTweaker.ReadFromXmlFile(node);
+        }
+
+        private XmlNode CreateXmlNode(string xml)
+        {
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(xml);
+            return document.DocumentElement;
+        }
+
         private IDemoTweaker SimulateKeypress(Keys key)
         {
             return SimulateKeypress(key, false);
@@ -274,7 +311,6 @@ namespace Dope.DDXX.DemoFramework
             return demoTweaker.HandleInput(inputDriver);
         }
 
-
         #region ITweakableObject Members
 
         public int NumVisableVariables
@@ -287,7 +323,7 @@ namespace Dope.DDXX.DemoFramework
             get { return numVariables; }
         }
 
-        public ITweakableObject GetVariable(int index)
+        public ITweakable GetTweakableChild(int index)
         {
             return getVariableReturn;
         }
@@ -330,9 +366,11 @@ namespace Dope.DDXX.DemoFramework
             this.status = status;
         }
 
-        public void UpdateListener(IEffectChangeListener changeListener)
+        public void ReadFromXmlFile(XmlNode node)
         {
-            throw new Exception("The method or operation is not implemented.");
+            Assert.IsTrue(readFromXmlExpected);
+            readFromXmlExpected = false;
+            this.node = node;
         }
 
         #endregion

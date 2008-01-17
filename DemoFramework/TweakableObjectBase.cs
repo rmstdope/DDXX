@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
+using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Dope.DDXX.Utility;
@@ -29,21 +30,28 @@ namespace Dope.DDXX.DemoFramework
     {
         private List<ITweakableValue> propertyHandlers;
         private T target;
+        private ITweakableFactory factory;
 
         public abstract int NumVisableVariables { get; }
         protected abstract int NumSpecificVariables { get; }
-        protected abstract string SpecificVariableName(int index);
         protected abstract ITweakableObject GetSpecificVariable(int index);
         protected abstract void CreateSpecificVariableControl(TweakerStatus status, int index, float y, ITweakerSettings settings);
+        public abstract void ReadFromXmlFile(XmlNode node);
 
         protected T Target
         {
             get { return target; }
         }
 
-        protected TweakableObjectBase(T target)
+        protected ITweakableFactory Factory
+        {
+            get { return factory; }
+        }
+
+        protected TweakableObjectBase(T target, ITweakableFactory factory)
         {
             this.target = target;
+            this.factory = factory;
             GetProperties();
         }
 
@@ -52,11 +60,11 @@ namespace Dope.DDXX.DemoFramework
             get { return NumSpecificVariables + propertyHandlers.Count; }
         }
 
-        public ITweakableObject GetVariable(int index)
+        public ITweakable GetTweakableChild(int index)
         {
             if (index < NumSpecificVariables)
                 return GetSpecificVariable(index);
-            return null;
+            return propertyHandlers[index - NumSpecificVariables];
         }
 
         public void CreateVariableControl(TweakerStatus status, int index, float y, ITweakerSettings settings)
@@ -104,7 +112,7 @@ namespace Dope.DDXX.DemoFramework
         public void SetValue(TweakerStatus status)
         {
             if (status.Selection >= NumSpecificVariables)
-                propertyHandlers[status.Selection - NumSpecificVariables].SetFromInputString(status);
+                propertyHandlers[status.Selection - NumSpecificVariables].SetFromString(status.Index, status.InputString);
         }
 
         private void GetProperties()
@@ -149,10 +157,29 @@ namespace Dope.DDXX.DemoFramework
             return settings.UnselectedColor;
         }
 
-
-        public void UpdateListener(IEffectChangeListener changeListener)
+        protected string GetStringAttribute(XmlNode node, string name)
         {
-            throw new Exception("The method or operation is not implemented.");
+            foreach (XmlAttribute attribute in node.Attributes)
+            {
+                if (attribute.Name.ToLower() == name)
+                    return attribute.Value;
+            }
+            throw new DDXXException("<" + node.Name + "> tag must have a " + name + " attribute.");
+        }
+
+        protected int GetIntAttribute(XmlNode node, string name)
+        {
+            return int.Parse(GetStringAttribute(node, name), System.Globalization.NumberFormatInfo.InvariantInfo);
+        }
+
+        protected float GetFloatAttribute(XmlNode node, string name)
+        {
+            return float.Parse(GetStringAttribute(node, name), System.Globalization.NumberFormatInfo.InvariantInfo);
+        }
+
+        protected List<ITweakableValue> PropertyHandlers
+        {
+            get { return propertyHandlers; }
         }
 
     }

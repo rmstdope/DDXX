@@ -40,10 +40,8 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void SetToTrue()
         {
-            // Setup
-            status.InputString = "true";
             // Exercise SUT
-            tweakable.SetFromInputString(status);
+            tweakable.SetFromString(0, "true");
             // Verify
             Assert.IsTrue(target.Variable);
         }
@@ -51,10 +49,8 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void SetToFalse()
         {
-            // Setup
-            status.InputString = "false";
             // Exercise SUT
-            tweakable.SetFromInputString(status);
+            tweakable.SetFromString("false");
             // Verify
             Assert.IsFalse(target.Variable);
         }

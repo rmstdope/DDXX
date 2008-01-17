@@ -143,6 +143,7 @@
       <Name>ITrack</Name>
     </Compile>
     <Compile Include="ITweakable.cs" />
+    <Compile Include="ITweakableFactory.cs" />
     <Compile Include="ITweakableObject.cs" />
     <Compile Include="ITweakableValue.cs" />
     <Compile Include="ITweakerSettings.cs">

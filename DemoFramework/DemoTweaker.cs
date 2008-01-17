@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml;
 using Dope.DDXX.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,7 +13,7 @@ namespace Dope.DDXX.DemoFramework
 {
     public class DemoTweaker : IDemoTweaker
     {
-        private ITweakableObject container;
+        private ITweakableObject tweakable;
         private TweakerStatus status;
         private ITweakerSettings settings;
         private IDemoRegistrator registrator;
@@ -20,11 +21,11 @@ namespace Dope.DDXX.DemoFramework
         private BaseControl mainWindow;
         private BaseControl timelineWindow;
 
-        public DemoTweaker(ITweakerSettings settings, ITweakableObject container)
+        public DemoTweaker(ITweakerSettings settings, ITweakableObject tweakable)
         {
-            this.container = container;
+            this.tweakable = tweakable;
             this.settings = settings;
-            status = new TweakerStatus(10.0f, 1.0f / container.NumVisableVariables);
+            status = new TweakerStatus(10.0f, 1.0f / tweakable.NumVisableVariables);
         }
 
         public void Initialize(IDemoRegistrator registrator, IUserInterface userInterface)
@@ -87,23 +88,23 @@ namespace Dope.DDXX.DemoFramework
         private void CreateTweakableControls()
         {
             float y = 0.05f;
-            for (int i = DrawStart; i < DrawStart + container.NumVisableVariables; i++)
+            for (int i = DrawStart; i < DrawStart + tweakable.NumVisableVariables; i++)
             {
-                if (i >= container.NumVariables)
+                if (i >= tweakable.NumVariables)
                     continue;
 
-                container.CreateVariableControl(status, i, y, settings);
+                tweakable.CreateVariableControl(status, i, y, settings);
                 y += status.VariableSpacing;
             }
-            container.CreateBaseControls(status, settings);
+            tweakable.CreateBaseControls(status, settings);
         }
 
         private int DrawStart
         {
             get
             {
-                int start = status.Selection - (container.NumVisableVariables / 2);
-                while (start > 0 && start + container.NumVisableVariables > container.NumVariables)
+                int start = status.Selection - (tweakable.NumVisableVariables / 2);
+                while (start > 0 && start + tweakable.NumVisableVariables > tweakable.NumVariables)
                     start--;
                 if (start < 0)
                     start = 0;
@@ -138,7 +139,7 @@ namespace Dope.DDXX.DemoFramework
 
         private void KeyDown()
         {
-            if (status.Selection < container.NumVariables - 1)
+            if (status.Selection < tweakable.NumVariables - 1)
                 status.Selection++;
         }
 
@@ -156,24 +157,24 @@ namespace Dope.DDXX.DemoFramework
             }
             if (inputDriver.KeyPressedNoRepeat(Keys.Tab))
             {
-                container.NextIndex(status);
+                tweakable.NextIndex(status);
             }
             if (inputDriver.KeyPressedSlowRepeat(Keys.PageUp))
             {
-                container.IncreaseValue(status);
+                tweakable.IncreaseValue(status);
             }
             if (inputDriver.KeyPressedSlowRepeat(Keys.PageDown))
             {
-                container.DecreaseValue(status);
+                tweakable.DecreaseValue(status);
             }
 
             StringInput(inputDriver);
 
             if (inputDriver.KeyPressedNoRepeat(Keys.Enter))
             {
-                if (container.GetVariable(status.Selection) != null)
+                if (tweakable.GetTweakableChild(status.Selection) is ITweakableObject)
                 {
-                    tweaker = new DemoTweaker(settings, container.GetVariable(status.Selection));
+                    tweaker = new DemoTweaker(settings, tweakable.GetTweakableChild(status.Selection) as ITweakableObject);
                     tweaker.Initialize(registrator, userInterface);
                 }
             }
@@ -214,7 +215,7 @@ namespace Dope.DDXX.DemoFramework
             {
                 try
                 {
-                    container.SetValue(status);
+                    tweakable.SetValue(status);
                 }
                 catch (FormatException) { }
                 status.InputString = "";
@@ -228,6 +229,14 @@ namespace Dope.DDXX.DemoFramework
         //        track.UpdateListener(effectChangeListener);
         //    }
         //}
+
+
+        public void ReadFromXmlFile(XmlNode node)
+        {
+            if (node.Name != "Demo")
+                throw new DDXXException("Root node of XML document should be demo");
+            tweakable.ReadFromXmlFile(node);
+        }
 
     }
 }

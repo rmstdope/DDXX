@@ -38,7 +38,7 @@ namespace Dope.DDXX.DemoFramework
         private IDemoFactory demoFactory;
         private IDemoEffectTypes effectTypes;
         private TweakerSettings settings = new TweakerSettings();
-        private DemoXMLReader xmlReader;
+        //private DemoXMLReader xmlReader;
         private Color clearColor = new Color(0, 0, 0, 0);
         private Dictionary<string, IGenerator> generators = new Dictionary<string,IGenerator>();
 
@@ -106,7 +106,7 @@ namespace Dope.DDXX.DemoFramework
             this.inputDriver = inputDriver;
             this.postProcessor = postProcessor;
             this.effectTypes = effectTypes;
-            tweakerHandler = new DemoTweakerHandler(this, settings, new TweakableDemo(this));
+            tweakerHandler = new DemoTweakerHandler(this, settings);
         }
 
         public void Initialize(IGraphicsDevice device, IGraphicsFactory graphicsFactory,
@@ -149,7 +149,8 @@ namespace Dope.DDXX.DemoFramework
 
             IUserInterface userInterface = new UserInterface();
             userInterface.Initialize(graphicsFactory, textureFactory);
-            tweakerHandler.Initialize(this, userInterface);
+            ITweakableObject tweakableDemo = new TweakableDemo(this, this, tweakerHandler.Factory);
+            tweakerHandler.Initialize(this, userInterface, tweakableDemo);
 
             Time.CurrentTime = StartTime;
         }
@@ -230,10 +231,11 @@ namespace Dope.DDXX.DemoFramework
 
         public void CleanUp()
         {
-            if (tweakerHandler.ShouldSave() && xmlReader != null)
+            if (tweakerHandler.ShouldSave())// && xmlReader != null)
             {
+                tweakerHandler.WriteToXmlFile();
                 //Update(xmlReader);
-                xmlReader.Write();
+                //xmlReader.Write();
             }
         }
 
@@ -327,8 +329,9 @@ namespace Dope.DDXX.DemoFramework
         {
             if (xmlFile != "")
             {
-                xmlReader = new DemoXMLReader(this);
-                xmlReader.Read(xmlFile);
+                tweakerHandler.ReadFromXmlFile(xmlFile);
+                //xmlReader = new DemoXMLReader(this);
+                //xmlReader.Read(xmlFile);
             }
         }
 

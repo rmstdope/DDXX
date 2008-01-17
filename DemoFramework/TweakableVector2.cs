@@ -34,11 +34,11 @@ namespace Dope.DDXX.DemoFramework
             Value += new Vector2(index == 0 ? delta : 0, index == 1 ? delta : 0);
         }
 
-        public override void SetFromInputString(TweakerStatus status)
+        public override void SetFromString(int index, string value)
         {
-            float floatValue = float.Parse(status.InputString, System.Globalization.NumberFormatInfo.InvariantInfo);
-            Value = new Vector2(status.Index == 0 ? floatValue : Value.X,
-                                status.Index == 1 ? floatValue : Value.Y);
+            float floatValue = float.Parse(value, System.Globalization.NumberFormatInfo.InvariantInfo);
+            Value = new Vector2(index == 0 ? floatValue : Value.X,
+                                index == 1 ? floatValue : Value.Y);
         }
     }
 }

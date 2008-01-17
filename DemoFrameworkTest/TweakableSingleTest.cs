@@ -40,10 +40,8 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void SetPositiveValue()
         {
-            // Setup
-            status.InputString = "123456.7890";
             // Exercise SUT
-            tweakable.SetFromInputString(status);
+            tweakable.SetFromString(0, "123456.7890");
             // Verify
             Assert.AreEqual(123456.7890, target.Variable, 0.01f);
         }
@@ -51,10 +49,8 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void SetNegativeValue()
         {
-            // Setup
-            status.InputString = "-987.654321";
             // Exercise SUT
-            tweakable.SetFromInputString(status);
+            tweakable.SetFromString("-987.654321");
             // Verify
             Assert.AreEqual(-987.654321, target.Variable, 0.0001f);
         }
