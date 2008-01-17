@@ -24,6 +24,7 @@ namespace Dope.DDXX.DemoFramework
             target = mockery.NewMock<IDemoRegistrator>();
             builder = mockery.NewMock<IDemoEffectBuilder>();
             factory = mockery.NewMock<ITweakableFactory>();
+            tweakable = new TweakableDemo(target, builder, factory);
         }
 
         [TearDown]
@@ -35,8 +36,6 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void NumVisableVariable()
         {
-            // Setup
-            tweakable = new TweakableDemo(target, builder, factory);
             // Exercise SUT and verify
             Assert.AreEqual(3, tweakable.NumVisableVariables);
         }
@@ -48,7 +47,6 @@ namespace Dope.DDXX.DemoFramework
             List<ITrack> tracks = new List<ITrack>();
             for (int i = 0; i < 5; i++)
                 tracks.Add(null);
-            tweakable = new TweakableDemo(target, builder, factory);
             Expect.Once.On(target).GetProperty("Tracks").Will(Return.Value(tracks));
             // Exercise SUT and verify
             Assert.AreEqual(5, tweakable.NumVariables);
@@ -58,7 +56,6 @@ namespace Dope.DDXX.DemoFramework
         public void ReadEmptyXml()
         {
             // Setup
-            tweakable = new TweakableDemo(target, builder, factory);
             XmlNode node = CreateXmlNode("<Demo></Demo>");
             // Exercise SUT and verify
             tweakable.ReadFromXmlFile(node);
@@ -69,7 +66,6 @@ namespace Dope.DDXX.DemoFramework
         public void ReadInvalidXml()
         {
             // Setup
-            tweakable = new TweakableDemo(target, builder, factory);
             XmlNode node = CreateXmlNode("<Demo> <Invalid/> </Demo>");
             // Exercise SUT and verify
             tweakable.ReadFromXmlFile(node);
@@ -84,7 +80,6 @@ namespace Dope.DDXX.DemoFramework
             List<ITrack> tracks = new List<ITrack>();
             tracks.Add(null);
             tracks.Add(track);
-            tweakable = new TweakableDemo(target, builder, factory);
             XmlNode node = CreateXmlNode("<Demo><Effect name=\"Name\" class=\"Class\" track=\"1\" startTime=\"10\" endTime=\"11\"/></Demo>");
             Expect.Once.On(builder).Method("AddEffect").With("Class", "Name", 1, 10.0f, 11.0f);
             Stub.On(target).GetProperty("Tracks").Will(Return.Value(tracks));
@@ -102,7 +97,6 @@ namespace Dope.DDXX.DemoFramework
             ITweakableObject tweakableTrack = mockery.NewMock<ITweakableObject>();
             List<ITrack> tracks = new List<ITrack>();
             tracks.Add(track);
-            tweakable = new TweakableDemo(target, builder, factory);
             XmlNode node = CreateXmlNode("<Demo><PostEffect name=\"Name1\" class=\"Class1\" track=\"0\" startTime=\"12.2\" endTime=\"13.3\"/></Demo>");
             Expect.Once.On(builder).Method("AddPostEffect").With("Class1", "Name1", 0, 12.2f, 13.3f);
             Stub.On(target).GetProperty("Tracks").Will(Return.Value(tracks));
@@ -116,7 +110,6 @@ namespace Dope.DDXX.DemoFramework
         public void ReadUnhandledFromXml()
         {
             // Setup
-            tweakable = new TweakableDemo(target, builder, factory);
             XmlNode node = CreateXmlNode("<Demo><Transition/><Texture/><Generator/></Demo>");
             // Exercise SUT and verify
             tweakable.ReadFromXmlFile(node);
@@ -127,7 +120,6 @@ namespace Dope.DDXX.DemoFramework
         public void ReadEffectWithMissingAttribute()
         {
             // Setup
-            tweakable = new TweakableDemo(target, builder, factory);
             XmlNode node = CreateXmlNode("<Demo><Effect/></Demo>");
             // Exercise SUT and verify
             tweakable.ReadFromXmlFile(node);

@@ -96,8 +96,10 @@
     <Compile Include="TweakableColorTest.cs" />
     <Compile Include="TweakableDemoTest.cs" />
     <Compile Include="TweakableInt32Test.cs" />
+    <Compile Include="TweakableRegisterableTest.cs" />
     <Compile Include="TweakableSingleTest.cs" />
     <Compile Include="TweakableStringTest.cs" />
+    <Compile Include="TweakableTrackTest.cs" />
     <Compile Include="TweakableVector2Test.cs" />
     <Compile Include="TweakableVector3Test.cs" />
     <Compile Include="TweakableVector4Test.cs" />

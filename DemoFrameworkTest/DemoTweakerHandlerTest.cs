@@ -133,5 +133,24 @@ namespace Dope.DDXX.DemoFramework
             Assert.AreEqual(property, (tweakable as TweakableVector4).Property);
         }
 
+        [Test]
+        public void CreateTweakableTrack()
+        {
+            // Exercise SUT
+            Track track = new Track();
+            ITweakableObject tweakable = handler.CreateTweakableObject(track);
+            // Verify
+            Assert.IsInstanceOfType(typeof(TweakableTrack), tweakable);
+        }
+
+        [Test]
+        public void CreateTweakableRegisterable()
+        {
+            // Exercise SUT
+            Registerable registerable = new Registerable("", 0, 0);
+            ITweakableObject tweakable = handler.CreateTweakableObject(registerable);
+            // Verify
+            Assert.IsInstanceOfType(typeof(TweakableRegisterable), tweakable);
+        }
     }
 }

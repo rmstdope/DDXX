@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -36,11 +37,19 @@ namespace Dope.DDXX.DemoFramework
         {
             foreach (XmlNode child in node.ChildNodes)
             {
+                if (child is XmlWhitespace)
+                    continue;
+                bool handled = false;
                 foreach (ITweakableValue handler in PropertyHandlers)
                 {
                     if (child.Name == handler.Property.Name)
+                    {
                         handler.SetFromString(child.InnerText);
+                        handled = true;
+                    }
                 }
+                if (!handled)
+                    throw new DDXXException("Missing property " + child.Name + " in class " + Target.GetType().Name);
             }
         }
     }

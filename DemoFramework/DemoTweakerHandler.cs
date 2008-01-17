@@ -78,6 +78,11 @@ namespace Dope.DDXX.DemoFramework
                     Type wrappedType = type.BaseType.GetGenericArguments()[0];
                     typeTweakableMapping.Add(new KeyValuePair<Type, Type>(wrappedType, type));
                 }
+                if (type.GetInterface("ITweakableObject") != null && !type.IsAbstract)
+                {
+                    Type wrappedType = type.BaseType.GetGenericArguments()[0];
+                    typeTweakableMapping.Add(new KeyValuePair<Type, Type>(wrappedType, type));
+                }
             }
         }
 
@@ -247,7 +252,13 @@ namespace Dope.DDXX.DemoFramework
 
         public ITweakableObject CreateTweakableObject(object target)
         {
-            throw new Exception("The method or operation is not implemented.");
+            foreach (KeyValuePair<Type, Type> pair in typeTweakableMapping)
+            {
+                if (pair.Key == target.GetType() || target.GetType().GetInterface(pair.Key.Name) != null)
+                    return pair.Value.GetConstructor(new Type[] { pair.Key, typeof(ITweakableFactory) }).
+                        Invoke(new object[] { target, this }) as ITweakableObject;
+            }
+            return null;
         }
 
         #endregion

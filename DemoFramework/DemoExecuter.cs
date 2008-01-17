@@ -132,6 +132,8 @@ namespace Dope.DDXX.DemoFramework
                 this.renderTargetNoMultiSampling = textureFactory.CreateFullsizeRenderTarget();
             this.depthStencilBuffer = textureFactory.CreateFullsizeDepthStencil(deviceParameters.DepthStencilFormat, deviceParameters.MultiSampleType);
 
+            InitializeTweaker(graphicsFactory, textureFactory);
+
             InitializeFromFile(xmlFile);
 
             InitializeSound();
@@ -147,12 +149,15 @@ namespace Dope.DDXX.DemoFramework
                 transition.Initialize(postProcessor);
             }
 
+            Time.CurrentTime = StartTime;
+        }
+
+        private void InitializeTweaker(IGraphicsFactory graphicsFactory, ITextureFactory textureFactory)
+        {
             IUserInterface userInterface = new UserInterface();
             userInterface.Initialize(graphicsFactory, textureFactory);
             ITweakableObject tweakableDemo = new TweakableDemo(this, this, tweakerHandler.Factory);
             tweakerHandler.Initialize(this, userInterface, tweakableDemo);
-
-            Time.CurrentTime = StartTime;
         }
 
         private void InitializeSound()
