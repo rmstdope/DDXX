@@ -37,7 +37,7 @@ namespace Dope.DDXX.DemoFramework
         protected abstract ITweakableObject GetSpecificVariable(int index);
         protected abstract void CreateSpecificVariableControl(TweakerStatus status, int index, float y, ITweakerSettings settings);
         protected abstract void ParseSpecficXmlNode(XmlNode node);
-        protected abstract void WriteSpecificXmlNode(XmlNode node);
+        protected abstract void WriteSpecificXmlNode(XmlDocument xmlDocument, XmlNode node);
 
         protected T Target
         {
@@ -127,8 +127,27 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        public void WriteToXmlFile(XmlNode node)
+        public void WriteToXmlFile(XmlDocument xmlDocument, XmlNode node)
         {
+            foreach (ITweakableValue tweakable in propertyHandlers)
+            {
+                bool found = false;
+                foreach (XmlNode child in node.ChildNodes)
+                {
+                    if (child.Name == tweakable.Property.Name)
+                        found = true;
+                }
+                if (!found && tweakable.Property.Name != "StartTime" && tweakable.Property.Name != "EndTime")
+                {
+                    XmlNode whitespace = node.FirstChild;
+                    if (whitespace is XmlWhitespace)
+                        node.InsertBefore(xmlDocument.CreateWhitespace(whitespace.Value), node.LastChild);
+                    node.InsertBefore(xmlDocument.CreateElement(tweakable.Property.Name), node.LastChild);
+                    //XmlWhitespace newWhitespace = xmlDocument.CreateWhitespace(lastWhitespace.Value);
+                    //node.AppendChild(newWhitespace);
+                    //lastWhitespace.Value += "\t";
+                }
+            }
             foreach (XmlNode child in node.ChildNodes)
             {
                 if (!(child is XmlElement))
@@ -136,7 +155,7 @@ namespace Dope.DDXX.DemoFramework
                 if (HasProperty(child.Name))
                     WriteProperty(child);
                 else
-                    WriteSpecificXmlNode(child);
+                    WriteSpecificXmlNode(xmlDocument, child);
             }
         }
 

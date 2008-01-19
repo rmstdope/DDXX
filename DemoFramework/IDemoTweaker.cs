@@ -13,6 +13,6 @@ namespace Dope.DDXX.DemoFramework
         void Draw();
         IDemoTweaker HandleInput(IInputDriver inputDriver);
         void ReadFromXmlFile(XmlNode node);
-        void WriteToXmlFile(XmlNode node);
+        void WriteToXmlFile(XmlDocument xmlDocument, XmlNode node);
     }
 }

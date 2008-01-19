@@ -234,7 +234,7 @@ namespace Dope.DDXX.DemoFramework
 
         public void WriteToXmlFile()
         {
-            firstTweaker.WriteToXmlFile(xmlDocument.DocumentElement);
+            firstTweaker.WriteToXmlFile(xmlDocument, xmlDocument.DocumentElement);
 
             using (Stream outStream = new FileStream(FileUtility.FilePath("..\\..\\..\\" + xmlFileName), FileMode.Create))
                 xmlDocument.Save(outStream);

@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Demo song="music_machinefunk_loop">
-	<ClearColor>30, 10, 10, 100</ClearColor>
 	<Generator name="noise256" class="PerlinNoise">
 		<Parameter name="BaseFrequency" int="1024" />
 	</Generator>
@@ -11,6 +10,9 @@
 	</PostEffect>-->
 	<Effect class="BloodCell" name="BloodCell" track="0" startTime="0" endTime="500">
 		<DrawOrder>0</DrawOrder>
+		<PulseSpeed>14</PulseSpeed>
+		<PulseFrequency>100</PulseFrequency>
+		<PulseAmplitude>0.1</PulseAmplitude>
 	</Effect>
 	<!--<PostEffect class="GlowPostEffect" name="Glow" track="0" startTime="20" endTime="500">
 		<BloomScale>1.1</BloomScale>
@@ -76,4 +78,5 @@
 	<!--<Effect class="GridEffect" track="0" startTime="0" endTime="500">
 		<Parameter name="DrawOrder" int="0" />
 	</Effect>-->
+	<ClearColor>0, 0, 0, 0</ClearColor>
 </Demo>

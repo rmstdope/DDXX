@@ -84,7 +84,7 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        protected override void WriteSpecificXmlNode(XmlNode node)
+        protected override void WriteSpecificXmlNode(XmlDocument xmlDocument, XmlNode node)
         {
             if (!(node is XmlElement))
                 return;
@@ -93,7 +93,7 @@ namespace Dope.DDXX.DemoFramework
                 case "Effect":
                 case "PostEffect":
                     int index = Target.GetAllRegisterables().FindIndex(delegate(IRegisterable r) { return r.Name == GetStringAttribute(node, "name"); });
-                    (GetTweakableChild(index) as ITweakableObject).WriteToXmlFile(node);
+                    (GetTweakableChild(index) as ITweakableObject).WriteToXmlFile(xmlDocument, node);
                     break;
                 case "Transition":
                 case "Texture":

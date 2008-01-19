@@ -50,7 +50,7 @@ namespace Dope.DDXX.DemoFramework
                 throw new DDXXException("Missing property " + node.Name + " in class " + Target.GetType().Name);
         }
 
-        protected override void WriteSpecificXmlNode(XmlNode node)
+        protected override void WriteSpecificXmlNode(XmlDocument xmlDocument, XmlNode node)
         {
         }
 

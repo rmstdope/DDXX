@@ -38,6 +38,7 @@ namespace Dope.DDXX.DemoFramework
         private Mockery mockery;
         private IRegisterable target;
         private ITweakableFactory factory;
+        private XmlDocument document;
 
         [SetUp]
         public void SetUp()
@@ -83,7 +84,7 @@ namespace Dope.DDXX.DemoFramework
             // Setup
             XmlNode node = CreateXmlNode("<Effect></Effect>");
             // Exercise SUT and verify
-            tweakable.WriteToXmlFile(node);
+            tweakable.WriteToXmlFile(document, node);
         }
 
         [Test]
@@ -97,7 +98,7 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
-        public void ReadFromXmlTwoParameters()
+        public void WriteToXmlTwoParameters()
         {
             // Setup
             target = new RegisterableStub();
@@ -106,14 +107,55 @@ namespace Dope.DDXX.DemoFramework
             tweakable = new TweakableRegisterable(target, factory);
             XmlNode node = CreateXmlNode("<Effect><Parameter1>0</Parameter1> <Parameter2>0</Parameter2></Effect>");
             // Exercise SUT
-            tweakable.WriteToXmlFile(node);
+            tweakable.WriteToXmlFile(document, node);
             // Verify
             Assert.AreEqual("<Effect><Parameter1>1.2</Parameter1> <Parameter2>2.2</Parameter2></Effect>", node.OuterXml);
         }
 
+        [Test]
+        public void WriteToXmlNewParameter()
+        {
+            // Setup
+            target = new RegisterableStub();
+            (target as RegisterableStub).Parameter1 = 2.3f;
+            (target as RegisterableStub).Parameter2 = 3.3f;
+            tweakable = new TweakableRegisterable(target, factory);
+            XmlNode node = CreateXmlNode(
+@"<Effect>
+		<Parameter2>0</Parameter2>
+</Effect>");
+            // Exercise SUT
+            tweakable.WriteToXmlFile(document, node);
+            // Verify
+            Assert.AreEqual(
+@"<Effect>
+		<Parameter2>3.3</Parameter2>
+		<Parameter1>2.3</Parameter1>
+</Effect>", node.OuterXml);
+        }
+
+        [Test]
+        public void WriteToXmlNewParameterNoWhitespace()
+        {
+            // Setup
+            target = new RegisterableStub();
+            (target as RegisterableStub).Parameter1 = 2.3f;
+            (target as RegisterableStub).Parameter2 = 3.3f;
+            tweakable = new TweakableRegisterable(target, factory);
+            XmlNode node = CreateXmlNode(
+@"<Effect><Parameter2>0</Parameter2>
+</Effect>");
+            // Exercise SUT
+            tweakable.WriteToXmlFile(document, node);
+            // Verify
+            Assert.AreEqual(
+@"<Effect><Parameter2>3.3</Parameter2><Parameter1>2.3</Parameter1>
+</Effect>", node.OuterXml);
+        }
+
         private XmlNode CreateXmlNode(string xml)
         {
-            XmlDocument document = new XmlDocument();
+            document = new XmlDocument();
             document.PreserveWhitespace = true;
             document.LoadXml(xml);
             return document.DocumentElement;

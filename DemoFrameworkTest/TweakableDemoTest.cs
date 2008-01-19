@@ -107,7 +107,7 @@ namespace Dope.DDXX.DemoFramework
             // Setup
             ReadEmptyXml();
             // Exercise SUT
-            tweakable.WriteToXmlFile(node);
+            tweakable.WriteToXmlFile(document, node);
             // Verify
             Assert.AreEqual("<Demo></Demo>", node.OuterXml);
         }
@@ -146,9 +146,9 @@ namespace Dope.DDXX.DemoFramework
             CreateXmlNode("<Demo><Effect name=\"R0\" /></Demo>");
             ITweakableObject tweakableRegisterable1 = mockery.NewMock<ITweakableObject>();
             Expect.Once.On(factory).Method("CreateTweakableObject").With(registerables[0]).Will(Return.Value(tweakableRegisterable1));
-            Expect.Once.On(tweakableRegisterable1).Method("WriteToXmlFile").With(node.ChildNodes[0]);
+            Expect.Once.On(tweakableRegisterable1).Method("WriteToXmlFile").With(document, node.ChildNodes[0]);
             // Exercise SUT
-            tweakable.WriteToXmlFile(node);
+            tweakable.WriteToXmlFile(document, node);
         }
 
         [Test]
@@ -177,10 +177,10 @@ namespace Dope.DDXX.DemoFramework
             ITweakableObject tweakableRegisterable2 = mockery.NewMock<ITweakableObject>();
             Expect.Once.On(factory).Method("CreateTweakableObject").With(registerables[0]).Will(Return.Value(tweakableRegisterable1));
             Expect.Once.On(factory).Method("CreateTweakableObject").With(registerables[1]).Will(Return.Value(tweakableRegisterable2));
-            Expect.Once.On(tweakableRegisterable1).Method("WriteToXmlFile").With(node.ChildNodes[1]);
-            Expect.Once.On(tweakableRegisterable2).Method("WriteToXmlFile").With(node.ChildNodes[0]);
+            Expect.Once.On(tweakableRegisterable1).Method("WriteToXmlFile").With(document, node.ChildNodes[1]);
+            Expect.Once.On(tweakableRegisterable2).Method("WriteToXmlFile").With(document, node.ChildNodes[0]);
             // Exercise SUT
-            tweakable.WriteToXmlFile(node);
+            tweakable.WriteToXmlFile(document, node);
         }
 
         [Test]
@@ -198,7 +198,7 @@ namespace Dope.DDXX.DemoFramework
             // Setup
             CreateXmlNode("<Demo><Transition /> <Texture /><Generator /></Demo>");
             // Exercise SUT
-            tweakable.WriteToXmlFile(node);
+            tweakable.WriteToXmlFile(document, node);
         }
 
         [Test]
@@ -231,7 +231,7 @@ namespace Dope.DDXX.DemoFramework
             ReadWithProperty();
             // Exercise SUT
             registrator.ClearColor = new Color(5, 6, 7, 8);
-            tweakable.WriteToXmlFile(node);
+            tweakable.WriteToXmlFile(document, node);
             // Verify
             Assert.AreEqual("<Demo><ClearColor>5, 6, 7, 8</ClearColor></Demo>", node.OuterXml);
         }
