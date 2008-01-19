@@ -34,5 +34,13 @@ namespace Dope.DDXX.DemoFramework
         {
             Value = bool.Parse(value);
         }
+
+        protected override string GetToString(int index)
+        {
+            if (Value)
+                return "true";
+            return "false";
+        }
+
     }
 }

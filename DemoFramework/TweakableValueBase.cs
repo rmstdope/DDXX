@@ -16,6 +16,7 @@ namespace Dope.DDXX.DemoFramework
         public abstract int Dimension { get; }
         protected abstract void ChangeValue(int index, float delta);
         public abstract void SetFromString(int index, string value);
+        protected abstract string GetToString(int index);
 
         protected TweakableValueBase(PropertyInfo property, object target)
         {
@@ -52,6 +53,18 @@ namespace Dope.DDXX.DemoFramework
             string[] values = value.Split(',');
             for (int i = 0; i < values.Length; i++)
                 SetFromString(i, values[i]);
+        }
+
+        public string GetToString()
+        {
+            string value = "";
+            for (int i = 0; i < Dimension; i++)
+            {
+                if (i != 0)
+                    value += ", ";
+                value += GetToString(i);
+            }
+            return value;
         }
 
         protected byte GetAlpha(TweakerStatus status, int selection)

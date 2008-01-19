@@ -38,7 +38,6 @@ namespace Dope.DDXX.DemoFramework
         private IDemoFactory demoFactory;
         private IDemoEffectTypes effectTypes;
         private TweakerSettings settings = new TweakerSettings();
-        //private DemoXMLReader xmlReader;
         private Color clearColor = new Color(0, 0, 0, 0);
         private Dictionary<string, IGenerator> generators = new Dictionary<string,IGenerator>();
 
@@ -236,11 +235,9 @@ namespace Dope.DDXX.DemoFramework
 
         public void CleanUp()
         {
-            if (tweakerHandler.ShouldSave())// && xmlReader != null)
+            if (tweakerHandler.ShouldSave())
             {
                 tweakerHandler.WriteToXmlFile();
-                //Update(xmlReader);
-                //xmlReader.Write();
             }
         }
 
@@ -335,8 +332,6 @@ namespace Dope.DDXX.DemoFramework
             if (xmlFile != "")
             {
                 tweakerHandler.ReadFromXmlFile(xmlFile);
-                //xmlReader = new DemoXMLReader(this);
-                //xmlReader.Read(xmlFile);
             }
         }
 

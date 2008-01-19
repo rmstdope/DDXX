@@ -374,5 +374,15 @@ namespace Dope.DDXX.DemoFramework
         }
 
         #endregion
+
+        #region ITweakableObject Members
+
+
+        public void WriteToXmlFile(XmlNode node)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
     }
 }

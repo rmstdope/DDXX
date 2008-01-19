@@ -234,7 +234,7 @@ namespace Dope.DDXX.DemoFramework
 
         public void WriteToXmlFile()
         {
-            //throw new Exception("The method or operation is not implemented.");
+            firstTweaker.WriteToXmlFile(doc.DocumentElement);
         }
 
         #region ITweakableFactory Members

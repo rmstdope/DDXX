@@ -29,6 +29,11 @@ namespace Dope.DDXX.DemoFramework
             return Factory.CreateTweakableObject(GetAllRegisterables()[index]);
         }
 
+        protected override bool ParseShouldTraverseChildren
+        {
+            get { return false; }
+        }
+
         protected override void CreateSpecificVariableControl(TweakerStatus status, int index, float y, ITweakerSettings settings)
         {
             float height = status.VariableSpacing * 0.9f;
@@ -66,7 +71,7 @@ namespace Dope.DDXX.DemoFramework
             return allEffects;
         }
 
-        public override void ReadFromXmlFile(XmlNode node)
+        protected override void ParseSpecficXmlNode(XmlNode node)
         {
             IRegisterable[] allEffects = GetAllRegisterables();
             for (int i = 0; i < allEffects.Length; i++)
@@ -75,5 +80,11 @@ namespace Dope.DDXX.DemoFramework
                     (GetTweakableChild(i) as ITweakableObject).ReadFromXmlFile(node);
             }
         }
+
+        protected override void WriteSpecificXmlNode(XmlNode node)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
     }
 }

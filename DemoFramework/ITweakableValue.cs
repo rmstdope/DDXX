@@ -13,5 +13,6 @@ namespace Dope.DDXX.DemoFramework
         void SetFromString(string value);
         void SetFromString(int index, string value);
         PropertyInfo Property { get; }
+        string GetToString();
     }
 }

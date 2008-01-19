@@ -41,38 +41,38 @@ namespace Dope.DDXX.DemoFramework
             CreateEffectControls(index, trackWindow, status.StartTime, status.TimeScale, settings);
         }
 
-        public override void ReadFromXmlFile(XmlNode node)
+        protected override void ParseSpecficXmlNode(XmlNode node)
         {
-            foreach (XmlNode child in node.ChildNodes)
+            if (!(node is XmlElement))
+                return;
+            switch (node.Name)
             {
-                if (child is XmlElement)
-                {
-                    switch (child.Name)
-                    {
-                        case "Effect":
-                            RegisterEffect(child);
-                            (GetTweakableChild(GetIntAttribute(child, "track"))
-                                as ITweakableObject).ReadFromXmlFile(child);
-                            break;
-                        case "PostEffect":
-                            RegisterPostEffect(child);
-                            (GetTweakableChild(GetIntAttribute(child, "track"))
-                                as ITweakableObject).ReadFromXmlFile(child);
-                            break;
-                        case "Transition":
-                            //RegisterTransition(child);
-                            //(GetTweakableChild(GetIntAttribute(child, "track"))
-                            //    as ITweakableObject).ReadFromXmlFile(child);
-                            break;
-                        case "Texture":
-                        case "Generator":
-                            break;
-                        default:
-                            throw new DDXXException("Invalid XML element " + child.Name + 
-                                " within element " + node.Name + ".");
-                    }
-                }
+                case "Effect":
+                    RegisterEffect(node);
+                    (GetTweakableChild(GetIntAttribute(node, "track"))
+                        as ITweakableObject).ReadFromXmlFile(node);
+                    break;
+                case "PostEffect":
+                    RegisterPostEffect(node);
+                    (GetTweakableChild(GetIntAttribute(node, "track"))
+                        as ITweakableObject).ReadFromXmlFile(node);
+                    break;
+                case "Transition":
+                    //RegisterTransition(child);
+                    //(GetTweakableChild(GetIntAttribute(child, "track"))
+                    //    as ITweakableObject).ReadFromXmlFile(child);
+                    break;
+                case "Texture":
+                case "Generator":
+                    break;
+                default:
+                    throw new DDXXException("Invalid XML element " + node.Name + 
+                        " within element " + node.Name + ".");
             }
+        }
+
+        protected override void WriteSpecificXmlNode(XmlNode node)
+        {
         }
 
         private void RegisterEffect(XmlNode node)

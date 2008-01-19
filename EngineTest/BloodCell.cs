@@ -17,28 +17,53 @@ namespace EngineTest
         private CameraNode camera;
         private List<ModelNode> cells = new List<ModelNode>();
         private ModelNode artery;
-
+        private float pulseSpeed;
+        private float pulseFrequency;
+        private float pulseAmplitude;
+        private PointLightNode light;
+        
         public IScene Scene
         {
             get { return scene; }
             set { scene = value; }
         }
 
+        public float PulseSpeed
+        {
+            get { return pulseSpeed; }
+            set { pulseSpeed = value; }
+        }
+        public float PulseFrequency
+        {
+            get { return pulseFrequency; }
+            set { pulseFrequency = value; }
+        }
+        [TweakStep(0.01f)]
+        public float PulseAmplitude
+        {
+            get { return pulseAmplitude; }
+            set { pulseAmplitude = value; }
+        }
+
         public BloodCell(string name, float start, float end)
             : base(name, start, end)
         {
+            PulseSpeed = 14;
+            PulseFrequency = 100.0f;
+            PulseAmplitude = 0.1f;
         }
 
         protected override void Initialize()
         {
-            CreateStandardSceneAndCamera(out scene, out camera, 6);
-            InitializeCells();
+            CreateStandardSceneAndCamera(out scene, out camera, 0);
+            //InitializeCells();
             InitializeArtery();
-            InitializeParticles();
-            PointLightNode light = new PointLightNode("Light");
+            //InitializeParticles();
+            light = new PointLightNode("Light");
+            //light.Position = new Vector3(10, 2, 0);
+            light.Position = new Vector3(1000, 0, 0);
             scene.AddNode(light);
-            Mixer.ClearColor = Color.Coral;
-            scene.AmbientColor = new Color(30, 30, 30);
+            scene.AmbientColor = new Color(255, 255, 255);
         }
 
         private void InitializeArtery()
@@ -54,13 +79,14 @@ namespace EngineTest
             ModelBuilder.SetAmbientColor("Default", Color.Black);
             ModelBuilder.SetDiffuseColor("Default", Color.Red);
             ModelBuilder.SetSpecularColor("Default", new Color(255, 160, 160));
-            ModelBuilder.SetShininess("Default", 1.0f);
+            ModelBuilder.SetShininess("Default", 0.0f);
             ModelBuilder.SetSpecularPower("Default", 32);
-            ModelBuilder.SetEffect("Default", "Content\\effects\\NormalMapping");
-            ModelDirector.CreateTunnel(2.0f, 32, 4, 20, 2, 1);
+            ModelBuilder.SetEffect("Default", "Content\\effects\\Artery");
+            ModelDirector.CreateTunnel(2.0f, 32, 30, 60, 2, 10);
             IModel model = ModelDirector.Generate("Default");
             artery = new ModelNode("Artery", model, GraphicsDevice);
             scene.AddNode(artery);
+            artery.WorldState.Tilt(MathHelper.PiOver2);
         }
 
         private void InitializeParticles()
@@ -121,7 +147,16 @@ namespace EngineTest
                 if (cell.WorldState.Position.X > 8)
                     cell.WorldState.Position -= new Vector3(16, 0, 0);
             }
-            artery.WorldState.Tilt(Time.DeltaTime);
+            artery.Model.Meshes[0].MeshParts[0].MaterialHandler.Effect.Parameters["time"].SetValue(Time.CurrentTime);
+            artery.Model.Meshes[0].MeshParts[0].MaterialHandler.Effect.Parameters["PulseSpeed"].SetValue(PulseSpeed);
+            artery.Model.Meshes[0].MeshParts[0].MaterialHandler.Effect.Parameters["PulseFrequency"].SetValue(PulseFrequency / 60.0f);
+            artery.Model.Meshes[0].MeshParts[0].MaterialHandler.Effect.Parameters["Amplitude"].SetValue(PulseAmplitude);
+
+            //artery.WorldState.Tilt(Time.DeltaTime);
+            camera.Position = new Vector3(0, 0, 10);
+            //camera.WorldState.Turn(Time.DeltaTime);
+            //light.Position = camera.Position; new Vector3(0, 0, (float)Math.Sin(Time.CurrentTime) * 5);
+
             scene.Step();
         }
 

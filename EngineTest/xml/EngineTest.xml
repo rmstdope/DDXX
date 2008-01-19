@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Demo song="music_machinefunk_loop">
+	<ClearColor>100,100,100,100</ClearColor>
 	<Generator name="noise256" class="PerlinNoise">
 		<Parameter name="BaseFrequency" int="1024" />
 	</Generator>
@@ -11,7 +12,7 @@
 	<Effect class="BloodCell" name="BloodCell" track="0" startTime="0" endTime="500">
 		<DrawOrder>0</DrawOrder>
 	</Effect>
-	<PostEffect class="GlowPostEffect" name="Glow" track="0" startTime="20" endTime="500">
+	<!--<PostEffect class="GlowPostEffect" name="Glow" track="0" startTime="20" endTime="500">
 		<BloomScale>1.1</BloomScale>
 		<WhiteCutoff>0</WhiteCutoff>
 		<Exposure>0.1</Exposure>
@@ -24,7 +25,7 @@
 		<DrawOrder>2</DrawOrder>
 		<Scale>4</Scale>
 		<Strength>30, 20, 25, 27</Strength>
-	</PostEffect>
+	</PostEffect>-->
 	<!--<PostEffect class="OverlayPostEffect" name="Noise" track="0" startTime="0" endTime="20">
 		<Parameter name="Filename" string="noise256" />
 		<Parameter name="Technique" string="Noise" />

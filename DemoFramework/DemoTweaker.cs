@@ -238,5 +238,9 @@ namespace Dope.DDXX.DemoFramework
             tweakable.ReadFromXmlFile(node);
         }
 
+        public void WriteToXmlFile(XmlNode node)
+        {
+            tweakable.WriteToXmlFile(node);
+        }
     }
 }

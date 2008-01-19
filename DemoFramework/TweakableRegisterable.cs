@@ -33,24 +33,27 @@ namespace Dope.DDXX.DemoFramework
             throw new Exception("The method should never be called.");
         }
 
-        public override void ReadFromXmlFile(XmlNode node)
+        protected override void ParseSpecficXmlNode(XmlNode node)
         {
-            foreach (XmlNode child in node.ChildNodes)
+            if (!(node is XmlElement))
+                return;
+            bool handled = false;
+            foreach (ITweakableValue handler in PropertyHandlers)
             {
-                if (child is XmlWhitespace)
-                    continue;
-                bool handled = false;
-                foreach (ITweakableValue handler in PropertyHandlers)
+                if (node.Name == handler.Property.Name)
                 {
-                    if (child.Name == handler.Property.Name)
-                    {
-                        handler.SetFromString(child.InnerText);
-                        handled = true;
-                    }
+                    handler.SetFromString(node.InnerText);
+                    handled = true;
                 }
-                if (!handled)
-                    throw new DDXXException("Missing property " + child.Name + " in class " + Target.GetType().Name);
             }
+            if (!handled)
+                throw new DDXXException("Missing property " + node.Name + " in class " + Target.GetType().Name);
         }
+
+        protected override void WriteSpecificXmlNode(XmlNode node)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
     }
 }

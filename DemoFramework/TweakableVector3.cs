@@ -4,6 +4,7 @@ using System.Text;
 using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -43,6 +44,20 @@ namespace Dope.DDXX.DemoFramework
             Value = new Vector3(index == 0 ? floatValue : Value.X,
                                 index == 1 ? floatValue : Value.Y,
                                 index == 2 ? floatValue : Value.Z);
+        }
+
+        protected override string GetToString(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    return Value.X.ToString();
+                case 1:
+                    return Value.Y.ToString();
+                case 2:
+                    return Value.Z.ToString();
+            }
+            throw new DDXXException("Invalid index.");
         }
     }
 }

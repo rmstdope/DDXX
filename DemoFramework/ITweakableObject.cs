@@ -16,5 +16,6 @@ namespace Dope.DDXX.DemoFramework
         void DecreaseValue(TweakerStatus status);
         void SetValue(TweakerStatus status);
         void ReadFromXmlFile(XmlNode node);
+        void WriteToXmlFile(XmlNode node);
     }
 }

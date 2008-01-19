@@ -34,5 +34,11 @@ namespace Dope.DDXX.DemoFramework
         {
             Value = float.Parse(value, System.Globalization.NumberFormatInfo.InvariantInfo);
         }
+
+        protected override string GetToString(int index)
+        {
+            return Value.ToString();
+        }
+
     }
 }

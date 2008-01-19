@@ -36,7 +36,13 @@ namespace Dope.DDXX.DemoFramework
         protected abstract int NumSpecificVariables { get; }
         protected abstract ITweakableObject GetSpecificVariable(int index);
         protected abstract void CreateSpecificVariableControl(TweakerStatus status, int index, float y, ITweakerSettings settings);
-        public abstract void ReadFromXmlFile(XmlNode node);
+        protected abstract void ParseSpecficXmlNode(XmlNode node);
+        protected abstract void WriteSpecificXmlNode(XmlNode node);
+
+        protected virtual bool ParseShouldTraverseChildren
+        {
+            get { return true; }
+        }
 
         protected T Target
         {
@@ -113,6 +119,62 @@ namespace Dope.DDXX.DemoFramework
         {
             if (status.Selection >= NumSpecificVariables)
                 propertyHandlers[status.Selection - NumSpecificVariables].SetFromString(status.Index, status.InputString);
+        }
+
+        public void ReadFromXmlFile(XmlNode node)
+        {
+            if (ParseShouldTraverseChildren)
+            {
+                foreach (XmlNode child in node.ChildNodes)
+                {
+                    if (HasProperty(child.Name))
+                        ParseProperty(child);
+                    else
+                        ParseSpecficXmlNode(child);
+                }
+            }
+            else
+            {
+                ParseSpecficXmlNode(node);
+            }
+        }
+
+        public void WriteToXmlFile(XmlNode node)
+        {
+            if (ParseShouldTraverseChildren)
+            {
+                foreach (XmlNode child in node.ChildNodes)
+                {
+                    if (HasProperty(child.Name))
+                        WriteProperty(child);
+                    else
+                        WriteSpecificXmlNode(child);
+                }
+            }
+            else
+            {
+                throw new Exception("Not implemented.");
+            }
+        }
+
+        private bool HasProperty(string name)
+        {
+            return propertyHandlers.Exists(delegate(ITweakableValue a) { return a.Property.Name == name; });
+        }
+
+        private ITweakableValue GetProperty(string name)
+        {
+            return propertyHandlers.Find(delegate(ITweakableValue a) { return a.Property.Name == name; });
+        }
+
+        private void ParseProperty(XmlNode node)
+        {
+            GetProperty(node.Name).SetFromString(node.InnerText);
+        }
+
+        private void WriteProperty(XmlNode node)
+        {
+            node.InnerText = GetProperty(node.Name).GetToString();
         }
 
         private void GetProperties()

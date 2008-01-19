@@ -34,5 +34,10 @@ namespace Dope.DDXX.DemoFramework
         {
             Value = value;
         }
+
+        protected override string GetToString(int index)
+        {
+            return Value;
+        }
     }
 }
