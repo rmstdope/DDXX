@@ -56,6 +56,24 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
+        public void GetTrue()
+        {
+            // Setup
+            target.Variable = true;
+            // Exercise SUT and verify
+            Assert.AreEqual("true", tweakable.GetToString());
+        }
+
+        [Test]
+        public void GetFalse()
+        {
+            // Setup
+            target.Variable = false;
+            // Exercise SUT and verify
+            Assert.AreEqual("false", tweakable.GetToString());
+        }
+
+        [Test]
         public void FlipFromFalse()
         {
             // Setup

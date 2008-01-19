@@ -11,6 +11,29 @@ namespace Dope.DDXX.DemoFramework
     [TestFixture]
     public class TweakableRegisterableTest
     {
+        private class RegisterableStub : Registerable
+        {
+            public RegisterableStub()
+                : base("", 0, 0)
+            {
+            }
+
+            private float parameter1;
+            public float Parameter1
+            {
+                get { return parameter1; }
+                set { parameter1 = value; }
+            }
+
+            private float parameter2;
+            public float Parameter2
+            {
+                get { return parameter2; }
+                set { parameter2 = value; }
+            }
+
+        }
+
         private TweakableRegisterable tweakable;
         private Mockery mockery;
         private IRegisterable target;
@@ -55,6 +78,15 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
+        public void WriteToXmlNoParameters()
+        {
+            // Setup
+            XmlNode node = CreateXmlNode("<Effect></Effect>");
+            // Exercise SUT and verify
+            tweakable.WriteToXmlFile(node);
+        }
+
+        [Test]
         [ExpectedException(typeof(DDXXException))]
         public void ReadFromXmlUnknownParameter()
         {
@@ -68,14 +100,15 @@ namespace Dope.DDXX.DemoFramework
         public void ReadFromXmlTwoParameters()
         {
             // Setup
-            target = new Registerable("", 0, 0);
+            target = new RegisterableStub();
+            (target as RegisterableStub).Parameter1 = 1.2f;
+            (target as RegisterableStub).Parameter2 = 2.2f;
             tweakable = new TweakableRegisterable(target, factory);
-            XmlNode node = CreateXmlNode("<Effect> <StartTime>1.2</StartTime> <EndTime>2.2</EndTime></Effect>");
+            XmlNode node = CreateXmlNode("<Effect><Parameter1>0</Parameter1> <Parameter2>0</Parameter2></Effect>");
             // Exercise SUT
-            tweakable.ReadFromXmlFile(node);
+            tweakable.WriteToXmlFile(node);
             // Verify
-            Assert.AreEqual(1.2f, target.StartTime);
-            Assert.AreEqual(2.2f, target.EndTime);
+            Assert.AreEqual("<Effect><Parameter1>1.2</Parameter1> <Parameter2>2.2</Parameter2></Effect>", node.OuterXml);
         }
 
         private XmlNode CreateXmlNode(string xml)

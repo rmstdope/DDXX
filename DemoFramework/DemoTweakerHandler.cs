@@ -28,7 +28,7 @@ namespace Dope.DDXX.DemoFramework
         private bool shouldSave;
         private bool exiting;
         private string xmlFileName;
-        private XmlDocument doc;
+        private XmlDocument xmlDocument;
         private List<KeyValuePair<Type, Type>> typeTweakableMapping;
 
         public object IdentifierToChild() { return 0; }
@@ -223,18 +223,21 @@ namespace Dope.DDXX.DemoFramework
         public void ReadFromXmlFile(string xmlFileName)
         {
             this.xmlFileName = FileUtility.FilePath(xmlFileName);
-            doc = new XmlDocument();
-            doc.PreserveWhitespace = true;
+            xmlDocument = new XmlDocument();
+            xmlDocument.PreserveWhitespace = true;
             using (Stream inputStream = new FileStream(this.xmlFileName, FileMode.Open))
             {
-                doc.Load(inputStream);
-                firstTweaker.ReadFromXmlFile(doc.DocumentElement);
+                xmlDocument.Load(inputStream);
+                firstTweaker.ReadFromXmlFile(xmlDocument.DocumentElement);
             }
         }
 
         public void WriteToXmlFile()
         {
-            firstTweaker.WriteToXmlFile(doc.DocumentElement);
+            firstTweaker.WriteToXmlFile(xmlDocument.DocumentElement);
+
+            using (Stream outStream = new FileStream(FileUtility.FilePath("..\\..\\..\\" + xmlFileName), FileMode.Create))
+                xmlDocument.Save(outStream);
         }
 
         #region ITweakableFactory Members

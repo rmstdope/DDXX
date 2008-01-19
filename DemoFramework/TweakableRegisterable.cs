@@ -52,7 +52,6 @@ namespace Dope.DDXX.DemoFramework
 
         protected override void WriteSpecificXmlNode(XmlNode node)
         {
-            throw new Exception("The method or operation is not implemented.");
         }
 
     }

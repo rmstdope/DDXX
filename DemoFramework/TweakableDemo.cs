@@ -86,6 +86,23 @@ namespace Dope.DDXX.DemoFramework
 
         protected override void WriteSpecificXmlNode(XmlNode node)
         {
+            if (!(node is XmlElement))
+                return;
+            switch (node.Name)
+            {
+                case "Effect":
+                case "PostEffect":
+                    int index = Target.GetAllRegisterables().FindIndex(delegate(IRegisterable r) { return r.Name == GetStringAttribute(node, "name"); });
+                    (GetTweakableChild(index) as ITweakableObject).WriteToXmlFile(node);
+                    break;
+                case "Transition":
+                case "Texture":
+                case "Generator":
+                    break;
+                default:
+                    throw new DDXXException("Invalid XML element " + node.Name +
+                        " within element " + node.Name + ".");
+            }
         }
 
         private void RegisterEffect(XmlNode node)

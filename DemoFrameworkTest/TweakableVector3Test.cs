@@ -50,6 +50,15 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
+        public void GetValue()
+        {
+            // Setup
+            target.Variable = new Vector3(1.2f, 3.4f, 5.6f);
+            // Exercise SUT and verify
+            Assert.AreEqual("1.2, 3.4, 5.6", tweakable.GetToString());
+        }
+
+        [Test]
         public void SetFirstIndex()
         {
             // Setup

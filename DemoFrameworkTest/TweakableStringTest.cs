@@ -47,6 +47,15 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
+        public void GetValue()
+        {
+            // Setup
+            target.Variable = "hesa";
+            // Exercise SUT and verify
+            Assert.AreEqual("hesa", tweakable.GetToString());
+        }
+
+        [Test]
         public void SetValueNoIndex()
         {
             // Exercise SUT

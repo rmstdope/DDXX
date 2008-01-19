@@ -37,7 +37,7 @@ namespace Dope.DDXX.DemoFramework
 
         protected override string GetToString(int index)
         {
-            return Value.ToString();
+            return Value.ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
         }
 
     }

@@ -47,9 +47,9 @@ namespace Dope.DDXX.DemoFramework
             switch (index)
             {
                 case 0:
-                    return Value.X.ToString();
+                    return Value.X.ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
                 case 1:
-                    return Value.Y.ToString();
+                    return Value.Y.ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
             }
             throw new DDXXException("Invalid index.");
         }

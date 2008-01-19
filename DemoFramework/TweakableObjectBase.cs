@@ -131,6 +131,8 @@ namespace Dope.DDXX.DemoFramework
         {
             foreach (XmlNode child in node.ChildNodes)
             {
+                if (!(child is XmlElement))
+                    continue;
                 if (HasProperty(child.Name))
                     WriteProperty(child);
                 else

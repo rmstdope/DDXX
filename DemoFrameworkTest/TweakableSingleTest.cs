@@ -56,6 +56,15 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
+        public void GetValue()
+        {
+            // Setup
+            target.Variable = -45.34f;
+            // Exercise SUT and verify
+            Assert.AreEqual("-45.34", tweakable.GetToString());
+        }
+
+        [Test]
         public void IncreaseValue()
         {
             // Setup

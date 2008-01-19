@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Demo song="music_machinefunk_loop">
-	<ClearColor>100,100,100,100</ClearColor>
+	<ClearColor>30, 10, 10, 100</ClearColor>
 	<Generator name="noise256" class="PerlinNoise">
 		<Parameter name="BaseFrequency" int="1024" />
 	</Generator>

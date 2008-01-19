@@ -138,6 +138,20 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
+        public void WriteEffectToXml()
+        {
+            // Setup
+            CreateRegisterables(1);
+            Stub.On(target).Method("GetAllRegisterables").Will(Return.Value(registerables));
+            CreateXmlNode("<Demo><Effect name=\"R0\" /></Demo>");
+            ITweakableObject tweakableRegisterable1 = mockery.NewMock<ITweakableObject>();
+            Expect.Once.On(factory).Method("CreateTweakableObject").With(registerables[0]).Will(Return.Value(tweakableRegisterable1));
+            Expect.Once.On(tweakableRegisterable1).Method("WriteToXmlFile").With(node.ChildNodes[0]);
+            // Exercise SUT
+            tweakable.WriteToXmlFile(node);
+        }
+
+        [Test]
         public void ReadPostEffectFromXml()
         {
             // Setup
@@ -153,6 +167,23 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
+        public void WriteEffectAndPostEffectToXml()
+        {
+            // Setup
+            CreateRegisterables(2);
+            Stub.On(target).Method("GetAllRegisterables").Will(Return.Value(registerables));
+            CreateXmlNode("<Demo><Effect name=\"R1\" /><PostEffect name=\"R0\" /></Demo>");
+            ITweakableObject tweakableRegisterable1 = mockery.NewMock<ITweakableObject>();
+            ITweakableObject tweakableRegisterable2 = mockery.NewMock<ITweakableObject>();
+            Expect.Once.On(factory).Method("CreateTweakableObject").With(registerables[0]).Will(Return.Value(tweakableRegisterable1));
+            Expect.Once.On(factory).Method("CreateTweakableObject").With(registerables[1]).Will(Return.Value(tweakableRegisterable2));
+            Expect.Once.On(tweakableRegisterable1).Method("WriteToXmlFile").With(node.ChildNodes[1]);
+            Expect.Once.On(tweakableRegisterable2).Method("WriteToXmlFile").With(node.ChildNodes[0]);
+            // Exercise SUT
+            tweakable.WriteToXmlFile(node);
+        }
+
+        [Test]
         public void ReadUnhandledFromXml()
         {
             // Setup
@@ -161,24 +192,14 @@ namespace Dope.DDXX.DemoFramework
             tweakable.ReadFromXmlFile(node);
         }
 
-        //[Test]
-        //public void WriteToXml()
-        //{
-        //    // Setup
-        //    ITrack track1 = mockery.NewMock<ITrack>();
-        //    ITrack track2 = mockery.NewMock<ITrack>();
-        //    tracks.Add(track1);
-        //    tracks.Add(track2);
-        //    ITweakableObject tweakableTrack1 = mockery.NewMock<ITweakableObject>();
-        //    ITweakableObject tweakableTrack2 = mockery.NewMock<ITweakableObject>();
-        //    Expect.Once.On(factory).Method("CreateTweakableObject").With(track1).Will(Return.Value(tweakableTrack1));
-        //    Expect.Once.On(factory).Method("CreateTweakableObject").With(track2).Will(Return.Value(tweakableTrack2));
-        //    CreateXmlNode("<Demo><Child /></Demo>");
-        //    Expect.Once.On(tweakableTrack1).Method("WriteToXmlFile").With(node);
-        //    Expect.Once.On(tweakableTrack2).Method("WriteToXmlFile").With(node);
-        //    // Exercise SUT
-        //    tweakable.WriteToXmlFile(node);
-        //}
+        [Test]
+        public void WriteUnhandledToXml()
+        {
+            // Setup
+            CreateXmlNode("<Demo><Transition /> <Texture /><Generator /></Demo>");
+            // Exercise SUT
+            tweakable.WriteToXmlFile(node);
+        }
 
         [Test]
         [ExpectedException(typeof(DDXXException))]

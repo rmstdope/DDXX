@@ -50,6 +50,15 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
+        public void GetValue()
+        {
+            // Setup
+            target.Variable = new Color(1, 2, 3, 4);
+            // Exercise SUT and verify
+            Assert.AreEqual("1, 2, 3, 4", tweakable.GetToString());
+        }
+
+        [Test]
         public void SetFirstIndex()
         {
             // Setup
