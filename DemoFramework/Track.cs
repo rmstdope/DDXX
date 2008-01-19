@@ -25,7 +25,7 @@ namespace Dope.DDXX.DemoFramework
             return false;
         }
 
-        private static int CompareRegisterableByTime(IRegisterable x, IRegisterable y)
+        public static int CompareRegisterableByTime(IRegisterable x, IRegisterable y)
         {
             if (x.StartTime < y.StartTime)
                 return -1;
@@ -45,6 +45,14 @@ namespace Dope.DDXX.DemoFramework
         public IDemoPostEffect[] PostEffects
         {
             get { return postEffects.ToArray(); }
+        }
+        public List<IDemoEffect> EffectList
+        {
+            get { return effects; }
+        }
+        public List<IDemoPostEffect> PostEffectList
+        {
+            get { return postEffects; }
         }
 
         public Track()

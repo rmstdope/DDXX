@@ -13,5 +13,6 @@ namespace Dope.DDXX.DemoFramework
         IDemoPostEffect[] PostEffects(int track);
         void Register(int track, IDemoEffect effect);
         void Register(int track, IDemoPostEffect postEffect);
+        List<IRegisterable> GetAllRegisterables();
     }
 }

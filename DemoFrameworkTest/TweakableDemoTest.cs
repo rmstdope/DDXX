@@ -41,6 +41,9 @@ namespace Dope.DDXX.DemoFramework
                 get { return clearColor; }
                 set { clearColor = value; }
             }
+
+            public List<IRegisterable> GetAllRegisterables()
+            { throw new Exception("The method or operation is not implemented."); }
         }
 
         private TweakableDemo tweakable;
@@ -52,6 +55,7 @@ namespace Dope.DDXX.DemoFramework
         private RegistratorStub registrator;
         private List<ITrack> tracks;
         private XmlDocument document;
+        private List<IRegisterable> registerables;
 
         [SetUp]
         public void SetUp()
@@ -75,15 +79,15 @@ namespace Dope.DDXX.DemoFramework
         public void NumVisableVariable()
         {
             // Exercise SUT and verify
-            Assert.AreEqual(3, tweakable.NumVisableVariables);
+            Assert.AreEqual(13, tweakable.NumVisableVariables);
         }
 
         [Test]
         public void NumVariables()
         {
             // Setup
-            for (int i = 0; i < 5; i++)
-                tracks.Add(null);
+            CreateRegisterables(5);
+            Stub.On(target).Method("GetAllRegisterables").Will(Return.Value(registerables));
             // Exercise SUT and verify
             Assert.AreEqual(5, tweakable.NumVariables);
         }
@@ -122,14 +126,13 @@ namespace Dope.DDXX.DemoFramework
         public void ReadEffectFromXml()
         {
             // Setup
-            ITrack track = mockery.NewMock<ITrack>();
-            ITweakableObject tweakableTrack = mockery.NewMock<ITweakableObject>();
-            tracks.Add(null);
-            tracks.Add(track);
-            CreateXmlNode("<Demo><Effect name=\"Name\" class=\"Class\" track=\"1\" startTime=\"10\" endTime=\"11\"/></Demo>");
-            Expect.Once.On(builder).Method("AddEffect").With("Class", "Name", 1, 10.0f, 11.0f);
-            Expect.Once.On(factory).Method("CreateTweakableObject").With(track).Will(Return.Value(tweakableTrack));
-            Expect.Once.On(tweakableTrack).Method("ReadFromXmlFile").With(node.FirstChild);
+            CreateRegisterables(2);
+            Stub.On(target).Method("GetAllRegisterables").Will(Return.Value(registerables));
+            ITweakableObject tweakableRegisterable = mockery.NewMock<ITweakableObject>();
+            CreateXmlNode("<Demo><Effect name=\"R1\" class=\"Class\" track=\"1\" startTime=\"10\" endTime=\"11\"/></Demo>");
+            Expect.Once.On(builder).Method("AddEffect").With("Class", "R1", 1, 10.0f, 11.0f);
+            Expect.Once.On(factory).Method("CreateTweakableObject").With(registerables[1]).Will(Return.Value(tweakableRegisterable));
+            Expect.Once.On(tweakableRegisterable).Method("ReadFromXmlFile").With(node.FirstChild);
             // Exercise SUT and verify
             tweakable.ReadFromXmlFile(node);
         }
@@ -138,13 +141,13 @@ namespace Dope.DDXX.DemoFramework
         public void ReadPostEffectFromXml()
         {
             // Setup
-            ITrack track = mockery.NewMock<ITrack>();
-            ITweakableObject tweakableTrack = mockery.NewMock<ITweakableObject>();
-            tracks.Add(track);
-            CreateXmlNode("<Demo><PostEffect name=\"Name1\" class=\"Class1\" track=\"0\" startTime=\"12.2\" endTime=\"13.3\"/></Demo>");
-            Expect.Once.On(builder).Method("AddPostEffect").With("Class1", "Name1", 0, 12.2f, 13.3f);
-            Expect.Once.On(factory).Method("CreateTweakableObject").With(track).Will(Return.Value(tweakableTrack));
-            Expect.Once.On(tweakableTrack).Method("ReadFromXmlFile").With(node.FirstChild);
+            CreateRegisterables(2);
+            Stub.On(target).Method("GetAllRegisterables").Will(Return.Value(registerables));
+            ITweakableObject tweakableRegisterable = mockery.NewMock<ITweakableObject>();
+            CreateXmlNode("<Demo><PostEffect name=\"R0\" class=\"Class1\" track=\"0\" startTime=\"12.2\" endTime=\"13.3\"/></Demo>");
+            Expect.Once.On(builder).Method("AddPostEffect").With("Class1", "R0", 0, 12.2f, 13.3f);
+            Expect.Once.On(factory).Method("CreateTweakableObject").With(registerables[0]).Will(Return.Value(tweakableRegisterable));
+            Expect.Once.On(tweakableRegisterable).Method("ReadFromXmlFile").With(node.FirstChild);
             // Exercise SUT and verify
             tweakable.ReadFromXmlFile(node);
         }
@@ -218,6 +221,13 @@ namespace Dope.DDXX.DemoFramework
             document.PreserveWhitespace = true;
             document.LoadXml(xml);
             node = document.DocumentElement;
+        }
+
+        private void CreateRegisterables(int num)
+        {
+            registerables = new List<IRegisterable>();
+            for (int i = 0; i < num; i++)
+                registerables.Add(new Registerable("R" + i, 0 + i, 1 + i));
         }
 
     }

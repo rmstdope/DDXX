@@ -39,11 +39,6 @@ namespace Dope.DDXX.DemoFramework
         protected abstract void ParseSpecficXmlNode(XmlNode node);
         protected abstract void WriteSpecificXmlNode(XmlNode node);
 
-        protected virtual bool ParseShouldTraverseChildren
-        {
-            get { return true; }
-        }
-
         protected T Target
         {
             get { return target; }
@@ -123,37 +118,23 @@ namespace Dope.DDXX.DemoFramework
 
         public void ReadFromXmlFile(XmlNode node)
         {
-            if (ParseShouldTraverseChildren)
+            foreach (XmlNode child in node.ChildNodes)
             {
-                foreach (XmlNode child in node.ChildNodes)
-                {
-                    if (HasProperty(child.Name))
-                        ParseProperty(child);
-                    else
-                        ParseSpecficXmlNode(child);
-                }
-            }
-            else
-            {
-                ParseSpecficXmlNode(node);
+                if (HasProperty(child.Name))
+                    ParseProperty(child);
+                else
+                    ParseSpecficXmlNode(child);
             }
         }
 
         public void WriteToXmlFile(XmlNode node)
         {
-            if (ParseShouldTraverseChildren)
+            foreach (XmlNode child in node.ChildNodes)
             {
-                foreach (XmlNode child in node.ChildNodes)
-                {
-                    if (HasProperty(child.Name))
-                        WriteProperty(child);
-                    else
-                        WriteSpecificXmlNode(child);
-                }
-            }
-            else
-            {
-                throw new Exception("Not implemented.");
+                if (HasProperty(child.Name))
+                    WriteProperty(child);
+                else
+                    WriteSpecificXmlNode(child);
             }
         }
 

@@ -134,16 +134,6 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
-        public void CreateTweakableTrack()
-        {
-            // Exercise SUT
-            Track track = new Track();
-            ITweakableObject tweakable = handler.CreateTweakableObject(track);
-            // Verify
-            Assert.IsInstanceOfType(typeof(TweakableTrack), tweakable);
-        }
-
-        [Test]
         public void CreateTweakableRegisterable()
         {
             // Exercise SUT

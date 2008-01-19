@@ -335,6 +335,20 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
+        public List<IRegisterable> GetAllRegisterables()
+        {
+            List<IRegisterable> allEffects = new List<IRegisterable>();
+            foreach (ITrack track in tracks)
+            {
+                foreach (IRegisterable registerable in track.EffectList)
+                    allEffects.Add(registerable);
+                foreach (IRegisterable registerable in track.PostEffectList)
+                    allEffects.Add(registerable);
+            }
+            allEffects.Sort(Track.CompareRegisterableByTime);
+            return allEffects;
+        }
+
         #region IDemoEffectBuilder Members
         private object lastAddedAsset;
 

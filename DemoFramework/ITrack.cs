@@ -2,12 +2,14 @@
 using Dope.DDXX.Graphics;
 using Dope.DDXX.TextureBuilder;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace Dope.DDXX.DemoFramework
 {
     public interface ITrack
     {
         IDemoEffect[] Effects { get; }
+        List<IDemoEffect> EffectList { get; }
         float EndTime { get; }
         float StartTime { get; }
         IDemoEffect[] GetEffects(float time);
@@ -19,6 +21,7 @@ namespace Dope.DDXX.DemoFramework
             IPostProcessor postProcessor);
         bool IsActive(float p);
         IDemoPostEffect[] PostEffects { get; }
+        List<IDemoPostEffect> PostEffectList { get; }
         void Register(IDemoPostEffect postEffect);
         void Register(IDemoEffect effect);
         IRenderTarget2D Render(IGraphicsDevice device, IRenderTarget2D renderTarget, IRenderTarget2D renderTargetNoMultiSampling, IDepthStencilBuffer depthStencilBuffer, Color backgroundColor);

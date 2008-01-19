@@ -185,7 +185,6 @@
     <Compile Include="TweakableRegisterable.cs" />
     <Compile Include="TweakableSingle.cs" />
     <Compile Include="TweakableString.cs" />
-    <Compile Include="TweakableTrack.cs" />
     <Compile Include="TweakableValueBase.cs" />
     <Compile Include="TweakableVector2.cs" />
     <Compile Include="TweakableVector3.cs" />
