@@ -71,22 +71,22 @@ namespace Dope.DDXX.DemoFramework
             visable = true;
 
             typeTweakableMapping = new List<KeyValuePair<Type, Type>>();
-            foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
-            {
-                if (type.GetInterface("ITweakableValue") != null && !type.IsAbstract)
-                {
-                    Type wrappedType = type.BaseType.GetGenericArguments()[0];
-                    typeTweakableMapping.Add(new KeyValuePair<Type, Type>(wrappedType, type));
-                }
-                if (type.GetInterface("ITweakableObject") != null && !type.IsAbstract)
-                {
-                    Type wrappedType = type.BaseType.GetGenericArguments()[0];
-                    typeTweakableMapping.Add(new KeyValuePair<Type, Type>(wrappedType, type));
-                }
-            }
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(bool), typeof(TweakableBoolean)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(Color), typeof(TweakableColor)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(IDemoRegistrator), typeof(TweakableDemo)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(int), typeof(TweakableInt32)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(IRegisterable), typeof(TweakableRegisterable)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(ITexture2D), typeof(TweakableTextureValue)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(Texture2DParameters), typeof(TweakableTexture2DParameters)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(float), typeof(TweakableSingle)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(string), typeof(TweakableString)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(Vector2), typeof(TweakableVector2)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(Vector3), typeof(TweakableVector3)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(Vector4), typeof(TweakableVector4)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(ITextureFactory), typeof(TweakableTextureFactory)));
         }
 
-        public virtual void Initialize(IDemoRegistrator registrator, IUserInterface userInterface, ITweakableObject demoTweakable)
+        public virtual void Initialize(IDemoRegistrator registrator, IUserInterface userInterface, ITweakable demoTweakable)
         {
             this.firstTweaker = new DemoTweaker(settings, demoTweakable);
             this.registrator = registrator;
@@ -242,26 +242,40 @@ namespace Dope.DDXX.DemoFramework
 
         #region ITweakableFactory Members
 
-        public ITweakableValue CreateTweakableValue(PropertyInfo property, object target)
+        public ITweakable CreateTweakableValue(PropertyInfo property, object target)
         {
             foreach (KeyValuePair<Type, Type> pair in typeTweakableMapping)
             {
                 if (pair.Key == property.PropertyType)
-                    return pair.Value.GetConstructor(new Type[] { typeof(PropertyInfo), typeof(object) }).
-                        Invoke(new object[] { property, target }) as ITweakableValue;
+                {
+                    ConstructorInfo constructor = pair.Value.GetConstructor(new Type[] { typeof(PropertyInfo), typeof(object) });
+                    if (constructor != null)
+                        return constructor.Invoke(new object[] { property, target }) as ITweakable;
+                    object propertyTarget = property.GetGetMethod().Invoke(target, null);
+                    if (propertyTarget != null)
+                        return CreateTweakableObject(propertyTarget);
+                }
             }
             return null;
         }
 
-        public ITweakableObject CreateTweakableObject(object target)
+        public ITweakable CreateTweakableObject(object target)
         {
             foreach (KeyValuePair<Type, Type> pair in typeTweakableMapping)
             {
                 if (pair.Key == target.GetType() || target.GetType().GetInterface(pair.Key.Name) != null)
-                    return pair.Value.GetConstructor(new Type[] { pair.Key, typeof(ITweakableFactory) }).
-                        Invoke(new object[] { target, this }) as ITweakableObject;
+                {
+                    ConstructorInfo constructor = pair.Value.GetConstructor(new Type[] { pair.Key, typeof(ITweakableFactory) });
+                    if (constructor != null)
+                        return constructor.Invoke(new object[] { target, this }) as ITweakable;
+                }
             }
             return null;
+        }
+
+        public ITextureFactory TextureFactory
+        {
+            get { return registrator.TextureFactory; }
         }
 
         #endregion

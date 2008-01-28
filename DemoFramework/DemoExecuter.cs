@@ -98,6 +98,11 @@ namespace Dope.DDXX.DemoFramework
             set { tweakerHandler = value; }
         }
 
+        public ITextureFactory TextureFactory 
+        {
+            get { return textureFactory; } 
+        }
+
         public DemoExecuter(IDemoFactory demoFactory, ISoundDriver soundDriver, IInputDriver inputDriver, IPostProcessor postProcessor, IDemoEffectTypes effectTypes)
         {
             this.demoFactory = demoFactory;
@@ -155,7 +160,7 @@ namespace Dope.DDXX.DemoFramework
         {
             IUserInterface userInterface = new UserInterface();
             userInterface.Initialize(graphicsFactory, textureFactory);
-            ITweakableObject tweakableDemo = new TweakableDemo(this, this, tweakerHandler.Factory);
+            ITweakable tweakableDemo = new TweakableDemo(this, this, tweakerHandler.Factory);
             tweakerHandler.Initialize(this, userInterface, tweakableDemo);
         }
 

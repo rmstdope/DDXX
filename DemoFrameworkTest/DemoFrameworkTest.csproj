@@ -99,6 +99,7 @@
     <Compile Include="TweakableRegisterableTest.cs" />
     <Compile Include="TweakableSingleTest.cs" />
     <Compile Include="TweakableStringTest.cs" />
+    <Compile Include="TweakableTextureFactoryTest.cs" />
     <Compile Include="TweakableVector2Test.cs" />
     <Compile Include="TweakableVector3Test.cs" />
     <Compile Include="TweakableVector4Test.cs" />

@@ -26,18 +26,18 @@ using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public abstract class TweakableObjectBase<T> : ITweakableObject
+    public abstract class TweakableObjectBase<T> : ITweakable
     {
-        private List<ITweakableValue> propertyHandlers;
+        private List<ITweakable> propertyHandlers;
         private T target;
         private ITweakableFactory factory;
 
         public abstract int NumVisableVariables { get; }
         protected abstract int NumSpecificVariables { get; }
-        protected abstract ITweakableObject GetSpecificVariable(int index);
-        protected abstract void CreateSpecificVariableControl(TweakerStatus status, int index, float y, ITweakerSettings settings);
+        protected abstract ITweakable GetSpecificVariable(int index);
         protected abstract void ParseSpecficXmlNode(XmlNode node);
         protected abstract void WriteSpecificXmlNode(XmlDocument xmlDocument, XmlNode node);
+        public abstract void CreateControl(TweakerStatus status, int index, float y, ITweakerSettings settings);
 
         protected T Target
         {
@@ -68,12 +68,19 @@ namespace Dope.DDXX.DemoFramework
             return propertyHandlers[index - NumSpecificVariables];
         }
 
+        public bool IsObject()
+        {
+            return true;
+        }
+
+
         public void CreateVariableControl(TweakerStatus status, int index, float y, ITweakerSettings settings)
         {
-            if (index < NumSpecificVariables)
-                CreateSpecificVariableControl(status, index, y, settings);
-            else
-                propertyHandlers[index - NumSpecificVariables].CreateVariableControl(status, index, y, settings);
+            GetTweakableChild(index).CreateControl(status, index, y, settings);
+            //if (index < NumSpecificVariables)
+            //    CreateSpecificVariableControl(status, index, y, settings);
+            //else
+            //    propertyHandlers[index - NumSpecificVariables].CreateVariableControl(status, index, y, settings);
         }
 
         public void NextIndex(TweakerStatus status)
@@ -129,7 +136,7 @@ namespace Dope.DDXX.DemoFramework
 
         public void WriteToXmlFile(XmlDocument xmlDocument, XmlNode node)
         {
-            foreach (ITweakableValue tweakable in propertyHandlers)
+            foreach (ITweakable tweakable in propertyHandlers)
             {
                 bool found = false;
                 foreach (XmlNode child in node.ChildNodes)
@@ -161,12 +168,12 @@ namespace Dope.DDXX.DemoFramework
 
         private bool HasProperty(string name)
         {
-            return propertyHandlers.Exists(delegate(ITweakableValue a) { return a.Property.Name == name; });
+            return propertyHandlers.Exists(delegate(ITweakable a) { return a.Property.Name == name; });
         }
 
-        private ITweakableValue GetProperty(string name)
+        private ITweakable GetProperty(string name)
         {
-            return propertyHandlers.Find(delegate(ITweakableValue a) { return a.Property.Name == name; });
+            return propertyHandlers.Find(delegate(ITweakable a) { return a.Property.Name == name; });
         }
 
         private void ParseProperty(XmlNode node)
@@ -181,28 +188,15 @@ namespace Dope.DDXX.DemoFramework
 
         private void GetProperties()
         {
-            List<KeyValuePair<Type, Type>> typeTweakableMapping = new List<KeyValuePair<Type, Type>>();
-            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(int), typeof(TweakableInt32)));
-            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(float), typeof(TweakableSingle)));
-            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(Vector2), typeof(TweakableVector2)));
-            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(Vector3), typeof(TweakableVector3)));
-            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(Vector4), typeof(TweakableVector4)));
-            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(string), typeof(TweakableString)));
-            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(Color), typeof(TweakableColor)));
-            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(bool), typeof(TweakableBoolean)));
             PropertyInfo[] array = target.GetType().GetProperties();
-            propertyHandlers = new List<ITweakableValue>();
+            propertyHandlers = new List<ITweakable>();
             foreach (PropertyInfo property in array)
             {
                 if (property.CanRead && property.CanWrite)
                 {
-                    foreach (KeyValuePair<Type, Type> pair in typeTweakableMapping)
-                    {
-                        if (pair.Key == property.PropertyType)
-                            propertyHandlers.Add(pair.Value.
-                                GetConstructor(new Type[] { typeof(PropertyInfo), typeof(object) }).
-                                Invoke(new object[] { property, target }) as ITweakableValue);
-                    }
+                    ITweakable tweakable = factory.CreateTweakableValue(property, Target);
+                    if (tweakable != null)
+                        propertyHandlers.Add(tweakable);
                 }
             }            
         }
@@ -241,9 +235,44 @@ namespace Dope.DDXX.DemoFramework
             return float.Parse(GetStringAttribute(node, name), System.Globalization.NumberFormatInfo.InvariantInfo);
         }
 
-        protected List<ITweakableValue> PropertyHandlers
+        protected List<ITweakable> PropertyHandlers
         {
             get { return propertyHandlers; }
+        }
+
+        public int Dimension
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public void IncreaseValue(int index)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void DecreaseValue(int index)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetFromString(string value)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetFromString(int index, string value)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public PropertyInfo Property
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public string GetToString()
+        {
+            throw new Exception("The method or operation is not implemented.");
         }
 
     }

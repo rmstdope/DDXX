@@ -111,12 +111,14 @@ namespace Dope.DDXX.ModelBuilder
         //    IModel model = new Model(mesh, new ModelMaterial[] { material });
         //    return model;
         //}
-
         public IModel CreateModel(IModifier generator, string material)
         {
-            IModel model;
+            return CreateModel(generator, GetMaterial(material));
+        }
 
-            IMaterialHandler modelMaterial = GetMaterial(material);
+        public IModel CreateModel(IModifier generator, IMaterialHandler modelMaterial)
+        {
+            IModel model;
 
             IPrimitive primitive = generator.Generate();
             primitive.Calculate();

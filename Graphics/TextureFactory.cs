@@ -10,39 +10,10 @@ namespace Dope.DDXX.Graphics
     {
         private ITexture2D whiteTexture;
 
-        private class BaseEntry
-        {
-            public string file;
-            public BaseEntry(string file)
-            {
-                this.file = file;
-            }
-        }
-
-        private class FileEntry : BaseEntry
-        {
-            public ITexture2D texture;
-            public FileEntry(string file, ITexture2D texture)
-                : base(file)
-            {
-                this.texture = texture;
-            }
-        }
-
-        private class CubeFileEntry : BaseEntry
-        {
-            public ITextureCube texture;
-            public CubeFileEntry(string file, ITextureCube texture)
-                : base(file)
-            {
-                this.texture = texture;
-            }
-        }
-
         private IGraphicsFactory factory;
         private IGraphicsDevice device;
-        private List<FileEntry> files = new List<FileEntry>();
-        private List<CubeFileEntry> cubeFiles = new List<CubeFileEntry>();
+        private List<Texture2DParameters> files = new List<Texture2DParameters>();
+        private List<TextureCubeParameters> cubeFiles = new List<TextureCubeParameters>();
 
         public TextureFactory(IGraphicsDevice device, IGraphicsFactory factory)
         {
@@ -52,42 +23,25 @@ namespace Dope.DDXX.Graphics
 
         public ITexture2D CreateFromFile(string file)
         {
-            FileEntry needle = new FileEntry(file, null);
-            FileEntry result = files.Find(delegate(FileEntry item)
-            {
-                if (needle.file == item.file)
-                    return true;
-                else
-                    return false;
-            });
+            Texture2DParameters result = files.Find(delegate(Texture2DParameters item) { return file == item.Name; });
             if (result != null)
             {
-                return result.texture;
+                return result.Texture;
             }
             ITexture2D texture = factory.Texture2DFromFile(file);
-            needle.texture = texture;
-            files.Add(needle);
+            files.Add(new Texture2DParameters(file, texture));
             return texture;
-
         }
 
         public ITextureCube CreateCubeFromFile(string file)
         {
-            CubeFileEntry needle = new CubeFileEntry(file, null);
-            CubeFileEntry result = cubeFiles.Find(delegate(CubeFileEntry item)
-            {
-                if (needle.file == item.file)
-                    return true;
-                else
-                    return false;
-            });
+            TextureCubeParameters result = cubeFiles.Find(delegate(TextureCubeParameters item) { return file == item.Name; });
             if (result != null)
             {
-                return result.texture;
+                return result.Texture;
             }
             ITextureCube texture = factory.TextureCubeFromFile(file);
-            needle.texture = texture;
-            cubeFiles.Add(needle);
+            cubeFiles.Add(new TextureCubeParameters(file, texture));
             return texture;
         }
 
@@ -190,7 +144,7 @@ namespace Dope.DDXX.Graphics
 
         public void RegisterTexture(string name, ITexture2D texture)
         {
-            files.Add(new FileEntry(name, texture));
+            files.Add(new Texture2DParameters(name, texture));
         }
 
         public ITexture2D WhiteTexture
@@ -200,6 +154,14 @@ namespace Dope.DDXX.Graphics
                 if (whiteTexture == null)
                     whiteTexture = CreateFromFunction(1, 1, 1, TextureUsage.None, SurfaceFormat.Color, delegate(Vector2 x, Vector2 y) { return Vector4.One; });
                 return whiteTexture;
+            }
+        }
+
+        public List<Texture2DParameters> Texture2DParameters
+        {
+            get
+            {
+                return files;
             }
         }
 

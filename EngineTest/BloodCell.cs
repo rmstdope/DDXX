@@ -21,7 +21,14 @@ namespace EngineTest
         private float pulseFrequency;
         private float pulseAmplitude;
         private PointLightNode light;
-        
+        private ITexture2D texture;
+
+        public ITexture2D ArteryTexture
+        {
+            get { return texture; }
+            set { texture = value; }
+        }
+
         public IScene Scene
         {
             get { return scene; }
@@ -68,22 +75,30 @@ namespace EngineTest
 
         private void InitializeArtery()
         {
+            MaterialHandler material = new MaterialHandler(EffectFactory.CreateFromFile("Content\\effects\\Artery"), new EffectConverter());
             TextureDirector.CreatePerlinNoise(64, 6, 0.5f);
-            ModelBuilder.SetDiffuseTexture("Default", TextureDirector.Generate(256, 256, 0, SurfaceFormat.Color));
+            TextureFactory.RegisterTexture("Noise256", TextureDirector.Generate(256, 256, 0, SurfaceFormat.Color));
+            material.DiffuseTexture = TextureFactory.CreateFromFile("Noise256");// Director.Generate(256, 256, 0, SurfaceFormat.Color);
+            //ModelBuilder.SetDiffuseTexture("Default", TextureDirector.Generate(256, 256, 0, SurfaceFormat.Color));
             TextureDirector.CreatePerlinNoise(64, 6, 0.5f);
             TextureDirector.Madd(2.0f, 0);
             TextureDirector.NormalMap();
             TextureDirector.Madd(1, 1);
             TextureDirector.Madd(0.5f, 0);
-            ModelBuilder.SetNormalTexture("Default", TextureDirector.Generate(256, 256, 0, SurfaceFormat.Color));
-            ModelBuilder.SetAmbientColor("Default", Color.Black);
-            ModelBuilder.SetDiffuseColor("Default", Color.Red);
-            ModelBuilder.SetSpecularColor("Default", new Color(255, 160, 160));
-            ModelBuilder.SetShininess("Default", 0.0f);
-            ModelBuilder.SetSpecularPower("Default", 32);
-            ModelBuilder.SetEffect("Default", "Content\\effects\\Artery");
+            //ModelBuilder.SetNormalTexture("Default", TextureDirector.Generate(256, 256, 0, SurfaceFormat.Color));
+            //ModelBuilder.SetAmbientColor("Default", Color.Black);
+            //ModelBuilder.SetDiffuseColor("Default", Color.Red);
+            //ModelBuilder.SetSpecularColor("Default", new Color(255, 160, 160));
+            //ModelBuilder.SetShininess("Default", 0.0f);
+            //ModelBuilder.SetSpecularPower("Default", 32);
+            //ModelBuilder.SetEffect("Default", "Content\\effects\\Artery");
             ModelDirector.CreateTunnel(2.0f, 32, 30, 60, 2, 10);
-            IModel model = ModelDirector.Generate("Default");
+            material.NormalTexture = TextureDirector.Generate(256, 256, 0, SurfaceFormat.Color);
+            material.AmbientColor = Color.Black;
+            material.DiffuseColor = Color.Red;
+            material.Shininess = 0.0f;
+            IModel model = ModelDirector.Generate(material);
+            //IModel model = ModelDirector.Generate("Default");
             artery = new ModelNode("Artery", model, GraphicsDevice);
             scene.AddNode(artery);
             artery.WorldState.Tilt(MathHelper.PiOver2);

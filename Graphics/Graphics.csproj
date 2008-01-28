@@ -308,6 +308,7 @@
     <Compile Include="TextureFactory.cs">
       <Name>TextureFactory</Name>
     </Compile>
+    <Compile Include="TextureParameters.cs" />
     <Compile Include="VertexBufferAdapter.cs">
       <Name>VertexBufferAdapter</Name>
     </Compile>

@@ -144,8 +144,6 @@
     </Compile>
     <Compile Include="ITweakable.cs" />
     <Compile Include="ITweakableFactory.cs" />
-    <Compile Include="ITweakableObject.cs" />
-    <Compile Include="ITweakableValue.cs" />
     <Compile Include="ITweakerSettings.cs">
       <Name>ITweakerSettings</Name>
     </Compile>
@@ -182,9 +180,13 @@
     <Compile Include="TweakableInt32.cs" />
     <Compile Include="TweakableObjectBase.cs" />
     <Compile Include="TweakableDemo.cs" />
+    <Compile Include="TweakableProperty.cs" />
     <Compile Include="TweakableRegisterable.cs" />
     <Compile Include="TweakableSingle.cs" />
     <Compile Include="TweakableString.cs" />
+    <Compile Include="TweakableTexture2DParameters.cs" />
+    <Compile Include="TweakableTextureValue.cs" />
+    <Compile Include="TweakableTextureFactory.cs" />
     <Compile Include="TweakableValueBase.cs" />
     <Compile Include="TweakableVector2.cs" />
     <Compile Include="TweakableVector3.cs" />

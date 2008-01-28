@@ -13,7 +13,7 @@ namespace Dope.DDXX.DemoFramework
 {
     public class DemoTweaker : IDemoTweaker
     {
-        private ITweakableObject tweakable;
+        private ITweakable tweakable;
         private TweakerStatus status;
         private ITweakerSettings settings;
         private IDemoRegistrator registrator;
@@ -21,7 +21,7 @@ namespace Dope.DDXX.DemoFramework
         private BaseControl mainWindow;
         private BaseControl timelineWindow;
 
-        public DemoTweaker(ITweakerSettings settings, ITweakableObject tweakable)
+        public DemoTweaker(ITweakerSettings settings, ITweakable tweakable)
         {
             this.tweakable = tweakable;
             this.settings = settings;
@@ -172,9 +172,9 @@ namespace Dope.DDXX.DemoFramework
 
             if (inputDriver.KeyPressedNoRepeat(Keys.Enter))
             {
-                if (tweakable.GetTweakableChild(status.Selection) is ITweakableObject)
+                if (tweakable.GetTweakableChild(status.Selection).IsObject())
                 {
-                    tweaker = new DemoTweaker(settings, tweakable.GetTweakableChild(status.Selection) as ITweakableObject);
+                    tweaker = new DemoTweaker(settings, tweakable.GetTweakableChild(status.Selection));
                     tweaker.Initialize(registrator, userInterface);
                 }
             }

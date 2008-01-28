@@ -25,6 +25,7 @@ namespace Dope.DDXX.DemoFramework
     {
         private DemoExecuter executer;
         private IDemoTweakerHandler tweakerHandler;
+        private ITweakableFactory tweakableFactory;
         private ISoundDriver soundDriver;
         private IInputDriver inputDriver;
         private IEffectChangeListener effectChangeListener;
@@ -48,6 +49,7 @@ namespace Dope.DDXX.DemoFramework
             effectTypes = mockery.NewMock<IDemoEffectTypes>();
             executer = new DemoExecuter(this, soundDriver, inputDriver, postProcessor, effectTypes);
             tweakerHandler = mockery.NewMock<IDemoTweakerHandler>();
+            tweakableFactory = mockery.NewMock<ITweakableFactory>();
             executer.TweakerHandler = tweakerHandler;
             renderTarget2 = mockery.NewMock<IRenderTarget2D>();
             renderTarget3 = mockery.NewMock<IRenderTarget2D>();
@@ -814,8 +816,10 @@ namespace Dope.DDXX.DemoFramework
         {
             Expect.Once.On(tweakerHandler).
                 Method("Initialize");
-            Expect.Once.On(tweakerHandler).
-                GetProperty("Factory").Will(Return.Value(null));
+            Stub.On(tweakerHandler).
+                GetProperty("Factory").Will(Return.Value(tweakableFactory));
+            Stub.On(tweakableFactory).
+                Method("CreateTweakableValue").Will(Return.Value(null));
         }
 
 

@@ -6,6 +6,7 @@ using NMock2;
 using System.Xml;
 using Dope.DDXX.Utility;
 using Microsoft.Xna.Framework.Graphics;
+using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -44,9 +45,19 @@ namespace Dope.DDXX.DemoFramework
 
             public List<IRegisterable> GetAllRegisterables()
             { throw new Exception("The method or operation is not implemented."); }
+
+            #region IDemoRegistrator Members
+
+
+            public ITextureFactory TextureFactory
+            {
+                get { throw new Exception("The method or operation is not implemented."); }
+            }
+
+            #endregion
         }
 
-        private TweakableDemo tweakable;
+        private ITweakable tweakable;
         private Mockery mockery;
         private IDemoRegistrator target;
         private IDemoEffectBuilder builder;
@@ -87,9 +98,37 @@ namespace Dope.DDXX.DemoFramework
         {
             // Setup
             CreateRegisterables(5);
-            Stub.On(target).Method("GetAllRegisterables").Will(Return.Value(registerables));
             // Exercise SUT and verify
-            Assert.AreEqual(5, tweakable.NumVariables);
+            Assert.AreEqual(5 + 1, tweakable.NumVariables);
+        }
+
+        [Test]
+        public void GetChildRegisterable()
+        {
+            // Setup
+            ITweakable childTweakable;
+            childTweakable = mockery.NewMock<ITweakable>();
+            CreateRegisterables(1);
+            Expect.Once.On(factory).Method("CreateTweakableObject").
+                With(registerables[0]).Will(Return.Value(childTweakable));
+            // Exercise SUT and verify
+            Assert.AreSame(childTweakable , tweakable.GetTweakableChild(0));
+        }
+
+        [Test]
+        public void GetChildTextureFactory()
+        {
+            // Setup
+            ITweakable childTweakable;
+            ITextureFactory textureFactory;
+            childTweakable = mockery.NewMock<ITweakable>();
+            textureFactory = mockery.NewMock<ITextureFactory>();
+            CreateRegisterables(1);
+            Expect.Once.On(target).GetProperty("TextureFactory").Will(Return.Value(textureFactory));
+            Expect.Once.On(factory).Method("CreateTweakableObject").
+                With(textureFactory).Will(Return.Value(childTweakable));
+            // Exercise SUT and verify
+            Assert.AreSame(childTweakable, tweakable.GetTweakableChild(1));
         }
 
         [Test]
@@ -127,8 +166,7 @@ namespace Dope.DDXX.DemoFramework
         {
             // Setup
             CreateRegisterables(2);
-            Stub.On(target).Method("GetAllRegisterables").Will(Return.Value(registerables));
-            ITweakableObject tweakableRegisterable = mockery.NewMock<ITweakableObject>();
+            ITweakable tweakableRegisterable = mockery.NewMock<ITweakable>();
             CreateXmlNode("<Demo><Effect name=\"R1\" class=\"Class\" track=\"1\" startTime=\"10\" endTime=\"11\"/></Demo>");
             Expect.Once.On(builder).Method("AddEffect").With("Class", "R1", 1, 10.0f, 11.0f);
             Expect.Once.On(factory).Method("CreateTweakableObject").With(registerables[1]).Will(Return.Value(tweakableRegisterable));
@@ -142,9 +180,8 @@ namespace Dope.DDXX.DemoFramework
         {
             // Setup
             CreateRegisterables(1);
-            Stub.On(target).Method("GetAllRegisterables").Will(Return.Value(registerables));
             CreateXmlNode("<Demo><Effect name=\"R0\" /></Demo>");
-            ITweakableObject tweakableRegisterable1 = mockery.NewMock<ITweakableObject>();
+            ITweakable tweakableRegisterable1 = mockery.NewMock<ITweakable>();
             Expect.Once.On(factory).Method("CreateTweakableObject").With(registerables[0]).Will(Return.Value(tweakableRegisterable1));
             Expect.Once.On(tweakableRegisterable1).Method("WriteToXmlFile").With(document, node.ChildNodes[0]);
             // Exercise SUT
@@ -156,8 +193,7 @@ namespace Dope.DDXX.DemoFramework
         {
             // Setup
             CreateRegisterables(2);
-            Stub.On(target).Method("GetAllRegisterables").Will(Return.Value(registerables));
-            ITweakableObject tweakableRegisterable = mockery.NewMock<ITweakableObject>();
+            ITweakable tweakableRegisterable = mockery.NewMock<ITweakable>();
             CreateXmlNode("<Demo><PostEffect name=\"R0\" class=\"Class1\" track=\"0\" startTime=\"12.2\" endTime=\"13.3\"/></Demo>");
             Expect.Once.On(builder).Method("AddPostEffect").With("Class1", "R0", 0, 12.2f, 13.3f);
             Expect.Once.On(factory).Method("CreateTweakableObject").With(registerables[0]).Will(Return.Value(tweakableRegisterable));
@@ -171,10 +207,9 @@ namespace Dope.DDXX.DemoFramework
         {
             // Setup
             CreateRegisterables(2);
-            Stub.On(target).Method("GetAllRegisterables").Will(Return.Value(registerables));
             CreateXmlNode("<Demo><Effect name=\"R1\" /><PostEffect name=\"R0\" /></Demo>");
-            ITweakableObject tweakableRegisterable1 = mockery.NewMock<ITweakableObject>();
-            ITweakableObject tweakableRegisterable2 = mockery.NewMock<ITweakableObject>();
+            ITweakable tweakableRegisterable1 = mockery.NewMock<ITweakable>();
+            ITweakable tweakableRegisterable2 = mockery.NewMock<ITweakable>();
             Expect.Once.On(factory).Method("CreateTweakableObject").With(registerables[0]).Will(Return.Value(tweakableRegisterable1));
             Expect.Once.On(factory).Method("CreateTweakableObject").With(registerables[1]).Will(Return.Value(tweakableRegisterable2));
             Expect.Once.On(tweakableRegisterable1).Method("WriteToXmlFile").With(document, node.ChildNodes[1]);
@@ -216,6 +251,7 @@ namespace Dope.DDXX.DemoFramework
         {
             // Setup
             registrator = new RegistratorStub();
+            factory = new DemoTweakerHandler(null, null);
             tweakable = new TweakableDemo(registrator, builder, factory);
             CreateXmlNode("<Demo><ClearColor>1,2,3,4</ClearColor></Demo>");
             // Exercise SUT
@@ -249,6 +285,7 @@ namespace Dope.DDXX.DemoFramework
             registerables = new List<IRegisterable>();
             for (int i = 0; i < num; i++)
                 registerables.Add(new Registerable("R" + i, 0 + i, 1 + i));
+            Stub.On(target).Method("GetAllRegisterables").Will(Return.Value(registerables));
         }
 
     }

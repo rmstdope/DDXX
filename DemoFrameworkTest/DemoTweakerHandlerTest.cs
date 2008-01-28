@@ -6,6 +6,7 @@ using System.Reflection;
 using NMock2;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -23,18 +24,54 @@ namespace Dope.DDXX.DemoFramework
             public Vector3 V3 { set { } }
             public Vector4 V4 { set { } }
         }
+        private class TextureFactoryStub : ITextureFactory
+        {
+            public ITexture2D CreateFromFile(string name)
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            public ITextureCube CreateCubeFromFile(string name)
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            public IRenderTarget2D CreateFullsizeRenderTarget(SurfaceFormat format, MultiSampleType multiSampleType, int multiSampleQuality)
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            public IRenderTarget2D CreateFullsizeRenderTarget()
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            public IDepthStencilBuffer CreateFullsizeDepthStencil(DepthFormat format, MultiSampleType multiSampleType)
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            public ITexture2D CreateFromFunction(int width, int height, int numLevels, TextureUsage usage, SurfaceFormat format, Fill2DTextureCallback callbackFunction)
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            public void RegisterTexture(string name, ITexture2D texture)
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+            public ITexture2D WhiteTexture
+            {
+                get { throw new Exception("The method or operation is not implemented."); }
+            }
+            public List<Texture2DParameters> Texture2DParameters
+            {
+                get { throw new Exception("The method or operation is not implemented."); }
+            }
+        }
 
         private DemoTweakerHandler handler;
         private TestHelper helper;
         private Mockery mockery;
-        //private ITweakableObject demoTweakable;
 
         [SetUp]
         public void SetUp()
         {
             mockery = new Mockery();
-            //demoTweakable = mockery.NewMock<ITweakableObject>();
-            //Stub.On(demoTweakable).GetProperty("NumVisableVariables").Will(Return.Value(1));
             handler = new DemoTweakerHandler(null, null);
             helper = new TestHelper();
         }
@@ -50,7 +87,7 @@ namespace Dope.DDXX.DemoFramework
         {
             // Exercise SUT
             PropertyInfo property = helper.GetType().GetProperty("B");
-            ITweakableValue tweakable = handler.CreateTweakableValue(property, helper);
+            ITweakable tweakable = handler.CreateTweakableValue(property, helper);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableBoolean), tweakable);
             Assert.AreEqual(property, (tweakable as TweakableBoolean).Property);
@@ -61,7 +98,7 @@ namespace Dope.DDXX.DemoFramework
         {
             // Exercise SUT
             PropertyInfo property = helper.GetType().GetProperty("C");
-            ITweakableValue tweakable = handler.CreateTweakableValue(property, helper);
+            ITweakable tweakable = handler.CreateTweakableValue(property, helper);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableColor), tweakable);
             Assert.AreEqual(property, (tweakable as TweakableColor).Property);
@@ -72,7 +109,7 @@ namespace Dope.DDXX.DemoFramework
         {
             // Exercise SUT
             PropertyInfo property = helper.GetType().GetProperty("I");
-            ITweakableValue tweakable = handler.CreateTweakableValue(property, helper);
+            ITweakable tweakable = handler.CreateTweakableValue(property, helper);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableInt32), tweakable);
             Assert.AreEqual(property, (tweakable as TweakableInt32).Property);
@@ -83,7 +120,7 @@ namespace Dope.DDXX.DemoFramework
         {
             // Exercise SUT
             PropertyInfo property = helper.GetType().GetProperty("F");
-            ITweakableValue tweakable = handler.CreateTweakableValue(property, helper);
+            ITweakable tweakable = handler.CreateTweakableValue(property, helper);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableSingle), tweakable);
             Assert.AreEqual(property, (tweakable as TweakableSingle).Property);
@@ -94,7 +131,7 @@ namespace Dope.DDXX.DemoFramework
         {
             // Exercise SUT
             PropertyInfo property = helper.GetType().GetProperty("S");
-            ITweakableValue tweakable = handler.CreateTweakableValue(property, helper);
+            ITweakable tweakable = handler.CreateTweakableValue(property, helper);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableString), tweakable);
             Assert.AreEqual(property, (tweakable as TweakableString).Property);
@@ -105,7 +142,7 @@ namespace Dope.DDXX.DemoFramework
         {
             // Exercise SUT
             PropertyInfo property = helper.GetType().GetProperty("V2");
-            ITweakableValue tweakable = handler.CreateTweakableValue(property, helper);
+            ITweakable tweakable = handler.CreateTweakableValue(property, helper);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableVector2), tweakable);
             Assert.AreEqual(property, (tweakable as TweakableVector2).Property);
@@ -116,7 +153,7 @@ namespace Dope.DDXX.DemoFramework
         {
             // Exercise SUT
             PropertyInfo property = helper.GetType().GetProperty("V3");
-            ITweakableValue tweakable = handler.CreateTweakableValue(property, helper);
+            ITweakable tweakable = handler.CreateTweakableValue(property, helper);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableVector3), tweakable);
             Assert.AreEqual(property, (tweakable as TweakableVector3).Property);
@@ -127,7 +164,7 @@ namespace Dope.DDXX.DemoFramework
         {
             // Exercise SUT
             PropertyInfo property = helper.GetType().GetProperty("V4");
-            ITweakableValue tweakable = handler.CreateTweakableValue(property, helper);
+            ITweakable tweakable = handler.CreateTweakableValue(property, helper);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableVector4), tweakable);
             Assert.AreEqual(property, (tweakable as TweakableVector4).Property);
@@ -138,9 +175,20 @@ namespace Dope.DDXX.DemoFramework
         {
             // Exercise SUT
             Registerable registerable = new Registerable("", 0, 0);
-            ITweakableObject tweakable = handler.CreateTweakableObject(registerable);
+            ITweakable tweakable = handler.CreateTweakableObject(registerable);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableRegisterable), tweakable);
         }
+
+        [Test]
+        public void CreateTweakableTextureFactory()
+        {
+            // Exercise SUT
+            ITextureFactory textureFactory = new TextureFactoryStub();
+            ITweakable tweakable = handler.CreateTweakableObject(textureFactory);
+            // Verify
+            Assert.IsInstanceOfType(typeof(TweakableTextureFactory), tweakable);
+        }
+
     }
 }

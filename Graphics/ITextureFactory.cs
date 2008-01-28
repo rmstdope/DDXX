@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace Dope.DDXX.Graphics
 {
@@ -16,5 +17,6 @@ namespace Dope.DDXX.Graphics
         ITexture2D CreateFromFunction(int width, int height, int numLevels, TextureUsage usage, SurfaceFormat format, Fill2DTextureCallback callbackFunction);
         void RegisterTexture(string name, ITexture2D texture);
         ITexture2D WhiteTexture { get; }
+        List<Texture2DParameters> Texture2DParameters { get; }
     }
 }

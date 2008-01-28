@@ -45,7 +45,7 @@ namespace Dope.DDXX.DemoFramework
         {
             mockery = new Mockery();
             target = mockery.NewMock<IRegisterable>();
-            factory = mockery.NewMock<ITweakableFactory>();
+            factory = new DemoTweakerHandler(null, null);// mockery.NewMock<ITweakableFactory>();
             tweakable = new TweakableRegisterable(target, factory);
         }
 

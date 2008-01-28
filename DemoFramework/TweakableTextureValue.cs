@@ -2,61 +2,54 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Dope.DDXX.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public abstract class TweakableValueBase<T> : TweakableProperty<T>
+    public class TweakableTextureValue : TweakableProperty<ITexture2D>
     {
-        protected abstract void ChangeValue(int index, float delta);
-        protected abstract string GetToString(int index);
-
-        protected TweakableValueBase(PropertyInfo property, object target)
+        public TweakableTextureValue(PropertyInfo property, object target)
             : base(property, target)
         {
         }
 
+        protected override void CreateValueControls(TweakerStatus status, int index, float x, float y, float w, float h)
+        {
+            new TextControl("<ITexture2D>",
+                new Vector4(x, y, w, h), TextFormatting.Center | TextFormatting.VerticalCenter,
+                GetAlpha(status, index), GetTextColor(status, index, 0), status.RootControl);
+        }
+
+        public override int Dimension
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
         public override void IncreaseValue(int index)
         {
-            ChangeValue(index, TweakStep);
+            throw new Exception("The method or operation is not implemented.");
         }
 
         public override void DecreaseValue(int index)
         {
-            ChangeValue(index, -TweakStep);
+            throw new Exception("The method or operation is not implemented.");
         }
 
         public override void SetFromString(string value)
         {
-            string[] values = value.Split(',');
-            for (int i = 0; i < values.Length; i++)
-                SetFromString(i, values[i]);
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public override void SetFromString(int index, string value)
+        {
+            throw new Exception("The method or operation is not implemented.");
         }
 
         public override string GetToString()
         {
-            string value = "";
-            for (int i = 0; i < Dimension; i++)
-            {
-                if (i != 0)
-                    value += ", ";
-                value += GetToString(i);
-            }
-            return value;
-        }
-
-        private float TweakStep
-        {
-            get 
-            { 
-                foreach (TweakStepAttribute attribute in Property.GetCustomAttributes(false))
-                {
-                    if (attribute != null)
-                        return attribute.Step;
-                }
-                return 1.0f;
-            }
+            throw new Exception("The method or operation is not implemented.");
         }
 
         public override int NumVisableVariables
@@ -76,7 +69,7 @@ namespace Dope.DDXX.DemoFramework
 
         public override bool IsObject()
         {
-            return false;
+            return true;
         }
 
         public override void CreateBaseControls(TweakerStatus status, ITweakerSettings settings)
@@ -113,6 +106,5 @@ namespace Dope.DDXX.DemoFramework
         {
             throw new Exception("The method or operation is not implemented.");
         }
-
     }
 }

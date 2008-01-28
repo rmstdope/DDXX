@@ -201,5 +201,10 @@ namespace Dope.DDXX.ModelBuilder
             return builder.CreateModel(primitive, materialName);
         }
 
+        public IModel Generate(IMaterialHandler material)
+        {
+            return builder.CreateModel(primitive, material);
+        }
+
     }
 }

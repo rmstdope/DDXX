@@ -11,7 +11,7 @@ using Dope.DDXX.Utility;
 namespace Dope.DDXX.DemoFramework
 {
     [TestFixture]
-    public class DemoTweakerTest : ITweakableObject
+    public class DemoTweakerTest : ITweakable
     {
         private Mockery mockery;
         private TweakerSettings settings;
@@ -26,7 +26,7 @@ namespace Dope.DDXX.DemoFramework
         private string setValueExpectedString;
         private int numVisableVariables;
         private int numVariables;
-        private ITweakableObject getVariableReturn;
+        private ITweakable getVariableReturn;
         private bool readFromXmlExpected;
         private XmlNode node;
 
@@ -45,7 +45,6 @@ namespace Dope.DDXX.DemoFramework
             increaseValueExpected = false;
             decreaseValueExpected = false;
             setValueExpectedString = null;
-            getVariableReturn = null;
             readFromXmlExpected = false;
         }
 
@@ -181,6 +180,7 @@ namespace Dope.DDXX.DemoFramework
             // Setup
             setValueExpectedString = "..--01234567890123456789";
             demoTweaker = new DemoTweaker(settings, this);
+            getVariableReturn = new TweakableBoolean(null, null);
             // Exercise SUT
             SimulateKeypressDoubleEnter(Keys.Decimal);
             SimulateKeypressDoubleEnter(Keys.OemPeriod);
@@ -210,10 +210,11 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
-        public void ChangeTweakerButNoNested()
+        public void ChangeTweakerButIsValue()
         {
             // Setup
             demoTweaker = new DemoTweaker(settings, this);
+            getVariableReturn = new TweakableBoolean(null, null);
             // Exercise SUT
             IDemoTweaker newTeaker = SimulateKeypress(Keys.Enter);
             // Verify
@@ -221,14 +222,17 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
-        public void ChangeTweakerWithNesting()
+        public void ChangeTweakerIsObject()
         {
             // Setup
-            getVariableReturn = mockery.NewMock<ITweakableObject>();
+            ITweakableFactory factory = mockery.NewMock<ITweakableFactory>();
+            Stub.On(factory).Method("CreateTweakableValue").Will(Return.Value(null));
+            getVariableReturn = mockery.NewMock<ITweakable>();
             Stub.On(getVariableReturn).GetProperty("NumVisableVariables").Will(Return.Value(1));
             Expect.Exactly(2).On(registrator).GetProperty("StartTime").Will(Return.Value(2.4f));
             demoTweaker = new DemoTweaker(settings, this);
             demoTweaker.Initialize(registrator, userInterface);
+            getVariableReturn = new TweakableRegisterable(new Registerable("", 0, 0), factory);
             // Exercise SUT
             DemoTweaker newTeaker = SimulateKeypress(Keys.Enter) as DemoTweaker;
             // Verify
@@ -311,7 +315,7 @@ namespace Dope.DDXX.DemoFramework
             return demoTweaker.HandleInput(inputDriver);
         }
 
-        #region ITweakableObject Members
+        #region ITweakable Members
 
         public int NumVisableVariables
         {
@@ -373,12 +377,57 @@ namespace Dope.DDXX.DemoFramework
             this.node = node;
         }
 
+        public void WriteToXmlFile(XmlDocument xmlDocument, XmlNode node)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public int Dimension
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public void IncreaseValue(int index)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void DecreaseValue(int index)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetFromString(string value)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public void SetFromString(int index, string value)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public System.Reflection.PropertyInfo Property
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public string GetToString()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public bool IsObject()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
         #endregion
 
-        #region ITweakableObject Members
+        #region ITweakable Members
 
 
-        public void WriteToXmlFile(XmlDocument xmlDocument, XmlNode node)
+        public void CreateControl(TweakerStatus status, int index, float y, ITweakerSettings settings)
         {
             throw new Exception("The method or operation is not implemented.");
         }
