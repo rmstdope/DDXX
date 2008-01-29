@@ -144,6 +144,7 @@
     </Compile>
     <Compile Include="ITweakable.cs" />
     <Compile Include="ITweakableFactory.cs" />
+    <Compile Include="ITweakableProperty.cs" />
     <Compile Include="ITweakerSettings.cs">
       <Name>ITweakerSettings</Name>
     </Compile>

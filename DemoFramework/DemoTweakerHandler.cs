@@ -242,7 +242,7 @@ namespace Dope.DDXX.DemoFramework
 
         #region ITweakableFactory Members
 
-        public ITweakable CreateTweakableValue(PropertyInfo property, object target)
+        public ITweakableProperty CreateTweakableValue(PropertyInfo property, object target)
         {
             foreach (KeyValuePair<Type, Type> pair in typeTweakableMapping)
             {
@@ -250,10 +250,10 @@ namespace Dope.DDXX.DemoFramework
                 {
                     ConstructorInfo constructor = pair.Value.GetConstructor(new Type[] { typeof(PropertyInfo), typeof(object) });
                     if (constructor != null)
-                        return constructor.Invoke(new object[] { property, target }) as ITweakable;
-                    object propertyTarget = property.GetGetMethod().Invoke(target, null);
-                    if (propertyTarget != null)
-                        return CreateTweakableObject(propertyTarget);
+                        return constructor.Invoke(new object[] { property, target }) as ITweakableProperty;
+                    //object propertyTarget = property.GetGetMethod().Invoke(target, null);
+                    //if (propertyTarget != null)
+                    //    return CreateTweakableObject(propertyTarget);
                 }
             }
             return null;

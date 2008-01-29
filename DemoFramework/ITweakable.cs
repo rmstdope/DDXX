@@ -8,19 +8,11 @@ namespace Dope.DDXX.DemoFramework
 {
     public interface ITweakable
     {
-        void CreateVariableControl(TweakerStatus status, int index, float y, ITweakerSettings settings);
+        void CreateChildControl(TweakerStatus status, int index, float y, ITweakerSettings settings);
         void CreateControl(TweakerStatus status, int index, float y, ITweakerSettings settings);
-        int Dimension { get; }
-        void IncreaseValue(int index);
-        void DecreaseValue(int index);
-        void SetFromString(string value);
-        void SetFromString(int index, string value);
-        PropertyInfo Property { get; }
-        string GetToString();
         int NumVisableVariables { get; }
         int NumVariables { get; }
-        ITweakable GetTweakableChild(int index);
-        bool IsObject();
+        ITweakable GetChild(int index);
         void CreateBaseControls(TweakerStatus status, ITweakerSettings settings);
         void NextIndex(TweakerStatus status);
         void IncreaseValue(TweakerStatus status);

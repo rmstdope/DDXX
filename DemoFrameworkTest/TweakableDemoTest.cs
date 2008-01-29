@@ -112,7 +112,7 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(factory).Method("CreateTweakableObject").
                 With(registerables[0]).Will(Return.Value(childTweakable));
             // Exercise SUT and verify
-            Assert.AreSame(childTweakable , tweakable.GetTweakableChild(0));
+            Assert.AreSame(childTweakable , tweakable.GetChild(0));
         }
 
         [Test]
@@ -128,7 +128,7 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(factory).Method("CreateTweakableObject").
                 With(textureFactory).Will(Return.Value(childTweakable));
             // Exercise SUT and verify
-            Assert.AreSame(childTweakable, tweakable.GetTweakableChild(1));
+            Assert.AreSame(childTweakable, tweakable.GetChild(1));
         }
 
         [Test]

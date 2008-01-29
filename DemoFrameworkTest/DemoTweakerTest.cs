@@ -46,6 +46,7 @@ namespace Dope.DDXX.DemoFramework
             decreaseValueExpected = false;
             setValueExpectedString = null;
             readFromXmlExpected = false;
+            getVariableReturn = null;
         }
 
         [TearDown]
@@ -180,7 +181,6 @@ namespace Dope.DDXX.DemoFramework
             // Setup
             setValueExpectedString = "..--01234567890123456789";
             demoTweaker = new DemoTweaker(settings, this);
-            getVariableReturn = new TweakableBoolean(null, null);
             // Exercise SUT
             SimulateKeypressDoubleEnter(Keys.Decimal);
             SimulateKeypressDoubleEnter(Keys.OemPeriod);
@@ -214,7 +214,6 @@ namespace Dope.DDXX.DemoFramework
         {
             // Setup
             demoTweaker = new DemoTweaker(settings, this);
-            getVariableReturn = new TweakableBoolean(null, null);
             // Exercise SUT
             IDemoTweaker newTeaker = SimulateKeypress(Keys.Enter);
             // Verify
@@ -327,7 +326,7 @@ namespace Dope.DDXX.DemoFramework
             get { return numVariables; }
         }
 
-        public ITweakable GetTweakableChild(int index)
+        public ITweakable GetChild(int index)
         {
             return getVariableReturn;
         }
@@ -337,7 +336,7 @@ namespace Dope.DDXX.DemoFramework
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public void CreateVariableControl(TweakerStatus status, int index, float y, ITweakerSettings settings)
+        public void CreateChildControl(TweakerStatus status, int index, float y, ITweakerSettings settings)
         {
             throw new Exception("The method or operation is not implemented.");
         }

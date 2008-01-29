@@ -66,7 +66,7 @@ namespace Dope.DDXX.DemoFramework
             ITweakable expectedChild = mockery.NewMock<ITweakable>();
             Expect.Once.On(factory).Method("CreateTweakableObject").With(list[0]).Will(Return.Value(expectedChild));
             // Exercise SUT
-            ITweakable child = tweakable.GetTweakableChild(0);
+            ITweakable child = tweakable.GetChild(0);
             // Verify
             Assert.AreSame(expectedChild, child);
         }

@@ -52,59 +52,5 @@ namespace Dope.DDXX.DemoFramework
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public override int NumVisableVariables
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public override int NumVariables
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public override ITweakable GetTweakableChild(int index)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public override bool IsObject()
-        {
-            return true;
-        }
-
-        public override void CreateBaseControls(TweakerStatus status, ITweakerSettings settings)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public override void NextIndex(TweakerStatus status)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public override void IncreaseValue(TweakerStatus status)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public override void DecreaseValue(TweakerStatus status)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public override void SetValue(TweakerStatus status)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public override void ReadFromXmlFile(System.Xml.XmlNode node)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public override void WriteToXmlFile(System.Xml.XmlDocument xmlDocument, System.Xml.XmlNode node)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
     }
 }

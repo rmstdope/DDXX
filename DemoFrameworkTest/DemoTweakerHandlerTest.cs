@@ -87,7 +87,7 @@ namespace Dope.DDXX.DemoFramework
         {
             // Exercise SUT
             PropertyInfo property = helper.GetType().GetProperty("B");
-            ITweakable tweakable = handler.CreateTweakableValue(property, helper);
+            ITweakableProperty tweakable = handler.CreateTweakableValue(property, helper);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableBoolean), tweakable);
             Assert.AreEqual(property, (tweakable as TweakableBoolean).Property);
@@ -98,7 +98,7 @@ namespace Dope.DDXX.DemoFramework
         {
             // Exercise SUT
             PropertyInfo property = helper.GetType().GetProperty("C");
-            ITweakable tweakable = handler.CreateTweakableValue(property, helper);
+            ITweakableProperty tweakable = handler.CreateTweakableValue(property, helper);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableColor), tweakable);
             Assert.AreEqual(property, (tweakable as TweakableColor).Property);
@@ -109,7 +109,7 @@ namespace Dope.DDXX.DemoFramework
         {
             // Exercise SUT
             PropertyInfo property = helper.GetType().GetProperty("I");
-            ITweakable tweakable = handler.CreateTweakableValue(property, helper);
+            ITweakableProperty tweakable = handler.CreateTweakableValue(property, helper);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableInt32), tweakable);
             Assert.AreEqual(property, (tweakable as TweakableInt32).Property);
@@ -120,7 +120,7 @@ namespace Dope.DDXX.DemoFramework
         {
             // Exercise SUT
             PropertyInfo property = helper.GetType().GetProperty("F");
-            ITweakable tweakable = handler.CreateTweakableValue(property, helper);
+            ITweakableProperty tweakable = handler.CreateTweakableValue(property, helper);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableSingle), tweakable);
             Assert.AreEqual(property, (tweakable as TweakableSingle).Property);
@@ -131,7 +131,7 @@ namespace Dope.DDXX.DemoFramework
         {
             // Exercise SUT
             PropertyInfo property = helper.GetType().GetProperty("S");
-            ITweakable tweakable = handler.CreateTweakableValue(property, helper);
+            ITweakableProperty tweakable = handler.CreateTweakableValue(property, helper);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableString), tweakable);
             Assert.AreEqual(property, (tweakable as TweakableString).Property);
@@ -142,7 +142,7 @@ namespace Dope.DDXX.DemoFramework
         {
             // Exercise SUT
             PropertyInfo property = helper.GetType().GetProperty("V2");
-            ITweakable tweakable = handler.CreateTweakableValue(property, helper);
+            ITweakableProperty tweakable = handler.CreateTweakableValue(property, helper);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableVector2), tweakable);
             Assert.AreEqual(property, (tweakable as TweakableVector2).Property);
@@ -153,7 +153,7 @@ namespace Dope.DDXX.DemoFramework
         {
             // Exercise SUT
             PropertyInfo property = helper.GetType().GetProperty("V3");
-            ITweakable tweakable = handler.CreateTweakableValue(property, helper);
+            ITweakableProperty tweakable = handler.CreateTweakableValue(property, helper);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableVector3), tweakable);
             Assert.AreEqual(property, (tweakable as TweakableVector3).Property);
@@ -164,7 +164,7 @@ namespace Dope.DDXX.DemoFramework
         {
             // Exercise SUT
             PropertyInfo property = helper.GetType().GetProperty("V4");
-            ITweakable tweakable = handler.CreateTweakableValue(property, helper);
+            ITweakableProperty tweakable = handler.CreateTweakableValue(property, helper);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableVector4), tweakable);
             Assert.AreEqual(property, (tweakable as TweakableVector4).Property);

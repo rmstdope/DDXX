@@ -8,7 +8,7 @@ namespace Dope.DDXX.DemoFramework
 {
     public interface ITweakableFactory
     {
-        ITweakable CreateTweakableValue(PropertyInfo property, object target);
+        ITweakableProperty CreateTweakableValue(PropertyInfo property, object target);
         ITweakable CreateTweakableObject(object target);
         ITextureFactory TextureFactory { get; }
     }

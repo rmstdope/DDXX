@@ -71,7 +71,7 @@ namespace Dope.DDXX.DemoFramework
                 case "Effect":
                 case "PostEffect":
                     int index = Target.GetAllRegisterables().FindIndex(delegate(IRegisterable r) { return r.Name == GetStringAttribute(node, "name"); });
-                    GetTweakableChild(index).WriteToXmlFile(xmlDocument, node);
+                    GetChild(index).WriteToXmlFile(xmlDocument, node);
                     break;
                 case "Transition":
                 case "Texture":
@@ -88,7 +88,7 @@ namespace Dope.DDXX.DemoFramework
             builder.AddEffect(GetStringAttribute(node, "class"), GetStringAttribute(node, "name"),
                 GetIntAttribute(node, "track"), GetFloatAttribute(node, "starttime"), GetFloatAttribute(node, "endtime"));
             int index = Target.GetAllRegisterables().FindIndex(delegate(IRegisterable r) { return r.Name == GetStringAttribute(node, "name"); });
-            GetTweakableChild(index).ReadFromXmlFile(node);
+            GetChild(index).ReadFromXmlFile(node);
         }
 
         private void RegisterPostEffect(XmlNode node)
@@ -96,7 +96,7 @@ namespace Dope.DDXX.DemoFramework
             builder.AddPostEffect(GetStringAttribute(node, "class"), GetStringAttribute(node, "name"),
                 GetIntAttribute(node, "track"), GetFloatAttribute(node, "starttime"), GetFloatAttribute(node, "endtime"));
             int index = Target.GetAllRegisterables().FindIndex(delegate(IRegisterable r) { return r.Name == GetStringAttribute(node, "name"); });
-            GetTweakableChild(index).ReadFromXmlFile(node);
+            GetChild(index).ReadFromXmlFile(node);
         }
 
     }

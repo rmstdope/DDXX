@@ -93,7 +93,7 @@ namespace Dope.DDXX.DemoFramework
                 if (i >= tweakable.NumVariables)
                     continue;
 
-                tweakable.CreateVariableControl(status, i, y, settings);
+                tweakable.CreateChildControl(status, i, y, settings);
                 y += status.VariableSpacing;
             }
             tweakable.CreateBaseControls(status, settings);
@@ -172,9 +172,9 @@ namespace Dope.DDXX.DemoFramework
 
             if (inputDriver.KeyPressedNoRepeat(Keys.Enter))
             {
-                if (tweakable.GetTweakableChild(status.Selection).IsObject())
+                if (tweakable.GetChild(status.Selection) != null)
                 {
-                    tweaker = new DemoTweaker(settings, tweakable.GetTweakableChild(status.Selection));
+                    tweaker = new DemoTweaker(settings, tweakable.GetChild(status.Selection));
                     tweaker.Initialize(registrator, userInterface);
                 }
             }

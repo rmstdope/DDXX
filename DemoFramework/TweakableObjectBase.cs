@@ -7,28 +7,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Dope.DDXX.Utility;
 
-// ITweakableValue
-//  - TweakableVector2
-//  - TweakableVector3
-//  - TweakableVector4
-//  - TweakableSingle
-//  - TweakableInt32
-//  - TweakableBoolean
-//  - TweakableString
-// ITweakableObject
-//  - TweakableDemo
-//  - TweakableTrack
-//  - TweakableRegitrable
-//  - TweakableScene
-//  - TweakableLight
-//  - TweakableModel
-//  - Tweakable
-
 namespace Dope.DDXX.DemoFramework
 {
     public abstract class TweakableObjectBase<T> : ITweakable
     {
-        private List<ITweakable> propertyHandlers;
+        private List<ITweakableProperty> propertyHandlers;
         private T target;
         private ITweakableFactory factory;
 
@@ -61,26 +44,19 @@ namespace Dope.DDXX.DemoFramework
             get { return NumSpecificVariables + propertyHandlers.Count; }
         }
 
-        public ITweakable GetTweakableChild(int index)
+        public ITweakable GetChild(int index)
         {
             if (index < NumSpecificVariables)
                 return GetSpecificVariable(index);
-            return propertyHandlers[index - NumSpecificVariables];
+            return null;
         }
 
-        public bool IsObject()
+        public void CreateChildControl(TweakerStatus status, int index, float y, ITweakerSettings settings)
         {
-            return true;
-        }
-
-
-        public void CreateVariableControl(TweakerStatus status, int index, float y, ITweakerSettings settings)
-        {
-            GetTweakableChild(index).CreateControl(status, index, y, settings);
-            //if (index < NumSpecificVariables)
-            //    CreateSpecificVariableControl(status, index, y, settings);
-            //else
-            //    propertyHandlers[index - NumSpecificVariables].CreateVariableControl(status, index, y, settings);
+            if (index < NumSpecificVariables)
+                GetChild(index).CreateControl(status, index, y, settings);
+            else
+                propertyHandlers[index - NumSpecificVariables].CreateControl(status, index, y, settings);
         }
 
         public void NextIndex(TweakerStatus status)
@@ -136,7 +112,7 @@ namespace Dope.DDXX.DemoFramework
 
         public void WriteToXmlFile(XmlDocument xmlDocument, XmlNode node)
         {
-            foreach (ITweakable tweakable in propertyHandlers)
+            foreach (ITweakableProperty tweakable in propertyHandlers)
             {
                 bool found = false;
                 foreach (XmlNode child in node.ChildNodes)
@@ -168,12 +144,12 @@ namespace Dope.DDXX.DemoFramework
 
         private bool HasProperty(string name)
         {
-            return propertyHandlers.Exists(delegate(ITweakable a) { return a.Property.Name == name; });
+            return propertyHandlers.Exists(delegate(ITweakableProperty a) { return a.Property.Name == name; });
         }
 
-        private ITweakable GetProperty(string name)
+        private ITweakableProperty GetProperty(string name)
         {
-            return propertyHandlers.Find(delegate(ITweakable a) { return a.Property.Name == name; });
+            return propertyHandlers.Find(delegate(ITweakableProperty a) { return a.Property.Name == name; });
         }
 
         private void ParseProperty(XmlNode node)
@@ -189,12 +165,12 @@ namespace Dope.DDXX.DemoFramework
         private void GetProperties()
         {
             PropertyInfo[] array = target.GetType().GetProperties();
-            propertyHandlers = new List<ITweakable>();
+            propertyHandlers = new List<ITweakableProperty>();
             foreach (PropertyInfo property in array)
             {
                 if (property.CanRead && property.CanWrite)
                 {
-                    ITweakable tweakable = factory.CreateTweakableValue(property, Target);
+                    ITweakableProperty tweakable = factory.CreateTweakableValue(property, Target);
                     if (tweakable != null)
                         propertyHandlers.Add(tweakable);
                 }
@@ -235,44 +211,9 @@ namespace Dope.DDXX.DemoFramework
             return float.Parse(GetStringAttribute(node, name), System.Globalization.NumberFormatInfo.InvariantInfo);
         }
 
-        protected List<ITweakable> PropertyHandlers
+        protected List<ITweakableProperty> PropertyHandlers
         {
             get { return propertyHandlers; }
-        }
-
-        public int Dimension
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public void IncreaseValue(int index)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void DecreaseValue(int index)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void SetFromString(string value)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void SetFromString(int index, string value)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public PropertyInfo Property
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public string GetToString()
-        {
-            throw new Exception("The method or operation is not implemented.");
         }
 
     }
