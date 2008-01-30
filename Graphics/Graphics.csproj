@@ -235,6 +235,7 @@
     <Compile Include="ITextureFactory.cs">
       <Name>ITextureFactory</Name>
     </Compile>
+    <Compile Include="ITextureGenerator.cs" />
     <Compile Include="IVertexBuffer.cs">
       <Name>IVertexBuffer</Name>
     </Compile>

@@ -15,12 +15,12 @@ namespace Dope.DDXX.DemoFramework
         {
         }
 
-        protected override void CreateValueControls(TweakerStatus status, int index, float x, float y, float w, float h)
+        protected override void CreateValueControls(TweakerStatus status, int index, float x, float y, float w, float h, ITweakerSettings settings)
         {
-            new TextControl("R: " + Value.R.ToString(), new Vector4(x + 0 * w / 5, y, w / 5, h), TextFormatting.Center | TextFormatting.VerticalCenter, GetAlpha(status, index), GetTextColor(status, index, 0), status.RootControl);
-            new TextControl("G: " + Value.G.ToString(), new Vector4(x + 1 * w / 5, y, w / 5, h), TextFormatting.Center | TextFormatting.VerticalCenter, GetAlpha(status, index), GetTextColor(status, index, 1), status.RootControl);
-            new TextControl("B: " + Value.B.ToString(), new Vector4(x + 2 * w / 5, y, w / 5, h), TextFormatting.Center | TextFormatting.VerticalCenter, GetAlpha(status, index), GetTextColor(status, index, 2), status.RootControl);
-            new TextControl("A: " + Value.A.ToString(), new Vector4(x + 3 * w / 5, y, w / 5, h), TextFormatting.Center | TextFormatting.VerticalCenter, GetAlpha(status, index), GetTextColor(status, index, 3), status.RootControl);
+            new TextControl("R: " + Value.R.ToString(), new Vector4(x + 0 * w / 5, y, w / 5, h), TextFormatting.Center | TextFormatting.VerticalCenter, settings.TextAlpha, GetTextColor(status, index, 0), status.RootControl);
+            new TextControl("G: " + Value.G.ToString(), new Vector4(x + 1 * w / 5, y, w / 5, h), TextFormatting.Center | TextFormatting.VerticalCenter, settings.TextAlpha, GetTextColor(status, index, 1), status.RootControl);
+            new TextControl("B: " + Value.B.ToString(), new Vector4(x + 2 * w / 5, y, w / 5, h), TextFormatting.Center | TextFormatting.VerticalCenter, settings.TextAlpha, GetTextColor(status, index, 2), status.RootControl);
+            new TextControl("A: " + Value.A.ToString(), new Vector4(x + 3 * w / 5, y, w / 5, h), TextFormatting.Center | TextFormatting.VerticalCenter, settings.TextAlpha, GetTextColor(status, index, 3), status.RootControl);
             Color alphaColor = new Color(Value.A, Value.A, Value.A, Value.A);
             new BoxControl(new Vector4(x + 4 * w / 5 + 0 * w / 10, y, w / 10, h), 255, Value, status.RootControl);
             new BoxControl(new Vector4(x + 4 * w / 5 + 1 * w / 10, y, w / 10, h), 255, alphaColor, status.RootControl);

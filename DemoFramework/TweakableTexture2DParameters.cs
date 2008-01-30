@@ -4,6 +4,7 @@ using System.Text;
 using Dope.DDXX.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Xml;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -12,11 +13,12 @@ namespace Dope.DDXX.DemoFramework
         public TweakableTexture2DParameters(Texture2DParameters target, ITweakableFactory factory)
             : base(target, factory)
         {
+            //ITexture2D texture = Factory.TextureFactory.CreateFromFunction(32, 32, 1, TextureUsage.None, SurfaceFormat.Color, 
         }
 
         public override int NumVisableVariables
         {
-            get { throw new Exception("The method or operation is not implemented."); }
+            get { return 5; }
         }
 
         protected override int NumSpecificVariables
@@ -29,12 +31,12 @@ namespace Dope.DDXX.DemoFramework
             throw new Exception("The method or operation is not implemented.");
         }
 
-        protected override void ParseSpecficXmlNode(System.Xml.XmlNode node)
+        protected override void ParseSpecficXmlNode(XmlNode node)
         {
             throw new Exception("The method or operation is not implemented.");
         }
 
-        protected override void WriteSpecificXmlNode(System.Xml.XmlDocument xmlDocument, System.Xml.XmlNode node)
+        protected override void WriteSpecificXmlNode(XmlDocument xmlDocument, XmlNode node)
         {
             throw new Exception("The method or operation is not implemented.");
         }
@@ -43,19 +45,10 @@ namespace Dope.DDXX.DemoFramework
         {
             float height = status.VariableSpacing * 0.9f;
             if (index == status.Selection)
-                new BoxControl(new Vector4(0, y, 1, height), GetAlpha(status, index), Color.Black, status.RootControl);
-            new TextControl(Target.Name, new Vector4(0, y, 0.45f, height), TextFormatting.Right | TextFormatting.VerticalCenter, GetAlpha(status, index), Color.White, status.RootControl);
+                new BoxControl(new Vector4(0, y, 1, height), settings.Alpha, settings.SelectedColor, status.RootControl);
+            new TextControl(Target.Name + " (<ITexture2D>)", new Vector4(0, y, 0.45f, height), TextFormatting.Right | TextFormatting.VerticalCenter, settings.TextAlpha, Color.White, status.RootControl);
 
-            new TextControl("<ITexture2D>",
-                new Vector4(0.55f, y, 0.45f, height), TextFormatting.Center | TextFormatting.VerticalCenter,
-                GetAlpha(status, index), GetTextColor(status, index, 0), status.RootControl);
-        }
-
-        protected byte GetAlpha(TweakerStatus status, int selection)
-        {
-            if (selection == status.Selection)
-                return 200;
-            return 75;
+            new BoxControl(new Vector4(0.55f + 0.225f - height / 2, y, height / 2, height), 255, Target.Texture, status.RootControl);
         }
 
     }

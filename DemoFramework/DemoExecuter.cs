@@ -5,7 +5,6 @@ using System.Text;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Input;
 using Dope.DDXX.Sound;
-using Dope.DDXX.TextureBuilder;
 using Dope.DDXX.Utility;
 using System.Reflection;
 using System.IO;
@@ -23,7 +22,6 @@ namespace Dope.DDXX.DemoFramework
         private IGraphicsDevice device;
         private IGraphicsFactory graphicsFactory;
         private ITextureFactory textureFactory;
-        private ITextureBuilder textureBuilder;
         private IPostProcessor postProcessor;
         private IDemoTweakerHandler tweakerHandler;
         private ISpriteBatch spriteBatch;
@@ -39,7 +37,7 @@ namespace Dope.DDXX.DemoFramework
         private IDemoEffectTypes effectTypes;
         private TweakerSettings settings = new TweakerSettings();
         private Color clearColor = new Color(0, 0, 0, 0);
-        private Dictionary<string, IGenerator> generators = new Dictionary<string,IGenerator>();
+        private Dictionary<string, ITextureGenerator> generators = new Dictionary<string,ITextureGenerator>();
 
         private string songFilename;
 
@@ -115,19 +113,18 @@ namespace Dope.DDXX.DemoFramework
 
         public void Initialize(IGraphicsDevice device, IGraphicsFactory graphicsFactory,
             ITextureFactory textureFactory, IEffectFactory effectFactory,
-            ITextureBuilder textureBuilder, IDeviceParameters deviceParameters)
+            IDeviceParameters deviceParameters)
         {
-            this.Initialize(device, graphicsFactory, textureFactory, effectFactory, textureBuilder, "", deviceParameters);
+            this.Initialize(device, graphicsFactory, textureFactory, effectFactory, "", deviceParameters);
         }
 
         public void Initialize(IGraphicsDevice device, IGraphicsFactory graphicsFactory, 
             ITextureFactory textureFactory, IEffectFactory effectFactory,
-            ITextureBuilder textureBuilder, string xmlFile, IDeviceParameters deviceParameters)
+            string xmlFile, IDeviceParameters deviceParameters)
         {
             this.device = device;
             this.graphicsFactory = graphicsFactory;
             this.textureFactory = textureFactory;
-            this.textureBuilder = textureBuilder;
             this.spriteBatch = graphicsFactory.CreateSpriteBatch();
             this.renderTarget = textureFactory.CreateFullsizeRenderTarget(deviceParameters.RenderTargetFormat, deviceParameters.MultiSampleType, 0);
             if (deviceParameters.MultiSampleType == MultiSampleType.None)
@@ -146,7 +143,7 @@ namespace Dope.DDXX.DemoFramework
 
             foreach (ITrack track in tracks)
             {
-                track.Initialize(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, this, postProcessor);
+                track.Initialize(graphicsFactory, device, textureFactory, effectFactory, this, postProcessor);
             }
             foreach (IDemoTransition transition in transitions)
             {
@@ -389,7 +386,7 @@ namespace Dope.DDXX.DemoFramework
 
         public void AddGenerator(string generatorName, string className)
         {
-            IGenerator generator = effectTypes.CreateGenerator(className);
+            ITextureGenerator generator = effectTypes.CreateGenerator(className);
             generators.Add(generatorName, generator);
             lastAddedAsset = generator;
         }
@@ -398,7 +395,7 @@ namespace Dope.DDXX.DemoFramework
         {
             if (!generators.ContainsKey(generatorName))
                 throw new DDXXException("Generator " + generatorName + " has never been registered.");
-            ITexture2D texture = textureBuilder.Generate(generators[generatorName], width, height, mipLevels, SurfaceFormat.Color);
+            ITexture2D texture = textureFactory.CreateFromGenerator(width, height, mipLevels, TextureUsage.None, SurfaceFormat.Color, generators[generatorName]);
             textureFactory.RegisterTexture(textureName, texture);
         }
 
@@ -462,10 +459,10 @@ namespace Dope.DDXX.DemoFramework
         {
             if (!generators.ContainsKey(generatorName))
                 throw new DDXXException("Generator " + generatorName + " has never been registered.");
-            if (!(lastAddedAsset is IGenerator))
+            if (!(lastAddedAsset is ITextureGenerator))
                 throw new DDXXException("Can not call AddGeneratorInput if no Generator was just added.");
 
-            IGenerator generator = lastAddedAsset as IGenerator;
+            ITextureGenerator generator = lastAddedAsset as ITextureGenerator;
             generator.ConnectToInput(num, generators[generatorName]);
         }
 

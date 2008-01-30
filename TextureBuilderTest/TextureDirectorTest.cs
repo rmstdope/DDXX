@@ -10,10 +10,10 @@ using Microsoft.Xna.Framework;
 namespace Dope.DDXX.TextureBuilder
 {
     [TestFixture]
-    public class TextureDirectorTest : D3DMockTest, ITextureBuilder
+    public class TextureDirectorTest : D3DMockTest, ITextureFactory
     {
         private TextureDirector director;
-        private IGenerator generatorUsed;
+        private ITextureGenerator generatorUsed;
         private int textureWidth;
         private int textureHeight;
         private int textureMipMaps;
@@ -24,7 +24,7 @@ namespace Dope.DDXX.TextureBuilder
         {
             base.SetUp();
 
-            director = new TextureDirector(this, textureFactory);
+            director = new TextureDirector(this);
         }
 
         [Test]
@@ -119,7 +119,7 @@ namespace Dope.DDXX.TextureBuilder
             Assert.IsInstanceOfType(typeof(FromFile), generatorUsed);
             FromFile fromFile = generatorUsed as FromFile;
             Assert.AreEqual("file", fromFile.Filename);
-            Assert.AreEqual(textureFactory, fromFile.TextureFactory);
+            Assert.AreSame(this, fromFile.TextureFactory);
         }
 
         [Test]
@@ -152,9 +152,39 @@ namespace Dope.DDXX.TextureBuilder
             Assert.IsInstanceOfType(typeof(Circle), add.GetInput(1));
         }
 
-        #region ITextureBuilder Members
+        #region ITextureFactory Members
 
-        public ITexture2D Generate(IGenerator generator, int width, int height, int numMipLevels, SurfaceFormat format)
+        public ITexture2D CreateFromFile(string name)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public ITextureCube CreateCubeFromFile(string name)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public IRenderTarget2D CreateFullsizeRenderTarget(SurfaceFormat format, MultiSampleType multiSampleType, int multiSampleQuality)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public IRenderTarget2D CreateFullsizeRenderTarget()
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public IDepthStencilBuffer CreateFullsizeDepthStencil(DepthFormat format, MultiSampleType multiSampleType)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public ITexture2D CreateFromFunction(int width, int height, int numLevels, TextureUsage usage, SurfaceFormat format, Fill2DTextureCallback callbackFunction)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public ITexture2D CreateFromGenerator(int width, int height, int numMipLevels, TextureUsage usage, SurfaceFormat format, ITextureGenerator generator)
         {
             generatorUsed = generator;
             textureWidth = width;
@@ -162,6 +192,21 @@ namespace Dope.DDXX.TextureBuilder
             textureMipMaps = numMipLevels;
             textureFormat = format;
             return null;
+        }
+
+        public void RegisterTexture(string name, ITexture2D texture)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public ITexture2D WhiteTexture
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        public List<Texture2DParameters> Texture2DParameters
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
         }
 
         #endregion

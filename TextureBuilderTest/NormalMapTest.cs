@@ -12,7 +12,7 @@ namespace Dope.DDXX.TextureBuilder
     public class NormalMapTest : D3DMockTest
     {
         private NormalMap normalMap;
-        private IGenerator generator;
+        private ITextureGenerator generator;
 
         [SetUp]
         public override void SetUp()
@@ -20,7 +20,7 @@ namespace Dope.DDXX.TextureBuilder
             base.SetUp();
 
             normalMap = new NormalMap();
-            generator = mockery.NewMock<IGenerator>();
+            generator = mockery.NewMock<ITextureGenerator>();
             normalMap.ConnectToInput(0, generator);
         }
 

@@ -4,15 +4,16 @@ using System.Text;
 using Dope.DDXX.Physics;
 using Dope.DDXX.TextureBuilder;
 using Microsoft.Xna.Framework;
+using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.ModelBuilder
 {
     public class TerrainPrimitive : PlanePrimitive
     {
-        private IGenerator heightMapGenerator;
+        private ITextureGenerator heightMapGenerator;
         private float heightScale;
 
-        public IGenerator HeightMapGenerator
+        public ITextureGenerator HeightMapGenerator
         {
             get { return heightMapGenerator; }
             set { heightMapGenerator = value; }

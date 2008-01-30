@@ -7,7 +7,6 @@ using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
 using Dope.DDXX.Sound;
 using Dope.DDXX.Input;
-using Dope.DDXX.TextureBuilder;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -71,9 +70,8 @@ namespace Dope.DDXX.DemoFramework
         {
             TextureFactory textureFactory = new TextureFactory(graphics.GraphicsDevice, graphicsFactory);
             EffectFactory effectFactory = new EffectFactory(graphics.GraphicsDevice, graphicsFactory);
-            TextureBuilder.TextureBuilder textureBuilder = new TextureBuilder.TextureBuilder(textureFactory);
 
-            executer.Initialize(graphics.GraphicsDevice, graphicsFactory, textureFactory, effectFactory, textureBuilder, xmlFile, deviceParameters);
+            executer.Initialize(graphics.GraphicsDevice, graphicsFactory, textureFactory, effectFactory, xmlFile, deviceParameters);
 
             if (AspectRatio.Ratios.RATIO_INVALID == new AspectRatio(Window.ClientBounds.Width, Window.ClientBounds.Height).Ratio)
                 throw new DDXXException("Width and height of window does not match any valid aspect ratio.");

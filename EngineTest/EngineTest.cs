@@ -22,7 +22,7 @@ namespace EngineTest
             Assembly[] assemblies = new Assembly[] { 
                 Assembly.GetExecutingAssembly(),
                 typeof(GlowPostEffect).Assembly,
-                typeof(TextureBuilder).Assembly };
+                typeof(TextureDirector).Assembly };
             FileUtility.SetLoadPaths(new string[] { "./", "../../../", "xml/" });
             DemoWindow window = new DemoWindow("Pelle", "EngineTest.xml", assemblies);
 

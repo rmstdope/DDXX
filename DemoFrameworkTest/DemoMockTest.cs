@@ -4,7 +4,6 @@ using System.Text;
 using Dope.DDXX.Graphics;
 using NUnit.Framework;
 using NMock2;
-using Dope.DDXX.TextureBuilder;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -12,7 +11,6 @@ namespace Dope.DDXX.DemoFramework
     {
         protected IPostProcessor postProcessor;
         protected IDemoMixer mixer;
-        protected ITextureBuilder textureBuilder;
 
         [SetUp]
         public override void SetUp()
@@ -20,7 +18,6 @@ namespace Dope.DDXX.DemoFramework
             base.SetUp();
             postProcessor = mockery.NewMock<IPostProcessor>();
             mixer = mockery.NewMock<IDemoMixer>();
-            textureBuilder = mockery.NewMock<ITextureBuilder>();
         }
 
         [TearDown]

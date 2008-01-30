@@ -90,12 +90,6 @@
     <Compile Include="GaussianBlur.cs">
       <Name>GaussianBlur</Name>
     </Compile>
-    <Compile Include="IGenerator.cs">
-      <Name>IGenerator</Name>
-    </Compile>
-    <Compile Include="ITextureBuilder.cs">
-      <Name>ITextureBuilder</Name>
-    </Compile>
     <Compile Include="Madd.cs">
       <Name>Madd</Name>
     </Compile>
@@ -120,9 +114,6 @@
     </Compile>
     <Compile Include="Square.cs">
       <Name>Square</Name>
-    </Compile>
-    <Compile Include="TextureBuilder.cs">
-      <Name>TextureBuilder</Name>
     </Compile>
     <Compile Include="TextureDirector.cs">
       <Name>TextureDirector</Name>

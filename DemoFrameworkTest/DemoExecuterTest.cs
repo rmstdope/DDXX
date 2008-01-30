@@ -12,7 +12,6 @@ using Dope.DDXX.Graphics;
 using Dope.DDXX.Input;
 using Dope.DDXX.Sound;
 using Dope.DDXX.Utility;
-using Dope.DDXX.TextureBuilder;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -168,7 +167,7 @@ namespace Dope.DDXX.DemoFramework
             ExpectPostProcessorInitialize();
             ExpectTweakerInitialize();
 
-            executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, textureBuilder, deviceParameters);
+            executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, deviceParameters);
         }
 
         [Test]
@@ -178,7 +177,7 @@ namespace Dope.DDXX.DemoFramework
             ExpectPostProcessorInitialize();
             ExpectTweakerInitialize();
 
-            executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, textureBuilder, deviceParameters);
+            executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, deviceParameters);
         }
 
         [Test]
@@ -196,7 +195,7 @@ namespace Dope.DDXX.DemoFramework
             ExpectPostProcessorInitialize();
             ExpectTweakerInitialize();
 
-            executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, textureBuilder, deviceParameters);
+            executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, deviceParameters);
         }
 
         [Test]
@@ -214,9 +213,9 @@ namespace Dope.DDXX.DemoFramework
             for (int i = 0; i < 50; i++)
                 Expect.Once.On(tracks[i]).
                     Method("Initialize").With(graphicsFactory, device, textureFactory, effectFactory,
-                    textureBuilder, executer, postProcessor);
+                    executer, postProcessor);
 
-            executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, textureBuilder, deviceParameters);
+            executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, deviceParameters);
         }
 
         [Test]
@@ -237,7 +236,7 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(t2).
                 Method("Initialize").With(postProcessor);
 
-            executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, textureBuilder, deviceParameters);
+            executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, deviceParameters);
         }
 
         [Test]
@@ -402,7 +401,7 @@ namespace Dope.DDXX.DemoFramework
             ExpectTweakerInitialize();
             Expect.Once.On(tweakerHandler).Method("ReadFromXmlFile").With("XmlFileName");
             // Exercise SUT
-            executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, textureBuilder, "XmlFileName", deviceParameters);
+            executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, "XmlFileName", deviceParameters);
 
 //            FooEffect fooEffect = new FooEffect("", 0, 0);
 //            BarEffect barEffect = new BarEffect("", 0, 0);
@@ -462,10 +461,10 @@ namespace Dope.DDXX.DemoFramework
 //            Expect.Once.On(tracks[0]).Method("Register").With(barEffect);
 //            Expect.Once.On(tracks[1]).Method("Register").With(fooEffect);
 //            Expect.Once.On(tracks[2]).Method("Register").With(fooGlow);
-//            Expect.Once.On(tracks[0]).Method("Initialize").With(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, executer, postProcessor);
-//            Expect.Once.On(tracks[1]).Method("Initialize").With(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, executer, postProcessor);
-//            Expect.Once.On(tracks[2]).Method("Initialize").With(graphicsFactory, device, textureFactory, effectFactory, textureBuilder, executer, postProcessor);
-//            executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, textureBuilder, tempFiles.New(twoEffectContents), deviceParameters);
+//            Expect.Once.On(tracks[0]).Method("Initialize").With(graphicsFactory, device, textureFactory, effectFactory, executer, postProcessor);
+//            Expect.Once.On(tracks[1]).Method("Initialize").With(graphicsFactory, device, textureFactory, effectFactory, executer, postProcessor);
+//            Expect.Once.On(tracks[2]).Method("Initialize").With(graphicsFactory, device, textureFactory, effectFactory, executer, postProcessor);
+//            executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, tempFiles.New(twoEffectContents), deviceParameters);
 //            Assert.AreEqual(3, executer.NumTracks);
         }
 
@@ -637,8 +636,8 @@ namespace Dope.DDXX.DemoFramework
 
             Expect.Once.On(effectTypes).Method("CreateGenerator").With("className").Will(Return.Value(generator1));
             executer.AddGenerator("genName", "className");
-            Expect.Once.On(textureBuilder).Method("Generate").
-                With(generator1, 1, 2, 3, SurfaceFormat.Color).Will(Return.Value(texture));
+            Expect.Once.On(textureFactory).Method("CreateFromGenerator").
+                With(1, 2, 3, TextureUsage.None, SurfaceFormat.Color, generator1).Will(Return.Value(texture));
             Expect.Once.On(textureFactory).Method("RegisterTexture").
                 With("texName", texture);
             executer.AddTexture("texName", "genName", 1, 2, 3);
@@ -918,15 +917,15 @@ namespace Dope.DDXX.DemoFramework
             throw new Exception("The method or operation is not implemented.");
         }
     }
-    public class TestGenerator : IGenerator
+    public class TestGenerator : ITextureGenerator
     {
-        public IGenerator[] Inputs = new IGenerator[100];
+        public ITextureGenerator[] Inputs = new ITextureGenerator[100];
 
         public Vector4  GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
         {
             throw new Exception("The method or operation is not implemented.");
         }
-        public void  ConnectToInput(int inputPin, IGenerator outputGenerator)
+        public void  ConnectToInput(int inputPin, ITextureGenerator outputGenerator)
         {
             Inputs[inputPin] = outputGenerator;
         }
@@ -936,7 +935,7 @@ namespace Dope.DDXX.DemoFramework
             get { throw new Exception("The method or operation is not implemented."); }
         }
 
-        public IGenerator GetInput(int inputPin)
+        public ITextureGenerator GetInput(int inputPin)
         {
             throw new Exception("The method or operation is not implemented.");
         }

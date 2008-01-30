@@ -15,14 +15,14 @@ namespace Dope.DDXX.DemoFramework
         {
         }
 
-        protected override void CreateValueControls(TweakerStatus status, int index, float x, float y, float w, float h)
+        protected override void CreateValueControls(TweakerStatus status, int index, float x, float y, float w, float h, ITweakerSettings settings)
         {
             new TextControl("X: " + Value.X.ToString("N3", System.Globalization.CultureInfo.InvariantCulture), 
-                new Vector4(x + 0 * w / 5, y, w / 5, h), TextFormatting.Center | TextFormatting.VerticalCenter, 
-                GetAlpha(status, index), GetTextColor(status, index, 0), status.RootControl);
+                new Vector4(x + 0 * w / 5, y, w / 5, h), TextFormatting.Center | TextFormatting.VerticalCenter,
+                settings.TextAlpha, GetTextColor(status, index, 0), status.RootControl);
             new TextControl("Y: " + Value.Y.ToString("N3", System.Globalization.CultureInfo.InvariantCulture), 
-                new Vector4(x + 1 * w / 5, y, w / 5, h), TextFormatting.Center | TextFormatting.VerticalCenter, 
-                GetAlpha(status, index), GetTextColor(status, index, 1), status.RootControl);
+                new Vector4(x + 1 * w / 5, y, w / 5, h), TextFormatting.Center | TextFormatting.VerticalCenter,
+                settings.TextAlpha, GetTextColor(status, index, 1), status.RootControl);
         }
 
         public override int Dimension

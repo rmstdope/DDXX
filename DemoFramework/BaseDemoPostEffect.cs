@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.SceneGraph;
-using Dope.DDXX.TextureBuilder;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -12,7 +11,6 @@ namespace Dope.DDXX.DemoFramework
         private int drawOrder;
         private IPostProcessor postProcessor;
         private ITextureFactory textureFactory;
-        private ITextureBuilder textureBuilder;
         private IGraphicsFactory graphicsFactory;
 
         protected IGraphicsFactory GraphicsFactory
@@ -35,11 +33,6 @@ namespace Dope.DDXX.DemoFramework
             get { return textureFactory; }
         }
 
-        protected ITextureBuilder TextureBuilder
-        {
-            get { return textureBuilder; }
-        }
-
         public int DrawOrder
         {
             set { drawOrder = value; }
@@ -58,12 +51,11 @@ namespace Dope.DDXX.DemoFramework
 
         public abstract void Render();
 
-        public void Initialize(IGraphicsFactory graphicsFactory, IPostProcessor postProcessor, ITextureFactory textureFactory, ITextureBuilder textureBuilder/*, IDevice device*/)
+        public void Initialize(IGraphicsFactory graphicsFactory, IPostProcessor postProcessor, ITextureFactory textureFactory)
         {
             this.graphicsFactory = graphicsFactory;
             this.postProcessor = postProcessor;
             this.textureFactory = textureFactory;
-            this.textureBuilder = textureBuilder;
             Initialize();
         }
 

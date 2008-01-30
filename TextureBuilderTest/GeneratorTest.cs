@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using Microsoft.Xna.Framework;
+using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.TextureBuilder
 {
@@ -52,7 +53,7 @@ namespace Dope.DDXX.TextureBuilder
         [Test]
         public void TestConnectOk()
         {
-            IGenerator generator1 = new SimpleGenerator(1);
+            ITextureGenerator generator1 = new SimpleGenerator(1);
             generator1.ConnectToInput(0, null);
             generator1 = new SimpleGenerator(5);
             for (int i = 0; i < 5; i++)
@@ -63,7 +64,7 @@ namespace Dope.DDXX.TextureBuilder
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void TestConnectInputNegative()
         {
-            IGenerator generator1 = new SimpleGenerator(1);
+            ITextureGenerator generator1 = new SimpleGenerator(1);
             generator1.ConnectToInput(-1, null);
         }
 
@@ -71,7 +72,7 @@ namespace Dope.DDXX.TextureBuilder
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void TestConnectInvalidInput1()
         {
-            IGenerator generator1 = new SimpleGenerator(1);
+            ITextureGenerator generator1 = new SimpleGenerator(1);
             generator1.ConnectToInput(1, null);
         }
 
@@ -79,7 +80,7 @@ namespace Dope.DDXX.TextureBuilder
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void TestConnectInvalidInput2()
         {
-            IGenerator generator1 = new SimpleGenerator(5);
+            ITextureGenerator generator1 = new SimpleGenerator(5);
             generator1.ConnectToInput(5, null);
         }
 

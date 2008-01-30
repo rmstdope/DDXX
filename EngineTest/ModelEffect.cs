@@ -31,7 +31,7 @@ namespace EngineTest
             scene = new Scene();
             scene.AmbientColor = new Color(180,180,180);
 
-            TextureDirector tDirector = new TextureDirector(TextureBuilder, TextureFactory);
+            TextureDirector tDirector = new TextureDirector(TextureFactory);
             tDirector.FromFile("Content\\textures\\BENEDETI2");
             tDirector.Madd(0.7f, 0);
             tDirector.NormalMap();

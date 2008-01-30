@@ -17,7 +17,7 @@ namespace Dope.DDXX.DemoFramework
 
         public override int NumVisableVariables
         {
-            get { return 13; }
+            get { return 5; }
         }
 
         protected override int NumSpecificVariables
@@ -44,20 +44,13 @@ namespace Dope.DDXX.DemoFramework
         {
             float height = status.VariableSpacing * 0.9f;
             if (index == status.Selection)
-                new BoxControl(new Vector4(0, y, 1, height), GetAlpha(status, index), Color.Black, status.RootControl);
-            new TextControl("TextureFactory", new Vector4(0, y, 0.45f, height), TextFormatting.Right | TextFormatting.VerticalCenter, GetAlpha(status, index), Color.White, status.RootControl);
+                new BoxControl(new Vector4(0, y, 1, height), settings.Alpha, settings.SelectedColor, status.RootControl);
+            new TextControl("TextureFactory", new Vector4(0, y, 0.45f, height), TextFormatting.Right | TextFormatting.VerticalCenter, settings.TextAlpha, Color.White, status.RootControl);
 
             new TextControl("<ITextureFactory>",
                 new Vector4(0.55f, y, 0.45f, height), TextFormatting.Center | TextFormatting.VerticalCenter,
-                GetAlpha(status, index), GetTextColor(status, index, 0), status.RootControl);
+                settings.TextAlpha, Color.White, status.RootControl);
         }
     
-        protected byte GetAlpha(TweakerStatus status, int selection)
-        {
-            if (selection == status.Selection)
-                return 200;
-            return 75;
-        }
-
     }
 }

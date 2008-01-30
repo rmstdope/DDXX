@@ -403,5 +403,15 @@ namespace Dope.DDXX.DemoFramework
         }
 
         #endregion
+
+        #region ITextureFactory Members
+
+
+        public ITexture2D CreateFromGenerator(int width, int height, int numMipLevels, TextureUsage usage, SurfaceFormat format, ITextureGenerator generator)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
     }
 }

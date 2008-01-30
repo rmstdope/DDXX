@@ -21,7 +21,7 @@ namespace EngineTest
 
         protected override void Initialize()
         {
-            TextureDirector director = new TextureDirector(TextureBuilder, TextureFactory);
+            TextureDirector director = new TextureDirector(TextureFactory);
             // Base circle
             director.CreateCircle(0.0f, 1.5f);
             // Add brush noise

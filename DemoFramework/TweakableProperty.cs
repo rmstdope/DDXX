@@ -29,13 +29,6 @@ namespace Dope.DDXX.DemoFramework
             get { return target; }
         }
 
-        protected byte GetAlpha(TweakerStatus status, int selection)
-        {
-            if (selection == status.Selection)
-                return 200;
-            return 75;
-        }
-
         protected Color GetTextColor(TweakerStatus status, int selection, int index)
         {
             if (selection == status.Selection && index == status.Index)
@@ -63,12 +56,12 @@ namespace Dope.DDXX.DemoFramework
         {
             float height = status.VariableSpacing * 0.9f;
             if (index == status.Selection)
-                new BoxControl(new Vector4(0, y, 1, height), GetAlpha(status, index), Color.Black, status.RootControl);
-            new TextControl(property.Name, new Vector4(0, y, 0.45f, height), TextFormatting.Right | TextFormatting.VerticalCenter, GetAlpha(status, index), Color.White, status.RootControl);
-            CreateValueControls(status, index, 0.55f, y, 0.45f, height);
+                new BoxControl(new Vector4(0, y, 1, height), settings.Alpha, settings.SelectedColor, status.RootControl);
+            new TextControl(property.Name, new Vector4(0, y, 0.45f, height), TextFormatting.Right | TextFormatting.VerticalCenter, settings.TextAlpha, Color.White, status.RootControl);
+            CreateValueControls(status, index, 0.55f, y, 0.45f, height, settings);
         }
 
-        protected abstract void CreateValueControls(TweakerStatus status, int index, float x, float y, float w, float h);
+        protected abstract void CreateValueControls(TweakerStatus status, int index, float x, float y, float w, float h, ITweakerSettings settings);
         public abstract int Dimension { get; }
         public abstract void IncreaseValue(int index);
         public abstract void DecreaseValue(int index);

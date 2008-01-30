@@ -10,20 +10,18 @@ namespace Dope.DDXX.TextureBuilder
 {
     public class TextureDirector
     {
-        Stack<IGenerator> generatorStack;
-        ITextureBuilder builder;
+        Stack<ITextureGenerator> generatorStack;
         ITextureFactory textureFactory;
 
-        public TextureDirector(ITextureBuilder builder, ITextureFactory textureFactory)
+        public TextureDirector(ITextureFactory textureFactory)
         {
-            generatorStack = new Stack<IGenerator>();
-            this.builder = builder;
+            generatorStack = new Stack<ITextureGenerator>();
             this.textureFactory = textureFactory;
         }
 
         public ITexture2D Generate(int width, int height, int numMipLevels, SurfaceFormat format)
         {
-            return builder.Generate(generatorStack.Pop(), width, height, numMipLevels, format);
+            return textureFactory.CreateFromGenerator(width, height, numMipLevels, TextureUsage.None, format, generatorStack.Pop());
         }
 
         public void CreatePerlinNoise(int baseFrequncy, int numOctaves, float persistance)
@@ -166,7 +164,7 @@ namespace Dope.DDXX.TextureBuilder
             generatorStack.Push(normalMap);
         }
 
-        private void ConnectFromStack(IGenerator modulate, int numInputs)
+        private void ConnectFromStack(ITextureGenerator modulate, int numInputs)
         {
             EnsureStackSize(numInputs);
             for (int i = 0; i < numInputs; i++)
@@ -181,18 +179,18 @@ namespace Dope.DDXX.TextureBuilder
 
         public ITexture2D GenerateChain(int width, int height)
         {
-            List<IGenerator> list = new List<IGenerator>();
-            IGenerator[] generators = generatorStack.ToArray();
-            foreach (IGenerator traversing in generators)
+            List<ITextureGenerator> list = new List<ITextureGenerator>();
+            ITextureGenerator[] generators = generatorStack.ToArray();
+            foreach (ITextureGenerator traversing in generators)
                 AddGeneratorRecursively(traversing, list);
             SideBySideGenerator generator = new SideBySideGenerator(list.Count);
             for (int i = 0; i < list.Count; i++)
                 generator.ConnectToInput(i, list[i]);
 
-            return builder.Generate(generator, width, height, 1, SurfaceFormat.Color);
+            return textureFactory.CreateFromGenerator(width, height, 1, TextureUsage.None, SurfaceFormat.Color, generator);
         }
 
-        private void AddGeneratorRecursively(IGenerator generator, List<IGenerator> list)
+        private void AddGeneratorRecursively(ITextureGenerator generator, List<ITextureGenerator> list)
         {
             for (int i = 0; i < generator.NumInputPins; i++)
                 AddGeneratorRecursively(generator.GetInput(i), list);

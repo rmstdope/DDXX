@@ -62,6 +62,16 @@ namespace Dope.DDXX.DemoFramework
             {
                 get { throw new Exception("The method or operation is not implemented."); }
             }
+
+            #region ITextureFactory Members
+
+
+            public ITexture2D CreateFromGenerator(int width, int height, int numMipLevels, TextureUsage usage, SurfaceFormat format, ITextureGenerator generator)
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+
+            #endregion
         }
 
         private DemoTweakerHandler handler;

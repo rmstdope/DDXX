@@ -72,9 +72,6 @@
       <Name>NormalMapTest</Name>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TextureBuilderTest.cs">
-      <Name>TextureBuilderTest</Name>
-    </Compile>
     <Compile Include="TextureDirectorTest.cs">
       <Name>TextureDirectorTest</Name>
     </Compile>

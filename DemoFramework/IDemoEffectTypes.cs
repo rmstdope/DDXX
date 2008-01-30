@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using Dope.DDXX.TextureBuilder;
+using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -11,7 +12,7 @@ namespace Dope.DDXX.DemoFramework
         IDictionary<string, Type> IRegisterables { get; }
         IDictionary<string, Type> IGenerators { get; }
         IRegisterable CreateInstance(string className, string effectName, float startTime, float endTime);
-        IGenerator CreateGenerator(string name);
+        ITextureGenerator CreateGenerator(string name);
         void SetProperty(object asset, string name, object value);
         object GetProperty(IRegisterable ei, string name);
         void CallSetup(object asset, string method, List<object> parameters);

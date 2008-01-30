@@ -23,7 +23,7 @@ namespace Dope.DDXX.DemoEffects
             outputTexture = mockery.NewMock<IRenderTarget2D>();
             texture1 = mockery.NewMock<IRenderTarget2D>();
             sut = new MonochromePostEffect("", 1.0f, 2.0f);
-            sut.Initialize(graphicsFactory, postProcessor, textureFactory, textureBuilder);
+            sut.Initialize(graphicsFactory, postProcessor, textureFactory);
         }
 
         [TearDown]

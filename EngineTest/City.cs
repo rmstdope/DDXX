@@ -29,7 +29,7 @@ namespace EngineTest
             camera.WorldState.MoveUp(2);
 
             modelDirector = new ModelDirector(ModelBuilder);
-            textureDirector = new TextureDirector(TextureBuilder, TextureFactory);
+            textureDirector = new TextureDirector(TextureFactory);
 
             SetNoiseTexture();
             CreateGround();

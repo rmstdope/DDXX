@@ -19,7 +19,6 @@ namespace Dope.DDXX.DemoFramework
         private ITextureFactory textureFactory;
         private IModelFactory modelFactory;
         private ModelBuilder.ModelBuilder modelBuilder;
-        private TextureBuilder.TextureBuilder textureBuilder;
         private ModelDirector modelDirector;
         private TextureDirector textureDirector;
         private IDemoMixer mixer;
@@ -83,24 +82,13 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        protected TextureBuilder.TextureBuilder TextureBuilder
-        {
-            // Lazy creation
-            get
-            {
-                if (textureBuilder == null)
-                    textureBuilder = new TextureBuilder.TextureBuilder(TextureFactory);
-                return textureBuilder;
-            }
-        }
-
         protected TextureDirector TextureDirector
         {
             // Lazy creation
             get
             {
                 if (textureDirector == null)
-                    textureDirector = new TextureDirector(TextureBuilder, TextureFactory);
+                    textureDirector = new TextureDirector(TextureFactory);
                 return textureDirector;
             }
         }

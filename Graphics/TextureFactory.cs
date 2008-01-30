@@ -77,6 +77,11 @@ namespace Dope.DDXX.Graphics
             return factory.CreateDepthStencilBuffer(width, height, format, multiSampleType);
         }
 
+        public ITexture2D CreateFromGenerator(int width, int height, int numMipLevels, TextureUsage usage, SurfaceFormat format, ITextureGenerator generator)
+        {
+            return CreateFromFunction(width, height, numMipLevels, usage, format, generator.GetPixel);
+        }
+
         public ITexture2D CreateFromFunction(int width, int height, int numLevels, TextureUsage usage, SurfaceFormat format, Fill2DTextureCallback callbackFunction)
         {
             Color[] data = new Color[width * height];

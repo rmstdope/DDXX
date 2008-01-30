@@ -75,6 +75,7 @@ namespace EngineTest
 
         private void InitializeArtery()
         {
+            TextureFactory.CreateFromFile("Content\\textures\\dope");
             MaterialHandler material = new MaterialHandler(EffectFactory.CreateFromFile("Content\\effects\\Artery"), new EffectConverter());
             TextureDirector.CreatePerlinNoise(64, 6, 0.5f);
             TextureFactory.RegisterTexture("Noise256", TextureDirector.Generate(256, 256, 0, SurfaceFormat.Color));

@@ -23,7 +23,7 @@ namespace Dope.DDXX.DemoEffects
             texture1 = mockery.NewMock<IRenderTarget2D>();
             outputTexture = mockery.NewMock<IRenderTarget2D>();
             sut = new DepthOfFieldPostEffect("", 1.0f, 2.0f);
-            sut.Initialize(graphicsFactory, postProcessor, textureFactory, textureBuilder);
+            sut.Initialize(graphicsFactory, postProcessor, textureFactory);
         }
 
         [TearDown]

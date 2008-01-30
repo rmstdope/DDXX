@@ -46,7 +46,7 @@ namespace Dope.DDXX.DemoFramework
         public void NumVisable()
         {
             // Exercise SUT and verify
-            Assert.AreEqual(13, tweakable.NumVisableVariables);
+            Assert.AreEqual(5, tweakable.NumVisableVariables);
         }
 
         [Test]

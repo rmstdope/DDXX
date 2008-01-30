@@ -64,7 +64,7 @@ namespace DFM2007Invitro
 
             //scene.AddNode(gridNode);
 
-            TextureDirector textureDirector = new TextureDirector(TextureBuilder, TextureFactory);
+            TextureDirector textureDirector = new TextureDirector(TextureFactory);
             textureDirector.CreatePerlinNoise(4, 6, 0.5f);
 
             ModelBuilder.SetDiffuseTexture("Default", textureDirector.Generate(64, 64, 0, SurfaceFormat.Color));

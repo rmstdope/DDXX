@@ -27,7 +27,7 @@ namespace EngineTest
         {
             CreateStandardSceneAndCamera(out scene, out camera, 50);
 
-            TextureDirector director = new TextureDirector(TextureBuilder, TextureFactory);
+            TextureDirector director = new TextureDirector(TextureFactory);
             director.CreateCircle(0.2f, 0.5f);
 
             //floaterSystem = new FloaterSystemNode("ps", 0.0f, 0.6f, 3);

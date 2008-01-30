@@ -19,7 +19,7 @@ namespace DFM2007Invitro
             Assembly[] assemblies = new Assembly[] { 
                 Assembly.GetExecutingAssembly(),
                 typeof(GlowPostEffect).Assembly,
-                typeof(TextureBuilder).Assembly };
+                typeof(TextureDirector).Assembly };
             FileUtility.SetLoadPaths(new string[] { "./", "../../../", "Content/xml/" });
             DemoWindow window = new DemoWindow("Invitro", "DFM2007.xml", assemblies);
             try

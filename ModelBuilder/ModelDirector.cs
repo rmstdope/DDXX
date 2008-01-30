@@ -66,7 +66,7 @@ namespace Dope.DDXX.ModelBuilder
             primitive = tube;
         }
 
-        public void CreateTerrain(IGenerator generator, float heightScale, float width, float height, int widthSegments, int heightSegments, bool textured)
+        public void CreateTerrain(ITextureGenerator generator, float heightScale, float width, float height, int widthSegments, int heightSegments, bool textured)
         {
             TerrainPrimitive terrain = new TerrainPrimitive();
             terrain.HeightMapGenerator = generator;

@@ -17,7 +17,7 @@ namespace Dope.DDXX.DemoFramework
         IDemoPostEffect[] GetPostEffects(float startTime, float endTime);
         IDemoPostEffect[] GetPostEffects(float time);
         void Initialize(IGraphicsFactory graphicsFactory, IGraphicsDevice device, ITextureFactory textureFactory, 
-            IEffectFactory effectFactory, ITextureBuilder textureBuilder, IDemoMixer mixer, 
+            IEffectFactory effectFactory, IDemoMixer mixer, 
             IPostProcessor postProcessor);
         bool IsActive(float p);
         IDemoPostEffect[] PostEffects { get; }
@@ -26,7 +26,6 @@ namespace Dope.DDXX.DemoFramework
         void Register(IDemoEffect effect);
         IRenderTarget2D Render(IGraphicsDevice device, IRenderTarget2D renderTarget, IRenderTarget2D renderTargetNoMultiSampling, IDepthStencilBuffer depthStencilBuffer, Color backgroundColor);
         void Step();
-        //void UpdateListener(IEffectChangeListener effectChangeListener);
         bool IsEffectRegistered(string name, Type type);
         bool IsPostEffectRegistered(string p, Type type);
     }

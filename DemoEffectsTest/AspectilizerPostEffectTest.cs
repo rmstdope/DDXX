@@ -6,7 +6,6 @@ using NMock2;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Utility;
-using Dope.DDXX.TextureBuilder;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoEffects
@@ -38,10 +37,10 @@ namespace Dope.DDXX.DemoEffects
         [Test]
         public void TestInitialize1()
         {
-            Expect.Once.On(textureBuilder).Method("Generate").
-                With(Is.Anything, Is.EqualTo(presentParameters.BackBufferWidth), Is.EqualTo(presentParameters.BackBufferHeight), Is.EqualTo(1), Is.EqualTo(SurfaceFormat.Color)).
+            Expect.Once.On(textureFactory).Method("CreateFromGenerator").
+                With(Is.EqualTo(presentParameters.BackBufferWidth), Is.EqualTo(presentParameters.BackBufferHeight), Is.EqualTo(1), Is.EqualTo(TextureUsage.None), Is.EqualTo(SurfaceFormat.Color), Is.Anything).
                 Will(Return.Value(texture2D));
-            aspectilizer.Initialize(graphicsFactory, postProcessor, textureFactory, textureBuilder);
+            aspectilizer.Initialize(graphicsFactory, postProcessor, textureFactory);
         }
 
         /// <summary>

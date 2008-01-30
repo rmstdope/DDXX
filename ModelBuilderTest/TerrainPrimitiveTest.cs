@@ -5,11 +5,12 @@ using NUnit.Framework;
 using Dope.DDXX.Physics;
 using Dope.DDXX.TextureBuilder;
 using Microsoft.Xna.Framework;
+using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.ModelBuilder
 {
     [TestFixture]
-    public class TerrainPrimitiveTest : IGenerator
+    public class TerrainPrimitiveTest : ITextureGenerator
     {
         private TerrainPrimitive terrain;
         private IPrimitive terrainPrimitive;
@@ -89,7 +90,7 @@ namespace Dope.DDXX.ModelBuilder
             }
         }
 
-        private void CreateTerrain(IGenerator generator, float heightScale, float width, float height, int widthSegments, int heightSegments, bool textured)
+        private void CreateTerrain(ITextureGenerator generator, float heightScale, float width, float height, int widthSegments, int heightSegments, bool textured)
         {
             terrain = new TerrainPrimitive();
             terrain.HeightMapGenerator = generator;
@@ -124,7 +125,7 @@ namespace Dope.DDXX.ModelBuilder
             return pixelValue;
         }
 
-        public void ConnectToInput(int inputPin, IGenerator outputGenerator)
+        public void ConnectToInput(int inputPin, ITextureGenerator outputGenerator)
         {
             throw new Exception("The method or operation is not implemented.");
         }
@@ -134,7 +135,7 @@ namespace Dope.DDXX.ModelBuilder
             get { return 0; }
         }
 
-        public IGenerator GetInput(int inputPin)
+        public ITextureGenerator GetInput(int inputPin)
         {
             throw new Exception("The method or operation is not implemented.");
         }

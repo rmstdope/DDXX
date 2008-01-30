@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
-using Dope.DDXX.TextureBuilder;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
@@ -157,7 +156,7 @@ namespace Dope.DDXX.DemoFramework
 
         public void Initialize(IGraphicsFactory graphicsFactory, IGraphicsDevice device, 
             ITextureFactory textureFactory, IEffectFactory effectFactory, 
-            ITextureBuilder textureBuilder, IDemoMixer mixer, IPostProcessor postProcessor)
+            IDemoMixer mixer, IPostProcessor postProcessor)
         {
             this.spriteBatch = graphicsFactory.CreateSpriteBatch();
             this.postProcessor = postProcessor;
@@ -165,7 +164,7 @@ namespace Dope.DDXX.DemoFramework
                 effect.Initialize(graphicsFactory, effectFactory, textureFactory,
                     mixer, postProcessor);
             foreach (IDemoPostEffect effect in postEffects)
-                effect.Initialize(graphicsFactory, postProcessor, textureFactory, textureBuilder);
+                effect.Initialize(graphicsFactory, postProcessor, textureFactory);
         }
 
         public void Step()

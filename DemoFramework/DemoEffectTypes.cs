@@ -4,6 +4,7 @@ using System.Text;
 using System.Reflection;
 using Dope.DDXX.Utility;
 using Dope.DDXX.TextureBuilder;
+using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -85,7 +86,7 @@ namespace Dope.DDXX.DemoFramework
             return demoEffect;
         }
 
-        public IGenerator CreateGenerator(string name)
+        public ITextureGenerator CreateGenerator(string name)
         {
             Type type;
             if (!iGenerators.TryGetValue(name, out type))
@@ -93,7 +94,7 @@ namespace Dope.DDXX.DemoFramework
             ConstructorInfo constrInfo = type.GetConstructor(new Type[] { });
             if (constrInfo == null)
                 throw new DDXXException("Public constructor() not found in generator " + name);
-            IGenerator generator = (IGenerator)constrInfo.Invoke(new object[] { });
+            ITextureGenerator generator = (ITextureGenerator)constrInfo.Invoke(new object[] { });
             return generator;
         }
 

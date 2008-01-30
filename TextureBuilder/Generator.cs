@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.TextureBuilder
 {
-    public abstract class Generator : IGenerator
+    public abstract class Generator : ITextureGenerator
     {
         private int numInputPins;
-        private IGenerator[] inputPins;
+        private ITextureGenerator[] inputPins;
 
         public int NumInputPins
         {
@@ -21,7 +22,7 @@ namespace Dope.DDXX.TextureBuilder
             if (numInputPins < 0)
                 throw new ArgumentOutOfRangeException("numInputPins", "Must be greater or equal to zero. Was " + numInputPins);
             this.numInputPins = numInputPins;
-            inputPins = new IGenerator[numInputPins];
+            inputPins = new ITextureGenerator[numInputPins];
         }
 
         protected Vector4 ColorToRgba(Color color1)
@@ -74,13 +75,13 @@ namespace Dope.DDXX.TextureBuilder
 
         public abstract Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize);
 
-        public void ConnectToInput(int inputPin, IGenerator outputGenerator)
+        public void ConnectToInput(int inputPin, ITextureGenerator outputGenerator)
         {
             ValidateInputPin(inputPin);
             inputPins[inputPin] = outputGenerator;
         }
 
-        public IGenerator GetInput(int inputPin)
+        public ITextureGenerator GetInput(int inputPin)
         {
             ValidateInputPin(inputPin);
             if (inputPins[inputPin] == null)
