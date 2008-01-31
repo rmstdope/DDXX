@@ -77,9 +77,12 @@ namespace Dope.DDXX.Graphics
             return factory.CreateDepthStencilBuffer(width, height, format, multiSampleType);
         }
 
-        public ITexture2D CreateFromGenerator(int width, int height, int numMipLevels, TextureUsage usage, SurfaceFormat format, ITextureGenerator generator)
+        public ITexture2D CreateFromGenerator(string name, int width, int height, int numMipLevels, TextureUsage usage, SurfaceFormat format, ITextureGenerator generator)
         {
-            return CreateFromFunction(width, height, numMipLevels, usage, format, generator.GetPixel);
+            ITexture2D texture = CreateFromFunction(width, height, numMipLevels, usage, format, generator.GetPixel);
+            if (name != null && name != "")
+                files.Add(new Texture2DParameters(name, texture, generator));
+            return texture;
         }
 
         public ITexture2D CreateFromFunction(int width, int height, int numLevels, TextureUsage usage, SurfaceFormat format, Fill2DTextureCallback callbackFunction)
@@ -145,11 +148,6 @@ namespace Dope.DDXX.Graphics
             if (y >= height)
                 y = height - 1;
             return data[y * width + x].ToVector4();
-        }
-
-        public void RegisterTexture(string name, ITexture2D texture)
-        {
-            files.Add(new Texture2DParameters(name, texture));
         }
 
         public ITexture2D WhiteTexture

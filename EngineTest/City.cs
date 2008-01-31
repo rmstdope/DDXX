@@ -71,7 +71,7 @@ namespace EngineTest
             textureDirector.CreatePerlinNoise(512, 6, 0.5f);
             textureDirector.Madd(0.04f, 0);
             textureDirector.Add();
-            ModelBuilder.SetDiffuseTexture("Default", textureDirector.Generate(256, 256, 0, SurfaceFormat.Color));
+            ModelBuilder.SetDiffuseTexture("Default", textureDirector.Generate("Noise256", 256, 256, 0, SurfaceFormat.Color));
         }
 
         private void SetBrickTexture()
@@ -96,7 +96,7 @@ namespace EngineTest
             textureDirector.Madd(0.3f, 0);
             textureDirector.Subtract();
             //textureDirector.Generate(256, 256, 0, SurfaceFormat.Color).Save("bricks.dds", ImageFileFormat.Dds);
-            ModelBuilder.SetDiffuseTexture("Default", textureDirector.Generate(256, 256, 0, SurfaceFormat.Color));
+            ModelBuilder.SetDiffuseTexture("Default", textureDirector.Generate("Noise256", 256, 256, 0, SurfaceFormat.Color));
         }
 
         public override void Step()

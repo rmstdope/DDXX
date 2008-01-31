@@ -67,7 +67,7 @@ namespace DFM2007Invitro
             TextureDirector textureDirector = new TextureDirector(TextureFactory);
             textureDirector.CreatePerlinNoise(4, 6, 0.5f);
 
-            ModelBuilder.SetDiffuseTexture("Default", textureDirector.Generate(64, 64, 0, SurfaceFormat.Color));
+            ModelBuilder.SetDiffuseTexture("Default", textureDirector.Generate("Noise64", 64, 64, 0, SurfaceFormat.Color));
             ModelBuilder.SetDiffuseColor("Default", new Color(250, 250, 250));
             ModelBuilder.SetAmbientColor("Default", new Color(50, 50, 50));
             ModelBuilder.SetEffect("Default", "Content\\effects\\Cylinders");

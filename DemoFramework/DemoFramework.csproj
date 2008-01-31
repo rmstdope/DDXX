@@ -186,6 +186,7 @@
     <Compile Include="TweakableSingle.cs" />
     <Compile Include="TweakableString.cs" />
     <Compile Include="TweakableTexture2DParameters.cs" />
+    <Compile Include="TweakableTextureGenerator.cs" />
     <Compile Include="TweakableTextureValue.cs" />
     <Compile Include="TweakableTextureFactory.cs" />
     <Compile Include="TweakableValueBase.cs" />

@@ -407,7 +407,7 @@ namespace Dope.DDXX.DemoFramework
         #region ITextureFactory Members
 
 
-        public ITexture2D CreateFromGenerator(int width, int height, int numMipLevels, TextureUsage usage, SurfaceFormat format, ITextureGenerator generator)
+        public ITexture2D CreateFromGenerator(string name, int width, int height, int numMipLevels, TextureUsage usage, SurfaceFormat format, ITextureGenerator generator)
         {
             throw new Exception("The method or operation is not implemented.");
         }

@@ -395,8 +395,7 @@ namespace Dope.DDXX.DemoFramework
         {
             if (!generators.ContainsKey(generatorName))
                 throw new DDXXException("Generator " + generatorName + " has never been registered.");
-            ITexture2D texture = textureFactory.CreateFromGenerator(width, height, mipLevels, TextureUsage.None, SurfaceFormat.Color, generators[generatorName]);
-            textureFactory.RegisterTexture(textureName, texture);
+            textureFactory.CreateFromGenerator(textureName, width, height, mipLevels, TextureUsage.None, SurfaceFormat.Color, generators[generatorName]);
         }
 
         public void AddFloatParameter(string name, float value, float stepSize)

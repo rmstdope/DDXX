@@ -37,7 +37,7 @@ namespace EngineTest
             tDirector.NormalMap();
             tDirector.Madd(1, 1);
             tDirector.Madd(0.5f, 0);
-            ITexture2D normalMap = tDirector.Generate(256, 256, 1, SurfaceFormat.Color);
+            ITexture2D normalMap = tDirector.Generate("NormalBENEDETI2", 256, 256, 1, SurfaceFormat.Color);
 
             model = ModelFactory.FromFile("Content/models/ChamferBox2", "Content/effects/NormalMapping");
             model.Meshes[0].MeshParts[0].MaterialHandler.AmbientColor = Color.Chocolate;

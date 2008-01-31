@@ -19,9 +19,9 @@ namespace Dope.DDXX.TextureBuilder
             this.textureFactory = textureFactory;
         }
 
-        public ITexture2D Generate(int width, int height, int numMipLevels, SurfaceFormat format)
+        public ITexture2D Generate(string name, int width, int height, int numMipLevels, SurfaceFormat format)
         {
-            return textureFactory.CreateFromGenerator(width, height, numMipLevels, TextureUsage.None, format, generatorStack.Pop());
+            return textureFactory.CreateFromGenerator(name, width, height, numMipLevels, TextureUsage.None, format, generatorStack.Pop());
         }
 
         public void CreatePerlinNoise(int baseFrequncy, int numOctaves, float persistance)
@@ -187,7 +187,7 @@ namespace Dope.DDXX.TextureBuilder
             for (int i = 0; i < list.Count; i++)
                 generator.ConnectToInput(i, list[i]);
 
-            return textureFactory.CreateFromGenerator(width, height, 1, TextureUsage.None, SurfaceFormat.Color, generator);
+            return textureFactory.CreateFromGenerator("Chain", width, height, 1, TextureUsage.None, SurfaceFormat.Color, generator);
         }
 
         private void AddGeneratorRecursively(ITextureGenerator generator, List<ITextureGenerator> list)

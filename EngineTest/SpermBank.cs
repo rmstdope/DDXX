@@ -33,7 +33,7 @@ namespace EngineTest
         private void InitializeSperms()
         {
             TextureDirector.CreatePerlinNoise(1, 6, 0.5f);
-            ModelBuilder.SetDiffuseTexture("Default", TextureDirector.Generate(64, 64, 0, SurfaceFormat.Color));
+            ModelBuilder.SetDiffuseTexture("Default", TextureDirector.Generate("Noise64", 64, 64, 0, SurfaceFormat.Color));
             //ModelBuilder.SetDiffuseTexture("Default", TextureFactory.CreateFromFile("Content\\textures\\CARPTBLU"));
             ModelBuilder.SetAmbientColor("Default", Color.Red);
             ModelBuilder.SetDiffuseColor("Default", Color.Red);

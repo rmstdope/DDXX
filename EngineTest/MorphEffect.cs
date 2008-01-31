@@ -105,7 +105,7 @@ namespace EngineTest
             material.SourceBlend = Blend.One;
             material.DestinationBlend = Blend.InverseSourceColor;
             TextureDirector.CreateCircle(0.4f, 0.5f);
-            material.DiffuseTexture = TextureDirector.Generate(64, 64, 4, SurfaceFormat.Color);
+            material.DiffuseTexture = TextureDirector.Generate("Circle64", 64, 64, 4, SurfaceFormat.Color);
         }
 
         public override void Step()

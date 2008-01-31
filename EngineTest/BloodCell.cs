@@ -78,7 +78,7 @@ namespace EngineTest
             TextureFactory.CreateFromFile("Content\\textures\\dope");
             MaterialHandler material = new MaterialHandler(EffectFactory.CreateFromFile("Content\\effects\\Artery"), new EffectConverter());
             TextureDirector.CreatePerlinNoise(64, 6, 0.5f);
-            TextureFactory.RegisterTexture("Noise256", TextureDirector.Generate(256, 256, 0, SurfaceFormat.Color));
+            TextureDirector.Generate("Noise256", 256, 256, 0, SurfaceFormat.Color);
             material.DiffuseTexture = TextureFactory.CreateFromFile("Noise256");// Director.Generate(256, 256, 0, SurfaceFormat.Color);
             //ModelBuilder.SetDiffuseTexture("Default", TextureDirector.Generate(256, 256, 0, SurfaceFormat.Color));
             TextureDirector.CreatePerlinNoise(64, 6, 0.5f);
@@ -94,7 +94,7 @@ namespace EngineTest
             //ModelBuilder.SetSpecularPower("Default", 32);
             //ModelBuilder.SetEffect("Default", "Content\\effects\\Artery");
             ModelDirector.CreateTunnel(2.0f, 32, 30, 60, 2, 10);
-            material.NormalTexture = TextureDirector.Generate(256, 256, 0, SurfaceFormat.Color);
+            material.NormalTexture = TextureDirector.Generate("NormalNoise256", 256, 256, 0, SurfaceFormat.Color);
             material.AmbientColor = Color.Black;
             material.DiffuseColor = Color.Red;
             material.Shininess = 0.0f;
@@ -110,7 +110,7 @@ namespace EngineTest
             TextureDirector.CreateCircle(0.1f, 0.5f);
             FloaterSystemNode floaterSystem = new FloaterSystemNode("Floaters", 4, 0.1f, 1);
             floaterSystem.Initialize(GraphicsDevice, GraphicsFactory, 100);
-            floaterSystem.Material.DiffuseTexture = TextureDirector.Generate(64, 64, 0, SurfaceFormat.Color);
+            floaterSystem.Material.DiffuseTexture = TextureDirector.Generate("Circle64", 64, 64, 0, SurfaceFormat.Color);
             floaterSystem.Material.BlendFunction = BlendFunction.ReverseSubtract;
             floaterSystem.Material.SourceBlend = Blend.One;
             floaterSystem.Material.DestinationBlend = Blend.One;
@@ -120,7 +120,7 @@ namespace EngineTest
         private void InitializeCells()
         {
             TextureDirector.CreatePerlinNoise(1, 6, 0.5f);
-            ModelBuilder.SetDiffuseTexture("Default", TextureDirector.Generate(64, 64, 0, SurfaceFormat.Color));
+            ModelBuilder.SetDiffuseTexture("Default", TextureDirector.Generate("Noise64", 64, 64, 0, SurfaceFormat.Color));
             //ModelBuilder.SetDiffuseTexture("Default", TextureFactory.CreateFromFile("Content\\textures\\CARPTBLU"));
             ModelBuilder.SetAmbientColor("Default", Color.Red);
             ModelBuilder.SetDiffuseColor("Default", Color.Red);

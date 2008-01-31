@@ -48,7 +48,7 @@ namespace Dope.DDXX.DemoEffects
                 float ratio = (height / width) *
                     (GraphicsDevice.PresentationParameters.BackBufferWidth / (float)GraphicsDevice.PresentationParameters.BackBufferHeight);
                 ITextureGenerator rect = new RoundedRectangle(new Vector2(0.95f, ratio * 0.95f), new Vector2(0.5f, 0.5f), rounding);
-                Texture = TextureFactory.CreateFromGenerator(GraphicsDevice.PresentationParameters.BackBufferWidth,
+                Texture = TextureFactory.CreateFromGenerator("AspectFrame", GraphicsDevice.PresentationParameters.BackBufferWidth,
                     GraphicsDevice.PresentationParameters.BackBufferHeight, 1, TextureUsage.None, SurfaceFormat.Color, rect);
             }
         }

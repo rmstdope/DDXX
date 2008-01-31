@@ -33,7 +33,7 @@ namespace Dope.DDXX.TextureBuilder
             // Setup
             director.CreatePerlinNoise(2, 4, 0.5f);
             // Exercise SUT
-            director.Generate(1, 2, 3, SurfaceFormat.Color);
+            director.Generate("name", 1, 2, 3, SurfaceFormat.Color);
             // Verify
             Assert.IsInstanceOfType(typeof(PerlinNoise), generatorUsed);
             PerlinNoise noise = generatorUsed as PerlinNoise;
@@ -48,7 +48,7 @@ namespace Dope.DDXX.TextureBuilder
             // Setup
             director.CreateCircle(0.1f, 0.2f);
             // Exercise SUT
-            director.Generate(1, 2, 3, SurfaceFormat.Color);
+            director.Generate("name", 1, 2, 3, SurfaceFormat.Color);
             // Verify
             Assert.IsInstanceOfType(typeof(Circle), generatorUsed);
             Circle circle = generatorUsed as Circle;
@@ -62,7 +62,7 @@ namespace Dope.DDXX.TextureBuilder
             // Setup
             director.CreateConstant(new Vector4(1, 2, 3, 4));
             // Exercise SUT
-            director.Generate(1, 2, 3, SurfaceFormat.Color);
+            director.Generate("name", 1, 2, 3, SurfaceFormat.Color);
             // Verify
             Assert.IsInstanceOfType(typeof(Constant), generatorUsed);
             Constant constant = generatorUsed as Constant;
@@ -77,7 +77,7 @@ namespace Dope.DDXX.TextureBuilder
             director.CreatePerlinNoise(2, 4, 0.5f);
             director.Modulate();
             // Exercise SUT
-            director.Generate(1, 2, 3, SurfaceFormat.Color);
+            director.Generate("name", 1, 2, 3, SurfaceFormat.Color);
             // Verify
             Assert.IsInstanceOfType(typeof(Modulate), generatorUsed);
             Modulate modulate = generatorUsed as Modulate;
@@ -100,7 +100,7 @@ namespace Dope.DDXX.TextureBuilder
         {
             // Exercise SUT
             director.CreatePerlinNoise(2, 4, 0.5f);
-            director.Generate(1, 2, 3, SurfaceFormat.Color);
+            director.Generate("name", 1, 2, 3, SurfaceFormat.Color);
             // Verify
             Assert.AreEqual(1, textureWidth);
             Assert.AreEqual(2, textureHeight);
@@ -114,7 +114,7 @@ namespace Dope.DDXX.TextureBuilder
             // Setup
             director.FromFile("file");
             // Exercise SUT
-            director.Generate(1, 2, 3, SurfaceFormat.Color);
+            director.Generate("name", 1, 2, 3, SurfaceFormat.Color);
             // Verify
             Assert.IsInstanceOfType(typeof(FromFile), generatorUsed);
             FromFile fromFile = generatorUsed as FromFile;
@@ -129,7 +129,7 @@ namespace Dope.DDXX.TextureBuilder
             director.CreateCircle(0.1f, 0.2f);
             director.NormalMap();
             // Exercise SUT
-            director.Generate(1, 2, 3, SurfaceFormat.Color);
+            director.Generate("name", 1, 2, 3, SurfaceFormat.Color);
             // Verify
             Assert.IsInstanceOfType(typeof(NormalMap), generatorUsed);
             NormalMap normalMap = generatorUsed as NormalMap;
@@ -144,7 +144,7 @@ namespace Dope.DDXX.TextureBuilder
             director.CreatePerlinNoise(2, 4, 0.5f);
             director.Add();
             // Exercise SUT
-            director.Generate(1, 2, 3, SurfaceFormat.Color);
+            director.Generate("name", 1, 2, 3, SurfaceFormat.Color);
             // Verify
             Assert.IsInstanceOfType(typeof(Add), generatorUsed);
             Add add = generatorUsed as Add;
@@ -184,7 +184,7 @@ namespace Dope.DDXX.TextureBuilder
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public ITexture2D CreateFromGenerator(int width, int height, int numMipLevels, TextureUsage usage, SurfaceFormat format, ITextureGenerator generator)
+        public ITexture2D CreateFromGenerator(string name, int width, int height, int numMipLevels, TextureUsage usage, SurfaceFormat format, ITextureGenerator generator)
         {
             generatorUsed = generator;
             textureWidth = width;

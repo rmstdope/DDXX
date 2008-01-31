@@ -15,8 +15,7 @@ namespace Dope.DDXX.Graphics
         IRenderTarget2D CreateFullsizeRenderTarget();
         IDepthStencilBuffer CreateFullsizeDepthStencil(DepthFormat format, MultiSampleType multiSampleType);
         ITexture2D CreateFromFunction(int width, int height, int numLevels, TextureUsage usage, SurfaceFormat format, Fill2DTextureCallback callbackFunction);
-        ITexture2D CreateFromGenerator(int width, int height, int numMipLevels, TextureUsage usage, SurfaceFormat format, ITextureGenerator generator);
-        void RegisterTexture(string name, ITexture2D texture);
+        ITexture2D CreateFromGenerator(string name, int width, int height, int numMipLevels, TextureUsage usage, SurfaceFormat format, ITextureGenerator generator);
         ITexture2D WhiteTexture { get; }
         List<Texture2DParameters> Texture2DParameters { get; }
     }

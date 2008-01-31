@@ -13,7 +13,6 @@ namespace Dope.DDXX.DemoFramework
         public TweakableTexture2DParameters(Texture2DParameters target, ITweakableFactory factory)
             : base(target, factory)
         {
-            //ITexture2D texture = Factory.TextureFactory.CreateFromFunction(32, 32, 1, TextureUsage.None, SurfaceFormat.Color, 
         }
 
         public override int NumVisableVariables
@@ -23,12 +22,14 @@ namespace Dope.DDXX.DemoFramework
 
         protected override int NumSpecificVariables
         {
-            get { throw new Exception("The method or operation is not implemented."); }
+            get { return 1; }
         }
 
         protected override ITweakable GetSpecificVariable(int index)
         {
-            throw new Exception("The method or operation is not implemented.");
+            if (Target.IsGenerated)
+                return Factory.CreateTweakableObject(Target.Generator);
+            return null;
         }
 
         protected override void ParseSpecficXmlNode(XmlNode node)

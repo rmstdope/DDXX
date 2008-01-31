@@ -36,7 +36,7 @@ namespace EngineTest
             director.CreateSquare(0.9f);
             director.GaussianBlur();
             director.Modulate();
-            texture = director.Generate(64, 64, 1, SurfaceFormat.Color);
+            texture = director.Generate("Cirvle64", 64, 64, 1, SurfaceFormat.Color);
             //texture = director.GenerateChain(512, 512);
             texture.Save("square-my.dds", ImageFileFormat.Dds);
 

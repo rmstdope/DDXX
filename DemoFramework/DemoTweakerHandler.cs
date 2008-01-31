@@ -84,6 +84,7 @@ namespace Dope.DDXX.DemoFramework
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(Vector3), typeof(TweakableVector3)));
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(Vector4), typeof(TweakableVector4)));
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(ITextureFactory), typeof(TweakableTextureFactory)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(ITextureGenerator), typeof(TweakableTextureGenerator)));
         }
 
         public virtual void Initialize(IDemoRegistrator registrator, IUserInterface userInterface, ITweakable demoTweakable)
@@ -251,9 +252,6 @@ namespace Dope.DDXX.DemoFramework
                     ConstructorInfo constructor = pair.Value.GetConstructor(new Type[] { typeof(PropertyInfo), typeof(object) });
                     if (constructor != null)
                         return constructor.Invoke(new object[] { property, target }) as ITweakableProperty;
-                    //object propertyTarget = property.GetGetMethod().Invoke(target, null);
-                    //if (propertyTarget != null)
-                    //    return CreateTweakableObject(propertyTarget);
                 }
             }
             return null;

@@ -39,13 +39,13 @@ namespace DFM2007Invitro
 
             TextureDirector.CreatePerlinNoise(8, 6, 0.5f);
             //TextureDirector.ModulateColor(new Vector4(0.3f, 0.3f, 0.9f, 0));
-            ModelBuilder.SetDiffuseTexture("Default", TextureDirector.Generate(256, 256, 0, SurfaceFormat.Color));
+            ModelBuilder.SetDiffuseTexture("Default", TextureDirector.Generate("Noise256", 256, 256, 0, SurfaceFormat.Color));
             TextureDirector.CreatePerlinNoise(8, 6, 0.5f);
             //TextureDirector.ModulateColor(new Vector4(0.3f, 0.3f, 0.9f, 0));
             TextureDirector.NormalMap();
             TextureDirector.Madd(1, 1);
             TextureDirector.Madd(0.5f, 0);
-            ModelBuilder.SetNormalTexture("Default", TextureDirector.Generate(256, 256, 0, SurfaceFormat.Color));
+            ModelBuilder.SetNormalTexture("Default", TextureDirector.Generate("MoreCircle256", 256, 256, 0, SurfaceFormat.Color));
             ModelBuilder.SetDiffuseColor("Default", new Color(60, 90, 250));
             ModelBuilder.SetAmbientColor("Default", new Color(60, 90, 250));
             ModelBuilder.SetSpecularColor("Default", new Color(200, 200, 200));
@@ -74,13 +74,13 @@ namespace DFM2007Invitro
             TextureDirector.CreateCircle(0.2f, 0.5f);
             floaterSystem = new FloaterSystemNode("FloaterSystem", 8, 0.02f, 6.0f);
             floaterSystem.Initialize(GraphicsDevice, GraphicsFactory, 2000);
-            floaterSystem.Material.DiffuseTexture = TextureDirector.Generate(64, 64, 0, SurfaceFormat.Color);
+            floaterSystem.Material.DiffuseTexture = TextureDirector.Generate("Circle64", 64, 64, 0, SurfaceFormat.Color);
             scene.AddNode(floaterSystem);
 
             TextureDirector.CreateCircle(0.2f, 0.5f);
             SpiralSystemNode spiralSystem = new SpiralSystemNode("ps", 0.05f);
             spiralSystem.Initialize(GraphicsDevice, GraphicsFactory, 10000);
-            spiralSystem.Material.DiffuseTexture = TextureDirector.Generate(256, 256, 0, SurfaceFormat.Color);
+            spiralSystem.Material.DiffuseTexture = TextureDirector.Generate("Circle256", 256, 256, 0, SurfaceFormat.Color);
             spiralSystem.WorldState.MoveUp(1.5f);
             spiralSystem.WorldState.MoveForward(1.5f);
             scene.AddNode(spiralSystem);
