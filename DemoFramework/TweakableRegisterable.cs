@@ -32,8 +32,6 @@ namespace Dope.DDXX.DemoFramework
 
         protected override void ParseSpecficXmlNode(XmlNode node)
         {
-            if (!(node is XmlElement))
-                return;
             throw new DDXXException("Missing property " + node.Name + " in class " + Target.GetType().Name);
         }
 

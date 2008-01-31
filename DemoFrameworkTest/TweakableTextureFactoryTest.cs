@@ -77,7 +77,8 @@ namespace Dope.DDXX.DemoFramework
             for (int i = 0; i < num; i++)
             {
                 ITexture2D texture = mockery.NewMock<ITexture2D>();
-                list.Add(new Texture2DParameters(i.ToString(), texture));
+                ITextureGenerator generator = mockery.NewMock<ITextureGenerator>();
+                list.Add(new Texture2DParameters(i.ToString(), texture, generator));
             }
             Stub.On(target).GetProperty("Texture2DParameters").Will(Return.Value(list));
         }

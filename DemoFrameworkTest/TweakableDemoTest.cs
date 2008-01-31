@@ -55,6 +55,16 @@ namespace Dope.DDXX.DemoFramework
             }
 
             #endregion
+
+            #region IDemoRegistrator Members
+
+
+            public IDemoEffectTypes EffectTypes
+            {
+                get { throw new Exception("The method or operation is not implemented."); }
+            }
+
+            #endregion
         }
 
         private ITweakable tweakable;

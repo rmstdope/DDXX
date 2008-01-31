@@ -45,7 +45,7 @@ namespace Dope.DDXX.DemoFramework
                         {
                             if (type.FullName == "Dope.DDXX.DemoFramework.IRegisterable")
                                 iRegisterables.Add(t.Name, t);
-                            if (type.FullName == "Dope.DDXX.TextureBuilder.IGenerator")
+                            if (type.FullName == "Dope.DDXX.Graphics.ITextureGenerator")
                                 iGenerators.Add(t.Name, t);
                         }
                         //TypeFilter filter = new TypeFilter(delegate(Type ty, object comp)

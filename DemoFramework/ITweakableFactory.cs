@@ -11,5 +11,6 @@ namespace Dope.DDXX.DemoFramework
         ITweakableProperty CreateTweakableValue(PropertyInfo property, object target);
         ITweakable CreateTweakableObject(object target);
         ITextureFactory TextureFactory { get; }
+        IDemoEffectTypes EffectTypes { get; }
     }
 }

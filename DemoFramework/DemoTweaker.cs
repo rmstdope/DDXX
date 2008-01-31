@@ -42,18 +42,32 @@ namespace Dope.DDXX.DemoFramework
 
         public void Draw()
         {
+            CreateTimeLine(timelineWindow);
             CreateTweakableControls();
+            CreateInputControls();
 
             userInterface.DrawControl(mainWindow);
 
             status.RootControl.RemoveChildren();
         }
 
+        private void CreateInputControls()
+        {
+            string displayText = "<No Input>";
+            BoxControl inputBox = new BoxControl(new Vector4(0, 0.97f, 1, 0.03f),
+                settings.Alpha, settings.TitleColor, mainWindow);
+            if (status.InputString != "")
+                displayText = "Input: " + status.InputString;
+            TextControl text = new TextControl(displayText, new Vector2(0.5f, 0.5f),
+                TextFormatting.Center | TextFormatting.VerticalCenter, 255,
+                Color.White, inputBox);
+        }
+
         private void CreateBaseControls()
         {
-            mainWindow = new BoxControl(new Vector4(0.05f, 0.05f, 0.90f, 0.90f), 0, Color.Black, null);
+            mainWindow = new BoxControl(new Vector4(0.02f, 0.02f, 0.96f, 0.96f), 0, Color.Black, null);
 
-            BaseControl titleWindow = new BoxControl(new Vector4(0, 0, 1, 0.05f),
+            BaseControl titleWindow = new BoxControl(new Vector4(0, 0, 1, 0.04f),
                 settings.Alpha, settings.TitleColor, mainWindow);
             int seconds = (int)Time.CurrentTime;
             int hundreds = (int)((Time.CurrentTime - seconds) * 100);
@@ -64,10 +78,9 @@ namespace Dope.DDXX.DemoFramework
 
         private void CreateTimeControls()
         {
-            BaseControl timeWindow = new BoxControl(new Vector4(0, 0.05f, 1, 0.95f),
+            BaseControl timeWindow = new BoxControl(new Vector4(0, 0.04f, 1, 0.93f),
                 settings.Alpha, settings.TimeColor, mainWindow);
             timelineWindow = new BoxControl(new Vector4(0.02f, 0.04f, 0.96f, 0.92f), 0, Color.Black, timeWindow);
-            CreateTimeLine(timelineWindow);
         }
 
         private void CreateTimeLine(BaseControl timelineWindow)

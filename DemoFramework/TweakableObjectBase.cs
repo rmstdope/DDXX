@@ -83,14 +83,6 @@ namespace Dope.DDXX.DemoFramework
 
         public void CreateBaseControls(TweakerStatus status, ITweakerSettings settings)
         {
-            string displayText = "<No Input>";
-            BoxControl inputBox = new BoxControl(new Vector4(0, 0.95f, 1, 0.05f),
-                settings.Alpha, settings.TitleColor, status.RootControl);
-            if (status.InputString != "")
-                displayText = "Input: " + status.InputString;
-            TextControl text = new TextControl(displayText, new Vector2(0.5f, 0.5f),
-                TextFormatting.Center | TextFormatting.VerticalCenter, 255,
-                Color.White, inputBox);
         }
 
         public void SetValue(TweakerStatus status)
@@ -105,7 +97,7 @@ namespace Dope.DDXX.DemoFramework
             {
                 if (HasProperty(child.Name))
                     ParseProperty(child);
-                else
+                else if (child is XmlElement)
                     ParseSpecficXmlNode(child);
             }
         }

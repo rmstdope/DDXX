@@ -101,6 +101,11 @@ namespace Dope.DDXX.DemoFramework
             get { return textureFactory; } 
         }
 
+        public IDemoEffectTypes EffectTypes
+        {
+            get { return effectTypes; }
+        }
+
         public DemoExecuter(IDemoFactory demoFactory, ISoundDriver soundDriver, IInputDriver inputDriver, IPostProcessor postProcessor, IDemoEffectTypes effectTypes)
         {
             this.demoFactory = demoFactory;

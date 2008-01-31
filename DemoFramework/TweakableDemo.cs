@@ -42,8 +42,6 @@ namespace Dope.DDXX.DemoFramework
 
         protected override void ParseSpecficXmlNode(XmlNode node)
         {
-            if (!(node is XmlElement))
-                return;
             switch (node.Name)
             {
                 case "Effect":
@@ -55,6 +53,9 @@ namespace Dope.DDXX.DemoFramework
                 case "Transition":
                 case "Texture":
                 case "Generator":
+                    break;
+                case "TextureFactory":
+                    Factory.CreateTweakableObject(Target.TextureFactory).ReadFromXmlFile(node);
                     break;
                 default:
                     throw new DDXXException("Invalid XML element " + node.Name + 

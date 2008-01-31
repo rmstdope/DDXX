@@ -10,9 +10,21 @@ namespace Dope.DDXX.DemoFramework
 {
     public class TweakableTexture2DParameters : TweakableObjectBase<Texture2DParameters>
     {
+        private List<List<ITextureGenerator>> generators = new List<List<ITextureGenerator>>();
+
         public TweakableTexture2DParameters(Texture2DParameters target, ITweakableFactory factory)
             : base(target, factory)
         {
+            ITextureGenerator generator = Target.Generator;
+            while (generator != null)
+            {
+                generators.Add(new List<ITextureGenerator>());
+                generators[generators.Count - 1].Add(generator);
+                if (generator.NumInputPins > 0)
+                    generator = generator.GetInput(0);
+                else
+                    generator = null;
+            }
         }
 
         public override int NumVisableVariables
@@ -22,12 +34,12 @@ namespace Dope.DDXX.DemoFramework
 
         protected override int NumSpecificVariables
         {
-            get { return 1; }
+            get { return generators.Count; }
         }
 
         protected override ITweakable GetSpecificVariable(int index)
         {
-            return Factory.CreateTweakableObject(Target.Generator);
+            return Factory.CreateTweakableObject(generators[index][0]);
         }
 
         protected override void ParseSpecficXmlNode(XmlNode node)

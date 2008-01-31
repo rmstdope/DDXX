@@ -164,6 +164,13 @@ namespace Dope.DDXX.TextureBuilder
             generatorStack.Push(normalMap);
         }
 
+        public void AddGenerator(ITextureGenerator generator)
+        {
+            if (generator.NumInputPins > 0)
+                ConnectFromStack(generator, generator.NumInputPins);
+            generatorStack.Push(generator);
+        }
+
         private void ConnectFromStack(ITextureGenerator modulate, int numInputs)
         {
             EnsureStackSize(numInputs);

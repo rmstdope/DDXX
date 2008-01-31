@@ -1,9 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Demo song="music_machinefunk_loop">
-	<Generator name="noise256" class="PerlinNoise">
+	<!--<Generator name="noise256" class="PerlinNoise">
 		<Parameter name="BaseFrequency" int="1024" />
 	</Generator>
-	<Texture name="noise256" generator="noise256" width="256" height="256" miplevels="1"></Texture>
+	<Texture name="noise256" generator="noise256" width="256" height="256" miplevels="1"></Texture>-->
+	<TextureFactory>
+		<Texture name="noise64" width="64" height="64" miplevels="1">
+			<Generator class="PerlinNoise">
+				<BaseFrequency>16</BaseFrequency>
+			</Generator>
+			<Generator class="Madd">
+			</Generator>
+		</Texture>
+	</TextureFactory>
 	<!--<PostEffect class="DepthOfFieldPostEffect" track="0" startTime="0" endTime="500">
 		<Parameter name="DrawOrder" int="0" />
 		<Parameter name="NumPasses" int="2" />

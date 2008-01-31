@@ -276,6 +276,11 @@ namespace Dope.DDXX.DemoFramework
             get { return registrator.TextureFactory; }
         }
 
+        public IDemoEffectTypes EffectTypes
+        {
+            get { return registrator.EffectTypes; }
+        }
+
         #endregion
     }
 }
