@@ -637,9 +637,7 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(effectTypes).Method("CreateGenerator").With("className").Will(Return.Value(generator1));
             executer.AddGenerator("genName", "className");
             Expect.Once.On(textureFactory).Method("CreateFromGenerator").
-                With(1, 2, 3, TextureUsage.None, SurfaceFormat.Color, generator1).Will(Return.Value(texture));
-            Expect.Once.On(textureFactory).Method("RegisterTexture").
-                With("texName", texture);
+                With("texName", 1, 2, 3, TextureUsage.None, SurfaceFormat.Color, generator1).Will(Return.Value(texture));
             executer.AddTexture("texName", "genName", 1, 2, 3);
         }
 

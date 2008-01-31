@@ -8,26 +8,29 @@ using System.Xml;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public class TweakableTexture2DParameters : TweakableObjectBase<Texture2DParameters>
+    public class TweakableTextureGenerator : TweakableObjectBase<ITextureGenerator>
     {
-        public TweakableTexture2DParameters(Texture2DParameters target, ITweakableFactory factory)
+        private ITexture2D texture;
+
+        public TweakableTextureGenerator(ITextureGenerator target, ITweakableFactory factory)
             : base(target, factory)
         {
+            texture = Factory.TextureFactory.CreateFromGenerator("", 32, 32, 1, TextureUsage.None, SurfaceFormat.Color, Target);
         }
 
         public override int NumVisableVariables
         {
-            get { return 5; }
+            get { return 13; }
         }
 
         protected override int NumSpecificVariables
         {
-            get { return 1; }
+            get { return 0; }
         }
 
         protected override ITweakable GetSpecificVariable(int index)
         {
-            return Factory.CreateTweakableObject(Target.Generator);
+            throw new Exception("The method or operation is not implemented.");
         }
 
         protected override void ParseSpecficXmlNode(XmlNode node)
@@ -45,9 +48,9 @@ namespace Dope.DDXX.DemoFramework
             float height = status.VariableSpacing * 0.9f;
             if (index == status.Selection)
                 new BoxControl(new Vector4(0, y, 1, height), settings.Alpha, settings.SelectedColor, status.RootControl);
-            new TextControl(Target.Name + " (<ITexture2D>)", new Vector4(0, y, 0.45f, height), TextFormatting.Right | TextFormatting.VerticalCenter, settings.TextAlpha, Color.White, status.RootControl);
+            new TextControl(Target.GetType().Name, new Vector4(0, y, 0.45f, height), TextFormatting.Right | TextFormatting.VerticalCenter, settings.TextAlpha, Color.White, status.RootControl);
 
-            new BoxControl(new Vector4(0.55f + 0.225f - height / 2, y, height / 2, height), 255, Target.Texture, status.RootControl);
+            new BoxControl(new Vector4(0.55f + 0.225f - height / 2, y, height / 2, height), 255, texture, status.RootControl);
         }
 
     }
