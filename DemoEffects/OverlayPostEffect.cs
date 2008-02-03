@@ -87,7 +87,7 @@ namespace Dope.DDXX.DemoEffects
                 throw new DDXXException("AddNoise and SubtractNoise cen not both be set for OverlayPostEffect.");
 
             if (texture == null && filename != "")
-                texture = TextureFactory.CreateFromFile(filename);
+                texture = TextureFactory.CreateFromName(filename);
             else
                 texture = TextureFactory.WhiteTexture;
         }

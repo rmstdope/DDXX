@@ -47,7 +47,7 @@ namespace Dope.DDXX.ModelBuilder
             if (fileName == null || fileName == "")
                 material.DiffuseTexture = null;
             else
-                material.DiffuseTexture = textureFactory.CreateFromFile(fileName);
+                material.DiffuseTexture = textureFactory.CreateFromName(fileName);
         }
 
         public void SetDiffuseTexture(string materialName, ITexture2D texture)
@@ -62,7 +62,7 @@ namespace Dope.DDXX.ModelBuilder
             if (fileName == null || fileName == "")
                 material.NormalTexture = null;
             else
-                material.NormalTexture = textureFactory.CreateFromFile(fileName);
+                material.NormalTexture = textureFactory.CreateFromName(fileName);
         }
 
         public void SetNormalTexture(string materialName, ITexture2D texture)

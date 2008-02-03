@@ -60,19 +60,36 @@ namespace Dope.DDXX.DemoFramework
                 }
                 if (!found)
                 {
-                    XmlNode newNode = InsertNewXmlNode(xmlDocument, node, "Texture");
-                    XmlAttribute newAttribute = xmlDocument.CreateAttribute("name");
-                    newAttribute.Value = parameter.Name;
-                    newNode.Attributes.Append(newAttribute);
+                    XmlElement newNode = AddNewChild(xmlDocument, node, "Texture");
+                    AddAttribute(xmlDocument, newNode, "name", parameter.Name);
+                    AddAttribute(xmlDocument, newNode, "width", parameter.Texture.Width.ToString());
+                    AddAttribute(xmlDocument, newNode, "height", parameter.Texture.Height.ToString());
+                    AddAttribute(xmlDocument, newNode, "miplevels", parameter.Texture.LevelCount > 1 ? "0" : "1");
                     UpdateTexture(xmlDocument, newNode, parameter);
                 }
             }
         }
 
-        private void UpdateTexture(XmlDocument xmlDocument, XmlNode newNode, Texture2DParameters parameter)
+        private void UpdateTexture(XmlDocument xmlDocument, XmlNode node, Texture2DParameters parameter)
         {
-            //ITweakable tweakableGenerator = Factory.CreateTweakableObject(parameter);
-            //tweakableGenerator.WriteToXmlFile(xmlDocument, newNode);
+            while (node.FirstChild != null)
+                node.RemoveChild(node.FirstChild);
+            List<ITextureGenerator> generators = new List<ITextureGenerator>();
+            AddGenerator(parameter.Generator, generators);
+            generators.Reverse();
+            foreach (ITextureGenerator generator in generators)
+            {
+                XmlElement newNode = AddNewChild(xmlDocument, node, "Generator");
+                AddAttribute(xmlDocument, newNode, "class", generator.GetType().Name);
+                Factory.CreateTweakableObject(generator).WriteToXmlFile(xmlDocument, newNode);
+            }
+        }
+
+        private void AddGenerator(ITextureGenerator generator, List<ITextureGenerator> generators)
+        {
+            generators.Add(generator);
+            for (int i = 0; i < generator.NumInputPins; i++)
+                AddGenerator(generator.GetInput(i), generators);
         }
 
         private void RegisterTexture(XmlNode node)

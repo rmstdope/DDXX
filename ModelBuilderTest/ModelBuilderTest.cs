@@ -108,7 +108,7 @@ namespace Dope.DDXX.ModelBuilder
         {
             // Setup
             Material();
-            Expect.Once.On(textureFactory).Method("CreateFromFile").
+            Expect.Once.On(textureFactory).Method("CreateFromName").
                 With("DiffuseTexture").Will(Return.Value(texture2D));
             Expect.Once.On(material).SetProperty("DiffuseTexture").To(texture2D);
             // Exercise SUT
@@ -150,7 +150,7 @@ namespace Dope.DDXX.ModelBuilder
         {
             // Setup
             Material();
-            Expect.Once.On(textureFactory).Method("CreateFromFile").
+            Expect.Once.On(textureFactory).Method("CreateFromName").
                 With("NormalTexture").Will(Return.Value(texture2D));
             Expect.Once.On(material).SetProperty("NormalTexture").To(texture2D);
             // Exercise SUT

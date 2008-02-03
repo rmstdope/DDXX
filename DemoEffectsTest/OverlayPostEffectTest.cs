@@ -37,7 +37,7 @@ namespace Dope.DDXX.DemoEffects
         [Test]
         public void TestInitialize1()
         {
-            Expect.Once.On(textureFactory).Method("CreateFromFile").
+            Expect.Once.On(textureFactory).Method("CreateFromName").
                 With("file1").Will(Return.Value(texture2D));
 
             overlay.AddNoise = true;
@@ -51,7 +51,7 @@ namespace Dope.DDXX.DemoEffects
         [Test]
         public void TestInitialize2()
         {
-            Expect.Once.On(textureFactory).Method("CreateFromFile").
+            Expect.Once.On(textureFactory).Method("CreateFromName").
                 With("file2").Will(Return.Value(texture2D));
 
             overlay.AddNoise = true;

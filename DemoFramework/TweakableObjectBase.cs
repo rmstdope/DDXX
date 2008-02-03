@@ -114,7 +114,7 @@ namespace Dope.DDXX.DemoFramework
                 }
                 if (!found && tweakable.Property.Name != "StartTime" && tweakable.Property.Name != "EndTime")
                 {
-                    InsertNewXmlNode(xmlDocument, node, tweakable.Property.Name);
+                    AddNewChild(xmlDocument, node, tweakable.Property.Name);
                 }
             }
             foreach (XmlNode child in node.ChildNodes)
@@ -129,13 +129,41 @@ namespace Dope.DDXX.DemoFramework
             WriteNewNodes(xmlDocument, node);
         }
 
-        protected XmlElement InsertNewXmlNode(XmlDocument xmlDocument, XmlNode parentNode, string name)
+        protected XmlElement AddNewChild(XmlDocument xmlDocument, XmlNode parentNode, string name)
         {
-            XmlNode whitespace = parentNode.FirstChild;
-            if (whitespace is XmlWhitespace)
-                parentNode.InsertBefore(xmlDocument.CreateWhitespace(whitespace.Value), parentNode.LastChild);
+            if (parentNode.FirstChild == null && parentNode.PreviousSibling is XmlWhitespace)
+                return AddNodeWhitespaceFromParent(xmlDocument, parentNode, name);
+            if (parentNode.FirstChild is XmlWhitespace)
+                return AddNodeWhitespaceFromChild(xmlDocument, parentNode, name);
+            return AddNodeWithoutWhitespace(xmlDocument, parentNode, name);
+        }
+
+        protected void AddAttribute(XmlDocument xmlDocument, XmlElement node, string name, string value)
+        {
+            XmlAttribute newAttribute = xmlDocument.CreateAttribute(name);
+            newAttribute.Value = value;
+            node.Attributes.Append(newAttribute);
+        }
+
+        private XmlElement AddNodeWithoutWhitespace(XmlDocument xmlDocument, XmlNode parentNode, string name)
+        {
             XmlElement newElement = xmlDocument.CreateElement(name);
             parentNode.InsertBefore(newElement, parentNode.LastChild);
+            return newElement;
+        }
+
+        private XmlElement AddNodeWhitespaceFromChild(XmlDocument xmlDocument, XmlNode parentNode, string name)
+        {
+            parentNode.InsertBefore(xmlDocument.CreateWhitespace(parentNode.FirstChild.Value), parentNode.LastChild);
+            return AddNodeWithoutWhitespace(xmlDocument, parentNode, name);
+        }
+
+        private XmlElement AddNodeWhitespaceFromParent(XmlDocument xmlDocument, XmlNode parentNode, string name)
+        {
+            parentNode.InsertBefore(xmlDocument.CreateWhitespace(parentNode.PreviousSibling.Value + "	"), parentNode.LastChild);
+            XmlElement newElement = xmlDocument.CreateElement(name);
+            parentNode.InsertAfter(newElement, parentNode.LastChild);
+            parentNode.InsertAfter(xmlDocument.CreateWhitespace(parentNode.PreviousSibling.Value), parentNode.LastChild);
             return newElement;
         }
 

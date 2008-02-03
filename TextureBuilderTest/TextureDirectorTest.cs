@@ -154,7 +154,7 @@ namespace Dope.DDXX.TextureBuilder
 
         #region ITextureFactory Members
 
-        public ITexture2D CreateFromFile(string name)
+        public ITexture2D CreateFromName(string name)
         {
             throw new Exception("The method or operation is not implemented.");
         }

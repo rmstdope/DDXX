@@ -41,7 +41,7 @@ namespace Dope.DDXX.DemoEffects
 
             foreach (TextureLayer layer in textureLayers)
             {
-                layer.Texture = TextureFactory.CreateFromFile(layer.TextureName);
+                layer.Texture = TextureFactory.CreateFromName(layer.TextureName);
             }
         }
 

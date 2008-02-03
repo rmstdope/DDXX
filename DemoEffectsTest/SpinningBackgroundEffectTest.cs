@@ -44,7 +44,7 @@ namespace Dope.DDXX.DemoEffects
         [Test]
         public void TestOneTextureLayer()
         {
-            Expect.Once.On(textureFactory).Method("CreateFromFile").With("file").Will(Return.Value(texture2D));
+            Expect.Once.On(textureFactory).Method("CreateFromName").With("file").Will(Return.Value(texture2D));
             spin.AddTextureLayer(new SpinningBackgroundEffect.TextureLayer("file", 2 * (float)Math.PI, new Color(1, 2, 3, 4)));
 
             ExpectSprite();
@@ -54,9 +54,9 @@ namespace Dope.DDXX.DemoEffects
         [Test]
         public void TestThreeTextureLayer()
         {
-            Expect.Once.On(textureFactory).Method("CreateFromFile").With("file1").Will(Return.Value(texture2D));
-            Expect.Once.On(textureFactory).Method("CreateFromFile").With("file1").Will(Return.Value(texture2));
-            Expect.Once.On(textureFactory).Method("CreateFromFile").With("file2").Will(Return.Value(texture3));
+            Expect.Once.On(textureFactory).Method("CreateFromName").With("file1").Will(Return.Value(texture2D));
+            Expect.Once.On(textureFactory).Method("CreateFromName").With("file1").Will(Return.Value(texture2));
+            Expect.Once.On(textureFactory).Method("CreateFromName").With("file2").Will(Return.Value(texture3));
             spin.AddTextureLayer(new SpinningBackgroundEffect.TextureLayer("file1", 2, new Color(1, 2, 3, 4)));
             spin.AddTextureLayer(new SpinningBackgroundEffect.TextureLayer("file1", 1, new Color(4, 3, 2, 1)));
             spin.AddTextureLayer(new SpinningBackgroundEffect.TextureLayer("file2", -2, new Color(5, 6, 7, 8)));

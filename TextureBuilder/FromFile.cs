@@ -36,7 +36,7 @@ namespace Dope.DDXX.TextureBuilder
         {
             if (data == null)
             {
-                ITexture2D texture = textureFactory.CreateFromFile(filename);
+                ITexture2D texture = textureFactory.CreateFromName(filename);
                 width = texture.Width;
                 height = texture.Height;
                 data = new Color[width * height];

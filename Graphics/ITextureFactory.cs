@@ -9,7 +9,7 @@ namespace Dope.DDXX.Graphics
 
     public interface ITextureFactory
     {
-        ITexture2D CreateFromFile(string name);
+        ITexture2D CreateFromName(string name);
         ITextureCube CreateCubeFromFile(string name);
         IRenderTarget2D CreateFullsizeRenderTarget(SurfaceFormat format, MultiSampleType multiSampleType, int multiSampleQuality);
         IRenderTarget2D CreateFullsizeRenderTarget();

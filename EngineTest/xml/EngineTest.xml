@@ -1,15 +1,56 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Demo song="music_machinefunk_loop">
-	<!--<Generator name="noise256" class="PerlinNoise">
-		<Parameter name="BaseFrequency" int="1024" />
-	</Generator>
-	<Texture name="noise256" generator="noise256" width="256" height="256" miplevels="1"></Texture>-->
 	<TextureFactory>
+		<Texture name="Noise256base1024" width="256" height="256" miplevels="1">
+			<Generator class="PerlinNoise">
+				<NumOctaves>6</NumOctaves>
+				<BaseFrequency>1024</BaseFrequency>
+				<Persistence>0.5</Persistence>
+			</Generator>
+		</Texture>
 		<Texture name="noise64" width="64" height="64" miplevels="1">
 			<Generator class="PerlinNoise">
+				<NumOctaves>6</NumOctaves>
 				<BaseFrequency>16</BaseFrequency>
+				<Persistence>0.5</Persistence>
 			</Generator>
 			<Generator class="Madd">
+				<Add>0</Add>
+				<Mul>1</Mul>
+			</Generator>
+		</Texture>
+		<Texture name="HeightMap" width="64" height="64" miplevels="0">
+			<Generator class="PerlinNoise">
+				<NumOctaves>6</NumOctaves>
+				<BaseFrequency>16</BaseFrequency>
+				<Persistence>0.5</Persistence>
+			</Generator>
+		</Texture>
+		<Texture name="Noise256" width="256" height="256" miplevels="0">
+			<Generator class="PerlinNoise">
+				<NumOctaves>6</NumOctaves>
+				<BaseFrequency>64</BaseFrequency>
+				<Persistence>0.5</Persistence>
+			</Generator>
+		</Texture>
+		<Texture name="NormalNoise256" width="256" height="256" miplevels="0">
+			<Generator class="PerlinNoise">
+				<NumOctaves>6</NumOctaves>
+				<BaseFrequency>64</BaseFrequency>
+				<Persistence>0.5</Persistence>
+			</Generator>
+			<Generator class="Madd">
+				<Add>0</Add>
+				<Mul>2</Mul>
+			</Generator>
+			<Generator class="NormalMap" />
+			<Generator class="Madd">
+				<Add>1</Add>
+				<Mul>1</Mul>
+			</Generator>
+			<Generator class="Madd">
+				<Add>0</Add>
+				<Mul>0.5</Mul>
 			</Generator>
 		</Texture>
 	</TextureFactory>
@@ -37,16 +78,16 @@
 		<Scale>4</Scale>
 		<Strength>30, 20, 25, 27</Strength>
 	</PostEffect>-->
-	<!--<PostEffect class="OverlayPostEffect" name="Noise" track="0" startTime="0" endTime="20">
-		<Parameter name="Filename" string="noise256" />
-		<Parameter name="Technique" string="Noise" />
-		<Parameter name="AddNoise" bool="true" />
-		<Parameter name="FadeOutLength" float="0" />
-		<Parameter name="FadeInLength" float="0" />
-		<Parameter name="SubtractNoise" bool="false" />
-		<Parameter name="BlendFactor" float="0.2500002" />
+	<PostEffect class="OverlayPostEffect" name="Noise" track="0" startTime="0" endTime="20">
+		<Filename>Noise256base1024</Filename>
+		<Technique>Noise</Technique>
+		<AddNoise>true</AddNoise>
+		<FadeOutLength>0</FadeOutLength>
+		<FadeInLength>0</FadeInLength>
+		<SubtractNoise>false</SubtractNoise>
+		<BlendFactor>0.2500002</BlendFactor>
 		<DrawOrder>7</DrawOrder>
-	</PostEffect>-->
+	</PostEffect>
 	<!--<PostEffect class="RadialBlurPostEffect" track="0" startTime="0" endTime="500">
 		<Parameter name="BlurColor" Color="100, 100, 150" />
 		<Parameter name="DrawOrder" int="0" />

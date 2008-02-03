@@ -7,6 +7,7 @@ using NMock2;
 using System.Xml;
 using Dope.DDXX.Utility;
 using Microsoft.Xna.Framework.Graphics;
+using Dope.DDXX.TextureBuilder;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -159,76 +160,108 @@ namespace Dope.DDXX.DemoFramework
         public void WriteToXmlOneUpdate()
         {
             // Setup
-            //ITweakable expectedChild = mockery.NewMock<ITweakable>();
             SetupTextures(1);
             XmlNode node = CreateXmlNode("<TextureFactory><Texture name=\"0\" /></TextureFactory>");
-            //Expect.Once.On(factory).Method("CreateTweakableObject").With(list[0]).Will(Return.Value(expectedChild));
-            //Expect.Once.On(expectedChild).Method("WriteToXmlFile").With(document, node.FirstChild);
+            ITweakable tweakableGenerator = mockery.NewMock<ITweakable>();
+            Expect.Once.On(factory).Method("CreateTweakableObject").With(list[0].Generator).Will(Return.Value(tweakableGenerator));
+            Expect.Once.On(tweakableGenerator).Method("WriteToXmlFile");
             // Exercise SUT
             tweakable.WriteToXmlFile(document, node);
             // Verify
-            Assert.AreEqual("<TextureFactory><Texture name=\"0\" /></TextureFactory>", node.OuterXml);
+            Assert.AreEqual("<TextureFactory><Texture name=\"0\"><Generator class=\"MockObject\" /></Texture></TextureFactory>", node.OuterXml);
         }
 
         [Test]
         public void WriteToXmlOneCreation()
         {
             // Setup
-            //ITweakable expectedChild = mockery.NewMock<ITweakable>();
             SetupTextures(1);
             XmlNode node = CreateXmlNode("<TextureFactory></TextureFactory>");
-            //Expect.Once.On(factory).Method("CreateTweakableObject").With(list[0]).Will(Return.Value(expectedChild));
-            //Expect.Once.On(expectedChild).Method("WriteToXmlFile").With(Is.EqualTo(document), Is.Anything);
+            ITweakable tweakableGenerator = mockery.NewMock<ITweakable>();
+            Expect.Once.On(factory).Method("CreateTweakableObject").With(list[0].Generator).Will(Return.Value(tweakableGenerator));
+            Expect.Once.On(tweakableGenerator).Method("WriteToXmlFile");
             // Exercise SUT
             tweakable.WriteToXmlFile(document, node);
             // Verify
-            Assert.AreEqual("<TextureFactory><Texture name=\"0\" /></TextureFactory>", node.OuterXml);
+            Assert.AreEqual("<TextureFactory><Texture name=\"0\" width=\"1\" height=\"2\" miplevels=\"0\"><Generator class=\"MockObject\" /></Texture></TextureFactory>", node.OuterXml);
         }
 
         [Test]
         public void WriteToXmlOneCreationOneExisting()
         {
             // Setup
-            //ITweakable expectedChild0 = mockery.NewMock<ITweakable>();
-            //ITweakable expectedChild1 = mockery.NewMock<ITweakable>();
             SetupTextures(2);
             XmlNode node = CreateXmlNode(
 @"<TextureFactory>
-    <Texture name=""0"" />
+	<Texture name=""0"" />
 </TextureFactory>");
-            //Expect.Once.On(factory).Method("CreateTweakableObject").With(list[0]).Will(Return.Value(expectedChild0));
-            //Expect.Once.On(factory).Method("CreateTweakableObject").With(list[1]).Will(Return.Value(expectedChild1));
-            //Expect.Once.On(expectedChild0).Method("WriteToXmlFile").With(Is.EqualTo(document), Is.Anything);
-            //Expect.Once.On(expectedChild1).Method("WriteToXmlFile").With(Is.EqualTo(document), Is.Anything);
+            ITweakable tweakableGenerator = mockery.NewMock<ITweakable>();
+            Expect.Once.On(factory).Method("CreateTweakableObject").With(list[0].Generator).Will(Return.Value(tweakableGenerator));
+            Expect.Once.On(factory).Method("CreateTweakableObject").With(list[1].Generator).Will(Return.Value(tweakableGenerator));
+            Expect.Exactly(2).On(tweakableGenerator).Method("WriteToXmlFile");
             // Exercise SUT
             tweakable.WriteToXmlFile(document, node);
             // Verify
             Assert.AreEqual(
 @"<TextureFactory>
-    <Texture name=""0"" />
-    <Texture name=""1"" />
+	<Texture name=""0"">
+		<Generator class=""MockObject"" />
+	</Texture>
+	<Texture name=""1"" width=""1"" height=""2"" miplevels=""0"">
+		<Generator class=""MockObject"" />
+	</Texture>
 </TextureFactory>", node.OuterXml);
         }
 
-//        [Test]
-//        public void WriteToXmlOneUpdate()
-//        {
-//            // Setup
-//            SetupTextures(1);
-//            XmlNode node = CreateXmlNode("<TextureFactory><Texture name=\"0\" /></TextureFactory>");
-//            // Exercise SUT
-//            tweakable.WriteToXmlFile(document, node);
-//            // Verify
-//            Assert.AreEqual(
-//@"<TextureFactory>
-//    <Texture name=""0"">
-//        <Generator class=""Circle"">
-//            <InnerRadius>1</InnerRadius>
-//            <OuterRadius>1</OuterRadius>
-//        </Generator>
-//    </Texture>
-//</TextureFactory>", node.OuterXml);
-//        }
+        [Test]
+        public void WriteToXmlMultipleGeneratorsGenerator()
+        {
+            // Setup
+            list = new List<Texture2DParameters>();
+            ITexture2D texture = mockery.NewMock<ITexture2D>();
+            ITextureGenerator circle = new Circle();
+            ITextureGenerator constant = new Constant();
+            ITextureGenerator modulate = new Modulate();
+            modulate.ConnectToInput(0, circle);
+            modulate.ConnectToInput(1, constant);
+            list.Add(new Texture2DParameters("Tex", texture, modulate));
+            Stub.On(target).GetProperty("Texture2DParameters").Will(Return.Value(list));
+            XmlNode node = CreateXmlNode(
+@"<TextureFactory>
+	<Texture name=""Tex"" />
+</TextureFactory>");
+            ITweakable tweakableGenerator = mockery.NewMock<ITweakable>();
+            Expect.Once.On(factory).Method("CreateTweakableObject").With(circle).Will(Return.Value(tweakableGenerator));
+            Expect.Once.On(factory).Method("CreateTweakableObject").With(constant).Will(Return.Value(tweakableGenerator));
+            Expect.Once.On(factory).Method("CreateTweakableObject").With(modulate).Will(Return.Value(tweakableGenerator));
+            Expect.Exactly(3).On(tweakableGenerator).Method("WriteToXmlFile");
+            // Exercise SUT
+            tweakable.WriteToXmlFile(document, node);
+            // Verify
+            Assert.AreEqual(
+@"<TextureFactory>
+	<Texture name=""Tex"">
+		<Generator class=""Constant"" />
+		<Generator class=""Circle"" />
+		<Generator class=""Modulate"" />
+	</Texture>
+</TextureFactory>", node.OuterXml);
+        }
+
+        [Test]
+        public void WriteToXmlOldGeneratorRemoved()
+        {
+            // Setup
+            SetupTextures(1);
+            XmlNode node = CreateXmlNode("<TextureFactory><Texture name=\"0\"><Generator class=\"OldJunk\" /></Texture></TextureFactory>");
+            ITweakable tweakableGenerator = mockery.NewMock<ITweakable>();
+            Expect.Once.On(factory).Method("CreateTweakableObject").With(list[0].Generator).Will(Return.Value(tweakableGenerator));
+            Expect.Once.On(tweakableGenerator).Method("WriteToXmlFile");
+            // Exercise SUT
+            tweakable.WriteToXmlFile(document, node);
+            // Verify
+            Assert.AreEqual("<TextureFactory><Texture name=\"0\"><Generator class=\"MockObject\" /></Texture></TextureFactory>", node.OuterXml);
+        }
 
         private void SetupTextures(int num)
         {
@@ -236,7 +269,11 @@ namespace Dope.DDXX.DemoFramework
             for (int i = 0; i < num; i++)
             {
                 ITexture2D texture = mockery.NewMock<ITexture2D>();
+                Stub.On(texture).GetProperty("Width").Will(Return.Value(1));
+                Stub.On(texture).GetProperty("Height").Will(Return.Value(2));
+                Stub.On(texture).GetProperty("LevelCount").Will(Return.Value(3));
                 ITextureGenerator generator = mockery.NewMock<ITextureGenerator>();
+                Stub.On(generator).GetProperty("NumInputPins").Will(Return.Value(0));
                 list.Add(new Texture2DParameters(i.ToString(), texture, generator));
             }
             Stub.On(target).GetProperty("Texture2DParameters").Will(Return.Value(list));

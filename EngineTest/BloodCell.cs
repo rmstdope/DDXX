@@ -27,7 +27,7 @@ namespace EngineTest
         public ITexture2D ArteryTexture
         {
             get { return texture; }
-            set { texture = value; }
+            //set { texture = value; }
         }
 
         public IScene Scene
@@ -76,21 +76,9 @@ namespace EngineTest
 
         private void InitializeArtery()
         {
-            PerlinNoise heightMap = new PerlinNoise();
-            heightMap.BaseFrequency = 16;
-            TextureFactory.CreateFromGenerator("HeightMap", 64, 64, 0, TextureUsage.None, SurfaceFormat.Color, heightMap);
-
-            TextureFactory.CreateFromFile("Content\\textures\\dope");
+            TextureFactory.CreateFromName("Content\\textures\\dope");
             MaterialHandler material = new MaterialHandler(EffectFactory.CreateFromFile("Content\\effects\\Artery"), new EffectConverter());
-            TextureDirector.CreatePerlinNoise(64, 6, 0.5f);
-            TextureDirector.Generate("Noise256", 256, 256, 0, SurfaceFormat.Color);
-            material.DiffuseTexture = TextureFactory.CreateFromFile("Noise256");// Director.Generate(256, 256, 0, SurfaceFormat.Color);
-            //ModelBuilder.SetDiffuseTexture("Default", TextureDirector.Generate(256, 256, 0, SurfaceFormat.Color));
-            TextureDirector.CreatePerlinNoise(64, 6, 0.5f);
-            TextureDirector.Madd(2.0f, 0);
-            TextureDirector.NormalMap();
-            TextureDirector.Madd(1, 1);
-            TextureDirector.Madd(0.5f, 0);
+            material.DiffuseTexture = TextureFactory.CreateFromName("Noise256");
             //ModelBuilder.SetNormalTexture("Default", TextureDirector.Generate(256, 256, 0, SurfaceFormat.Color));
             //ModelBuilder.SetAmbientColor("Default", Color.Black);
             //ModelBuilder.SetDiffuseColor("Default", Color.Red);
@@ -99,13 +87,14 @@ namespace EngineTest
             //ModelBuilder.SetSpecularPower("Default", 32);
             //ModelBuilder.SetEffect("Default", "Content\\effects\\Artery");
             ModelDirector.CreateTunnel(2.0f, 32, 30, 60, 2, 10);
+            PerlinNoise heightMap = new PerlinNoise();
+            heightMap.BaseFrequency = 16;
             ModelDirector.HeightMap(heightMap);
-            material.NormalTexture = TextureDirector.Generate("NormalNoise256", 256, 256, 0, SurfaceFormat.Color);
+            material.NormalTexture = TextureFactory.CreateFromName("NormalNoise256");
             material.AmbientColor = Color.Black;
             material.DiffuseColor = Color.Red;
             material.Shininess = 0.0f;
             IModel model = ModelDirector.Generate(material);
-            //IModel model = ModelDirector.Generate("Default");
             artery = new ModelNode("Artery", model, GraphicsDevice);
             scene.AddNode(artery);
             artery.WorldState.Tilt(MathHelper.PiOver2);

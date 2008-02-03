@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.Graphics
 {
@@ -21,7 +22,7 @@ namespace Dope.DDXX.Graphics
             this.factory = factory;
         }
 
-        public ITexture2D CreateFromFile(string file)
+        public ITexture2D CreateFromName(string file)
         {
             Texture2DParameters result = files.Find(delegate(Texture2DParameters item) { return file == item.Name; });
             if (result != null)
@@ -79,6 +80,8 @@ namespace Dope.DDXX.Graphics
 
         public ITexture2D CreateFromGenerator(string name, int width, int height, int numMipLevels, TextureUsage usage, SurfaceFormat format, ITextureGenerator generator)
         {
+            if (files.Find(delegate(Texture2DParameters item) { return name == item.Name; }) != null)
+                throw new DDXXException("Texture with name " + name + " already created.");
             ITexture2D texture = CreateFromFunction(width, height, numMipLevels, usage, format, generator.GetPixel);
             if (name != null && name != "")
                 files.Add(new Texture2DParameters(name, texture, generator));

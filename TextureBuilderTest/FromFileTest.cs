@@ -139,7 +139,7 @@ namespace Dope.DDXX.TextureBuilder
         private void ExpectTexture(int width, int height, Color[] data)
         {
             fromFile.Filename = "Name";
-            Expect.Once.On(textureFactory).Method("CreateFromFile").With("Name").Will(Return.Value(texture2D));
+            Expect.Once.On(textureFactory).Method("CreateFromName").With("Name").Will(Return.Value(texture2D));
             Stub.On(texture2D).GetProperty("Width").Will(Return.Value(width));
             Stub.On(texture2D).GetProperty("Height").Will(Return.Value(height));
             Stub.On(texture2D).Method("GetData").Will(new SetArrayAction<Color>(data));
