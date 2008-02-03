@@ -8,6 +8,7 @@ using Dope.DDXX.Utility;
 using Microsoft.Xna.Framework;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.ParticleSystems;
+using Dope.DDXX.TextureBuilder;
 
 namespace EngineTest
 {
@@ -67,14 +68,18 @@ namespace EngineTest
             InitializeArtery();
             //InitializeParticles();
             light = new PointLightNode("Light");
-            //light.Position = new Vector3(10, 2, 0);
-            light.Position = new Vector3(1000, 0, 0);
+            //light.Position = new Vector3(1000, 0, 0);
+            light.Position = new Vector3(0, 0, 0);
             scene.AddNode(light);
             scene.AmbientColor = new Color(255, 255, 255);
         }
 
         private void InitializeArtery()
         {
+            PerlinNoise heightMap = new PerlinNoise();
+            heightMap.BaseFrequency = 16;
+            TextureFactory.CreateFromGenerator("HeightMap", 64, 64, 0, TextureUsage.None, SurfaceFormat.Color, heightMap);
+
             TextureFactory.CreateFromFile("Content\\textures\\dope");
             MaterialHandler material = new MaterialHandler(EffectFactory.CreateFromFile("Content\\effects\\Artery"), new EffectConverter());
             TextureDirector.CreatePerlinNoise(64, 6, 0.5f);
@@ -94,6 +99,7 @@ namespace EngineTest
             //ModelBuilder.SetSpecularPower("Default", 32);
             //ModelBuilder.SetEffect("Default", "Content\\effects\\Artery");
             ModelDirector.CreateTunnel(2.0f, 32, 30, 60, 2, 10);
+            ModelDirector.HeightMap(heightMap);
             material.NormalTexture = TextureDirector.Generate("NormalNoise256", 256, 256, 0, SurfaceFormat.Color);
             material.AmbientColor = Color.Black;
             material.DiffuseColor = Color.Red;

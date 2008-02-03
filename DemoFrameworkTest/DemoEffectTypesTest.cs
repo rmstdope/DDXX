@@ -16,6 +16,7 @@ namespace Dope.DDXX.DemoFramework
         string source = @"
 using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Graphics;
+using Dope.DDXX.TextureBuilder;
 using Microsoft.Xna.Framework;
 public class FooEffect : Registerable, IDemoEffect 
 {
@@ -44,6 +45,14 @@ public class BarEffect : FooEffect {
   }
 }
 public class Dummy {}
+public class TestGenerator : Generator
+{
+  public TestGenerator() : base(0) {}
+  public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+  {
+    return Vector4.Zero;
+  }
+}
 ";
         Assembly assembly;
         CompilerResults results;
@@ -158,7 +167,7 @@ public class Dummy {}
             AssemblyName[] referenced = Assembly.GetExecutingAssembly().GetReferencedAssemblies();
             string d3dAssembly = Assembly.GetAssembly(typeof(Microsoft.Xna.Framework.Vector3)).CodeBase;
             d3dAssembly = d3dAssembly.Remove(0, 8);
-            CompilerParameters cp = new CompilerParameters(new string[] { "Dope.DDXX.DemoFramework.dll", "Dope.DDXX.Graphics.dll", d3dAssembly });
+            CompilerParameters cp = new CompilerParameters(new string[] { "Dope.DDXX.DemoFramework.dll", "Dope.DDXX.Graphics.dll", "Dope.DDXX.TextureBuilder.dll", "Dope.DDXX.Utility.dll", d3dAssembly });
             results = provider.CompileAssemblyFromSource(cp, source);
             if (results.Errors.HasErrors)
             {

@@ -37,40 +37,16 @@ namespace Dope.DDXX.DemoFramework
             {
                 if (assembly == null)
                     continue;
-                //try
-                //{
-                    foreach (Type t in assembly.GetTypes())
+                foreach (Type t in assembly.GetTypes())
+                {
+                    foreach (Type type in t.GetInterfaces())
                     {
-                        foreach (Type type in t.GetInterfaces())
-                        {
-                            if (type.FullName == "Dope.DDXX.DemoFramework.IRegisterable")
-                                iRegisterables.Add(t.Name, t);
-                            if (type.FullName == "Dope.DDXX.Graphics.ITextureGenerator")
-                                iGenerators.Add(t.Name, t);
-                        }
-                        //TypeFilter filter = new TypeFilter(delegate(Type ty, object comp)
-                        //{
-                        //    if (ty.FullName == (string)comp)
-                        //        return true;
-                        //    else
-                        //        return false;
-                        //});
-                        //Type[] interfaces = t.FindInterfaces(filter, "Dope.DDXX.DemoFramework.IRegisterable");
-                        //if (interfaces.Length > 0)
-                        //{
-                        //    iRegisterables.Add(t.Name, t);
-                        //}
-                        //interfaces = t.FindInterfaces(filter, "Dope.DDXX.TextureBuilder.IGenerator");
-                        //if (interfaces.Length > 0)
-                        //{
-                        //    iGenerators.Add(t.Name, t);
-                        //}
+                        if (type.FullName == "Dope.DDXX.DemoFramework.IRegisterable")
+                            iRegisterables.Add(t.Name, t);
+                        if (type.FullName == "Dope.DDXX.Graphics.ITextureGenerator")
+                            iGenerators.Add(t.Name, t);
                     }
-                //}
-                //catch (ReflectionTypeLoadException e)
-                //{
-                //    throw new DDXXException(e.ToString() + "LoaderExceptions:" + e.LoaderExceptions.ToString());
-                //}
+                }
             }
         }
 

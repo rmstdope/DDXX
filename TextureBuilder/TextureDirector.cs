@@ -21,6 +21,8 @@ namespace Dope.DDXX.TextureBuilder
 
         public ITexture2D Generate(string name, int width, int height, int numMipLevels, SurfaceFormat format)
         {
+            if (generatorStack.Count == 0)
+                throw new DDXXException("At least one generator must be added before a texture can be generator.");
             return textureFactory.CreateFromGenerator(name, width, height, numMipLevels, TextureUsage.None, format, generatorStack.Pop());
         }
 

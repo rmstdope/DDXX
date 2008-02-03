@@ -82,16 +82,6 @@ namespace Dope.DDXX.DemoFramework
             return GetParentY1() + GetParentHeight() * rectangle.Y;
         }
 
-        protected float GetX2()
-        {
-            return GetParentX1() + GetParentWidth() * (rectangle.X + rectangle.Z);
-        }
-
-        protected float GetY2()
-        {
-            return GetParentY1() + GetParentHeight() * (rectangle.Y + rectangle.W);
-        }
-
         protected void DrawVerticalLine(ISpriteBatch spriteBatch, ITexture2D whiteTexture, int x, int y, int height, Color color)
         {
             spriteBatch.Draw(whiteTexture, new Rectangle(x, y, 1, height), color);

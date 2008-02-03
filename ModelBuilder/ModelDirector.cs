@@ -196,6 +196,14 @@ namespace Dope.DDXX.ModelBuilder
             primitive = amplitude;
         }
 
+        public void HeightMap(ITextureGenerator generator)
+        {
+            HeightMap heightMap = new HeightMap();
+            heightMap.HeightMapGenerator = generator;
+            heightMap.ConnectToInput(0, primitive);
+            primitive = heightMap;
+        }
+
         public IModel Generate(string materialName)
         {
             return builder.CreateModel(primitive, materialName);

@@ -72,6 +72,7 @@
     <Compile Include="DiscPrimitive.cs">
       <Name>DiscPrimitive</Name>
     </Compile>
+    <Compile Include="HeightMap.cs" />
     <Compile Include="IModifier.cs">
       <Name>IModifier</Name>
     </Compile>

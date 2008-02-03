@@ -114,13 +114,7 @@ namespace Dope.DDXX.DemoFramework
                 }
                 if (!found && tweakable.Property.Name != "StartTime" && tweakable.Property.Name != "EndTime")
                 {
-                    XmlNode whitespace = node.FirstChild;
-                    if (whitespace is XmlWhitespace)
-                        node.InsertBefore(xmlDocument.CreateWhitespace(whitespace.Value), node.LastChild);
-                    node.InsertBefore(xmlDocument.CreateElement(tweakable.Property.Name), node.LastChild);
-                    //XmlWhitespace newWhitespace = xmlDocument.CreateWhitespace(lastWhitespace.Value);
-                    //node.AppendChild(newWhitespace);
-                    //lastWhitespace.Value += "\t";
+                    InsertNewXmlNode(xmlDocument, node, tweakable.Property.Name);
                 }
             }
             foreach (XmlNode child in node.ChildNodes)
@@ -132,6 +126,21 @@ namespace Dope.DDXX.DemoFramework
                 else
                     WriteSpecificXmlNode(xmlDocument, child);
             }
+            WriteNewNodes(xmlDocument, node);
+        }
+
+        protected XmlElement InsertNewXmlNode(XmlDocument xmlDocument, XmlNode parentNode, string name)
+        {
+            XmlNode whitespace = parentNode.FirstChild;
+            if (whitespace is XmlWhitespace)
+                parentNode.InsertBefore(xmlDocument.CreateWhitespace(whitespace.Value), parentNode.LastChild);
+            XmlElement newElement = xmlDocument.CreateElement(name);
+            parentNode.InsertBefore(newElement, parentNode.LastChild);
+            return newElement;
+        }
+
+        protected virtual void WriteNewNodes(XmlDocument xmlDocument, XmlNode node)
+        {
         }
 
         private bool HasProperty(string name)

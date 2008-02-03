@@ -74,6 +74,7 @@
     <Compile Include="DiscPrimitiveTest.cs">
       <Name>DiscPrimitiveTest</Name>
     </Compile>
+    <Compile Include="HeightMapTest.cs" />
     <Compile Include="ModelBuilderTest.cs">
       <Name>ModelBuilderTest</Name>
     </Compile>
@@ -143,6 +144,10 @@
     <ProjectReference Include="..\ModelBuilder\ModelBuilder.csproj">
       <Project>{2C34DF5D-D096-45DF-84C9-E78A3691F182}</Project>
       <Name>ModelBuilder</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NUnitExtension\NUnitExtension.csproj">
+      <Project>{D7587CF1-F97E-44B1-A6EB-40D58FC9FA26}</Project>
+      <Name>NUnitExtension</Name>
     </ProjectReference>
     <ProjectReference Include="..\Physics\Physics.csproj">
       <Project>{3925EBCA-3484-4349-BD1A-967D8FB9CE19}</Project>

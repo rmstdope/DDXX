@@ -41,12 +41,43 @@ namespace Dope.DDXX.DemoFramework
 
         protected override void WriteSpecificXmlNode(XmlDocument xmlDocument, XmlNode node)
         {
-            throw new Exception("The method or operation is not implemented.");
+            Texture2DParameters parameter = TextureParameters.Find(delegate(Texture2DParameters param) { return param.Name == GetStringAttribute(node, "name"); });
+            if (parameter != null)
+            {
+                UpdateTexture(xmlDocument, node, parameter);
+            }
+        }
+
+        protected override void WriteNewNodes(XmlDocument xmlDocument, XmlNode node)
+        {
+            foreach (Texture2DParameters parameter in TextureParameters)
+            {
+                bool found = false;
+                foreach (XmlNode child in node.ChildNodes)
+                {
+                    if (child.Name == "Texture" && GetStringAttribute(child, "name") == parameter.Name)
+                        found = true;
+                }
+                if (!found)
+                {
+                    XmlNode newNode = InsertNewXmlNode(xmlDocument, node, "Texture");
+                    XmlAttribute newAttribute = xmlDocument.CreateAttribute("name");
+                    newAttribute.Value = parameter.Name;
+                    newNode.Attributes.Append(newAttribute);
+                    UpdateTexture(xmlDocument, newNode, parameter);
+                }
+            }
+        }
+
+        private void UpdateTexture(XmlDocument xmlDocument, XmlNode newNode, Texture2DParameters parameter)
+        {
+            //ITweakable tweakableGenerator = Factory.CreateTweakableObject(parameter);
+            //tweakableGenerator.WriteToXmlFile(xmlDocument, newNode);
         }
 
         private void RegisterTexture(XmlNode node)
         {
-            TextureDirector director = new TextureDirector(Factory.TextureFactory);
+            TextureDirector director = new TextureDirector(Target);
             foreach (XmlNode child in node.ChildNodes)
             {
                 if (!(child is XmlElement))
