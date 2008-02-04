@@ -4,7 +4,7 @@
 		<Texture name="Noise256base1024" width="256" height="256" miplevels="1">
 			<Generator class="PerlinNoise">
 				<NumOctaves>6</NumOctaves>
-				<BaseFrequency>1024</BaseFrequency>
+				<BaseFrequency>100</BaseFrequency>
 				<Persistence>0.5</Persistence>
 			</Generator>
 		</Texture>
@@ -19,24 +19,17 @@
 				<Mul>1</Mul>
 			</Generator>
 		</Texture>
-		<Texture name="HeightMap" width="64" height="64" miplevels="0">
-			<Generator class="PerlinNoise">
-				<NumOctaves>6</NumOctaves>
-				<BaseFrequency>16</BaseFrequency>
-				<Persistence>0.5</Persistence>
-			</Generator>
-		</Texture>
 		<Texture name="Noise256" width="256" height="256" miplevels="0">
 			<Generator class="PerlinNoise">
 				<NumOctaves>6</NumOctaves>
-				<BaseFrequency>64</BaseFrequency>
+				<BaseFrequency>4</BaseFrequency>
 				<Persistence>0.5</Persistence>
 			</Generator>
 		</Texture>
 		<Texture name="NormalNoise256" width="256" height="256" miplevels="0">
 			<Generator class="PerlinNoise">
 				<NumOctaves>6</NumOctaves>
-				<BaseFrequency>64</BaseFrequency>
+				<BaseFrequency>4</BaseFrequency>
 				<Persistence>0.5</Persistence>
 			</Generator>
 			<Generator class="Madd">
@@ -60,20 +53,20 @@
 	</PostEffect>-->
 	<Effect class="BloodCell" name="BloodCell" track="0" startTime="0" endTime="500">
 		<DrawOrder>0</DrawOrder>
-		<PulseSpeed>14</PulseSpeed>
-		<PulseFrequency>100</PulseFrequency>
-		<PulseAmplitude>0.1</PulseAmplitude>
+		<PulseSpeed>10</PulseSpeed>
+		<PulseFrequency>50</PulseFrequency>
+		<PulseAmplitude>0.02</PulseAmplitude>
 	</Effect>
-	<!--<PostEffect class="GlowPostEffect" name="Glow" track="0" startTime="20" endTime="500">
-		<BloomScale>1.1</BloomScale>
-		<WhiteCutoff>0</WhiteCutoff>
-		<Exposure>0.1</Exposure>
-		<Luminance>0.2</Luminance>
+	<PostEffect class="GlowPostEffect" name="Glow" track="0" startTime="0" endTime="500">
+		<BloomScale>1.5</BloomScale>
+		<WhiteCutoff>0.2</WhiteCutoff>
+		<Exposure>0.22</Exposure>
+		<Luminance>0.15</Luminance>
 		<DownSamples>2</DownSamples>
-		<AdvancedGlow>false</AdvancedGlow>
+		<AdvancedGlow>true</AdvancedGlow>
 		<DrawOrder>1</DrawOrder>
 	</PostEffect>
-	<PostEffect class="WavePostEffect" name="Wave" track="0" startTime="0" endTime="500">
+	<!--<PostEffect class="WavePostEffect" name="Wave" track="0" startTime="0" endTime="500">
 		<DrawOrder>2</DrawOrder>
 		<Scale>4</Scale>
 		<Strength>30, 20, 25, 27</Strength>
@@ -85,7 +78,7 @@
 		<FadeOutLength>0</FadeOutLength>
 		<FadeInLength>0</FadeInLength>
 		<SubtractNoise>false</SubtractNoise>
-		<BlendFactor>0.2500002</BlendFactor>
+		<BlendFactor>0.15</BlendFactor>
 		<DrawOrder>7</DrawOrder>
 	</PostEffect>
 	<!--<PostEffect class="RadialBlurPostEffect" track="0" startTime="0" endTime="500">

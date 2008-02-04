@@ -18,5 +18,6 @@ namespace Dope.DDXX.Graphics
         ITexture2D CreateFromGenerator(string name, int width, int height, int numMipLevels, TextureUsage usage, SurfaceFormat format, ITextureGenerator generator);
         ITexture2D WhiteTexture { get; }
         List<Texture2DParameters> Texture2DParameters { get; }
+        void Update(Texture2DParameters Target);
     }
 }

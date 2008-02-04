@@ -22,7 +22,7 @@ namespace EngineTest
         private float pulseFrequency;
         private float pulseAmplitude;
         private PointLightNode light;
-        private ITexture2D texture;
+        private ITexture2D texture = null;
 
         public ITexture2D ArteryTexture
         {

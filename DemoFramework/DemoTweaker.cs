@@ -192,6 +192,9 @@ namespace Dope.DDXX.DemoFramework
                 }
             }
 
+            if (inputDriver.KeyPressedNoRepeat(Keys.F12))
+                tweakable.HandleKeypress(Keys.F12, status);
+
             return tweaker;
         }
 

@@ -6,6 +6,7 @@ using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Dope.DDXX.Utility;
+using Microsoft.Xna.Framework.Input;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -168,6 +169,10 @@ namespace Dope.DDXX.DemoFramework
         }
 
         protected virtual void WriteNewNodes(XmlDocument xmlDocument, XmlNode node)
+        {
+        }
+
+        public virtual void HandleKeypress(Keys key, TweakerStatus status)
         {
         }
 

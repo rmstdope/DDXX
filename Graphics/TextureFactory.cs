@@ -88,26 +88,39 @@ namespace Dope.DDXX.Graphics
             return texture;
         }
 
+        public void Update(Texture2DParameters Target)
+        {
+            SetFromFunction(Target.Texture, Target.Generator.GetPixel);
+        }
+
         public ITexture2D CreateFromFunction(int width, int height, int numLevels, TextureUsage usage, SurfaceFormat format, Fill2DTextureCallback callbackFunction)
         {
-            Color[] data = new Color[width * height];
+            ITexture2D texture = factory.CreateTexture2D(width, height, numLevels, usage, format);
+
+            SetFromFunction(texture, callbackFunction);
+
+            return texture;
+        }
+
+        private void SetFromFunction(ITexture2D texture, Fill2DTextureCallback callbackFunction)
+        {
+            Color[] data = new Color[texture.Width * texture.Height];
             int i = 0;
-            Vector2 texelSize = new Vector2(1 / (float)(width - 1), 1 / (float)(height - 1));
-            for (int y = 0; y < height; y++)
+            Vector2 texelSize = new Vector2(1 / (float)(texture.Width - 1), 1 / (float)(texture.Height - 1));
+            for (int y = 0; y < texture.Height; y++)
             {
                 float yPos = y * texelSize.Y;
-                for (int x = 0; x < width; x++)
+                for (int x = 0; x < texture.Width; x++)
                 {
                     float xPos = x * texelSize.X;
                     data[i++] = new Color(callbackFunction(new Vector2(xPos, yPos), texelSize));
                 }
             }
 
-            ITexture2D texture = factory.CreateTexture2D(width, height, numLevels, usage, format);
             texture.SetData<Color>(data);
 
-            int levelWidth = width;
-            int levelHeight = height;
+            int levelWidth = texture.Width;
+            int levelHeight = texture.Height;
             //texture.Save("before.dds", ImageFileFormat.Dds);
             for (int j = 0; j < texture.LevelCount - 1; j++)
             {
@@ -135,9 +148,7 @@ namespace Dope.DDXX.Graphics
                 texture.SetData<Color>(j + 1, null, newData, 0, newData.Length, SetDataOptions.None);
                 data = newData;
             }
-
             //texture.Save("after.dds", ImageFileFormat.Dds);
-            return texture;
         }
 
         private Vector4 GetData(Color[] data, int x, int y, int width, int height)

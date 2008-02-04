@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Xml;
 using Dope.DDXX.Utility;
 using Dope.DDXX.TextureBuilder;
+using Microsoft.Xna.Framework.Input;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -129,5 +130,11 @@ namespace Dope.DDXX.DemoFramework
                 return Target.Texture2DParameters.FindAll(delegate(Texture2DParameters param) { return param.IsGenerated; });
             }
         }
+
+        public override void HandleKeypress(Keys key, TweakerStatus status)
+        {
+            Target.Update(TextureParameters[status.Selection]);
+        }
+
     }
 }

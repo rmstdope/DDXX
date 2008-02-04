@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using System.Xml;
+using Microsoft.Xna.Framework.Input;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -20,5 +21,6 @@ namespace Dope.DDXX.DemoFramework
         void SetValue(TweakerStatus status);
         void ReadFromXmlFile(XmlNode node);
         void WriteToXmlFile(XmlDocument xmlDocument, XmlNode node);
+        void HandleKeypress(Keys key, TweakerStatus status);
     }
 }

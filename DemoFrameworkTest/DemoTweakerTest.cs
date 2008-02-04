@@ -432,5 +432,15 @@ namespace Dope.DDXX.DemoFramework
         }
 
         #endregion
+
+        #region ITweakable Members
+
+
+        public void HandleKeypress(Keys key, TweakerStatus status)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
     }
 }

@@ -413,5 +413,15 @@ namespace Dope.DDXX.DemoFramework
         }
 
         #endregion
+
+        #region ITextureFactory Members
+
+
+        public void Update(Texture2DParameters Target)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
     }
 }
