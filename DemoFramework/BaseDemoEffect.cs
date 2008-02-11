@@ -23,6 +23,7 @@ namespace Dope.DDXX.DemoFramework
         private TextureDirector textureDirector;
         private IDemoMixer mixer;
         private IPostProcessor postProcessor;
+        private IScene scene;
 
         protected BaseDemoEffect(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
@@ -104,6 +105,11 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
+        protected IScene Scene
+        {
+            get { return scene; }
+        }
+
         public int DrawOrder
         {
             set { drawOrder = value; }
@@ -150,11 +156,13 @@ namespace Dope.DDXX.DemoFramework
         public void Initialize(IGraphicsFactory graphicsFactory, IEffectFactory effectFactory, 
             ITextureFactory textureFactory, IDemoMixer mixer, IPostProcessor postProcessor)
         {
+            CameraNode camera;
             this.graphicsFactory = graphicsFactory;
             this.effectFactory = effectFactory;
             this.mixer = mixer;
             this.postProcessor = postProcessor;
             this.textureFactory = textureFactory;
+            CreateStandardSceneAndCamera(out scene, out camera, 10);
 
             Initialize();
         }

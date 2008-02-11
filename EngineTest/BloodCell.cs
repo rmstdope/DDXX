@@ -30,12 +30,6 @@ namespace EngineTest
             //set { texture = value; }
         }
 
-        public IScene Scene
-        {
-            get { return scene; }
-            set { scene = value; }
-        }
-
         public float PulseSpeed
         {
             get { return pulseSpeed; }

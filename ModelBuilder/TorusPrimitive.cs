@@ -107,7 +107,7 @@ namespace Dope.DDXX.ModelBuilder
                     normal.Normalize();
                     vertices[vertex].Position = position;
                     vertices[vertex].Normal = normal;
-                    vertices[vertex].U = 10 * i / (float)segments;
+                    vertices[vertex].U = i / (float)segments;
                     vertices[vertex].V = j / (float)sides;
                     //vertices[vertex].V = 0.3f + 0.5f * vertices[vertex].V;
                     vertex++;
