@@ -10,7 +10,7 @@ namespace Dope.DDXX.Graphics
         //
         // Returns:
         //     The GraphicsDevice associated with this vertex declaration.
-        GraphicsDevice GraphicsDevice { get; }
+        IGraphicsDevice GraphicsDevice { get; }
         //
         // Summary:
         //     Gets a value that indicates whether the object is disposed.

@@ -236,6 +236,7 @@
       <Name>ITextureFactory</Name>
     </Compile>
     <Compile Include="ITextureGenerator.cs" />
+    <Compile Include="IUserPrimitive.cs" />
     <Compile Include="IVertexBuffer.cs">
       <Name>IVertexBuffer</Name>
     </Compile>
@@ -310,6 +311,7 @@
       <Name>TextureFactory</Name>
     </Compile>
     <Compile Include="TextureParameters.cs" />
+    <Compile Include="UserPrimitive.cs" />
     <Compile Include="VertexBufferAdapter.cs">
       <Name>VertexBufferAdapter</Name>
     </Compile>

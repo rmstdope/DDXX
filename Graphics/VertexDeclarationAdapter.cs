@@ -16,9 +16,9 @@ namespace Dope.DDXX.Graphics
 
         #region IVertexDeclaration Members
 
-        public GraphicsDevice GraphicsDevice
+        public IGraphicsDevice GraphicsDevice
         {
-            get { throw new Exception("The method or operation is not implemented."); }
+            get { return new GraphicsDeviceAdapter(vertexDeclaration.GraphicsDevice); }
         }
 
         public bool IsDisposed

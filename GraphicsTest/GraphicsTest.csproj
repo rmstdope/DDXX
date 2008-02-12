@@ -82,6 +82,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextureParametersTest.cs" />
+    <Compile Include="UserPrimitiveTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <NestedContentProject Include="Content.contentproj">

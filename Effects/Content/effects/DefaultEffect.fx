@@ -19,10 +19,10 @@ DefaultVertexShader(INPUT input)
 {
 	INPUT output;
 	
-    // transform the position into projection space
-    output.position = mul(input.position, World[0]);
-    output.position = mul(output.position, View);
-    output.position = mul(output.position, Projection);
+	// transform the position into projection space
+	output.position = mul(input.position, World[0]);
+	output.position = mul(output.position, View);
+	output.position = mul(output.position, Projection);
 	
 	output.texCoord = input.texCoord;
 	
@@ -32,7 +32,7 @@ DefaultVertexShader(INPUT input)
 float4
 DefaultPixelShader(INPUT input) : COLOR
 {
-    return tex2D(DefaultEffectSampler, input.texCoord);
+	return tex2D(DefaultEffectSampler, input.texCoord);
 }
 
 Technique Default

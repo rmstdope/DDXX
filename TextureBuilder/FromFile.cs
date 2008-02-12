@@ -61,6 +61,10 @@ namespace Dope.DDXX.TextureBuilder
                 x = width - 1;
             if (y >= height)
                 y = height - 1;
+            if (x < 0)
+                x = 0;
+            if (y < 0)
+                y = 0;
             return data[y * width + x].ToVector4();
         }
     }

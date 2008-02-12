@@ -51,16 +51,10 @@
 		<Parameter name="DrawOrder" int="0" />
 		<Parameter name="NumPasses" int="2" />
 	</PostEffect>-->
-  <Effect class="Tubes" name="Tubes" track="0" startTime="0" endTime="500">
-    <DrawOrder>0</DrawOrder>
-  </Effect>
-  <!--<Effect class="BloodCell" name="BloodCell" track="0" startTime="0" endTime="500">
+	<Effect class="LineEffect" name="Lines" track="0" startTime="0" endTime="500">
 		<DrawOrder>0</DrawOrder>
-		<PulseSpeed>10</PulseSpeed>
-		<PulseFrequency>50</PulseFrequency>
-		<PulseAmplitude>0.02</PulseAmplitude>
 	</Effect>
-	<PostEffect class="GlowPostEffect" name="Glow" track="0" startTime="0" endTime="500">
+	<!--<PostEffect class="GlowPostEffect" name="Glow" track="0" startTime="0" endTime="500">
 		<BloomScale>1.5</BloomScale>
 		<WhiteCutoff>0.2</WhiteCutoff>
 		<Exposure>0.22</Exposure>
@@ -74,7 +68,7 @@
 		<Scale>4</Scale>
 		<Strength>30, 20, 25, 27</Strength>
 	</PostEffect>-->
-	<!--<PostEffect class="OverlayPostEffect" name="Noise" track="0" startTime="0" endTime="20">
+	<PostEffect class="OverlayPostEffect" name="Noise" track="0" startTime="0" endTime="20">
 		<Filename>Noise256base1024</Filename>
 		<Technique>Noise</Technique>
 		<AddNoise>true</AddNoise>
@@ -83,7 +77,7 @@
 		<SubtractNoise>false</SubtractNoise>
 		<BlendFactor>0.15</BlendFactor>
 		<DrawOrder>7</DrawOrder>
-	</PostEffect>-->
+	</PostEffect>
 	<!--<PostEffect class="RadialBlurPostEffect" track="0" startTime="0" endTime="500">
 		<Parameter name="BlurColor" Color="100, 100, 150" />
 		<Parameter name="DrawOrder" int="0" />

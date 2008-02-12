@@ -310,6 +310,9 @@ namespace Dope.DDXX.DemoFramework
             if (doubleEnter)
                 Expect.Once.On(inputDriver).Method("KeyPressedNoRepeat").
                     With(Keys.Enter).Will(Return.Value(key == Keys.Enter));
+
+            Expect.Once.On(inputDriver).Method("KeyPressedNoRepeat").
+                With(Keys.F12).Will(Return.Value(false));
             
             return demoTweaker.HandleInput(inputDriver);
         }

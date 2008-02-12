@@ -64,6 +64,7 @@
     <Compile Include="GridEffect.cs">
       <Name>GridEffect</Name>
     </Compile>
+    <Compile Include="LineEffect.cs" />
     <Compile Include="ModelEffect.cs">
       <Name>ModelEffect</Name>
     </Compile>

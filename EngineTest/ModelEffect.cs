@@ -55,14 +55,6 @@ namespace EngineTest
             scene.AddNode(mirror);
 
 
-            //IEffect effect = model.Meshes[0].MeshParts[0].Effect;
-            //IEffect clone = effect.Clone(effect.GraphicsDevice);
-            //effect.Parameters["Texture"].SetValue((ITexture2D)null);
-            
-            //model = ModelFactory.FromFile("Content/models/ChamferBox", "Content/effects/NormalMapping");
-            //genNode = new ModelNode("Test Model", model, GraphicsDevice);
-            //scene.AddNode(genNode);
-
             ModelDirector mDirector = new ModelDirector(ModelBuilder);
             //ModelBuilder.GetMaterial("Default").Effect = EffectFactory.CreateFromFile("Content\\effects\\NormalMapping");
             ModelBuilder.SetDiffuseTexture("Default", "Content\\textures\\BENEDETI2");
