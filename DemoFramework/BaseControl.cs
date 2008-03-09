@@ -12,9 +12,11 @@ namespace Dope.DDXX.DemoFramework
         protected Vector4 rectangle;
         private BaseControl parent;
         public List<BaseControl> Children = new List<BaseControl>();
+        private float screenAspect;
 
         public BaseControl(Vector4 rectangle, BaseControl parent)
         {
+            this.screenAspect = -1;
             this.rectangle = rectangle;
             this.parent = parent;
             if (parent != null)
@@ -23,6 +25,11 @@ namespace Dope.DDXX.DemoFramework
 
         public void DrawControl(ISpriteBatch spriteBatch, ISpriteFont spriteFont, ITexture2D whiteTexture)
         {
+            if (screenAspect == -1)
+            {
+                screenAspect = spriteBatch.GraphicsDevice.PresentationParameters.BackBufferWidth /
+                    (float)spriteBatch.GraphicsDevice.PresentationParameters.BackBufferHeight;
+            }
             Draw(spriteBatch, spriteFont, whiteTexture);
             foreach (BaseControl child in Children)
                 child.DrawControl(spriteBatch, spriteFont, whiteTexture);
@@ -64,12 +71,18 @@ namespace Dope.DDXX.DemoFramework
 
         protected float GetHeight()
         {
-            return GetParentHeight() * rectangle.W;
+            if (rectangle.W == -1)
+                return GetParentWidth() * rectangle.Z * screenAspect;
+            else
+                return GetParentHeight() * rectangle.W;
         }
 
         protected float GetWidth()
         {
-            return GetParentWidth() * rectangle.Z;
+            if (rectangle.Z == -1)
+                return GetParentHeight() * rectangle.W / screenAspect;
+            else
+                return GetParentWidth() * rectangle.Z;
         }
 
         protected float GetX1()
@@ -96,5 +109,6 @@ namespace Dope.DDXX.DemoFramework
         {
             Children = new List<BaseControl>();
         }
+
     }
 }

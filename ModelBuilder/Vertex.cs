@@ -35,7 +35,7 @@ namespace Dope.DDXX.ModelBuilder
         public Vector2 UV
         {
             get { return new Vector2(u, v); }
-            set { u = value.X; v = value.Y; }
+            set { U = value.X; V = value.Y; }
         }
 
         public Vector3 Position

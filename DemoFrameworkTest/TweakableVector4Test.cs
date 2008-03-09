@@ -27,7 +27,7 @@ namespace Dope.DDXX.DemoFramework
         public void SetUp()
         {
             target = new Target();
-            tweakable = new TweakableVector4(target.GetType().GetProperty("Variable"), target);
+            tweakable = new TweakableVector4(target.GetType().GetProperty("Variable"), target, null);
             status = new TweakerStatus(1, 1);
         }
 

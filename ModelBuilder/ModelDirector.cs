@@ -111,7 +111,7 @@ namespace Dope.DDXX.ModelBuilder
             primitive = cylinder;
         }
 
-        public void CreateTunnel(float radius, int segments, float height, int heightSegments, int wrapU, int wrapV)
+        public void CreateTunnel(float radius, int segments, float height, int heightSegments, int wrapU, int wrapV, bool mirrorTexture)
         {
             TunnelPrimitive tunnel = new TunnelPrimitive();
             tunnel.Radius = radius;
@@ -120,6 +120,7 @@ namespace Dope.DDXX.ModelBuilder
             tunnel.HeightSegments = heightSegments;
             tunnel.WrapU = wrapU;
             tunnel.WrapV = wrapV;
+            tunnel.MirrorTexture = mirrorTexture;
             primitive = tunnel;
         }
 

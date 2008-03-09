@@ -8,8 +8,8 @@ namespace Dope.DDXX.DemoFramework
 {
     public class TweakableBoolean : TweakableValueBase<bool>
     {
-        public TweakableBoolean(PropertyInfo property, object target)
-            : base(property, target)
+        public TweakableBoolean(PropertyInfo property, object target, ITweakableFactory factory)
+            : base(property, target, factory)
         {
         }
 

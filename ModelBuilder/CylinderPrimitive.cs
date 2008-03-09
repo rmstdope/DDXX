@@ -16,6 +16,7 @@ namespace Dope.DDXX.ModelBuilder
         private bool lid;
         private int wrapU;
         private int wrapV;
+        private bool mirrorTexture;
 
         public float Height
         {
@@ -59,6 +60,12 @@ namespace Dope.DDXX.ModelBuilder
             set { wrapV = value; }
         }
 
+        public bool MirrorTexture
+        {
+            get { return mirrorTexture; }
+            set { mirrorTexture = value; }
+        }
+
         public CylinderPrimitive()
             : base(0)
         {
@@ -72,6 +79,12 @@ namespace Dope.DDXX.ModelBuilder
                 throw new DDXXException("Cylinder must have at least three segments.");
             if (heightSegments < 1)
                 throw new DDXXException("Cylinder must have at least one segments.");
+            if ((segments & 1) == 1 && MirrorTexture)
+                throw new DDXXException("Cylinder with mirrored texture must have an even number of segments.");
+            if ((wrapU & 1) == 1 && MirrorTexture)
+                throw new DDXXException("Cylinder with mirrored texture must have an even number of wraps.");
+            if ((wrapV & 1) == 1 && MirrorTexture)
+                throw new DDXXException("Cylinder with mirrored texture must have an even number of wraps.");
 
             int numVertices = (segments + 1) * (heightSegments + 1);
             int numIndices = 6 * segments * heightSegments;
@@ -89,6 +102,14 @@ namespace Dope.DDXX.ModelBuilder
             FillVertices(vertices);
 
             FillIndices(vertices, indices);
+
+            if (MirrorTexture)
+            {
+                Weld welder = new Weld();
+                welder.Distance = 0.0f;
+                welder.ConnectToInput(0, new DummyPrimitive(vertices, indices));
+                return welder.Generate();
+            }
             return new Primitive(vertices, indices);
         }
 
@@ -160,8 +181,7 @@ namespace Dope.DDXX.ModelBuilder
                     position *= radius;
                     position.Y = yPos;
                     vertices[vertex].Position = position;
-                    vertices[vertex].U = wrapU * j / (float)(segments);
-                    vertices[vertex].V = wrapV * i / (float)heightSegments;
+                    vertices[vertex].UV = GetUV(i, j);
                     vertices[vertex].Normal = normal;
                     vertex++;
                 }
@@ -173,6 +193,25 @@ namespace Dope.DDXX.ModelBuilder
                 vertices[vertex].U = 0;
                 vertices[vertex++].V = 10;
             }
+        }
+
+        private Vector2 GetUV(int i, int j)
+        {
+            Vector2 uv = new Vector2(wrapU * j / (float)(segments), 
+                wrapV * i / (float)heightSegments);
+            if (MirrorTexture)
+            {
+                int xInt = (int)uv.X;
+                uv.X = uv.X % 1.0f;
+                if ((xInt & 1) == 1)
+                    uv.X = 1 - uv.X;
+
+                int yInt = (int)uv.Y;
+                uv.Y = uv.Y % 1.0f;
+                if ((yInt & 1) == 1)
+                    uv.Y = 1 - uv.Y;
+            }
+            return uv;
         }
     }
 }

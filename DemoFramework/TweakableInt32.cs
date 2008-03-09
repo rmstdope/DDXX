@@ -8,8 +8,8 @@ namespace Dope.DDXX.DemoFramework
 {
     public class TweakableInt32 : TweakableValueBase<int>
     {
-        public TweakableInt32(PropertyInfo property, object target)
-            : base(property, target)
+        public TweakableInt32(PropertyInfo property, object target, ITweakableFactory factory)
+            : base(property, target, factory)
         {
         }
 

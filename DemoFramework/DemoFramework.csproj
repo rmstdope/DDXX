@@ -179,10 +179,12 @@
     <Compile Include="TweakableBoolean.cs" />
     <Compile Include="TweakableColor.cs" />
     <Compile Include="TweakableInt32.cs" />
+    <Compile Include="TweakableMaterial.cs" />
     <Compile Include="TweakableObjectBase.cs" />
     <Compile Include="TweakableDemo.cs" />
     <Compile Include="TweakableProperty.cs" />
     <Compile Include="TweakableRegisterable.cs" />
+    <Compile Include="TweakableScene.cs" />
     <Compile Include="TweakableSingle.cs" />
     <Compile Include="TweakableString.cs" />
     <Compile Include="TweakableTexture2DParameters.cs" />

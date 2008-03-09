@@ -12,8 +12,8 @@ namespace Dope.DDXX.DemoFramework
         protected abstract void ChangeValue(int index, float delta);
         protected abstract string GetToString(int index);
 
-        protected TweakableValueBase(PropertyInfo property, object target)
-            : base(property, target)
+        protected TweakableValueBase(PropertyInfo property, object target, ITweakableFactory factory)
+            : base(property, target, factory)
         {
         }
 

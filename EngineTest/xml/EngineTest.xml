@@ -53,6 +53,7 @@
 	</PostEffect>-->
 	<Effect class="LineEffect" name="Lines" track="0" startTime="0" endTime="500">
 		<DrawOrder>0</DrawOrder>
+		<ArteryTexture>Content\textures\dope</ArteryTexture>
 	</Effect>
 	<!--<PostEffect class="GlowPostEffect" name="Glow" track="0" startTime="0" endTime="500">
 		<BloomScale>1.5</BloomScale>

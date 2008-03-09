@@ -26,7 +26,7 @@ namespace Dope.DDXX.DemoFramework
         public void SetUp()
         {
             target = new Target();
-            tweakable = new TweakableBoolean(target.GetType().GetProperty("Variable"), target);
+            tweakable = new TweakableBoolean(target.GetType().GetProperty("Variable"), target, null);
             status = new TweakerStatus(1, 1);
         }
 

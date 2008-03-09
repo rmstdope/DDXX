@@ -276,6 +276,7 @@
     <Compile Include="ModelMeshPartCollectionAdapter.cs">
       <Name>ModelMeshPartCollectionAdapter</Name>
     </Compile>
+    <Compile Include="ModelParameters.cs" />
     <Compile Include="RenderStateAdapter.cs">
       <Name>RenderStateAdapter</Name>
     </Compile>

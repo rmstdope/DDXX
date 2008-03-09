@@ -31,7 +31,7 @@ namespace Dope.DDXX.ModelBuilder
 
         private void DoWeld(IPrimitive primitive)
         {
-            const float epsilon = 1e-9f;
+            const float epsilon = 1e-5f;
             List<Vertex> newVertices = new List<Vertex>(primitive.Vertices);
             short[] indices = primitive.Indices;
             for (int i = 0; i < newVertices.Count; i++)

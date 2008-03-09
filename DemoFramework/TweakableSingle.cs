@@ -8,8 +8,8 @@ namespace Dope.DDXX.DemoFramework
 {
     public class TweakableSingle : TweakableValueBase<float>
     {
-        public TweakableSingle(PropertyInfo property, object target)
-            : base(property, target)
+        public TweakableSingle(PropertyInfo property, object target, ITweakableFactory factory)
+            : base(property, target, factory)
         {
         }
 

@@ -10,8 +10,8 @@ namespace Dope.DDXX.DemoFramework
 {
     public class TweakableColor : TweakableValueBase<Color>
     {
-        public TweakableColor(PropertyInfo property, object target)
-            : base(property, target)
+        public TweakableColor(PropertyInfo property, object target, ITweakableFactory factory)
+            : base(property, target, factory)
         {
         }
 

@@ -10,8 +10,8 @@ namespace Dope.DDXX.DemoFramework
 {
     public class TweakableVector2 : TweakableValueBase<Vector2>
     {
-        public TweakableVector2(PropertyInfo property, object target)
-            : base(property, target)
+        public TweakableVector2(PropertyInfo property, object target, ITweakableFactory factory)
+            : base(property, target, factory)
         {
         }
 

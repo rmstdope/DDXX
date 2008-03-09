@@ -290,7 +290,7 @@ namespace Dope.DDXX.DemoFramework
             registrator = new RegistratorStub();
             Expect.Once.On(factory).Method("CreateTweakableValue").
                 With(registrator.GetType().GetProperty("ClearColor"), registrator).
-                Will(Return.Value(new TweakableColor(registrator.GetType().GetProperty("ClearColor"), registrator)));
+                Will(Return.Value(new TweakableColor(registrator.GetType().GetProperty("ClearColor"), registrator, null)));
             tweakable = new TweakableDemo(registrator, builder, factory);
             CreateXmlNode("<Demo><ClearColor>1,2,3,4</ClearColor></Demo>");
             // Exercise SUT

@@ -17,7 +17,7 @@ namespace Dope.DDXX.DemoFramework
 
         public override int NumVisableVariables
         {
-            get { return 15; }
+            get { return 10; }
         }
 
         protected override int NumSpecificVariables

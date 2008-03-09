@@ -10,6 +10,7 @@ namespace Dope.DDXX.Graphics
         private IGraphicsFactory factory;
         private IGraphicsDevice device;
         private ITextureFactory textureFactory;
+        private List<ModelParameters> models;
 
         public ModelFactory(IGraphicsDevice device, IGraphicsFactory factory,
             ITextureFactory textureFactory)
@@ -17,10 +18,17 @@ namespace Dope.DDXX.Graphics
             this.device = device;
             this.factory = factory;
             this.textureFactory = textureFactory;
+            models = new List<ModelParameters>();
         }
 
         public IModel FromFile(string file, string effect)
         {
+            ModelParameters modelParam = models.Find(delegate(ModelParameters parameters)
+            {
+                return parameters.Name == file && parameters.Effect == effect;
+            });
+            if (modelParam != null)
+                return modelParam.Model;
             IModel model = factory.ModelFromFile(file);
             foreach (IModelMesh mesh in model.Meshes)
             {
@@ -30,33 +38,9 @@ namespace Dope.DDXX.Graphics
                     part.Effect = newEffect;
                 }
             }
+            models.Add(new ModelParameters(file, effect, model));
             return model;
         }
-
-        //private void CopyEffectParameters(IEffect fromEffect, IEffect toEffect)
-        //{
-        //    foreach (IEffectParameter fromParameter in fromEffect.Parameters)
-        //    {
-        //        IEffectParameter toParameter = toEffect.Parameters[fromParameter.Name];
-        //        if (toParameter != null)
-        //        {
-        //            toParameter.get
-
-        //        }
-        //    }
-        //}
-
-        //public IModel FromFile(string file, MaterialEffectChooser techniqueChooser)
-        //{
-        //    IModel model = factory.ModelFromFile(file);
-        //    return model;
-        //}
-
-        //public IModel FromFile(string file, MeshEffectChooser techniqueChooser)
-        //{
-        //    IModel model = factory.ModelFromFile(file);
-        //    return model;
-        //}
 
     }
 }

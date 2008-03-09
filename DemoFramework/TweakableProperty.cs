@@ -12,11 +12,13 @@ namespace Dope.DDXX.DemoFramework
     {
         private PropertyInfo property;
         private object target;
+        private ITweakableFactory factory;
 
-        public TweakableProperty(PropertyInfo property, object target)
+        public TweakableProperty(PropertyInfo property, object target, ITweakableFactory factory)
         {
             this.property = property;
             this.target = target;
+            this.factory = factory;
         }
 
         public PropertyInfo Property
@@ -27,6 +29,11 @@ namespace Dope.DDXX.DemoFramework
         protected object Target
         {
             get { return target; }
+        }
+
+        protected ITweakableFactory Factory
+        {
+            get { return factory; }
         }
 
         protected Color GetTextColor(TweakerStatus status, int selection, int index)

@@ -12,7 +12,8 @@ namespace Dope.DDXX.Graphics
     public class ModelFactoryTest : D3DMockTest
     {
         IModelFactory modelFactory;
-        IModel model;
+        IModel model1;
+        IModel model2;
         IModelMesh modelMesh1;
         IModelMesh modelMesh2;
         IModelMeshPart modelMeshPart1;
@@ -28,7 +29,8 @@ namespace Dope.DDXX.Graphics
         public override void SetUp()
         {
             base.SetUp();
-            model = mockery.NewMock<IModel>();
+            model1 = mockery.NewMock<IModel>();
+            model2 = mockery.NewMock<IModel>();
             modelMesh1 = mockery.NewMock<IModelMesh>();
             modelMesh2 = mockery.NewMock<IModelMesh>();
             modelMeshPart1 = mockery.NewMock<IModelMeshPart>();
@@ -53,30 +55,30 @@ namespace Dope.DDXX.Graphics
         public void SingleEffectOnePart()
         {
             // Setup
-            StubModelMesh(model, new IModelMesh[] { modelMesh1 });
+            StubModelMesh(model1, new IModelMesh[] { modelMesh1 });
             StubModelMeshPart(modelMesh1, new IModelMeshPart[] { modelMeshPart1 });
             Expect.Once.On(graphicsFactory).Method("ModelFromFile").
-                With("File1").Will(Return.Value(model));
+                With("File1").Will(Return.Value(model1));
             Expect.Once.On(graphicsFactory).Method("EffectFromFile").
                 With("Effect").Will(Return.Value(effect));
             Expect.Once.On(modelMeshPart1).SetProperty("Effect").To(effect);
 
             // Exercise SUT
-            IModel model1 = modelFactory.FromFile("File1", "Effect");
+            IModel newModel1 = modelFactory.FromFile("File1", "Effect");
 
             // Verify
-            Assert.AreSame(model, model1);
+            Assert.AreSame(model1, newModel1);
         }
 
         [Test]
         public void SingleEffectMultipleParts()
         {
             // Setup
-            StubModelMesh(model, new IModelMesh[] { modelMesh1, modelMesh2 });
+            StubModelMesh(model1, new IModelMesh[] { modelMesh1, modelMesh2 });
             StubModelMeshPart(modelMesh1, new IModelMeshPart[] { modelMeshPart1, modelMeshPart2 });
             StubModelMeshPart(modelMesh2, new IModelMeshPart[] { modelMeshPart3 });
             Expect.Once.On(graphicsFactory).Method("ModelFromFile").
-                With("File1").Will(Return.Value(model));
+                With("File1").Will(Return.Value(model1));
             Expect.Once.On(graphicsFactory).Method("EffectFromFile").
                 With("Effect").Will(Return.Value(effect));
             Expect.Once.On(graphicsFactory).Method("EffectFromFile").
@@ -89,10 +91,54 @@ namespace Dope.DDXX.Graphics
             Expect.Once.On(modelMeshPart3).SetProperty("Effect").To(effect3);
 
             // Exercise SUT
-            IModel model1 = modelFactory.FromFile("File1", "Effect");
+            IModel newModel1 = modelFactory.FromFile("File1", "Effect");
 
             // Verify
-            Assert.AreSame(model, model1);
+            Assert.AreSame(model1, newModel1);
+        }
+
+        [Test]
+        public void SameFileDifferentEffect()
+        {
+            // Setup
+            StubModelMesh(model1, new IModelMesh[] { modelMesh1 });
+            StubModelMesh(model2, new IModelMesh[] { modelMesh2 });
+            StubModelMeshPart(modelMesh1, new IModelMeshPart[] { modelMeshPart1 });
+            StubModelMeshPart(modelMesh2, new IModelMeshPart[] { modelMeshPart2 });
+            Expect.Once.On(graphicsFactory).Method("ModelFromFile").
+                With("File1").Will(Return.Value(model1));
+            Expect.Once.On(graphicsFactory).Method("ModelFromFile").
+                With("File1").Will(Return.Value(model2));
+            Expect.Once.On(graphicsFactory).Method("EffectFromFile").
+                With("Effect1").Will(Return.Value(effect));
+            Expect.Once.On(graphicsFactory).Method("EffectFromFile").
+                With("Effect2").Will(Return.Value(effect2));
+            Expect.Once.On(modelMeshPart1).SetProperty("Effect").To(effect);
+            Expect.Once.On(modelMeshPart2).SetProperty("Effect").To(effect2);
+            // Exercise SUT
+            IModel newModel1 = modelFactory.FromFile("File1", "Effect1");
+            IModel newModel2 = modelFactory.FromFile("File1", "Effect2");
+            // Verify
+            Assert.AreSame(model1, newModel1);
+        }
+
+        [Test]
+        public void SameFileSameEffect()
+        {
+            // Setup
+            StubModelMesh(model1, new IModelMesh[] { modelMesh1 });
+            StubModelMeshPart(modelMesh1, new IModelMeshPart[] { modelMeshPart1 });
+            Expect.Once.On(graphicsFactory).Method("ModelFromFile").
+                With("File1").Will(Return.Value(model1));
+            Expect.Once.On(graphicsFactory).Method("EffectFromFile").
+                With("Effect1").Will(Return.Value(effect));
+            Expect.Once.On(modelMeshPart1).SetProperty("Effect").To(effect);
+            // Exercise SUT
+            IModel newModel1 = modelFactory.FromFile("File1", "Effect1");
+            IModel newModel2 = modelFactory.FromFile("File1", "Effect1");
+            // Verify
+            Assert.AreSame(model1, newModel1);
+            Assert.AreSame(model1, newModel2);
         }
 
     }

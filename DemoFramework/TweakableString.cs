@@ -9,8 +9,8 @@ namespace Dope.DDXX.DemoFramework
 {
     public class TweakableString : TweakableValueBase<string>
     {
-        public TweakableString(PropertyInfo property, object target)
-            : base(property, target)
+        public TweakableString(PropertyInfo property, object target, ITweakableFactory factory)
+            : base(property, target, factory)
         {
         }
 
