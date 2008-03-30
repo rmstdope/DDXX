@@ -2049,5 +2049,15 @@ namespace Dope.DDXX.SceneGraph
         }
 
         #endregion
+
+        #region IMaterialHandler Members
+
+
+        public void SetupRendering(Matrix[] worldMatrices, Matrix viewMatrix, Matrix projectionMatrx, Color ambientLight)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
     }
 }

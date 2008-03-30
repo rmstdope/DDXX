@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.SceneGraph;
 using System.Xml;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {

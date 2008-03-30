@@ -22,12 +22,12 @@ namespace EngineTest
         private float pulseFrequency;
         private float pulseAmplitude;
         private PointLightNode light;
-        private ITexture2D texture = null;
 
-        public ITexture2D ArteryTexture
+        private ITexture2D texture;
+        public ITexture2D Texture
         {
             get { return texture; }
-            //set { texture = value; }
+            set { texture = value; }
         }
 
         public float PulseSpeed
@@ -80,7 +80,7 @@ namespace EngineTest
             //ModelBuilder.SetShininess("Default", 0.0f);
             //ModelBuilder.SetSpecularPower("Default", 32);
             //ModelBuilder.SetEffect("Default", "Content\\effects\\Artery");
-            ModelDirector.CreateTunnel(2.0f, 32, 30, 60, 2, 10);
+            ModelDirector.CreateTunnel(2.0f, 32, 30, 60, 2, 10, false);
             PerlinNoise heightMap = new PerlinNoise();
             heightMap.BaseFrequency = 16;
             ModelDirector.HeightMap(heightMap);

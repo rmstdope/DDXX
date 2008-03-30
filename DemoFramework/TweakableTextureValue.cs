@@ -17,82 +17,71 @@ namespace Dope.DDXX.DemoFramework
 
         protected override void CreateValueControls(TweakerStatus status, int index, float x, float y, float w, float h, ITweakerSettings settings)
         {
-            float xPos = x + w / 2 - h / 2;
-            BaseControl rightBox = new BoxControl(new Vector4(x + w / 2, y, w / 2, h), 0, Color.White, status.RootControl);
-            new TextControl(TextureName, new Vector4(x, y, w / 2, h), TextFormatting.Center | TextFormatting.VerticalCenter,
+            new TextControl(GetTextureName(),
+                new Vector4(x, y, w, h), TextFormatting.Center | TextFormatting.VerticalCenter,
                 settings.TextAlpha, GetTextColor(status, index, 0), status.RootControl);
-            new BoxControl(new Vector4(0, 0, -1, 1), 255, Value, rightBox);
         }
 
-        private string TextureName
+        private string GetTextureName()
         {
-            get
-            {
-                Texture2DParameters parameter = Factory.TextureFactory.Texture2DParameters.Find(delegate(Texture2DParameters param)
-                {
-                    return param.Texture == Value;
-                });
-                if (parameter != null)
-                    return parameter.Name;
-                return "<null>";
-            }
+            Texture2DParameters parameter = Factory.TextureFactory.Texture2DParameters.Find(delegate(Texture2DParameters param) { return param.Texture == Value; });
+            if (parameter == null)
+                return "";
+            return parameter.Name;
+        }
+
+        private int GetTextureIndex()
+        {
+            return Factory.TextureFactory.Texture2DParameters.IndexOf(GetParameters());
+        }
+
+        private Texture2DParameters GetParameters()
+        {
+            return Factory.TextureFactory.Texture2DParameters.Find(delegate(Texture2DParameters param) { return param.Texture == Value; });
+        }
+
+        private int GetTextureIndexFromName(string name)
+        {
+            return Factory.TextureFactory.Texture2DParameters.IndexOf(Factory.TextureFactory.Texture2DParameters.Find(delegate(Texture2DParameters param) { return param.Name == name; }));
+        }
+
+        private int GetNumTextures()
+        {
+            return Factory.TextureFactory.Texture2DParameters.Count;
         }
 
         public override int Dimension
         {
-            get { throw new Exception("The method or operation is not implemented."); }
+            get { return 1; }
         }
 
-        public override void IncreaseValue(int selectionIndex)
+        public override void IncreaseValue(int index)
         {
-            int index = CorrectIndexBounds(TextureIndex + 1);
-            SetValueFromIndex(index);
+            int i = GetTextureIndex() + 1;
+            if (i >= GetNumTextures())
+                i = -1;
+            SetTexture(i);
         }
 
-        public override void DecreaseValue(int selectionIndex)
+        public override void DecreaseValue(int index)
         {
-            int index = CorrectIndexBounds(TextureIndex - 1);
-            SetValueFromIndex(index);
+            int i = GetTextureIndex() - 1;
+            if (i < -1)
+                i = GetNumTextures() - 1;
+            SetTexture(i);
         }
 
-        private void SetValueFromIndex(int index)
+        private void SetTexture(int i)
         {
-            if (index == -1)
+            if (i == -1)
                 Value = null;
             else
-                Value = Factory.TextureFactory.Texture2DParameters[index].Texture;
-        }
-
-        private int CorrectIndexBounds(int index)
-        {
-            if (index < -1)
-                index = Factory.TextureFactory.Texture2DParameters.Count - 1;
-            if (index >= Factory.TextureFactory.Texture2DParameters.Count)
-                index = -1;
-            return index;
-        }
-
-        private int TextureIndex
-        {
-            get
-            {
-                return Factory.TextureFactory.Texture2DParameters.FindIndex(delegate(Texture2DParameters param)
-                {
-                    return param.Texture == Value;
-                });
-            }
+                Value = Factory.TextureFactory.Texture2DParameters[i].Texture;
         }
 
         public override void SetFromString(string value)
         {
-            if (value == "")
-            {
-                Value = null;
-            }
-            else
-            {
-                Value = Factory.TextureFactory.CreateFromName(value);
-            }
+            SetTexture(GetTextureIndexFromName(value));
         }
 
         public override void SetFromString(int index, string value)
@@ -102,9 +91,7 @@ namespace Dope.DDXX.DemoFramework
 
         public override string GetToString()
         {
-            if (TextureIndex < 0)
-                return "";
-            return Factory.TextureFactory.Texture2DParameters[TextureIndex].Name;
+            return GetTextureName();
         }
 
     }

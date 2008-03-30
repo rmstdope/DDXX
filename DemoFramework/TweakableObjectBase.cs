@@ -110,12 +110,12 @@ namespace Dope.DDXX.DemoFramework
                 bool found = false;
                 foreach (XmlNode child in node.ChildNodes)
                 {
-                    if (child.Name == tweakable.Property.Name)
+                    if (child.Name == tweakable.Name)
                         found = true;
                 }
-                if (!found && tweakable.Property.Name != "StartTime" && tweakable.Property.Name != "EndTime")
+                if (!found && tweakable.Name != "StartTime" && tweakable.Name != "EndTime")
                 {
-                    AddNewChild(xmlDocument, node, tweakable.Property.Name);
+                    AddNewChild(xmlDocument, node, tweakable.Name);
                 }
             }
             foreach (XmlNode child in node.ChildNodes)
@@ -178,12 +178,12 @@ namespace Dope.DDXX.DemoFramework
 
         private bool HasProperty(string name)
         {
-            return propertyHandlers.Exists(delegate(ITweakableProperty a) { return a.Property.Name == name; });
+            return propertyHandlers.Exists(delegate(ITweakableProperty a) { return a.Name == name; });
         }
 
         private ITweakableProperty GetProperty(string name)
         {
-            return propertyHandlers.Find(delegate(ITweakableProperty a) { return a.Property.Name == name; });
+            return propertyHandlers.Find(delegate(ITweakableProperty a) { return a.Name == name; });
         }
 
         private void ParseProperty(XmlNode node)

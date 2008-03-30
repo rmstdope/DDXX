@@ -51,19 +51,19 @@
 		<Parameter name="DrawOrder" int="0" />
 		<Parameter name="NumPasses" int="2" />
 	</PostEffect>-->
-	<Effect class="LineEffect" name="Lines" track="0" startTime="0" endTime="500">
+	<Effect class="BloodCell" name="Lines" track="0" startTime="0" endTime="500">
 		<DrawOrder>0</DrawOrder>
-		<ArteryTexture>Content\textures\dope</ArteryTexture>
+		<!--<Texture></Texture>-->
 	</Effect>
-	<!--<PostEffect class="GlowPostEffect" name="Glow" track="0" startTime="0" endTime="500">
+	<PostEffect class="GlowPostEffect" name="Glow" track="0" startTime="0" endTime="500">
 		<BloomScale>1.5</BloomScale>
-		<WhiteCutoff>0.2</WhiteCutoff>
-		<Exposure>0.22</Exposure>
-		<Luminance>0.15</Luminance>
-		<DownSamples>2</DownSamples>
-		<AdvancedGlow>true</AdvancedGlow>
+		<WhiteCutoff>0.5</WhiteCutoff>
+		<Exposure>0.26</Exposure>
+		<Luminance>0.16</Luminance>
+		<DownSamples>1</DownSamples>
+		<AdvancedGlow>false</AdvancedGlow>
 		<DrawOrder>1</DrawOrder>
-	</PostEffect>-->
+	</PostEffect>
 	<!--<PostEffect class="WavePostEffect" name="Wave" track="0" startTime="0" endTime="500">
 		<DrawOrder>2</DrawOrder>
 		<Scale>4</Scale>

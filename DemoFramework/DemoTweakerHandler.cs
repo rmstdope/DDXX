@@ -253,6 +253,9 @@ namespace Dope.DDXX.DemoFramework
                     ConstructorInfo constructor = pair.Value.GetConstructor(new Type[] { typeof(PropertyInfo), typeof(object), typeof(ITweakableFactory) });
                     if (constructor != null)
                         return constructor.Invoke(new object[] { property, target, this }) as ITweakableProperty;
+                    constructor = pair.Value.GetConstructor(new Type[] { typeof(PropertyInfo), typeof(object), typeof(ITweakableFactory) });
+                    if (constructor != null)
+                        return constructor.Invoke(new object[] { property, target, this }) as ITweakableProperty;
                 }
             }
             return null;

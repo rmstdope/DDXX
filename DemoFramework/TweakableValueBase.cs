@@ -46,18 +46,5 @@ namespace Dope.DDXX.DemoFramework
             return value;
         }
 
-        private float TweakStep
-        {
-            get 
-            { 
-                foreach (TweakStepAttribute attribute in Property.GetCustomAttributes(false))
-                {
-                    if (attribute != null)
-                        return attribute.Step;
-                }
-                return 1.0f;
-            }
-        }
-
     }
 }

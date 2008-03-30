@@ -52,6 +52,8 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CameraNodeTest.cs">
@@ -60,6 +62,7 @@
     <Compile Include="DirectionalLightNodeTest.cs">
       <Name>DirectionalLightNodeTest</Name>
     </Compile>
+    <Compile Include="LineNodeTest.cs" />
     <Compile Include="MirrorNodeTest.cs">
       <Name>MirrorNodeTest</Name>
     </Compile>

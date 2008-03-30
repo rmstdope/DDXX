@@ -50,6 +50,8 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CameraNode.cs">
@@ -85,6 +87,7 @@
     <Compile Include="LightNode.cs">
       <Name>LightNode</Name>
     </Compile>
+    <Compile Include="LineNode.cs" />
     <Compile Include="MirrorNode.cs">
       <Name>MirrorNode</Name>
     </Compile>

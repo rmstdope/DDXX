@@ -1,6 +1,6 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>{70f76e25-311c-4dfc-9412-89470f537bdf}</ProjectGuid>
+    <ProjectGuid>{70F76E25-311C-4DFC-9412-89470F537BDF}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -74,6 +74,7 @@
     <Compile Include="InterpolatedFloat.cs">
       <Name>InterpolatedFloat</Name>
     </Compile>
+    <Compile Include="InterpolatedVector2.cs" />
     <Compile Include="InterpolatedVector3.cs">
       <Name>InterpolatedVector3</Name>
     </Compile>
@@ -96,6 +97,8 @@
     <Compile Include="Rand.cs">
       <Name>Rand</Name>
     </Compile>
+    <Compile Include="SimpleCubicSpline.cs" />
+    <Compile Include="SmoothInterval.cs" />
     <Compile Include="SplineBase.cs">
       <Name>SplineBase</Name>
     </Compile>

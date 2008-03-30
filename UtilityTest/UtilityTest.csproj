@@ -77,6 +77,8 @@
     <Compile Include="RandTest.cs">
       <Name>RandTest</Name>
     </Compile>
+    <Compile Include="SimpleCubicSplineTest.cs" />
+    <Compile Include="SmoothIntervalTest.cs" />
     <Compile Include="SplineBaseTest.cs">
       <Name>SplineBaseTest</Name>
     </Compile>

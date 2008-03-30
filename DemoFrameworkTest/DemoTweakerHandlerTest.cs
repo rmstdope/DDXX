@@ -110,7 +110,7 @@ namespace Dope.DDXX.DemoFramework
             ITweakableProperty tweakable = handler.CreateTweakableValue(property, helper);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableBoolean), tweakable);
-            Assert.AreEqual(property, (tweakable as TweakableBoolean).Property);
+            Assert.AreEqual("B", (tweakable as TweakableBoolean).Name);
         }
 
         [Test]
@@ -121,7 +121,7 @@ namespace Dope.DDXX.DemoFramework
             ITweakableProperty tweakable = handler.CreateTweakableValue(property, helper);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableColor), tweakable);
-            Assert.AreEqual(property, (tweakable as TweakableColor).Property);
+            Assert.AreEqual("C", (tweakable as TweakableColor).Name);
         }
 
         [Test]
@@ -132,7 +132,7 @@ namespace Dope.DDXX.DemoFramework
             ITweakableProperty tweakable = handler.CreateTweakableValue(property, helper);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableInt32), tweakable);
-            Assert.AreEqual(property, (tweakable as TweakableInt32).Property);
+            Assert.AreEqual("I", (tweakable as TweakableInt32).Name);
         }
 
         [Test]
@@ -143,7 +143,7 @@ namespace Dope.DDXX.DemoFramework
             ITweakableProperty tweakable = handler.CreateTweakableValue(property, helper);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableSingle), tweakable);
-            Assert.AreEqual(property, (tweakable as TweakableSingle).Property);
+            Assert.AreEqual("F", (tweakable as TweakableSingle).Name);
         }
 
         [Test]
@@ -154,7 +154,7 @@ namespace Dope.DDXX.DemoFramework
             ITweakableProperty tweakable = handler.CreateTweakableValue(property, helper);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableString), tweakable);
-            Assert.AreEqual(property, (tweakable as TweakableString).Property);
+            Assert.AreEqual("S", (tweakable as TweakableString).Name);
         }
 
         [Test]
@@ -165,7 +165,7 @@ namespace Dope.DDXX.DemoFramework
             ITweakableProperty tweakable = handler.CreateTweakableValue(property, helper);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableVector2), tweakable);
-            Assert.AreEqual(property, (tweakable as TweakableVector2).Property);
+            Assert.AreEqual("V2", (tweakable as TweakableVector2).Name);
         }
 
         [Test]
@@ -176,7 +176,7 @@ namespace Dope.DDXX.DemoFramework
             ITweakableProperty tweakable = handler.CreateTweakableValue(property, helper);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableVector3), tweakable);
-            Assert.AreEqual(property, (tweakable as TweakableVector3).Property);
+            Assert.AreEqual("V3", (tweakable as TweakableVector3).Name);
         }
 
         [Test]
@@ -187,7 +187,7 @@ namespace Dope.DDXX.DemoFramework
             ITweakableProperty tweakable = handler.CreateTweakableValue(property, helper);
             // Verify
             Assert.IsInstanceOfType(typeof(TweakableVector4), tweakable);
-            Assert.AreEqual(property, (tweakable as TweakableVector4).Property);
+            Assert.AreEqual("V4", (tweakable as TweakableVector4).Name);
         }
 
         [Test]

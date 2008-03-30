@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Dope.DDXX.Utility
 {
-    public struct KeyFrame<T>
+    public class KeyFrame<T>
     {
         private float time;
         private T value;
@@ -12,13 +12,13 @@ namespace Dope.DDXX.Utility
         public float Time
         {
             get { return time; }
-            //set { time = value; }
+            set { time = value; }
         }
 
         public T Value
         {
             get { return this.value; }
-            //set { this.value = value; }
+            set { this.value = value; }
         }
 
         public KeyFrame(float time, T value)

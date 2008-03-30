@@ -13,7 +13,7 @@ namespace Dope.DDXX.DemoFramework
         void DecreaseValue(int index);
         void SetFromString(string value);
         void SetFromString(int index, string value);
-        PropertyInfo Property { get; }
+        string Name { get; }
         string GetToString();
     }
 }

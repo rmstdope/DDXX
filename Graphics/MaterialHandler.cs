@@ -53,6 +53,12 @@ namespace Dope.DDXX.Graphics
             this.destinationBlend = Blend.Zero;
         }
 
+        public void SetupRendering(Matrix[] worldMatrices, Matrix viewMatrix, Matrix projectionMatrix,
+            Color ambientLight)
+        {
+            SetupRendering(worldMatrices, viewMatrix, projectionMatrix, ambientLight, new LightState());
+        }
+
         public void SetupRendering(Matrix[] worldMatrices, Matrix viewMatrix, Matrix projectionMatrix, 
             Color ambientLight, LightState lightState)
         {

@@ -21,9 +21,9 @@ namespace Dope.DDXX.DemoFramework
             this.factory = factory;
         }
 
-        public PropertyInfo Property
+        public string Name
         {
-            get { return property; } 
+            get { return property.Name; } 
         }
 
         protected object Target
@@ -66,6 +66,19 @@ namespace Dope.DDXX.DemoFramework
                 new BoxControl(new Vector4(0, y, 1, height), settings.Alpha, settings.SelectedColor, status.RootControl);
             new TextControl(property.Name, new Vector4(0, y, 0.45f, height), TextFormatting.Right | TextFormatting.VerticalCenter, settings.TextAlpha, Color.White, status.RootControl);
             CreateValueControls(status, index, 0.55f, y, 0.45f, height, settings);
+        }
+
+        protected float TweakStep
+        {
+            get
+            {
+                foreach (TweakStepAttribute attribute in property.GetCustomAttributes(false))
+                {
+                    if (attribute != null)
+                        return attribute.Step;
+                }
+                return 1.0f;
+            }
         }
 
         protected abstract void CreateValueControls(TweakerStatus status, int index, float x, float y, float w, float h, ITweakerSettings settings);

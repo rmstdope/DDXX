@@ -24,6 +24,16 @@ namespace Dope.DDXX.Graphics
             this.vertexDeclaration = vertexDeclaration;
         }
 
+        public IMaterialHandler Material 
+        {
+            get { return material; }
+        }
+
+        public int BufferSize 
+        {
+            get { return bufferSize; }
+        }
+
         public int NumPrimitives(int numVertices)
         {
             if (primitiveType == PrimitiveType.LineList)
