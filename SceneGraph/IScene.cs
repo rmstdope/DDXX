@@ -14,7 +14,9 @@ namespace Dope.DDXX.SceneGraph
         void AddNode(INode node);
         void Step();
         void Render();
+        INode RootNode { get; }
         INode GetNodeByName(string name);
+        INode GetNodeByNumber(int number);
         void Validate();
     }
 }

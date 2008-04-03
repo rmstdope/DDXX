@@ -13,7 +13,6 @@ namespace DFM2007Invitro
 {
     public class ParticleSystemEffect : BaseDemoEffect
     {
-        private IScene scene;
         private CameraNode camera;
         //private FloaterSystemNode floaterSystem;
         private SpiralSystemNode spiralSystem;
@@ -25,7 +24,7 @@ namespace DFM2007Invitro
 
         protected override void Initialize()
         {
-            CreateStandardSceneAndCamera(out scene, out camera, 50);
+            CreateStandardCamera(out camera, 50);
 
             TextureDirector director = new TextureDirector(TextureFactory);
             director.CreateCircle(0.2f, 0.5f);
@@ -38,19 +37,19 @@ namespace DFM2007Invitro
             spiralSystem = new SpiralSystemNode("ps", 1.0f);
             spiralSystem.Initialize(GraphicsDevice, GraphicsFactory, 10000);
             spiralSystem.Material.DiffuseTexture = director.Generate("Circle256", 256, 256, 0, SurfaceFormat.Color);
-            scene.AddNode(spiralSystem);
+            Scene.AddNode(spiralSystem);
         }
 
         public override void Step()
         {
             spiralSystem.WorldState.Turn(Time.DeltaTime * 0.4f);
             spiralSystem.WorldState.Roll(Time.DeltaTime * 0.1f);
-            scene.Step();
+            Scene.Step();
         }
 
         public override void Render()
         {
-            scene.Render();
+            Scene.Render();
         }
     }
 }

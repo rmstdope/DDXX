@@ -14,7 +14,6 @@ namespace EngineTest
     public class SpermBank : BaseDemoEffect
     {
         private const float TailLength = 6.0f;
-        private IScene scene;
         private CameraNode camera;
         private List<ModelNode> sperms = new List<ModelNode>();
 
@@ -25,9 +24,9 @@ namespace EngineTest
 
         protected override void Initialize()
         {
-            CreateStandardSceneAndCamera(out scene, out camera, 6);
+            CreateStandardCamera(out camera, 6);
             InitializeSperms();
-            scene.AmbientColor = new Color(30, 30, 30);
+            Scene.AmbientColor = new Color(30, 30, 30);
         }
 
         private void InitializeSperms()
@@ -56,7 +55,7 @@ namespace EngineTest
                 head.AddChild(tail);
                 head.WorldState.Position = new Vector3(0, 0, -3);// Rand.Vector3(-3, 3);
                 sperms.Add(head);
-                scene.AddNode(head);
+                Scene.AddNode(head);
             }
         }
 
@@ -79,12 +78,12 @@ namespace EngineTest
                 if (cell.WorldState.Position.X > 8)
                     cell.WorldState.Position -= new Vector3(16, 0, 0);
             }
-            scene.Step();
+            Scene.Step();
         }
 
         public override void Render()
         {
-            scene.Render();
+            Scene.Render();
         }
     }
 }

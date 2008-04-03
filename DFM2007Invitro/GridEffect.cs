@@ -14,7 +14,6 @@ namespace DFM2007Invitro
 {
     public class GridEffect : BaseDemoEffect
     {
-        private IScene scene;
         private CameraNode camera;
         //private DummyNode gridNode;
         //private ModelNode terrain;
@@ -27,7 +26,7 @@ namespace DFM2007Invitro
 
         protected override void Initialize()
         {
-            CreateStandardSceneAndCamera(out scene, out camera, 50);
+            CreateStandardCamera(out camera, 50);
 
             List<VertexPositionColor> list = new List<VertexPositionColor>();
             for (int i = -5; i < 6; i++)
@@ -84,7 +83,7 @@ namespace DFM2007Invitro
                 IModel tubeModel = director.Generate("Default");
                 ModelNode tube = new ModelNode("x", tubeModel, GraphicsDevice);
                 if (tubes.Count == 0)
-                    scene.AddNode(tube);
+                    Scene.AddNode(tube);
                 else
                     tubes[tubes.Count - 1].AddChild(tube);
                 tubes.Add(tube);
@@ -95,7 +94,7 @@ namespace DFM2007Invitro
             // Add Light
             PointLightNode light = new PointLightNode("");
             light.WorldState.MoveDelta(new Vector3(-17, 10, 0));
-            scene.AddNode(light);
+            Scene.AddNode(light);
 
             //ModelBuilder.SetEffect("Default", "Content\\effects\\Terrain");
             //PerlinNoise noise = new PerlinNoise();
@@ -117,12 +116,12 @@ namespace DFM2007Invitro
                     tubes[i].WorldState.Tilt(Time.DeltaTime / (0.7f - i * 0.02f));
                 turn = !turn;
             }
-            scene.Step();
+            Scene.Step();
         }
 
         public override void Render()
         {
-            scene.Render();
+            Scene.Render();
         }
     }
 }

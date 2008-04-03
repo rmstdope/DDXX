@@ -2059,5 +2059,35 @@ namespace Dope.DDXX.SceneGraph
         }
 
         #endregion
+
+        #region INode Members
+
+
+        public INode GetNumber(int number)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
+
+        #region IScene Members
+
+
+        public INode GetNodeByNumber(int number)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
+
+        #region IScene Members
+
+
+        public INode RootNode
+        {
+            get { throw new Exception("The method or operation is not implemented."); }
+        }
+
+        #endregion
     }
 }

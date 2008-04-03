@@ -39,6 +39,7 @@ namespace EngineTest
         private void CreateTorus(float innerRadius, float outerRadius, float y)
         {
             ModelDirector.CreateTorus(innerRadius, outerRadius, 8, 32);
+            ModelDirector.UvRemap(0, 0, 6, 1);
             IModel model = ModelDirector.Generate("Default");
             ModelNode node = new ModelNode("Model", model, GraphicsDevice);
             node.WorldState.MoveUp(y);

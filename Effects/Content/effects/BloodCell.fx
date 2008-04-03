@@ -30,14 +30,17 @@ DefaultVertexShader(VertexInput input)
 	PixelInput output;
 	
 	// transform the position into projection space
-	output.position = mul(input.position, World[0]);
-	output.position = mul(output.position, View);
+	float4 worldSpacePos = mul(input.position, World[0]);
+	output.position = mul(worldSpacePos, View);
 	output.position = mul(output.position, Projection);
 
 	// N dot V
 	float3 normal = mul(input.normal, (float3x3)World[0]);
-	normal = mul(normal, (float3x3)View);
-	float nDotV = abs(dot(normal, float3(0, 0, 1)));
+	//normal = mul(normal, (float3x3)View);
+	float3 eyePosition = mul(-View._m30_m31_m32, transpose(View));
+	float3 eyeVector = normalize(worldSpacePos.xyz - eyePosition);
+
+	float nDotV = abs(dot(normal, eyeVector));
 	// Reverse scale
 	//nDotV = min(1, nDotV * 2.0f);
 	float diffuse = (1 - nDotV);

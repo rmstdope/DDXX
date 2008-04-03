@@ -141,6 +141,17 @@ namespace Dope.DDXX.ModelBuilder
             primitive = map;
         }
 
+        public void UvRemap(float translateU, float translateV, float scaleU, float scaleV)
+        {
+            UvRemap map = new UvRemap();
+            map.ScaleU = scaleU;
+            map.ScaleV = scaleV;
+            map.TranslateU = translateU;
+            map.TranslateV = translateV;
+            map.ConnectToInput(0, primitive);
+            primitive = map;
+        }
+
         /// <summary>
         /// Rotates around: 1)z-axis 2)x-axis 3)y-axis
         /// </summary>

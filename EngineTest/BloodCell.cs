@@ -14,7 +14,6 @@ namespace EngineTest
 {
     public class BloodCell : BaseDemoEffect
     {
-        private IScene scene;
         private CameraNode camera;
         private List<ModelNode> cells = new List<ModelNode>();
         private ModelNode artery;
@@ -23,11 +22,11 @@ namespace EngineTest
         private float pulseAmplitude;
         private PointLightNode light;
 
-        private ITexture2D texture;
-        public ITexture2D Texture
+        private IMaterialHandler material;
+        public IMaterialHandler Material
         {
-            get { return texture; }
-            set { texture = value; }
+            get { return material; }
+            set { material = value; }
         }
 
         public float PulseSpeed
@@ -57,40 +56,35 @@ namespace EngineTest
 
         protected override void Initialize()
         {
-            CreateStandardSceneAndCamera(out scene, out camera, 0);
-            //InitializeCells();
+            CreateStandardCamera(out camera, 0);
+            InitializeCells();
             InitializeArtery();
             //InitializeParticles();
             light = new PointLightNode("Light");
             //light.Position = new Vector3(1000, 0, 0);
             light.Position = new Vector3(0, 0, 0);
-            scene.AddNode(light);
-            scene.AmbientColor = new Color(255, 255, 255);
+            Scene.AddNode(light);
+            Scene.AmbientColor = new Color(255, 255, 255);
         }
 
         private void InitializeArtery()
         {
-            TextureFactory.CreateFromName("Content\\textures\\dope");
             MaterialHandler material = new MaterialHandler(EffectFactory.CreateFromFile("Content\\effects\\Artery"), new EffectConverter());
             material.DiffuseTexture = TextureFactory.CreateFromName("Noise256");
-            //ModelBuilder.SetNormalTexture("Default", TextureDirector.Generate(256, 256, 0, SurfaceFormat.Color));
-            //ModelBuilder.SetAmbientColor("Default", Color.Black);
-            //ModelBuilder.SetDiffuseColor("Default", Color.Red);
-            //ModelBuilder.SetSpecularColor("Default", new Color(255, 160, 160));
-            //ModelBuilder.SetShininess("Default", 0.0f);
-            //ModelBuilder.SetSpecularPower("Default", 32);
-            //ModelBuilder.SetEffect("Default", "Content\\effects\\Artery");
-            ModelDirector.CreateTunnel(2.0f, 32, 30, 60, 2, 10, false);
+            ModelDirector.CreateTunnel(2.0f, 32, 30, 60, 2, 10, true);
             PerlinNoise heightMap = new PerlinNoise();
             heightMap.BaseFrequency = 16;
-            ModelDirector.HeightMap(heightMap);
+            Madd madd = new Madd();
+            madd.Mul = 0.2f;
+            madd.ConnectToInput(0, heightMap);
+            ModelDirector.HeightMap(madd);
             material.NormalTexture = TextureFactory.CreateFromName("NormalNoise256");
             material.AmbientColor = Color.Black;
             material.DiffuseColor = Color.Red;
             material.Shininess = 0.0f;
             IModel model = ModelDirector.Generate(material);
             artery = new ModelNode("Artery", model, GraphicsDevice);
-            scene.AddNode(artery);
+            Scene.AddNode(artery);
             artery.WorldState.Tilt(MathHelper.PiOver2);
         }
 
@@ -103,7 +97,7 @@ namespace EngineTest
             floaterSystem.Material.BlendFunction = BlendFunction.ReverseSubtract;
             floaterSystem.Material.SourceBlend = Blend.One;
             floaterSystem.Material.DestinationBlend = Blend.One;
-            scene.AddNode(floaterSystem);
+            Scene.AddNode(floaterSystem);
         }
 
         private void InitializeCells()
@@ -112,20 +106,21 @@ namespace EngineTest
             ModelBuilder.SetDiffuseTexture("Default", TextureDirector.Generate("Noise64", 64, 64, 0, SurfaceFormat.Color));
             //ModelBuilder.SetDiffuseTexture("Default", TextureFactory.CreateFromFile("Content\\textures\\CARPTBLU"));
             ModelBuilder.SetAmbientColor("Default", Color.Red);
-            ModelBuilder.SetDiffuseColor("Default", Color.Red);
+            ModelBuilder.SetDiffuseColor("Default", new Color(255, 100, 100));
             ModelBuilder.SetSpecularColor("Default", Color.White);
             ModelBuilder.SetShininess("Default", 0.5f);
             ModelBuilder.SetSpecularPower("Default", 8);
             ModelBuilder.SetEffect("Default", "Content\\effects\\BloodCell");
             ModelDirector.CreateSphere(1, 32);
             ModelDirector.Amplitude(cellFunction);
+            ModelDirector.Scale(0.3f);
             IModel model = ModelDirector.Generate("Default");
             for (int i = 0; i < 20; i++)
             {
                 ModelNode cell = new ModelNode("Cell", model, GraphicsDevice);
-                cell.WorldState.Position = Rand.Vector3(-6, 6);
+                cell.WorldState.Position = new Vector3(Rand.Float(-1, 1), Rand.Float(-1, 1), Rand.Float(-5, 5));
                 cells.Add(cell);
-                scene.AddNode(cell);
+                Scene.AddNode(cell);
             }
         }
 
@@ -148,9 +143,9 @@ namespace EngineTest
             {
                 cell.WorldState.Turn(Time.DeltaTime * 0.8f);
                 cell.WorldState.Tilt(Time.DeltaTime * 0.94f);
-                cell.WorldState.Position += new Vector3(Time.DeltaTime * 1.4f, 0, 0);
-                if (cell.WorldState.Position.X > 8)
-                    cell.WorldState.Position -= new Vector3(16, 0, 0);
+                cell.WorldState.Position += new Vector3(0, 0, Time.DeltaTime * 1.4f);
+                if (cell.WorldState.Position.Z > 8)
+                    cell.WorldState.Position -= new Vector3(0, 0, 16);
             }
             artery.Model.Meshes[0].MeshParts[0].MaterialHandler.Effect.Parameters["time"].SetValue(Time.CurrentTime);
             artery.Model.Meshes[0].MeshParts[0].MaterialHandler.Effect.Parameters["PulseSpeed"].SetValue(PulseSpeed);
@@ -162,12 +157,12 @@ namespace EngineTest
             //camera.WorldState.Turn(Time.DeltaTime);
             //light.Position = camera.Position; new Vector3(0, 0, (float)Math.Sin(Time.CurrentTime) * 5);
 
-            scene.Step();
+            Scene.Step();
         }
 
         public override void Render()
         {
-            scene.Render();
+            Scene.Render();
         }
     }
 }

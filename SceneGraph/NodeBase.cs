@@ -131,6 +131,21 @@ namespace Dope.DDXX.SceneGraph
             }
         }
 
+        public INode GetNumber(int number)
+        {
+            if (number == 0)
+                return this;
+            foreach (INode child in Children)
+            {
+                if (number <= child.CountNodes())
+                    return child.GetNumber(number - 1);
+                number -= child.CountNodes();
+                //if (number == 0)
+                //    return child;
+            }
+            return null;
+        }
+
         public int CountNodes()
         {
             int num = 1;
@@ -155,5 +170,6 @@ namespace Dope.DDXX.SceneGraph
         }
 
         #endregion
+
     }
 }

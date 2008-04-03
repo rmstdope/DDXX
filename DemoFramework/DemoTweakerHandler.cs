@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Reflection;
+using Dope.DDXX.SceneGraph;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -85,6 +86,10 @@ namespace Dope.DDXX.DemoFramework
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(Vector4), typeof(TweakableVector4)));
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(ITextureFactory), typeof(TweakableTextureFactory)));
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(ITextureGenerator), typeof(TweakableTextureGenerator)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(IScene), typeof(TweakableScene)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(INode), typeof(TweakableNode)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(IModel), typeof(TweakableModel)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(IModelMeshPart), typeof(TweakableModelMeshPart)));
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(IMaterialHandler), typeof(TweakableMaterial)));
         }
 
@@ -263,6 +268,8 @@ namespace Dope.DDXX.DemoFramework
 
         public ITweakable CreateTweakableObject(object target)
         {
+            if (target == null)
+                return null;
             foreach (KeyValuePair<Type, Type> pair in typeTweakableMapping)
             {
                 if (pair.Key == target.GetType() || target.GetType().GetInterface(pair.Key.Name) != null)

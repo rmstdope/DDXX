@@ -12,15 +12,16 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void TestCamera()
         {
-            CameraNode c1 = new CameraNode("C1");
+            CameraNode c1 = new CameraNode("C1", 2);
             Assert.AreEqual(null, c1.Parent);
             Assert.AreEqual("C1", c1.Name);
+            Assert.AreEqual(2, c1.AspectRatio);
         }
 
         [Test]
         public void TestFOV()
         {
-            CameraNode c1 = new CameraNode("C1");
+            CameraNode c1 = new CameraNode("C1", 1);
 
             Assert.AreEqual((float)Math.PI / 4, c1.GetFOV());
 
@@ -42,7 +43,7 @@ namespace Dope.DDXX.SceneGraph
             Matrix exp1 = Matrix.CreatePerspectiveFieldOfView(fov1, aspect1, zNear1, zFar1);
             Matrix exp2 = Matrix.CreatePerspectiveFieldOfView(fov2, aspect2, zNear2, zFar2);
 
-            CameraNode c1 = new CameraNode("Name");
+            CameraNode c1 = new CameraNode("Name", aspect1);
             Assert.IsTrue(exp1.Equals(c1.ProjectionMatrix));
             c1.SetFOV(fov2);
             c1.SetClippingPlanes(zNear2, zFar2);
@@ -61,7 +62,7 @@ namespace Dope.DDXX.SceneGraph
         public void TestView()
         {
             Vector3 vec = new Vector3(1, 2, 3);
-            CameraNode c1 = new CameraNode("Name");
+            CameraNode c1 = new CameraNode("Name", 1);
             AssertVectors(new Vector3(1, 2, 3), Vector3.Transform(vec, c1.ViewMatrix));
 
             c1.WorldState.Position = new Vector3(100, 200, 300);
@@ -73,7 +74,7 @@ namespace Dope.DDXX.SceneGraph
         public void TestLookAtFromOrigo1()
         {
             const float epsilon = 0.0001f;
-            CameraNode camera = new CameraNode("");
+            CameraNode camera = new CameraNode("", 1);
             camera.LookAt(new Vector3(0, 0, 1), new Vector3(0, 1, 0));
             Assert.AreEqual(0, camera.WorldState.Forward.X, epsilon);
             Assert.AreEqual(0, camera.WorldState.Forward.Y, epsilon);
@@ -87,7 +88,7 @@ namespace Dope.DDXX.SceneGraph
         public void TestLookAtFromOrigo2()
         {
             const float epsilon = 0.0001f;
-            CameraNode camera = new CameraNode("");
+            CameraNode camera = new CameraNode("", 1);
             camera.LookAt(new Vector3(0, 0, -1), new Vector3(0, 1, 0));
             Assert.AreEqual(0, camera.WorldState.Forward.X, epsilon);
             Assert.AreEqual(0, camera.WorldState.Forward.Y, epsilon);
@@ -101,7 +102,7 @@ namespace Dope.DDXX.SceneGraph
         public void TestLookAt1()
         {
             const float epsilon = 0.0001f;
-            CameraNode camera = new CameraNode("");
+            CameraNode camera = new CameraNode("", 1);
             camera.Position = new Vector3(0, 0, -200);
             camera.LookAt(new Vector3(0, 0, -1), new Vector3(0, -1, 0));
             Assert.AreEqual(0, camera.WorldState.Forward.X, epsilon);

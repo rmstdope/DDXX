@@ -5,14 +5,25 @@ using Dope.DDXX.SceneGraph;
 using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public class TweakableScene : TweakableObjectBase<IScene>
+    public class TweakableModel : TweakableObjectBase<IModel>
     {
-        public TweakableScene(IScene target, ITweakableFactory factory)
+        List<IModelMeshPart> parts;
+
+        public TweakableModel(IModel target, ITweakableFactory factory)
             : base(target, factory)
         {
+            parts = new List<IModelMeshPart>();
+            foreach (IModelMesh mesh in Target.Meshes)
+            {
+                foreach (IModelMeshPart part in mesh.MeshParts)
+                {
+                    parts.Add(part);
+                }
+            }
         }
 
         public override int NumVisableVariables
@@ -22,12 +33,12 @@ namespace Dope.DDXX.DemoFramework
 
         protected override int NumSpecificVariables
         {
-            get { return 1; }
+            get { return parts.Count; }
         }
 
         protected override ITweakable GetSpecificVariable(int index)
         {
-            return Factory.CreateTweakableObject(Target.RootNode);
+            return Factory.CreateTweakableObject(parts[index]);
         }
 
         protected override void ParseSpecficXmlNode(XmlNode node)
@@ -45,9 +56,9 @@ namespace Dope.DDXX.DemoFramework
             float height = status.VariableSpacing * 0.9f;
             if (index == status.Selection)
                 new BoxControl(new Vector4(0, y, 1, height), settings.Alpha, settings.SelectedColor, status.RootControl);
-            new TextControl("Scene", new Vector4(0, y, 0.45f, height), TextFormatting.Right | TextFormatting.VerticalCenter, settings.TextAlpha, Color.White, status.RootControl);
+            new TextControl("Model", new Vector4(0, y, 0.45f, height), TextFormatting.Right | TextFormatting.VerticalCenter, settings.TextAlpha, Color.White, status.RootControl);
 
-            new TextControl("<IScene>",
+            new TextControl("<IModel>",
                 new Vector4(0.55f, y, 0.45f, height), TextFormatting.Center | TextFormatting.VerticalCenter,
                 settings.TextAlpha, Color.White, status.RootControl);
         }

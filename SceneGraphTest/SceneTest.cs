@@ -87,7 +87,7 @@ namespace Dope.DDXX.SceneGraph
         {
             Assert.AreEqual(1, graph.NumNodes);
 
-            CameraNode camera = new CameraNode("Camera");
+            CameraNode camera = new CameraNode("Camera", 1);
             camera.WorldState.Position = new Vector3(1, 2, 3);
             graph.AddNode(camera);
             graph.ActiveCamera = camera;
@@ -165,7 +165,7 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void TestRenderOK()
         {
-            CameraNode camera = new CameraNode("Camera");
+            CameraNode camera = new CameraNode("Camera", 1);
             graph.AddNode(node1);
             graph.AddNode(node2);
             graph.AddNode(camera);
@@ -181,14 +181,14 @@ namespace Dope.DDXX.SceneGraph
         [ExpectedException(typeof(DDXXException))]
         public void TestActiveCameraFail()
         {
-            CameraNode camera = new CameraNode("Camera");
+            CameraNode camera = new CameraNode("Camera", 1);
             graph.ActiveCamera = camera;
         }
 
         [Test]
         public void TestActiveCamera()
         {
-            CameraNode camera = new CameraNode("Camera");
+            CameraNode camera = new CameraNode("Camera", 1);
             graph.AddNode(camera);
             graph.ActiveCamera = camera;
             Assert.AreSame(camera, graph.ActiveCamera);
@@ -197,7 +197,7 @@ namespace Dope.DDXX.SceneGraph
         [Test]
         public void TestActiveCameraAsChild()
         {
-            CameraNode camera = new CameraNode("Camera");
+            CameraNode camera = new CameraNode("Camera", 1);
             node1.AddChild(camera);
             graph.AddNode(node1);
             graph.ActiveCamera = camera;

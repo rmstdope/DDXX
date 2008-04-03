@@ -15,7 +15,6 @@ namespace DFM2007Invitro
 {
     public class CubeSystem : BaseDemoEffect
     {
-        private IScene scene;
         private CameraNode camera;
         private NaturalCubicSpline<InterpolatedVector3> spline = 
             new NaturalCubicSpline<InterpolatedVector3>();
@@ -29,7 +28,7 @@ namespace DFM2007Invitro
 
         protected override void Initialize()
         {
-            CreateStandardSceneAndCamera(out scene, out camera, 5);
+            CreateStandardCamera(out camera, 5);
 
             spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(0.0f, new InterpolatedVector3(new Vector3(0, 1.02f, 0))));
             spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(4.0f, new InterpolatedVector3(new Vector3(2, 1.04f, -1))));
@@ -62,20 +61,20 @@ namespace DFM2007Invitro
                     ModelNode box = new ModelNode("Chamfer", chamferBoxModel, GraphicsDevice);
                     box.WorldState.MoveRight(x * 1.5f);
                     box.WorldState.MoveForward(z * 1.5f);
-                    scene.AddNode(box);
+                    Scene.AddNode(box);
                 }
             }
 
             // Add Light
             light = new PointLightNode("");
             light.WorldState.Position = new Vector3(0, 2, -5);
-            scene.AddNode(light);
+            Scene.AddNode(light);
 
             TextureDirector.CreateCircle(0.2f, 0.5f);
             floaterSystem = new FloaterSystemNode("FloaterSystem", 8, 0.02f, 6.0f);
             floaterSystem.Initialize(GraphicsDevice, GraphicsFactory, 2000);
             floaterSystem.Material.DiffuseTexture = TextureDirector.Generate("Circle64", 64, 64, 0, SurfaceFormat.Color);
-            scene.AddNode(floaterSystem);
+            Scene.AddNode(floaterSystem);
 
             TextureDirector.CreateCircle(0.2f, 0.5f);
             SpiralSystemNode spiralSystem = new SpiralSystemNode("ps", 0.05f);
@@ -83,7 +82,7 @@ namespace DFM2007Invitro
             spiralSystem.Material.DiffuseTexture = TextureDirector.Generate("Circle256", 256, 256, 0, SurfaceFormat.Color);
             spiralSystem.WorldState.MoveUp(1.5f);
             spiralSystem.WorldState.MoveForward(1.5f);
-            scene.AddNode(spiralSystem);
+            Scene.AddNode(spiralSystem);
         }
 
         public override void Step()
@@ -96,12 +95,12 @@ namespace DFM2007Invitro
                                                             2 * (float)Math.Cos(Time.CurrentTime)) + camera.Position;
             camera.WorldState.Position = spline.GetValue(Time.CurrentTime % 10);
             light.WorldState.Position = camera.WorldState.Position;
-            scene.Step();
+            Scene.Step();
         }
 
         public override void Render()
         {
-            scene.Render();
+            Scene.Render();
         }
     }
 }

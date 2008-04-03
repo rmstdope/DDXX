@@ -29,6 +29,8 @@ namespace Dope.DDXX.DemoFramework
             : base(name, startTime, endTime)
         {
             drawOrder = 0;
+            scene = new Scene();
+            scene.AmbientColor = new Color(255, 255, 255, 255);
         }
 
         protected IGraphicsFactory GraphicsFactory
@@ -105,7 +107,7 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        protected IScene Scene
+        public IScene Scene
         {
             get { return scene; }
         }
@@ -116,28 +118,12 @@ namespace Dope.DDXX.DemoFramework
             get { return drawOrder; }
         }
 
-        protected void CreateStandardSceneAndCamera(out IScene scene, out CameraNode camera, float distance)
+        protected void CreateStandardCamera(out CameraNode camera, float distance)
         {
-            scene = new Scene();
-            scene.AmbientColor = new Color(255, 255, 255, 255);
-            camera = new CameraNode("Standard Camera");
+            camera = new CameraNode("Standard Camera", GraphicsDevice.AspectRatio);
             camera.WorldState.MoveForward(-distance);
             scene.AddNode(camera);
             scene.ActiveCamera = camera;
-        }
-
-        protected ModelNode CreateSimpleModelNode(IModel model, string effectFileName, string techniqueName)
-        {
-            return CreateSimpleModelNode(model, effectFileName, techniqueName, EffectFactory);
-        }
-
-        public static ModelNode CreateSimpleModelNode(IModel model, string effectFileName, string techniqueName, 
-            IEffectFactory effectFactory)
-        {
-            throw new Exception("Not implemented");
-            //IEffectHandler effectHandler = new EffectHandler(effectFactory.CreateFromFile(effectFileName),
-            //    delegate(int material) { return techniqueName; }, model);
-            //return new ModelNode("", model, effectHandler, device);
         }
 
         protected float EffectTime
@@ -156,13 +142,11 @@ namespace Dope.DDXX.DemoFramework
         public void Initialize(IGraphicsFactory graphicsFactory, IEffectFactory effectFactory, 
             ITextureFactory textureFactory, IDemoMixer mixer, IPostProcessor postProcessor)
         {
-            CameraNode camera;
             this.graphicsFactory = graphicsFactory;
             this.effectFactory = effectFactory;
             this.mixer = mixer;
             this.postProcessor = postProcessor;
             this.textureFactory = textureFactory;
-            CreateStandardSceneAndCamera(out scene, out camera, 10);
 
             Initialize();
         }

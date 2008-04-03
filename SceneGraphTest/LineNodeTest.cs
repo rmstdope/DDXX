@@ -33,7 +33,7 @@ namespace Dope.DDXX.SceneGraph
         //private LightState lightState = new LightState();
         //private IAnimationController animationController;
 
-        private LineNode node = null;
+        //private LineNode node = null;
 
         [SetUp]
         public override void SetUp()

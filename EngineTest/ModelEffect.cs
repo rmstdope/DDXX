@@ -84,7 +84,7 @@ namespace EngineTest
             scene.AddNode(light2);
 
             // Create camera
-            camera = new CameraNode("Test Camera");
+            camera = new CameraNode("Test Camera", GraphicsDevice.AspectRatio);
             camera.WorldState.MoveBackward(60);
             scene.AddNode(camera);
             scene.ActiveCamera = camera;

@@ -180,6 +180,9 @@
     <Compile Include="TweakableColor.cs" />
     <Compile Include="TweakableInt32.cs" />
     <Compile Include="TweakableMaterial.cs" />
+    <Compile Include="TweakableModel.cs" />
+    <Compile Include="TweakableModelMeshPart.cs" />
+    <Compile Include="TweakableNode.cs" />
     <Compile Include="TweakableObjectBase.cs" />
     <Compile Include="TweakableDemo.cs" />
     <Compile Include="TweakableProperty.cs" />

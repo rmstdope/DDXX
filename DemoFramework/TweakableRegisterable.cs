@@ -22,12 +22,24 @@ namespace Dope.DDXX.DemoFramework
 
         protected override int NumSpecificVariables
         {
-            get { return 0; }
+            get 
+            {
+                if (TargetIsEffect())
+                    return 1;
+                return 0; 
+            }
+        }
+
+        private bool TargetIsEffect()
+        {
+            return Target.GetType().IsSubclassOf(typeof(BaseDemoEffect));
         }
 
         protected override ITweakable GetSpecificVariable(int index)
         {
-            throw new Exception("The method should never be called.");
+            return Factory.CreateTweakableObject((Target as BaseDemoEffect).Scene);
+            //if (TargetIsEffect())
+            //throw new Exception("The method should never be called.");
         }
 
         protected override void ParseSpecficXmlNode(XmlNode node)

@@ -648,5 +648,13 @@ namespace Dope.DDXX.Graphics
         }
 
         #endregion
+
+        public float AspectRatio 
+        {
+            get
+            {
+                return (float)PresentationParameters.BackBufferWidth / (float)PresentationParameters.BackBufferHeight;
+            }
+        }
     }
 }

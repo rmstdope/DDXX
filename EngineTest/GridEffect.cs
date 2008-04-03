@@ -14,7 +14,6 @@ namespace EngineTest
 {
     public class GridEffect : BaseDemoEffect
     {
-        private IScene scene;
         private CameraNode camera;
         private DummyNode gridNode;
         private ModelNode terrain;
@@ -27,7 +26,7 @@ namespace EngineTest
 
         protected override void Initialize()
         {
-            CreateStandardSceneAndCamera(out scene, out camera, 40);
+            CreateStandardCamera(out camera, 40);
 
             List<VertexPositionColor> list = new List<VertexPositionColor>();
             for (int i = -5; i < 6; i++)
@@ -62,7 +61,7 @@ namespace EngineTest
             node.WorldState.MoveForward(6);
             gridNode.AddChild(node);
             
-            scene.AddNode(gridNode);
+            Scene.AddNode(gridNode);
 
             ModelBuilder.SetDiffuseTexture("Default", "Content\\textures\\BENEDETI2");
             ModelDirector director = new ModelDirector(ModelBuilder);
@@ -75,7 +74,7 @@ namespace EngineTest
                 IModel tubeModel = director.Generate("Default");
                 ModelNode tube = new ModelNode("x", tubeModel, GraphicsDevice);
                 if (tubes.Count == 0)
-                    scene.AddNode(tube);
+                    Scene.AddNode(tube);
                 else
                     tubes[tubes.Count - 1].AddChild(tube);
                 tubes.Add(tube);
@@ -85,7 +84,7 @@ namespace EngineTest
             // Add Light
             PointLightNode light = new PointLightNode("");
             light.WorldState.MoveUp(5);
-            scene.AddNode(light);
+            Scene.AddNode(light);
 
             ModelBuilder.SetEffect("Default", "Content\\effects\\Terrain");
             PerlinNoise noise = new PerlinNoise();
@@ -93,7 +92,7 @@ namespace EngineTest
             director.CreateTerrain(noise, 40, 200, 200, 30, 30, true);
             terrain = new ModelNode("Terrain", director.Generate("Default"), GraphicsDevice);
             terrain.WorldState.MoveDown(25);
-            scene.AddNode(terrain);
+            Scene.AddNode(terrain);
         }
 
         public override void Step()
@@ -107,12 +106,12 @@ namespace EngineTest
                     tube.WorldState.Tilt(Time.DeltaTime / 0.7f);
                 turn = !turn;
             }
-            scene.Step();
+            Scene.Step();
         }
 
         public override void Render()
         {
-            scene.Render();
+            Scene.Render();
         }
     }
 }

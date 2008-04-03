@@ -14,7 +14,6 @@ namespace EngineTest
 {
     public class LineEffect : BaseDemoEffect
     {
-        private IScene scene;
         private CameraNode camera;
         private LineNode[] lines;
         private ISpline<InterpolatedVector3>[] splines;
@@ -37,7 +36,7 @@ namespace EngineTest
 
         protected override void Initialize()
         {
-            CreateStandardSceneAndCamera(out scene, out camera, 15);
+            CreateStandardCamera(out camera, 15);
 
             for (int i = 0; i < NumLines; i++)
             {
@@ -53,7 +52,7 @@ namespace EngineTest
                 lines[i] = new LineNode("Line", GraphicsFactory,
                     material,
                     splines[i], 100);
-                scene.AddNode(lines[i]);
+                Scene.AddNode(lines[i]);
             }
         }
 
@@ -72,12 +71,12 @@ namespace EngineTest
                 lines[i].WorldState.Tilt(Time.DeltaTime * 0.5f);
                 lines[i].EndTime = Time.CurrentTime;
             }
-            scene.Step();
+            Scene.Step();
         }
 
         public override void Render()
         {
-            scene.Render();
+            Scene.Render();
         }
     }
 }

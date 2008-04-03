@@ -2,10 +2,12 @@
 
 sampler2D DefaultEffectSampler = sampler_state
 {
-    Texture = <Texture>;
-    MinFilter = linear;
-    MagFilter = linear;
-    MipFilter = linear;
+    Texture	= <Texture>;
+    MinFilter	= linear;
+    MagFilter	= linear;
+    MipFilter	= linear;
+	AddressU	= Mirror;
+	AddressV	= Mirror;
 };
 
 struct INPUT

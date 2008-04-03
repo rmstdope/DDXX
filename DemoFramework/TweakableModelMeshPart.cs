@@ -5,12 +5,13 @@ using Dope.DDXX.SceneGraph;
 using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public class TweakableScene : TweakableObjectBase<IScene>
+    public class TweakableModelMeshPart : TweakableObjectBase<IModelMeshPart>
     {
-        public TweakableScene(IScene target, ITweakableFactory factory)
+        public TweakableModelMeshPart(IModelMeshPart target, ITweakableFactory factory)
             : base(target, factory)
         {
         }
@@ -27,7 +28,7 @@ namespace Dope.DDXX.DemoFramework
 
         protected override ITweakable GetSpecificVariable(int index)
         {
-            return Factory.CreateTweakableObject(Target.RootNode);
+            return Factory.CreateTweakableObject(Target.MaterialHandler);
         }
 
         protected override void ParseSpecficXmlNode(XmlNode node)
@@ -45,9 +46,9 @@ namespace Dope.DDXX.DemoFramework
             float height = status.VariableSpacing * 0.9f;
             if (index == status.Selection)
                 new BoxControl(new Vector4(0, y, 1, height), settings.Alpha, settings.SelectedColor, status.RootControl);
-            new TextControl("Scene", new Vector4(0, y, 0.45f, height), TextFormatting.Right | TextFormatting.VerticalCenter, settings.TextAlpha, Color.White, status.RootControl);
+            new TextControl("ModelMeshPart", new Vector4(0, y, 0.45f, height), TextFormatting.Right | TextFormatting.VerticalCenter, settings.TextAlpha, Color.White, status.RootControl);
 
-            new TextControl("<IScene>",
+            new TextControl("<IModelMeshPart>",
                 new Vector4(0.55f, y, 0.45f, height), TextFormatting.Center | TextFormatting.VerticalCenter,
                 settings.TextAlpha, Color.White, status.RootControl);
         }

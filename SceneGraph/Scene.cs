@@ -11,7 +11,7 @@ namespace Dope.DDXX.SceneGraph
 {
     public class Scene : IScene
     {
-        private NodeBase rootNode;
+        private INode rootNode;
         private IRenderableCamera activeCamera;
         private Color ambientColor;
         private LightState lightState;
@@ -22,12 +22,14 @@ namespace Dope.DDXX.SceneGraph
             ambientColor = new Color(200, 200, 200);
         }
 
+        public INode RootNode
+        {
+            get { return rootNode; }
+        }
+
         public int NumNodes
         {
-            get
-            {
-                return rootNode.CountNodes();
-            }
+            get { return rootNode.CountNodes(); }
         }
 
         public void AddNode(INode node)
@@ -78,6 +80,11 @@ namespace Dope.DDXX.SceneGraph
         public INode GetNodeByName(string name)
         {
             return FindNodeByName(rootNode, name, null);
+        }
+
+        public INode GetNodeByNumber(int number)
+        {
+            return rootNode.GetNumber(number);
         }
 
         private INode FindNodeByName(INode node, string name, INode exclude)

@@ -5,12 +5,37 @@ using NUnit.Framework;
 using NMock2;
 using System.Xml;
 using Dope.DDXX.Utility;
+using Dope.DDXX.SceneGraph;
 
 namespace Dope.DDXX.DemoFramework
 {
     [TestFixture]
     public class TweakableRegisterableTest
     {
+        private class TestEffect : BaseDemoEffect
+        {
+            public TestEffect(Mockery mockery)
+                : base("", 1, 2)
+            {
+            }
+
+            protected override void Initialize()
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+
+            public override void Step()
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+
+            public override void Render()
+            {
+                throw new Exception("The method or operation is not implemented.");
+            }
+
+        }
+
         private class RegisterableStub : Registerable
         {
             public RegisterableStub()
@@ -63,10 +88,30 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
-        public void NumVariables()
+        public void NumVariablesNotEffect()
         {
             // Exercise SUT and verify
             Assert.AreEqual(0, tweakable.NumVariables);
+        }
+
+        [Test]
+        public void NumVariablesEffect()
+        {
+            // Setup
+            TestEffect newTarget = new TestEffect(mockery);
+            tweakable = new TweakableRegisterable(newTarget, factory);
+            // Exercise SUT and verify
+            Assert.AreEqual(3 + 1, tweakable.NumVariables);
+        }
+
+        [Test]
+        public void GetSceneFromEffect()
+        {
+            // Setup
+            TestEffect newTarget = new TestEffect(mockery);
+            tweakable = new TweakableRegisterable(newTarget, factory);
+            // Exercise SUT and verify
+            Assert.IsInstanceOfType(typeof(TweakableScene), tweakable.GetChild(0));
         }
 
         [Test]

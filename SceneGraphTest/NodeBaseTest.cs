@@ -75,7 +75,7 @@ namespace Dope.DDXX.SceneGraph
         {
             DerivedNode node1 = new DerivedNode("NodeName");
             DerivedNode node2 = new DerivedNode("NewNewNodeName");
-            CameraNode camera = new CameraNode("Camera");
+            CameraNode camera = new CameraNode("Camera", 1);
             node1.AddChild(node2);
 
             node1.Render(null);
@@ -144,38 +144,77 @@ namespace Dope.DDXX.SceneGraph
             Assert.IsTrue(node2.setLightStateCalled);
         }
 
-        //[Test]
-        //[ExpectedException(typeof(DDXXException))]
-        //public void TestFrameWorldStateConflict()
-        //{
-        //    IFrame frame = new FrameAdapter(new SkinnedFrame("Test"));
-        //    DerivedNode node1 = new DerivedNode("NewNewNodeName1");
-        //    node1.EnableFrameHandling(frame);
-        //    Vector3 vec = node1.WorldState.Position;
-        //}
+        [Test]
+        public void GetNumberZero()
+        {
+            // Setup
+            DerivedNode node1 = new DerivedNode("N1");
+            // Exercise SUT and Verify
+            Assert.AreSame(node1, node1.GetNumber(0));
+        }
 
-        //[Test]
-        //public void TestFramePosition()
-        //{
-        //    IFrame frame = new FrameAdapter(new SkinnedFrame("Test"));
-        //    frame.TransformationMatrix = Matrix.Translation(3, 5, 7);
-        //    DerivedNode node1 = new DerivedNode("NewNewNodeName1");
-        //    node1.WorldState.Position = new Vector3(1, 2, 3);
-        //    node1.EnableFrameHandling(frame);
-        //    Matrix m = node1.WorldMatrix;
-        //    Assert.AreEqual(new Vector3(3, 5, 7), new Vector3(m.M41, m.M42, m.M43), "Position should be (3, 5, 7)");
-        //}
+        [Test]
+        public void GetNumberOneNoChildren()
+        {
+            // Setup
+            DerivedNode node1 = new DerivedNode("N1");
+            // Exercise SUT and Verify
+            Assert.AreSame(null, node1.GetNumber(1));
+        }
 
-        //[Test]
-        //public void TestFrameTransformation()
-        //{
-        //    IFrame frame = new FrameAdapter(new SkinnedFrame("Test"));
-        //    frame.TransformationMatrix = Matrix.PerspectiveRH(1, 2, 3, 4);
-        //    DerivedNode node1 = new DerivedNode("NewNewNodeName1");
-        //    node1.EnableFrameHandling(frame);
-        //    Assert.AreEqual(Matrix.PerspectiveRH(1, 2, 3, 4), node1.WorldMatrix, 
-        //        "Transformation matrix should match frame.");
-        //}
+        [Test]
+        public void GetNumberOneOneLayer()
+        {
+            // Setup
+            DerivedNode node1 = new DerivedNode("N1");
+            DerivedNode node2 = new DerivedNode("N2");
+            node1.AddChild(node2);
+            // Exercise SUT and Verify
+            Assert.AreSame(node2, node1.GetNumber(1));
+        }
+
+        [Test]
+        public void GetNumberTwoOneLayer()
+        {
+            // Setup
+            DerivedNode node1 = new DerivedNode("N1");
+            DerivedNode node2 = new DerivedNode("N2");
+            DerivedNode node3 = new DerivedNode("N3");
+            node1.AddChild(node2);
+            node1.AddChild(node3);
+            // Exercise SUT and Verify
+            Assert.AreSame(node3, node1.GetNumber(2));
+        }
+
+        [Test]
+        public void GetNumberTwoTwoLayers()
+        {
+            // Setup
+            DerivedNode node1 = new DerivedNode("N1");
+            DerivedNode node2 = new DerivedNode("N2");
+            DerivedNode node3 = new DerivedNode("N3");
+            node1.AddChild(node2);
+            node2.AddChild(node3);
+            // Exercise SUT and Verify
+            Assert.AreSame(node3, node1.GetNumber(2));
+        }
+
+        [Test]
+        public void GetNumberFourTreeLayers()
+        {
+            // Setup
+            DerivedNode node1 = new DerivedNode("N1");
+            DerivedNode node2 = new DerivedNode("N2");
+            DerivedNode node3 = new DerivedNode("N3");
+            DerivedNode node4 = new DerivedNode("N4");
+            DerivedNode node5 = new DerivedNode("N5");
+            node1.AddChild(node2);
+            node1.AddChild(node3);
+            node3.AddChild(node4);
+            node4.AddChild(node5);
+            // Exercise SUT and Verify
+            Assert.AreSame(node5, node1.GetNumber(4));
+        }
 
     }
 }

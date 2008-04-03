@@ -13,7 +13,6 @@ namespace EngineTest
 {
     public class City : BaseDemoEffect
     {
-        private IScene scene;
         private CameraNode camera;
         private ModelDirector modelDirector;
         private TextureDirector textureDirector;
@@ -25,7 +24,7 @@ namespace EngineTest
 
         protected override void Initialize()
         {
-            CreateStandardSceneAndCamera(out scene, out camera, 20);
+            CreateStandardCamera(out camera, 20);
             camera.WorldState.MoveUp(2);
 
             modelDirector = new ModelDirector(ModelBuilder);
@@ -44,7 +43,7 @@ namespace EngineTest
             modelDirector.Translate(0, 5, 0);
             IModel model = modelDirector.Generate("Default");
             ModelNode house = new ModelNode("Ground", model, GraphicsDevice);
-            scene.AddNode(house);
+            Scene.AddNode(house);
         }
 
         private void CreateGround()
@@ -54,7 +53,7 @@ namespace EngineTest
             IModel model = modelDirector.Generate("Default");
             ModelNode ground = new ModelNode("Ground", model, GraphicsDevice);
             ground.CullMode = CullMode.None;
-            scene.AddNode(ground);
+            Scene.AddNode(ground);
         }
 
         private void SetNoiseTexture()
@@ -101,12 +100,12 @@ namespace EngineTest
 
         public override void Step()
         {
-            scene.Step();
+            Scene.Step();
         }
 
         public override void Render()
         {
-            scene.Render();
+            Scene.Render();
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Dope.DDXX.SceneGraph
         void Step();
         void Render(IScene scene);
         int CountNodes();
-        //void EnableFrameHandling(IFrame frame);
+        INode GetNumber(int number);
         Vector3 Position { get; }
     }
 }

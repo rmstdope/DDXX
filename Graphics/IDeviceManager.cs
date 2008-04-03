@@ -81,26 +81,26 @@ namespace Dope.DDXX.Graphics
         //     Value that indicates whether to sync to the vertical trace (vsync) when presenting
         //     the back buffer.
         bool SynchronizeWithVerticalRetrace { get; set; }
-        // Summary:
-        //     Raised when a new graphics device is created.
-        event EventHandler DeviceCreated;
-        //
-        // Summary:
-        //     Raised when the GraphicsDeviceManager is being disposed.
-        event EventHandler DeviceDisposing;
-        //
-        // Summary:
-        //     Raised when the GraphicsDeviceManager is reset.
-        event EventHandler DeviceReset;
-        //
-        // Summary:
-        //     Raised when the GraphicsDeviceManager is about to be reset.
-        event EventHandler DeviceResetting;
-        //
-        // Summary:
-        //     Raised when the GraphicsDeviceManager is disposed.
-        event EventHandler Disposed;
-        //
+        //// Summary:
+        ////     Raised when a new graphics device is created.
+        //event EventHandler DeviceCreated;
+        ////
+        //// Summary:
+        ////     Raised when the GraphicsDeviceManager is being disposed.
+        //event EventHandler DeviceDisposing;
+        ////
+        //// Summary:
+        ////     Raised when the GraphicsDeviceManager is reset.
+        //event EventHandler DeviceReset;
+        ////
+        //// Summary:
+        ////     Raised when the GraphicsDeviceManager is about to be reset.
+        //event EventHandler DeviceResetting;
+        ////
+        //// Summary:
+        ////     Raised when the GraphicsDeviceManager is disposed.
+        //event EventHandler Disposed;
+        ////
         // Summary:
         //     Raised when the GraphicsDeviceManager is changing the Graphics.GraphicsDevice
         //     settings (during reset or recreation of the Graphics.GraphicsDevice).

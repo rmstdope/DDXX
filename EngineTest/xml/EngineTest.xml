@@ -53,7 +53,9 @@
 	</PostEffect>-->
 	<Effect class="BloodCell" name="Lines" track="0" startTime="0" endTime="500">
 		<DrawOrder>0</DrawOrder>
-		<!--<Texture></Texture>-->
+		<PulseSpeed>14</PulseSpeed>
+		<PulseFrequency>100</PulseFrequency>
+		<PulseAmplitude>0.03000001</PulseAmplitude>
 	</Effect>
 	<PostEffect class="GlowPostEffect" name="Glow" track="0" startTime="0" endTime="500">
 		<BloomScale>1.5</BloomScale>

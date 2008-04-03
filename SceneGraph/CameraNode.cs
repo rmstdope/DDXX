@@ -12,9 +12,10 @@ namespace Dope.DDXX.SceneGraph
         private float farZ = 10000.0f;
         private float aspectRatio = 16.0f / 9.0f;//4.0f / 3.0f;
 
-        public CameraNode(String name)
+        public CameraNode(String name, float aspect)
             : base(name)
         {
+            AspectRatio = aspect;
         }
 
         public object GetFOV()
