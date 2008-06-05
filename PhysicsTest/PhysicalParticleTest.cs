@@ -13,6 +13,7 @@ namespace Dope.DDXX.Physics
         [SetUp]
         public void SetUp()
         {
+            Time.Reset();
         }
 
         [Test]

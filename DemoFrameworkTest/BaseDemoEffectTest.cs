@@ -55,7 +55,6 @@ namespace Dope.DDXX.DemoFramework
         public void CameraCreation()
         {
             // Setup fixture
-            IScene scene;
             CameraNode camera;
             Initialize(this, this, this, this, this);
             //Exercise SUT
