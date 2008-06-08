@@ -8,8 +8,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("UserInterfaceTest")]
 [assembly: AssemblyProduct("UserInterfaceTest")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyCompany("Motorola")]
-[assembly: AssemblyCopyright("Copyright © Motorola 2008")]
+[assembly: AssemblyCompany("Dope Demo Productions")]
+[assembly: AssemblyCopyright("Copyright © Dope 2008")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -37,6 +37,7 @@ namespace Dope.DDXX.Utility
                 if (File.Exists(path + file))
                     return path + file;
             }
+            string s = Directory.GetCurrentDirectory();
             throw new DDXXException("Could not find file \"" + file + "\" in search paths.");
         }
 

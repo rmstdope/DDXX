@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using Microsoft.Xna.Framework;
+using Dope.DDXX.UserInterface;
 
 namespace Dope.DDXX.DemoFramework
 {

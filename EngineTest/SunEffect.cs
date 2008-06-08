@@ -1,16 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Text;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Physics;
 using Dope.DDXX.SceneGraph;
 using Dope.DDXX.Utility;
 using Dope.DDXX.ParticleSystems;
-using Dope.DDXX.MeshBuilder;
+using Dope.DDXX.ModelBuilder;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace EngineTest
 {
@@ -26,7 +25,7 @@ namespace EngineTest
         }
 
         private ITexture circleTexture;
-        private ISprite circleSprite;
+        private ISpriteBatch circleSprite;
         private BlitCircle[] circles;
 
         public SunEffect(string name, float startTime, float endTime)
@@ -50,8 +49,8 @@ namespace EngineTest
 
         protected override void Initialize()
         {
-            circleTexture = TextureFactory.CreateFromFunction(512, 512, 0, Usage.None, Format.A8R8G8B8, Pool.Managed, circleCallback);
-            circleSprite = GraphicsFactory.CreateSprite(Device);
+            circleTexture = TextureFactory.CreateFromFunction(512, 512, 0, TextureUsage.None, SurfaceFormat.Color, circleCallback);
+            circleSprite = GraphicsFactory.CreateSpriteBatch();
             circles = new BlitCircle[NUM_CIRCLES];
             Random rand = new Random();
             for (int i = 0; i < NUM_CIRCLES; i++)
@@ -69,28 +68,20 @@ namespace EngineTest
             //circleTexture.Save("test.jpg", ImageFileFormat.Jpg);
         }
 
-        public override void StartTimeUpdated()
-        {
-        }
-
-        public override void EndTimeUpdated()
-        {
-        }
-
         public override void Step()
         {
         }
 
         public override void Render()
         {
-            Viewport viewport = Device.Viewport;
+            Viewport viewport = GraphicsDevice.Viewport;
             Vector2 point;
             Vector2 center = new Vector2(viewport.Width / 2.0f, viewport.Height / 2.0f);
             Vector2 size = new Vector2(200, 200);
-            circleSprite.Begin(SpriteFlags.AlphaBlend);
+            circleSprite.Begin();
             point = center - size * 0.5f;
-            circleSprite.Draw2D(circleTexture, Rectangle.Empty, new SizeF(size.X, size.Y),
-                new PointF(point.X, point.Y), Color.White);
+            //circleSprite.Draw(circleTexture, Rectangle.Empty, new SizeF(size.X, size.Y),
+            //    new PointF(point.X, point.Y), Color.White);
             for (int i = 0; i < NUM_CIRCLES; i++)
             {
                 float x = circles[i].Offset.X + Time.CurrentTime / circles[i].Period.X;
@@ -100,8 +91,8 @@ namespace EngineTest
                                 circles[i].Scale.Y * (float)Math.Cos(y));
                 size = new Vector2(circles[i].Size, circles[i].Size);
                 point = center - size * 0.5f + distortion;
-                circleSprite.Draw2D(circleTexture, Rectangle.Empty, new SizeF(size.X, size.Y),
-                    new PointF(point.X, point.Y), Color.Black);
+                //circleSprite.Draw2D(circleTexture, Rectangle.Empty, new SizeF(size.X, size.Y),
+                //    new PointF(point.X, point.Y), Color.Black);
             }
             circleSprite.End();
         }

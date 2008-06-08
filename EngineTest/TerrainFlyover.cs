@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.TextureBuilder;
 using Dope.DDXX.DemoFramework;
-using Dope.DDXX.MeshBuilder;
+using Dope.DDXX.ModelBuilder;
 using Dope.DDXX.SceneGraph;
 using Dope.DDXX.Graphics;
-using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Utility;
 
 namespace EngineTest
@@ -15,7 +14,6 @@ namespace EngineTest
     {
         private ModelNode terrainModel = null;
         private CameraNode camera;
-        private IScene scene;
 
         public TerrainFlyover(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
@@ -24,7 +22,7 @@ namespace EngineTest
 
         protected override void Initialize()
         {
-            CreateStandardSceneAndCamera(out scene, out camera, -3);
+            CreateStandardCamera(out camera, -3);
 
             //PerlinNoise generator = new PerlinNoise();
             //generator.NumOctaves = 10;
@@ -49,12 +47,12 @@ namespace EngineTest
         public override void Step()
         {
             terrainModel.WorldState.Turn(Time.DeltaTime / 2);
-            scene.Step();
+            Scene.Step();
         }
 
         public override void Render()
         {
-            scene.Render();
+            Scene.Render();
         }
     }
 }

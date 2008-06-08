@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Reflection;
 using Dope.DDXX.SceneGraph;
+using Dope.DDXX.UserInterface;
 
 namespace Dope.DDXX.DemoFramework
 {

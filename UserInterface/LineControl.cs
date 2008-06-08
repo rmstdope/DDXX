@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Dope.DDXX.Utility;
 
-namespace Dope.DDXX.DemoFramework
+namespace Dope.DDXX.UserInterface
 {
     public class LineControl : BaseControl
     {

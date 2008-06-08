@@ -23,7 +23,7 @@ namespace EngineTest
             scene = new Scene();
 
             // Create modelTivi
-            IModel model = ModelFactory.FromFile("airplane 2.x", ModelOptions.EnsureTangents);
+            IModel model = ModelFactory.FromFile("airplane 2.x", "Test.fx");
 
             // Add normal map
             for (int i = 0; i < model.Materials.Length; i++)

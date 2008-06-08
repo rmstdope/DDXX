@@ -5,7 +5,7 @@ using Dope.DDXX.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Dope.DDXX.DemoFramework
+namespace Dope.DDXX.UserInterface
 {
     public abstract class BaseControl
     {

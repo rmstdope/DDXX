@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Xml;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Dope.DDXX.UserInterface;
 
 namespace Dope.DDXX.DemoFramework
 {

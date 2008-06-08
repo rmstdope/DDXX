@@ -44,12 +44,8 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Xna.Framework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Game, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
+    <Reference Include="Microsoft.Xna.Framework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL" />
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
@@ -62,9 +58,6 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseControl.cs">
-      <Name>BaseControl</Name>
-    </Compile>
     <Compile Include="BaseDemoEffect.cs">
       <Name>BaseDemoEffect</Name>
     </Compile>
@@ -73,9 +66,6 @@
     </Compile>
     <Compile Include="BaseDemoTransition.cs">
       <Name>BaseDemoTransition</Name>
-    </Compile>
-    <Compile Include="BoxControl.cs">
-      <Name>BoxControl</Name>
     </Compile>
     <Compile Include="DemoEffectTypes.cs">
       <Name>DemoEffectTypes</Name>
@@ -154,12 +144,6 @@
     <Compile Include="ITweakerSettings.cs">
       <Name>ITweakerSettings</Name>
     </Compile>
-    <Compile Include="IUserInterface.cs">
-      <Name>IUserInterface</Name>
-    </Compile>
-    <Compile Include="LineControl.cs">
-      <Name>LineControl</Name>
-    </Compile>
     <Compile Include="PostProcessor.cs">
       <Name>PostProcessor</Name>
     </Compile>
@@ -175,9 +159,6 @@
     </Compile>
     <Compile Include="SetupLogic.cs">
       <Name>SetupLogic</Name>
-    </Compile>
-    <Compile Include="TextControl.cs">
-      <Name>TextControl</Name>
     </Compile>
     <Compile Include="Track.cs">
       <Name>Track</Name>
@@ -209,9 +190,6 @@
     </Compile>
     <Compile Include="TweakerStatus.cs" />
     <Compile Include="TweakStepAttribute.cs" />
-    <Compile Include="UserInterface.cs">
-      <Name>UserInterface</Name>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SetupForm.resx">
@@ -258,6 +236,10 @@
     <ProjectReference Include="..\TextureBuilder\TextureBuilder.csproj">
       <Project>{7DCF0749-447D-4D64-A1A2-2560C03A072E}</Project>
       <Name>TextureBuilder</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UserInterface\UserInterface.csproj">
+      <Project>{E946451F-C88E-4847-BB22-3D1E1B6D65D0}</Project>
+      <Name>UserInterface</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utility\Utility.csproj">
       <Project>{70F76E25-311C-4DFC-9412-89470F537BDF}</Project>

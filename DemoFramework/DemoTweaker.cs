@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
+using Dope.DDXX.UserInterface;
 
 namespace Dope.DDXX.DemoFramework
 {

@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Dope.DDXX.Utility;
 
-namespace Dope.DDXX.DemoFramework
+namespace Dope.DDXX.UserInterface
 {
     [TestFixture]
     public class UserInterfaceTest : D3DMockTest
@@ -45,33 +45,6 @@ namespace Dope.DDXX.DemoFramework
                 Will(Return.Value(texture2D));
 
             ui.Initialize(graphicsFactory, textureFactory);
-        }
-
-        class Vector2ArrayMatcher : Matcher
-        {
-            private Vector2[] vector;
-            public Vector2ArrayMatcher(Vector2[] vector)
-            {
-                this.vector = vector;
-            }
-            public override void DescribeTo(TextWriter writer)
-            {
-                writer.WriteLine("Matching");
-            }
-            public override bool Matches(object o)
-            {
-                float epsilon = 1e-4f;
-                if (!(o is Vector2[]))
-                    return false;
-                Vector2[] newVec = (Vector2[])o;
-                Assert.AreEqual(vector.Length, newVec.Length);
-                for (int i = 0; i < vector.Length; i++)
-                {
-                    Assert.AreEqual(vector[i].X, newVec[i].X, epsilon);
-                    Assert.AreEqual(vector[i].Y, newVec[i].Y, epsilon);
-                }
-                return true;
-            }
         }
 
         [Test]

@@ -44,12 +44,8 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Xna.Framework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Game, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
+    <Reference Include="Microsoft.Xna.Framework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL" />
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
@@ -111,9 +107,6 @@
     <Compile Include="TweakableVector2Test.cs" />
     <Compile Include="TweakableVector3Test.cs" />
     <Compile Include="TweakableVector4Test.cs" />
-    <Compile Include="UserInterfaceTest.cs">
-      <Name>UserInterfaceTest</Name>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <NestedContentProject Include="Content.contentproj">
@@ -157,6 +150,10 @@
     <ProjectReference Include="..\TextureBuilder\TextureBuilder.csproj">
       <Project>{7DCF0749-447D-4D64-A1A2-2560C03A072E}</Project>
       <Name>TextureBuilder</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UserInterface\UserInterface.csproj">
+      <Project>{E946451F-C88E-4847-BB22-3D1E1B6D65D0}</Project>
+      <Name>UserInterface</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utility\Utility.csproj">
       <Project>{70F76E25-311C-4DFC-9412-89470F537BDF}</Project>

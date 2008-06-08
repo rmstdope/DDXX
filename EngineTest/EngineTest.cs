@@ -23,18 +23,18 @@ namespace EngineTest
                 Assembly.GetExecutingAssembly(),
                 typeof(GlowPostEffect).Assembly,
                 typeof(TextureDirector).Assembly };
-            FileUtility.SetLoadPaths(new string[] { "./", "../../../", "xml/" });
+            FileUtility.SetLoadPaths(new string[] { "./", "../../../xml/" });
             DemoWindow window = new DemoWindow("Pelle", "EngineTest.xml", assemblies);
 
-            CompiledMidi midi = window.Content.Load<CompiledMidi>("Content\\sound\\music_machinefunk_loop");
-            System.Diagnostics.Debug.WriteLine("CompiledMidi loaded. Number of tracks: " + 
-                midi.Tracks.Count);
-            int i = 0;
-            foreach (CompiledMidi.CompiledMidiTrack track in midi.Tracks)
-            {
-                System.Diagnostics.Debug.WriteLine("Track " + i + " contains " + track.NotesAndTimes.Length/2 + " notes.");
-                i++;
-            }
+            //CompiledMidi midi = window.Content.Load<CompiledMidi>("Content\\sound\\music_machinefunk_loop");
+            //System.Diagnostics.Debug.WriteLine("CompiledMidi loaded. Number of tracks: " + 
+            //    midi.Tracks.Count);
+            //int i = 0;
+            //foreach (CompiledMidi.CompiledMidiTrack track in midi.Tracks)
+            //{
+            //    System.Diagnostics.Debug.WriteLine("Track " + i + " contains " + track.NotesAndTimes.Length/2 + " notes.");
+            //    i++;
+            //}
             if (window.SetupDialog())
                 window.Run();
         }

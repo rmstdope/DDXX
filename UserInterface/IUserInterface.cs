@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
 
-namespace Dope.DDXX.DemoFramework
+namespace Dope.DDXX.UserInterface
 {
     public interface IUserInterface
     {

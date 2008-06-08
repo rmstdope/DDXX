@@ -5,7 +5,7 @@ using Dope.DDXX.Graphics;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
-namespace Dope.DDXX.DemoFramework
+namespace Dope.DDXX.UserInterface
 {
     public class UserInterface : IUserInterface
     {

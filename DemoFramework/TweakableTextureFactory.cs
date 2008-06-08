@@ -8,6 +8,7 @@ using System.Xml;
 using Dope.DDXX.Utility;
 using Dope.DDXX.TextureBuilder;
 using Microsoft.Xna.Framework.Input;
+using Dope.DDXX.UserInterface;
 
 namespace Dope.DDXX.DemoFramework
 {

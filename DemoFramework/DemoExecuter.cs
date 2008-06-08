@@ -11,6 +11,7 @@ using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Dope.DDXX.UserInterface;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -160,7 +161,7 @@ namespace Dope.DDXX.DemoFramework
 
         private void InitializeTweaker(IGraphicsFactory graphicsFactory, ITextureFactory textureFactory)
         {
-            IUserInterface userInterface = new UserInterface();
+            IUserInterface userInterface = new UserInterface.UserInterface();
             userInterface.Initialize(graphicsFactory, textureFactory);
             ITweakable tweakableDemo = new TweakableDemo(this, this, tweakerHandler.Factory);
             tweakerHandler.Initialize(this, userInterface, tweakableDemo);

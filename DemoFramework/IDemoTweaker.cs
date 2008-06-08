@@ -4,6 +4,7 @@ using System.Text;
 using System.Xml;
 using Dope.DDXX.Input;
 using Dope.DDXX.Graphics;
+using Dope.DDXX.UserInterface;
 
 namespace Dope.DDXX.DemoFramework
 {

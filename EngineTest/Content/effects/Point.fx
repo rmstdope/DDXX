@@ -1,4 +1,4 @@
-#include "../../Effects/Content/effects/CommonVariables.hlsl"
+#include "../../../Effects/Content/effects/CommonVariables.hlsl"
 
 sampler TextureSampler = 
 sampler_state
