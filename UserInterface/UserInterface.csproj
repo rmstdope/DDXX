@@ -71,10 +71,13 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseControl.cs" />
     <Compile Include="BoxControl.cs" />
+    <Compile Include="IDrawResources.cs" />
     <Compile Include="IUserInterface.cs" />
     <Compile Include="LineControl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

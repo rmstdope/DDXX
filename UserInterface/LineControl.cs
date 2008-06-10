@@ -25,20 +25,20 @@ namespace Dope.DDXX.UserInterface
                 throw new DDXXException("Lines must be either vertical or horizontal.");
         }
 
-        public override void Draw(ISpriteBatch spriteBatch, ISpriteFont spriteFont, ITexture2D whiteTexture)
+        public override void Draw(IDrawResources resources)
         {
-            spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
-            int screenWidth = spriteBatch.GraphicsDevice.PresentationParameters.BackBufferWidth;
-            int screenHeight = spriteBatch.GraphicsDevice.PresentationParameters.BackBufferHeight;
-            int x1 = (int)(screenWidth * GetX1());
-            int y1 = (int)(screenHeight * GetY1());
-            int width = (int)(screenWidth * GetWidth());
-            int height = (int)(screenHeight * GetHeight());
+            resources.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+            int screenWidth = resources.SpriteBatch.GraphicsDevice.PresentationParameters.BackBufferWidth;
+            int screenHeight = resources.SpriteBatch.GraphicsDevice.PresentationParameters.BackBufferHeight;
+            int x1 = (int)(screenWidth * GetX1(resources));
+            int y1 = (int)(screenHeight * GetY1(resources));
+            int width = (int)(screenWidth * GetWidth(resources));
+            int height = (int)(screenHeight * GetHeight(resources));
             if (vertical)
-                DrawVerticalLine(spriteBatch, whiteTexture, x1, y1, height, Color);
+                DrawVerticalLine(resources.SpriteBatch, resources.WhiteTexture, x1, y1, height, Color);
             else
-                DrawHorizontalLine(spriteBatch, whiteTexture, x1, y1, width, Color);
-            spriteBatch.End();
+                DrawHorizontalLine(resources.SpriteBatch, resources.WhiteTexture, x1, y1, width, Color);
+            resources.SpriteBatch.End();
 
             //line.Begin();
             //line.Draw(new Vector2[] { new Vector2(GetX1() + 1, GetY1() + 1), 

@@ -87,21 +87,21 @@ namespace Dope.DDXX.UserInterface
             rectangle = new Vector4(x, y, width, height);
         }
 
-        public override void Draw(ISpriteBatch spriteBatch, ISpriteFont spriteFont, ITexture2D whiteTexture)
+        public override void Draw(IDrawResources resources)
         {
-            Vector2 size = spriteFont.MeasureString(text);
-            Vector2 pos = new Vector2(GetX1(), GetY1());
+            Vector2 size = resources.GetSpriteFont(FontSize.Medium).MeasureString(text);
+            Vector2 pos = new Vector2(GetX1(resources), GetY1(resources));
             if (((int)format & (int)TextFormatting.Bottom) != 0)
-                pos.Y += GetHeight();
+                pos.Y += GetHeight(resources);
             if (((int)format & (int)TextFormatting.VerticalCenter) != 0)
-                pos.Y += GetHeight() / 2;
+                pos.Y += GetHeight(resources) / 2;
             if (((int)format & (int)TextFormatting.Right) != 0)
-                pos.X += GetWidth();
+                pos.X += GetWidth(resources);
             if (((int)format & (int)TextFormatting.Center) != 0)
-                pos.X += GetWidth() / 2;
+                pos.X += GetWidth(resources) / 2;
 
-            pos.X *= spriteBatch.GraphicsDevice.PresentationParameters.BackBufferWidth;
-            pos.Y *= spriteBatch.GraphicsDevice.PresentationParameters.BackBufferHeight;
+            pos.X *= resources.SpriteBatch.GraphicsDevice.PresentationParameters.BackBufferWidth;
+            pos.Y *= resources.SpriteBatch.GraphicsDevice.PresentationParameters.BackBufferHeight;
 
             if (((int)format & (int)TextFormatting.Bottom) != 0)
                 pos.Y -= size.Y;
@@ -114,10 +114,10 @@ namespace Dope.DDXX.UserInterface
 
             Color col1 = new Color(color.R, color.G, color.B, alpha);
             Color col2 = new Color(0, 0, 0, alpha);
-            spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
-            spriteBatch.DrawString(spriteFont, text, pos + new Vector2(ShadowOffset, ShadowOffset), col2);
-            spriteBatch.DrawString(spriteFont, text, pos, col1);
-            spriteBatch.End();
+            resources.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+            resources.SpriteBatch.DrawString(resources.GetSpriteFont(FontSize.Medium), text, pos + new Vector2(ShadowOffset, ShadowOffset), col2);
+            resources.SpriteBatch.DrawString(resources.GetSpriteFont(FontSize.Medium), text, pos, col1);
+            resources.SpriteBatch.End();
         }
     }
 }
