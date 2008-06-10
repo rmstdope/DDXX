@@ -14,7 +14,8 @@ namespace Dope.DDXX.UserInterface
     [TestFixture]
     public class UserInterfaceTest : D3DMockTest
     {
-        private UserInterface ui;
+        private IUserInterface ui;
+        private IDrawResources res;
 
         [SetUp]
         public override void SetUp()
@@ -22,6 +23,7 @@ namespace Dope.DDXX.UserInterface
             base.SetUp();
 
             ui = new UserInterface();
+            res = ui as IDrawResources;
         }
 
         [TearDown]
@@ -31,7 +33,7 @@ namespace Dope.DDXX.UserInterface
         }
 
         [Test]
-        public void TestInitialize()
+        public void TestInitializeNoFontSet()
         {
             Expect.Once.On(graphicsFactory).
                 Method("CreateSpriteBatch").
@@ -43,8 +45,32 @@ namespace Dope.DDXX.UserInterface
             Expect.Once.On(textureFactory).
                 GetProperty("WhiteTexture").
                 Will(Return.Value(texture2D));
+            Stub.On(spriteBatch).GetProperty("GraphicsDevice").
+                Will(Return.Value(device));
 
             ui.Initialize(graphicsFactory, textureFactory);
+            Assert.AreSame(spriteBatch, res.SpriteBatch);
+            Assert.AreSame(texture2D, res.WhiteTexture);
+            Assert.AreSame(spriteFont, res.GetSpriteFont(FontSize.Medium));
+        }
+
+        [Test]
+        public void TestInitializeMediumFontSet()
+        {
+            Expect.Once.On(graphicsFactory).
+                Method("CreateSpriteBatch").
+                Will(Return.Value(spriteBatch));
+            Expect.Once.On(textureFactory).
+                GetProperty("WhiteTexture").
+                Will(Return.Value(texture2D));
+            Stub.On(spriteBatch).GetProperty("GraphicsDevice").
+                Will(Return.Value(device));
+
+            ui.SetFont(FontSize.Medium, spriteFont);
+            ui.Initialize(graphicsFactory, textureFactory);
+            Assert.AreSame(spriteBatch, res.SpriteBatch);
+            Assert.AreSame(texture2D, res.WhiteTexture);
+            Assert.AreSame(spriteFont, res.GetSpriteFont(FontSize.Medium));
         }
 
         [Test]
@@ -64,7 +90,7 @@ namespace Dope.DDXX.UserInterface
             int x22 = (int)(x11 + x2 * (x21 - x11));
             int y12 = (int)(y11 + y1 * (y21 - y11));
             int y22 = (int)(y11 + y2 * (y21 - y11));
-            TestInitialize();
+            TestInitializeNoFontSet();
 
             BoxControl box1 = new BoxControl(new Vector4(x1, y1, x2 - x1, y2 - y1), 190, new Color(1, 2, 3), null);
             BoxControl box2 = new BoxControl(new Vector4(x1, y1, x2 - x1, y2 - y1), 190, new Color(4, 5, 6), box1);
@@ -93,7 +119,7 @@ namespace Dope.DDXX.UserInterface
             int x22 = (int)(x11 + x2 * (x21 - x11));
             int y12 = (int)(y11 + y1 * (y21 - y11));
             int y22 = (int)(y11 + y2 * (y21 - y11));
-            TestInitialize();
+            TestInitializeNoFontSet();
 
             BoxControl box1 = new BoxControl(new Vector4(x1, y1, x2 - x1, y2 - y1), 0, Color.Turquoise, null);
             BoxControl box2 = new BoxControl(new Vector4(x1, y1, x2 - x1, y2 - y1), 190, new Color(), box1);
@@ -113,7 +139,7 @@ namespace Dope.DDXX.UserInterface
             float height = 0.5f;
             float screenWidth = presentParameters.BackBufferWidth;
             float screenHeight = presentParameters.BackBufferHeight;
-            TestInitialize();
+            TestInitializeNoFontSet();
 
             int x = (int)(x1 * screenWidth);
             int y = (int)(y1 * screenHeight);
@@ -134,7 +160,7 @@ namespace Dope.DDXX.UserInterface
             float height = 0.5f;
             float screenWidth = presentParameters.BackBufferWidth;
             float screenHeight = presentParameters.BackBufferHeight;
-            TestInitialize();
+            TestInitializeNoFontSet();
 
             int x = (int)((x1 + width) * screenWidth) - 2;
             int y = (int)((y1 + height) * screenHeight) - 4;
@@ -155,7 +181,7 @@ namespace Dope.DDXX.UserInterface
             float height = 0.5f;
             float screenWidth = presentParameters.BackBufferWidth;
             float screenHeight = presentParameters.BackBufferHeight;
-            TestInitialize();
+            TestInitializeNoFontSet();
 
             int x = (int)((x1 + width / 2) * screenWidth) - 1;
             int y = (int)((y1 + height / 2) * screenHeight) - 2;
@@ -203,7 +229,7 @@ namespace Dope.DDXX.UserInterface
         {
             float width = presentParameters.BackBufferWidth;
             float height = presentParameters.BackBufferHeight;
-            TestInitialize();
+            TestInitializeNoFontSet();
 
             ExpectAlphaBlending();
             ExpectLine((int)(x1 * width), (int)(x2 * width), (int)(y1 * height), (int)(y2 * height), new Color(1, 2, 3, 4));
@@ -213,7 +239,6 @@ namespace Dope.DDXX.UserInterface
 
         private void ExpectText(int x, int y)
         {
-            Stub.On(spriteBatch).GetProperty("GraphicsDevice").Will(Return.Value(device));
             using (mockery.Ordered)
             {
                 Expect.Once.On(spriteBatch).Method("Begin").
@@ -237,7 +262,6 @@ namespace Dope.DDXX.UserInterface
 
         private void ExpectLine(int x, int width, int y, int height, Color color)
         {
-            Stub.On(spriteBatch).GetProperty("GraphicsDevice").Will(Return.Value(device));
             using (mockery.Ordered)
             {
                 Expect.Once.On(spriteBatch).Method("Begin").
@@ -263,7 +287,6 @@ namespace Dope.DDXX.UserInterface
         {
             Color color2 = new Color(0, 0, 0, color.A);
             Color color3 = new Color(255, 255, 255, color.A);
-            Stub.On(spriteBatch).GetProperty("GraphicsDevice").Will(Return.Value(device));
             using (mockery.Ordered)
             {
                 Expect.Once.On(spriteBatch).
