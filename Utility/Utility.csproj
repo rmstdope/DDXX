@@ -1,4 +1,4 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectGuid>{70F76E25-311C-4DFC-9412-89470F537BDF}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -107,12 +107,6 @@
     <Compile Include="Time.cs">
       <Name>Time</Name>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <NestedContentProject Include="Content.contentproj">
-      <Project>{cc4e42c8-e3ea-48b2-aaad-a5d401025b59}</Project>
-      <Visible>False</Visible>
-    </NestedContentProject>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
