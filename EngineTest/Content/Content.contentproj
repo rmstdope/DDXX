@@ -139,6 +139,34 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="fonts\Porscha.spritefont">
+      <Name>Porscha</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="fonts\PorschaSmall.spritefont">
+      <Name>PorschaSmall</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="effects\VolumetricRayCastingBack.fx">
+      <Name>VolumetricRayCastingBack</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="effects\VolumetricRayCastingFront.fx">
+      <Name>VolumetricRayCastingFront</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="models\" />
     <Folder Include="sound\" />
   </ItemGroup>

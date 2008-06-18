@@ -40,6 +40,7 @@ namespace Dope.DDXX.Graphics
             set
             {
                 effect = value;
+                MaterialHandler.Effect = value;
             }
         }
 

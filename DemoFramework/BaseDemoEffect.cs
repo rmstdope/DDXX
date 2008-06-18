@@ -133,6 +133,22 @@ namespace Dope.DDXX.DemoFramework
 
         protected abstract void Initialize();
 
+        protected int BackbufferWidth
+        {
+            get
+            {
+                return GraphicsDevice.PresentationParameters.BackBufferWidth;
+            }
+        }
+
+        protected int BackbufferHeight
+        {
+            get
+            {
+                return GraphicsDevice.PresentationParameters.BackBufferHeight;
+            }
+        }
+
         #region IDemoEffect Members
 
         public abstract void Step();

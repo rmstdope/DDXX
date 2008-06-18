@@ -15,6 +15,7 @@ using Dope.DDXX.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Dope.DDXX.UserInterface;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -35,6 +36,7 @@ namespace Dope.DDXX.DemoFramework
         private IRenderTarget2D renderTarget2;
         private IRenderTarget2D renderTarget3;
         private IDeviceParameters deviceParameters;
+        private IUserInterface userInterface;
 
         [SetUp]
         public override void SetUp()
@@ -53,6 +55,8 @@ namespace Dope.DDXX.DemoFramework
             renderTarget2 = mockery.NewMock<IRenderTarget2D>();
             renderTarget3 = mockery.NewMock<IRenderTarget2D>();
             deviceParameters = mockery.NewMock<IDeviceParameters>();
+            userInterface = mockery.NewMock<IUserInterface>();
+            executer.UserInterface = userInterface;
 
             effectChangeListener = mockery.NewMock<IEffectChangeListener>();
 
@@ -811,6 +815,8 @@ namespace Dope.DDXX.DemoFramework
 
         private void ExpectTweakerInitialize()
         {
+            Expect.Once.On(userInterface).
+                Method("Initialize");
             Expect.Once.On(tweakerHandler).
                 Method("Initialize");
             Stub.On(tweakerHandler).

@@ -19,6 +19,8 @@ namespace EngineTest
 
         protected override void Initialize()
         {
+            CameraNode camera;
+            CreateStandardCamera(out camera, 5);
             ModelBuilder.SetDiffuseTexture("Default", "Content\\textures\\BENEDETI2");
             torus = new DummyNode("Torus");
             Scene.AddNode(torus);
@@ -33,7 +35,7 @@ namespace EngineTest
                 float innerRadius = (float)(-radius * Math.Sin(phi));
                 CreateTorus(0.07f, innerRadius, y);
             }
-            Scene.ActiveCamera.WorldState.MoveForward(6);
+            //Scene.ActiveCamera.WorldState.MoveForward(6);
         }
 
         private void CreateTorus(float innerRadius, float outerRadius, float y)

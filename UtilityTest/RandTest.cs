@@ -94,12 +94,12 @@ namespace Dope.DDXX.Utility
             nextIntReturn = 10;
             Assert.AreEqual(10, Rand.Int(1, 2));
             Assert.AreEqual(1, lastMinValue);
-            Assert.AreEqual(2, lastMaxValue);
+            Assert.AreEqual(3, lastMaxValue);
 
             nextIntReturn = -10;
             Assert.AreEqual(-10, Rand.Int(-1, -2));
             Assert.AreEqual(-1, lastMinValue);
-            Assert.AreEqual(-2, lastMaxValue);
+            Assert.AreEqual(-1, lastMaxValue);
         }
 
         public override int Next()

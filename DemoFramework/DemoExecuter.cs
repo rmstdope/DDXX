@@ -25,6 +25,7 @@ namespace Dope.DDXX.DemoFramework
         private ITextureFactory textureFactory;
         private IPostProcessor postProcessor;
         private IDemoTweakerHandler tweakerHandler;
+        private IUserInterface userInterface;
         private ISpriteBatch spriteBatch;
         private IRenderTarget2D renderTarget;
         private IRenderTarget2D renderTargetNoMultiSampling;
@@ -97,6 +98,11 @@ namespace Dope.DDXX.DemoFramework
             set { tweakerHandler = value; }
         }
 
+        public IUserInterface UserInterface
+        {
+            set { userInterface = value; }
+        }
+
         public ITextureFactory TextureFactory 
         {
             get { return textureFactory; } 
@@ -115,6 +121,7 @@ namespace Dope.DDXX.DemoFramework
             this.postProcessor = postProcessor;
             this.effectTypes = effectTypes;
             tweakerHandler = new DemoTweakerHandler(this, settings);
+            userInterface = new UserInterface.UserInterface();
         }
 
         public void Initialize(IGraphicsDevice device, IGraphicsFactory graphicsFactory,
@@ -161,7 +168,6 @@ namespace Dope.DDXX.DemoFramework
 
         private void InitializeTweaker(IGraphicsFactory graphicsFactory, ITextureFactory textureFactory)
         {
-            IUserInterface userInterface = new UserInterface.UserInterface();
             userInterface.Initialize(graphicsFactory, textureFactory);
             ITweakable tweakableDemo = new TweakableDemo(this, this, tweakerHandler.Factory);
             tweakerHandler.Initialize(this, userInterface, tweakableDemo);

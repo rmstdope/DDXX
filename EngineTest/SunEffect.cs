@@ -24,7 +24,7 @@ namespace EngineTest
             public Vector2 Scale;
         }
 
-        private ITexture circleTexture;
+        private ITexture2D circleTexture;
         private ISpriteBatch circleSprite;
         private BlitCircle[] circles;
 
@@ -80,8 +80,7 @@ namespace EngineTest
             Vector2 size = new Vector2(200, 200);
             circleSprite.Begin();
             point = center - size * 0.5f;
-            //circleSprite.Draw(circleTexture, Rectangle.Empty, new SizeF(size.X, size.Y),
-            //    new PointF(point.X, point.Y), Color.White);
+            circleSprite.Draw(circleTexture, new Rectangle((int)point.X, (int)point.Y, (int)size.X, (int)size.Y), Color.White);
             for (int i = 0; i < NUM_CIRCLES; i++)
             {
                 float x = circles[i].Offset.X + Time.CurrentTime / circles[i].Period.X;
@@ -91,8 +90,7 @@ namespace EngineTest
                                 circles[i].Scale.Y * (float)Math.Cos(y));
                 size = new Vector2(circles[i].Size, circles[i].Size);
                 point = center - size * 0.5f + distortion;
-                //circleSprite.Draw2D(circleTexture, Rectangle.Empty, new SizeF(size.X, size.Y),
-                //    new PointF(point.X, point.Y), Color.Black);
+                circleSprite.Draw(circleTexture, new Rectangle((int)point.X, (int)point.Y, (int)size.X, (int)size.Y), Color.Black);
             }
             circleSprite.End();
         }

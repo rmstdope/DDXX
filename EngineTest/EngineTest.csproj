@@ -73,16 +73,22 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BlitSine.cs" />
     <Compile Include="BloodCell.cs" />
-    <Compile Include="City.cs" />
+    <Compile Include="VolumetricClouds.cs" />
+    <Compile Include="xml\City.cs" />
     <Compile Include="EmptyEffect.cs" />
     <Compile Include="EngineTest.cs" />
     <Compile Include="GridEffect.cs" />
+    <Compile Include="IntroText.cs" />
     <Compile Include="LineEffect.cs" />
     <Compile Include="ModelEffect.cs" />
     <Compile Include="MorphEffect.cs" />
+    <Compile Include="ParticleParty.cs" />
     <Compile Include="ParticleSystemEffect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Simple2DEffect.cs" />

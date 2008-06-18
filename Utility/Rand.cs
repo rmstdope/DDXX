@@ -27,7 +27,12 @@ namespace Dope.DDXX.Utility
 
         public static int Int(int min, int max)
         {
-            return random.Next(min, max);
+            return random.Next(min, max + 1);
+        }
+
+        public static char Char(char min, char max)
+        {
+            return Convert.ToChar(Int(Convert.ToInt32(min), Convert.ToInt32(max)));
         }
 
         public static Vector3 Vector3(double max)
@@ -38,6 +43,16 @@ namespace Dope.DDXX.Utility
         public static Vector3 Vector3(double min, double max)
         {
             return new Vector3(Float(min, max), Float(min, max), Float(min, max));
+        }
+
+        public static Vector3 Vector3(Vector3 max)
+        {
+            return new Vector3(Float(max.X), Float(max.Y), Float(max.Z));
+        }
+
+        public static Vector3 Vector3(Vector3 min, Vector3 max)
+        {
+            return new Vector3(Float(min.X, max.X), Float(min.Y, max.Y), Float(min.Z, max.Z));
         }
     }
 }

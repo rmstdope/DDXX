@@ -39,7 +39,8 @@ namespace Dope.DDXX.Graphics
             get { return effect; }
             set 
             {
-                effectConverter.Convert(effect, value);
+                if (value != null)
+                    effectConverter.Convert(effect, value);
                 effect = value; 
             }
         }
@@ -93,9 +94,12 @@ namespace Dope.DDXX.Graphics
             effect.Parameters["World"].SetValue(worldMatrices);
             effect.Parameters["View"].SetValue(viewMatrix);
             effect.Parameters["Projection"].SetValue(projectionMatrix);
-            effect.Parameters["LightPositions"].SetValue(lightState.Positions);
-            effect.Parameters["LightDirections"].SetValue(lightState.Directions);
-            effect.Parameters["LightColors"].SetValue(lightState.Color);
+            if (lightState != null)
+            {
+                effect.Parameters["LightPositions"].SetValue(lightState.Positions);
+                effect.Parameters["LightDirections"].SetValue(lightState.Directions);
+                effect.Parameters["LightColors"].SetValue(lightState.Color);
+            }
             effect.Parameters["AmbientLightColor"].SetValue(ambientLight.ToVector3());
         }
 

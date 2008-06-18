@@ -308,12 +308,12 @@ namespace Dope.DDXX.DemoFramework
             postProcessor.StartFrame(startTexture);
             CreateFullsize(new IRenderTarget2D[] { fullsizeTexture1, fullsizeTexture2 });
 
-            SetupPostEffect(startTexture, fullsizeTexture1, "DownSample4x", 400, 200, 1.0f, 0.5f, false);
+            SetupPostEffect(startTexture, fullsizeTexture1, "DownSample4x", 400, 200, 1.0f, 0.5f, true);
             SetupBlend(BlendFunction.ReverseSubtract, Blend.DestinationColor, Blend.BothInverseSourceAlpha, Color.DodgerBlue);
             postProcessor.Process("DownSample4x", startTexture, fullsizeTexture1);
             Assert.AreSame(fullsizeTexture1, postProcessor.OutputTexture);
 
-            SetupPostEffect(fullsizeTexture1, fullsizeTexture2, "DownSample4x", 200, 100, 0.5f, 0.25f, false);
+            SetupPostEffect(fullsizeTexture1, fullsizeTexture2, "DownSample4x", 200, 100, 0.5f, 0.25f, true);
             SetupBlend(BlendFunction.Add, Blend.One, Blend.Zero, Color.DodgerBlue);
             postProcessor.Process("DownSample4x", fullsizeTexture1, fullsizeTexture2);
             Assert.AreSame(fullsizeTexture2, postProcessor.OutputTexture);
@@ -330,12 +330,12 @@ namespace Dope.DDXX.DemoFramework
             TestDownSample();
             mockery.VerifyAllExpectationsHaveBeenMet();
 
-            SetupPostEffect(fullsizeTexture1, fullsizeTexture2, "UpSample4x", 200, 100, 0.5f, 2.0f, true);
+            SetupPostEffect(fullsizeTexture1, fullsizeTexture2, "UpSample4x", 200, 100, 0.5f, 2.0f, false);
             SetupBlend(BlendFunction.Subtract, Blend.DestinationColor, Blend.BothInverseSourceAlpha, Color.DimGray);
             postProcessor.Process("UpSample4x", fullsizeTexture1, fullsizeTexture2);
             Assert.AreEqual(fullsizeTexture2, postProcessor.OutputTexture);
 
-            SetupPostEffect(fullsizeTexture2, fullsizeTexture1, "Monochrome", 400, 200, 1.0f, 1.0f, true);
+            SetupPostEffect(fullsizeTexture2, fullsizeTexture1, "Monochrome", 400, 200, 1.0f, 1.0f, false);
             SetupBlend(BlendFunction.ReverseSubtract, Blend.DestinationColor, Blend.BothInverseSourceAlpha, Color.DimGray);
             postProcessor.Process("Monochrome", fullsizeTexture2, fullsizeTexture1);
             Assert.AreEqual(fullsizeTexture1, postProcessor.OutputTexture);

@@ -174,7 +174,7 @@ namespace Dope.DDXX.DemoFramework
                 int destWidth = device.PresentationParameters.BackBufferWidth;
                 int sourceHeight = source.Texture.Height;
                 int sourceWidth = source.Texture.Width;
-                if (destination.scale < toScale)
+                if (destination.scale > toScale)
                     device.Clear(ClearOptions.Target, Color.Black, 0, 0);
                 destination.scale = toScale;
                 spriteBatch.Draw(source.Texture,
