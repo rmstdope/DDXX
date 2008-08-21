@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.Graphics
 {
@@ -92,6 +93,24 @@ namespace Dope.DDXX.Graphics
         //     The color channel modulation to use. Use Color.White for full color with
         //     no tinting.
         void Draw(ITexture2D texture, Rectangle destinationRectangle, Color color);
+        //
+        // Summary:
+        //     Adds a sprite to the batch of sprites to be rendered, specifying the texture,
+        //     destination rectangle, and color tint.
+        //
+        // Parameters:
+        //   texture:
+        //     The sprite texture.
+        //
+        //   destinationRectangle:
+        //     A rectangle specifying, in screen coordinates, where the sprite will be drawn.
+        //     If this rectangle is not the same size as sourcerectangle, the sprite is
+        //     scaled to fit.
+        //
+        //   color:
+        //     The color channel modulation to use. Use Color.White for full color with
+        //     no tinting.
+        void Draw(ITexture2D texture, RectangleF destinationRectangle, Color color, float layerDepth);
         //
         // Summary:
         //     Adds a sprite to the batch of sprites to be rendered, specifying the texture,

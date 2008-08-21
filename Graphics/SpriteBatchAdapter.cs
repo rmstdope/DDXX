@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.Graphics
 {
@@ -14,6 +15,8 @@ namespace Dope.DDXX.Graphics
         {
             this.spriteBatch = spriteBatch;
         }
+
+
 
         #region ISpriteBatch Members
 
@@ -69,6 +72,16 @@ namespace Dope.DDXX.Graphics
         public void Draw(ITexture2D texture, Rectangle destinationRectangle, Color color)
         {
             spriteBatch.Draw((texture as Texture2DAdapter).DxTexture2D, destinationRectangle, color);
+        }
+
+        public void Draw(ITexture2D texture, RectangleF destinationRectangle, Color color, float layerDepth)
+        {
+            spriteBatch.Draw((texture as Texture2DAdapter).DxTexture2D,
+                new Vector2(destinationRectangle.X, destinationRectangle.Y),
+                null, color, 0.0f, new Vector2(0, 0), 
+                new Vector2(destinationRectangle.Width / (float)texture.Width,
+                    destinationRectangle.Height / (float)texture.Height), 
+                SpriteEffects.None, layerDepth);
         }
 
         public void Draw(ITexture2D texture, Vector2 position, Color color)
@@ -131,5 +144,6 @@ namespace Dope.DDXX.Graphics
         }
 
         #endregion
+
     }
 }
