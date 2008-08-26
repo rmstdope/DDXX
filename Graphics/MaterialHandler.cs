@@ -233,7 +233,13 @@ namespace Dope.DDXX.Graphics
             set
             {
                 if (effect is IBasicEffect)
+                {
                     (effect as IBasicEffect).Texture = value;
+                    if (value == null)
+                        (effect as IBasicEffect).TextureEnabled = false;
+                    else
+                        (effect as IBasicEffect).TextureEnabled = true;
+                }
                 else
                     effect.Parameters["Texture"].SetValue(value);
             }

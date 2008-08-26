@@ -101,5 +101,10 @@ namespace Dope.DDXX.Graphics
             return new VertexDeclarationAdapter(new VertexDeclaration(DxGraphicsDevice, elements));
         }
 
+        public IBasicEffect CreateBasicEffect()
+        {
+            return new BasicEffectAdapter(new BasicEffect(DxGraphicsDevice, null));
+        }
+
     }
 }

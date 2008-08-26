@@ -12,13 +12,20 @@ namespace Dope.DDXX.Graphics
         private ITexture2D whiteTexture;
 
         private IGraphicsFactory factory;
-        private IGraphicsDevice device;
+        private IGraphicsDevice graphicsDevice;
         private List<Texture2DParameters> files = new List<Texture2DParameters>();
         private List<TextureCubeParameters> cubeFiles = new List<TextureCubeParameters>();
 
+
+        public IGraphicsDevice GraphicsDevice
+        {
+            get { return graphicsDevice; }
+        }
+
+        // TODO: Remove device as parameter. It can be retrieved from the factory
         public TextureFactory(IGraphicsDevice device, IGraphicsFactory factory)
         {
-            this.device = device;
+            this.graphicsDevice = device;
             this.factory = factory;
         }
 
@@ -58,18 +65,18 @@ namespace Dope.DDXX.Graphics
 
         public IRenderTarget2D CreateFullsizeRenderTarget()
         {
-            return this.CreateRenderTarget(device.PresentationParameters.BackBufferWidth, device.PresentationParameters.BackBufferHeight);
+            return this.CreateRenderTarget(graphicsDevice.PresentationParameters.BackBufferWidth, graphicsDevice.PresentationParameters.BackBufferHeight);
         }
 
         public IRenderTarget2D CreateFullsizeRenderTarget(SurfaceFormat format, MultiSampleType multiSampleType, int multiSampleQuality)
         {
-            return this.CreateRenderTarget(device.PresentationParameters.BackBufferWidth, device.PresentationParameters.BackBufferHeight,
+            return this.CreateRenderTarget(graphicsDevice.PresentationParameters.BackBufferWidth, graphicsDevice.PresentationParameters.BackBufferHeight,
                 format, multiSampleType, multiSampleQuality);
         }
 
         public IDepthStencilBuffer CreateFullsizeDepthStencil(DepthFormat format, MultiSampleType multiSampleType)
         {
-            return this.CreateDepthStencil(device.PresentationParameters.BackBufferWidth, device.PresentationParameters.BackBufferHeight,
+            return this.CreateDepthStencil(graphicsDevice.PresentationParameters.BackBufferWidth, graphicsDevice.PresentationParameters.BackBufferHeight,
                 format, multiSampleType);
         }
 

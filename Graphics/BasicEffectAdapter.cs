@@ -14,6 +14,11 @@ namespace Dope.DDXX.Graphics
             this.effect = effect;
         }
 
+        public override IEffect Clone(IGraphicsDevice device)
+        {
+            return new BasicEffectAdapter(effect.Clone((device as GraphicsDeviceAdapter).DxGraphicsDevice) as BasicEffect);
+        }
+
         #region IBasicEffect Members
 
         public float Alpha

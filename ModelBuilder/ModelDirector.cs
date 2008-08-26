@@ -6,14 +6,19 @@ using Dope.DDXX.TextureBuilder;
 
 namespace Dope.DDXX.ModelBuilder
 {
-    public class ModelDirector
+    public class ModelDirector : IModelDirector
     {
-        private ModelBuilder builder;
+        private IModelBuilder modelBuilder;
         private IModifier primitive;
 
-        public ModelDirector(ModelBuilder builder)
+        public IModelBuilder ModelBuilder
         {
-            this.builder = builder;
+            get { return modelBuilder; }
+        }
+
+        public ModelDirector(IModelBuilder modelBuilder)
+        {
+            this.modelBuilder = modelBuilder;
         }
 
         public void CreateBox(float width, float length, float height)
@@ -218,12 +223,12 @@ namespace Dope.DDXX.ModelBuilder
 
         public IModel Generate(string materialName)
         {
-            return builder.CreateModel(primitive, materialName);
+            return modelBuilder.CreateModel(primitive, materialName);
         }
 
         public IModel Generate(IMaterialHandler material)
         {
-            return builder.CreateModel(primitive, material);
+            return modelBuilder.CreateModel(primitive, material);
         }
 
     }

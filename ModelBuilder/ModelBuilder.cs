@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.ModelBuilder
 {
-    public class ModelBuilder
+    public class ModelBuilder : Dope.DDXX.ModelBuilder.IModelBuilder
     {
         private IGraphicsDevice device;
         private IGraphicsFactory graphicsFactory;
@@ -18,6 +18,7 @@ namespace Dope.DDXX.ModelBuilder
         private IEffectFactory effectFactory;
         private Dictionary<string, IMaterialHandler> materials = new Dictionary<string, IMaterialHandler>();
 
+        // TODO: Remove device as parameter. It can be retrieved from the factory
         public ModelBuilder(IGraphicsDevice device, IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, IEffectFactory effectFactory, IEffect defaultEffect)
         {
             this.device = device;
@@ -26,11 +27,15 @@ namespace Dope.DDXX.ModelBuilder
             this.effectFactory = effectFactory;
             materials["Default"] = new MaterialHandler(defaultEffect.Clone(defaultEffect.GraphicsDevice), new EffectConverter());
             materials["Default"].DiffuseColor = new Color(200, 200, 200);
-            materials["Default"].AmbientColor = new Color(100, 100, 100);
             materials["Default"].SpecularColor = new Color(255, 255, 255);
-            materials["Default"].ReflectiveFactor = 0;
-            materials["Default"].Shininess = 1.0f;
             materials["Default"].SpecularPower = 32;
+
+            if (!(defaultEffect is IBasicEffect))
+            {
+                materials["Default"].AmbientColor = new Color(100, 100, 100);
+                materials["Default"].ReflectiveFactor = 0;
+                materials["Default"].Shininess = 1.0f;
+            }
         }
 
         public IMaterialHandler GetMaterial(string name)

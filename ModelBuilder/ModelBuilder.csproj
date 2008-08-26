@@ -76,6 +76,8 @@
     </Compile>
     <Compile Include="DummyPrimitive.cs" />
     <Compile Include="HeightMap.cs" />
+    <Compile Include="IModelBuilder.cs" />
+    <Compile Include="IModelDirector.cs" />
     <Compile Include="IModifier.cs">
       <Name>IModifier</Name>
     </Compile>

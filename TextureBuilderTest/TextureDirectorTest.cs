@@ -220,5 +220,14 @@ namespace Dope.DDXX.TextureBuilder
         }
 
         #endregion
+
+        #region ITextureFactory Members
+
+        public IGraphicsDevice GraphicsDevice
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        #endregion
     }
 }

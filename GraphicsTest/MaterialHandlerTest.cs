@@ -463,8 +463,20 @@ namespace Dope.DDXX.Graphics
             //Setup 
             UseBasicEffect();
             Expect.Once.On(basicEffect).SetProperty("Texture").To(texture2D);
+            Expect.Once.On(basicEffect).SetProperty("TextureEnabled").To(true);
             // Exercise SUT
             materialHandler.DiffuseTexture = texture2D;
+        }
+
+        [Test]
+        public void SetSDiffuseTextureBasicEffectNull()
+        {
+            //Setup 
+            UseBasicEffect();
+            Expect.Once.On(basicEffect).SetProperty("Texture").To(Is.Null);
+            Expect.Once.On(basicEffect).SetProperty("TextureEnabled").To(false);
+            // Exercise SUT
+            materialHandler.DiffuseTexture = null;
         }
 
         [Test]

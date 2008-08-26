@@ -70,7 +70,7 @@ namespace Dope.DDXX.Graphics
             effect.Begin(saveStateMode);
         }
 
-        public IEffect Clone(IGraphicsDevice device)
+        public virtual IEffect Clone(IGraphicsDevice device)
         {
             return new EffectAdapter(effect.Clone((device as GraphicsDeviceAdapter).DxGraphicsDevice));
         }

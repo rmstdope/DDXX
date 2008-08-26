@@ -22,13 +22,17 @@ namespace Dope.DDXX.Graphics
         private IGraphicsFactory factory;
         private IGraphicsDevice device;
         private List<FileEntry> files = new List<FileEntry>();
-        //private EffectPool pool;
 
+        // TODO: Remove device as parameter. It can be retrieved from the factory
         public EffectFactory(IGraphicsDevice device, IGraphicsFactory factory)
         {
             this.device = device;
             this.factory = factory;
-            //pool = new EffectPool();
+        }
+
+        public IBasicEffect CreateBasicEffect()
+        {
+            return factory.CreateBasicEffect();
         }
 
         public IEffect CreateFromFile(string file)
@@ -44,7 +48,6 @@ namespace Dope.DDXX.Graphics
             if (result != null)
             {
                 return result.effect.Clone(result.effect.GraphicsDevice);
-                //return result.effect;
             }
             IEffect effect = factory.EffectFromFile(file);
             needle.effect = effect;

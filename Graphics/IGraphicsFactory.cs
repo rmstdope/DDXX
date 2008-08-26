@@ -23,5 +23,6 @@ namespace Dope.DDXX.Graphics
         IModel ModelFromFile(string name);
         IIndexBuffer CreateIndexBuffer(Type indexType, int elementCount, BufferUsage usage);
         IVertexDeclaration CreateVertexDeclaration(VertexElement[] vertexElement);
+        IBasicEffect CreateBasicEffect();
     }
 }
