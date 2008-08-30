@@ -6,14 +6,14 @@ using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.UserInterface
 {
-    public class MenuControl : BaseControl
+    public class MenuControlOld : BaseControl
     {
         private int selected;
         private string[] options;
         private TextControl textControl;
         private BoxControl boxControl;
 
-        public MenuControl(Vector4 rectangle, string[] options, byte boxAlpha, Color boxColor, Color textColor, BaseControl parent)
+        public MenuControlOld(Vector4 rectangle, string[] options, byte boxAlpha, Color boxColor, Color textColor, BaseControl parent)
             : base(rectangle, parent)
         {
             boxControl = new BoxControl(new Vector4(0, 0, 1, 1), boxAlpha, boxColor, this);
