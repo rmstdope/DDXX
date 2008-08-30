@@ -67,6 +67,11 @@ namespace Dope.DDXX.UserInterface
             get { return aspectRatio; }
         }
 
+        public IDrawResources DrawResources
+        {
+            get { return this; }
+        }
+
         #endregion
     }
 }

@@ -16,5 +16,6 @@ namespace Dope.DDXX.UserInterface
         void Initialize(IGraphicsFactory graphicsFactory, ITextureFactory textureFactory);
         void DrawControl(BaseControl control);
         void SetFont(FontSize size, ISpriteFont font);
+        IDrawResources DrawResources { get; }
     }
 }
