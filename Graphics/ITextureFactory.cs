@@ -9,6 +9,7 @@ namespace Dope.DDXX.Graphics
 
     public interface ITextureFactory
     {
+        bool TextureExists(string name);
         IGraphicsDevice GraphicsDevice { get; }
         ITexture2D CreateFromName(string name);
         ITextureCube CreateCubeFromFile(string name);

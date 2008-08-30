@@ -24,5 +24,6 @@ namespace Dope.DDXX.Graphics
         IIndexBuffer CreateIndexBuffer(Type indexType, int elementCount, BufferUsage usage);
         IVertexDeclaration CreateVertexDeclaration(VertexElement[] vertexElement);
         IBasicEffect CreateBasicEffect();
+        void SetScreen(int width, int height, bool fullscreen);
     }
 }

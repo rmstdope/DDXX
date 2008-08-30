@@ -229,5 +229,14 @@ namespace Dope.DDXX.TextureBuilder
         }
 
         #endregion
+
+        #region ITextureFactory Members
+
+        public bool TextureExists(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

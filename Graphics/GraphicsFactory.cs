@@ -21,6 +21,13 @@ namespace Dope.DDXX.Graphics
             contentManager = new ContentManagerAdapter(new ContentManager(serviceProvider));
         }
 
+        public void SetScreen(int width, int height, bool fullscreen)
+        {
+            deviceManager.PreferredBackBufferWidth = width;
+            deviceManager.PreferredBackBufferHeight = height;
+            deviceManager.IsFullScreen = fullscreen;
+        }
+
         public IDeviceManager GraphicsDeviceManager
         {
             get { return deviceManager; }

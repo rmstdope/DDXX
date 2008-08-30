@@ -6,6 +6,7 @@ namespace Dope.DDXX.ModelBuilder
 {
     public interface IModelBuilder
     {
+        void CreateMaterial(string materialName);
         IModel CreateModel(IModifier generator, IMaterialHandler modelMaterial);
         IModel CreateModel(IModifier generator, string material);
         IMaterialHandler GetMaterial(string name);

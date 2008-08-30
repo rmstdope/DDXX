@@ -92,6 +92,7 @@
     <Compile Include="GaussianBlur.cs">
       <Name>GaussianBlur</Name>
     </Compile>
+    <Compile Include="ITextureDirector.cs" />
     <Compile Include="Madd.cs">
       <Name>Madd</Name>
     </Compile>

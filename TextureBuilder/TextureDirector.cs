@@ -8,10 +8,15 @@ using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.TextureBuilder
 {
-    public class TextureDirector
+    public class TextureDirector : ITextureDirector
     {
         Stack<ITextureGenerator> generatorStack;
         ITextureFactory textureFactory;
+
+        public ITextureFactory TextureFactory
+        {
+            get { return textureFactory; }
+        }
 
         public TextureDirector(ITextureFactory textureFactory)
         {

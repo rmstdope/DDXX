@@ -10,32 +10,24 @@ using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.ModelBuilder
 {
-    public class ModelBuilder : Dope.DDXX.ModelBuilder.IModelBuilder
+    public class ModelBuilder : IModelBuilder
     {
         private IGraphicsDevice device;
         private IGraphicsFactory graphicsFactory;
         private ITextureFactory textureFactory;
         private IEffectFactory effectFactory;
         private Dictionary<string, IMaterialHandler> materials = new Dictionary<string, IMaterialHandler>();
+        private IEffect defaultEffect;
 
         // TODO: Remove device as parameter. It can be retrieved from the factory
         public ModelBuilder(IGraphicsDevice device, IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, IEffectFactory effectFactory, IEffect defaultEffect)
         {
+            this.defaultEffect = defaultEffect;
             this.device = device;
             this.graphicsFactory = graphicsFactory;
             this.textureFactory = textureFactory;
             this.effectFactory = effectFactory;
-            materials["Default"] = new MaterialHandler(defaultEffect.Clone(defaultEffect.GraphicsDevice), new EffectConverter());
-            materials["Default"].DiffuseColor = new Color(200, 200, 200);
-            materials["Default"].SpecularColor = new Color(255, 255, 255);
-            materials["Default"].SpecularPower = 32;
-
-            if (!(defaultEffect is IBasicEffect))
-            {
-                materials["Default"].AmbientColor = new Color(100, 100, 100);
-                materials["Default"].ReflectiveFactor = 0;
-                materials["Default"].Shininess = 1.0f;
-            }
+            CreateMaterial("Default");
         }
 
         public IMaterialHandler GetMaterial(string name)
@@ -252,6 +244,23 @@ namespace Dope.DDXX.ModelBuilder
         public void SetMaterial(string materialName, IMaterialHandler material)
         {
             materials[materialName] = material;
+        }
+
+        public void CreateMaterial(string materialName)
+        {
+            if (!materials.ContainsKey(materialName))
+            {
+                materials[materialName] = new MaterialHandler(defaultEffect.Clone(defaultEffect.GraphicsDevice), new EffectConverter());
+                materials[materialName].DiffuseColor = new Color(200, 200, 200);
+                materials[materialName].SpecularColor = new Color(255, 255, 255);
+                materials[materialName].SpecularPower = 32;
+                if (!(defaultEffect is IBasicEffect))
+                {
+                    materials[materialName].AmbientColor = new Color(100, 100, 100);
+                    materials[materialName].ReflectiveFactor = 0;
+                    materials[materialName].Shininess = 1.0f;
+                }
+            }
         }
 
     }

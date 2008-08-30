@@ -29,6 +29,11 @@ namespace Dope.DDXX.Graphics
             this.factory = factory;
         }
 
+        public bool TextureExists(string name)
+        {
+            return files.Find(delegate(Texture2DParameters item) { return name == item.Name; }) != null;
+        }
+
         public ITexture2D CreateFromName(string file)
         {
             Texture2DParameters result = files.Find(delegate(Texture2DParameters item) { return file == item.Name; });

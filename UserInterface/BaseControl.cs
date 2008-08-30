@@ -103,5 +103,15 @@ namespace Dope.DDXX.UserInterface
             Children = new List<BaseControl>();
         }
 
+        public void RemoveFromParent()
+        {
+            parent.RemoveChild(this);
+        }
+
+        private void RemoveChild(BaseControl baseControl)
+        {
+            Children.Remove(baseControl);
+        }
+
     }
 }

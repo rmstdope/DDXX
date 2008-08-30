@@ -87,6 +87,14 @@ namespace Dope.DDXX.UserInterface
             rectangle = new Vector4(x, y, width, height);
         }
 
+        public Vector2 BoundingBox(IDrawResources resources)
+        {
+            Vector2 bb = resources.GetSpriteFont(FontSize.Medium).MeasureString(text);
+            bb.X /= resources.SpriteBatch.GraphicsDevice.PresentationParameters.BackBufferWidth;
+            bb.Y /= resources.SpriteBatch.GraphicsDevice.PresentationParameters.BackBufferHeight;
+            return bb;
+        }
+
         public override void Draw(IDrawResources resources)
         {
             Vector2 size = resources.GetSpriteFont(FontSize.Medium).MeasureString(text);

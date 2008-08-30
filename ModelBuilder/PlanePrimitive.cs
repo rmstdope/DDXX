@@ -65,7 +65,7 @@ namespace Dope.DDXX.ModelBuilder
                 for (int x = 0; x < widthSegments + 1; x++)
                 {
                     float xPos = width * (-0.5f + x / (float)widthSegments);
-                    vertices[v].Normal = new Vector3(0, 0, -1);
+                    vertices[v].Normal = new Vector3(0, 0, 1);
                     vertices[v].Position = new Vector3(xPos, yPos, 0);
                     if (textured)
                     {

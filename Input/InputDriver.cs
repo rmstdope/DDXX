@@ -22,8 +22,8 @@ namespace Dope.DDXX.Input
 
         private class KeyInfo
         {
-            private float[] slowRepeatTimes = new float[] { 0.5f, 0.1f, 0.02f };
-            private int[] slowRepeatNums = new int[] { 3, 15, 200 };
+            private float[] slowRepeatTimes = new float[] { 0.3f, 0.1f, 0.04f };
+            private int[] slowRepeatNums = new int[] { 2, 6, 200 };
 
             public KeyInfo()
             {
