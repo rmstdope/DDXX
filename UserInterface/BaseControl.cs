@@ -13,6 +13,14 @@ namespace Dope.DDXX.UserInterface
         private BaseControl parent;
         public List<BaseControl> Children = new List<BaseControl>();
 
+        public Vector4 Rectangle
+        {
+            get
+            {
+                return rectangle;
+            }
+        }
+
         public BaseControl(Vector4 rectangle, BaseControl parent)
         {
             this.rectangle = rectangle;
