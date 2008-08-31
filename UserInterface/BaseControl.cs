@@ -116,10 +116,15 @@ namespace Dope.DDXX.UserInterface
             parent.RemoveChild(this);
         }
 
-        private void RemoveChild(BaseControl baseControl)
+        private void RemoveChild(BaseControl control)
         {
-            Children.Remove(baseControl);
+            Children.Remove(control);
         }
 
+
+        public void AddChild(BaseControl control)
+        {
+            Children.Add(control);
+        }
     }
 }

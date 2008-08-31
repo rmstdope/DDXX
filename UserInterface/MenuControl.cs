@@ -22,7 +22,13 @@ namespace Dope.DDXX.UserInterface
 
         public T Action
         {
-            get { return optionActions[selected]; }
+            get 
+            {
+                if (selected < optionActions.Count)
+                    return optionActions[selected];
+                else
+                    return default(T);
+            }
         }
 
         public MenuControl(Vector2 position, byte alpha, IDrawResources resources, BaseControl parent)
