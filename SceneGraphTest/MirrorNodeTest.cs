@@ -2089,5 +2089,25 @@ namespace Dope.DDXX.SceneGraph
         }
 
         #endregion
+
+        #region IScene Members
+
+
+        public void RemoveNode(INode node)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region INode Members
+
+
+        public void RemoveChild(INode node)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

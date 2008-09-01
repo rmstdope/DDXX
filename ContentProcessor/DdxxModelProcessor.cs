@@ -233,8 +233,12 @@ namespace Dope.DDXX.ContentProcessor
             foreach (KeyValuePair<string, object> pair in material.OpaqueData)
                 System.Diagnostics.Debug.WriteLine(pair);
 
+            string file = Path.Combine(directory, "../../Effects/Content/effects/DefaultEffect.fx");
+            if (!File.Exists(file))
+                file = Path.Combine(directory, "../effects/DefaultEffect.fx");
+
             normalMappingMaterial.Effect =
-                new ExternalReference<EffectContent>(Path.Combine(directory, "../../Effects/Content/effects/DefaultEffect.fx"));
+                new ExternalReference<EffectContent>(file);
 
             System.Diagnostics.Debug.WriteLine("Textures:");
             foreach (KeyValuePair<String, ExternalReference<TextureContent>> texture in material.Textures)

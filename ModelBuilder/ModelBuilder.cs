@@ -19,6 +19,9 @@ namespace Dope.DDXX.ModelBuilder
         private Dictionary<string, IMaterialHandler> materials = new Dictionary<string, IMaterialHandler>();
         private IEffect defaultEffect;
 
+        public ITextureFactory TextureFactory { get { return textureFactory; } }
+        public IEffectFactory EffectFactory { get { return effectFactory; } }
+
         // TODO: Remove device as parameter. It can be retrieved from the factory
         public ModelBuilder(IGraphicsDevice device, IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, IEffectFactory effectFactory, IEffect defaultEffect)
         {
@@ -136,7 +139,7 @@ namespace Dope.DDXX.ModelBuilder
             FillVertexBuffer(vertexBuffer, vertices);
             FillIndexBuffer(indexBuffer, indices);
 
-            IModelMeshPart part = new CustomModelMeshPart(material.Effect, 0, vertices.Length, 0, indices.Length / 3);
+            IModelMeshPart part = new CustomModelMeshPart(material, 0, vertices.Length, 0, indices.Length / 3);
             IModelMesh mesh = new CustomModelMesh(device, vertexBuffer, indexBuffer, vertexSize, 
                 vertexDeclaration, PrimitiveType.TriangleList, new IModelMeshPart[] { part });
             
@@ -240,6 +243,13 @@ namespace Dope.DDXX.ModelBuilder
             material.Effect = effectFactory.CreateFromFile(effectName);
         }
 
+        public void SetBlendMode(string materialName, BlendFunction blendFunction, Blend sourceBlend, Blend destinationBlend)
+        {
+            IMaterialHandler material = GetMaterial(materialName);
+            material.BlendFunction = blendFunction;
+            material.SourceBlend = sourceBlend;
+            material.DestinationBlend = destinationBlend;
+        }
 
         public void SetMaterial(string materialName, IMaterialHandler material)
         {

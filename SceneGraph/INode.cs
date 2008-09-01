@@ -15,6 +15,7 @@ namespace Dope.DDXX.SceneGraph
         WorldState WorldState { get; }
         Matrix WorldMatrix { get; }
         void AddChild(INode child);
+        void RemoveChild(INode node);
         bool HasChild(INode node);
         void SetLightState(LightState state);
         void Step();

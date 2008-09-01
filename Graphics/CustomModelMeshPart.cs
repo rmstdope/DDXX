@@ -14,14 +14,14 @@ namespace Dope.DDXX.Graphics
         private int primitiveCount;
         private IMaterialHandler materialHandler;
 
-        public CustomModelMeshPart(IEffect effect, int baseVertex, int numVertices, int startIndex, int primitiveCount)
+        public CustomModelMeshPart(IMaterialHandler material, int baseVertex, int numVertices, int startIndex, int primitiveCount)
         {
-            this.effect = effect;
+            this.effect = material.Effect;
             this.baseVertex = baseVertex;
             this.numVertices = numVertices;
             this.startIndex = startIndex;
             this.primitiveCount = primitiveCount;
-            this.materialHandler = new MaterialHandler(effect, new EffectConverter());
+            this.materialHandler = material;// new MaterialHandler(effect, new EffectConverter());
         }
 
         #region IModelMeshPart Members

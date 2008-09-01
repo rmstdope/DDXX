@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
+using NMock2;
 
 namespace Dope.DDXX.Graphics
 {
@@ -9,11 +10,14 @@ namespace Dope.DDXX.Graphics
     public class CustomModelMeshPartTest : D3DMockTest
     {
         private CustomModelMeshPart part;
+        private IMaterialHandler material;
 
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
+            material = mockery.NewMock<IMaterialHandler>();
+            Stub.On(material).GetProperty("Effect").Will(Return.Value(effect));
         }
 
         [TearDown]
@@ -26,7 +30,7 @@ namespace Dope.DDXX.Graphics
         public void VertexVariables()
         {
             // Exercise SUT
-            part = new CustomModelMeshPart(effect, 42, 43, 0, 0);
+            part = new CustomModelMeshPart(material, 42, 43, 0, 0);
             // Verify
             Assert.AreEqual(42, part.BaseVertex);
             Assert.AreEqual(43, part.NumVertices);
@@ -36,7 +40,7 @@ namespace Dope.DDXX.Graphics
         public void IndexVariables()
         {
             // Exercise SUT
-            part = new CustomModelMeshPart(effect, 0, 0, 54, 55);
+            part = new CustomModelMeshPart(material, 0, 0, 54, 55);
             // Verify
             Assert.AreEqual(54, part.StartIndex);
             Assert.AreEqual(55, part.PrimitiveCount);
@@ -46,20 +50,18 @@ namespace Dope.DDXX.Graphics
         public void Effect()
         {
             // Exercise SUT
-            part = new CustomModelMeshPart(effect, 0, 0, 0, 0);
+            part = new CustomModelMeshPart(material, 0, 0, 0, 0);
             // Verify
             Assert.AreSame(effect, part.Effect);
-            part.Effect = null;
-            Assert.IsNull(part.Effect);
         }
 
         [Test]
         public void MaterialHandler()
         {
             // Exercise SUT
-            part = new CustomModelMeshPart(effect, 0, 0, 0, 0);
+            part = new CustomModelMeshPart(material, 0, 0, 0, 0);
             // Verify
-            Assert.IsNotNull(part.MaterialHandler);
+            Assert.AreSame(material, part.MaterialHandler);
         }
 
     }

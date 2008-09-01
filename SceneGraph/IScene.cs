@@ -12,6 +12,7 @@ namespace Dope.DDXX.SceneGraph
         Color AmbientColor { get; set; }
         int NumNodes { get; }
         void AddNode(INode node);
+        void RemoveNode(INode node);
         void Step();
         void Render();
         INode RootNode { get; }

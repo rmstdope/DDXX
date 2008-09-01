@@ -37,6 +37,11 @@ namespace Dope.DDXX.SceneGraph
             rootNode.AddChild(node);
         }
 
+        public void RemoveNode(INode node)
+        {
+            rootNode.RemoveChild(node);
+        }
+
         public void Step()
         {
             rootNode.Step();

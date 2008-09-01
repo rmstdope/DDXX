@@ -80,6 +80,7 @@
     <Compile Include="IDrawResources.cs" />
     <Compile Include="IUserInterface.cs" />
     <Compile Include="LineControl.cs" />
+    <Compile Include="ListControl.cs" />
     <Compile Include="MenuControl.cs" />
     <Compile Include="MenuControlOld.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
