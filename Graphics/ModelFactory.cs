@@ -12,6 +12,7 @@ namespace Dope.DDXX.Graphics
         private ITextureFactory textureFactory;
         private List<ModelParameters> models;
 
+        // TODO: Remove device, it can be retrieved from the factory
         public ModelFactory(IGraphicsDevice device, IGraphicsFactory factory,
             ITextureFactory textureFactory)
         {

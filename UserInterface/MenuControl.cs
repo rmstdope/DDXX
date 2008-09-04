@@ -80,5 +80,13 @@ namespace Dope.DDXX.UserInterface
             }
             resources.SpriteBatch.End();
         }
+
+        public void ClearOptions()
+        {
+            optionTexts.Clear();
+            optionActions.Clear();
+            selected = 0;
+            DrawSize = new Vector2(0, 10);
+        }
     }
 }
