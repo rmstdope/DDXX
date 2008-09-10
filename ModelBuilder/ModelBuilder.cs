@@ -266,6 +266,7 @@ namespace Dope.DDXX.ModelBuilder
                     materials[materialName].AmbientColor = new Color(100, 100, 100);
                     materials[materialName].ReflectiveFactor = 0;
                     materials[materialName].Shininess = 1.0f;
+                    materials[materialName].Transparency = 0.0f;
                 }
             }
         }
