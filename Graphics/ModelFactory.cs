@@ -8,15 +8,11 @@ namespace Dope.DDXX.Graphics
     public class ModelFactory : IModelFactory
     {
         private IGraphicsFactory factory;
-        private IGraphicsDevice device;
         private ITextureFactory textureFactory;
         private List<ModelParameters> models;
 
-        // TODO: Remove device, it can be retrieved from the factory
-        public ModelFactory(IGraphicsDevice device, IGraphicsFactory factory,
-            ITextureFactory textureFactory)
+        public ModelFactory(IGraphicsFactory factory, ITextureFactory textureFactory)
         {
-            this.device = device;
             this.factory = factory;
             this.textureFactory = textureFactory;
             models = new List<ModelParameters>();

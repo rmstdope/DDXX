@@ -47,7 +47,6 @@ namespace Dope.DDXX.ModelBuilder
             Stub.On(modifier).Method("Generate").Will(Return.Value(primitive));
             Stub.On(primitive).GetProperty("Vertices").Will(Return.Value(vertices));
             Stub.On(primitive).GetProperty("Indices").Will(Return.Value(indices));
-            Stub.On(effect).GetProperty("GraphicsDevice").Will(Return.Value(device));
             Stub.On(effect).Method("Clone").With(device).Will(Return.Value(cloneEffect));
         }
 
@@ -88,7 +87,7 @@ namespace Dope.DDXX.ModelBuilder
             Expect.Once.On(shininessParameter).Method("SetValue").With(1.0f);
             Expect.Once.On(reflectiveParameter).Method("SetValue").With(0.0f);
             // Exercise SUT
-            builder = new ModelBuilder(device, graphicsFactory, textureFactory, effectFactory, effect);
+            builder = new ModelBuilder(graphicsFactory, textureFactory, effectFactory, effect);
         }
 
         [Test]

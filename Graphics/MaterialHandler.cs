@@ -222,6 +222,22 @@ namespace Dope.DDXX.Graphics
             }
         }
 
+        public float Transparency
+        {
+            get
+            {
+                if (effect is IBasicEffect)
+                    throw new DDXXException("Transparency does not work for IBasicEffect effects.");
+                return effect.Parameters["Transparency"].GetValueSingle();
+            }
+            set
+            {
+                if (effect is IBasicEffect)
+                    throw new DDXXException("Transparency does not work for IBasicEffect effects.");
+                effect.Parameters["Transparency"].SetValue(value);
+            }
+        }
+
         public ITexture2D DiffuseTexture 
         {
             get

@@ -398,6 +398,52 @@ namespace Dope.DDXX.Graphics
         }
 
         [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void SetTransparencyFail()
+        {
+            //Setup 
+            UseBasicEffect();
+            // Exercise SUT
+            materialHandler.Transparency = 1;
+        }
+
+        [Test]
+        public void SetTransparency()
+        {
+            //Setup 
+            IEffectParameter ambientParameter = mockery.NewMock<IEffectParameter>();
+            UseEffect();
+            StubParameter("Transparency", ambientParameter);
+            Expect.Once.On(ambientParameter).Method("SetValue").With(10.0f);
+            // Exercise SUT
+            materialHandler.Transparency = 10;
+        }
+
+        [Test]
+        [ExpectedException(typeof(DDXXException))]
+        public void GetTransparencyFail()
+        {
+            //Setup 
+            UseBasicEffect();
+            // Exercise SUT
+            float c = materialHandler.Transparency;
+        }
+
+        [Test]
+        public void GetTransparency()
+        {
+            //Setup 
+            IEffectParameter ambientParameter = mockery.NewMock<IEffectParameter>();
+            UseEffect();
+            StubParameter("Transparency", ambientParameter);
+            Expect.Once.On(ambientParameter).Method("GetValueSingle").Will(Return.Value(2.0f));
+            // Exercise SUT
+            float transparency = materialHandler.Transparency;
+            // Verify
+            Assert.AreEqual(2.0f, transparency);
+        }
+
+        [Test]
         public void SetSpecularPower()
         {
             //Setup 

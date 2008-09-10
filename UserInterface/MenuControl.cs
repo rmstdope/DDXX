@@ -31,8 +31,8 @@ namespace Dope.DDXX.UserInterface
             }
         }
 
-        public MenuControl(Vector2 position, byte alpha, IDrawResources resources, BaseControl parent)
-            : base(position, alpha, resources, parent)
+        public MenuControl(Vector2 position, Positioning positioning, byte alpha, IDrawResources resources, BaseControl parent)
+            : base(position, positioning, alpha, resources, parent)
         {
             optionTexts = new List<string>();
             optionActions = new List<T>();
@@ -75,7 +75,7 @@ namespace Dope.DDXX.UserInterface
             foreach (string text in optionTexts)
             {
                 resources.SpriteBatch.DrawString(font, text, pos + new Vector2(1, 1), shadowColor);
-                resources.SpriteBatch.DrawString(font, text, pos, num++ == selected ? selectedTextColor : textColor);
+                resources.SpriteBatch.DrawString(font, text, pos, num++ == selected ? SelectedTextColor : TextColor);
                 pos.Y += font.MeasureString(text).Y;
             }
             resources.SpriteBatch.End();
@@ -88,5 +88,8 @@ namespace Dope.DDXX.UserInterface
             selected = 0;
             DrawSize = new Vector2(0, 10);
         }
+
+        public int NumOptions { get { return optionTexts.Count; } }
+
     }
 }

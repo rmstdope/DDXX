@@ -42,7 +42,7 @@ namespace Dope.DDXX.Graphics
             effect2 = mockery.NewMock<IEffect>();
             effect3 = mockery.NewMock<IEffect>();
 
-            modelFactory = new ModelFactory(device, graphicsFactory, textureFactory);
+            modelFactory = new ModelFactory(graphicsFactory, textureFactory);
         }
 
         [TearDown]

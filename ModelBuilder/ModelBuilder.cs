@@ -12,7 +12,6 @@ namespace Dope.DDXX.ModelBuilder
 {
     public class ModelBuilder : IModelBuilder
     {
-        private IGraphicsDevice device;
         private IGraphicsFactory graphicsFactory;
         private ITextureFactory textureFactory;
         private IEffectFactory effectFactory;
@@ -22,11 +21,9 @@ namespace Dope.DDXX.ModelBuilder
         public ITextureFactory TextureFactory { get { return textureFactory; } }
         public IEffectFactory EffectFactory { get { return effectFactory; } }
 
-        // TODO: Remove device as parameter. It can be retrieved from the factory
-        public ModelBuilder(IGraphicsDevice device, IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, IEffectFactory effectFactory, IEffect defaultEffect)
+        public ModelBuilder(IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, IEffectFactory effectFactory, IEffect defaultEffect)
         {
             this.defaultEffect = defaultEffect;
-            this.device = device;
             this.graphicsFactory = graphicsFactory;
             this.textureFactory = textureFactory;
             this.effectFactory = effectFactory;
@@ -140,7 +137,7 @@ namespace Dope.DDXX.ModelBuilder
             FillIndexBuffer(indexBuffer, indices);
 
             IModelMeshPart part = new CustomModelMeshPart(material, 0, vertices.Length, 0, indices.Length / 3);
-            IModelMesh mesh = new CustomModelMesh(device, vertexBuffer, indexBuffer, vertexSize, 
+            IModelMesh mesh = new CustomModelMesh(graphicsFactory.GraphicsDevice, vertexBuffer, indexBuffer, vertexSize, 
                 vertexDeclaration, PrimitiveType.TriangleList, new IModelMeshPart[] { part });
             
             return mesh;
@@ -260,7 +257,7 @@ namespace Dope.DDXX.ModelBuilder
         {
             if (!materials.ContainsKey(materialName))
             {
-                materials[materialName] = new MaterialHandler(defaultEffect.Clone(defaultEffect.GraphicsDevice), new EffectConverter());
+                materials[materialName] = new MaterialHandler(defaultEffect.Clone(graphicsFactory.GraphicsDevice), new EffectConverter());
                 materials[materialName].DiffuseColor = new Color(200, 200, 200);
                 materials[materialName].SpecularColor = new Color(255, 255, 255);
                 materials[materialName].SpecularPower = 32;

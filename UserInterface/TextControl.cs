@@ -7,23 +7,13 @@ using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.UserInterface
 {
-    public enum TextFormatting
-    {
-        Center = 0x01,
-        VerticalCenter = 0x02,
-        Right = 0x04,
-        Bottom = 0x08,
-        Left = 0x10,
-        Top = 0x20
-    }
-
     public class TextControl : BaseControl
     {
         private string text;
         private byte alpha;
         private Color color;
         private int shadowOffset = 2;
-        private TextFormatting format;
+        private Positioning format;
 
         public Color Color
         {
@@ -49,13 +39,13 @@ namespace Dope.DDXX.UserInterface
             set { shadowOffset = value; }
         }
 
-        public TextFormatting Format
+        public Positioning Format
         {
             get { return format; }
             set { format = value; }
         }
 
-        public TextControl(string text, Vector4 rectangle, TextFormatting format, byte alpha, Color color, BaseControl parent)
+        public TextControl(string text, Vector4 rectangle, Positioning format, byte alpha, Color color, BaseControl parent)
             : base(rectangle, parent)
         {
             this.text = text;
@@ -64,7 +54,7 @@ namespace Dope.DDXX.UserInterface
             this.format = format;
         }
 
-        public TextControl(string text, Vector2 point, TextFormatting format, byte alpha, Color color, BaseControl parent)
+        public TextControl(string text, Vector2 point, Positioning format, byte alpha, Color color, BaseControl parent)
             : base(new Vector4(), parent)
         {
             this.text = text;
@@ -76,13 +66,13 @@ namespace Dope.DDXX.UserInterface
 
             float height = 1;
             float width = 1;
-            if (((int)format & (int)TextFormatting.Bottom) != 0)
+            if (((int)format & (int)Positioning.Bottom) != 0)
                 y -= height;
-            if (((int)format & (int)TextFormatting.VerticalCenter) != 0)
+            if (((int)format & (int)Positioning.VerticalCenter) != 0)
                 y -= height / 2;
-            if (((int)format & (int)TextFormatting.Right) != 0)
+            if (((int)format & (int)Positioning.Right) != 0)
                 x -= width;
-            if (((int)format & (int)TextFormatting.Center) != 0)
+            if (((int)format & (int)Positioning.Center) != 0)
                 x -= width / 2;
             rectangle = new Vector4(x, y, width, height);
         }
@@ -99,25 +89,25 @@ namespace Dope.DDXX.UserInterface
         {
             Vector2 size = resources.GetSpriteFont(FontSize.Medium).MeasureString(text);
             Vector2 pos = new Vector2(GetX1(resources), GetY1(resources));
-            if (((int)format & (int)TextFormatting.Bottom) != 0)
+            if (((int)format & (int)Positioning.Bottom) != 0)
                 pos.Y += GetHeight(resources);
-            if (((int)format & (int)TextFormatting.VerticalCenter) != 0)
+            if (((int)format & (int)Positioning.VerticalCenter) != 0)
                 pos.Y += GetHeight(resources) / 2;
-            if (((int)format & (int)TextFormatting.Right) != 0)
+            if (((int)format & (int)Positioning.Right) != 0)
                 pos.X += GetWidth(resources);
-            if (((int)format & (int)TextFormatting.Center) != 0)
+            if (((int)format & (int)Positioning.Center) != 0)
                 pos.X += GetWidth(resources) / 2;
 
             pos.X *= resources.SpriteBatch.GraphicsDevice.PresentationParameters.BackBufferWidth;
             pos.Y *= resources.SpriteBatch.GraphicsDevice.PresentationParameters.BackBufferHeight;
 
-            if (((int)format & (int)TextFormatting.Bottom) != 0)
+            if (((int)format & (int)Positioning.Bottom) != 0)
                 pos.Y -= size.Y;
-            if (((int)format & (int)TextFormatting.VerticalCenter) != 0)
+            if (((int)format & (int)Positioning.VerticalCenter) != 0)
                 pos.Y -= size.Y / 2;
-            if (((int)format & (int)TextFormatting.Right) != 0)
+            if (((int)format & (int)Positioning.Right) != 0)
                 pos.X -= size.X;
-            if (((int)format & (int)TextFormatting.Center) != 0)
+            if (((int)format & (int)Positioning.Center) != 0)
                 pos.X -= size.X / 2;
 
             Color col1 = new Color(color.R, color.G, color.B, alpha);

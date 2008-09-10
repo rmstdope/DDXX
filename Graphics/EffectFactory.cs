@@ -20,13 +20,10 @@ namespace Dope.DDXX.Graphics
         }
 
         private IGraphicsFactory factory;
-        private IGraphicsDevice device;
         private List<FileEntry> files = new List<FileEntry>();
 
-        // TODO: Remove device as parameter. It can be retrieved from the factory
-        public EffectFactory(IGraphicsDevice device, IGraphicsFactory factory)
+        public EffectFactory(IGraphicsFactory factory)
         {
-            this.device = device;
             this.factory = factory;
         }
 

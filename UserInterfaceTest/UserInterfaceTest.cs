@@ -148,7 +148,7 @@ namespace Dope.DDXX.UserInterface
             ExpectAlphaBlending();
             ExpectText(x, y);
 
-            ui.DrawControl(new TextControl("Text", new Vector4(x1, y1, width, height), TextFormatting.Top, 190, new Color(1, 2, 3), null));
+            ui.DrawControl(new TextControl("Text", new Vector4(x1, y1, width, height), Positioning.Top, 190, new Color(1, 2, 3), null));
         }
 
         [Test]
@@ -169,7 +169,7 @@ namespace Dope.DDXX.UserInterface
             ExpectAlphaBlending();
             ExpectText(x, y);
 
-            ui.DrawControl(new TextControl("Text", new Vector4(x1, y1, width, height), TextFormatting.Bottom | TextFormatting.Right, 190, new Color(1, 2, 3), null));
+            ui.DrawControl(new TextControl("Text", new Vector4(x1, y1, width, height), Positioning.Bottom | Positioning.Right, 190, new Color(1, 2, 3), null));
         }
 
         [Test]
@@ -190,7 +190,7 @@ namespace Dope.DDXX.UserInterface
             ExpectAlphaBlending();
             ExpectText(x, y);
 
-            ui.DrawControl(new TextControl("Text", new Vector4(x1, y1, width, height), TextFormatting.Center | TextFormatting.VerticalCenter, 190, new Color(1, 2, 3), null));
+            ui.DrawControl(new TextControl("Text", new Vector4(x1, y1, width, height), Positioning.Center | Positioning.VerticalCenter, 190, new Color(1, 2, 3), null));
         }
 
         [Test]

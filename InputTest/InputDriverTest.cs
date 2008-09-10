@@ -15,8 +15,8 @@ namespace Dope.DDXX.Input
         private IInputFactory factory;
         private InputDriver driver;
 
-        private float[] slowRepeatTimes = new float[] { 0.5f, 0.1f, 0.02f };
-        private int[] slowRepeatNums = new int[] { 3, 12, 100 };
+        private float[] slowRepeatTimes = new float[] { 0.3f, 0.1f, 0.04f };
+        private int[] slowRepeatNums = new int[] { 2, 4, 194 };
 
         [SetUp]
         public void SetUp()
@@ -124,17 +124,17 @@ namespace Dope.DDXX.Input
 
             // One keypress at time 0 (true)
             KeyPressAtTime(0.0f, true);
-            // One keypress at time 0.5 (true)
+            // One keypress at time 0.6 (true)
             KeyPressAtTime(0.6f, true);
-            // One keypress at time 1.0 (true)
+            // One keypress at time 1.2 (true)
             KeyPressAtTime(1.2f, true);
             // Reset presser
             ExpectKeyPress(Keys.Escape, false);
             Assert.IsFalse(driver.KeyPressedSlowRepeat(Keys.Escape));
-            // One keypress at time 1.5 (true)
+            // One keypress at time 1.8 (true)
             KeyPressAtTime(1.8f, true);
-            // One keypress at time 1.9 (false)
-            KeyPressAtTime(2.2f, false);
+            // One keypress at time 2.0 (false)
+            KeyPressAtTime(2.0f, false);
         }
 
         private void KeyPressAtTime(float time, bool shouldBeTrue)

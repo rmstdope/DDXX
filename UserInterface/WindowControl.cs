@@ -9,18 +9,32 @@ namespace Dope.DDXX.UserInterface
 {
     public class WindowControl : BaseControl
     {
-        private readonly Color boxColor;
+        private readonly Positioning positioning;
+        private Color boxColor;
         protected readonly Color shadowColor = Color.Black;
         protected readonly Color outlineColor = Color.White;
-        protected readonly Color textColor = Color.Green;
-        protected readonly Color selectedTextColor = Color.Red;
+        private Color textColor;
+        private Color selectedTextColor;
         private readonly float screenWidth;
         private readonly float screenHeight;
         private readonly ISpriteFont titleFont;
+        protected readonly ISpriteFont textFont;
         private string title;
         private Vector2 titleTextSize;
         private Vector2 drawSize;
 
+        public Color SelectedTextColor
+        {
+            get { return selectedTextColor; }
+            set { selectedTextColor = value; }
+        }
+
+        public Color TextColor
+        {
+            get { return textColor; }
+            set { textColor = value; }
+
+        }
         protected Vector2 DrawSize
         {
             get { return drawSize; }
@@ -33,13 +47,23 @@ namespace Dope.DDXX.UserInterface
             set { title = value; CalculateTitleSize(); }
         }
 
-        public WindowControl(Vector2 position, byte alpha, IDrawResources resources, BaseControl parent)
+        public byte Alpha
+        {
+            get { return boxColor.A; }
+            set { boxColor = new Color(boxColor.R, boxColor.G, boxColor.B, value); }
+        }
+
+        public WindowControl(Vector2 position, Positioning positioning, byte alpha, IDrawResources resources, BaseControl parent)
             : base(new Vector4(position, 0, 0), parent)
         {
+            this.textColor = Color.White;
+            this.selectedTextColor = Color.Red;
+            this.positioning = positioning;
             boxColor = new Color(Color.Teal.R, Color.Teal.G, Color.Teal.B, alpha);
             screenWidth = resources.SpriteBatch.GraphicsDevice.PresentationParameters.BackBufferWidth;
             screenHeight = resources.SpriteBatch.GraphicsDevice.PresentationParameters.BackBufferHeight;
-            titleFont = resources.GetSpriteFont(FontSize.Medium);
+            titleFont = resources.GetSpriteFont(FontSize.Large);
+            textFont = resources.GetSpriteFont(FontSize.Medium);
             title = "";
             CalculateTitleSize();
         }
@@ -82,12 +106,20 @@ namespace Dope.DDXX.UserInterface
 
         private int GetWindowY1(IDrawResources resources)
         {
-            return (int)(screenHeight * GetY1(resources)) - GetWindowHeight() / 2;
+            if ((positioning & Positioning.VerticalCenter) == Positioning.VerticalCenter)
+                return (int)(screenHeight * GetY1(resources)) - GetWindowHeight() / 2;
+            if ((positioning & Positioning.Top) == Positioning.Top)
+                return (int)(screenHeight * GetY1(resources));
+            return (int)(screenHeight * GetY1(resources)) - GetWindowHeight();
         }
 
         private int GetWindowX1(IDrawResources resources)
         {
-            return (int)(screenWidth * GetX1(resources)) - GetWindowWidth() / 2;
+            if ((positioning & Positioning.Center) == Positioning.Center)
+                return (int)(screenWidth * GetX1(resources)) - GetWindowWidth() / 2;
+            if ((positioning & Positioning.Left) == Positioning.Left)
+                return (int)(screenWidth * GetX1(resources));
+            return (int)(screenWidth * GetX1(resources)) - GetWindowWidth();
         }
 
         private int GetWindowHeight()

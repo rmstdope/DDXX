@@ -16,6 +16,7 @@ namespace Dope.DDXX.Graphics
         Color SpecularColor { get; set; }
         float SpecularPower { get; set; }
         float Shininess { get; set; }
+        float Transparency { get; set; }
         ITexture2D DiffuseTexture { get; set; }
         ITexture2D NormalTexture { get; set; }
         ITextureCube ReflectiveTexture { get; set; }

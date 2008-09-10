@@ -17,7 +17,7 @@ namespace Dope.DDXX.UserInterface
             : base(rectangle, parent)
         {
             boxControl = new BoxControl(new Vector4(0, 0, 1, 1), boxAlpha, boxColor, this);
-            textControl = new TextControl("", new Vector2(0.03f, 0.5f), TextFormatting.Left | TextFormatting.VerticalCenter, 255, textColor, this);
+            textControl = new TextControl("", new Vector2(0.03f, 0.5f), Positioning.Left | Positioning.VerticalCenter, 255, textColor, this);
             this.options = options;
             Selected = 0;
         }

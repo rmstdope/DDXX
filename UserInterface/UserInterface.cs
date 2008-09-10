@@ -54,7 +54,7 @@ namespace Dope.DDXX.UserInterface
 
         public ISpriteFont GetSpriteFont(FontSize size)
         {
-            return spriteFonts[FontSize.Medium];
+            return spriteFonts[size];
         }
 
         public ITexture2D WhiteTexture

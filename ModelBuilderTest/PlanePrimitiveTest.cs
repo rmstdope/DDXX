@@ -65,7 +65,7 @@ namespace Dope.DDXX.ModelBuilder
             // Check that the indices create clockwise triangles
             CheckRectangleClockwise(startIndex, numTriangles, new Vector3(0, 0, -1));
             // Check normals
-            CheckRectangleNormals(startVertex, numVertices, new Vector3(0, 0, -1));
+            CheckRectangleNormals(startVertex, numVertices, new Vector3(0, 0, 1));
             // Check limits
             CheckPlaneVertexLimits(10.0f, 20.0f, 1, 1);
             // Check no texture coordinates
@@ -90,7 +90,7 @@ namespace Dope.DDXX.ModelBuilder
             // Check that the indices create clockwise triangles
             CheckRectangleClockwise(startIndex, numTriangles, new Vector3(0, 0, -1));
             // Check normals
-            CheckRectangleNormals(startVertex, numVertices, new Vector3(0, 0, -1));
+            CheckRectangleNormals(startVertex, numVertices, new Vector3(0, 0, 1));
             // Check limits
             CheckPlaneVertexLimits(20.0f, 40.0f, 2, 4);
             // Check no texture coordinates
@@ -115,7 +115,7 @@ namespace Dope.DDXX.ModelBuilder
             // Check that the indices create clockwise triangles
             CheckRectangleClockwise(startIndex, numTriangles, new Vector3(0, 0, -1));
             // Check normals
-            CheckRectangleNormals(startVertex, numVertices, new Vector3(0, 0, -1));
+            CheckRectangleNormals(startVertex, numVertices, new Vector3(0, 0, 1));
             // Check limits
             CheckPlaneVertexLimits(20.0f, 40.0f, 2, 4);
             // Check no texture coordinates

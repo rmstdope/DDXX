@@ -9,22 +9,26 @@ namespace Dope.DDXX.UserInterface
 {
     public class ListControl : WindowControl
     {
-        private readonly ISpriteFont font;
         private List<string> optionTexts;
 
-        public ListControl(Vector2 position, byte alpha, IDrawResources resources, BaseControl parent)
-            : base(position, alpha, resources, parent)
+        public ListControl(Vector2 position, Positioning positioning, byte alpha, IDrawResources resources, BaseControl parent)
+            : base(position, positioning, alpha, resources, parent)
         {
-            optionTexts = new List<string>();
-            font = resources.GetSpriteFont(FontSize.Medium);
+            this.optionTexts = new List<string>();
             DrawSize = new Vector2(0, 10);
         }
 
         public void AddText(string text)
         {
             optionTexts.Add(text);
-            Vector2 textSize = font.MeasureString(text);
+            Vector2 textSize = textFont.MeasureString(text);
             DrawSize = new Vector2(Math.Max(DrawSize.X, textSize.X + 10), DrawSize.Y + textSize.Y);
+        }
+
+        public void ClearText()
+        {
+            optionTexts.Clear();
+            DrawSize = new Vector2(0, 10);
         }
 
         public override void Draw(IDrawResources resources)
@@ -33,12 +37,11 @@ namespace Dope.DDXX.UserInterface
             Vector2 pos = new Vector2(GetDrawX1(resources) + 5, GetDrawY1(resources) + 5);
 
             resources.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
-            int num = 0;
             foreach (string text in optionTexts)
             {
-                resources.SpriteBatch.DrawString(font, text, pos + new Vector2(1, 1), shadowColor);
-                resources.SpriteBatch.DrawString(font, text, pos, textColor);
-                pos.Y += font.MeasureString(text).Y;
+                resources.SpriteBatch.DrawString(textFont, text, pos + new Vector2(1, 1), shadowColor);
+                resources.SpriteBatch.DrawString(textFont, text, pos, TextColor);
+                pos.Y += textFont.MeasureString(text).Y;
             }
             resources.SpriteBatch.End();
         }

@@ -2109,5 +2109,22 @@ namespace Dope.DDXX.SceneGraph
         }
 
         #endregion
+
+        #region IMaterialHandler Members
+
+
+        public float Transparency
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        #endregion
     }
 }
