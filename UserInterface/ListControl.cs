@@ -12,13 +12,13 @@ namespace Dope.DDXX.UserInterface
         private List<string> optionTexts;
 
         public ListControl(Vector2 position, Positioning positioning, byte alpha, IDrawResources resources, BaseControl parent)
-            : base(position, positioning, alpha, resources, parent)
+            : base(position, positioning, alpha, resources, parent, FontSize.Medium)
         {
             this.optionTexts = new List<string>();
             DrawSize = new Vector2(0, 10);
         }
 
-        public void AddText(string text)
+        public virtual void AddText(string text)
         {
             optionTexts.Add(text);
             Vector2 textSize = textFont.MeasureString(text);

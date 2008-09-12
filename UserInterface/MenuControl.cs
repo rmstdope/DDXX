@@ -32,7 +32,7 @@ namespace Dope.DDXX.UserInterface
         }
 
         public MenuControl(Vector2 position, Positioning positioning, byte alpha, IDrawResources resources, BaseControl parent)
-            : base(position, positioning, alpha, resources, parent)
+            : base(position, positioning, alpha, resources, parent, FontSize.Medium)
         {
             optionTexts = new List<string>();
             optionActions = new List<T>();

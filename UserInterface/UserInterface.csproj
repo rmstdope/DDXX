@@ -84,6 +84,7 @@
     <Compile Include="MenuControl.cs" />
     <Compile Include="MenuControlOld.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScrollListControl.cs" />
     <Compile Include="TextControl.cs" />
     <Compile Include="UserInterface.cs" />
     <Compile Include="WindowControl.cs" />

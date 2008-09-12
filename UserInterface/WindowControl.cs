@@ -26,13 +26,13 @@ namespace Dope.DDXX.UserInterface
         public Color SelectedTextColor
         {
             get { return selectedTextColor; }
-            set { selectedTextColor = value; }
+            set { selectedTextColor = value; Alpha = Alpha; }
         }
 
         public Color TextColor
         {
             get { return textColor; }
-            set { textColor = value; }
+            set { textColor = value; Alpha = Alpha; }
 
         }
         protected Vector2 DrawSize
@@ -50,10 +50,16 @@ namespace Dope.DDXX.UserInterface
         public byte Alpha
         {
             get { return boxColor.A; }
-            set { boxColor = new Color(boxColor.R, boxColor.G, boxColor.B, value); }
+            set 
+            {
+                boxColor = new Color(boxColor.R, boxColor.G, boxColor.B, value);
+                textColor = new Color(textColor.R, textColor.G, textColor.B, value);
+                selectedTextColor = new Color(selectedTextColor.R, selectedTextColor.G, selectedTextColor.B, value);
+            }
         }
 
-        public WindowControl(Vector2 position, Positioning positioning, byte alpha, IDrawResources resources, BaseControl parent)
+        public WindowControl(Vector2 position, Positioning positioning, byte alpha, 
+            IDrawResources resources, BaseControl parent, FontSize fontSize)
             : base(new Vector4(position, 0, 0), parent)
         {
             this.textColor = Color.White;
@@ -63,14 +69,17 @@ namespace Dope.DDXX.UserInterface
             screenWidth = resources.SpriteBatch.GraphicsDevice.PresentationParameters.BackBufferWidth;
             screenHeight = resources.SpriteBatch.GraphicsDevice.PresentationParameters.BackBufferHeight;
             titleFont = resources.GetSpriteFont(FontSize.Large);
-            textFont = resources.GetSpriteFont(FontSize.Medium);
+            textFont = resources.GetSpriteFont(fontSize);
             title = "";
             CalculateTitleSize();
         }
 
         private void CalculateTitleSize()
         {
-            titleTextSize = titleFont.MeasureString(title);
+            if (title != "")
+                titleTextSize = titleFont.MeasureString(title) + new Vector2(10, 10);
+            else
+                titleTextSize = Vector2.Zero;
         }
 
         public override void Draw(IDrawResources resources)
@@ -97,7 +106,7 @@ namespace Dope.DDXX.UserInterface
             DrawVerticalLine(resources.SpriteBatch, resources.WhiteTexture, x1 + width, y1, height, outlineColor);
             resources.SpriteBatch.End();
 
-            Vector2 pos = new Vector2(x1 + (width - titleTextSize.X) / 2, y1 + (GetTitleHeight() - titleTextSize.Y) / 2);
+            Vector2 pos = new Vector2(x1 + (width - titleTextSize.X + 10) / 2, y1 + (GetTitleHeight() - titleTextSize.Y + 10) / 2);
             resources.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
             resources.SpriteBatch.DrawString(titleFont, title, pos + new Vector2(1, 1), shadowColor);
             resources.SpriteBatch.DrawString(titleFont, title, pos, textColor);
@@ -124,17 +133,17 @@ namespace Dope.DDXX.UserInterface
 
         private int GetWindowHeight()
         {
-            return (int)(titleTextSize.Y + 10 + drawSize.Y);
+            return (int)(titleTextSize.Y + drawSize.Y);
         }
 
         private int GetWindowWidth()
         {
-            return (int)(Math.Max(titleTextSize.X + 10, drawSize.X));
+            return (int)(Math.Max(titleTextSize.X , drawSize.X));
         }
 
         private int GetTitleHeight()
         {
-            return (int)(titleTextSize.Y + 10);
+            return (int)(titleTextSize.Y);
         }
 
         protected int GetDrawX1(IDrawResources resources)
