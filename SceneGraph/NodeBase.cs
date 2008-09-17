@@ -13,11 +13,13 @@ namespace Dope.DDXX.SceneGraph
         private WorldState worldState = new WorldState();
         private String name;
         private List<INode> children = new List<INode>();
+        private bool visible;
 
         public NodeBase(String name)
             : base()
         {
             this.name = name;
+            this.visible = true;
         }
 
         protected virtual void SetLightStateNode(LightState state)
@@ -103,14 +105,17 @@ namespace Dope.DDXX.SceneGraph
 
         public void Render(IScene scene)
         {
-            RenderNode(scene);
-
-            BeforeRenderingChildren();
-            foreach (INode node in children)
+            if (visible)
             {
-                node.Render(scene);
+                RenderNode(scene);
+
+                BeforeRenderingChildren();
+                foreach (INode node in children)
+                {
+                    node.Render(scene);
+                }
+                AfterRenderingChildren();
             }
-            AfterRenderingChildren();
         }
 
         protected virtual void AfterRenderingChildren()
@@ -166,6 +171,18 @@ namespace Dope.DDXX.SceneGraph
             set
             {
                 WorldState.Position = value;
+            }
+        }
+
+        public bool Visible
+        {
+            get
+            {
+                return visible;
+            }
+            set
+            {
+                visible = value;
             }
         }
 
