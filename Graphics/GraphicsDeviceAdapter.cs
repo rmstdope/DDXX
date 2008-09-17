@@ -137,18 +137,6 @@ namespace Dope.DDXX.Graphics
             }
         }
 
-        public bool SoftwareVertexProcessing
-        {
-            get
-            {
-                return device.SoftwareVertexProcessing;
-            }
-            set
-            {
-                device.SoftwareVertexProcessing = value;
-            }
-        }
-
         public TextureCollection Textures
         {
             get { return device.Textures; }
