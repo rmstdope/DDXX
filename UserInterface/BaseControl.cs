@@ -113,7 +113,8 @@ namespace Dope.DDXX.UserInterface
 
         public void RemoveFromParent()
         {
-            parent.RemoveChild(this);
+            if (parent != null)
+                parent.RemoveChild(this);
         }
 
         private void RemoveChild(IControl control)
@@ -125,6 +126,7 @@ namespace Dope.DDXX.UserInterface
         public void AddChild(IControl control)
         {
             Children.Add(control);
+            (control as BaseControl).parent = this;
         }
     }
 }
