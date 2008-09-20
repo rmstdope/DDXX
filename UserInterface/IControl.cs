@@ -5,7 +5,7 @@ namespace Dope.DDXX.UserInterface
 {
     public interface IControl
     {
-        void AddChild(BaseControl control);
+        void AddChild(IControl control);
         void DrawControl(IDrawResources resources);
         Vector4 Rectangle { get; }
         void RemoveChildren();

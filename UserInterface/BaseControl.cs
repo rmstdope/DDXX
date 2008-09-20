@@ -11,7 +11,7 @@ namespace Dope.DDXX.UserInterface
     {
         protected Vector4 rectangle;
         private BaseControl parent;
-        public List<BaseControl> Children = new List<BaseControl>();
+        public List<IControl> Children = new List<IControl>();
 
         public Vector4 Rectangle
         {
@@ -32,7 +32,7 @@ namespace Dope.DDXX.UserInterface
         public void DrawControl(IDrawResources resources)
         {
             Draw(resources);
-            foreach (BaseControl child in Children)
+            foreach (IControl child in Children)
                 child.DrawControl(resources);
         }
 
@@ -108,7 +108,7 @@ namespace Dope.DDXX.UserInterface
 
         public void RemoveChildren()
         {
-            Children = new List<BaseControl>();
+            Children = new List<IControl>();
         }
 
         public void RemoveFromParent()
@@ -116,13 +116,13 @@ namespace Dope.DDXX.UserInterface
             parent.RemoveChild(this);
         }
 
-        private void RemoveChild(BaseControl control)
+        private void RemoveChild(IControl control)
         {
             Children.Remove(control);
         }
 
 
-        public void AddChild(BaseControl control)
+        public void AddChild(IControl control)
         {
             Children.Add(control);
         }
