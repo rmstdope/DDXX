@@ -1,4 +1,4 @@
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectGuid>{E946451F-C88E-4847-BB22-3D1E1B6D65D0}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -77,12 +77,14 @@
   <ItemGroup>
     <Compile Include="BaseControl.cs" />
     <Compile Include="BoxControl.cs" />
+    <Compile Include="IControl.cs" />
     <Compile Include="IDrawResources.cs" />
     <Compile Include="IUserInterface.cs" />
     <Compile Include="LineControl.cs" />
     <Compile Include="ListControl.cs" />
     <Compile Include="MenuControl.cs" />
     <Compile Include="MenuControlOld.cs" />
+    <Compile Include="Positioning.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScrollListControl.cs" />
     <Compile Include="TextControl.cs" />

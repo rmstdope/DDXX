@@ -7,17 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.UserInterface
 {
-    public enum Positioning
-    {
-        Center = 0x01,
-        VerticalCenter = 0x02,
-        Right = 0x04,
-        Bottom = 0x08,
-        Left = 0x10,
-        Top = 0x20
-    }
-
-    public abstract class BaseControl
+    public abstract class BaseControl : IControl
     {
         protected Vector4 rectangle;
         private BaseControl parent;
