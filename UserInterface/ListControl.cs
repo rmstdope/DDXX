@@ -18,6 +18,13 @@ namespace Dope.DDXX.UserInterface
             DrawSize = new Vector2(0, 10);
         }
 
+        public ListControl(Vector4 rectangle, byte alpha, IDrawResources resources, BaseControl parent, FontSize fontSize)
+            : base(rectangle, alpha, resources, parent, fontSize)
+        {
+            this.optionTexts = new List<string>();
+            DrawSize = new Vector2(0, 10);
+        }
+
         public virtual void AddText(string text)
         {
             optionTexts.Add(text);

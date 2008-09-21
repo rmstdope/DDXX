@@ -22,6 +22,8 @@ namespace Dope.DDXX.UserInterface
         private string title;
         private Vector2 titleTextSize;
         private Vector2 drawSize;
+        private ITexture2D texture;
+        private bool fixedWindow;
 
         public Color SelectedTextColor
         {
@@ -58,6 +60,12 @@ namespace Dope.DDXX.UserInterface
             }
         }
 
+        public ITexture2D Texture
+        {
+            get { return texture; }
+            set { texture = value; }
+        }
+
         public WindowControl(Vector2 position, Positioning positioning, byte alpha, 
             IDrawResources resources, BaseControl parent, FontSize fontSize)
             : base(new Vector4(position, 0, 0), parent)
@@ -65,6 +73,23 @@ namespace Dope.DDXX.UserInterface
             this.textColor = Color.White;
             this.selectedTextColor = Color.Red;
             this.positioning = positioning;
+            this.fixedWindow = false;
+            boxColor = new Color(Color.Teal.R, Color.Teal.G, Color.Teal.B, alpha);
+            screenWidth = resources.SpriteBatch.GraphicsDevice.PresentationParameters.BackBufferWidth;
+            screenHeight = resources.SpriteBatch.GraphicsDevice.PresentationParameters.BackBufferHeight;
+            titleFont = resources.GetSpriteFont(FontSize.Large);
+            textFont = resources.GetSpriteFont(fontSize);
+            title = "";
+            CalculateTitleSize();
+        }
+
+        public WindowControl(Vector4 rectangle, byte alpha,
+            IDrawResources resources, BaseControl parent, FontSize fontSize)
+            : base(rectangle, parent)
+        {
+            this.textColor = Color.White;
+            this.selectedTextColor = Color.Red;
+            this.fixedWindow = true;
             boxColor = new Color(Color.Teal.R, Color.Teal.G, Color.Teal.B, alpha);
             screenWidth = resources.SpriteBatch.GraphicsDevice.PresentationParameters.BackBufferWidth;
             screenHeight = resources.SpriteBatch.GraphicsDevice.PresentationParameters.BackBufferHeight;
@@ -84,13 +109,31 @@ namespace Dope.DDXX.UserInterface
 
         public override void Draw(IDrawResources resources)
         {
-            int width = GetWindowWidth();
-            int height = GetWindowHeight();
-            int x1 = GetWindowX1(resources);
-            int y1 = GetWindowY1(resources);
+
+            int x1;
+            int y1;
+            int width;
+            int height;
+            if (fixedWindow)
+            {
+                x1 = (int)(screenWidth * GetX1(resources));
+                y1 = (int)(screenHeight * GetY1(resources));
+                width = (int)(screenWidth * GetWidth(resources));
+                height = (int)(screenHeight * GetHeight(resources));
+            }
+            else
+            {
+                x1 = GetWindowX1(resources);
+                y1 = GetWindowY1(resources);
+                width = GetWindowWidth();
+                height = GetWindowHeight();
+            }
 
             resources.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
-            resources.SpriteBatch.Draw(resources.WhiteTexture, new Rectangle(x1, y1, width, height), boxColor);
+            if (Texture != null)
+                resources.SpriteBatch.Draw(Texture, new Rectangle(x1, y1, width, height), new Color(255, 255, 255, 255));
+            else
+                resources.SpriteBatch.Draw(resources.WhiteTexture, new Rectangle(x1, y1, width, height), boxColor);
             resources.SpriteBatch.End();
 
             resources.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
@@ -115,20 +158,34 @@ namespace Dope.DDXX.UserInterface
 
         private int GetWindowY1(IDrawResources resources)
         {
-            if ((positioning & Positioning.VerticalCenter) == Positioning.VerticalCenter)
-                return (int)(screenHeight * GetY1(resources)) - GetWindowHeight() / 2;
-            if ((positioning & Positioning.Top) == Positioning.Top)
+            if (fixedWindow)
+            {
                 return (int)(screenHeight * GetY1(resources));
-            return (int)(screenHeight * GetY1(resources)) - GetWindowHeight();
+            }
+            else
+            {
+                if ((positioning & Positioning.VerticalCenter) == Positioning.VerticalCenter)
+                    return (int)(screenHeight * GetY1(resources)) - GetWindowHeight() / 2;
+                if ((positioning & Positioning.Top) == Positioning.Top)
+                    return (int)(screenHeight * GetY1(resources));
+                return (int)(screenHeight * GetY1(resources)) - GetWindowHeight();
+            }
         }
 
         private int GetWindowX1(IDrawResources resources)
         {
-            if ((positioning & Positioning.Center) == Positioning.Center)
-                return (int)(screenWidth * GetX1(resources)) - GetWindowWidth() / 2;
-            if ((positioning & Positioning.Left) == Positioning.Left)
+            if (fixedWindow)
+            {
                 return (int)(screenWidth * GetX1(resources));
-            return (int)(screenWidth * GetX1(resources)) - GetWindowWidth();
+            }
+            else
+            {
+                if ((positioning & Positioning.Center) == Positioning.Center)
+                    return (int)(screenWidth * GetX1(resources)) - GetWindowWidth() / 2;
+                if ((positioning & Positioning.Left) == Positioning.Left)
+                    return (int)(screenWidth * GetX1(resources));
+                return (int)(screenWidth * GetX1(resources)) - GetWindowWidth();
+            }
         }
 
         private int GetWindowHeight()
