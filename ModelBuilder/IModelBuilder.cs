@@ -22,6 +22,7 @@ namespace Dope.DDXX.ModelBuilder
         void SetNormalTexture(string materialName, ITexture2D texture);
         void SetNormalTexture(string materialName, string fileName);
         void SetReflectiveFactor(string materialName, float factor);
+        void SetTransparency(string materialName, float factor);
         void SetReflectiveTexture(string materialName, string fileName);
         void SetShininess(string materialName, float shininess);
         void SetSpecularColor(string materialName, Color color);

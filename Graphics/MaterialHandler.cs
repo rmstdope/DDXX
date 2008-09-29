@@ -98,7 +98,8 @@ namespace Dope.DDXX.Graphics
             {
                 effect.Parameters["LightPositions"].SetValue(lightState.Positions);
                 effect.Parameters["LightDirections"].SetValue(lightState.Directions);
-                effect.Parameters["LightColors"].SetValue(lightState.Color);
+                effect.Parameters["DiffuseLightColors"].SetValue(lightState.DiffuseColor);
+                effect.Parameters["SpecularLightColors"].SetValue(lightState.SpecularColor);
             }
             effect.Parameters["AmbientLightColor"].SetValue(ambientLight.ToVector3());
         }
@@ -112,8 +113,8 @@ namespace Dope.DDXX.Graphics
             {
                 IBasicDirectionalLight light = GetDirectionalLight(effect, i);
                 light.Enabled = true;
-                light.DiffuseColor = lightState.Color[i];
-                light.SpecularColor = lightState.Color[i];
+                light.DiffuseColor = lightState.DiffuseColor[i];
+                light.SpecularColor = lightState.DiffuseColor[i];
                 light.Direction = lightState.Directions[i];
             }
             for (int i = lightState.NumLights; i < 3; i++)

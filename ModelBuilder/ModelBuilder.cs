@@ -83,6 +83,12 @@ namespace Dope.DDXX.ModelBuilder
             material.ReflectiveFactor = factor;
         }
 
+        public void SetTransparency(string materialName, float factor)
+        {
+            IMaterialHandler material = GetMaterial(materialName);
+            material.Transparency = factor;
+        }
+
         //public IModel CreateSkyBoxModel(string name, string textureName)
         //{
         //    Vector3[] vertices = new Vector3[4];
@@ -270,6 +276,6 @@ namespace Dope.DDXX.ModelBuilder
                 }
             }
         }
-
+        
     }
 }

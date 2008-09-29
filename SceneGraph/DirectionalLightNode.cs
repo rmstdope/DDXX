@@ -24,7 +24,7 @@ namespace Dope.DDXX.SceneGraph
 
         protected override void SetLightStateNode(LightState state)
         {
-            state.NewState(new Vector3(), Direction, Color);
+            state.NewState(new Vector3(), Direction, DiffuseColor, SpecularColor);
         }
     }
 }

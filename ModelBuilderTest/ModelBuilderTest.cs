@@ -66,6 +66,7 @@ namespace Dope.DDXX.ModelBuilder
             IEffectParameter shininessParameter = mockery.NewMock<IEffectParameter>();
             IEffectParameter powerParameter = mockery.NewMock<IEffectParameter>();
             IEffectParameter reflectiveParameter = mockery.NewMock<IEffectParameter>();
+            IEffectParameter transparencyParameter = mockery.NewMock<IEffectParameter>();
             ICollectionAdapter<IEffectParameter> parameterCollection = mockery.NewMock<ICollectionAdapter<IEffectParameter>>();
             Stub.On(cloneEffect).GetProperty("Parameters").Will(Return.Value(parameterCollection));
             Stub.On(parameterCollection).Method("get_Item").With("DiffuseColor").
@@ -80,12 +81,15 @@ namespace Dope.DDXX.ModelBuilder
                 Will(Return.Value(shininessParameter));
             Stub.On(parameterCollection).Method("get_Item").With("ReflectiveFactor").
                 Will(Return.Value(reflectiveParameter));
+            Stub.On(parameterCollection).Method("get_Item").With("Transparency").
+                Will(Return.Value(transparencyParameter));
             Expect.Once.On(diffuseParameter).Method("SetValue").With(new Color(200, 200, 200).ToVector3());
             Expect.Once.On(ambientParameter).Method("SetValue").With(new Color(100, 100, 100).ToVector3());
             Expect.Once.On(specularParameter).Method("SetValue").With(new Color(255, 255, 255).ToVector3());
             Expect.Once.On(powerParameter).Method("SetValue").With(32.0f);
             Expect.Once.On(shininessParameter).Method("SetValue").With(1.0f);
             Expect.Once.On(reflectiveParameter).Method("SetValue").With(0.0f);
+            Expect.Once.On(transparencyParameter).Method("SetValue").With(0.0f);
             // Exercise SUT
             builder = new ModelBuilder(graphicsFactory, textureFactory, effectFactory, effect);
         }
@@ -376,6 +380,16 @@ namespace Dope.DDXX.ModelBuilder
             Expect.Once.On(material).SetProperty("ReflectiveFactor").To(1.1f);
             // Exercise SUT
             builder.SetReflectiveFactor("Default", 1.1f);
+        }
+
+        [Test]
+        public void SetTransparency()
+        {
+            // Setup
+            Material();
+            Expect.Once.On(material).SetProperty("Transparency").To(1.1f);
+            // Exercise SUT
+            builder.SetTransparency("Default", 1.1f);
         }
 
         [Test]

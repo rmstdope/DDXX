@@ -7,18 +7,26 @@ namespace Dope.DDXX.SceneGraph
 {
     public abstract class LightNode : NodeBase
     {
-        private Color color;
+        private Color diffuseColor;
+        private Color specularColor;
 
         public LightNode(string name)
             : base(name)
         {
-            color = new Color(255, 255, 255, 255);
+            diffuseColor = new Color(255, 255, 255, 255);
+            specularColor = new Color(255, 255, 255, 255);
         }
 
-        public Color Color
+        public Color DiffuseColor
         {
-            get { return color; }
-            set { color = value; }
+            get { return diffuseColor; }
+            set { diffuseColor = value; }
+        }
+
+        public Color SpecularColor
+        {
+            get { return specularColor; }
+            set { specularColor = value; }
         }
 
         protected override void StepNode()

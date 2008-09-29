@@ -33,7 +33,8 @@ namespace Dope.DDXX.Graphics
         private IEffectParameter projParameter;
         private IEffectParameter lightPosParameter;
         private IEffectParameter lightDirParameter;
-        private IEffectParameter lightColorParameter;
+        private IEffectParameter diffuseColorParameter;
+        private IEffectParameter specularColorParameter;
         private IEffectParameter ambientParameter;
 
         [SetUp]
@@ -61,7 +62,8 @@ namespace Dope.DDXX.Graphics
             projParameter = mockery.NewMock<IEffectParameter>();
             lightPosParameter = mockery.NewMock<IEffectParameter>();
             lightDirParameter = mockery.NewMock<IEffectParameter>();
-            lightColorParameter = mockery.NewMock<IEffectParameter>();
+            diffuseColorParameter = mockery.NewMock<IEffectParameter>();
+            specularColorParameter = mockery.NewMock<IEffectParameter>();
             ambientParameter = mockery.NewMock<IEffectParameter>();
 
             StubParameter("World", worldParameter);
@@ -69,7 +71,8 @@ namespace Dope.DDXX.Graphics
             StubParameter("Projection", projParameter);
             StubParameter("LightPositions", lightPosParameter);
             StubParameter("LightDirections", lightDirParameter);
-            StubParameter("LightColors", lightColorParameter);
+            StubParameter("DiffuseLightColors", diffuseColorParameter);
+            StubParameter("SpecularLightColors", specularColorParameter);
             StubParameter("AmbientLightColor", ambientParameter);
             Stub.On(basicEffect).GetProperty("DirectionalLight0").Will(Return.Value(directionalLight0));
             Stub.On(basicEffect).GetProperty("DirectionalLight1").Will(Return.Value(directionalLight1));
@@ -109,7 +112,8 @@ namespace Dope.DDXX.Graphics
             Expect.Once.On(projParameter).Method("SetValue").With(projMatrix);
             Expect.Once.On(lightPosParameter).Method("SetValue").With(new Vector3[] { });
             Expect.Once.On(lightDirParameter).Method("SetValue").With(new Vector3[] { });
-            Expect.Once.On(lightColorParameter).Method("SetValue").With(new Vector3[] { });
+            Expect.Once.On(diffuseColorParameter).Method("SetValue").With(new Vector3[] { });
+            Expect.Once.On(specularColorParameter).Method("SetValue").With(new Vector3[] { });
             Expect.Once.On(ambientParameter).Method("SetValue").With(sceneAmbient.ToVector3());
             Expect.Once.On(renderState).SetProperty("AlphaBlendEnable").To(false);
 
@@ -130,7 +134,8 @@ namespace Dope.DDXX.Graphics
             Expect.Once.On(projParameter).Method("SetValue").With(projMatrix);
             Expect.Once.On(lightPosParameter).Method("SetValue").With(new Vector3[] { });
             Expect.Once.On(lightDirParameter).Method("SetValue").With(new Vector3[] { });
-            Expect.Once.On(lightColorParameter).Method("SetValue").With(new Vector3[] { });
+            Expect.Once.On(diffuseColorParameter).Method("SetValue").With(new Vector3[] { });
+            Expect.Once.On(specularColorParameter).Method("SetValue").With(new Vector3[] { });
             Expect.Once.On(ambientParameter).Method("SetValue").With(sceneAmbient.ToVector3());
 
             Expect.Once.On(renderState).SetProperty("AlphaBlendEnable").To(true);
@@ -147,14 +152,15 @@ namespace Dope.DDXX.Graphics
         {
             //Setup
             UseEffect();
-            lightState.NewState(new Vector3(1, 2, 3), new Vector3(4, 5, 6), new Color(7, 8, 9));
-            lightState.NewState(new Vector3(11, 12, 13), new Vector3(14, 15, 16), new Color(17, 18, 19));
+            lightState.NewState(new Vector3(1, 2, 3), new Vector3(4, 5, 6), new Color(7, 8, 9), new Color(10, 11, 12));
+            lightState.NewState(new Vector3(11, 12, 13), new Vector3(14, 15, 16), new Color(17, 18, 19), new Color(20, 21, 22));
             Expect.Once.On(worldParameter).Method("SetValue").With(new Matrix[] { worldMatrix });
             Expect.Once.On(viewParameter).Method("SetValue").With(viewMatrix);
             Expect.Once.On(projParameter).Method("SetValue").With(projMatrix);
             Expect.Once.On(lightPosParameter).Method("SetValue").With(new Vector3[] { new Vector3(1, 2, 3), new Vector3(11, 12, 13) });
             Expect.Once.On(lightDirParameter).Method("SetValue").With(new Vector3[] { new Vector3(4, 5, 6), new Vector3(14, 15, 16) });
-            Expect.Once.On(lightColorParameter).Method("SetValue").With(new Vector3[] { new Color(7, 8, 9).ToVector3(), new Color(17, 18, 19).ToVector3() });
+            Expect.Once.On(diffuseColorParameter).Method("SetValue").With(new Vector3[] { new Color(7, 8, 9).ToVector3(), new Color(17, 18, 19).ToVector3() });
+            Expect.Once.On(specularColorParameter).Method("SetValue").With(new Vector3[] { new Color(10, 11, 12).ToVector3(), new Color(20, 21, 22).ToVector3() });
             Expect.Once.On(ambientParameter).Method("SetValue").With(sceneAmbient.ToVector3());
             Expect.Once.On(renderState).SetProperty("AlphaBlendEnable").To(false);
 
@@ -186,8 +192,8 @@ namespace Dope.DDXX.Graphics
         {
             //Setup
             UseBasicEffect();
-            lightState.NewState(new Vector3(1, 2, 3), new Vector3(4, 5, 6), new Color(7, 8, 9));
-            lightState.NewState(new Vector3(11, 12, 13), new Vector3(14, 15, 16), new Color(17, 18, 19));
+            lightState.NewState(new Vector3(1, 2, 3), new Vector3(4, 5, 6), new Color(7, 8, 9), new Color(10, 11, 12));
+            lightState.NewState(new Vector3(11, 12, 13), new Vector3(14, 15, 16), new Color(17, 18, 19), new Color(20, 21, 22));
             Expect.Once.On(basicEffect).SetProperty("LightingEnabled").To(true);
             Expect.Once.On(basicEffect).SetProperty("AmbientLightColor").To(sceneAmbient.ToVector3());
             Expect.Once.On(directionalLight0).SetProperty("Enabled").To(true);

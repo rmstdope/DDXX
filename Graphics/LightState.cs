@@ -14,13 +14,15 @@ namespace Dope.DDXX.Graphics
         private int numLights;
         private Vector3[] directionList;
         private Vector3[] positionList;
-        private Vector3[] colorList;
+        private Vector3[] diffuseColorList;
+        private Vector3[] specularColorList;
 
         public LightState()
         {
             positionList = new Vector3[MaxNumLights];
             directionList = new Vector3[MaxNumLights];
-            colorList = new Vector3[MaxNumLights];
+            diffuseColorList = new Vector3[MaxNumLights];
+            specularColorList = new Vector3[MaxNumLights];
         }
 
         public int NumLights
@@ -48,23 +50,34 @@ namespace Dope.DDXX.Graphics
             }
         }
 
-        public Vector3[] Color
+        public Vector3[] DiffuseColor
         {
             get
             {
                 Vector3[] newArray = new Vector3[numLights];
-                Array.Copy(colorList, newArray, numLights);
+                Array.Copy(diffuseColorList, newArray, numLights);
                 return newArray;
             }
         }
 
-        public void NewState(Vector3 position, Vector3 direction, Color color)
+        public Vector3[] SpecularColor
+        {
+            get
+            {
+                Vector3[] newArray = new Vector3[numLights];
+                Array.Copy(specularColorList, newArray, numLights);
+                return newArray;
+            }
+        }
+
+        public void NewState(Vector3 position, Vector3 direction, Color diffuseColor, Color specularColor)
         {
             if (numLights == MaxNumLights)
                 throw new DDXXException("Too many lights in the scene. Maximum number is " + MaxNumLights);
             positionList[numLights] = position;
             directionList[numLights] = direction;
-            colorList[numLights] = color.ToVector3();
+            diffuseColorList[numLights] = diffuseColor.ToVector3();
+            specularColorList[numLights] = specularColor.ToVector3();
             numLights++;
         }
     }
