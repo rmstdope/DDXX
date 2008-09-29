@@ -139,6 +139,7 @@
     <Compile Include="SystemParticle.cs">
       <Name>SystemParticle</Name>
     </Compile>
+    <Compile Include="TextNode.cs" />
   </ItemGroup>
   <ItemGroup>
     <NestedContentProject Include="Content.contentproj">
