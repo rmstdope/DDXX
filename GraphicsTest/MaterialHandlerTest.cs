@@ -71,8 +71,8 @@ namespace Dope.DDXX.Graphics
             StubParameter("Projection", projParameter);
             StubParameter("LightPositions", lightPosParameter);
             StubParameter("LightDirections", lightDirParameter);
-            StubParameter("DiffuseLightColors", diffuseColorParameter);
-            StubParameter("SpecularLightColors", specularColorParameter);
+            StubParameter("LightDiffuseColors", diffuseColorParameter);
+            StubParameter("LightSpecularColors", specularColorParameter);
             StubParameter("AmbientLightColor", ambientParameter);
             Stub.On(basicEffect).GetProperty("DirectionalLight0").Will(Return.Value(directionalLight0));
             Stub.On(basicEffect).GetProperty("DirectionalLight1").Will(Return.Value(directionalLight1));

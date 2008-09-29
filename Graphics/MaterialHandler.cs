@@ -98,8 +98,8 @@ namespace Dope.DDXX.Graphics
             {
                 effect.Parameters["LightPositions"].SetValue(lightState.Positions);
                 effect.Parameters["LightDirections"].SetValue(lightState.Directions);
-                effect.Parameters["DiffuseLightColors"].SetValue(lightState.DiffuseColor);
-                effect.Parameters["SpecularLightColors"].SetValue(lightState.SpecularColor);
+                effect.Parameters["LightDiffuseColors"].SetValue(lightState.DiffuseColor);
+                effect.Parameters["LightSpecularColors"].SetValue(lightState.SpecularColor);
             }
             effect.Parameters["AmbientLightColor"].SetValue(ambientLight.ToVector3());
         }
