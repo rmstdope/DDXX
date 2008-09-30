@@ -41,6 +41,7 @@ namespace Dope.DDXX.SceneGraph
         public ParticleSystemNode(string name)
             : base(name)
         {
+            DrawPass = DrawPass.Second;
         }
 
         public void Initialize(IGraphicsDevice device, IGraphicsFactory graphicsFactory, int maxNumParticles)

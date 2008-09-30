@@ -72,7 +72,7 @@ namespace Dope.DDXX.SceneGraph
             modelNode.CullMode = CullMode.CullCounterClockwiseFace;
             MirrorNode node = new MirrorNode(modelNode);
             // Exercise SUT
-            node.Render(this);
+            node.Render(this, DrawPass.First);
             // Verify
             Assert.AreEqual(CullMode.CullClockwiseFace, newCulling);
         }
@@ -85,7 +85,7 @@ namespace Dope.DDXX.SceneGraph
             modelNode.CullMode = CullMode.CullClockwiseFace;
             MirrorNode node = new MirrorNode(modelNode);
             // Exercise SUT
-            node.Render(this);
+            node.Render(this, DrawPass.First);
             // Verify
             Assert.AreEqual(CullMode.CullCounterClockwiseFace, newCulling);
         }
@@ -98,7 +98,7 @@ namespace Dope.DDXX.SceneGraph
             modelNode.CullMode = CullMode.None;
             MirrorNode node = new MirrorNode(modelNode);
             // Exercise SUT
-            node.Render(this);
+            node.Render(this, DrawPass.First);
             // Verify
             Assert.AreEqual(CullMode.None, newCulling);
         }
@@ -113,7 +113,7 @@ namespace Dope.DDXX.SceneGraph
             MirrorNode node = new MirrorNode(baseNode);
             baseNode.AddChild(modelNode);
             // Exercise SUT
-            node.Render(this);
+            node.Render(this, DrawPass.First);
             // Verify
             Assert.AreEqual(CullMode.CullClockwiseFace, newCulling);
         }
@@ -129,7 +129,7 @@ namespace Dope.DDXX.SceneGraph
             specularColor = new Color(6, 6, 6);
             node.Brightness = 0.5f;
             // Exercise SUT
-            node.Render(this);
+            node.Render(this, DrawPass.First);
             // Verify
             Assert.AreEqual(new Color(2, 2, 2), ambientColor);
             Assert.AreEqual(new Color(4, 4, 4), diffuseColor);
@@ -150,7 +150,7 @@ namespace Dope.DDXX.SceneGraph
             specularColor = new Color(60, 60, 60);
             node.Brightness = 2;
             // Exercise SUT
-            node.Render(this);
+            node.Render(this, DrawPass.First);
             // Verify
             Assert.AreEqual(new Color(20, 20, 20), ambientColor);
             Assert.AreEqual(new Color(40, 40, 40), diffuseColor);
@@ -317,7 +317,7 @@ namespace Dope.DDXX.SceneGraph
             throw new Exception("The method or operation is not implemented.");
         }
 
-        public void Render(IScene scene)
+        public void Render(IScene scene, DrawPass drawPass)
         {
             throw new Exception("The method or operation is not implemented.");
         }
@@ -2114,6 +2114,23 @@ namespace Dope.DDXX.SceneGraph
 
 
         public float Transparency
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        #endregion
+
+        #region INode Members
+
+
+        public DrawPass DrawPass
         {
             get
             {

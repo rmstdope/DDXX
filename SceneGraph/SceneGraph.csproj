@@ -86,6 +86,7 @@
     <Compile Include="DirectionalLightNode.cs">
       <Name>DirectionalLightNode</Name>
     </Compile>
+    <Compile Include="DrawPass.cs" />
     <Compile Include="DummyNode.cs">
       <Name>DummyNode</Name>
     </Compile>

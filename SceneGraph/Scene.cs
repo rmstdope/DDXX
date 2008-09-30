@@ -57,7 +57,10 @@ namespace Dope.DDXX.SceneGraph
             if (ActiveCamera == null)
                 throw new DDXXException("Must have an active camera set before a scene can be rendered.");
 
-            rootNode.Render(this);
+            foreach (DrawPass drawPass in Enum.GetValues(typeof(DrawPass)))
+            {
+                rootNode.Render(this, drawPass);
+            }
         }
 
         public IRenderableCamera ActiveCamera

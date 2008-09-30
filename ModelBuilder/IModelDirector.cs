@@ -20,6 +20,7 @@ namespace Dope.DDXX.ModelBuilder
         IModel Generate(string materialName);
         IModel Generate(IMaterialHandler material);
         void HeightMap(ITextureGenerator generator);
+        void NormalFlip();
         void Rotate(double x, double y, double z);
         void Scale(float factor);
         void Scale(float x, float y, float z);

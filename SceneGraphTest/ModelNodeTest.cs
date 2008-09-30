@@ -89,7 +89,7 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(modelMesh1).Method("Draw");
 
             // Exercise SUT
-            node.Render(scene);
+            node.Render(scene, DrawPass.First);
         }
 
         [Test]
@@ -104,7 +104,7 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(modelMesh1).Method("Draw");
 
             // Exercise SUT
-            node.Render(scene);
+            node.Render(scene, DrawPass.First);
         }
 
         [Test]
@@ -121,7 +121,7 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(modelMesh1).Method("Draw");
 
             // Exercise SUT
-            node.Render(scene);
+            node.Render(scene, DrawPass.First);
         }
 
         [Test]
@@ -138,7 +138,7 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(modelMesh1).Method("Draw");
 
             // Exercise SUT
-            node.Render(scene);
+            node.Render(scene, DrawPass.First);
         }
 
         [Test]
@@ -161,7 +161,7 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(modelMesh2).Method("Draw");
 
             // Exercise SUT
-            node.Render(scene);
+            node.Render(scene, DrawPass.First);
         }
 
         [Test]

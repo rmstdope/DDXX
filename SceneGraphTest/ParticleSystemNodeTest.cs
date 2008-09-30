@@ -204,7 +204,7 @@ namespace Dope.DDXX.SceneGraph
             // Setup
             Initialize0Of0();
             // Exercise SUT
-            system.Render(scene);
+            system.Render(scene, DrawPass.Second);
         }
 
         [Test]
@@ -224,7 +224,7 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(pass).Method("End");
             Expect.Once.On(effect).Method("End");
             // Exercise SUT
-            system.Render(scene);
+            system.Render(scene, DrawPass.Second);
         }
 
         [Test]
@@ -244,7 +244,7 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(pass).Method("End");
             Expect.Once.On(effect).Method("End");
             // Exercise SUT
-            system.Render(scene);
+            system.Render(scene, DrawPass.Second);
         }
 
         [Test]

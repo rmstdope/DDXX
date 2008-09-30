@@ -14,12 +14,20 @@ namespace Dope.DDXX.SceneGraph
         private String name;
         private List<INode> children = new List<INode>();
         private bool visible;
+        private DrawPass drawPass;
 
         public NodeBase(String name)
             : base()
         {
             this.name = name;
             this.visible = true;
+            this.drawPass = DrawPass.First;
+        }
+
+        public DrawPass DrawPass
+        {
+            get { return drawPass; }
+            set { drawPass = value; }
         }
 
         protected virtual void SetLightStateNode(LightState state)
@@ -103,16 +111,17 @@ namespace Dope.DDXX.SceneGraph
             }
         }
 
-        public void Render(IScene scene)
+        public void Render(IScene scene, DrawPass drawPass)
         {
             if (visible)
             {
-                RenderNode(scene);
+                if (this.drawPass == drawPass)
+                    RenderNode(scene);
 
                 BeforeRenderingChildren();
                 foreach (INode node in children)
                 {
-                    node.Render(scene);
+                    node.Render(scene, drawPass);
                 }
                 AfterRenderingChildren();
             }

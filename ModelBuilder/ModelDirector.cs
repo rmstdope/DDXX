@@ -129,6 +129,13 @@ namespace Dope.DDXX.ModelBuilder
             primitive = tunnel;
         }
 
+        public void NormalFlip()
+        {
+            NormalFlip flip = new NormalFlip();
+            flip.ConnectToInput(0, primitive);
+            primitive = flip;
+        }
+
         public void UvMapPlane(int alignToAxis, int tileU, int tileV)
         {
             UvMapPlane map = new UvMapPlane();

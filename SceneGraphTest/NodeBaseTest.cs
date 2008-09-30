@@ -78,12 +78,28 @@ namespace Dope.DDXX.SceneGraph
             CameraNode camera = new CameraNode("Camera", 1);
             node1.AddChild(node2);
 
-            node1.Render(null);
+            node1.Render(null, DrawPass.First);
 
             Assert.IsTrue(node1.renderCalled);
             Assert.IsNull(node1.renderScene);
             Assert.IsTrue(node2.renderCalled);
             Assert.IsNull(node2.renderScene);
+        }
+
+        [Test]
+        public void TestRenderWithDrawOrder()
+        {
+            DerivedNode node1 = new DerivedNode("NodeName");
+            DerivedNode node2 = new DerivedNode("NewNewNodeName");
+            CameraNode camera = new CameraNode("Camera", 1);
+            node1.AddChild(node2);
+            node1.DrawPass = DrawPass.Second;
+            node2.DrawPass = DrawPass.First;
+
+            node1.Render(null, DrawPass.Second);
+
+            Assert.IsTrue(node1.renderCalled);
+            Assert.IsFalse(node2.renderCalled);
         }
 
         public void AssertVectors(Vector3 vec1, Vector3 vec2)

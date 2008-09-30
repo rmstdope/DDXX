@@ -19,9 +19,10 @@ namespace Dope.DDXX.SceneGraph
         bool HasChild(INode node);
         void SetLightState(LightState state);
         void Step();
-        void Render(IScene scene);
+        void Render(IScene scene, DrawPass drawPass);
         int CountNodes();
         INode GetNumber(int number);
         Vector3 Position { get; }
+        DrawPass DrawPass { get; set; }
     }
 }
