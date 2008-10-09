@@ -149,9 +149,6 @@
     <Compile Include="IEffectChangeListener.cs">
       <Name>IEffectChangeListener</Name>
     </Compile>
-    <Compile Include="IPostProcessor.cs">
-      <Name>IPostProcessor</Name>
-    </Compile>
     <Compile Include="IRegisterable.cs">
       <Name>IRegisterable</Name>
     </Compile>
@@ -167,9 +164,6 @@
     <Compile Include="ITweakableProperty.cs" />
     <Compile Include="ITweakerSettings.cs">
       <Name>ITweakerSettings</Name>
-    </Compile>
-    <Compile Include="PostProcessor.cs">
-      <Name>PostProcessor</Name>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registerable.cs" />

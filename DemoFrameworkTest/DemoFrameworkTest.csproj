@@ -107,10 +107,6 @@
       <SubType>Code</SubType>
       <Name>DemoXMLReaderTest</Name>
     </Compile>
-    <Compile Include="PostProcessorTest.cs">
-      <SubType>Code</SubType>
-      <Name>PostProcessorTest</Name>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SetupLogicTest.cs">
       <Name>SetupLogicTest</Name>

@@ -4,12 +4,11 @@ using System.Text;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using NMock2;
-using Dope.DDXX.Graphics;
 using Dope.DDXX.Utility;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
-namespace Dope.DDXX.DemoFramework
+namespace Dope.DDXX.Graphics
 {
     [TestFixture]
     public class PostProcessorTest : D3DMockTest

@@ -21,6 +21,7 @@
     </UpgradeBackupLocation>
     <XnaUpgrade>
     </XnaUpgrade>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -33,7 +34,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -227,6 +227,7 @@
     <Compile Include="IndexBufferAdapter.cs">
       <Name>IndexBufferAdapter</Name>
     </Compile>
+    <Compile Include="IPostProcessor.cs" />
     <Compile Include="IRenderState.cs">
       <Name>IRenderState</Name>
     </Compile>
@@ -303,6 +304,7 @@
       <Name>ModelMeshPartCollectionAdapter</Name>
     </Compile>
     <Compile Include="ModelParameters.cs" />
+    <Compile Include="PostProcessor.cs" />
     <Compile Include="RenderStateAdapter.cs">
       <Name>RenderStateAdapter</Name>
     </Compile>
@@ -382,6 +384,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
       <Visible>False</Visible>
       <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
@@ -396,6 +403,11 @@
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5</ProductName>
       <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
       <Visible>False</Visible>
