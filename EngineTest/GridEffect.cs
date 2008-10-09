@@ -40,7 +40,7 @@ namespace EngineTest
             IVertexBuffer vertexBuffer = GraphicsFactory.CreateVertexBuffer(typeof(VertexPositionColor), list.Count, BufferUsage.None);
             vertexBuffer.SetData(list.ToArray());
 
-            CustomModelMeshPart part = new CustomModelMeshPart(EffectFactory.CreateFromFile("Content\\effects\\ColorLine"), 0, 0, 0, list.Count / 2);
+            CustomModelMeshPart part = new CustomModelMeshPart(new MaterialHandler(EffectFactory.CreateFromFile("Content\\effects\\ColorLine"), new EffectConverter()), 0, 0, 0, list.Count / 2);
             CustomModelMesh mesh = new CustomModelMesh(GraphicsDevice, vertexBuffer, null, VertexPositionColor.SizeInBytes, GraphicsFactory.CreateVertexDeclaration(VertexPositionColor.VertexElements), PrimitiveType.LineList, new IModelMeshPart[] { part });
             CustomModel model = new CustomModel(mesh);
 

@@ -42,7 +42,7 @@ VertexShader(VertexShaderInput input)
 	float3 viewDirection = normalize(worldSpacePos - eyePosition);
 
 	float nDotL = max(dot(lightDirection, viewDirection), 0);
-	output.color = LightColors[0] * nDotL * DiffuseColor;
+	output.color = LightDiffuseColors[0] * nDotL * DiffuseColor;
     
 	// pass the texture coordinate through without additional processing
 	output.texCoord = input.texCoord;

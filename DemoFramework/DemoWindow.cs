@@ -68,8 +68,8 @@ namespace Dope.DDXX.DemoFramework
 
         protected override void Initialize()
         {
-            TextureFactory textureFactory = new TextureFactory(graphics.GraphicsDevice, graphicsFactory);
-            EffectFactory effectFactory = new EffectFactory(graphics.GraphicsDevice, graphicsFactory);
+            TextureFactory textureFactory = new TextureFactory(graphicsFactory);
+            EffectFactory effectFactory = new EffectFactory(graphicsFactory);
 
             executer.Initialize(graphics.GraphicsDevice, graphicsFactory, textureFactory, effectFactory, xmlFile, deviceParameters);
 

@@ -19,13 +19,13 @@ namespace Dope.DDXX.DemoFramework
         protected override void CreateValueControls(TweakerStatus status, int index, float x, float y, float w, float h, ITweakerSettings settings)
         {
             new TextControl("X: " + Value.X.ToString("N3", System.Globalization.CultureInfo.InvariantCulture),
-                new Vector4(x + 0 * w / 5, y, w / 5, h), TextFormatting.Center | TextFormatting.VerticalCenter,
+                new Vector4(x + 0 * w / 5, y, w / 5, h), Positioning.Center | Positioning.VerticalCenter,
                 settings.TextAlpha, GetTextColor(status, index, 0), status.RootControl);
             new TextControl("Y: " + Value.Y.ToString("N3", System.Globalization.CultureInfo.InvariantCulture),
-                new Vector4(x + 1 * w / 5, y, w / 5, h), TextFormatting.Center | TextFormatting.VerticalCenter,
+                new Vector4(x + 1 * w / 5, y, w / 5, h), Positioning.Center | Positioning.VerticalCenter,
                 settings.TextAlpha, GetTextColor(status, index, 1), status.RootControl);
             new TextControl("Z: " + Value.Z.ToString("N3", System.Globalization.CultureInfo.InvariantCulture),
-                new Vector4(x + 2 * w / 5, y, w / 5, h), TextFormatting.Center | TextFormatting.VerticalCenter,
+                new Vector4(x + 2 * w / 5, y, w / 5, h), Positioning.Center | Positioning.VerticalCenter,
                 settings.TextAlpha, GetTextColor(status, index, 2), status.RootControl);
         }
 

@@ -112,14 +112,14 @@ float4 PixelShader( VS_OUTPUT input ) : COLOR0
     
 	// use the normal we looked up to do phong diffuse style lighting.    
 	float nDotL = max(dot(normalFromMap, input.lightDirection), 0);
-	float3 diffuse = LightColors[0] * nDotL * DiffuseColor;
+	float3 diffuse = LightDiffuseColors[0] * nDotL * DiffuseColor;
     
 	// use phong to calculate specular highlights: reflect the incoming light
 	// vector off the normal, and use a dot product to see how "similar"
 	// the reflected vector is to the view vector.    
 	float3 reflectedLight = reflect(input.lightDirection, normalFromMap);
 	float rDotV = max(dot(reflectedLight, input.viewDirection), 0);
-	float3 specular = Shininess * SpecularColor * LightColors[0] * pow(rDotV, SpecularPower);
+	float3 specular = Shininess * SpecularColor * LightSpecularColors[0] * pow(rDotV, SpecularPower);
     
 	float3 diffuseTexture = tex2D(DiffuseTextureSampler, input.texCoord);
     

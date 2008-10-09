@@ -17,7 +17,7 @@ namespace Dope.DDXX.DemoFramework
         protected override void CreateValueControls(TweakerStatus status, int index, float x, float y, float w, float h, ITweakerSettings settings)
         {
             new TextControl(Value ? "true" : "false", new Vector4(x, y, w, h),
-                TextFormatting.Center | TextFormatting.VerticalCenter, settings.TextAlpha, 
+                Positioning.Center | Positioning.VerticalCenter, settings.TextAlpha, 
                 GetTextColor(status, index, 0), status.RootControl);
         }
 

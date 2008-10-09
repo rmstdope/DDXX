@@ -5,7 +5,8 @@
  * Light properties
  *******************************/
 float3 AmbientLightColor;
-float3 LightColors[MAX_NUM_LIGHTS];
+float3 LightDiffuseColors[MAX_NUM_LIGHTS];
+float3 LightSpecularColors[MAX_NUM_LIGHTS];
 float3 LightPositions[MAX_NUM_LIGHTS];
 float3 LightDirections[MAX_NUM_LIGHTS];
 
@@ -18,6 +19,7 @@ float3 SpecularColor;
 float Shininess;
 float SpecularPower;
 float ReflectiveFactor;
+float Transparency;
 
 /*******************************
  * Transformation matrices

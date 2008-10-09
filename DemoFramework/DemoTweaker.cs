@@ -60,7 +60,7 @@ namespace Dope.DDXX.DemoFramework
             if (status.InputString != "")
                 displayText = "Input: " + status.InputString;
             TextControl text = new TextControl(displayText, new Vector2(0.5f, 0.5f),
-                TextFormatting.Center | TextFormatting.VerticalCenter, 255,
+                Positioning.Center | Positioning.VerticalCenter, 255,
                 Color.White, inputBox);
         }
 
@@ -73,7 +73,7 @@ namespace Dope.DDXX.DemoFramework
             int seconds = (int)Time.CurrentTime;
             int hundreds = (int)((Time.CurrentTime - seconds) * 100);
             string titleString = "DDXX Tweaker - " + seconds.ToString("D3") + "." + hundreds.ToString("D2");
-            BaseControl titleText = new TextControl(titleString, new Vector4(0, 0, 1, 1), TextFormatting.Center | TextFormatting.VerticalCenter,
+            BaseControl titleText = new TextControl(titleString, new Vector4(0, 0, 1, 1), Positioning.Center | Positioning.VerticalCenter,
                 settings.TextAlpha, Color.White, titleWindow);
         }
 
@@ -91,7 +91,7 @@ namespace Dope.DDXX.DemoFramework
             {
                 float x = i / 4.0f;
                 float t = status.StartTime + status.TimeScale * i / 4.0f;
-                new TextControl(t.ToString(), new Vector2(x, 0), TextFormatting.Bottom | TextFormatting.Center, settings.Alpha, Color.White, timelineWindow);
+                new TextControl(t.ToString(), new Vector2(x, 0), Positioning.Bottom | Positioning.Center, settings.Alpha, Color.White, timelineWindow);
                 new LineControl(new Vector4(x, 0, 0, 0.02f), settings.Alpha, Color.White, timelineWindow);
             }
             while ((Time.CurrentTime - status.StartTime) / status.TimeScale > 0.9f)

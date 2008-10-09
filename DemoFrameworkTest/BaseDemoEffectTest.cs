@@ -1137,5 +1137,33 @@ namespace Dope.DDXX.DemoFramework
         }
 
         #endregion
+
+        #region ITextureFactory Members
+
+        public bool TextureExists(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region IEffectFactory Members
+
+        public IBasicEffect CreateBasicEffect()
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region IGraphicsFactory Members
+
+
+        public void SetScreen(int width, int height, bool fullscreen)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

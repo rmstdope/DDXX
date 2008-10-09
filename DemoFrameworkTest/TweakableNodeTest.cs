@@ -41,7 +41,7 @@ namespace Dope.DDXX.DemoFramework
         public void NumVariables()
         {
             // Exercise SUT and verify
-            Assert.AreEqual(1, tweakable.NumVariables);
+            Assert.AreEqual(2, tweakable.NumVariables);
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace Dope.DDXX.DemoFramework
             target.AddChild(new DummyNode("d1"));
             target.AddChild(new DummyNode("d2"));
             // Exercise SUT and verify
-            Assert.AreEqual(3, tweakable.NumVariables);
+            Assert.AreEqual(4, tweakable.NumVariables);
         }
 
         [Test]

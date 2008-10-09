@@ -79,7 +79,7 @@ namespace EngineTest
             //scene.AddNode(light);
 
             PointLightNode light2 = new PointLightNode("x");
-            light2.Color = Color.CornflowerBlue;
+            light2.DiffuseColor = Color.CornflowerBlue;
             light2.Position = new Vector3(20, 0, 20);
             scene.AddNode(light2);
 

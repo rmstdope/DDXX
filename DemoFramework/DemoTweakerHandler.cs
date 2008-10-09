@@ -114,7 +114,7 @@ namespace Dope.DDXX.DemoFramework
             int seconds = (int)Time.CurrentTime;
             int hundreds = (int)((Time.CurrentTime - seconds) * 100);
             string titleString = "DDXX Tweaker - " + seconds.ToString("D3") + "." + hundreds.ToString("D2");
-            BaseControl titleText = new TextControl(titleString, new Vector4(0, 0, 1, 1), TextFormatting.Center | TextFormatting.VerticalCenter,
+            BaseControl titleText = new TextControl(titleString, new Vector4(0, 0, 1, 1), Positioning.Center | Positioning.VerticalCenter,
                 settings.TextAlpha, Color.White, titleWindow);
         }
 
@@ -210,15 +210,15 @@ namespace Dope.DDXX.DemoFramework
         {
             BoxControl tweakableWindow = new BoxControl(new Vector4(0, 0.05f, 1, 0.95f),
                 settings.Alpha, settings.TimeColor, mainWindow);
-            new TextControl("Should old XML file be overwritten?", new Vector4(0, 0, 1, 0.90f), TextFormatting.VerticalCenter | TextFormatting.Center, 255, Color.White, tweakableWindow);
+            new TextControl("Should old XML file be overwritten?", new Vector4(0, 0, 1, 0.90f), Positioning.VerticalCenter | Positioning.Center, 255, Color.White, tweakableWindow);
             Color yesColor = Color.DarkGray;
             Color noColor = Color.DarkGray;
             if (shouldSave)
                 yesColor = Color.White;
             else
                 noColor = Color.White;
-            new TextControl("Yes>>>", new Vector4(0, 0, 0.5f, 1), TextFormatting.Right | TextFormatting.VerticalCenter, 255, yesColor, tweakableWindow);
-            new TextControl("<<<No", new Vector4(0.5f, 0, 0.5f, 1), TextFormatting.Left | TextFormatting.VerticalCenter, 255, noColor, tweakableWindow);
+            new TextControl("Yes>>>", new Vector4(0, 0, 0.5f, 1), Positioning.Right | Positioning.VerticalCenter, 255, yesColor, tweakableWindow);
+            new TextControl("<<<No", new Vector4(0.5f, 0, 0.5f, 1), Positioning.Left | Positioning.VerticalCenter, 255, noColor, tweakableWindow);
 
             userInterface.DrawControl(mainWindow);
         }

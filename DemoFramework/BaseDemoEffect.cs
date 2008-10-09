@@ -54,7 +54,7 @@ namespace Dope.DDXX.DemoFramework
             get
             {
                 if (modelFactory == null)
-                    modelFactory = new ModelFactory(GraphicsDevice, GraphicsFactory, TextureFactory);
+                    modelFactory = new ModelFactory(GraphicsFactory, TextureFactory);
                 return modelFactory;
             }
         }
@@ -80,7 +80,7 @@ namespace Dope.DDXX.DemoFramework
             get
             {
                 if (modelBuilder == null)
-                    modelBuilder = new ModelBuilder.ModelBuilder(GraphicsDevice, GraphicsFactory, TextureFactory, EffectFactory, EffectFactory.CreateFromFile("Content\\effects\\DefaultEffect"));
+                    modelBuilder = new ModelBuilder.ModelBuilder(GraphicsFactory, TextureFactory, EffectFactory, EffectFactory.CreateFromFile("Content\\effects\\DefaultEffect"));
                 return modelBuilder;
             }
         }

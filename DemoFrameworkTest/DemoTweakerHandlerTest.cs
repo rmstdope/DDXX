@@ -82,6 +82,20 @@ namespace Dope.DDXX.DemoFramework
             }
 
             #endregion
+
+            #region ITextureFactory Members
+
+            public bool TextureExists(string name)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IGraphicsDevice GraphicsDevice
+            {
+                get { throw new NotImplementedException(); }
+            }
+
+            #endregion
         }
 
         private DemoTweakerHandler handler;
