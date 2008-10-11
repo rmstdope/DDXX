@@ -58,7 +58,7 @@ namespace Dope.DDXX.Graphics
         {
             InitializeSetup();
             ExpectForeachParameters(new IEffectParameter[] { });
-            postProcessor.Initialize(device, graphicsFactory, textureFactory, effectFactory);
+            postProcessor.Initialize(graphicsFactory, textureFactory, effectFactory);
         }
 
         [Test]
@@ -265,7 +265,7 @@ namespace Dope.DDXX.Graphics
             Expect.Once.On(toParameter3).Method("SetValue").
                 With(new float[] { 3 / 2.0f, 4 / 4.0f, 5 / 2.0f, 6 / 4.0f });
 
-            postProcessor.Initialize(device, graphicsFactory, textureFactory, effectFactory);
+            postProcessor.Initialize(graphicsFactory, textureFactory, effectFactory);
         }
 
         [Test]

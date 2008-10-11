@@ -104,6 +104,7 @@
     <Compile Include="DepthStencilBufferAdapter.cs">
       <Name>DepthStencilBufferAdapter</Name>
     </Compile>
+    <Compile Include="DeviceParameters.cs" />
     <Compile Include="EffectAdapter.cs">
       <Name>EffectAdapter</Name>
     </Compile>
@@ -170,6 +171,7 @@
     <Compile Include="IDepthStencilBuffer.cs">
       <Name>IDepthStencilBuffer</Name>
     </Compile>
+    <Compile Include="IDeviceParameters.cs" />
     <Compile Include="IEffect.cs">
       <Name>IEffect</Name>
     </Compile>

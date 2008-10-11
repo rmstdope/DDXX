@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Dope.DDXX.Utility;
 
-namespace Dope.DDXX.DemoFramework
+namespace Dope.DDXX.Graphics
 {
     public class DeviceParameters : IDeviceParameters
     {

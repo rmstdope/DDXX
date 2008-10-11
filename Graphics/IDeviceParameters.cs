@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Dope.DDXX.DemoFramework
+namespace Dope.DDXX.Graphics
 {
     public interface IDeviceParameters
     {

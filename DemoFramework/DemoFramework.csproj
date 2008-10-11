@@ -109,9 +109,6 @@
     <Compile Include="DemoXMLReader.cs">
       <Name>DemoXMLReader</Name>
     </Compile>
-    <Compile Include="DeviceParameters.cs">
-      <Name>DeviceParameters</Name>
-    </Compile>
     <Compile Include="IDemoEffect.cs">
       <Name>IDemoEffect</Name>
     </Compile>
@@ -143,9 +140,6 @@
       <Name>IDemoTweakerContext</Name>
     </Compile>
     <Compile Include="IDemoTweakerHandler.cs" />
-    <Compile Include="IDeviceParameters.cs">
-      <Name>IDeviceParameters</Name>
-    </Compile>
     <Compile Include="IEffectChangeListener.cs">
       <Name>IEffectChangeListener</Name>
     </Compile>

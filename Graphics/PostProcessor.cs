@@ -50,9 +50,9 @@ namespace Dope.DDXX.Graphics
         {
         }
 
-        public void Initialize(IGraphicsDevice device, IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, IEffectFactory effectFactory)
+        public void Initialize(IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, IEffectFactory effectFactory)
         {
-            this.device = device;
+            this.device = graphicsFactory.GraphicsDevice;
             effect = effectFactory.CreateFromFile("Content\\effects\\PostEffects");
             spriteBatch = graphicsFactory.CreateSpriteBatch();
             this.textureFactory = textureFactory;

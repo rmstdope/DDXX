@@ -13,7 +13,7 @@ namespace Dope.DDXX.Graphics
         /// Initializes the post processor by getting the needed DX objects.
         /// </summary>
         /// <param name="device"></param>
-        void Initialize(IGraphicsDevice device, IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, IEffectFactory effectFactory);
+        void Initialize(IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, IEffectFactory effectFactory);
 
         /// <summary>
         /// Get the ITexture of the texture that was last rendered.
