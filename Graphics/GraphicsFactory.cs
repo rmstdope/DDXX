@@ -35,7 +35,7 @@ namespace Dope.DDXX.Graphics
 
         public IGraphicsDevice GraphicsDevice
         {
-            get { return deviceManager.GraphicsDevice as GraphicsDeviceAdapter; }
+            get { return deviceManager.GraphicsDevice; }
         }
 
         private GraphicsDevice DxGraphicsDevice
