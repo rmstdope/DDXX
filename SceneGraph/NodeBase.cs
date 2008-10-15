@@ -15,6 +15,7 @@ namespace Dope.DDXX.SceneGraph
         private List<INode> children = new List<INode>();
         private bool visible;
         private DrawPass drawPass;
+        private Stepper stepper;
 
         public NodeBase(String name)
             : base()
@@ -36,8 +37,6 @@ namespace Dope.DDXX.SceneGraph
 
         protected abstract void StepNode();
         protected abstract void RenderNode(IScene scene);
-
-        #region INode Members
 
         public string Name
         {
@@ -103,6 +102,8 @@ namespace Dope.DDXX.SceneGraph
 
         public void Step()
         {
+            if (stepper != null)
+                stepper(this);
             StepNode();
 
             foreach (INode node in children)
@@ -195,7 +196,11 @@ namespace Dope.DDXX.SceneGraph
             }
         }
 
-        #endregion
+        public Stepper Stepper
+        {
+            get { return stepper; }
+            set { stepper = value; }
+        }
 
     }
 }

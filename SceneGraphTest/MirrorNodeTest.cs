@@ -2143,5 +2143,22 @@ namespace Dope.DDXX.SceneGraph
         }
 
         #endregion
+
+        #region INode Members
+
+
+        public Stepper Stepper
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        #endregion
     }
 }

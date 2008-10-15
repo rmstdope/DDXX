@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.SceneGraph
 {
+    public delegate void Stepper(INode node);
+
     public interface INode
     {
         string Name { get; }
@@ -24,5 +26,6 @@ namespace Dope.DDXX.SceneGraph
         INode GetNumber(int number);
         Vector3 Position { get; }
         DrawPass DrawPass { get; set; }
+        Stepper Stepper { get; set; }        
     }
 }
