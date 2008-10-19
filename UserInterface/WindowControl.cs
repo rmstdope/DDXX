@@ -18,9 +18,13 @@ namespace Dope.DDXX.UserInterface
         private readonly float screenWidth;
         private readonly float screenHeight;
         private readonly ISpriteFont titleFont;
+        private readonly ISpriteFont subTitleFont;
         protected readonly ISpriteFont textFont;
         private string title;
+        private string subTitle;
         private Vector2 titleTextSize;
+        private Vector2 subTitleTextSize;
+        private Vector2 combinedTitleTextSize;
         private Vector2 drawSize;
         private ITexture2D texture;
         private bool fixedWindow;
@@ -47,6 +51,12 @@ namespace Dope.DDXX.UserInterface
         {
             get { return title; }
             set { title = value; CalculateTitleSize(); }
+        }
+
+        public string SubTitle
+        {
+            get { return subTitle; }
+            set { subTitle = value; CalculateTitleSize(); }
         }
 
         public byte Alpha
@@ -78,8 +88,10 @@ namespace Dope.DDXX.UserInterface
             screenWidth = resources.SpriteBatch.GraphicsDevice.PresentationParameters.BackBufferWidth;
             screenHeight = resources.SpriteBatch.GraphicsDevice.PresentationParameters.BackBufferHeight;
             titleFont = resources.GetSpriteFont(FontSize.Large);
+            subTitleFont = resources.GetSpriteFont(FontSize.Medium);
             textFont = resources.GetSpriteFont(fontSize);
             title = "";
+            subTitle = "";
             CalculateTitleSize();
         }
 
@@ -94,17 +106,29 @@ namespace Dope.DDXX.UserInterface
             screenWidth = resources.SpriteBatch.GraphicsDevice.PresentationParameters.BackBufferWidth;
             screenHeight = resources.SpriteBatch.GraphicsDevice.PresentationParameters.BackBufferHeight;
             titleFont = resources.GetSpriteFont(FontSize.Large);
+            subTitleFont = resources.GetSpriteFont(FontSize.Medium);
             textFont = resources.GetSpriteFont(fontSize);
             title = "";
+            subTitle = "";
             CalculateTitleSize();
         }
 
         private void CalculateTitleSize()
         {
+            combinedTitleTextSize = Vector2.Zero;
             if (title != "")
-                titleTextSize = titleFont.MeasureString(title) + new Vector2(10, 10);
+                titleTextSize = titleFont.MeasureString(title);
             else
                 titleTextSize = Vector2.Zero;
+            if (subTitle != "")
+                subTitleTextSize = subTitleFont.MeasureString(subTitle);
+            else
+                subTitleTextSize = Vector2.Zero;
+            if (subTitleTextSize != Vector2.Zero || titleTextSize != Vector2.Zero)
+            {
+                combinedTitleTextSize.X = Math.Max(titleTextSize.X, subTitleTextSize.X) + 10;
+                combinedTitleTextSize.Y = titleTextSize.Y + subTitleTextSize.Y + 10;
+            }
         }
 
         public override void Draw(IDrawResources resources)
@@ -149,11 +173,24 @@ namespace Dope.DDXX.UserInterface
             DrawVerticalLine(resources.SpriteBatch, resources.WhiteTexture, x1 + width, y1, height, outlineColor);
             resources.SpriteBatch.End();
 
-            Vector2 pos = new Vector2(x1 + (width - titleTextSize.X + 10) / 2, y1 + (GetTitleHeight() - titleTextSize.Y + 10) / 2);
-            resources.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
-            resources.SpriteBatch.DrawString(titleFont, title, pos + new Vector2(1, 1), shadowColor);
-            resources.SpriteBatch.DrawString(titleFont, title, pos, textColor);
-            resources.SpriteBatch.End();
+            Vector2 pos = new Vector2(x1 + (width - titleTextSize.X) / 2, 
+                                      y1 + 10 / 2);
+            if (title != "")
+            {
+                resources.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+                resources.SpriteBatch.DrawString(titleFont, title, pos + new Vector2(1, 1), shadowColor);
+                resources.SpriteBatch.DrawString(titleFont, title, pos, textColor);
+                resources.SpriteBatch.End();
+            }
+            if (subTitle != "")
+            {
+                pos.X = x1 + (width - subTitleTextSize.X) / 2;
+                pos.Y += titleTextSize.Y;
+                resources.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+                resources.SpriteBatch.DrawString(subTitleFont, subTitle, pos + new Vector2(1, 1), shadowColor);
+                resources.SpriteBatch.DrawString(subTitleFont, subTitle, pos, textColor);
+                resources.SpriteBatch.End();
+            }
         }
 
         private int GetWindowY1(IDrawResources resources)
@@ -190,17 +227,17 @@ namespace Dope.DDXX.UserInterface
 
         private int GetWindowHeight()
         {
-            return (int)(titleTextSize.Y + drawSize.Y);
+            return (int)(combinedTitleTextSize.Y + drawSize.Y);
         }
 
         private int GetWindowWidth()
         {
-            return (int)(Math.Max(titleTextSize.X , drawSize.X));
+            return (int)(Math.Max(combinedTitleTextSize.X, drawSize.X));
         }
 
         private int GetTitleHeight()
         {
-            return (int)(titleTextSize.Y);
+            return (int)(combinedTitleTextSize.Y);
         }
 
         protected int GetDrawX1(IDrawResources resources)
