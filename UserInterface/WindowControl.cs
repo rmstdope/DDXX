@@ -77,7 +77,7 @@ namespace Dope.DDXX.UserInterface
         }
 
         public WindowControl(Vector2 position, Positioning positioning, byte alpha, 
-            IDrawResources resources, BaseControl parent, FontSize fontSize)
+            IDrawResources resources, IControl parent, FontSize fontSize)
             : base(new Vector4(position, 0, 0), parent)
         {
             this.textColor = Color.White;

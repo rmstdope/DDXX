@@ -10,7 +10,7 @@ namespace Dope.DDXX.UserInterface
     public abstract class BaseControl : IControl
     {
         protected Vector4 rectangle;
-        private BaseControl parent;
+        private IControl parent;
         public List<IControl> Children = new List<IControl>();
 
         public Vector4 Rectangle
@@ -21,12 +21,12 @@ namespace Dope.DDXX.UserInterface
             }
         }
 
-        public BaseControl(Vector4 rectangle, BaseControl parent)
+        public BaseControl(Vector4 rectangle, IControl parent)
         {
             this.rectangle = rectangle;
             this.parent = parent;
             if (parent != null)
-                parent.Children.Add(this);
+                (parent as BaseControl).Children.Add(this);
         }
 
         public void DrawControl(IDrawResources resources)
@@ -70,7 +70,7 @@ namespace Dope.DDXX.UserInterface
                 return parent.GetY1(resources);
         }
 
-        protected float GetHeight(IDrawResources resources)
+        public float GetHeight(IDrawResources resources)
         {
             if (rectangle.W == -1)
                 return GetParentWidth(resources) * rectangle.Z * resources.AspectRatio;
@@ -78,7 +78,7 @@ namespace Dope.DDXX.UserInterface
                 return GetParentHeight(resources) * rectangle.W;
         }
 
-        protected float GetWidth(IDrawResources resources)
+        public float GetWidth(IDrawResources resources)
         {
             if (rectangle.Z == -1)
                 return GetParentHeight(resources) * rectangle.W / resources.AspectRatio;
@@ -86,12 +86,12 @@ namespace Dope.DDXX.UserInterface
                 return GetParentWidth(resources) * rectangle.Z;
         }
 
-        protected float GetX1(IDrawResources resources)
+        public float GetX1(IDrawResources resources)
         {
             return GetParentX1(resources) + GetParentWidth(resources) * rectangle.X;
         }
 
-        protected float GetY1(IDrawResources resources)
+        public float GetY1(IDrawResources resources)
         {
             return GetParentY1(resources) + GetParentHeight(resources) * rectangle.Y;
         }
@@ -117,7 +117,7 @@ namespace Dope.DDXX.UserInterface
                 parent.RemoveChild(this);
         }
 
-        private void RemoveChild(IControl control)
+        public void RemoveChild(IControl control)
         {
             Children.Remove(control);
         }
