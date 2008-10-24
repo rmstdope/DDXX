@@ -24,14 +24,8 @@ namespace Dope.DDXX.Graphics
 
         public float Spacing
         {
-            get
-            {
-                return spriteFont.Spacing;
-            }
-            set
-            {
-                spriteFont.Spacing = value;
-            }
+            get { return spriteFont.Spacing; }
+            set { spriteFont.Spacing = value; }
         }
 
         public Vector2 MeasureString(string text)
