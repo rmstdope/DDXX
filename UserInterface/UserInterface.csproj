@@ -79,6 +79,7 @@
     <Compile Include="BoxControl.cs" />
     <Compile Include="IControl.cs" />
     <Compile Include="IDrawResources.cs" />
+    <Compile Include="IScrollListControl.cs" />
     <Compile Include="IUserInterface.cs" />
     <Compile Include="LineControl.cs" />
     <Compile Include="ListControl.cs" />

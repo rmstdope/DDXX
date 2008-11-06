@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.UserInterface
 {
-    public class ScrollListControl : WindowControl
+    public class ScrollListControl : WindowControl, IScrollListControl
     {
         private int maxNum;
         private int numShown;
