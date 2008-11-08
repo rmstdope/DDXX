@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.UserInterface
 {
-    public class WindowControl : BaseControl
+    public class WindowControl : BaseControl, IWindowControl
     {
         private readonly Positioning positioning;
         private Color boxColor;

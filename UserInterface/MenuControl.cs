@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.UserInterface
 {
-    public class MenuControl<T> : WindowControl
+    public class MenuControl<T> : WindowControl, IMenuControl<T>
     {
         private readonly ISpriteFont font;
         private List<string> optionTexts;

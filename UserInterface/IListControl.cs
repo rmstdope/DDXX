@@ -1,9 +1,9 @@
-﻿using System;
-
+﻿
 namespace Dope.DDXX.UserInterface
 {
-    public interface IScrollListControl : IWindowControl
+    public interface IListControl : IWindowControl
     {
         void AddText(string text);
+        void ClearText();
     }
 }

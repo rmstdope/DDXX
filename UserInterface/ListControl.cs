@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.UserInterface
 {
-    public class ListControl : WindowControl
+    public class ListControl : WindowControl, IListControl
     {
         private List<string> optionTexts;
 
