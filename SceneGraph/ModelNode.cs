@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.SceneGraph
 {
-    public class ModelNode : NodeBase, IRenderableMesh
+    public class ModelNode : NodeBase, IModelNode
     {
         private IModel model;
         private LightState lightState;

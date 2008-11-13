@@ -24,8 +24,9 @@ namespace Dope.DDXX.SceneGraph
         void Render(IScene scene, DrawPass drawPass);
         int CountNodes();
         INode GetNumber(int number);
-        Vector3 Position { get; }
+        Vector3 Position { get; set; }
         DrawPass DrawPass { get; set; }
-        Stepper Stepper { get; set; }        
+        Stepper Stepper { get; set; }
+        bool Visible { get; set; }
     }
 }

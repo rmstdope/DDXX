@@ -93,14 +93,12 @@
     <Compile Include="IFrameNode.cs">
       <Name>IFrameNode</Name>
     </Compile>
+    <Compile Include="IModelNode.cs" />
     <Compile Include="INode.cs">
       <Name>INode</Name>
     </Compile>
     <Compile Include="IRenderableCamera.cs">
       <Name>IRenderableCamera</Name>
-    </Compile>
-    <Compile Include="IRenderableMesh.cs">
-      <Name>IRenderableMesh</Name>
     </Compile>
     <Compile Include="IScene.cs">
       <Name>IScene</Name>

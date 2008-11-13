@@ -330,6 +330,7 @@ namespace Dope.DDXX.SceneGraph
         public Microsoft.Xna.Framework.Vector3 Position
         {
             get { throw new Exception("The method or operation is not implemented."); }
+            set { throw new Exception("The method or operation is not implemented."); }
         }
 
         #endregion
@@ -2148,6 +2149,23 @@ namespace Dope.DDXX.SceneGraph
 
 
         public Stepper Stepper
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        #endregion
+
+        #region INode Members
+
+
+        public bool Visible
         {
             get
             {
