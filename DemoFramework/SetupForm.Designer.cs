@@ -1,3 +1,4 @@
+#if!(XBOX)
 namespace Dope.DDXX.DemoFramework
 {
     partial class SetupForm
@@ -328,3 +329,4 @@ namespace Dope.DDXX.DemoFramework
         private System.Windows.Forms.CheckBox multisampling;
     }
 }
+#endif

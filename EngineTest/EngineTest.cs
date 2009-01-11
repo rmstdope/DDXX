@@ -7,7 +7,6 @@ using Dope.DDXX.Utility;
 using System.Reflection;
 using Dope.DDXX.DemoEffects;
 using Dope.DDXX.TextureBuilder;
-using Dope.DDXX.MidiProcessorLib;
 using Microsoft.Xna.Framework.Audio;
 
 namespace EngineTest

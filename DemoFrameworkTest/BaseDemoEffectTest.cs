@@ -87,10 +87,6 @@ namespace Dope.DDXX.DemoFramework
 
         #region IPostProcessor Members
 
-        public void Initialize(IGraphicsDevice device, IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, IEffectFactory effectFactory) {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
         public IRenderTarget2D OutputTexture
         {
             get { throw new Exception("The method or operation is not implemented."); }
@@ -1160,6 +1156,15 @@ namespace Dope.DDXX.DemoFramework
 
 
         public void SetScreen(int width, int height, bool fullscreen)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region IPostProcessor Members
+
+        public void Initialize(IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, IEffectFactory effectFactory)
         {
             throw new NotImplementedException();
         }

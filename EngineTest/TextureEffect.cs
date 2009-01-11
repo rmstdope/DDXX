@@ -38,7 +38,9 @@ namespace EngineTest
             director.Modulate();
             texture = director.Generate("Cirvle64", 64, 64, 1, SurfaceFormat.Color);
             //texture = director.GenerateChain(512, 512);
+#if !(XBOX360)
             texture.Save("square-my.dds", ImageFileFormat.Dds);
+#endif
 
             spriteBatch = GraphicsFactory.CreateSpriteBatch();
         }

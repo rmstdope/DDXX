@@ -273,7 +273,7 @@ namespace Dope.DDXX.DemoFramework
                 return null;
             foreach (KeyValuePair<Type, Type> pair in typeTweakableMapping)
             {
-                if (pair.Key == target.GetType() || target.GetType().GetInterface(pair.Key.Name) != null)
+                if (pair.Key == target.GetType() || !Array.TrueForAll<Type>(target.GetType().GetInterfaces(), delegate(Type type) { return pair.Key.Name != type.Name; }))
                 {
                     ConstructorInfo constructor = pair.Value.GetConstructor(new Type[] { pair.Key, typeof(ITweakableFactory) });
                     if (constructor != null)

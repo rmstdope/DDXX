@@ -20,16 +20,12 @@ sampler_state
 struct VertexOutputStream
 {
 	// Position
-	float4	Position	:	POSITION;
+	float4	Position	: POSITION;
 	// Texture coords
-	float Size				: PSIZE;
-#ifdef XBOX
-	float4 TextureUV	: SPRITETEXCOORD;
-#else
+	float Size			: PSIZE;
 	float2 TextureUV	: TEXCOORD0;
-#endif
 	// Sprite color and alpha
-	float4 Color			:	COLOR0;
+	float4 Color		: COLOR0;
 };
 
 //-----------------------------------------------------------------------------
@@ -38,11 +34,15 @@ struct VertexOutputStream
 struct PixelInputStream
 {
 	// Position
-	float4	Position	:	POSITION;
+	float4	Position	: POSITION;
 	// Texture coords
+#ifdef XBOX
+	float2 TextureUV	: SPRITETEXCOORD;
+#else
 	float2 TextureUV	: TEXCOORD0;
+#endif
 	// Sprite color and alpha
-	float4 Color			:	COLOR0;
+	float4 Color		: COLOR0;
 };
 
 /**
@@ -72,7 +72,11 @@ PointSizeVertexShader(float4 Position	:	POSITION,
 	output.Position = mul(pos, Projection);
 
 	// Strange, this seems to be needed...
+#ifdef XBOX
+	output.TextureUV = float4(0,0,1,1);
+#else
 	output.TextureUV = float2(0,0);
+#endif
 
 	// Copy color
 	output.Color = Color;
@@ -91,7 +95,7 @@ SimplePixelShader(const PixelInputStream input) : COLOR0
 	float2 texCoord;
 
 #ifdef XBOX
-	texCoord = abs(input.TextureUV.zw);
+	texCoord = abs(input.TextureUV.xy);
 #else
 	texCoord = input.TextureUV.xy;
 #endif

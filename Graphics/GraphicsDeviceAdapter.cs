@@ -453,10 +453,10 @@ namespace Dope.DDXX.Graphics
             device.Reset();
         }
 
-        public void Reset(GraphicsAdapter graphicsAdapter)
-        {
-            device.Reset(graphicsAdapter);
-        }
+        //public void Reset(GraphicsAdapter graphicsAdapter)
+        //{
+        //    device.Reset(graphicsAdapter);
+        //}
 
         public void Reset(PresentationParameters presentationParameters)
         {

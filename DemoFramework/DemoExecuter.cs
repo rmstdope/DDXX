@@ -152,7 +152,7 @@ namespace Dope.DDXX.DemoFramework
 
             InitializeSound();
 
-            postProcessor.Initialize(device, graphicsFactory, textureFactory, effectFactory);
+            postProcessor.Initialize(graphicsFactory, textureFactory, effectFactory);
 
             foreach (ITrack track in tracks)
             {

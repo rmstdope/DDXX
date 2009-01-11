@@ -1,16 +1,15 @@
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Graphics")]
-[assembly: AssemblyDescription("The Graphics parts of DDXX")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Dope Demo Production")]
-[assembly: AssemblyProduct("DDXX")]
-[assembly: AssemblyCopyright("Copyright © Dope 2006")]
+[assembly: AssemblyTitle("GameFrameworkTest")]
+[assembly: AssemblyProduct("GameFrameworkTest")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyCompany("Motorola")]
+[assembly: AssemblyCopyright("Copyright © Motorola 2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("a3759380-be1d-41c4-8f32-dcfa25e58529")]
+[assembly: Guid("47ea94b7-155c-41e1-999e-da8308fe9ac9")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -29,6 +28,4 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-// You can specify all the values or you can default the Revision and Build Numbers 
-// by using the '*' as shown below:
 [assembly: AssemblyVersion("1.0.0.0")]

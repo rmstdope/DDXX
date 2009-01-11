@@ -21,20 +21,20 @@ struct VertexShaderInput
 struct VertexShaderOutput
 {
 	float4 Position		: POSITION0;
-	float3 Color			: COLOR0;
-	float  Size				: PSIZE;
-#ifdef XBOX
-	float4 TextureUV	: SPRITETEXCOORD;
-#else
+	float3 Color		: COLOR0;
+	float  Size			: PSIZE;
 	float2 TextureUV	: TEXCOORD0;
-#endif
 };
 
 struct PixelShaderInput
 {
 	float4 Position		: POSITION0;
-	float3 Color			: COLOR0;
+	float3 Color		: COLOR0;
+#ifdef XBOX
+	float2 TextureUV	: SPRITETEXCOORD;
+#else
 	float2 TextureUV	: TEXCOORD0;
+#endif
 };
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
@@ -55,11 +55,8 @@ float4 PixelShaderFunction(PixelShaderInput input) : COLOR0
 {
 	float2 texCoord;
 
-#ifdef XBOX
-	texCoord = abs(input.TextureUV.zw);
-#else
-	texCoord = input.TextureUV.xy;
-#endif
+	texCoord = input.TextureUV;
+
 	return float4(input.Color * tex2D(TextureSampler, texCoord), 1);
 }
 

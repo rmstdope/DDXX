@@ -42,7 +42,7 @@ namespace Dope.DDXX.DemoFramework
 
         public override void SetFromString(int index, string value)
         {
-            byte byteValue = byte.Parse(value, System.Globalization.NumberFormatInfo.InvariantInfo);
+            byte byteValue = byte.Parse(value, System.Globalization.NumberStyles.Any);//FormatInfo.InvariantInfo);
             Value = new Color(index == 0 ? byteValue : Value.R,
                               index == 1 ? byteValue : Value.G,
                               index == 2 ? byteValue : Value.B,
