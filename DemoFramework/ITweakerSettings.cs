@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -28,5 +29,7 @@ namespace Dope.DDXX.DemoFramework
         Color TimeColor { get; set; }
         Color TitleColor { get; set; }
         Color UnselectedColor { get; set; }
+        Keys ScreenshotKey { get; set; }
+        Keys RegenerateKey { get; set; }
     }
 }

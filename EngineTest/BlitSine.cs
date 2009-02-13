@@ -20,7 +20,7 @@ namespace EngineTest
             offset = new Vector2(Rand.Float(0, 2 * Math.PI), Rand.Float(0, 2 * Math.PI));
             period = new Vector2(Rand.Float(0.5f, 3.5f), Rand.Float(0.5f, 3.5f));
             size = Rand.Int(100, 180);
-            scale = new Vector2(Rand.Float(70, 180), Rand.Float(70, 180));
+            scale = new Vector2(Rand.Float(30, 90), Rand.Float(30, 90));
         }
 
         public void Draw(ISpriteBatch spriteBatch, ITexture2D texture)

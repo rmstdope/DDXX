@@ -12,7 +12,7 @@ using Dope.DDXX.TextureBuilder;
 
 namespace EngineTest
 {
-    public class LineEffect : BaseDemoEffect
+    public class TextEffect : BaseDemoEffect
     {
         private class TextData
         {
@@ -32,9 +32,10 @@ namespace EngineTest
             {
                 get
                 {
-                    if (text.Length - textPosition >= 25)
-                        return text.Substring(textPosition, 25);
-                    return text.Substring(textPosition) + text.Substring(0, 30 - (text.Length - textPosition));
+                    const int numChars = 35;
+                    if (text.Length - textPosition >= numChars)
+                        return text.Substring(textPosition, numChars);
+                    return text.Substring(textPosition) + text.Substring(0, numChars - (text.Length - textPosition));
                 }
             }
             public void Advance(ISpriteFont font)
@@ -67,8 +68,9 @@ namespace EngineTest
         private const int NumLines = 50;
 
         private ITexture2D circleTexture;
+        private IModel model;
 
-        public LineEffect(string name, float start, float end)
+        public TextEffect(string name, float start, float end)
             : base(name, start, end)
         {
             splines = new ISpline<InterpolatedVector3>[NumLines];
@@ -105,18 +107,18 @@ namespace EngineTest
 
             textData.Add(new TextData("Dope greets the following heros: asd-outbreak-farbrausch-tbl-fairlight.  ", Rand.Float(0.5f, 1.5f)));
             textData.Add(new TextData("Why are you reading this text? Get a life!  ", Rand.Float(0.5f, 1.5f)));
-            textData.Add(new TextData("Dope - Don't try this at home!  ", Rand.Float(0.5f, 1.5f)));
+            textData.Add(new TextData("Dope - Don't try this at home!      ", Rand.Float(0.5f, 1.5f)));
             textData.Add(new TextData("The stars in heaven shine just as bright as your silver dollar.  ", Rand.Float(0.5f, 1.5f)));
             textData.Add(new TextData("Dope greets the following heros: asd-outbreak-farbrausch-tbl-fairlight.  ", Rand.Float(0.5f, 1.5f)));
             textData.Add(new TextData("The micro organisms that will feed on your dead corpse are just a small part of the big game of life.  ", Rand.Float(0.5f, 1.5f)));
-            textData.Add(new TextData("Dope - Don't try this at home!  ", Rand.Float(0.5f, 1.5f)));
+            textData.Add(new TextData("Dope - Don't try this at home!      ", Rand.Float(0.5f, 1.5f)));
             textData.Add(new TextData("The stars in heaven shine just as bright as your silver dollar.  ", Rand.Float(0.5f, 1.5f)));
             textData.Add(new TextData("Dope greets the following heros: asd-outbreak-farbrausch-tbl-fairlight.  ", Rand.Float(0.5f, 1.5f)));
             textData.Add(new TextData("The micro organisms that will feed on your dead corpse are just a small part of the big game of life.  ", Rand.Float(0.5f, 1.5f)));
+            textData.Add(new TextData("Why are you reading this text? Get a life!  ", Rand.Float(0.5f, 1.5f)));
+            textData.Add(new TextData("Dope - Don't try this at home!      ", Rand.Float(0.5f, 1.5f)));
 
-            //TextureDirector.CreateCircle(0.05f, 0.5f);
             circleTexture = TextureFactory.CreateFromName("Circle");
-            //TextureDirector.Generate("Circle", 64, 64, 0, SurfaceFormat.Color);
 
             highlights.Add(new BlitSine());
             highlights.Add(new BlitSine());
@@ -128,6 +130,40 @@ namespace EngineTest
             highlights.Add(new BlitSine());
             highlights.Add(new BlitSine());
             highlights.Add(new BlitSine());
+
+            ModelDirector.CreatePlane(3, 3, 1, 1);
+            ModelBuilder.SetDiffuseTexture("Default", circleTexture);
+            ModelBuilder.SetEffect("Default", "Content\\effects\\HighlightedText");
+            model = ModelDirector.Generate("Default");
+
+            CreatePlane(0.0f);
+            CreatePlane(MathHelper.PiOver4);
+            CreatePlane(-MathHelper.PiOver4);
+            CreatePlane(MathHelper.PiOver2);
+            CreatePlane(-MathHelper.PiOver2);
+
+            ModelDirector.CreateBox(20, 20, 3);
+            ModelDirector.Translate(0, 1.5f, 0);
+            ModelDirector.NormalFlip();
+            ModelBuilder.CreateMaterial("Room");
+            ModelBuilder.SetDiffuseColor("Room", new Color(50, 50, 50));
+            ModelBuilder.SetDiffuseTexture("Room", "Content\\textures\\yellowswirls_untiled");
+            ModelBuilder.SetEffect("Room", "Content\\effects\\HighlightedText");
+            IModel roomModel = ModelDirector.Generate("Room");
+            IModelNode modelNode = new ModelNode("Room", roomModel, GraphicsDevice);
+            Scene.AddNode(modelNode);
+        }
+
+        private void CreatePlane(float rotation)
+        {
+            IModelNode modelNode = new ModelNode("Plane", model, GraphicsDevice);
+            modelNode.WorldState.Turn(rotation);
+            modelNode.WorldState.MoveUp(1.5f);
+            modelNode.WorldState.MoveForward(5.0f);
+            MirrorNode mirror = new MirrorNode(modelNode);
+            mirror.Brightness = 0.2f;
+            Scene.AddNode(modelNode);
+            Scene.AddNode(mirror);
         }
 
         private void AddKeyFrame(int i, float t, Vector3 vector)
@@ -141,7 +177,7 @@ namespace EngineTest
             const float OffsetY = 3;
             IRenderTarget2D oldRt = GraphicsDevice.GetRenderTarget(0) as IRenderTarget2D;
             GraphicsDevice.SetRenderTarget(0, highlightRenderTarget);
-            GraphicsDevice.Clear(ClearOptions.Target, Color.Black, 0, 0);            
+            GraphicsDevice.Clear(ClearOptions.Target, new Color(20, 20, 20), 0, 0);            
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
             GraphicsDevice.RenderState.DestinationBlend = Blend.One;
             GraphicsDevice.RenderState.SourceBlend = Blend.One;
@@ -183,10 +219,14 @@ namespace EngineTest
 
         public override void Render()
         {
-            spriteBatch.Begin();
-            spriteBatch.Draw(textRenderTarget.GetTexture(), 
-                new Rectangle(BackbufferWidth / 2 - 128, BackbufferHeight / 2 - 128, 256, 256), Color.White);
-            spriteBatch.End();
+            //spriteBatch.Begin();
+            //spriteBatch.Draw(textRenderTarget.GetTexture(), 
+            //    new Rectangle(0, 0, 256, 256), Color.White);
+            //spriteBatch.Draw(highlightRenderTarget.GetTexture(),
+            //    new Rectangle(256, 0, 256, 256), Color.White);
+            //spriteBatch.End();
+            model.Meshes[0].MeshParts[0].MaterialHandler.DiffuseTexture = textRenderTarget.GetTexture();
+            model.Meshes[0].MeshParts[0].MaterialHandler.AmbientColor = new Color(5, 5, 5);
             Scene.Render();
         }
     }

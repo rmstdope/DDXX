@@ -48,8 +48,8 @@
 		</Texture>
 		<Texture name="Circle" width="64" height="64" miplevels="0">
 			<Generator class="Circle">
-				<InnerRadius>0.01</InnerRadius>
-				<OuterRadius>0.5</OuterRadius>
+				<InnerRadius>0</InnerRadius>
+				<OuterRadius>0.4</OuterRadius>
 			</Generator>
 		</Texture>
 		<Texture name="Circle256" width="256" height="256" miplevels="0">
@@ -58,18 +58,34 @@
 				<OuterRadius>0.5</OuterRadius>
 			</Generator>
 		</Texture>
+		<Texture name="Noise64" width="64" height="64" miplevels="0">
+			<Generator class="PerlinNoise">
+				<NumOctaves>6</NumOctaves>
+				<BaseFrequency>16</BaseFrequency>
+				<Persistence>0.5</Persistence>
+			</Generator>
+		</Texture>
+		<Texture name="Circle64" width="64" height="64" miplevels="0">
+			<Generator class="Circle">
+				<InnerRadius>0.4</InnerRadius>
+				<OuterRadius>0.5</OuterRadius>
+			</Generator>
+		</Texture>
 	</TextureFactory>
   <!--<Effect class="IntroText" name="Lines" track="0" startTime="0" endTime="500">
 		<DrawOrder>0</DrawOrder>
 		<Position>70, 500</Position>
 	</Effect>-->
-  <Effect class="VolumetricClouds" name="Lines" track="0" startTime="0" endTime="500">
+  <!--<Effect class="VolumetricClouds" name="Lines" track="0" startTime="0" endTime="500">
+    <DrawOrder>0</DrawOrder>
+  </Effect>-->
+  <Effect class="TextEffect" name="Lines" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
   </Effect>
-  <!--<Effect class="LineEffect" name="Lines" track="0" startTime="0" endTime="500">
+  <PostEffect class="RadialBlurPostEffect" name="RadialBlur" track="0" startTime="0" endTime="500">
+    <BlurColor>40, 40, 150, 255</BlurColor>
     <DrawOrder>0</DrawOrder>
-    <Position>70, 500</Position>
-  </Effect>-->
+  </PostEffect>
   <!--<PostEffect class="GlowPostEffect" name="Glow" track="0" startTime="0" endTime="500">
     <BloomScale>1.5</BloomScale>
     <WhiteCutoff>0.5099999</WhiteCutoff>
@@ -94,13 +110,13 @@
 		<DownSamples>1</DownSamples>
 		<AdvancedGlow>false</AdvancedGlow>
 		<DrawOrder>1</DrawOrder>
-	</PostEffect>-->
-	<!--<PostEffect class="WavePostEffect" name="Wave" track="0" startTime="0" endTime="500">
+	</PostEffect>
+	<PostEffect class="WavePostEffect" name="Wave" track="0" startTime="0" endTime="500">
 		<DrawOrder>2</DrawOrder>
 		<Scale>4</Scale>
 		<Strength>30, 20, 25, 27</Strength>
-	</PostEffect>-->
-	<!--<PostEffect class="OverlayPostEffect" name="Noise" track="0" startTime="0" endTime="20">
+	</PostEffect>
+	<PostEffect class="OverlayPostEffect" name="Noise" track="0" startTime="0" endTime="500">
 		<Filename>Noise256base1024</Filename>
 		<Technique>Noise</Technique>
 		<AddNoise>true</AddNoise>
@@ -109,16 +125,30 @@
 		<SubtractNoise>false</SubtractNoise>
 		<BlendFactor>0.15</BlendFactor>
 		<DrawOrder>7</DrawOrder>
-	</PostEffect>-->
-	<!--<PostEffect class="RadialBlurPostEffect" track="0" startTime="0" endTime="500">
-		<Parameter name="BlurColor" Color="100, 100, 150" />
-		<Parameter name="DrawOrder" int="0" />
+	</PostEffect>
+	<PostEffect class="RadialBlurPostEffect" name="RadialBlur" track="0" startTime="0" endTime="500">
+    <BlurColor>100, 100, 100, 255</BlurColor>
+    <DrawOrder>0</DrawOrder>
 	</PostEffect>-->
 
-	<!--<Effect class="MorphEffect" track="0" startTime="0" endTime="500">
-		<Parameter name="DrawOrder" int="0" />
-	</Effect>-->
-	<!--<PostEffect class="OverlayPostEffect" name="Logo" track="0" startTime="2" endTime="22">
+	<!--<Effect class="MorphEffect" name="Morph" track="0" startTime="0" endTime="500">
+	<DrawOrder>0</DrawOrder>
+	</Effect>
+  <PostEffect class="GlowPostEffect" name="Glow" track="0" startTime="0" endTime="500">
+    <BloomScale>1.5</BloomScale>
+    <WhiteCutoff>0.8</WhiteCutoff>
+    <Exposure>0.1</Exposure>
+    <Luminance>0.2</Luminance>
+    <DownSamples>1</DownSamples>
+    <AdvancedGlow>false</AdvancedGlow>
+    <DrawOrder>1</DrawOrder>
+  </PostEffect>-->
+
+  <!--<PostEffect class="RadialBlurPostEffect" name="RadialBlur" track="0" startTime="0" endTime="500">
+    <BlurColor>250,150,50,255</BlurColor>
+    <DrawOrder>4</DrawOrder>
+  </PostEffect>-->
+  <!--<PostEffect class="OverlayPostEffect" name="Logo" track="0" startTime="2" endTime="22">
 		<Parameter name="Filename" string="Content/textures/ARTery Glow" />
 		<Parameter name="AddNoise" bool="true"></Parameter>
 		<Parameter name="Technique" string="Blend" />
@@ -147,8 +177,8 @@
 		<Parameter name="BlendFactor" float="0.15" />
 		<Parameter name="DrawOrder" int="10" />
 	</PostEffect>-->
-	<!--<Effect class="GridEffect" track="0" startTime="0" endTime="500">
-		<Parameter name="DrawOrder" int="0" />
+	<!--<Effect class="GridEffect" name="Grid" track="0" startTime="0" endTime="500">
+	  <DrawOrder>0</DrawOrder>
 	</Effect>-->
 	<ClearColor>0, 0, 0, 0</ClearColor>
 </Demo>

@@ -21,6 +21,6 @@ namespace Dope.DDXX.DemoFramework
         void SetValue(TweakerStatus status);
         void ReadFromXmlFile(XmlNode node);
         void WriteToXmlFile(XmlDocument xmlDocument, XmlNode node);
-        void HandleKeypress(Keys key, TweakerStatus status);
+        void Regenerate(TweakerStatus status);
     }
 }

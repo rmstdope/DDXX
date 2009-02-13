@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -14,6 +15,20 @@ namespace Dope.DDXX.DemoFramework
         private Color selectedColor;
         private Color unselectedColor;
         private ColorSchema colorSchema;
+        private Keys screenshotKey;
+        private Keys regenerateKey;
+
+        public Keys RegenerateKey
+        {
+            get { return regenerateKey; }
+            set { regenerateKey = value; }
+        }
+
+        public Keys ScreenshotKey
+        {
+            get { return screenshotKey; }
+            set { screenshotKey = value; }
+        }
 
         public Color UnselectedColor
         {
@@ -52,6 +67,8 @@ namespace Dope.DDXX.DemoFramework
         {
             SetTransparency(Transparency.High);
             SetColorSchema(ColorSchema.Blue);
+            ScreenshotKey = Keys.F11;
+            RegenerateKey = Keys.F12;
         }
 
         private void SetColorSchema(ColorSchema colorSchema)

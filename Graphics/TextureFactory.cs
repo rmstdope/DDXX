@@ -97,9 +97,9 @@ namespace Dope.DDXX.Graphics
             return texture;
         }
 
-        public void Update(Texture2DParameters Target)
+        public void Update(Texture2DParameters target)
         {
-            SetFromFunction(Target.Texture, Target.Generator.GetPixel);
+            target.Regenerate();
         }
 
         public ITexture2D CreateFromFunction(int width, int height, int numLevels, TextureUsage usage, SurfaceFormat format, Fill2DTextureCallback callbackFunction)

@@ -279,7 +279,7 @@ namespace Dope.DDXX.DemoFramework
             ITexture2D renderedTexture = RenderTracks();
 
 #if (!XBOX)
-            if (inputDriver.KeyPressedNoRepeat(Keys.F12))
+            if (inputDriver.KeyPressedNoRepeat(settings.ScreenshotKey))
                 renderedTexture.Save("Screenshot" + screenshotNum++ + ".jpg", ImageFileFormat.Jpg);
 #endif
 

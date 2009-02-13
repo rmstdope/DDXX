@@ -177,6 +177,10 @@ namespace Dope.DDXX.DemoFramework
             if (inputDriver.KeyPressedNoRepeat(Keys.F6))
                 settings.PreviousColorSchema();
 
+            if (inputDriver.KeyPressedNoRepeat(settings.RegenerateKey))
+                foreach (IDemoTweaker tweaker in tweakerStack)
+                    tweaker.Regenerate();
+
             return null;
         }
 

@@ -64,5 +64,10 @@ namespace Dope.DDXX.DemoFramework
             new BoxControl(new Vector4(0.55f + 0.225f - height / 2, y, height / 2, height), 255, Target.Texture, status.RootControl);
         }
 
+        //public override void Regenerate(TweakerStatus status)
+        //{
+        //    Target.Regenerate();
+        //}
+
     }
 }

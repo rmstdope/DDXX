@@ -312,9 +312,6 @@ namespace Dope.DDXX.DemoFramework
                 Expect.Once.On(inputDriver).Method("KeyPressedNoRepeat").
                     With(Keys.Enter).Will(Return.Value(key == Keys.Enter));
 
-            Expect.Once.On(inputDriver).Method("KeyPressedNoRepeat").
-                With(Keys.F12).Will(Return.Value(false));
-            
             return demoTweaker.HandleInput(inputDriver);
         }
 
@@ -437,12 +434,13 @@ namespace Dope.DDXX.DemoFramework
 
         #endregion
 
+
         #region ITweakable Members
 
 
-        public void HandleKeypress(Keys key, TweakerStatus status)
+        public void Regenerate(TweakerStatus status)
         {
-            throw new Exception("The method or operation is not implemented.");
+            throw new NotImplementedException();
         }
 
         #endregion

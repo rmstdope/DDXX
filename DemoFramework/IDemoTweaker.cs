@@ -15,5 +15,6 @@ namespace Dope.DDXX.DemoFramework
         IDemoTweaker HandleInput(IInputDriver inputDriver);
         void ReadFromXmlFile(XmlNode node);
         void WriteToXmlFile(XmlDocument xmlDocument, XmlNode node);
+        void Regenerate();
     }
 }

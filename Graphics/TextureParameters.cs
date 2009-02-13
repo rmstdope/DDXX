@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.Graphics
 {
@@ -53,6 +55,69 @@ namespace Dope.DDXX.Graphics
             get { return generator != null; }
         }
 
+        public void Regenerate()
+        {
+            if (!IsGenerated)
+                return;
+
+            Color[] data = new Color[texture.Width * texture.Height];
+            int i = 0;
+            Vector2 texelSize = new Vector2(1 / (float)(texture.Width - 1), 1 / (float)(texture.Height - 1));
+            for (int y = 0; y < texture.Height; y++)
+            {
+                float yPos = y * texelSize.Y;
+                for (int x = 0; x < texture.Width; x++)
+                {
+                    float xPos = x * texelSize.X;
+                    data[i++] = new Color(generator.GetPixel(new Vector2(xPos, yPos), texelSize));
+                }
+            }
+
+            texture.SetData<Color>(data);
+
+            int levelWidth = texture.Width;
+            int levelHeight = texture.Height;
+            //texture.Save("before.dds", ImageFileFormat.Dds);
+            for (int j = 0; j < texture.LevelCount - 1; j++)
+            {
+                levelHeight = levelHeight / 2;
+                levelWidth = levelWidth / 2;
+                Color[] newData = new Color[levelWidth * levelHeight];
+                i = 0;
+                for (int y = 0; y < levelHeight; y++)
+                {
+                    for (int x = 0; x < levelWidth; x++)
+                    {
+                        int w2 = levelWidth * 2;
+                        int h2 = levelHeight * 2;
+                        int x2 = x * 2;
+                        int y2 = y * 2;
+                        newData[y * levelWidth + x] = new Color(
+                            (GetData(data, x2 - 1, y2, w2, h2) +
+                            GetData(data, x2 + 1, y2, w2, h2) +
+                            GetData(data, x2, y2 - 1, w2, h2) +
+                            GetData(data, x2, y2 + 1, w2, h2) +
+                            GetData(data, x2, y2, w2, h2)) / 5.0f);
+                        i++;
+                    }
+                }
+                texture.SetData<Color>(j + 1, null, newData, 0, newData.Length, SetDataOptions.None);
+                data = newData;
+            }
+        }
+
+        private Vector4 GetData(Color[] data, int x, int y, int width, int height)
+        {
+            if (y < 0)
+                y = 0;
+            if (x < 0)
+                x = 0;
+            if (x >= width)
+                x = width - 1;
+            if (y >= height)
+                y = height - 1;
+            return data[y * width + x].ToVector4();
+        }
     }
 
     public class TextureCubeParameters : TextureParameters

@@ -193,9 +193,6 @@ namespace Dope.DDXX.DemoFramework
                 }
             }
 
-            if (inputDriver.KeyPressedNoRepeat(Keys.F12))
-                tweakable.HandleKeypress(Keys.F12, status);
-
             return tweaker;
         }
 
@@ -259,5 +256,11 @@ namespace Dope.DDXX.DemoFramework
         {
             tweakable.WriteToXmlFile(xmlDocument, node);
         }
+
+        public void Regenerate()
+        {
+            tweakable.Regenerate(status);
+        }
+
     }
 }

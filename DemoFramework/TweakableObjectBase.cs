@@ -172,7 +172,7 @@ namespace Dope.DDXX.DemoFramework
         {
         }
 
-        public virtual void HandleKeypress(Keys key, TweakerStatus status)
+        public virtual void Regenerate(TweakerStatus status)
         {
         }
 

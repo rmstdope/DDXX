@@ -272,9 +272,7 @@ namespace Dope.DDXX.DemoFramework
         public void TestRenderNoEffect()
         {
             TestInitializeOKSong();
-
-            Expect.Once.On(inputDriver).Method("KeyPressedNoRepeat").With(Keys.F12).Will(Return.Value(false));
-
+            ExpectNoScreenshot();
             Expect.Once.On(tweakerHandler).
                 Method("Draw");
 
@@ -295,9 +293,7 @@ namespace Dope.DDXX.DemoFramework
         public void TestDraw1Track()
         {
             TestInitializeOKNoSong1();
-
-            Expect.Once.On(inputDriver).Method("KeyPressedNoRepeat").With(Keys.F12).Will(Return.Value(false));
-
+            ExpectNoScreenshot();
             EnsureNumTracks(1);
             Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(1000.0f));
 
@@ -317,9 +313,7 @@ namespace Dope.DDXX.DemoFramework
         public void TestDraw2TracksNoTransition()
         {
             TestInitializeOKNoSong1();
-
-            Expect.Once.On(inputDriver).Method("KeyPressedNoRepeat").With(Keys.F12).Will(Return.Value(false));
-
+            ExpectNoScreenshot();
             EnsureNumTracks(2);
             Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(1000.0f));
             Stub.On(tracks[1]).GetProperty("EndTime").Will(Return.Value(1000.0f));
@@ -341,9 +335,7 @@ namespace Dope.DDXX.DemoFramework
         {
             ITexture newTexture = mockery.NewMock<ITexture>();
             TestInitializeOKNoSong1();
-
-            Expect.Once.On(inputDriver).Method("KeyPressedNoRepeat").With(Keys.F12).Will(Return.Value(false));
-
+            ExpectNoScreenshot();
             EnsureNumTracks(2);
             IDemoTransition transition = RegisterTransition("name1", 1, 0, 10);
             Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(1000.0f));
@@ -375,9 +367,7 @@ namespace Dope.DDXX.DemoFramework
         public void TestRender2TracksTransitionNotOnTime()
         {
             TestInitializeOKNoSong1();
-
-            Expect.Once.On(inputDriver).Method("KeyPressedNoRepeat").With(Keys.F12).Will(Return.Value(false));
-
+            ExpectNoScreenshot();
             EnsureNumTracks(2);
             IDemoTransition transition = RegisterTransition("name1", 1, 0, 10);
             Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(1000.0f));
@@ -810,7 +800,7 @@ namespace Dope.DDXX.DemoFramework
         {
             Expect.Once.On(postProcessor).
                 Method("Initialize").
-                With(device, graphicsFactory, textureFactory, effectFactory);
+                With(graphicsFactory, textureFactory, effectFactory);
         }
 
         private void ExpectTweakerInitialize()
@@ -823,6 +813,11 @@ namespace Dope.DDXX.DemoFramework
                 GetProperty("Factory").Will(Return.Value(tweakableFactory));
             Stub.On(tweakableFactory).
                 Method("CreateTweakableValue").Will(Return.Value(null));
+        }
+
+        private void ExpectNoScreenshot()
+        {
+            Expect.Once.On(inputDriver).Method("KeyPressedNoRepeat").With(Keys.F11).Will(Return.Value(false));
         }
 
 

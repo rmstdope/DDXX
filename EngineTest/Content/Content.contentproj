@@ -167,6 +167,20 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="effects\HighlightedText.fx">
+      <Name>HighlightedText</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="textures\yellowswirls_untiled.jpg">
+      <Name>yellowswirls_untiled</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="models\" />
     <Folder Include="sound\" />
   </ItemGroup>

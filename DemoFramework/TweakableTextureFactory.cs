@@ -132,9 +132,9 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        public override void HandleKeypress(Keys key, TweakerStatus status)
+        public override void Regenerate(TweakerStatus status)
         {
-            Target.Update(TextureParameters[status.Selection]);
+            TextureParameters[status.Selection].Regenerate();
         }
 
     }
