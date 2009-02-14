@@ -124,10 +124,28 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
+        public void ReadFromXmlWithScene()
+        {
+            // Setup
+            XmlNode node = CreateXmlNode("<Effect><Scene /></Effect>");
+            // Exercise SUT and verify
+            tweakable.ReadFromXmlFile(node);
+        }
+
+        [Test]
         public void WriteToXmlNoParameters()
         {
             // Setup
             XmlNode node = CreateXmlNode("<Effect></Effect>");
+            // Exercise SUT and verify
+            tweakable.WriteToXmlFile(document, node);
+        }
+
+        [Test]
+        public void WriteToXmlWithScene()
+        {
+            // Setup
+            XmlNode node = CreateXmlNode("<Effect><Scene /></Effect>");
             // Exercise SUT and verify
             tweakable.WriteToXmlFile(document, node);
         }

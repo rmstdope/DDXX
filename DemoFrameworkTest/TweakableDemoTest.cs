@@ -48,7 +48,6 @@ namespace Dope.DDXX.DemoFramework
 
             #region IDemoRegistrator Members
 
-
             public ITextureFactory TextureFactory
             {
                 get { throw new Exception("The method or operation is not implemented."); }

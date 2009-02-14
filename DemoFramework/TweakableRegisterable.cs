@@ -39,18 +39,23 @@ namespace Dope.DDXX.DemoFramework
         protected override ITweakable GetSpecificVariable(int index)
         {
             return Factory.CreateTweakableObject((Target as BaseDemoEffect).Scene);
-            //if (TargetIsEffect())
-            //throw new Exception("The method should never be called.");
         }
 
         protected override void ParseSpecficXmlNode(XmlNode node)
         {
-            throw new DDXXException("Missing property " + node.Name + " in class " + Target.GetType().Name);
+            switch (node.Name)
+            {
+                case "Scene":
+                    Factory.CreateTweakableObject((Target as BaseDemoEffect).Scene).ReadFromXmlFile(node);
+                    break;
+                default:
+                    throw new DDXXException("Missing property " + node.Name + " in class " + Target.GetType().Name);
+            }
         }
 
         protected override void WriteSpecificXmlNode(XmlDocument xmlDocument, XmlNode node)
         {
-            throw new Exception("The method or operation is not implemented.");
+            Factory.CreateTweakableObject((Target as BaseDemoEffect).Scene).WriteToXmlFile(xmlDocument, node);
         }
 
         public override void CreateControl(TweakerStatus status, int index, float y, ITweakerSettings settings)
