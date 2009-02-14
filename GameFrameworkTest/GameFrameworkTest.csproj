@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GameFramework</RootNamespace>
-    <AssemblyName>GameFrameworkTest</AssemblyName>
+    <RootNamespace>Dope.DDXX.GameFramework</RootNamespace>
+    <AssemblyName>Dope.DDXX.GameFrameworkTest</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <XnaFrameworkVersion>v3.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>

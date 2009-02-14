@@ -1,9 +1,9 @@
 using System;
-using GameFramework;
+using Dope.DDXX.GameFramework;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Input;
 
-namespace DreamBuildPlay2009
+namespace Dope.DDXX.DreamBuildPlay2009
 {
     static class Program
     {
@@ -13,7 +13,7 @@ namespace DreamBuildPlay2009
         static void Main(string[] args)
         {
             //graphicsFactory.SetScreen(1280, 800, true);
-            using (GameMain game = new GameMain(new GameExecuter()))
+            using (GameMain game = new GameMain(new GameExecuter(), new SpriteMove()))
             {
                 game.Run();
             }

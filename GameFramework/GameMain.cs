@@ -7,16 +7,18 @@ using Dope.DDXX.Graphics;
 using Dope.DDXX.Input;
 using Dope.DDXX.Utility;
 
-namespace GameFramework
+namespace Dope.DDXX.GameFramework
 {
     public class GameMain : Game, IGameCallback
     {
         private IGameExecuter gameExecuter;
+        private IFsa startFsa;
         private IGraphicsFactory graphicsFactory;
 
-        public GameMain(IGameExecuter gameExecuter)
+        public GameMain(IGameExecuter gameExecuter, IFsa startFsa)
         {
             this.gameExecuter = gameExecuter;
+            this.startFsa = startFsa;
             this.graphicsFactory = new GraphicsFactory(this, Services);
         }
 
@@ -27,7 +29,7 @@ namespace GameFramework
             IEffectFactory effectFactory = new EffectFactory(graphicsFactory);
             IPostProcessor postProcessor = new PostProcessor();
 
-            gameExecuter.Initialize(this, graphicsFactory, inputDriver, textureFactory, effectFactory, postProcessor);
+            gameExecuter.Initialize(this, startFsa, graphicsFactory, inputDriver, textureFactory, effectFactory, postProcessor);
             base.Initialize();
         }
 
