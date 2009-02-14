@@ -79,6 +79,7 @@
   <ItemGroup>
     <Compile Include="BlitSine.cs" />
     <Compile Include="BloodCell.cs" />
+    <Compile Include="MusicSynchronizedOverlay.cs" />
     <Compile Include="VolumetricClouds.cs" />
     <Compile Include="City.cs" />
     <Compile Include="EmptyEffect.cs" />

@@ -72,6 +72,7 @@
 			</Generator>
 		</Texture>
 	</TextureFactory>
+  <Effect class="MusicSynchronizedOverlay" name="MusicSync" track="0" startTime="0" endTime="500"></Effect>
   <!--<Effect class="IntroText" name="Lines" track="0" startTime="0" endTime="500">
 		<DrawOrder>0</DrawOrder>
 		<Position>70, 500</Position>
@@ -79,7 +80,7 @@
   <!--<Effect class="VolumetricClouds" name="Lines" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
   </Effect>-->
-  <Effect class="TextEffect" name="Lines" track="0" startTime="0" endTime="500">
+  <!--<Effect class="TextEffect" name="Lines" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
     <Scene>
     	<AmbientColor>255, 255, 255, 255</AmbientColor>
@@ -88,7 +89,7 @@
   <PostEffect class="RadialBlurPostEffect" name="RadialBlur" track="0" startTime="0" endTime="500">
     <BlurColor>40, 40, 150, 255</BlurColor>
     <DrawOrder>0</DrawOrder>
-  </PostEffect>
+  </PostEffect>-->
   <!--<PostEffect class="GlowPostEffect" name="Glow" track="0" startTime="0" endTime="500">
     <BloomScale>1.5</BloomScale>
     <WhiteCutoff>0.5099999</WhiteCutoff>

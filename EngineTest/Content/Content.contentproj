@@ -181,6 +181,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="effects\TransparentColor.fx">
+      <Name>TransparentColor</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="models\" />
     <Folder Include="sound\" />
   </ItemGroup>
