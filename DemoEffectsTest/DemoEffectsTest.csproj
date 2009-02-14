@@ -116,12 +116,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <NestedContentProject Include="Content.contentproj">
-      <Project>{edadb3bd-6702-45bf-8abf-b2c24de4d61c}</Project>
-      <Visible>False</Visible>
-    </NestedContentProject>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\DemoEffects\DemoEffects.csproj">
       <Project>{D8A4AD1F-20EA-42E8-9F24-15D339A60448}</Project>
       <Name>DemoEffects</Name>

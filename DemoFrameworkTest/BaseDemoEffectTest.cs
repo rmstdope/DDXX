@@ -19,6 +19,7 @@ namespace Dope.DDXX.DemoFramework
         public BaseDemoEffectTest()
             : base("", 0, 0)
         {
+            PreparingDeviceSettings = null;
         }
 
         [SetUp]
@@ -530,7 +531,9 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
+#pragma warning disable 0067
         public event EventHandler<PreparingDeviceSettingsEventArgs> PreparingDeviceSettings;
+#pragma warning restore 0067
 
         public void ApplyChanges()
         {

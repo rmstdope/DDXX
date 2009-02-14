@@ -129,12 +129,6 @@
     <Compile Include="TweakableVector4Test.cs" />
   </ItemGroup>
   <ItemGroup>
-    <NestedContentProject Include="Content.contentproj">
-      <Project>{0f08349f-67e3-4420-88b2-22f439631b03}</Project>
-      <Visible>False</Visible>
-    </NestedContentProject>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\DemoFramework\DemoFramework.csproj">
       <Project>{0E899EC0-D2E2-47EE-A46D-53E037C3F52F}</Project>
       <Name>DemoFramework</Name>

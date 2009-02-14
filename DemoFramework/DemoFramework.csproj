@@ -211,12 +211,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <NestedContentProject Include="Content.contentproj">
-      <Project>{7d7cbffa-feea-4245-bea1-5d0db8435921}</Project>
-      <Visible>False</Visible>
-    </NestedContentProject>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\ContentProcessor\ContentProcessor.csproj">
       <Project>{01FF3AC6-34FA-4CD4-8F28-B7EFAC351F50}</Project>
       <Name>ContentProcessor</Name>

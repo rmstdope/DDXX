@@ -121,12 +121,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <NestedContentProject Include="Content.contentproj">
-      <Project>{facf3209-a4ef-494d-95d2-b3113f5fd031}</Project>
-      <Visible>False</Visible>
-    </NestedContentProject>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\DemoFramework\DemoFramework.csproj">
       <Project>{0E899EC0-D2E2-47EE-A46D-53E037C3F52F}</Project>
       <Name>DemoFramework</Name>

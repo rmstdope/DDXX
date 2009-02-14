@@ -90,12 +90,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <NestedContentProject Include="Content.contentproj">
-      <Project>{0a407e00-e053-4327-8fe3-1a54c9424f0d}</Project>
-      <Visible>False</Visible>
-    </NestedContentProject>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Graphics\Graphics.csproj">
       <Project>{797591FA-968E-41D7-BFEF-85E13FCCA4CF}</Project>
       <Name>Graphics</Name>

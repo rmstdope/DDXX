@@ -13,7 +13,7 @@ namespace TiVi
     {
         private CameraNode camera;
         private ModelDirector modelDirector;
-        private ModelNode box;
+        //private ModelNode box;
 
         public EmptyEffect(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
@@ -29,15 +29,15 @@ namespace TiVi
             modelDirector.CreateBox(2, 2, 2);
             IModel model = modelDirector.Generate("Default1");
             //box = CreateSimpleModelNode(model, "TiVi.fxo", "Simple");
-            Scene.AddNode(box);
+            //Scene.AddNode(box);
 
             Scene.Validate();
         }
 
         public override void Step()
         {
-            box.WorldState.Roll(Time.DeltaTime);
-            box.WorldState.Turn(Time.DeltaTime);
+            //box.WorldState.Roll(Time.DeltaTime);
+            //box.WorldState.Turn(Time.DeltaTime);
             Scene.Step();
         }
 

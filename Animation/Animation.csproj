@@ -91,12 +91,6 @@
     <Compile Include="TypeReaders.cs" />
   </ItemGroup>
   <ItemGroup>
-    <NestedContentProject Include="Content\Content.contentproj">
-      <Project>c63390dc-2446-4021-ad8f-42d0ba4fb84e</Project>
-      <Visible>False</Visible>
-    </NestedContentProject>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Utility\Utility.csproj">
       <Project>{70F76E25-311C-4DFC-9412-89470F537BDF}</Project>
       <Name>Utility</Name>

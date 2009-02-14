@@ -141,12 +141,6 @@
     <Compile Include="TextNode.cs" />
   </ItemGroup>
   <ItemGroup>
-    <NestedContentProject Include="Content.contentproj">
-      <Project>{617dcea2-4fd6-4cec-a63a-71a039e5af98}</Project>
-      <Visible>False</Visible>
-    </NestedContentProject>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Animation\Animation.csproj">
       <Project>{F5199C46-A0DF-4066-8EF9-A728F490DB80}</Project>
       <Name>Animation</Name>
