@@ -108,12 +108,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <NestedContentProject Include="Content.contentproj">
-      <Project>{86ef72da-5bd0-48dd-a64b-081e859fd4ac}</Project>
-      <Visible>False</Visible>
-    </NestedContentProject>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Physics\Physics.csproj">
       <Project>{3925EBCA-3484-4349-BD1A-967D8FB9CE19}</Project>
       <Name>Physics</Name>

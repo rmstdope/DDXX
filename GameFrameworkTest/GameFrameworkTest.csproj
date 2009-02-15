@@ -92,12 +92,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <NestedContentProject Include="Content\Content.contentproj">
-      <Project>4829c179-1eba-467c-a967-02e02e86c57f</Project>
-      <Visible>False</Visible>
-    </NestedContentProject>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\GameFramework\GameFramework.csproj">
       <Project>{FE3FB27D-0CEC-4E7A-AD4C-D0747E19DE8E}</Project>
       <Name>GameFramework</Name>

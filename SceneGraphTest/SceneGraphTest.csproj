@@ -114,12 +114,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <NestedContentProject Include="Content.contentproj">
-      <Project>{a77665ef-df2a-420e-9e88-fb4d99f40318}</Project>
-      <Visible>False</Visible>
-    </NestedContentProject>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Animation\Animation.csproj">
       <Project>{F5199C46-A0DF-4066-8EF9-A728F490DB80}</Project>
       <Name>Animation</Name>

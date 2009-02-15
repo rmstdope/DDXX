@@ -86,12 +86,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <NestedContentProject Include="Content\Content.contentproj">
-      <Project>4c9d0580-f581-4dab-bd33-ec0947787052</Project>
-      <Visible>False</Visible>
-    </NestedContentProject>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\MidiExtractor\MidiExtractor.csproj">
       <Project>{675A104D-E80D-4E5F-9048-37A6BB33A0D1}</Project>
       <Name>MidiExtractor</Name>

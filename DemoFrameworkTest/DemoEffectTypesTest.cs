@@ -17,6 +17,7 @@ namespace Dope.DDXX.DemoFramework
 using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.TextureBuilder;
+using Dope.DDXX.SceneGraph;
 using Microsoft.Xna.Framework;
 public class FooEffect : Registerable, IDemoEffect 
 {
@@ -24,6 +25,7 @@ public class FooEffect : Registerable, IDemoEffect
   public FooEffect(string s1, float f1, float f2) : base(s1, f1, f2) { }
   public int DrawOrder { get { return drawOrder;} set { drawOrder = value; } }
   public void Step() {} public void Render() {} public void Initialize(IGraphicsFactory graphicsFactory, IEffectFactory effectFactory, ITextureFactory textureFactory, IDemoMixer mixer, IPostProcessor postProcessor) {} 
+  public IScene Scene { get { return null; } }
 }
 public class BarEffect : FooEffect {
   private int intParam;
@@ -167,13 +169,14 @@ public class TestGenerator : Generator
             AssemblyName[] referenced = Assembly.GetExecutingAssembly().GetReferencedAssemblies();
             string d3dAssembly = Assembly.GetAssembly(typeof(Microsoft.Xna.Framework.Vector3)).CodeBase;
             d3dAssembly = d3dAssembly.Remove(0, 8);
-            CompilerParameters cp = new CompilerParameters(new string[] { "Dope.DDXX.DemoFramework.dll", "Dope.DDXX.Graphics.dll", "Dope.DDXX.TextureBuilder.dll", "Dope.DDXX.Utility.dll", d3dAssembly });
+            CompilerParameters cp = new CompilerParameters(new string[] { "Dope.DDXX.DemoFramework.dll", "Dope.DDXX.Graphics.dll", "Dope.DDXX.TextureBuilder.dll", "Dope.DDXX.SceneGraph.dll", "Dope.DDXX.Utility.dll", d3dAssembly });
             results = provider.CompileAssemblyFromSource(cp, source);
             if (results.Errors.HasErrors)
             {
+                string s = "";
                 foreach (CompilerError e in results.Errors)
-                    System.Diagnostics.Debug.WriteLine(e.ToString());
-                Assert.Fail("Internal error in test code");
+                    s += " : " + e.ToString();
+                Assert.Fail("Internal error in test code" + s);
             }
             Assert.IsEmpty(results.Errors);
             return results.CompiledAssembly;

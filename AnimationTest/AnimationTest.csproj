@@ -92,12 +92,6 @@
     <Compile Include="SkinInformationTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <NestedContentProject Include="Content\Content.contentproj">
-      <Project>1a5bed66-ac92-4d97-99b7-5b880a15bc22</Project>
-      <Visible>False</Visible>
-    </NestedContentProject>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Animation\Animation.csproj">
       <Project>{F5199C46-A0DF-4066-8EF9-A728F490DB80}</Project>
       <Name>Animation</Name>

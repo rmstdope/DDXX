@@ -107,12 +107,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <NestedContentProject Include="Content.contentproj">
-      <Project>{54686a63-beba-407f-a924-2b942b4ca21f}</Project>
-      <Visible>False</Visible>
-    </NestedContentProject>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\GraphicsTest\GraphicsTest.csproj">
       <Project>{292A547D-05A7-4C2A-AC8E-C3F9FFD41F6D}</Project>
       <Name>GraphicsTest</Name>

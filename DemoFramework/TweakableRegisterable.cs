@@ -46,7 +46,11 @@ namespace Dope.DDXX.DemoFramework
             switch (node.Name)
             {
                 case "Scene":
-                    Factory.CreateTweakableObject((Target as BaseDemoEffect).Scene).ReadFromXmlFile(node);
+                    if (Target is IDemoEffect)
+                    {
+                        IDemoEffect effect = Target as IDemoEffect;
+                        Factory.CreateTweakableObject(effect.Scene).ReadFromXmlFile(node);
+                    }
                     break;
                 default:
                     throw new DDXXException("Missing property " + node.Name + " in class " + Target.GetType().Name);
@@ -55,7 +59,11 @@ namespace Dope.DDXX.DemoFramework
 
         protected override void WriteSpecificXmlNode(XmlDocument xmlDocument, XmlNode node)
         {
-            Factory.CreateTweakableObject((Target as BaseDemoEffect).Scene).WriteToXmlFile(xmlDocument, node);
+            if (Target is IDemoEffect)
+            {
+                IDemoEffect effect = Target as IDemoEffect;
+                Factory.CreateTweakableObject(effect.Scene).WriteToXmlFile(xmlDocument, node);
+            }
         }
 
         public override void CreateControl(TweakerStatus status, int index, float y, ITweakerSettings settings)

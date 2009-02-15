@@ -64,12 +64,19 @@ namespace Dope.DDXX.DemoFramework
         private IRegisterable target;
         private ITweakableFactory factory;
         private XmlDocument document;
+        private IDemoEffect effectTarget;
+        private IScene scene;
+        private ITweakable tweakableScene;
 
         [SetUp]
         public void SetUp()
         {
             mockery = new Mockery();
             target = mockery.NewMock<IRegisterable>();
+            effectTarget = mockery.NewMock<IDemoEffect>();
+            scene = mockery.NewMock<IScene>();
+            tweakableScene = mockery.NewMock<ITweakable>();
+            Stub.On(effectTarget).GetProperty("Scene").Will(Return.Value(scene));
             factory = new DemoTweakerHandler(null, null);// mockery.NewMock<ITweakableFactory>();
             tweakable = new TweakableRegisterable(target, factory);
         }
@@ -127,7 +134,11 @@ namespace Dope.DDXX.DemoFramework
         public void ReadFromXmlWithScene()
         {
             // Setup
+            factory = mockery.NewMock<ITweakableFactory>();
+            tweakable = new TweakableRegisterable(effectTarget, factory);
             XmlNode node = CreateXmlNode("<Effect><Scene /></Effect>");
+            Stub.On(factory).Method("CreateTweakableObject").With(scene).Will(Return.Value(tweakableScene));
+            Expect.Once.On(tweakableScene).Method("ReadFromXmlFile");
             // Exercise SUT and verify
             tweakable.ReadFromXmlFile(node);
         }
@@ -145,7 +156,11 @@ namespace Dope.DDXX.DemoFramework
         public void WriteToXmlWithScene()
         {
             // Setup
+            factory = mockery.NewMock<ITweakableFactory>();
+            tweakable = new TweakableRegisterable(effectTarget, factory);
             XmlNode node = CreateXmlNode("<Effect><Scene /></Effect>");
+            Stub.On(factory).Method("CreateTweakableObject").With(scene).Will(Return.Value(tweakableScene));
+            Expect.Once.On(tweakableScene).Method("WriteToXmlFile");
             // Exercise SUT and verify
             tweakable.WriteToXmlFile(document, node);
         }
