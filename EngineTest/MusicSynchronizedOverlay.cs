@@ -15,14 +15,14 @@ namespace EngineTest
     {
         private class MusicPlane
         {
-            const float maxTransparency = 1.0f;
-            const float fadeIn = 0;//0.1f;
-            const float fadeOut = 0.2f;//1.3f;
+            const float maxTransparency = 0.2f;
+            const float fadeIn = 0.05f;
+            const float fadeOut = 0.8f;
             public ModelNode ModelNode;
             private float startTime;
-            public MusicPlane(ModelNode modelNode)
+            public MusicPlane(ModelNode modelNode, float startTime)
             {
-                startTime = Time.CurrentTime;
+                this.startTime = startTime;
                 ModelNode = modelNode;
             }
             public void SetColor()
@@ -66,31 +66,28 @@ namespace EngineTest
             {
                 string material = "TransparentBlue" + i;
                 ModelBuilder.CreateMaterial(material);
-                ModelBuilder.SetAmbientColor(material, new Color(50, 50, 200));
+                ModelBuilder.SetAmbientColor(material, new Color(50, 20, 160));
                 ModelBuilder.SetEffect(material, "Content\\effects\\TransparentColor");
                 ModelDirector.CreatePlane(1, 200, 1, 1);
-                ModelDirector.Rotate(MathHelper.PiOver2, 0, 0);
-                ModelDirector.Translate(0, 1, 0);
+                ModelDirector.Rotate(MathHelper.PiOver2 * 0.95f, 0, 0);
+                ModelDirector.Translate(0, 2, 0);
                 IModel model = ModelDirector.Generate(material);
                 ModelNode modelNode = new ModelNode("x", model, GraphicsDevice);
                 unusedNodes.Add(modelNode);
             }
         }
 
-        float lastTime = Time.CurrentTime;
         int index = 0;
         public override void Step()
         {
-            const int TrackNum = 7;
+            const int TrackNum = 9;
             CompiledMidi.CompiledMidiTrack track = Mixer.CompiledMidi.Tracks[TrackNum];
             if (index < track.NotesAndTimes.Length &&
                 Time.CurrentTime > track.NotesAndTimes[index] && 
                 unusedNodes.Count > 0)
-            //if (Time.CurrentTime - lastTime > 0.3f && unusedNodes.Count > 0)
             {
+                MusicPlane plane = new MusicPlane(unusedNodes[0], track.NotesAndTimes[index]);
                 index += 2;
-                lastTime = Time.CurrentTime;
-                MusicPlane plane = new MusicPlane(unusedNodes[0]);
                 unusedNodes.RemoveAt(0);
                 plane.ModelNode.WorldState.Reset();
                 plane.ModelNode.WorldState.Roll(Rand.Float(MathHelper.TwoPi));
