@@ -67,8 +67,12 @@
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
-    <Reference Include="NMock2, Version=1.0.2313.18049, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="nunit.framework, Version=2.4.3.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
+    <Reference Include="NMock2, Version=1.0.2313.18049, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.4.3.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
@@ -144,6 +148,10 @@
     <ProjectReference Include="..\Input\Input.csproj">
       <Project>{D8131D4F-45AF-4942-B77F-17714A6B64DF}</Project>
       <Name>Input</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MidiProcessorLib\MidiProcessorLib.csproj">
+      <Project>{8197CC1B-D3BF-4DCD-92DC-0ABE1BA1514A}</Project>
+      <Name>MidiProcessorLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\ModelBuilder\ModelBuilder.csproj">
       <Project>{2C34DF5D-D096-45DF-84C9-E78A3691F182}</Project>

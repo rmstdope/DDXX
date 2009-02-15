@@ -7,6 +7,7 @@ using Dope.DDXX.Graphics;
 using Dope.DDXX.SceneGraph;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Dope.DDXX.MidiProcessorLib;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -1187,7 +1188,7 @@ namespace Dope.DDXX.DemoFramework
         #region IDemoMixer Members
 
 
-        public Dope.DDXX.MidiProcessorLib.CompiledMidi CompiledMidi
+        public CompiledMidi CompiledMidi
         {
             get { throw new NotImplementedException(); }
         }
