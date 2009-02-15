@@ -192,7 +192,7 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(soundFactory).
                  Method("Initialize").With("Song");
             Expect.Once.On(soundFactory).
-                Method("PlaySound").
+                Method("CreateCue").
                 With("Song").
                 Will(Return.Value(sound));
             ExpectRenderTargetInitialize(SurfaceFormat.Bgra4444, DepthFormat.Depth24, MultiSampleType.SevenSamples);
