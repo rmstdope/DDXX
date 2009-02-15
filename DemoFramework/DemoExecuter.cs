@@ -12,12 +12,13 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Dope.DDXX.UserInterface;
+using Dope.DDXX.MidiProcessorLib;
 
 namespace Dope.DDXX.DemoFramework
 {
     public class DemoExecuter : IDemoEffectBuilder, IDemoRegistrator, IDemoTweakerContext, IDemoMixer
     {
-        private ISoundDriver soundDriver;
+        private ISoundFactory soundFactory;
         private ICue song;
 
         private IGraphicsDevice device;
@@ -113,10 +114,10 @@ namespace Dope.DDXX.DemoFramework
             get { return effectTypes; }
         }
 
-        public DemoExecuter(IDemoFactory demoFactory, ISoundDriver soundDriver, IInputDriver inputDriver, IPostProcessor postProcessor, IDemoEffectTypes effectTypes)
+        public DemoExecuter(IDemoFactory demoFactory, ISoundFactory soundFactory, IInputDriver inputDriver, IPostProcessor postProcessor, IDemoEffectTypes effectTypes)
         {
             this.demoFactory = demoFactory;
-            this.soundDriver = soundDriver;
+            this.soundFactory = soundFactory;
             this.inputDriver = inputDriver;
             this.postProcessor = postProcessor;
             this.effectTypes = effectTypes;
@@ -179,8 +180,8 @@ namespace Dope.DDXX.DemoFramework
             {
                 // songFilename also used as wave bank name
                 // sound bank name and cue name!
-                soundDriver.Initialize(songFilename);
-                song = soundDriver.PlaySound(songFilename);
+                soundFactory.Initialize(songFilename);
+                song = soundFactory.CreateCue(songFilename);
                 //System.Diagnostics.Debug.WriteLine(song.GetVariable("Position"));
             }
         }
@@ -234,11 +235,17 @@ namespace Dope.DDXX.DemoFramework
             transitions.Add(transition);
         }
 
+        bool isInSynch = false;
         public void Step()
         {
+            if (!isInSynch)
+            {
+                SynchronizeSong();
+                isInSynch = true;
+            }
             //System.Diagnostics.Debug.WriteLine(song.GetVariable("Position"));
             inputDriver.Step();
-            soundDriver.Step();
+            soundFactory.Step();
             tweakerHandler.HandleInput(inputDriver);
 
             foreach (ITrack track in tracks)
@@ -260,16 +267,18 @@ namespace Dope.DDXX.DemoFramework
             return !tweakerHandler.Quit;
         }
 
-        //private void SynchronizeSong()
-        //{
-        //    if (sound != null)
-        //    {
-        //        soundDriver.SetPosition(channel, Time.CurrentTime);
-        //        //Time.CurrentTime = soundDriver.GetPosition(channel);
-        //        //System.Diagnostics.Debug.Write("Syncronizing sound: SoundTime=" + soundDriver.GetPosition(channel));
-        //        //System.Diagnostics.Debug.WriteLine(", ActualTime: " + Time.CurrentTime);
-        //    }
-        //}
+        private void SynchronizeSong()
+        {
+            if (song != null)
+            {
+                Time.CurrentTime = 0;
+                song.Play();
+                //soundDriver.SetPosition(channel, Time.CurrentTime);
+                //Time.CurrentTime = soundDriver.GetPosition(channel);
+                //System.Diagnostics.Debug.Write("Syncronizing sound: SoundTime=" + soundDriver.GetPosition(channel));
+                //System.Diagnostics.Debug.WriteLine(", ActualTime: " + Time.CurrentTime);
+            }
+        }
 
 #if (!XBOX)
         private int screenshotNum = 0;
@@ -530,6 +539,11 @@ namespace Dope.DDXX.DemoFramework
         {
             get { return clearColor; }
             set { clearColor = value; }
+        }
+
+        public CompiledMidi CompiledMidi
+        {
+            get { return soundFactory.Midi; }
         }
 
         #endregion

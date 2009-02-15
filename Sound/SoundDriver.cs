@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Utility;
+using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.Sound
 {
@@ -9,10 +10,11 @@ namespace Dope.DDXX.Sound
     {
         private static SoundDriver instance;
         //private ISoundSystem system;
-        private static ISoundFactory factory = new SoundFactory();
+        private static ISoundFactory factory;
 
-        private SoundDriver()
+        private SoundDriver(IContentManager contentManager)
         {
+            factory = new SoundFactory(contentManager)
         }
 
         public static ISoundFactory Factory
@@ -20,7 +22,7 @@ namespace Dope.DDXX.Sound
             set { factory = value; }
         }
 
-        public static SoundDriver GetInstance()
+        public static SoundDriver GetInstance(content)
         {
             if (instance == null)
             {

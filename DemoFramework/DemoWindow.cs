@@ -33,11 +33,12 @@ namespace Dope.DDXX.DemoFramework
             this.xmlFile = xmlFile;
             Window.Title = name;
 
+            graphicsFactory = new GraphicsFactory(this, Services);
+
             DemoEffectTypes effectTypes = new DemoEffectTypes(assemblies);
-            executer = new DemoExecuter(new DemoFactory(), SoundDriver.GetInstance(),
+            executer = new DemoExecuter(new DemoFactory(), new SoundFactory(graphicsFactory.ContentManager),
                 InputDriver.GetInstance(), new PostProcessor(), effectTypes);
 
-            graphicsFactory = new GraphicsFactory(this, Services);
             graphics = graphicsFactory.GraphicsDeviceManager;
             graphics.PreparingDeviceSettings += new EventHandler<PreparingDeviceSettingsEventArgs>(graphics_PreparingDeviceSettings);
 

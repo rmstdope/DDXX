@@ -17,7 +17,7 @@ namespace Dope.DDXX.MidiProcessorLib
     /// TODO: change the ContentImporter attribute to specify the correct file
     /// extension, display name, and default processor for this importer.
     /// </summary>
-    [ContentImporter(".midi", ".mid", DisplayName = "MIDI Importer", 
+    [ContentImporter(".midi", ".mid", DisplayName = "Dope MIDI Importer", 
         DefaultProcessor = "MidiProcessor", CacheImportedData = false)]
     public class MidiImporter : ContentImporter<MidiSource>
     {
@@ -31,10 +31,12 @@ namespace Dope.DDXX.MidiProcessorLib
 
         public MidiSource ImportFromStream(Stream midiStream)
         {
+            //System.Diagnostics.Debugger.Launch();
             MidiExtractor.MidiExtractor extractor = new MidiExtractor.MidiExtractor();
             MThd header;
             List<IMTrk> tracks;
             extractor.Parse(midiStream, new EventParser(), out header, out tracks);
+            extractor.CalcRealTime(header, tracks);
             return new MidiSource(header, tracks);
         }
     }

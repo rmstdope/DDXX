@@ -249,7 +249,23 @@ namespace Dope.DDXX.DemoFramework
         {
             if (node.Name != "Demo")
                 throw new DDXXException("Root node of XML document should be demo");
+            HandleDemoAttributes(node);
             tweakable.ReadFromXmlFile(node);
+        }
+
+        private void HandleDemoAttributes(XmlNode demoNode)
+        {
+            foreach (XmlAttribute node in demoNode.Attributes)
+            {
+                switch (node.Name)
+                {
+                    case "song":
+                        registrator.SetSong(node.InnerText);
+                        break;
+                    default:
+                        throw new DDXXException("Unknown attribute '" + node.Name + "' in xml file.");
+                }
+            }
         }
 
         public void WriteToXmlFile(XmlDocument xmlDocument, XmlNode node)

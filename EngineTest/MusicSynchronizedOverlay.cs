@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Dope.DDXX.SceneGraph;
 using Dope.DDXX.Utility;
+using Dope.DDXX.MidiProcessorLib;
 
 namespace EngineTest
 {
@@ -14,9 +15,9 @@ namespace EngineTest
     {
         private class MusicPlane
         {
-            const float maxTransparency = 0.5f;
-            const float fadeIn = 0.1f;
-            const float fadeOut = 1.3f;
+            const float maxTransparency = 1.0f;
+            const float fadeIn = 0;//0.1f;
+            const float fadeOut = 0.2f;//1.3f;
             public ModelNode ModelNode;
             private float startTime;
             public MusicPlane(ModelNode modelNode)
@@ -37,7 +38,6 @@ namespace EngineTest
                     delta = 1.0f - ((time - fadeIn) / fadeOut);
                 }
                 ModelNode.Model.Meshes[0].MeshParts[0].MaterialHandler.Transparency = delta* maxTransparency;
-                //Console.WriteLine("Delta is {0}\n", delta);
             }
             public bool HasEnded
             {
@@ -75,16 +75,20 @@ namespace EngineTest
                 ModelNode modelNode = new ModelNode("x", model, GraphicsDevice);
                 unusedNodes.Add(modelNode);
             }
-
-            //ModelNode node = new ModelNode("Plane", model, GraphicsDevice);
-            //Scene.AddNode(node);
         }
 
         float lastTime = Time.CurrentTime;
+        int index = 0;
         public override void Step()
         {
-            if (Time.CurrentTime - lastTime > 0.3f && unusedNodes.Count > 0)
+            const int TrackNum = 7;
+            CompiledMidi.CompiledMidiTrack track = Mixer.CompiledMidi.Tracks[TrackNum];
+            if (index < track.NotesAndTimes.Length &&
+                Time.CurrentTime > track.NotesAndTimes[index] && 
+                unusedNodes.Count > 0)
+            //if (Time.CurrentTime - lastTime > 0.3f && unusedNodes.Count > 0)
             {
+                index += 2;
                 lastTime = Time.CurrentTime;
                 MusicPlane plane = new MusicPlane(unusedNodes[0]);
                 unusedNodes.RemoveAt(0);

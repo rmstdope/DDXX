@@ -64,6 +64,16 @@ namespace Dope.DDXX.DemoFramework
             }
 
             #endregion
+
+            #region IDemoRegistrator Members
+
+
+            public void SetSong(string filename)
+            {
+                throw new NotImplementedException();
+            }
+
+            #endregion
         }
 
         private ITweakable tweakable;

@@ -18,7 +18,7 @@ namespace Dope.DDXX.MidiProcessorLib
     /// This should be part of a Content Pipeline Extension Library project.
     ///
     /// </summary>
-    [ContentProcessor(DisplayName = "MIDI Processor")]
+    [ContentProcessor(DisplayName = "Dope MIDI Processor")]
     public class MidiProcessor : ContentProcessor<MidiSource, CompiledMidi>
     {
         public override CompiledMidi Process(MidiSource input,
@@ -35,7 +35,7 @@ namespace Dope.DDXX.MidiProcessorLib
                 List<float> notesAndTimes = new List<float>();
                 foreach (MidiEvent e in trk.Events)
                 {
-                    if (e.EventType == 0x90)
+                    if ((e.EventType & 0xF0)== 0x90)
                     {
                         notesAndTimes.Add(e.RealTime);
                         notesAndTimes.Add(e.Arg1);

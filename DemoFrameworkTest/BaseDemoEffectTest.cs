@@ -1173,5 +1173,25 @@ namespace Dope.DDXX.DemoFramework
         }
 
         #endregion
+
+        #region IGraphicsFactory Members
+
+
+        public IContentManager ContentManager
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        #endregion
+
+        #region IDemoMixer Members
+
+
+        public Dope.DDXX.MidiProcessorLib.CompiledMidi CompiledMidi
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        #endregion
     }
 }

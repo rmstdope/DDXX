@@ -17,5 +17,6 @@ namespace Dope.DDXX.DemoFramework
         List<IRegisterable> GetAllRegisterables();
         ITextureFactory TextureFactory { get; }
         IDemoEffectTypes EffectTypes { get; }
+        void SetSong(string filename);
     }
 }

@@ -47,7 +47,7 @@ namespace Dope.DDXX.DemoFramework
             {
                 byteValue = byte.Parse(value, System.Globalization.NumberStyles.Any);
             }
-            catch (Exception e) { }
+            catch (Exception) { }
             Value = new Color(index == 0 ? byteValue : Value.R,
                               index == 1 ? byteValue : Value.G,
                               index == 2 ? byteValue : Value.B,

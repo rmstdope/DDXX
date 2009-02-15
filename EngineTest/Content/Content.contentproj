@@ -188,8 +188,19 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="sound\music_machinefunk_loop.mid">
+      <Name>music_machinefunk_loop</Name>
+      <Importer>MidiImporter</Importer>
+      <Processor>MidiProcessor</Processor>
+    </Compile>
+    <Compile Include="sound\music_machinefunk_loop.xap">
+      <Name>music_machinefunk_loop</Name>
+      <Importer>XactImporter</Importer>
+      <Processor>XactProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="models\" />
-    <Folder Include="sound\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v3.0\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

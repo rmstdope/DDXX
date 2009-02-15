@@ -86,27 +86,23 @@
     <Compile Include="ICue.cs">
       <Name>ICue</Name>
     </Compile>
-    <Compile Include="ISoundDriver.cs">
-      <Name>ISoundDriver</Name>
-    </Compile>
     <Compile Include="ISoundFactory.cs">
       <Name>ISoundFactory</Name>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SoundDriver.cs">
-      <Name>SoundDriver</Name>
-    </Compile>
     <Compile Include="SoundFactory.cs">
       <Name>SoundFactory</Name>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <NestedContentProject Include="Content.contentproj">
-      <Project>{1a409e4c-feea-456a-959a-c39b670c4c9b}</Project>
-      <Visible>False</Visible>
-    </NestedContentProject>
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\Graphics\Graphics.csproj">
+      <Project>{797591FA-968E-41D7-BFEF-85E13FCCA4CF}</Project>
+      <Name>Graphics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MidiProcessorLib\MidiProcessorLib.csproj">
+      <Project>{8197CC1B-D3BF-4DCD-92DC-0ABE1BA1514A}</Project>
+      <Name>MidiProcessorLib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Utility\Utility.csproj">
       <Project>{70F76E25-311C-4DFC-9412-89470F537BDF}</Project>
       <Name>Utility</Name>

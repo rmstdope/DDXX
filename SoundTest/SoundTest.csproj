@@ -81,15 +81,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SoundDriverTest.cs">
-      <Name>SoundDriverTest</Name>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <NestedContentProject Include="Content.contentproj">
-      <Project>{717164b8-afb7-4e67-8b2d-b71148827ae0}</Project>
-      <Visible>False</Visible>
-    </NestedContentProject>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sound\Sound.csproj">

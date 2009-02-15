@@ -33,6 +33,11 @@ namespace Dope.DDXX.Graphics
             get { return deviceManager; }
         }
 
+        public IContentManager ContentManager
+        {
+            get { return contentManager; }
+        }
+
         public IGraphicsDevice GraphicsDevice
         {
             get { return deviceManager.GraphicsDevice; }

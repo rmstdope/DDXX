@@ -26,7 +26,7 @@ namespace Dope.DDXX.DemoFramework
         private DemoExecuter executer;
         private IDemoTweakerHandler tweakerHandler;
         private ITweakableFactory tweakableFactory;
-        private ISoundDriver soundDriver;
+        private ISoundFactory soundFactory;
         private IInputDriver inputDriver;
         private IEffectChangeListener effectChangeListener;
         private ICue sound;
@@ -45,10 +45,10 @@ namespace Dope.DDXX.DemoFramework
 
             sound = mockery.NewMock<ICue>();
 
-            soundDriver = mockery.NewMock<ISoundDriver>();
+            soundFactory = mockery.NewMock<ISoundFactory>();
             inputDriver = mockery.NewMock<IInputDriver>();
             effectTypes = mockery.NewMock<IDemoEffectTypes>();
-            executer = new DemoExecuter(this, soundDriver, inputDriver, postProcessor, effectTypes);
+            executer = new DemoExecuter(this, soundFactory, inputDriver, postProcessor, effectTypes);
             tweakerHandler = mockery.NewMock<IDemoTweakerHandler>();
             tweakableFactory = mockery.NewMock<ITweakableFactory>();
             executer.TweakerHandler = tweakerHandler;
@@ -153,7 +153,7 @@ namespace Dope.DDXX.DemoFramework
 
             Expect.Once.On(inputDriver).
                 Method("Step");
-            Expect.Once.On(soundDriver).
+            Expect.Once.On(soundFactory).
                 Method("Step");
             Expect.Once.On(tracks[0]).
                 Method("Step");
@@ -189,9 +189,9 @@ namespace Dope.DDXX.DemoFramework
         {
             executer.SetSong("Song");
             FileUtility.SetLoadPaths(new string[] { "./" });
-            Expect.Once.On(soundDriver).
+            Expect.Once.On(soundFactory).
                  Method("Initialize").With("Song");
-            Expect.Once.On(soundDriver).
+            Expect.Once.On(soundFactory).
                 Method("PlaySound").
                 With("Song").
                 Will(Return.Value(sound));
