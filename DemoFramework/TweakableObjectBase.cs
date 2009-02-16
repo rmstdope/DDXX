@@ -176,6 +176,10 @@ namespace Dope.DDXX.DemoFramework
         {
         }
 
+        public virtual void InsertNew(TweakerStatus status)
+        {
+        }
+
         private bool HasProperty(string name)
         {
             return propertyHandlers.Exists(delegate(ITweakableProperty a) { return a.Name == name; });

@@ -87,12 +87,12 @@ namespace EngineTest
                 unusedNodes.Count > 0)
             {
                 MusicPlane plane = new MusicPlane(unusedNodes[0], track.NotesAndTimes[index]);
-                index += 2;
                 unusedNodes.RemoveAt(0);
                 plane.ModelNode.WorldState.Reset();
                 plane.ModelNode.WorldState.Roll(Rand.Float(MathHelper.TwoPi));
                 Scene.AddNode(plane.ModelNode);
                 planes.Add(plane);
+                index += 2;
             }
             planes.RemoveAll(delegate(MusicPlane plane) 
             {

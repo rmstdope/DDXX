@@ -162,25 +162,17 @@ namespace Dope.DDXX.DemoFramework
             IDemoTweaker tweaker = null;
 
             if (inputDriver.KeyPressedNoRepeat(Keys.Up))
-            {
                 KeyUp();
-            }
             if (inputDriver.KeyPressedNoRepeat(Keys.Down))
-            {
                 KeyDown();
-            }
             if (inputDriver.KeyPressedNoRepeat(Keys.Tab))
-            {
                 tweakable.NextIndex(status);
-            }
             if (inputDriver.KeyPressedSlowRepeat(Keys.PageUp))
-            {
                 tweakable.IncreaseValue(status);
-            }
             if (inputDriver.KeyPressedSlowRepeat(Keys.PageDown))
-            {
                 tweakable.DecreaseValue(status);
-            }
+            if (inputDriver.KeyPressedNoRepeat(Keys.Insert))
+                tweakable.InsertNew(status);
 
             StringInput(inputDriver);
 

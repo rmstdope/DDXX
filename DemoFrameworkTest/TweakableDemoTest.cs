@@ -48,12 +48,7 @@ namespace Dope.DDXX.DemoFramework
 
             #region IDemoRegistrator Members
 
-            public ITextureFactory TextureFactory
-            {
-                get { throw new Exception("The method or operation is not implemented."); }
-            }
-
-            public IModelFactory ModelFactory
+            public IGraphicsFactory GraphicsFactory
             {
                 get { throw new Exception("The method or operation is not implemented."); }
             }
@@ -91,6 +86,7 @@ namespace Dope.DDXX.DemoFramework
         private List<ITrack> tracks;
         private XmlDocument document;
         private List<IRegisterable> registerables;
+        private IGraphicsFactory graphicsFactory;
         private ITextureFactory textureFactory;
         private IModelFactory modelFactory;
 
@@ -101,13 +97,15 @@ namespace Dope.DDXX.DemoFramework
             target = mockery.NewMock<IDemoRegistrator>();
             builder = mockery.NewMock<IDemoEffectBuilder>();
             factory = mockery.NewMock<ITweakableFactory>();
+            graphicsFactory = mockery.NewMock<IGraphicsFactory>();
             textureFactory = mockery.NewMock<ITextureFactory>();
             modelFactory = mockery.NewMock<IModelFactory>();
             tweakable = new TweakableDemo(target, builder, factory);
             tracks = new List<ITrack>();
             Stub.On(target).GetProperty("Tracks").Will(Return.Value(tracks));
-            Stub.On(factory).GetProperty("TextureFactory").Will(Return.Value(textureFactory));
-            Stub.On(factory).GetProperty("ModelFactory").Will(Return.Value(modelFactory));
+            Stub.On(factory).GetProperty("GraphicsFactory").Will(Return.Value(graphicsFactory));
+            Stub.On(graphicsFactory).GetProperty("TextureFactory").Will(Return.Value(textureFactory));
+            Stub.On(graphicsFactory).GetProperty("ModelFactory").Will(Return.Value(modelFactory));
         }
 
         [TearDown]
@@ -129,7 +127,7 @@ namespace Dope.DDXX.DemoFramework
             // Setup
             CreateRegisterables(5);
             // Exercise SUT and verify
-            Assert.AreEqual(5 + 1, tweakable.NumVariables);
+            Assert.AreEqual(5 + 2, tweakable.NumVariables);
         }
 
         [Test]
@@ -149,16 +147,16 @@ namespace Dope.DDXX.DemoFramework
         public void GetChildFactories()
         {
             // Setup
-            ITweakable childTweakable;
-            ITextureFactory textureFactory;
-            childTweakable = mockery.NewMock<ITweakable>();
-            textureFactory = mockery.NewMock<ITextureFactory>();
+            ITweakable childTweakable1 = mockery.NewMock<ITweakable>();
+            ITweakable childTweakable2 = mockery.NewMock<ITweakable>();
             CreateRegisterables(1);
-            Expect.Once.On(target).GetProperty("TextureFactory").Will(Return.Value(textureFactory));
             Expect.Once.On(factory).Method("CreateTweakableObject").
-                With(textureFactory).Will(Return.Value(childTweakable));
+                With(textureFactory).Will(Return.Value(childTweakable1));
+            Expect.Once.On(factory).Method("CreateTweakableObject").
+                With(modelFactory).Will(Return.Value(childTweakable2));
             // Exercise SUT and verify
-            Assert.AreSame(childTweakable, tweakable.GetChild(1));
+            Assert.AreSame(childTweakable1, tweakable.GetChild(1));
+            Assert.AreSame(childTweakable2, tweakable.GetChild(2));
         }
 
         [Test]
@@ -174,14 +172,13 @@ namespace Dope.DDXX.DemoFramework
         public void WriteEmptyXml()
         {
             // Setup
-            CreateXmlNode("<Demo> <TextureFactory /> </Demo>");
-            ITweakable tweakableTextureFactory = mockery.NewMock<ITweakable>();
-            Expect.Once.On(factory).Method("CreateTweakableObject").With(textureFactory).Will(Return.Value(tweakableTextureFactory));
-            Expect.Once.On(tweakableTextureFactory).Method("WriteToXmlFile").With(document, node.ChildNodes[1]);
+            CreateXmlNode("<Demo> <TextureFactory /> <ModelFactory /> </Demo>");
+            ExpectWriteToXml(textureFactory);
+            ExpectWriteToXml(modelFactory);
             // Exercise SUT
             tweakable.WriteToXmlFile(document, node);
             // Verify
-            Assert.AreEqual("<Demo> <TextureFactory /> </Demo>", node.OuterXml);
+            Assert.AreEqual("<Demo> <TextureFactory /> <ModelFactory /> </Demo>", node.OuterXml);
         }
 
         [Test]
@@ -217,11 +214,12 @@ namespace Dope.DDXX.DemoFramework
             ITweakable tweakableRegisterable1 = mockery.NewMock<ITweakable>();
             Expect.Once.On(factory).Method("CreateTweakableObject").With(registerables[0]).Will(Return.Value(tweakableRegisterable1));
             Expect.Once.On(tweakableRegisterable1).Method("WriteToXmlFile").With(document, node.ChildNodes[0]);
-            ITweakable tweakableTextureFactory = mockery.NewMock<ITweakable>();
-            Expect.Once.On(factory).Method("CreateTweakableObject").With(textureFactory).Will(Return.Value(tweakableTextureFactory));
-            Expect.Once.On(tweakableTextureFactory).Method("WriteToXmlFile").WithAnyArguments();
+            ExpectWriteToXml(textureFactory);
+            ExpectWriteToXml(modelFactory);
             // Exercise SUT
             tweakable.WriteToXmlFile(document, node);
+            // Verify
+            Assert.AreEqual("<Demo><Effect name=\"R0\" /><TextureFactory /><ModelFactory /></Demo>", node.OuterXml);
         }
 
         [Test]
@@ -246,15 +244,16 @@ namespace Dope.DDXX.DemoFramework
             CreateXmlNode("<Demo><Effect name=\"R1\" /><PostEffect name=\"R0\" /></Demo>");
             ITweakable tweakableRegisterable1 = mockery.NewMock<ITweakable>();
             ITweakable tweakableRegisterable2 = mockery.NewMock<ITweakable>();
-            ITweakable tweakableTextureFactory = mockery.NewMock<ITweakable>();
             Expect.Once.On(factory).Method("CreateTweakableObject").With(registerables[0]).Will(Return.Value(tweakableRegisterable1));
             Expect.Once.On(factory).Method("CreateTweakableObject").With(registerables[1]).Will(Return.Value(tweakableRegisterable2));
-            Expect.Once.On(factory).Method("CreateTweakableObject").With(textureFactory).Will(Return.Value(tweakableTextureFactory));
             Expect.Once.On(tweakableRegisterable1).Method("WriteToXmlFile").With(document, node.ChildNodes[1]);
             Expect.Once.On(tweakableRegisterable2).Method("WriteToXmlFile").With(document, node.ChildNodes[0]);
-            Expect.Once.On(tweakableTextureFactory).Method("WriteToXmlFile").WithAnyArguments();
+            ExpectWriteToXml(textureFactory);
+            ExpectWriteToXml(modelFactory);
             // Exercise SUT
             tweakable.WriteToXmlFile(document, node);
+            // Verify
+            Assert.AreEqual("<Demo><Effect name=\"R1\" /><PostEffect name=\"R0\" /><TextureFactory /><ModelFactory /></Demo>", node.OuterXml);
         }
 
         [Test]
@@ -271,11 +270,11 @@ namespace Dope.DDXX.DemoFramework
         {
             // Setup
             CreateXmlNode("<Demo><Transition /> </Demo>");
-            ITweakable tweakableTextureFactory = mockery.NewMock<ITweakable>();
-            Expect.Once.On(factory).Method("CreateTweakableObject").With(textureFactory).Will(Return.Value(tweakableTextureFactory));
-            Expect.Once.On(tweakableTextureFactory).Method("WriteToXmlFile").WithAnyArguments();
+            ExpectWriteToXml(textureFactory);
+            ExpectWriteToXml(modelFactory);
             // Exercise SUT
             tweakable.WriteToXmlFile(document, node);
+            CreateXmlNode("<Demo><Transition /> <TextureFactory /><ModelFactory /></Demo>");
         }
 
         [Test]
@@ -321,14 +320,13 @@ namespace Dope.DDXX.DemoFramework
         {
             // Setup
             ReadWithProperty();
-            ITweakable tweakableTextureFactory = mockery.NewMock<ITweakable>();
-            Expect.Once.On(factory).Method("CreateTweakableObject").With(textureFactory).Will(Return.Value(tweakableTextureFactory));
-            Expect.Once.On(tweakableTextureFactory).Method("WriteToXmlFile").WithAnyArguments();
+            ExpectWriteToXml(textureFactory);
+            ExpectWriteToXml(modelFactory);
             // Exercise SUT
             registrator.ClearColor = new Color(5, 6, 7, 8);
             tweakable.WriteToXmlFile(document, node);
             // Verify
-            Assert.AreEqual("<Demo><ClearColor>5, 6, 7, 8</ClearColor><TextureFactory /></Demo>", node.OuterXml);
+            Assert.AreEqual("<Demo><ClearColor>5, 6, 7, 8</ClearColor><TextureFactory /><ModelFactory /></Demo>", node.OuterXml);
         }
 
         private void CreateXmlNode(string xml)
@@ -345,6 +343,13 @@ namespace Dope.DDXX.DemoFramework
             for (int i = 0; i < num; i++)
                 registerables.Add(new Registerable("R" + i, 0 + i, 1 + i));
             Stub.On(target).Method("GetAllRegisterables").Will(Return.Value(registerables));
+        }
+
+        private void ExpectWriteToXml(object target)
+        {
+            ITweakable tweakable = mockery.NewMock<ITweakable>();
+            Expect.Once.On(factory).Method("CreateTweakableObject").With(target).Will(Return.Value(tweakable));
+            Expect.Once.On(tweakable).Method("WriteToXmlFile").WithAnyArguments();
         }
 
     }

@@ -137,5 +137,18 @@ namespace Dope.DDXX.DemoFramework
             TextureParameters[status.Selection].Regenerate();
         }
 
+        public override void InsertNew(TweakerStatus status)
+        {
+            string newName = "Texture - " + Rand.Int(0, 65535);
+            TextureDirector director = new TextureDirector(Target);
+            director.AddGenerator(new Constant());
+            director.Generate(newName, 64, 64, 1, SurfaceFormat.Color);
+            int index = TextureParameters.FindIndex(delegate(Texture2DParameters param)
+            {
+                return param.Name == newName;
+            });
+            status.Selection = index;
+        }
+
     }
 }

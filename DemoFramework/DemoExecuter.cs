@@ -102,14 +102,9 @@ namespace Dope.DDXX.DemoFramework
             set { userInterface = value; }
         }
 
-        public ITextureFactory TextureFactory 
+        public IGraphicsFactory GraphicsFactory 
         {
-            get { return graphicsFactory.TextureFactory; } 
-        }
-
-        public IModelFactory ModelFactory
-        {
-            get { return graphicsFactory.ModelFactory; }
+            get { return graphicsFactory; } 
         }
 
         public IDemoEffectTypes EffectTypes
@@ -137,14 +132,14 @@ namespace Dope.DDXX.DemoFramework
         {
             this.graphicsFactory = graphicsFactory;
             this.spriteBatch = graphicsFactory.CreateSpriteBatch();
-            this.renderTarget = TextureFactory.CreateFullsizeRenderTarget(deviceParameters.RenderTargetFormat, deviceParameters.MultiSampleType, 0);
+            this.renderTarget = graphicsFactory.TextureFactory.CreateFullsizeRenderTarget(deviceParameters.RenderTargetFormat, deviceParameters.MultiSampleType, 0);
             if (deviceParameters.MultiSampleType == MultiSampleType.None)
                 this.renderTargetNoMultiSampling = this.renderTarget;
             else
-                this.renderTargetNoMultiSampling = TextureFactory.CreateFullsizeRenderTarget();
-            this.depthStencilBuffer = TextureFactory.CreateFullsizeDepthStencil(deviceParameters.DepthStencilFormat, deviceParameters.MultiSampleType);
+                this.renderTargetNoMultiSampling = graphicsFactory.TextureFactory.CreateFullsizeRenderTarget();
+            this.depthStencilBuffer = graphicsFactory.TextureFactory.CreateFullsizeDepthStencil(deviceParameters.DepthStencilFormat, deviceParameters.MultiSampleType);
 
-            InitializeTweaker(graphicsFactory, TextureFactory);
+            InitializeTweaker(graphicsFactory);
 
             InitializeFromFile(xmlFile);
 
@@ -164,9 +159,9 @@ namespace Dope.DDXX.DemoFramework
             Time.CurrentTime = StartTime;
         }
 
-        private void InitializeTweaker(IGraphicsFactory graphicsFactory, ITextureFactory textureFactory)
+        private void InitializeTweaker(IGraphicsFactory graphicsFactory)
         {
-            userInterface.Initialize(graphicsFactory, textureFactory);
+            userInterface.Initialize(graphicsFactory, graphicsFactory.TextureFactory);
             ITweakable tweakableDemo = new TweakableDemo(this, this, tweakerHandler.Factory);
             tweakerHandler.Initialize(this, userInterface, tweakableDemo);
         }

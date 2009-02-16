@@ -29,7 +29,7 @@ namespace Dope.DDXX.DemoFramework
 
         protected override int NumSpecificVariables
         {
-            get { return Target.GetAllRegisterables().Count + 1; }
+            get { return Target.GetAllRegisterables().Count + 2; }
         }
 
         public override void CreateControl(TweakerStatus status, int index, float y, ITweakerSettings settings)
@@ -41,7 +41,9 @@ namespace Dope.DDXX.DemoFramework
         {
             if (index < Target.GetAllRegisterables().Count)
                 return Factory.CreateTweakableObject(Target.GetAllRegisterables()[index]);
-            return Factory.CreateTweakableObject(Target.TextureFactory);
+            else if (index == Target.GetAllRegisterables().Count)
+                return Factory.CreateTweakableObject(Factory.GraphicsFactory.TextureFactory);
+            return Factory.CreateTweakableObject(Factory.GraphicsFactory.ModelFactory);
         }
 
         protected override void ParseSpecficXmlNode(XmlNode node)
@@ -57,10 +59,10 @@ namespace Dope.DDXX.DemoFramework
                 case "Transition":
                     break;
                 case "TextureFactory":
-                    Factory.CreateTweakableObject(Factory.TextureFactory).ReadFromXmlFile(node);
+                    Factory.CreateTweakableObject(Factory.GraphicsFactory.TextureFactory).ReadFromXmlFile(node);
                     break;
                 case "ModelFactory":
-                    Factory.CreateTweakableObject(Factory.ModelFactory).ReadFromXmlFile(node);
+                    Factory.CreateTweakableObject(Factory.GraphicsFactory.ModelFactory).ReadFromXmlFile(node);
                     break;
                 default:
                     throw new DDXXException("Invalid XML element " + node.Name + 
@@ -83,11 +85,11 @@ namespace Dope.DDXX.DemoFramework
                     break;
                 case "TextureFactory":
                     textureFactoryWritten = true;
-                    Factory.CreateTweakableObject(Factory.TextureFactory).WriteToXmlFile(xmlDocument, node);
+                    Factory.CreateTweakableObject(Factory.GraphicsFactory.TextureFactory).WriteToXmlFile(xmlDocument, node);
                     break;
                 case "ModelFactory":
                     modelFactoryWritten = true;
-                    Factory.CreateTweakableObject(Factory.ModelFactory).WriteToXmlFile(xmlDocument, node);
+                    Factory.CreateTweakableObject(Factory.GraphicsFactory.ModelFactory).WriteToXmlFile(xmlDocument, node);
                     break;
                 default:
                     throw new DDXXException("Invalid XML element " + node.Name +
@@ -100,12 +102,12 @@ namespace Dope.DDXX.DemoFramework
             if (!textureFactoryWritten)
             {
                 node.AppendChild(xmlDocument.CreateElement("TextureFactory"));
-                Factory.CreateTweakableObject(Factory.TextureFactory).WriteToXmlFile(xmlDocument, node);
+                Factory.CreateTweakableObject(Factory.GraphicsFactory.TextureFactory).WriteToXmlFile(xmlDocument, node);
             }
             if (!modelFactoryWritten)
             {
                 node.AppendChild(xmlDocument.CreateElement("ModelFactory"));
-                Factory.CreateTweakableObject(Factory.ModelFactory).WriteToXmlFile(xmlDocument, node);
+                Factory.CreateTweakableObject(Factory.GraphicsFactory.ModelFactory).WriteToXmlFile(xmlDocument, node);
             }
         }
 

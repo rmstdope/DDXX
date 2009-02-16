@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using Dope.DDXX.Graphics;
+using Dope.DDXX.TextureBuilder;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -10,8 +11,7 @@ namespace Dope.DDXX.DemoFramework
     {
         ITweakableProperty CreateTweakableValue(PropertyInfo property, object target);
         ITweakable CreateTweakableObject(object target);
-        ITextureFactory TextureFactory { get; }
-        IModelFactory ModelFactory { get; }
+        IGraphicsFactory GraphicsFactory { get; }
         IDemoEffectTypes EffectTypes { get; }
     }
 }

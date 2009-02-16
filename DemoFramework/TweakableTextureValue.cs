@@ -25,7 +25,7 @@ namespace Dope.DDXX.DemoFramework
 
         private string GetTextureName()
         {
-            Texture2DParameters parameter = Factory.TextureFactory.Texture2DParameters.Find(delegate(Texture2DParameters param) { return param.Texture == Value; });
+            Texture2DParameters parameter = Factory.GraphicsFactory.TextureFactory.Texture2DParameters.Find(delegate(Texture2DParameters param) { return param.Texture == Value; });
             if (parameter == null)
                 return "";
             return parameter.Name;
@@ -33,22 +33,22 @@ namespace Dope.DDXX.DemoFramework
 
         private int GetTextureIndex()
         {
-            return Factory.TextureFactory.Texture2DParameters.IndexOf(GetParameters());
+            return Factory.GraphicsFactory.TextureFactory.Texture2DParameters.IndexOf(GetParameters());
         }
 
         private Texture2DParameters GetParameters()
         {
-            return Factory.TextureFactory.Texture2DParameters.Find(delegate(Texture2DParameters param) { return param.Texture == Value; });
+            return Factory.GraphicsFactory.TextureFactory.Texture2DParameters.Find(delegate(Texture2DParameters param) { return param.Texture == Value; });
         }
 
         private int GetTextureIndexFromName(string name)
         {
-            return Factory.TextureFactory.Texture2DParameters.IndexOf(Factory.TextureFactory.Texture2DParameters.Find(delegate(Texture2DParameters param) { return param.Name == name; }));
+            return Factory.GraphicsFactory.TextureFactory.Texture2DParameters.IndexOf(Factory.GraphicsFactory.TextureFactory.Texture2DParameters.Find(delegate(Texture2DParameters param) { return param.Name == name; }));
         }
 
         private int GetNumTextures()
         {
-            return Factory.TextureFactory.Texture2DParameters.Count;
+            return Factory.GraphicsFactory.TextureFactory.Texture2DParameters.Count;
         }
 
         public override int Dimension
@@ -77,7 +77,7 @@ namespace Dope.DDXX.DemoFramework
             if (i == -1)
                 Value = null;
             else
-                Value = Factory.TextureFactory.Texture2DParameters[i].Texture;
+                Value = Factory.GraphicsFactory.TextureFactory.Texture2DParameters[i].Texture;
         }
 
         public override void SetFromString(string value)

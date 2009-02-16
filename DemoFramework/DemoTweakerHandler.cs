@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Reflection;
 using Dope.DDXX.SceneGraph;
 using Dope.DDXX.UserInterface;
+using Dope.DDXX.TextureBuilder;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -288,14 +289,9 @@ namespace Dope.DDXX.DemoFramework
             return null;
         }
 
-        public ITextureFactory TextureFactory
+        public IGraphicsFactory GraphicsFactory
         {
-            get { return registrator.TextureFactory; }
-        }
-
-        public IModelFactory ModelFactory
-        {
-            get { return registrator.ModelFactory; }
+            get { return registrator.GraphicsFactory; }
         }
 
         public IDemoEffectTypes EffectTypes

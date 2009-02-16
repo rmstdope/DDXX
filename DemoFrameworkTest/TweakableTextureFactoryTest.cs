@@ -19,6 +19,7 @@ namespace Dope.DDXX.DemoFramework
         private ITextureFactory target;
         private ITweakableFactory factory;
         private IDemoEffectTypes effectTypes;
+        private ITexture2D texture2D;
         List<Texture2DParameters> list;
         private XmlDocument document;
 
@@ -29,6 +30,7 @@ namespace Dope.DDXX.DemoFramework
             target = mockery.NewMock<ITextureFactory>();
             factory = mockery.NewMock<ITweakableFactory>();
             effectTypes = mockery.NewMock<IDemoEffectTypes>();
+            texture2D = mockery.NewMock<ITexture2D>();
             tweakable = new TweakableTextureFactory(target, factory);
             Stub.On(factory).GetProperty("EffectTypes").Will(Return.Value(effectTypes));
         }
@@ -262,6 +264,20 @@ namespace Dope.DDXX.DemoFramework
             // Verify
             Assert.AreEqual("<TextureFactory><Texture name=\"0\"><Generator class=\"MockObject\" /></Texture></TextureFactory>", node.OuterXml);
         }
+
+        //[Test]
+        //public void CreateNew()
+        //{
+        //    // Setup
+        //    TweakerStatus status = new TweakerStatus(1, 1);
+        //    SetupTextures(2);
+        //    Expect.Once.On(target).Method("CreateFromGenerator").Will(Return.Value(texture2D));
+        //    ///list.Add(new Texture2DParameters(i.ToString(), texture, generator));
+        //    // Exercise SUT
+        //    tweakable.InsertNew(status);
+        //    // Verify
+        //    Assert.AreEqual(2, status.Selection);
+        //}
 
         private void SetupTextures(int num)
         {

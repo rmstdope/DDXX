@@ -16,7 +16,7 @@ namespace Dope.DDXX.DemoFramework
         public TweakableTextureGenerator(ITextureGenerator target, ITweakableFactory factory)
             : base(target, factory)
         {
-            texture = Factory.TextureFactory.CreateFromGenerator("", 32, 32, 1, TextureUsage.None, SurfaceFormat.Color, Target);
+            texture = Factory.GraphicsFactory.TextureFactory.CreateFromGenerator("", 32, 32, 1, TextureUsage.None, SurfaceFormat.Color, Target);
         }
 
         public override int NumVisableVariables
