@@ -12,12 +12,14 @@ namespace Dope.DDXX.DemoFramework
     {
         private IDemoEffectBuilder builder;
         private bool textureFactoryWritten;
+        private bool modelFactoryWritten;
 
         public TweakableDemo(IDemoRegistrator target, IDemoEffectBuilder builder, ITweakableFactory factory)
             : base(target, factory)
         {
             this.builder = builder;
             textureFactoryWritten = false;
+            modelFactoryWritten = false;
         }
 
         public override int NumVisableVariables
@@ -57,6 +59,9 @@ namespace Dope.DDXX.DemoFramework
                 case "TextureFactory":
                     Factory.CreateTweakableObject(Factory.TextureFactory).ReadFromXmlFile(node);
                     break;
+                case "ModelFactory":
+                    Factory.CreateTweakableObject(Factory.ModelFactory).ReadFromXmlFile(node);
+                    break;
                 default:
                     throw new DDXXException("Invalid XML element " + node.Name + 
                         " within element " + node.Name + ".");
@@ -80,6 +85,10 @@ namespace Dope.DDXX.DemoFramework
                     textureFactoryWritten = true;
                     Factory.CreateTweakableObject(Factory.TextureFactory).WriteToXmlFile(xmlDocument, node);
                     break;
+                case "ModelFactory":
+                    modelFactoryWritten = true;
+                    Factory.CreateTweakableObject(Factory.ModelFactory).WriteToXmlFile(xmlDocument, node);
+                    break;
                 default:
                     throw new DDXXException("Invalid XML element " + node.Name +
                         " within element " + node.Name + ".");
@@ -92,6 +101,11 @@ namespace Dope.DDXX.DemoFramework
             {
                 node.AppendChild(xmlDocument.CreateElement("TextureFactory"));
                 Factory.CreateTweakableObject(Factory.TextureFactory).WriteToXmlFile(xmlDocument, node);
+            }
+            if (!modelFactoryWritten)
+            {
+                node.AppendChild(xmlDocument.CreateElement("ModelFactory"));
+                Factory.CreateTweakableObject(Factory.ModelFactory).WriteToXmlFile(xmlDocument, node);
             }
         }
 

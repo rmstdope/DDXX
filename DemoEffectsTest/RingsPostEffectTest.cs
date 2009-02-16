@@ -30,7 +30,7 @@ namespace Dope.DDXX.DemoEffects
             texture2 = mockery.NewMock<IRenderTarget2D>();
             outputTexture = mockery.NewMock<IRenderTarget2D>();
             sut = new RingsPostEffect("", 1.0f, 2.0f);
-            sut.Initialize(graphicsFactory, postProcessor, textureFactory);
+            sut.Initialize(graphicsFactory, postProcessor);
         }
 
         [TearDown]

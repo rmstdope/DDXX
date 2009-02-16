@@ -65,6 +65,8 @@ namespace Dope.DDXX.Graphics
             Stub.On(device).GetProperty("RenderState").Will(Return.Value(renderState));
             Stub.On(graphicsFactory).GetProperty("GraphicsDeviceManager").Will(Return.Value(manager));
             Stub.On(graphicsFactory).GetProperty("GraphicsDevice").Will(Return.Value(device));
+            Stub.On(graphicsFactory).GetProperty("TextureFactory").Will(Return.Value(textureFactory));
+            Stub.On(graphicsFactory).GetProperty("EffectFactory").Will(Return.Value(effectFactory));
             Stub.On(manager).GetProperty("GraphicsDevice").Will(Return.Value(device));
             Stub.On(device).GetProperty("Vertices").Will(Return.Value(vertexStreamCollection));
             Stub.On(vertexStreamCollection).Method("get_Item").With(0).Will(Return.Value(vertexStream));

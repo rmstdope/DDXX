@@ -12,6 +12,10 @@ namespace Dope.DDXX.Graphics
         IDeviceManager GraphicsDeviceManager { get; }
         IContentManager ContentManager { get; }
         IGraphicsDevice GraphicsDevice { get; }
+        ITextureFactory TextureFactory { get; }
+        IModelFactory ModelFactory { get; }
+        IEffectFactory EffectFactory { get; }
+
         IRenderTarget2D CreateRenderTarget2D(int width, int height, int numLevels, SurfaceFormat format, MultiSampleType multiSampleType, int multiSampleQuality);
         ITexture2D CreateTexture2D(int width, int height, int numLevels, TextureUsage usage, SurfaceFormat format);
         IDepthStencilBuffer CreateDepthStencilBuffer(int width, int height, DepthFormat format, MultiSampleType multiSampleType);

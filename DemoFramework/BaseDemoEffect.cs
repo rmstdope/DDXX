@@ -15,9 +15,6 @@ namespace Dope.DDXX.DemoFramework
     {
         private int drawOrder;
         private IGraphicsFactory graphicsFactory;
-        private IEffectFactory effectFactory;
-        private ITextureFactory textureFactory;
-        private IModelFactory modelFactory;
         private ModelBuilder.ModelBuilder modelBuilder;
         private ModelDirector modelDirector;
         private TextureDirector textureDirector;
@@ -40,28 +37,22 @@ namespace Dope.DDXX.DemoFramework
 
         protected IGraphicsDevice GraphicsDevice
         {
-            get { return graphicsFactory.GraphicsDeviceManager.GraphicsDevice; }
+            get { return graphicsFactory.GraphicsDevice; }
         }
 
         protected IEffectFactory EffectFactory
         {
-            get { return effectFactory; }
+            get { return graphicsFactory.EffectFactory; }
         }
 
         protected IModelFactory ModelFactory
         {
-            // Lazy creation
-            get
-            {
-                if (modelFactory == null)
-                    modelFactory = new ModelFactory(GraphicsFactory, TextureFactory);
-                return modelFactory;
-            }
+            get { return graphicsFactory.ModelFactory; }
         }
 
         protected ITextureFactory TextureFactory
         {
-            get { return textureFactory; }
+            get { return graphicsFactory.TextureFactory; }
         }
 
         protected IDemoMixer Mixer
@@ -155,14 +146,11 @@ namespace Dope.DDXX.DemoFramework
 
         public abstract void Render();
 
-        public void Initialize(IGraphicsFactory graphicsFactory, IEffectFactory effectFactory, 
-            ITextureFactory textureFactory, IDemoMixer mixer, IPostProcessor postProcessor)
+        public void Initialize(IGraphicsFactory graphicsFactory, IDemoMixer mixer, IPostProcessor postProcessor)
         {
             this.graphicsFactory = graphicsFactory;
-            this.effectFactory = effectFactory;
             this.mixer = mixer;
             this.postProcessor = postProcessor;
-            this.textureFactory = textureFactory;
 
             Initialize();
         }

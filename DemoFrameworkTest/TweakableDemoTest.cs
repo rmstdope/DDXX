@@ -53,6 +53,11 @@ namespace Dope.DDXX.DemoFramework
                 get { throw new Exception("The method or operation is not implemented."); }
             }
 
+            public IModelFactory ModelFactory
+            {
+                get { throw new Exception("The method or operation is not implemented."); }
+            }
+
             #endregion
 
             #region IDemoRegistrator Members
@@ -87,6 +92,7 @@ namespace Dope.DDXX.DemoFramework
         private XmlDocument document;
         private List<IRegisterable> registerables;
         private ITextureFactory textureFactory;
+        private IModelFactory modelFactory;
 
         [SetUp]
         public void SetUp()
@@ -96,10 +102,12 @@ namespace Dope.DDXX.DemoFramework
             builder = mockery.NewMock<IDemoEffectBuilder>();
             factory = mockery.NewMock<ITweakableFactory>();
             textureFactory = mockery.NewMock<ITextureFactory>();
+            modelFactory = mockery.NewMock<IModelFactory>();
             tweakable = new TweakableDemo(target, builder, factory);
             tracks = new List<ITrack>();
             Stub.On(target).GetProperty("Tracks").Will(Return.Value(tracks));
             Stub.On(factory).GetProperty("TextureFactory").Will(Return.Value(textureFactory));
+            Stub.On(factory).GetProperty("ModelFactory").Will(Return.Value(modelFactory));
         }
 
         [TearDown]
@@ -138,7 +146,7 @@ namespace Dope.DDXX.DemoFramework
         }
 
         [Test]
-        public void GetChildTextureFactory()
+        public void GetChildFactories()
         {
             // Setup
             ITweakable childTweakable;

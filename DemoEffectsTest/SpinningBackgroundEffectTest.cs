@@ -38,7 +38,7 @@ namespace Dope.DDXX.DemoEffects
         public void TestInitialize()
         {
             ExpectSprite();
-            spin.Initialize(graphicsFactory, effectFactory, textureFactory, mixer, postProcessor);
+            spin.Initialize(graphicsFactory, mixer, postProcessor);
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace Dope.DDXX.DemoEffects
             spin.AddTextureLayer(new SpinningBackgroundEffect.TextureLayer("file", 2 * (float)Math.PI, new Color(1, 2, 3, 4)));
 
             ExpectSprite();
-            spin.Initialize(graphicsFactory, effectFactory, textureFactory, mixer, postProcessor);
+            spin.Initialize(graphicsFactory, mixer, postProcessor);
         }
 
         [Test]
@@ -62,14 +62,14 @@ namespace Dope.DDXX.DemoEffects
             spin.AddTextureLayer(new SpinningBackgroundEffect.TextureLayer("file2", -2, new Color(5, 6, 7, 8)));
 
             ExpectSprite();
-            spin.Initialize(graphicsFactory, effectFactory, textureFactory, mixer, postProcessor);
+            spin.Initialize(graphicsFactory, mixer, postProcessor);
         }
 
         [Test]
         public void TestRender1()
         {
             ExpectSprite();
-            spin.Initialize(graphicsFactory, effectFactory, textureFactory, mixer, postProcessor);
+            spin.Initialize(graphicsFactory, mixer, postProcessor);
             Expect.Once.On(spriteBatch).Method("Begin").With(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
             Expect.Once.On(renderState).SetProperty("DepthBufferEnable").To(false);
             Expect.Once.On(spriteBatch).Method("End");

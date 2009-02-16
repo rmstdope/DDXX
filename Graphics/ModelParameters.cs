@@ -25,6 +25,11 @@ namespace Dope.DDXX.Graphics
             get { return model; }
         }
 
+        public bool IsGenerated
+        {
+            get { return false; }
+        }
+
         public ModelParameters(string name, string effect, IModel model)
         {
             this.name = name;

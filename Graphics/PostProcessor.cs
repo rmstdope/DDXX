@@ -32,8 +32,7 @@ namespace Dope.DDXX.Graphics
                 scale = 1.0f;
             }
         }
-        private IGraphicsDevice device;
-        private ITextureFactory textureFactory;
+        private IGraphicsFactory graphicsFactory;
         private IRenderTarget2D lastUsedTexture;
         private TextureContainer inputTextureContainer = new TextureContainer(null);
         private TextureContainer sourceTextureContainer = new TextureContainer(null);
@@ -50,12 +49,11 @@ namespace Dope.DDXX.Graphics
         {
         }
 
-        public void Initialize(IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, IEffectFactory effectFactory)
+        public void Initialize(IGraphicsFactory graphicsFactory)
         {
-            this.device = graphicsFactory.GraphicsDevice;
-            effect = effectFactory.CreateFromFile("Content\\effects\\PostEffects");
+            this.graphicsFactory = graphicsFactory;
+            effect = graphicsFactory.EffectFactory.CreateFromFile("Content\\effects\\PostEffects");
             spriteBatch = graphicsFactory.CreateSpriteBatch();
-            this.textureFactory = textureFactory;
 
             HandleAnnotations();
         }
@@ -72,8 +70,8 @@ namespace Dope.DDXX.Graphics
                     float[] values = parameterFrom.GetValueSingleArray(numElements * 2);
                     for (int j = 0; j < numElements; j++)
                     {
-                        values[j * 2 + 0] /= device.PresentationParameters.BackBufferWidth;
-                        values[j * 2 + 1] /= device.PresentationParameters.BackBufferHeight;
+                        values[j * 2 + 0] /= graphicsFactory.GraphicsDevice.PresentationParameters.BackBufferWidth;
+                        values[j * 2 + 1] /= graphicsFactory.GraphicsDevice.PresentationParameters.BackBufferHeight;
                     }
                     parameterTo.SetValue(values);
                 }
@@ -112,7 +110,7 @@ namespace Dope.DDXX.Graphics
 
             ProcessPasses(technique, sourceContainer, destinationContainer);
 
-            device.SetRenderTarget(0, null);//.ResolveRenderTarget(0);
+            graphicsFactory.GraphicsDevice.SetRenderTarget(0, null);//.ResolveRenderTarget(0);
             lastUsedTexture = destination;
 
             //sourceContainer.Texture.GetTexture().Save("source.jpg", ImageFileFormat.Jpg);
@@ -142,7 +140,7 @@ namespace Dope.DDXX.Graphics
 
         private void SetupProcessParameters(string technique, TextureContainer destination)
         {
-            device.SetRenderTarget(0, destination.RenderTarget);
+            graphicsFactory.GraphicsDevice.SetRenderTarget(0, destination.RenderTarget);
             effect.CurrentTechnique = effect.Techniques[technique];
         }
 
@@ -169,12 +167,12 @@ namespace Dope.DDXX.Graphics
 #endif
                 if (toScale > 1.0f)
                     throw new DDXXException("Can not scale larger than back buffer size");
-                int destHeight = device.PresentationParameters.BackBufferHeight;
-                int destWidth = device.PresentationParameters.BackBufferWidth;
+                int destHeight = graphicsFactory.GraphicsDevice.PresentationParameters.BackBufferHeight;
+                int destWidth = graphicsFactory.GraphicsDevice.PresentationParameters.BackBufferWidth;
                 int sourceHeight = source.Texture.Height;
                 int sourceWidth = source.Texture.Width;
                 if (destination.scale > toScale)
-                    device.Clear(ClearOptions.Target, Color.Black, 0, 0);
+                    graphicsFactory.GraphicsDevice.Clear(ClearOptions.Target, Color.Black, 0, 0);
                 destination.scale = toScale;
                 spriteBatch.Draw(source.Texture,
                         new Rectangle(0, 0, (int)(destWidth * toScale), (int)(destHeight * toScale)),
@@ -192,15 +190,15 @@ namespace Dope.DDXX.Graphics
                 Blend.One == sourceBlend &&
                 Blend.Zero == destinatonBlend)
             {
-                device.RenderState.AlphaBlendEnable = false;
+                graphicsFactory.GraphicsDevice.RenderState.AlphaBlendEnable = false;
             }
             else
             {
-                device.RenderState.AlphaBlendEnable = true;
-                device.RenderState.BlendFunction = blendOperation;
-                device.RenderState.SourceBlend = sourceBlend;
-                device.RenderState.DestinationBlend = destinatonBlend;
-                device.RenderState.BlendFactor = blendFactor;
+                graphicsFactory.GraphicsDevice.RenderState.AlphaBlendEnable = true;
+                graphicsFactory.GraphicsDevice.RenderState.BlendFunction = blendOperation;
+                graphicsFactory.GraphicsDevice.RenderState.SourceBlend = sourceBlend;
+                graphicsFactory.GraphicsDevice.RenderState.DestinationBlend = destinatonBlend;
+                graphicsFactory.GraphicsDevice.RenderState.BlendFactor = blendFactor;
             }
         }
 
@@ -211,8 +209,8 @@ namespace Dope.DDXX.Graphics
         //    float toScale = fromScale * pass.Annotations["Scale"].GetValueSingle();
         //    if (toScale > 1.0f)
         //        throw new DDXXException("Can not scale larger than back buffer size");
-        //    int height = device.PresentationParameters.BackBufferHeight;
-        //    int width = device.PresentationParameters.BackBufferWidth;
+        //    int height = graphicsFactory.GraphicsDevice.PresentationParameters.BackBufferHeight;
+        //    int width = graphicsFactory.GraphicsDevice.PresentationParameters.BackBufferWidth;
         //    vertices = new VertexPositionTexture[4];
         //    vertices[0] = new VertexPositionTexture(new Vector3(0, 0, 0.0f), new Vector2(0, 0));
         //    vertices[1] = new VertexPositionTexture(new Vector3(width * toScale - 0.5f, -0.5f, 1.0f, 1.0f), new Vector2(fromScale, 0));
@@ -278,7 +276,7 @@ namespace Dope.DDXX.Graphics
             int numToAdd = num - tempTextures.Count;
             for (int i = 0; i < numToAdd; i++)
             {
-                IRenderTarget2D newTexture = textureFactory.CreateFullsizeRenderTarget();
+                IRenderTarget2D newTexture = graphicsFactory.TextureFactory.CreateFullsizeRenderTarget();
                 textures.Add(new TextureContainer(newTexture));
                 tempTextures.Add(newTexture);
             }

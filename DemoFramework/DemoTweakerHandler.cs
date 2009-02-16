@@ -86,6 +86,7 @@ namespace Dope.DDXX.DemoFramework
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(Vector3), typeof(TweakableVector3)));
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(Vector4), typeof(TweakableVector4)));
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(ITextureFactory), typeof(TweakableTextureFactory)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(IModelFactory), typeof(TweakableModelFactory)));
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(ITextureGenerator), typeof(TweakableTextureGenerator)));
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(IScene), typeof(TweakableScene)));
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(INode), typeof(TweakableNode)));
@@ -290,6 +291,11 @@ namespace Dope.DDXX.DemoFramework
         public ITextureFactory TextureFactory
         {
             get { return registrator.TextureFactory; }
+        }
+
+        public IModelFactory ModelFactory
+        {
+            get { return registrator.ModelFactory; }
         }
 
         public IDemoEffectTypes EffectTypes

@@ -16,6 +16,7 @@ namespace Dope.DDXX.DemoFramework
         void Register(int track, IDemoPostEffect postEffect);
         List<IRegisterable> GetAllRegisterables();
         ITextureFactory TextureFactory { get; }
+        IModelFactory ModelFactory { get; }
         IDemoEffectTypes EffectTypes { get; }
         void SetSong(string filename);
     }

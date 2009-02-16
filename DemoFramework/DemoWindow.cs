@@ -71,8 +71,9 @@ namespace Dope.DDXX.DemoFramework
         {
             TextureFactory textureFactory = new TextureFactory(graphicsFactory);
             EffectFactory effectFactory = new EffectFactory(graphicsFactory);
+            ModelFactory modelFactory = new ModelFactory(graphicsFactory, textureFactory);
 
-            executer.Initialize(graphics.GraphicsDevice, graphicsFactory, textureFactory, effectFactory, xmlFile, deviceParameters);
+            executer.Initialize(graphicsFactory, xmlFile, deviceParameters);
 
             if (AspectRatio.Ratios.RATIO_INVALID == new AspectRatio(Window.ClientBounds.Width, Window.ClientBounds.Height).Ratio)
                 throw new DDXXException("Width and height of window does not match any valid aspect ratio.");

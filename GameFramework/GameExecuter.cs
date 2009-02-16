@@ -41,7 +41,7 @@ namespace Dope.DDXX.GameFramework
             renderTarget = textureFactory.CreateFullsizeRenderTarget(SurfaceFormat.Color, MultiSampleType.None, 0);
             depthStencilBuffer = textureFactory.CreateFullsizeDepthStencil(graphicsFactory.GraphicsDevice.PresentationParameters.AutoDepthStencilFormat, MultiSampleType.None);
             spriteBatch = graphicsFactory.CreateSpriteBatch();
-            postProcessor.Initialize(graphicsFactory, textureFactory, effectFactory);
+            postProcessor.Initialize(graphicsFactory);
 
             fsa.Initialize(graphicsFactory);
         }

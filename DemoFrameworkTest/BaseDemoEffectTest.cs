@@ -12,15 +12,14 @@ using Dope.DDXX.MidiProcessorLib;
 namespace Dope.DDXX.DemoFramework
 {
     [TestFixture]
-    public class BaseDemoEffectTest : BaseDemoEffect, IGraphicsFactory, IEffectFactory, ITextureFactory,
-        IDemoMixer, IEffect, IPostProcessor, IDeviceManager, IGraphicsDevice
+    public class BaseDemoEffectTest : BaseDemoEffect, IDemoMixer, 
+        IPostProcessor, IGraphicsFactory, IGraphicsDevice
     {
         public bool initializeCalled;
 
         public BaseDemoEffectTest()
             : base("", 0, 0)
         {
-            PreparingDeviceSettings = null;
         }
 
         [SetUp]
@@ -32,10 +31,9 @@ namespace Dope.DDXX.DemoFramework
         [Test]
         public void Initialization()
         {
-            Initialize(this, this, this, this, this);
+            Initialize(this, this, this);
             Assert.IsTrue(initializeCalled);
             Assert.AreSame(this, GraphicsFactory);
-            Assert.AreSame(this, EffectFactory);
             Assert.AreSame(this, Mixer);
         }
 
@@ -58,7 +56,7 @@ namespace Dope.DDXX.DemoFramework
         {
             // Setup fixture
             CameraNode camera;
-            Initialize(this, this, this, this, this);
+            Initialize(this, this, this);
             //Exercise SUT
             CreateStandardCamera(out camera, 10);
             // Verify
@@ -144,64 +142,6 @@ namespace Dope.DDXX.DemoFramework
 
         #endregion
 
-        #region IGraphicsFactory Members
-
-        public IDeviceManager GraphicsDeviceManager
-        {
-            get { return this; }
-        }
-
-        public IRenderTarget2D CreateRenderTarget2D(int width, int height, int numLevels, Microsoft.Xna.Framework.Graphics.SurfaceFormat format, Microsoft.Xna.Framework.Graphics.MultiSampleType multiSampleType, int multiSampleQuality)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public ITexture2D CreateTexture2D(int width, int height, int numLevels, TextureUsage usage, Microsoft.Xna.Framework.Graphics.SurfaceFormat format)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public ITexture2D Texture2DFromFile(string name)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public ITextureCube TextureCubeFromFile(string name)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IVertexBuffer CreateVertexBuffer(Type typeVertexType, int numVerts, BufferUsage usage)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public ISpriteBatch CreateSpriteBatch()
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IEffect EffectFromFile(string name)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public ISpriteFont SpriteFontFromFile(string name)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        #endregion
-
-        #region IEffectFactory Members
-
-        public IEffect CreateFromFile(string file)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        #endregion
-
         #region IDisposable Members
 
         public void Dispose()
@@ -222,353 +162,6 @@ namespace Dope.DDXX.DemoFramework
             {
                 throw new Exception("The method or operation is not implemented.");
             }
-        }
-
-        #endregion
-
-        #region IEffect Members
-
-        public string Creator
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public IEffectTechnique CurrentTechnique
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
-
-        public Microsoft.Xna.Framework.Graphics.EffectPool EffectPool
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public ICollectionAdapter<IEffectFunction> Functions
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public new IGraphicsDevice GraphicsDevice
-        {
-            get { return this; }
-        }
-
-        public ICollectionAdapter<IEffectParameter> Parameters
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public ICollectionAdapter<IEffectTechnique> Techniques
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public void Begin()
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void Begin(Microsoft.Xna.Framework.Graphics.SaveStateMode saveStateMode)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IEffect Clone(IGraphicsDevice device)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void CommitChanges()
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public string Disassemble(bool enableColorCode)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void End()
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        #endregion
-
-        #region ITextureFactory Members
-
-        ITexture2D ITextureFactory.CreateFromName(string name)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public ITextureCube CreateCubeFromFile(string name)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IRenderTarget2D CreateFullsizeRenderTarget(SurfaceFormat format, MultiSampleType multiSampleType, int multiSampleQuality)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IRenderTarget2D CreateFullsizeRenderTarget()
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public ITexture2D CreateFromFunction(int width, int height, int numLevels, TextureUsage usage, SurfaceFormat format, Fill2DTextureCallback callbackFunction)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void RegisterTexture(string name, ITexture2D texture)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        #endregion
-
-        #region IGraphicsFactory Members
-
-
-        public IModel ModelFromFile(string name)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        #endregion
-
-        #region IGraphicsFactory Members
-
-
-        public IIndexBuffer CreateIndexBuffer(Type indexType, int elementCount, BufferUsage usage)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IVertexDeclaration CreateVertexDeclaration(VertexElement[] vertexElement)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        #endregion
-
-        #region IGraphicsFactory Members
-
-
-        public IDepthStencilBuffer CreateDepthStencilBuffer(int width, int height, DepthFormat format, MultiSampleType multiSampleType)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        #endregion
-
-        #region ITextureFactory Members
-
-
-        public IDepthStencilBuffer CreateFullsizeDepthStencil(DepthFormat format, MultiSampleType multiSampleType)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        #endregion
-
-        #region ITextureFactory Members
-
-
-        public ITexture2D WhiteTexture
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        #endregion
-
-        #region ITextureFactory Members
-
-
-        public List<Texture2DParameters> Texture2DParameters
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        #endregion
-
-        #region ITextureFactory Members
-
-
-        public ITexture2D CreateFromGenerator(string name, int width, int height, int numMipLevels, TextureUsage usage, SurfaceFormat format, ITextureGenerator generator)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        #endregion
-
-        #region ITextureFactory Members
-
-
-        public void Update(Texture2DParameters Target)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        #endregion
-
-        #region IDeviceManager Members
-
-
-        public bool IsFullScreen
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
-
-        public ShaderProfile MinimumPixelShaderProfile
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
-
-        public ShaderProfile MinimumVertexShaderProfile
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
-
-        public bool PreferMultiSampling
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
-
-        public SurfaceFormat PreferredBackBufferFormat
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
-
-        public int PreferredBackBufferHeight
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
-
-        public int PreferredBackBufferWidth
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
-
-        public DepthFormat PreferredDepthStencilFormat
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
-
-        public bool SynchronizeWithVerticalRetrace
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
-
-#pragma warning disable 0067
-        public event EventHandler<PreparingDeviceSettingsEventArgs> PreparingDeviceSettings;
-#pragma warning restore 0067
-
-        public void ApplyChanges()
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void OnDeviceCreated(object sender, EventArgs args)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void OnDeviceDisposing(object sender, EventArgs args)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void OnDeviceReset(object sender, EventArgs args)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void OnDeviceResetting(object sender, EventArgs args)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void OnPreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs args)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void ToggleFullScreen()
-        {
-            throw new Exception("The method or operation is not implemented.");
         }
 
         #endregion
@@ -1138,18 +731,98 @@ namespace Dope.DDXX.DemoFramework
 
         #endregion
 
-        #region ITextureFactory Members
+        #region IPostProcessor Members
 
-        public bool TextureExists(string name)
+        public void Initialize(IGraphicsFactory graphicsFactory)
         {
             throw new NotImplementedException();
         }
 
         #endregion
 
-        #region IEffectFactory Members
+        #region IGraphicsFactory Members
 
-        public IBasicEffect CreateBasicEffect()
+        public IDeviceManager GraphicsDeviceManager
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public new ITextureFactory TextureFactory
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public new IModelFactory ModelFactory
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public new IEffectFactory EffectFactory
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public IRenderTarget2D CreateRenderTarget2D(int width, int height, int numLevels, SurfaceFormat format, MultiSampleType multiSampleType, int multiSampleQuality)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ITexture2D CreateTexture2D(int width, int height, int numLevels, TextureUsage usage, SurfaceFormat format)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IDepthStencilBuffer CreateDepthStencilBuffer(int width, int height, DepthFormat format, MultiSampleType multiSampleType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ITexture2D Texture2DFromFile(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ITextureCube TextureCubeFromFile(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IVertexBuffer CreateVertexBuffer(Type typeVertexType, int numVerts, BufferUsage usage)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ISpriteBatch CreateSpriteBatch()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEffect EffectFromFile(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ISpriteFont SpriteFontFromFile(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IModel ModelFromFile(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IIndexBuffer CreateIndexBuffer(Type indexType, int elementCount, BufferUsage usage)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IVertexDeclaration CreateVertexDeclaration(VertexElement[] vertexElement)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetScreen(int width, int height, bool fullscreen)
         {
             throw new NotImplementedException();
         }
@@ -1159,16 +832,12 @@ namespace Dope.DDXX.DemoFramework
         #region IGraphicsFactory Members
 
 
-        public void SetScreen(int width, int height, bool fullscreen)
+        public new IGraphicsDevice GraphicsDevice
         {
-            throw new NotImplementedException();
+            get { return this; }
         }
 
-        #endregion
-
-        #region IPostProcessor Members
-
-        public void Initialize(IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, IEffectFactory effectFactory)
+        public IBasicEffect CreateBasicEffect()
         {
             throw new NotImplementedException();
         }

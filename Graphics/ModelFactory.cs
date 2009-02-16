@@ -18,7 +18,7 @@ namespace Dope.DDXX.Graphics
             models = new List<ModelParameters>();
         }
 
-        public IModel FromFile(string file, string effect)
+        public IModel CreateFromName(string file, string effect)
         {
             ModelParameters modelParam = models.Find(delegate(ModelParameters parameters)
             {
@@ -37,6 +37,15 @@ namespace Dope.DDXX.Graphics
             }
             models.Add(new ModelParameters(file, effect, model));
             return model;
+        }
+
+        public List<ModelParameters> ModelParameters
+        {
+            get { return models; }
+        }
+
+        public void Update(ModelParameters Target)
+        {
         }
 
     }

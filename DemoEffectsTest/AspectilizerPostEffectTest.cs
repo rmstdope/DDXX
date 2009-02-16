@@ -40,7 +40,7 @@ namespace Dope.DDXX.DemoEffects
             Expect.Once.On(textureFactory).Method("CreateFromGenerator").
                 With(Is.EqualTo("AspectFrame"), Is.EqualTo(presentParameters.BackBufferWidth), Is.EqualTo(presentParameters.BackBufferHeight), Is.EqualTo(1), Is.EqualTo(TextureUsage.None), Is.EqualTo(SurfaceFormat.Color), Is.Anything).
                 Will(Return.Value(texture2D));
-            aspectilizer.Initialize(graphicsFactory, postProcessor, textureFactory);
+            aspectilizer.Initialize(graphicsFactory, postProcessor);
         }
 
         /// <summary>

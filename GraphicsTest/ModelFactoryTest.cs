@@ -64,7 +64,7 @@ namespace Dope.DDXX.Graphics
             Expect.Once.On(modelMeshPart1).SetProperty("Effect").To(effect);
 
             // Exercise SUT
-            IModel newModel1 = modelFactory.FromFile("File1", "Effect");
+            IModel newModel1 = modelFactory.CreateFromName("File1", "Effect");
 
             // Verify
             Assert.AreSame(model1, newModel1);
@@ -91,7 +91,7 @@ namespace Dope.DDXX.Graphics
             Expect.Once.On(modelMeshPart3).SetProperty("Effect").To(effect3);
 
             // Exercise SUT
-            IModel newModel1 = modelFactory.FromFile("File1", "Effect");
+            IModel newModel1 = modelFactory.CreateFromName("File1", "Effect");
 
             // Verify
             Assert.AreSame(model1, newModel1);
@@ -116,8 +116,8 @@ namespace Dope.DDXX.Graphics
             Expect.Once.On(modelMeshPart1).SetProperty("Effect").To(effect);
             Expect.Once.On(modelMeshPart2).SetProperty("Effect").To(effect2);
             // Exercise SUT
-            IModel newModel1 = modelFactory.FromFile("File1", "Effect1");
-            IModel newModel2 = modelFactory.FromFile("File1", "Effect2");
+            IModel newModel1 = modelFactory.CreateFromName("File1", "Effect1");
+            IModel newModel2 = modelFactory.CreateFromName("File1", "Effect2");
             // Verify
             Assert.AreSame(model1, newModel1);
         }
@@ -134,8 +134,8 @@ namespace Dope.DDXX.Graphics
                 With("Effect1").Will(Return.Value(effect));
             Expect.Once.On(modelMeshPart1).SetProperty("Effect").To(effect);
             // Exercise SUT
-            IModel newModel1 = modelFactory.FromFile("File1", "Effect1");
-            IModel newModel2 = modelFactory.FromFile("File1", "Effect1");
+            IModel newModel1 = modelFactory.CreateFromName("File1", "Effect1");
+            IModel newModel2 = modelFactory.CreateFromName("File1", "Effect1");
             // Verify
             Assert.AreSame(model1, newModel1);
             Assert.AreSame(model1, newModel2);

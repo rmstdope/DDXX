@@ -66,7 +66,7 @@ namespace Dope.DDXX.GameFramework
             Expect.Once.On(textureFactory).Method("CreateFullsizeRenderTarget").With(SurfaceFormat.Color, MultiSampleType.None, 0).Will(Return.Value(renderTarget));
             Expect.Once.On(textureFactory).Method("CreateFullsizeDepthStencil").With(presentationParameters.AutoDepthStencilFormat, MultiSampleType.None).Will(Return.Value(depthStencilBuffer));
             Expect.Once.On(graphicsFactory).Method("CreateSpriteBatch").Will(Return.Value(spriteBatch));
-            Expect.Once.On(postProcessor).Method("Initialize").With(graphicsFactory, textureFactory, effectFactory);
+            Expect.Once.On(postProcessor).Method("Initialize").With(graphicsFactory);
             Expect.Once.On(baseFsa).Method("Initialize").With(graphicsFactory);
 
             executer.Initialize(gameCallback, baseFsa, graphicsFactory, inputDriver, textureFactory, effectFactory, postProcessor);

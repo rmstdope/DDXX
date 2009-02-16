@@ -14,11 +14,17 @@ namespace Dope.DDXX.Graphics
     {
         private IDeviceManager deviceManager;
         private IContentManager contentManager;
+        private ITextureFactory textureFactory;
+        private IModelFactory modelFactory;
+        private IEffectFactory effectFactory;
 
         public GraphicsFactory(Game game, IServiceProvider serviceProvider)
         {
             deviceManager = new GraphicsDeviceManagerAdapter(new GraphicsDeviceManager(game));
             contentManager = new ContentManagerAdapter(new ContentManager(serviceProvider));
+            textureFactory = new TextureFactory(this);
+            modelFactory = new ModelFactory(this, textureFactory);
+            effectFactory = new EffectFactory(this);
         }
 
         public void SetScreen(int width, int height, bool fullscreen)
@@ -41,6 +47,21 @@ namespace Dope.DDXX.Graphics
         public IGraphicsDevice GraphicsDevice
         {
             get { return deviceManager.GraphicsDevice; }
+        }
+
+        public ITextureFactory TextureFactory 
+        {
+            get { return textureFactory; } 
+        }
+        
+        public IModelFactory ModelFactory 
+        {
+            get { return modelFactory; }
+        }
+        
+        public IEffectFactory EffectFactory 
+        {
+            get { return effectFactory; }
         }
 
         private GraphicsDevice DxGraphicsDevice

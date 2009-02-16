@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Demo song="music_machinefunk_loop">
+  <ModelFactory>
+  </ModelFactory>
 	<TextureFactory>
 		<Texture name="Noise256base1024" width="256" height="256" miplevels="1">
 			<Generator class="PerlinNoise">

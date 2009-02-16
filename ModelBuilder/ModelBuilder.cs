@@ -89,31 +89,6 @@ namespace Dope.DDXX.ModelBuilder
             material.Transparency = factor;
         }
 
-        //public IModel CreateSkyBoxModel(string name, string textureName)
-        //{
-        //    Vector3[] vertices = new Vector3[4];
-        //    float fHighW = -1.0f - (1.0f / graphicsFactory.GraphicsDeviceManager.GraphicsDevice.Viewport.Width);
-        //    float fHighH = -1.0f - (1.0f / graphicsFactory.GraphicsDeviceManager.GraphicsDevice.Viewport.Height);
-        //    float fLowW = 1.0f + (1.0f / graphicsFactory.GraphicsDeviceManager.GraphicsDevice.Viewport.Width);
-        //    float fLowH = 1.0f + (1.0f / graphicsFactory.GraphicsDeviceManager.GraphicsDevice.Viewport.Height);
-        //    vertices[0] = new Vector3(fLowW, fLowH, 1.0f);
-        //    vertices[1] = new Vector3(fLowW, fHighH, 1.0f);
-        //    vertices[2] = new Vector3(fHighW, fLowH, 1.0f);
-        //    vertices[3] = new Vector3(fHighW, fHighH, 1.0f);
-        //    short[] indices = new short[] { 0, 1, 2, 3, 2, 1 };
-            
-        //    VertexElementArray declaration = new VertexElementArray();
-        //    declaration.AddPositions();
-
-        //    IMesh mesh = graphicsFactory.CreateMesh(2, 4, MeshFlags.Managed, 
-        //        declaration.VertexElements, device);
-        //    mesh.SetVertexBufferData(vertices, LockFlags.None);
-        //    mesh.SetIndexBufferData(indices, LockFlags.None);
-        //    ModelMaterial material = new ModelMaterial(new Material());
-        //    material.ReflectiveTexture = textureFactory.CreateCubeFromFile(textureName);
-        //    IModel model = new Model(mesh, new ModelMaterial[] { material });
-        //    return model;
-        //}
         public IModel CreateModel(IModifier generator, string material)
         {
             return CreateModel(generator, GetMaterial(material));

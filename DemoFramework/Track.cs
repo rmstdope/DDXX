@@ -154,17 +154,14 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        public void Initialize(IGraphicsFactory graphicsFactory, IGraphicsDevice device, 
-            ITextureFactory textureFactory, IEffectFactory effectFactory, 
-            IDemoMixer mixer, IPostProcessor postProcessor)
+        public void Initialize(IGraphicsFactory graphicsFactory, IDemoMixer mixer, IPostProcessor postProcessor)
         {
             this.spriteBatch = graphicsFactory.CreateSpriteBatch();
             this.postProcessor = postProcessor;
             foreach (IDemoEffect effect in effects)
-                effect.Initialize(graphicsFactory, effectFactory, textureFactory,
-                    mixer, postProcessor);
+                effect.Initialize(graphicsFactory, mixer, postProcessor);
             foreach (IDemoPostEffect effect in postEffects)
-                effect.Initialize(graphicsFactory, postProcessor, textureFactory);
+                effect.Initialize(graphicsFactory, postProcessor);
         }
 
         public void Step()

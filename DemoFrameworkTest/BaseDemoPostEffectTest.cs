@@ -40,7 +40,7 @@ namespace Dope.DDXX.DemoFramework
             PostProcessor postProcessor = new PostProcessor();
             TestPostEffect effect = new TestPostEffect("", 0.0f, 10.0f);
 
-            effect.Initialize(null, postProcessor, null);
+            effect.Initialize(null, postProcessor);
         }
 
         [Test]

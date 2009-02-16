@@ -10,7 +10,6 @@ namespace Dope.DDXX.DemoFramework
     {
         private int drawOrder;
         private IPostProcessor postProcessor;
-        private ITextureFactory textureFactory;
         private IGraphicsFactory graphicsFactory;
 
         protected IGraphicsFactory GraphicsFactory
@@ -30,7 +29,7 @@ namespace Dope.DDXX.DemoFramework
 
         protected ITextureFactory TextureFactory
         {
-            get { return textureFactory; }
+            get { return graphicsFactory.TextureFactory; }
         }
 
         public int DrawOrder
@@ -47,20 +46,14 @@ namespace Dope.DDXX.DemoFramework
 
         protected abstract void Initialize();
 
-        #region IDemoPostEffect Members
-
         public abstract void Render();
 
-        public void Initialize(IGraphicsFactory graphicsFactory, IPostProcessor postProcessor, ITextureFactory textureFactory)
+        public void Initialize(IGraphicsFactory graphicsFactory, IPostProcessor postProcessor)
         {
             this.graphicsFactory = graphicsFactory;
             this.postProcessor = postProcessor;
-            this.textureFactory = textureFactory;
             Initialize();
         }
-
-        #endregion
-
 
     }
 }

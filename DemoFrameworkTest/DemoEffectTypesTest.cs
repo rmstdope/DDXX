@@ -24,7 +24,7 @@ public class FooEffect : Registerable, IDemoEffect
   protected int drawOrder; 
   public FooEffect(string s1, float f1, float f2) : base(s1, f1, f2) { }
   public int DrawOrder { get { return drawOrder;} set { drawOrder = value; } }
-  public void Step() {} public void Render() {} public void Initialize(IGraphicsFactory graphicsFactory, IEffectFactory effectFactory, ITextureFactory textureFactory, IDemoMixer mixer, IPostProcessor postProcessor) {} 
+  public void Step() {} public void Render() {} public void Initialize(IGraphicsFactory graphicsFactory, IDemoMixer mixer, IPostProcessor postProcessor) {} 
   public IScene Scene { get { return null; } }
 }
 public class BarEffect : FooEffect {

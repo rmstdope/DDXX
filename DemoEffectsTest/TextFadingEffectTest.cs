@@ -195,7 +195,7 @@ namespace Dope.DDXX.DemoEffects
             textFadingEffect.FontName = fontName;
             ExpectSprite();
             ExpectFont(fontName);
-            textFadingEffect.Initialize(graphicsFactory, effectFactory, textureFactory, mixer, postProcessor);
+            textFadingEffect.Initialize(graphicsFactory, mixer, postProcessor);
         }
 
         private void ExpectFont(string fontName)

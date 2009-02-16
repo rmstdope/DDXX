@@ -171,7 +171,7 @@ namespace Dope.DDXX.DemoFramework
             ExpectPostProcessorInitialize();
             ExpectTweakerInitialize();
 
-            executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, deviceParameters);
+            executer.Initialize(graphicsFactory, deviceParameters);
         }
 
         [Test]
@@ -181,7 +181,7 @@ namespace Dope.DDXX.DemoFramework
             ExpectPostProcessorInitialize();
             ExpectTweakerInitialize();
 
-            executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, deviceParameters);
+            executer.Initialize(graphicsFactory, deviceParameters);
         }
 
         [Test]
@@ -199,7 +199,7 @@ namespace Dope.DDXX.DemoFramework
             ExpectPostProcessorInitialize();
             ExpectTweakerInitialize();
 
-            executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, deviceParameters);
+            executer.Initialize(graphicsFactory, deviceParameters);
         }
 
         [Test]
@@ -216,10 +216,9 @@ namespace Dope.DDXX.DemoFramework
 
             for (int i = 0; i < 50; i++)
                 Expect.Once.On(tracks[i]).
-                    Method("Initialize").With(graphicsFactory, device, textureFactory, effectFactory,
-                    executer, postProcessor);
+                    Method("Initialize").With(graphicsFactory, executer, postProcessor);
 
-            executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, deviceParameters);
+            executer.Initialize(graphicsFactory, deviceParameters);
         }
 
         [Test]
@@ -240,7 +239,7 @@ namespace Dope.DDXX.DemoFramework
             Expect.Once.On(t2).
                 Method("Initialize").With(postProcessor);
 
-            executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, deviceParameters);
+            executer.Initialize(graphicsFactory, deviceParameters);
         }
 
         [Test]
@@ -395,7 +394,7 @@ namespace Dope.DDXX.DemoFramework
             ExpectTweakerInitialize();
             Expect.Once.On(tweakerHandler).Method("ReadFromXmlFile").With("XmlFileName");
             // Exercise SUT
-            executer.Initialize(device, graphicsFactory, textureFactory, effectFactory, "XmlFileName", deviceParameters);
+            executer.Initialize(graphicsFactory, "XmlFileName", deviceParameters);
 
 //            FooEffect fooEffect = new FooEffect("", 0, 0);
 //            BarEffect barEffect = new BarEffect("", 0, 0);
@@ -800,7 +799,7 @@ namespace Dope.DDXX.DemoFramework
         {
             Expect.Once.On(postProcessor).
                 Method("Initialize").
-                With(graphicsFactory, textureFactory, effectFactory);
+                With(graphicsFactory);
         }
 
         private void ExpectTweakerInitialize()
