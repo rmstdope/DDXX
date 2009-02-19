@@ -299,6 +299,11 @@ namespace Dope.DDXX.DemoFramework
             get { return registrator.EffectTypes; }
         }
 
+        public IMenuControl<T> CreateMenuControl<T>()
+        {
+            return new MenuControl<T>(new Vector2(0.5f, 0.5f), Positioning.Center | Positioning.VerticalCenter, 128, userInterface.DrawResources, null);
+        }
+
         #endregion
     }
 }

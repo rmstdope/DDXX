@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Dope.DDXX.Utility;
 using Microsoft.Xna.Framework.Input;
+using Dope.DDXX.UserInterface;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -176,7 +177,12 @@ namespace Dope.DDXX.DemoFramework
         {
         }
 
-        public virtual void InsertNew(TweakerStatus status)
+        public virtual IMenuControl InsertNew(TweakerStatus status, IDrawResources drawResources, bool after)
+        {
+            return null;
+        }
+
+        public virtual void ChoiceMade(TweakerStatus status, int index)
         {
         }
 

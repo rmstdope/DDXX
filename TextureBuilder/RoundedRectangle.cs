@@ -9,14 +9,41 @@ namespace Dope.DDXX.TextureBuilder
     {
         private Vector4 corners;
         private Vector4 innerCorners;
+        private Vector2 center;
+        private Vector2 size;
         private float roundRadius;
 
-        public RoundedRectangle(Vector2 size, Vector2 center, float roundRadius)
-            : base(0)
+        public float RoundRadius
+        {
+            get { return roundRadius; }
+            set { roundRadius = value; Recalc(); }
+        }
+
+        public Vector2 Center
+        {
+            get { return center; }
+            set { center = value; Recalc(); }
+        }
+
+        public Vector2 Size
+        {
+            get { return size; }
+            set { size = value; Recalc(); }
+        }
+
+        private void Recalc()
         {
             corners = new Vector4(center.X - size.X / 2.0f, center.Y - size.Y / 2.0f, center.X + size.X / 2.0f, center.Y + size.Y / 2.0f);
             innerCorners = new Vector4(corners.X + roundRadius, corners.Y + roundRadius, corners.Z - roundRadius, corners.W - roundRadius);
-            this.roundRadius = roundRadius;
+        }
+
+        public RoundedRectangle()
+            : base(0)
+        {
+            center = new Vector2(0.5f, 0.5f);
+            size = new Vector2(0.95f, 0.95f);
+            roundRadius = 0.01f;
+            Recalc();
         }
 
         public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)

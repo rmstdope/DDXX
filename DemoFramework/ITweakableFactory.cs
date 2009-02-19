@@ -4,6 +4,7 @@ using System.Text;
 using System.Reflection;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.TextureBuilder;
+using Dope.DDXX.UserInterface;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -13,5 +14,6 @@ namespace Dope.DDXX.DemoFramework
         ITweakable CreateTweakableObject(object target);
         IGraphicsFactory GraphicsFactory { get; }
         IDemoEffectTypes EffectTypes { get; }
+        IMenuControl<T> CreateMenuControl<T>();
     }
 }

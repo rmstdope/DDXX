@@ -13,13 +13,37 @@ namespace Dope.DDXX.TextureBuilder
         private float turbSize;
         private float turbPower;
 
-        public Marble(float veinPeriodX, float veinPeriodY, float turbulenceSize, float turbulencePower)
+        public float VeinPeriodX
+        {
+            get { return veinPeriodX; }
+            set { veinPeriodX = value; }
+        }
+
+        public float VeinPeriodY
+        {
+            get { return veinPeriodY; }
+            set { veinPeriodY = value; }
+        }
+
+        public float TurbSize
+        {
+            get { return turbSize; }
+            set { turbSize = value; }
+        }
+
+        public float TurbPower
+        {
+            get { return turbPower; }
+            set { turbPower = value; }
+        }
+
+        public Marble()
             : base(0)
         {
-            this.turbSize = turbulenceSize;
-            this.veinPeriodX = veinPeriodX;
-            this.veinPeriodY = veinPeriodY;
-            this.turbPower = turbulencePower;
+            this.turbSize = 8;
+            this.veinPeriodX = 1.0f;
+            this.veinPeriodY = 1.0f;
+            this.turbPower = 32;
             perlinGenerator = new PerlinTurbulence();
             perlinGenerator.NumOctaves = 6;
             perlinGenerator.BaseFrequency = turbSize;

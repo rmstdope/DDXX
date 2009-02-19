@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Xml;
 using Dope.DDXX.UserInterface;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -51,7 +52,8 @@ namespace Dope.DDXX.DemoFramework
                 new BoxControl(new Vector4(0, y, 1, height), settings.Alpha, settings.SelectedColor, status.RootControl);
             new TextControl(Target.GetType().Name, new Vector4(0, y, 0.45f, height), Positioning.Right | Positioning.VerticalCenter, settings.TextAlpha, Color.White, status.RootControl);
 
-            new BoxControl(new Vector4(0.55f + 0.225f - height / 2, y, height / 2, height), 255, texture, status.RootControl);
+            int i = 0;// Rand.Int(0, 1);
+            new BoxControl(new Vector4(0.55f - height / 2 * i + 0.225f - height / 2, y, height / 2, height), 255, texture, status.RootControl);
         }
 
     }

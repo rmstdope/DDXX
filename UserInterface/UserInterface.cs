@@ -29,7 +29,7 @@ namespace Dope.DDXX.UserInterface
                 (float)spriteBatch.GraphicsDevice.PresentationParameters.BackBufferHeight;
         }
 
-        public void DrawControl(BaseControl control)
+        public void DrawControl(IControl control)
         {
             spriteBatch.GraphicsDevice.RenderState.AlphaBlendEnable = true;
             spriteBatch.GraphicsDevice.RenderState.BlendFunction = BlendFunction.Add;

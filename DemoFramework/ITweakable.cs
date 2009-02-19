@@ -4,6 +4,7 @@ using System.Text;
 using System.Reflection;
 using System.Xml;
 using Microsoft.Xna.Framework.Input;
+using Dope.DDXX.UserInterface;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -22,6 +23,7 @@ namespace Dope.DDXX.DemoFramework
         void ReadFromXmlFile(XmlNode node);
         void WriteToXmlFile(XmlDocument xmlDocument, XmlNode node);
         void Regenerate(TweakerStatus status);
-        void InsertNew(TweakerStatus status);
+        IMenuControl InsertNew(TweakerStatus status, IDrawResources drawResources, bool after);
+        void ChoiceMade(TweakerStatus status, int index);
     }
 }

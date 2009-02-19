@@ -42,13 +42,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="fonts\TweakerFont.spritefont">
-      <Name>TweakerFont</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="textures\head.tga">
       <Name>head</Name>
       <Importer>TextureImporter</Importer>
@@ -197,6 +190,18 @@
       <Name>music_machinefunk_loop</Name>
       <Importer>XactImporter</Importer>
       <Processor>XactProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="fonts\TweakerFontLarge.spritefont">
+      <Name>TweakerFontLarge</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+    <Compile Include="fonts\TweakerFontMedium.spritefont">
+      <Name>TweakerFontMedium</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>

@@ -21,6 +21,7 @@ namespace Dope.DDXX.DemoFramework
         private IUserInterface userInterface;
         private BaseControl mainWindow;
         private BaseControl timelineWindow;
+        private IMenuControl menuControl;
 
         public DemoTweaker(ITweakerSettings settings, ITweakable tweakable)
         {
@@ -48,6 +49,8 @@ namespace Dope.DDXX.DemoFramework
             CreateInputControls();
 
             userInterface.DrawControl(mainWindow);
+            if (menuControl != null)
+                userInterface.DrawControl(menuControl);
 
             status.RootControl.RemoveChildren();
         }
@@ -159,6 +162,27 @@ namespace Dope.DDXX.DemoFramework
 
         public IDemoTweaker HandleInput(IInputDriver inputDriver)
         {
+            if (menuControl == null)
+                return HandleTweakerInput(inputDriver);
+            HandleMenuInput(inputDriver);
+            return null;
+        }
+
+        private void HandleMenuInput(IInputDriver inputDriver)
+        {
+            if (inputDriver.KeyPressedSlowRepeat(Keys.Up))
+                menuControl.Previous();
+            if (inputDriver.KeyPressedSlowRepeat(Keys.Down))
+                menuControl.Next();
+            if (inputDriver.KeyPressedNoRepeat(Keys.Enter))
+            {
+                tweakable.ChoiceMade(status, menuControl.Selected);
+                menuControl = null;
+            }
+        }
+
+        private IDemoTweaker HandleTweakerInput(IInputDriver inputDriver)
+        {
             IDemoTweaker tweaker = null;
 
             if (inputDriver.KeyPressedNoRepeat(Keys.Up))
@@ -172,7 +196,7 @@ namespace Dope.DDXX.DemoFramework
             if (inputDriver.KeyPressedSlowRepeat(Keys.PageDown))
                 tweakable.DecreaseValue(status);
             if (inputDriver.KeyPressedNoRepeat(Keys.Insert))
-                tweakable.InsertNew(status);
+                menuControl = tweakable.InsertNew(status, userInterface.DrawResources, inputDriver.KeyPressed(Keys.LeftControl));
 
             StringInput(inputDriver);
 
@@ -227,15 +251,6 @@ namespace Dope.DDXX.DemoFramework
                 status.InputString = "";
             }
         }
-
-        //public void Update(IEffectChangeListener effectChangeListener)
-        //{
-        //    foreach (ITrack track in tracks)
-        //    {
-        //        track.UpdateListener(effectChangeListener);
-        //    }
-        //}
-
 
         public void ReadFromXmlFile(XmlNode node)
         {

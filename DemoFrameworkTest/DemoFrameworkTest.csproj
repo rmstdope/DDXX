@@ -127,6 +127,7 @@
     <Compile Include="TweakableSceneTest.cs" />
     <Compile Include="TweakableSingleTest.cs" />
     <Compile Include="TweakableStringTest.cs" />
+    <Compile Include="TweakableTexture2DParametersTest.cs" />
     <Compile Include="TweakableTextureFactoryTest.cs" />
     <Compile Include="TweakableVector2Test.cs" />
     <Compile Include="TweakableVector3Test.cs" />

@@ -62,7 +62,8 @@ namespace Dope.DDXX.DemoFramework
 
             Stub.On(inputDriver).Method("KeyPressedNoRepeat").With(Keys.Space).Will(Return.Value(false));
             Stub.On(graphicsFactory).Method("CreateSpriteBatch").Will(Return.Value(spriteBatch));
-            Stub.On(graphicsFactory).Method("SpriteFontFromFile").With("Content/fonts/TweakerFont").Will(Return.Value(null));
+            Stub.On(graphicsFactory).Method("SpriteFontFromFile").With("Content/fonts/TweakerFontMedium").Will(Return.Value(null));
+            Stub.On(graphicsFactory).Method("SpriteFontFromFile").With("Content/fonts/TweakerFontLarge").Will(Return.Value(null));
             Stub.On(textureFactory).GetProperty("WhiteTexture").Will(Return.Value(null));
 
             numTracksRegistered = 0;
@@ -804,6 +805,10 @@ namespace Dope.DDXX.DemoFramework
 
         private void ExpectTweakerInitialize()
         {
+            Expect.Once.On(userInterface).
+                Method("SetFont").With(FontSize.Medium, null);
+            Expect.Once.On(userInterface).
+                Method("SetFont").With(FontSize.Large, null);
             Expect.Once.On(userInterface).
                 Method("Initialize");
             Expect.Once.On(tweakerHandler).

@@ -448,11 +448,17 @@ namespace Dope.DDXX.DemoFramework
         #region ITweakable Members
 
 
-        public void InsertNew(TweakerStatus status)
+        public IMenuControl InsertNew(TweakerStatus status, IDrawResources drawResources, bool after)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ChoiceMade(TweakerStatus status, int index)
         {
             throw new NotImplementedException();
         }
 
         #endregion
+
     }
 }

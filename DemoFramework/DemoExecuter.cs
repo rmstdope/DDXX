@@ -161,6 +161,8 @@ namespace Dope.DDXX.DemoFramework
 
         private void InitializeTweaker(IGraphicsFactory graphicsFactory)
         {
+            userInterface.SetFont(FontSize.Medium, graphicsFactory.SpriteFontFromFile("Content/fonts/TweakerFontMedium"));
+            userInterface.SetFont(FontSize.Large, graphicsFactory.SpriteFontFromFile("Content/fonts/TweakerFontLarge"));
             userInterface.Initialize(graphicsFactory, graphicsFactory.TextureFactory);
             ITweakable tweakableDemo = new TweakableDemo(this, this, tweakerHandler.Factory);
             tweakerHandler.Initialize(this, userInterface, tweakableDemo);

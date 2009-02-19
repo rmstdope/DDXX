@@ -73,11 +73,6 @@
 				<OuterRadius>0.5</OuterRadius>
 			</Generator>
 		</Texture>
-		<Texture name="Texture - 10531" width="64" height="64" miplevels="1">
-			<Generator class="Constant">
-				<Color>0, 0, 0, 0</Color>
-			</Generator>
-		</Texture>
 	</TextureFactory>
   <!--<Effect class="IntroText" name="Lines" track="0" startTime="0" endTime="500">
 		<DrawOrder>0</DrawOrder>

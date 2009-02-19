@@ -137,7 +137,7 @@ namespace Dope.DDXX.DemoFramework
             TextureParameters[status.Selection].Regenerate();
         }
 
-        public override void InsertNew(TweakerStatus status)
+        public override IMenuControl InsertNew(TweakerStatus status, IDrawResources drawResources, bool after)
         {
             string newName = "Texture - " + Rand.Int(0, 65535);
             TextureDirector director = new TextureDirector(Target);
@@ -148,6 +148,7 @@ namespace Dope.DDXX.DemoFramework
                 return param.Name == newName;
             });
             status.Selection = index;
+            return null;
         }
 
     }
