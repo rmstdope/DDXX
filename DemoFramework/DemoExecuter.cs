@@ -36,7 +36,6 @@ namespace Dope.DDXX.DemoFramework
 
         private IDemoFactory demoFactory;
         private IDemoEffectTypes effectTypes;
-        private TweakerSettings settings = new TweakerSettings();
         private Color clearColor = new Color(0, 0, 0, 0);
         private Dictionary<string, ITextureGenerator> generators = new Dictionary<string,ITextureGenerator>();
 
@@ -92,11 +91,6 @@ namespace Dope.DDXX.DemoFramework
             return tracks[track].PostEffects;
         }
 
-        public IDemoTweakerHandler TweakerHandler
-        {
-            set { tweakerHandler = value; }
-        }
-
         public IUserInterface UserInterface
         {
             set { userInterface = value; }
@@ -112,14 +106,14 @@ namespace Dope.DDXX.DemoFramework
             get { return effectTypes; }
         }
 
-        public DemoExecuter(IDemoFactory demoFactory, ISoundFactory soundFactory, IInputDriver inputDriver, IPostProcessor postProcessor, IDemoEffectTypes effectTypes)
+        public DemoExecuter(IDemoFactory demoFactory, ISoundFactory soundFactory, IInputDriver inputDriver, IPostProcessor postProcessor, IDemoEffectTypes effectTypes, IDemoTweakerHandler tweakerHandler)
         {
             this.demoFactory = demoFactory;
             this.soundFactory = soundFactory;
             this.inputDriver = inputDriver;
             this.postProcessor = postProcessor;
             this.effectTypes = effectTypes;
-            tweakerHandler = new DemoTweakerHandler(this, settings);
+            this.tweakerHandler = tweakerHandler;
             userInterface = new UserInterface.UserInterface();
         }
 
@@ -164,8 +158,8 @@ namespace Dope.DDXX.DemoFramework
             userInterface.SetFont(FontSize.Medium, graphicsFactory.SpriteFontFromFile("Content/fonts/TweakerFontMedium"));
             userInterface.SetFont(FontSize.Large, graphicsFactory.SpriteFontFromFile("Content/fonts/TweakerFontLarge"));
             userInterface.Initialize(graphicsFactory, graphicsFactory.TextureFactory);
-            ITweakable tweakableDemo = new TweakableDemo(this, this, tweakerHandler.Factory);
-            tweakerHandler.Initialize(this, userInterface, tweakableDemo);
+            ITweakable tweakableDemo = tweakerHandler.Factory.CreateTweakableObject(this);
+            tweakerHandler.Initialize(this, this, userInterface, tweakableDemo);
         }
 
         private void InitializeSound()
@@ -282,7 +276,7 @@ namespace Dope.DDXX.DemoFramework
             ITexture2D renderedTexture = RenderTracks();
 
 #if (!XBOX)
-            if (inputDriver.KeyPressedNoRepeat(settings.ScreenshotKey))
+            if (inputDriver.KeyPressedNoRepeat(tweakerHandler.Settings.ScreenshotKey))
                 renderedTexture.Save("Screenshot" + screenshotNum++ + ".jpg", ImageFileFormat.Jpg);
 #endif
 

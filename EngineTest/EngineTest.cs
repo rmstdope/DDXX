@@ -8,6 +8,7 @@ using System.Reflection;
 using Dope.DDXX.DemoEffects;
 using Dope.DDXX.TextureBuilder;
 using Microsoft.Xna.Framework.Audio;
+using Dope.DDXX.DemoTweaker;
 
 namespace EngineTest
 {
@@ -23,7 +24,7 @@ namespace EngineTest
                 typeof(GlowPostEffect).Assembly,
                 typeof(TextureDirector).Assembly };
             FileUtility.SetLoadPaths(new string[] { "./", "../../../xml/" });
-            DemoWindow window = new DemoWindow("Pelle", "EngineTest.xml", assemblies);
+            DemoWindow window = new DemoWindow("Pelle", "EngineTest.xml", assemblies, new DemoTweakerHandler(new TweakerSettings()));
 
             //CompiledMidi midi = window.Content.Load<CompiledMidi>("Content\\sound\\music_machinefunk_loop");
             //System.Diagnostics.Debug.WriteLine("CompiledMidi loaded. Number of tracks: " + 

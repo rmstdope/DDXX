@@ -8,6 +8,7 @@ using Dope.DDXX.Utility;
 using Dope.DDXX.DemoFramework;
 #if (!XBOX)
 using System.Windows.Forms;
+using Dope.DDXX.DemoTweaker;
 #endif
 
 namespace DFM2007Invitro
@@ -21,7 +22,7 @@ namespace DFM2007Invitro
                 typeof(GlowPostEffect).Assembly,
                 typeof(TextureDirector).Assembly };
             FileUtility.SetLoadPaths(new string[] { "./", "../../../", "Content/xml/" });
-            DemoWindow window = new DemoWindow("Invitro", "DFM2007.xml", assemblies);
+            DemoWindow window = new DemoWindow("Invitro", "DFM2007.xml", assemblies, new DemoTweakerHandler(new TweakerSettings()));
             try
             {
                 if (window.SetupDialog())

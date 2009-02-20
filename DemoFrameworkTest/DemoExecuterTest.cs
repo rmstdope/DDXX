@@ -16,6 +16,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Dope.DDXX.UserInterface;
+using Dope.DDXX.DemoTweaker;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -48,14 +49,13 @@ namespace Dope.DDXX.DemoFramework
             soundFactory = mockery.NewMock<ISoundFactory>();
             inputDriver = mockery.NewMock<IInputDriver>();
             effectTypes = mockery.NewMock<IDemoEffectTypes>();
-            executer = new DemoExecuter(this, soundFactory, inputDriver, postProcessor, effectTypes);
             tweakerHandler = mockery.NewMock<IDemoTweakerHandler>();
             tweakableFactory = mockery.NewMock<ITweakableFactory>();
-            executer.TweakerHandler = tweakerHandler;
             renderTarget2 = mockery.NewMock<IRenderTarget2D>();
             renderTarget3 = mockery.NewMock<IRenderTarget2D>();
             deviceParameters = mockery.NewMock<IDeviceParameters>();
             userInterface = mockery.NewMock<IUserInterface>();
+            executer = new DemoExecuter(this, soundFactory, inputDriver, postProcessor, effectTypes, tweakerHandler);
             executer.UserInterface = userInterface;
 
             effectChangeListener = mockery.NewMock<IEffectChangeListener>();
@@ -65,6 +65,8 @@ namespace Dope.DDXX.DemoFramework
             Stub.On(graphicsFactory).Method("SpriteFontFromFile").With("Content/fonts/TweakerFontMedium").Will(Return.Value(null));
             Stub.On(graphicsFactory).Method("SpriteFontFromFile").With("Content/fonts/TweakerFontLarge").Will(Return.Value(null));
             Stub.On(textureFactory).GetProperty("WhiteTexture").Will(Return.Value(null));
+            Stub.On(tweakerHandler).GetProperty("Factory").Will(Return.Value(tweakableFactory));
+            Stub.On(tweakerHandler).GetProperty("Settings").Will(Return.Value(new TweakerSettings()));
 
             numTracksRegistered = 0;
             tracks = new List<ITrack>();
@@ -811,6 +813,10 @@ namespace Dope.DDXX.DemoFramework
                 Method("SetFont").With(FontSize.Large, null);
             Expect.Once.On(userInterface).
                 Method("Initialize");
+            Expect.Once.On(tweakableFactory).
+                Method("CreateTweakableObject").
+                With(executer).
+                Will(Return.Value(null));
             Expect.Once.On(tweakerHandler).
                 Method("Initialize");
             Stub.On(tweakerHandler).

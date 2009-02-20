@@ -115,6 +115,10 @@
       <Project>{0E899EC0-D2E2-47EE-A46D-53E037C3F52F}</Project>
       <Name>DemoFramework</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DemoTweaker\DemoTweaker.csproj">
+      <Project>{F09DC880-7107-459C-8239-D6494DD13887}</Project>
+      <Name>DemoTweaker</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Effects\Effects.csproj">
       <Project>{F8F2B6F6-5D5B-4433-9FDF-2ACA99CF730C}</Project>
       <Name>Effects</Name>

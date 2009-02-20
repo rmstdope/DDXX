@@ -8,10 +8,11 @@ namespace Dope.DDXX.DemoFramework
 {
     public interface IDemoTweakerHandler
     {
+        ITweakerSettings Settings { get; }
         ITweakableFactory Factory { get; }
         bool Quit { get; }
         bool Exiting { get; }
-        void Initialize(IDemoRegistrator registrator, IUserInterface userInterface, ITweakable firstTweaker);
+        void Initialize(IDemoTweakerContext context, IDemoRegistrator registrator, IUserInterface userInterface, ITweakable firstTweaker);
         void Draw();
         IDemoTweaker HandleInput(IInputDriver inputDriver);
         object IdentifierToChild();

@@ -1,25 +1,17 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
-    <ProjectGuid>{70987D73-4C29-45ED-8D60-42606B3AE38D}</ProjectGuid>
+    <ProjectGuid>{F09DC880-7107-459C-8239-D6494DD13887}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EngineTest</RootNamespace>
-    <AssemblyName>EngineTest</AssemblyName>
+    <RootNamespace>Dope.DDXX.DemoTweaker</RootNamespace>
+    <AssemblyName>Dope.DDXX.DemoTweaker</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <XnaFrameworkVersion>v3.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
-    <XnaCrossPlatformGroupID>18e88ce1-226d-48c0-982e-770154eec4d8</XnaCrossPlatformGroupID>
-    <ApplicationIcon>Game.ico</ApplicationIcon>
-    <Thumbnail>GameThumbnail.png</Thumbnail>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>2.0</OldToolsVersion>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <XnaCrossPlatformGroupID>37d3ea1c-d291-4874-aaa2-9929e1bd88ea</XnaCrossPlatformGroupID>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -32,6 +24,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -46,6 +39,7 @@
     <NoStdLib>true</NoStdLib>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <PlatformTarget>x86</PlatformTarget>
+    <XnaCompressContent>false</XnaCompressContent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>
@@ -57,6 +51,7 @@
     <NoStdLib>true</NoStdLib>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <PlatformTarget>x86</PlatformTarget>
+    <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Xna.Framework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
@@ -73,43 +68,46 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BlitSine.cs" />
-    <Compile Include="BloodCell.cs" />
-    <Compile Include="MusicSynchronizedOverlay.cs" />
-    <Compile Include="VolumetricClouds.cs" />
-    <Compile Include="City.cs" />
-    <Compile Include="EmptyEffect.cs" />
-    <Compile Include="EngineTest.cs" />
-    <Compile Include="GridEffect.cs" />
-    <Compile Include="IntroText.cs" />
-    <Compile Include="TextEffect.cs" />
-    <Compile Include="ModelEffect.cs" />
-    <Compile Include="MorphEffect.cs" />
-    <Compile Include="ParticleParty.cs" />
-    <Compile Include="ParticleSystemEffect.cs" />
+    <Compile Include="DemoTweaker.cs" />
+    <Compile Include="DemoTweakerHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Simple2DEffect.cs" />
-    <Compile Include="SkinningEffect.cs" />
-    <Compile Include="SpermBank.cs" />
-    <Compile Include="SunEffect.cs" />
-    <Compile Include="TerrainFlyover.cs" />
-    <Compile Include="TextureEffect.cs" />
-    <Compile Include="Tubes.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Game.ico" />
-    <Content Include="GameThumbnail.png" />
-    <Content Include="xml\EngineTest.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <NestedContentProject Include="Content\Content.contentproj">
-      <Project>9ca0f39a-39c0-45be-8ca2-7dd68898f009</Project>
-      <Visible>False</Visible>
-    </NestedContentProject>
+    <Compile Include="TweakableBoolean.cs" />
+    <Compile Include="TweakableColor.cs" />
+    <Compile Include="TweakableDemo.cs" />
+    <Compile Include="TweakableInt32.cs" />
+    <Compile Include="TweakableMaterial.cs" />
+    <Compile Include="TweakableModel.cs" />
+    <Compile Include="TweakableModelFactory.cs" />
+    <Compile Include="TweakableModelMeshPart.cs" />
+    <Compile Include="TweakableNode.cs" />
+    <Compile Include="TweakableObjectBase.cs" />
+    <Compile Include="TweakableProperty.cs" />
+    <Compile Include="TweakableRegisterable.cs" />
+    <Compile Include="TweakableScene.cs" />
+    <Compile Include="TweakableSingle.cs" />
+    <Compile Include="TweakableString.cs" />
+    <Compile Include="TweakableTexture2DParameters.cs" />
+    <Compile Include="TweakableTextureFactory.cs" />
+    <Compile Include="TweakableTextureGenerator.cs" />
+    <Compile Include="TweakableTextureValue.cs" />
+    <Compile Include="TweakableValueBase.cs" />
+    <Compile Include="TweakableVector2.cs" />
+    <Compile Include="TweakableVector3.cs" />
+    <Compile Include="TweakableVector4.cs" />
+    <Compile Include="TweakerSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
@@ -132,27 +130,16 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Xna.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft XNA Framework Redistributable 3.0</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Animation\Animation.csproj">
-      <Project>{F5199C46-A0DF-4066-8EF9-A728F490DB80}</Project>
-      <Name>Animation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DemoEffects\DemoEffects.csproj">
-      <Project>{D8A4AD1F-20EA-42E8-9F24-15D339A60448}</Project>
-      <Name>DemoEffects</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DemoFramework\DemoFramework.csproj">
       <Project>{0E899EC0-D2E2-47EE-A46D-53E037C3F52F}</Project>
       <Name>DemoFramework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DemoTweaker\DemoTweaker.csproj">
-      <Project>{F09DC880-7107-459C-8239-D6494DD13887}</Project>
-      <Name>DemoTweaker</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Effects\Effects.csproj">
-      <Project>{F8F2B6F6-5D5B-4433-9FDF-2ACA99CF730C}</Project>
-      <Name>Effects</Name>
     </ProjectReference>
     <ProjectReference Include="..\Graphics\Graphics.csproj">
       <Project>{797591FA-968E-41D7-BFEF-85E13FCCA4CF}</Project>
@@ -162,33 +149,13 @@
       <Project>{D8131D4F-45AF-4942-B77F-17714A6B64DF}</Project>
       <Name>Input</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MidiExtractor\MidiExtractor.csproj">
-      <Project>{675A104D-E80D-4E5F-9048-37A6BB33A0D1}</Project>
-      <Name>MidiExtractor</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MidiProcessorLib\MidiProcessorLib.csproj">
-      <Project>{8197CC1B-D3BF-4DCD-92DC-0ABE1BA1514A}</Project>
-      <Name>MidiProcessorLib</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ModelBuilder\ModelBuilder.csproj">
       <Project>{2C34DF5D-D096-45DF-84C9-E78A3691F182}</Project>
       <Name>ModelBuilder</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ParticleSystems\ParticleSystems.csproj">
-      <Project>{7FE16E46-C51A-403F-AF42-B6D757CC75A6}</Project>
-      <Name>ParticleSystems</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Physics\Physics.csproj">
-      <Project>{3925EBCA-3484-4349-BD1A-967D8FB9CE19}</Project>
-      <Name>Physics</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SceneGraph\SceneGraph.csproj">
       <Project>{3876D35C-41A0-459E-819B-0354A2A75443}</Project>
       <Name>SceneGraph</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Sound\Sound.csproj">
-      <Project>{A99FE879-47B6-48B4-956C-EE082AC41817}</Project>
-      <Name>Sound</Name>
     </ProjectReference>
     <ProjectReference Include="..\TextureBuilder\TextureBuilder.csproj">
       <Project>{7DCF0749-447D-4D64-A1A2-2560C03A072E}</Project>

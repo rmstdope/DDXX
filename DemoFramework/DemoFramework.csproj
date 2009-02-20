@@ -101,8 +101,6 @@
     <Compile Include="DemoFactory.cs">
       <Name>DemoFactory</Name>
     </Compile>
-    <Compile Include="DemoTweaker.cs" />
-    <Compile Include="DemoTweakerHandler.cs" />
     <Compile Include="DemoWindow.cs">
       <Name>DemoWindow</Name>
     </Compile>
@@ -153,11 +151,17 @@
       <SubType>Code</SubType>
       <Name>ITrack</Name>
     </Compile>
-    <Compile Include="ITweakable.cs" />
-    <Compile Include="ITweakableFactory.cs" />
-    <Compile Include="ITweakableProperty.cs" />
+    <Compile Include="ITweakable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ITweakableFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ITweakableProperty.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ITweakerSettings.cs">
-      <Name>ITweakerSettings</Name>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registerable.cs" />
@@ -175,34 +179,12 @@
     <Compile Include="Track.cs">
       <Name>Track</Name>
     </Compile>
-    <Compile Include="TweakableBoolean.cs" />
-    <Compile Include="TweakableColor.cs" />
-    <Compile Include="TweakableInt32.cs" />
-    <Compile Include="TweakableMaterial.cs" />
-    <Compile Include="TweakableModel.cs" />
-    <Compile Include="TweakableModelFactory.cs" />
-    <Compile Include="TweakableModelMeshPart.cs" />
-    <Compile Include="TweakableNode.cs" />
-    <Compile Include="TweakableObjectBase.cs" />
-    <Compile Include="TweakableDemo.cs" />
-    <Compile Include="TweakableProperty.cs" />
-    <Compile Include="TweakableRegisterable.cs" />
-    <Compile Include="TweakableScene.cs" />
-    <Compile Include="TweakableSingle.cs" />
-    <Compile Include="TweakableString.cs" />
-    <Compile Include="TweakableTexture2DParameters.cs" />
-    <Compile Include="TweakableTextureGenerator.cs" />
-    <Compile Include="TweakableTextureValue.cs" />
-    <Compile Include="TweakableTextureFactory.cs" />
-    <Compile Include="TweakableValueBase.cs" />
-    <Compile Include="TweakableVector2.cs" />
-    <Compile Include="TweakableVector3.cs" />
-    <Compile Include="TweakableVector4.cs" />
-    <Compile Include="TweakerSettings.cs">
-      <Name>TweakerSettings</Name>
+    <Compile Include="TweakerStatus.cs">
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="TweakerStatus.cs" />
-    <Compile Include="TweakStepAttribute.cs" />
+    <Compile Include="TweakStepAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SetupForm.resx">

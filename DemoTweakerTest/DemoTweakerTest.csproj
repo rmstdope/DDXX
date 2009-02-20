@@ -1,26 +1,17 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
-    <ProjectGuid>{374D0305-E7B6-425E-810D-7E1D67CE7AEF}</ProjectGuid>
+    <ProjectGuid>{4AF4A8EB-717C-404D-863D-8D3A60AD32C4}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Dope.DDXX.DemoFramework</RootNamespace>
-    <AssemblyName>Dope.DDXX.DemoFrameworkTest</AssemblyName>
+    <RootNamespace>Dope.DDXX.DemoTweaker</RootNamespace>
+    <AssemblyName>Dope.DDXX.DemoTweakerTest</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <XnaFrameworkVersion>v3.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
-    <Thumbnail>
-    </Thumbnail>
-    <XnaCrossPlatformGroupID>{202c821b-6da6-4fa9-af35-045d56da1bed}</XnaCrossPlatformGroupID>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <XnaUpgrade>
-    </XnaUpgrade>
+    <XnaCrossPlatformGroupID>5b99dcd4-201a-4b8e-b35f-fedc3f3274c0</XnaCrossPlatformGroupID>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -48,74 +39,98 @@
     <NoStdLib>true</NoStdLib>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <PlatformTarget>x86</PlatformTarget>
+    <XnaCompressContent>false</XnaCompressContent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\x86\Release</OutputPath>
-    <DefineConstants>TRACE%3bWINDOWS</DefineConstants>
+    <DefineConstants>TRACE;WINDOWS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoStdLib>true</NoStdLib>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <PlatformTarget>x86</PlatformTarget>
-    <XnaCompressContent>True</XnaCompressContent>
+    <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Xna.Framework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86" />
-    <Reference Include="Microsoft.Xna.Framework.Game, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Xna.Framework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
+      <Private>False</Private>
+      <SpecificVersion>True</SpecificVersion>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <SpecificVersion>True</SpecificVersion>
+    </Reference>
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
     <Reference Include="NMock2, Version=1.0.2313.18049, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.4.3.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+    <Reference Include="nunit.framework, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Xml">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseDemoEffectTest.cs">
-      <SubType>Code</SubType>
-      <Name>BaseDemoEffectTest</Name>
-    </Compile>
-    <Compile Include="BaseDemoPostEffectTest.cs">
-      <SubType>Code</SubType>
-      <Name>BaseDemoPostEffectTest</Name>
-    </Compile>
-    <Compile Include="DemoEffectTypesTest.cs">
-      <SubType>Code</SubType>
-      <Name>DemoEffectTypesTest</Name>
-    </Compile>
-    <Compile Include="DemoExecuterTest.cs">
-      <Name>DemoExecuterTest</Name>
-    </Compile>
-    <Compile Include="DemoMockTest.cs">
-      <SubType>Code</SubType>
-      <Name>DemoMockTest</Name>
-    </Compile>
-    <Compile Include="DemoXMLReaderTest.cs">
-      <SubType>Code</SubType>
-      <Name>DemoXMLReaderTest</Name>
-    </Compile>
+    <Compile Include="DemoTweakerHandlerTest.cs" />
+    <Compile Include="DemoTweakerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SetupLogicTest.cs">
-      <Name>SetupLogicTest</Name>
-    </Compile>
-    <Compile Include="TrackTest.cs">
-      <Name>TrackTest</Name>
-    </Compile>
+    <Compile Include="TweakableBooleanTest.cs" />
+    <Compile Include="TweakableColorTest.cs" />
+    <Compile Include="TweakableDemoTest.cs" />
+    <Compile Include="TweakableInt32Test.cs" />
+    <Compile Include="TweakableNodeTest.cs" />
+    <Compile Include="TweakableRegisterableTest.cs" />
+    <Compile Include="TweakableSceneTest.cs" />
+    <Compile Include="TweakableSingleTest.cs" />
+    <Compile Include="TweakableStringTest.cs" />
+    <Compile Include="TweakableTexture2DParametersTest.cs" />
+    <Compile Include="TweakableTextureFactoryTest.cs" />
+    <Compile Include="TweakableVector2Test.cs" />
+    <Compile Include="TweakableVector3Test.cs" />
+    <Compile Include="TweakableVector4Test.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Xna.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft XNA Framework Redistributable 3.0</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DemoFramework\DemoFramework.csproj">
@@ -126,10 +141,6 @@
       <Project>{F09DC880-7107-459C-8239-D6494DD13887}</Project>
       <Name>DemoTweaker</Name>
     </ProjectReference>
-    <ProjectReference Include="..\GraphicsTest\GraphicsTest.csproj">
-      <Project>{292A547D-05A7-4C2A-AC8E-C3F9FFD41F6D}</Project>
-      <Name>GraphicsTest</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Graphics\Graphics.csproj">
       <Project>{797591FA-968E-41D7-BFEF-85E13FCCA4CF}</Project>
       <Name>Graphics</Name>
@@ -138,25 +149,9 @@
       <Project>{D8131D4F-45AF-4942-B77F-17714A6B64DF}</Project>
       <Name>Input</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MidiProcessorLib\MidiProcessorLib.csproj">
-      <Project>{8197CC1B-D3BF-4DCD-92DC-0ABE1BA1514A}</Project>
-      <Name>MidiProcessorLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ModelBuilder\ModelBuilder.csproj">
-      <Project>{2C34DF5D-D096-45DF-84C9-E78A3691F182}</Project>
-      <Name>ModelBuilder</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Physics\Physics.csproj">
-      <Project>{3925EBCA-3484-4349-BD1A-967D8FB9CE19}</Project>
-      <Name>Physics</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SceneGraph\SceneGraph.csproj">
       <Project>{3876D35C-41A0-459E-819B-0354A2A75443}</Project>
       <Name>SceneGraph</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Sound\Sound.csproj">
-      <Project>{A99FE879-47B6-48B4-956C-EE082AC41817}</Project>
-      <Name>Sound</Name>
     </ProjectReference>
     <ProjectReference Include="..\TextureBuilder\TextureBuilder.csproj">
       <Project>{7DCF0749-447D-4D64-A1A2-2560C03A072E}</Project>
@@ -171,44 +166,8 @@
       <Name>Utility</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Xna.Framework.3.0">
-      <Visible>False</Visible>
-      <ProductName>Microsoft XNA Framework Redistributable 3.0</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -216,5 +175,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" Condition="" />
 </Project>

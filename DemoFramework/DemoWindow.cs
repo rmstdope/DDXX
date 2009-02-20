@@ -28,7 +28,8 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        public DemoWindow(string name, string xmlFile, Assembly[] assemblies)
+        public DemoWindow(string name, string xmlFile, Assembly[] assemblies, IDemoTweakerHandler tweakerHandler)
+        //new DemoTweakerHandler(new TweakerSettings())
         {
             this.xmlFile = xmlFile;
             Window.Title = name;
@@ -37,7 +38,8 @@ namespace Dope.DDXX.DemoFramework
 
             DemoEffectTypes effectTypes = new DemoEffectTypes(assemblies);
             executer = new DemoExecuter(new DemoFactory(), new SoundFactory(graphicsFactory.ContentManager),
-                InputDriver.GetInstance(), new PostProcessor(), effectTypes);
+                InputDriver.GetInstance(), new PostProcessor(), effectTypes, 
+                tweakerHandler);
 
             graphics = graphicsFactory.GraphicsDeviceManager;
             graphics.PreparingDeviceSettings += new EventHandler<PreparingDeviceSettingsEventArgs>(graphics_PreparingDeviceSettings);
