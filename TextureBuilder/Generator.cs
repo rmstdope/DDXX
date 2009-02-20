@@ -4,12 +4,14 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Dope.DDXX.Graphics;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.TextureBuilder
 {
     public abstract class Generator : ITextureGenerator
     {
         private int numInputPins;
+        private ITextureGenerator output;
         private ITextureGenerator[] inputPins;
 
         public int NumInputPins
@@ -75,10 +77,26 @@ namespace Dope.DDXX.TextureBuilder
 
         public abstract Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize);
 
+        public ITextureGenerator Output 
+        {
+            get { return output; }
+            set { output = value; }
+        }
+
+        public int GetInputIndex(ITextureGenerator generator)
+        {
+            for (int i = 0; i < NumInputPins; i++)
+                if (generator == inputPins[i])
+                    return i;
+            throw new ArgumentException("The specified generator is not an input of this generator.");
+        }
+
         public void ConnectToInput(int inputPin, ITextureGenerator outputGenerator)
         {
             ValidateInputPin(inputPin);
             inputPins[inputPin] = outputGenerator;
+            if (outputGenerator != null)
+                outputGenerator.Output = this;
         }
 
         public ITextureGenerator GetInput(int inputPin)

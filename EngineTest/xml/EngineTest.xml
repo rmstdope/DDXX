@@ -2,78 +2,86 @@
 <Demo song="music_machinefunk_loop">
   <ModelFactory>
   </ModelFactory>
-	<TextureFactory>
-		<Texture name="Noise256base1024" width="256" height="256" miplevels="1">
-			<Generator class="PerlinNoise">
-				<NumOctaves>6</NumOctaves>
-				<BaseFrequency>100</BaseFrequency>
-				<Persistence>0.5</Persistence>
-			</Generator>
-		</Texture>
-		<Texture name="noise64" width="64" height="64" miplevels="1">
-			<Generator class="PerlinNoise">
-				<NumOctaves>6</NumOctaves>
-				<BaseFrequency>16</BaseFrequency>
-				<Persistence>0.5</Persistence>
-			</Generator>
-			<Generator class="Madd">
-				<Add>0</Add>
-				<Mul>1</Mul>
-			</Generator>
-		</Texture>
-		<Texture name="Noise256" width="256" height="256" miplevels="0">
-			<Generator class="PerlinNoise">
-				<NumOctaves>6</NumOctaves>
-				<BaseFrequency>4</BaseFrequency>
-				<Persistence>0.5</Persistence>
-			</Generator>
-		</Texture>
-		<Texture name="NormalNoise256" width="256" height="256" miplevels="0">
-			<Generator class="PerlinNoise">
-				<NumOctaves>6</NumOctaves>
-				<BaseFrequency>4</BaseFrequency>
-				<Persistence>0.5</Persistence>
-			</Generator>
-			<Generator class="Madd">
-				<Add>0</Add>
-				<Mul>2</Mul>
-			</Generator>
-			<Generator class="NormalMap" />
-			<Generator class="Madd">
-				<Add>1</Add>
-				<Mul>1</Mul>
-			</Generator>
-			<Generator class="Madd">
-				<Add>0</Add>
-				<Mul>0.5</Mul>
-			</Generator>
-		</Texture>
-		<Texture name="Circle" width="64" height="64" miplevels="0">
-			<Generator class="Circle">
-				<InnerRadius>0</InnerRadius>
-				<OuterRadius>0.4</OuterRadius>
-			</Generator>
-		</Texture>
-		<Texture name="Circle256" width="256" height="256" miplevels="0">
-			<Generator class="Circle">
-				<InnerRadius>0.2</InnerRadius>
-				<OuterRadius>0.5</OuterRadius>
-			</Generator>
-		</Texture>
-		<Texture name="Noise64" width="64" height="64" miplevels="0">
-			<Generator class="PerlinNoise">
-				<NumOctaves>6</NumOctaves>
-				<BaseFrequency>16</BaseFrequency>
-				<Persistence>0.5</Persistence>
-			</Generator>
-		</Texture>
-		<Texture name="Circle64" width="64" height="64" miplevels="0">
-			<Generator class="Circle">
-				<InnerRadius>0.4</InnerRadius>
-				<OuterRadius>0.5</OuterRadius>
-			</Generator>
-		</Texture>
-	</TextureFactory>
+  <TextureFactory>
+    <Texture name="Noise256base1024" width="256" height="256" miplevels="1">
+    	<Generator class="PerlinNoise">
+    		<NumOctaves>6</NumOctaves>
+    		<BaseFrequency>100</BaseFrequency>
+    		<Persistence>0.5</Persistence>
+    	</Generator>
+    	<Generator class="PerlinNoise">
+    		<NumOctaves>6</NumOctaves>
+    		<BaseFrequency>100</BaseFrequency>
+    		<Persistence>0.5</Persistence>
+    	</Generator>
+    	<Generator class="FactorBlend">
+    		<Factor>0</Factor>
+    	</Generator>
+    </Texture>
+    <Texture name="noise64" width="64" height="64" miplevels="1">
+    	<Generator class="PerlinNoise">
+    		<NumOctaves>6</NumOctaves>
+    		<BaseFrequency>16</BaseFrequency>
+    		<Persistence>0.5</Persistence>
+    	</Generator>
+    	<Generator class="Madd">
+    		<Add>0</Add>
+    		<Mul>1</Mul>
+    	</Generator>
+    </Texture>
+    <Texture name="Noise256" width="256" height="256" miplevels="0">
+    	<Generator class="PerlinNoise">
+    		<NumOctaves>6</NumOctaves>
+    		<BaseFrequency>4</BaseFrequency>
+    		<Persistence>0.5</Persistence>
+    	</Generator>
+    </Texture>
+    <Texture name="NormalNoise256" width="256" height="256" miplevels="0">
+    	<Generator class="PerlinNoise">
+    		<NumOctaves>6</NumOctaves>
+    		<BaseFrequency>4</BaseFrequency>
+    		<Persistence>0.5</Persistence>
+    	</Generator>
+    	<Generator class="Madd">
+    		<Add>0</Add>
+    		<Mul>2</Mul>
+    	</Generator>
+    	<Generator class="NormalMap" />
+    	<Generator class="Madd">
+    		<Add>1</Add>
+    		<Mul>1</Mul>
+    	</Generator>
+    	<Generator class="Madd">
+    		<Add>0</Add>
+    		<Mul>0.5</Mul>
+    	</Generator>
+    </Texture>
+    <Texture name="Circle" width="64" height="64" miplevels="0">
+    	<Generator class="Circle">
+    		<InnerRadius>0</InnerRadius>
+    		<OuterRadius>0.4</OuterRadius>
+    	</Generator>
+    </Texture>
+    <Texture name="Circle256" width="256" height="256" miplevels="0">
+    	<Generator class="Circle">
+    		<InnerRadius>0.2</InnerRadius>
+    		<OuterRadius>0.5</OuterRadius>
+    	</Generator>
+    </Texture>
+    <Texture name="Noise64" width="64" height="64" miplevels="0">
+    	<Generator class="PerlinNoise">
+    		<NumOctaves>6</NumOctaves>
+    		<BaseFrequency>16</BaseFrequency>
+    		<Persistence>0.5</Persistence>
+    	</Generator>
+    </Texture>
+    <Texture name="Circle64" width="64" height="64" miplevels="0">
+    	<Generator class="Circle">
+    		<InnerRadius>0.4</InnerRadius>
+    		<OuterRadius>0.5</OuterRadius>
+    	</Generator>
+    </Texture>
+  </TextureFactory>
   <!--<Effect class="IntroText" name="Lines" track="0" startTime="0" endTime="500">
 		<DrawOrder>0</DrawOrder>
 		<Position>70, 500</Position>
@@ -81,19 +89,20 @@
   <!--<Effect class="VolumetricClouds" name="Lines" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
   </Effect>-->
+
   <Effect class="TextEffect" name="Lines" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
     <Scene>
-    	<AmbientColor>255, 255, 255, 255</AmbientColor>
+      <AmbientColor>255, 255, 255, 255</AmbientColor>
     </Scene>
   </Effect>
   <PostEffect class="RadialBlurPostEffect" name="RadialBlur" track="0" startTime="0" endTime="500">
     <BlurColor>40, 40, 150, 255</BlurColor>
     <DrawOrder>0</DrawOrder>
   </PostEffect>
-  <Effect class="MusicSynchronizedOverlay" name="MusicSync" track="0" startTime="0" endTime="500">
+  <!--<Effect class="MusicSynchronizedOverlay" name="MusicSync" track="0" startTime="0" endTime="500">
     <DrawOrder>1</DrawOrder>
-  </Effect>
+  </Effect>-->
   <!--<PostEffect class="GlowPostEffect" name="Glow" track="0" startTime="0" endTime="500">
     <BloomScale>1.5</BloomScale>
     <WhiteCutoff>0.5099999</WhiteCutoff>
@@ -139,7 +148,7 @@
     <DrawOrder>0</DrawOrder>
 	</PostEffect>-->
 
-	<!--<Effect class="MorphEffect" name="Morph" track="0" startTime="0" endTime="500">
+  <!--<Effect class="MorphEffect" name="Morph" track="0" startTime="0" endTime="500">
 	<DrawOrder>0</DrawOrder>
 	</Effect>
   <PostEffect class="GlowPostEffect" name="Glow" track="0" startTime="0" endTime="500">
@@ -185,8 +194,8 @@
 		<Parameter name="BlendFactor" float="0.15" />
 		<Parameter name="DrawOrder" int="10" />
 	</PostEffect>-->
-	<!--<Effect class="GridEffect" name="Grid" track="0" startTime="0" endTime="500">
+  <!--<Effect class="GridEffect" name="Grid" track="0" startTime="0" endTime="500">
 	  <DrawOrder>0</DrawOrder>
 	</Effect>-->
-	<ClearColor>0, 0, 0, 0</ClearColor>
+  <ClearColor>0, 0, 0, 0</ClearColor>
 </Demo>

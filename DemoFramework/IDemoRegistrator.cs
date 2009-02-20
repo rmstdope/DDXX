@@ -5,7 +5,7 @@ using Dope.DDXX.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public interface IDemoRegistrator
+    public interface IDemoRegistrator : IDemoEffectBuilder
     {
         float StartTime { get; }
         float EndTime { get; }
@@ -17,6 +17,5 @@ namespace Dope.DDXX.DemoFramework
         List<IRegisterable> GetAllRegisterables();
         IGraphicsFactory GraphicsFactory { get; }
         IDemoEffectTypes EffectTypes { get; }
-        void SetSong(string filename);
     }
 }

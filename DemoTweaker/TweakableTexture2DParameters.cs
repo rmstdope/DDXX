@@ -19,6 +19,7 @@ namespace Dope.DDXX.DemoTweaker
         private List<ITextureGenerator> generators = new List<ITextureGenerator>();
         private ITweakable[] cachedChildren;
         private bool insertAfter;
+        private IMenuControl<Type> menuControl;
 
         public TweakableTexture2DParameters(Texture2DParameters target, ITweakableFactory factory)
             : base(target, factory)
@@ -75,10 +76,9 @@ namespace Dope.DDXX.DemoTweaker
         public override IMenuControl InsertNew(TweakerStatus status, IDrawResources drawResources, bool after)
         {
             List<Type> generators = EnumerateGenerators(ValidateAndGetStackSize());
-            // TODO: Change type to ITextureGenerator
-            IMenuControl<int> menuControl = Factory.CreateMenuControl<int>();
+            menuControl = Factory.CreateMenuControl<Type>();
             for (int i = 0; i < generators.Count; i++)
-                menuControl.AddOption(generators[i].Name, i);
+                menuControl.AddOption(generators[i].Name, generators[i]);
             menuControl.Title = "Select Generator";
             insertAfter = after;
             return menuControl;
@@ -86,7 +86,7 @@ namespace Dope.DDXX.DemoTweaker
 
         public override void ChoiceMade(TweakerStatus status, int index)
         {
-            Type type = EnumerateGenerators(ValidateAndGetStackSize())[index];
+            Type type = menuControl.Action;
             ITextureGenerator generator = createGenerator(type);
             generators.Insert(status.Selection + (insertAfter ? 1 : 0), generator);
             cachedChildren = new ITweakable[generators.Count];

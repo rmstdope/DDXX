@@ -98,6 +98,7 @@ namespace Dope.DDXX.DemoTweaker
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(IModel), typeof(TweakableModel)));
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(IModelMeshPart), typeof(TweakableModelMeshPart)));
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(IMaterialHandler), typeof(TweakableMaterial)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(IDemoRegistrator), typeof(TweakableDemo)));
         }
 
         public virtual void Initialize(IDemoTweakerContext context, IDemoRegistrator registrator, IUserInterface userInterface, ITweakable demoTweakable)

@@ -11,14 +11,12 @@ namespace Dope.DDXX.DemoTweaker
 {
     public class TweakableDemo : TweakableObjectBase<IDemoRegistrator>
     {
-        private IDemoEffectBuilder builder;
         private bool textureFactoryWritten;
         private bool modelFactoryWritten;
 
-        public TweakableDemo(IDemoRegistrator target, IDemoEffectBuilder builder, ITweakableFactory factory)
+        public TweakableDemo(IDemoRegistrator target, ITweakableFactory factory)
             : base(target, factory)
         {
-            this.builder = builder;
             textureFactoryWritten = false;
             modelFactoryWritten = false;
         }
@@ -114,7 +112,7 @@ namespace Dope.DDXX.DemoTweaker
 
         private void RegisterEffect(XmlNode node)
         {
-            builder.AddEffect(GetStringAttribute(node, "class"), GetStringAttribute(node, "name"),
+            Target.AddEffect(GetStringAttribute(node, "class"), GetStringAttribute(node, "name"),
                 GetIntAttribute(node, "track"), GetFloatAttribute(node, "starttime"), GetFloatAttribute(node, "endtime"));
             int index = Target.GetAllRegisterables().FindIndex(delegate(IRegisterable r) { return r.Name == GetStringAttribute(node, "name"); });
             GetChild(index).ReadFromXmlFile(node);
@@ -122,7 +120,7 @@ namespace Dope.DDXX.DemoTweaker
 
         private void RegisterPostEffect(XmlNode node)
         {
-            builder.AddPostEffect(GetStringAttribute(node, "class"), GetStringAttribute(node, "name"),
+            Target.AddPostEffect(GetStringAttribute(node, "class"), GetStringAttribute(node, "name"),
                 GetIntAttribute(node, "track"), GetFloatAttribute(node, "starttime"), GetFloatAttribute(node, "endtime"));
             int index = Target.GetAllRegisterables().FindIndex(delegate(IRegisterable r) { return r.Name == GetStringAttribute(node, "name"); });
             GetChild(index).ReadFromXmlFile(node);

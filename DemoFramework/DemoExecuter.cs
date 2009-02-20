@@ -16,7 +16,7 @@ using Dope.DDXX.MidiProcessorLib;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public class DemoExecuter : IDemoEffectBuilder, IDemoRegistrator, IDemoTweakerContext, IDemoMixer
+    public class DemoExecuter : IDemoRegistrator, IDemoTweakerContext, IDemoMixer
     {
         private ISoundFactory soundFactory;
         private ICue song;

@@ -8,7 +8,6 @@ namespace Dope.DDXX.DemoFramework
 {
     public interface IDemoEffectBuilder
     {
-
         void AddEffect(string className, string effectName, int effectTrack, float startTime, float endTime);
         void AddPostEffect(string className, string postEffectName, int effectTrack, float startTime, float endTime);
         void AddTransition(string className, string transitionName, int destinationTrack, float startTime, float endTime);

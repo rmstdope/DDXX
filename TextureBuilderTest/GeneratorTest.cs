@@ -38,20 +38,20 @@ namespace Dope.DDXX.TextureBuilder
 
         [Test]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void TestTooFewInputs()
+        public void TooFewInputs()
         {
             new SimpleGenerator(-1);
         }
 
         [Test]
-        public void TestInputsOk()
+        public void MultipleInputs()
         {
             for (int i = 0; i < 10; i++)
                 new SimpleGenerator(i);
         }
 
         [Test]
-        public void TestConnectOk()
+        public void ConnectToNull()
         {
             ITextureGenerator generator1 = new SimpleGenerator(1);
             generator1.ConnectToInput(0, null);
@@ -62,7 +62,7 @@ namespace Dope.DDXX.TextureBuilder
 
         [Test]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void TestConnectInputNegative()
+        public void ConnectInputNegative()
         {
             ITextureGenerator generator1 = new SimpleGenerator(1);
             generator1.ConnectToInput(-1, null);
@@ -70,7 +70,7 @@ namespace Dope.DDXX.TextureBuilder
 
         [Test]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void TestConnectInvalidInput1()
+        public void ConnectInvalidInput1()
         {
             ITextureGenerator generator1 = new SimpleGenerator(1);
             generator1.ConnectToInput(1, null);
@@ -78,7 +78,7 @@ namespace Dope.DDXX.TextureBuilder
 
         [Test]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void TestConnectInvalidInput2()
+        public void ConnectInvalidInput2()
         {
             ITextureGenerator generator1 = new SimpleGenerator(5);
             generator1.ConnectToInput(5, null);
@@ -86,7 +86,7 @@ namespace Dope.DDXX.TextureBuilder
 
         [Test]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void TestGetInputNegative()
+        public void GetInputNegative()
         {
             SimpleGenerator generator1 = new SimpleGenerator(1);
             generator1.CallGetInput(-1);
@@ -94,7 +94,7 @@ namespace Dope.DDXX.TextureBuilder
 
         [Test]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void TestGetInputTooHigh1()
+        public void GetInputTooHigh1()
         {
             SimpleGenerator generator1 = new SimpleGenerator(1);
             generator1.CallGetInput(1);
@@ -102,7 +102,7 @@ namespace Dope.DDXX.TextureBuilder
 
         [Test]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void TestGetInputTooHigh2()
+        public void GetInputTooHigh2()
         {
             SimpleGenerator generator1 = new SimpleGenerator(5);
             generator1.CallGetInput(5);
@@ -110,14 +110,14 @@ namespace Dope.DDXX.TextureBuilder
 
         [Test]
         [ExpectedException(typeof(ArgumentException))]
-        public void TestGetInputNotConnected()
+        public void GetInputNotConnected()
         {
             SimpleGenerator generator1 = new SimpleGenerator(5);
             generator1.CallGetInput(2);
         }
 
         [Test]
-        public void TestGetInputOk1()
+        public void GetInputOk1()
         {
             SimpleGenerator generator1 = new SimpleGenerator(1);
             SimpleGenerator generator2 = new SimpleGenerator(1, new Vector4(1, 2, 3, 4));
@@ -126,12 +126,45 @@ namespace Dope.DDXX.TextureBuilder
         }
 
         [Test]
-        public void TestGetInputOk2()
+        public void GetInputOk2()
         {
             SimpleGenerator generator1 = new SimpleGenerator(1);
             SimpleGenerator generator2 = new SimpleGenerator(1, new Vector4(5, 6, 7, 8));
             generator1.ConnectToInput(0, generator2);
             Assert.AreEqual(new Vector4(5, 6, 7, 8), generator1.CallGetInput(0));
+        }
+
+        [Test]
+        public void GetReverseConnectionOk()
+        {
+            SimpleGenerator generator1 = new SimpleGenerator(1);
+            SimpleGenerator generator2 = new SimpleGenerator(0);
+            generator1.ConnectToInput(0, generator2);
+            Assert.AreEqual(generator1, generator2.Output);
+        }
+
+        [Test]
+        public void TraceInput()
+        {
+            SimpleGenerator generator1 = new SimpleGenerator(3);
+            SimpleGenerator generator2 = new SimpleGenerator(0);
+            SimpleGenerator generator3 = new SimpleGenerator(0);
+            SimpleGenerator generator4 = new SimpleGenerator(0);
+            generator1.ConnectToInput(0, generator2);
+            generator1.ConnectToInput(1, generator3);
+            generator1.ConnectToInput(2, generator4);
+            Assert.AreEqual(0, generator1.GetInputIndex(generator2));
+            Assert.AreEqual(1, generator1.GetInputIndex(generator3));
+            Assert.AreEqual(2, generator1.GetInputIndex(generator4));
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TraceInputInvalid()
+        {
+            SimpleGenerator generator1 = new SimpleGenerator(0);
+            SimpleGenerator generator2 = new SimpleGenerator(0);
+            generator1.GetInputIndex(generator2);
         }
 
     }

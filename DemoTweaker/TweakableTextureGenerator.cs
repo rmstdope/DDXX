@@ -17,7 +17,7 @@ namespace Dope.DDXX.DemoTweaker
         public TweakableTextureGenerator(ITextureGenerator target, ITweakableFactory factory)
             : base(target, factory)
         {
-            texture = Factory.GraphicsFactory.TextureFactory.CreateFromGenerator("", 32, 32, 1, TextureUsage.None, SurfaceFormat.Color, Target);
+            texture = Factory.GraphicsFactory.TextureFactory.CreateFromGenerator("", 64, 64, 1, TextureUsage.None, SurfaceFormat.Color, Target);
         }
 
         public override int NumVisableVariables
@@ -47,13 +47,44 @@ namespace Dope.DDXX.DemoTweaker
 
         public override void CreateControl(TweakerStatus status, int index, float y, ITweakerSettings settings)
         {
-            float height = status.VariableSpacing * 0.9f;
+            float sizeY = status.VariableSpacing * 0.9f;
+            float halfSizeY = sizeY / 2;
+            float sizeX = sizeY / 2;
+            float halfSizeX = sizeX / 2;
+            float spacingY = status.VariableSpacing * 0.1f;
+            float spacingX = sizeX * 0.1f;
             if (index == status.Selection)
-                new BoxControl(new Vector4(0, y, 1, height), settings.Alpha, settings.SelectedColor, status.RootControl);
-            new TextControl(Target.GetType().Name, new Vector4(0, y, 0.45f, height), Positioning.Right | Positioning.VerticalCenter, settings.TextAlpha, Color.White, status.RootControl);
+                new BoxControl(new Vector4(0, y, 1, sizeY), settings.Alpha, settings.SelectedColor, status.RootControl);
+            new TextControl(Target.GetType().Name, new Vector4(0, y, 0.45f, sizeY), Positioning.Right | Positioning.VerticalCenter, settings.TextAlpha, Color.White, status.RootControl);
 
-            int i = 0;// Rand.Int(0, 1);
-            new BoxControl(new Vector4(0.55f - height / 2 * i + 0.225f - height / 2, y, height / 2, height), 255, texture, status.RootControl);
+            int indent = 1 - GetIndentation(Target);
+            float x = 0.55f - (sizeX + spacingX) * indent + 0.225f - sizeY / 2;
+            new BoxControl(new Vector4(x, y, sizeY / 2, sizeY), 255, texture, status.RootControl);
+            for (int i = 0; i < Target.NumInputPins; i++)
+            {
+                int inputIndent = 1 - GetIndentation(Target.GetInput(i));
+                if (inputIndent == indent)
+                {
+                    new LineControl(new Vector4(x + halfSizeX, y - spacingY, 0, spacingY), 
+                        255, Color.White, status.RootControl);
+                }
+                else
+                {
+                    new LineControl(new Vector4(x + sizeX, y + halfSizeY, spacingX, 0), 
+                        255, Color.White, status.RootControl);
+                    //new LineControl(new Vector4(x + height / 4, y - status.VariableSpacing * 0.1f, 0, status.VariableSpacing * 0.1f), 255, Color.White, status.RootControl);
+                }
+            }
+        }
+
+        private int GetIndentation(ITextureGenerator generator)
+        {
+            if (generator.Output != null)
+            {
+                int index = generator.Output.GetInputIndex(generator);
+                return index + GetIndentation(generator.Output);
+            }
+            return 0;
         }
 
     }
