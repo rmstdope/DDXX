@@ -90,11 +90,15 @@
     <DrawOrder>0</DrawOrder>
   </Effect>-->
 
-  <Effect class="Morph3DEffect" name="3D Morph" track="0" startTime="0" endTime="500">
+  <Effect class="SimpleParticleEffect" name="Simple Particles" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
   </Effect>
 
 
+  <!--<Effect class="Morph3DEffect" name="3D Morph" track="0" startTime="0" endTime="500">
+    <DrawOrder>0</DrawOrder>
+  </Effect>-->
+  
   <!--<Effect class="TextEffect" name="Lines" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
     <Scene>

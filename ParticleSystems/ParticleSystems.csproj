@@ -80,6 +80,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FallingCurtain.cs" />
     <Compile Include="FallingSystemNode.cs" />
     <Compile Include="FloaterParticle.cs">
       <Name>FloaterParticle</Name>
