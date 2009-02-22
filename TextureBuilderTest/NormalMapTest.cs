@@ -21,6 +21,7 @@ namespace Dope.DDXX.TextureBuilder
 
             normalMap = new NormalMap();
             generator = mockery.NewMock<ITextureGenerator>();
+            Stub.On(generator).SetProperty("Output");
             normalMap.ConnectToInput(0, generator);
         }
 

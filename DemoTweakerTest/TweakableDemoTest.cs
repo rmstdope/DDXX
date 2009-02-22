@@ -54,20 +54,10 @@ namespace Dope.DDXX.DemoTweaker
                 get { throw new Exception("The method or operation is not implemented."); }
             }
 
-            #endregion
-
-            #region IDemoRegistrator Members
-
-
             public IDemoEffectTypes EffectTypes
             {
                 get { throw new Exception("The method or operation is not implemented."); }
             }
-
-            #endregion
-
-            #region IDemoRegistrator Members
-
 
             public void SetSong(string filename)
             {
@@ -159,7 +149,6 @@ namespace Dope.DDXX.DemoTweaker
         private ITweakable tweakable;
         private Mockery mockery;
         private IDemoRegistrator target;
-        private IDemoEffectBuilder builder;
         private ITweakableFactory factory;
         private XmlNode node;
         private RegistratorStub registrator;
@@ -175,7 +164,6 @@ namespace Dope.DDXX.DemoTweaker
         {
             mockery = new Mockery();
             target = mockery.NewMock<IDemoRegistrator>();
-            builder = mockery.NewMock<IDemoEffectBuilder>();
             factory = mockery.NewMock<ITweakableFactory>();
             graphicsFactory = mockery.NewMock<IGraphicsFactory>();
             textureFactory = mockery.NewMock<ITextureFactory>();
@@ -278,7 +266,7 @@ namespace Dope.DDXX.DemoTweaker
             CreateRegisterables(2);
             ITweakable tweakableRegisterable = mockery.NewMock<ITweakable>();
             CreateXmlNode("<Demo><Effect name=\"R1\" class=\"Class\" track=\"1\" startTime=\"10\" endTime=\"11\"/></Demo>");
-            Expect.Once.On(builder).Method("AddEffect").With("Class", "R1", 1, 10.0f, 11.0f);
+            Expect.Once.On(target).Method("AddEffect").With("Class", "R1", 1, 10.0f, 11.0f);
             Expect.Once.On(factory).Method("CreateTweakableObject").With(registerables[1]).Will(Return.Value(tweakableRegisterable));
             Expect.Once.On(tweakableRegisterable).Method("ReadFromXmlFile").With(node.FirstChild);
             // Exercise SUT and verify
@@ -309,7 +297,7 @@ namespace Dope.DDXX.DemoTweaker
             CreateRegisterables(2);
             ITweakable tweakableRegisterable = mockery.NewMock<ITweakable>();
             CreateXmlNode("<Demo><PostEffect name=\"R0\" class=\"Class1\" track=\"0\" startTime=\"12.2\" endTime=\"13.3\"/></Demo>");
-            Expect.Once.On(builder).Method("AddPostEffect").With("Class1", "R0", 0, 12.2f, 13.3f);
+            Expect.Once.On(target).Method("AddPostEffect").With("Class1", "R0", 0, 12.2f, 13.3f);
             Expect.Once.On(factory).Method("CreateTweakableObject").With(registerables[0]).Will(Return.Value(tweakableRegisterable));
             Expect.Once.On(tweakableRegisterable).Method("ReadFromXmlFile").With(node.FirstChild);
             // Exercise SUT and verify

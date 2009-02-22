@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Dope.DDXX.Utility;
 using Dope.DDXX.ModelBuilder;
 using System.Reflection;
+using Microsoft.Xna.Framework;
 
 namespace EngineTest
 {
@@ -22,16 +23,30 @@ namespace EngineTest
             private List<IModifier> to;
             private ModelNode node;
             private IModifier chain;
+            private IModel model;
 
             public Morph(IModifier primitive, List<IModifier> from, List<IModifier> to, IModelDirector modelDirector)
             {
                 this.primitive = primitive;
-                this.from = from;
-                this.to = to;
+                this.from = new List<IModifier>(from);
+                this.to = new List<IModifier>(to);
                 this.modelDirector = modelDirector;
                 this.modelBuilder = modelDirector.ModelBuilder;
-                this.to.InsertRange(0, from);
-                this.from.AddRange(to);
+
+                int i = 0;
+                foreach (IModifier modifier in from)
+                {
+                    ConstructorInfo constructor = modifier.GetType().GetConstructor(new Type[] { });
+                    IModifier newModifier = constructor.Invoke(new object[] { }) as IModifier;
+                    this.to.Insert(i, newModifier);
+                    i++;
+                }
+                foreach (IModifier modifier in to)
+                {
+                    ConstructorInfo constructor = modifier.GetType().GetConstructor(new Type[] { });
+                    IModifier newModifier = constructor.Invoke(new object[] { }) as IModifier;
+                    this.from.Add(newModifier);
+                }
 
                 chain = primitive;
                 foreach (IModifier modifier in this.from)
@@ -41,6 +56,34 @@ namespace EngineTest
                     newModifier.ConnectToInput(0, chain);
                     chain = newModifier;
                 }
+                from.Reverse();
+                to.Reverse();
+            }
+
+            public void Step(float delta)
+            {
+                IModifier modifier = chain;
+                for (int i = 0; i < from.Count; i++)
+                {
+                    PropertyInfo[] properties = from[i].GetType().GetProperties();
+                    foreach (PropertyInfo property in properties)
+                    {
+                        if (property.CanRead && property.CanWrite && property.PropertyType == typeof(float))
+                        {
+                            float start = (float)property.GetGetMethod().Invoke(from[i], new object[] { });
+                            float end = (float)property.GetGetMethod().Invoke(to[i], new object[] { });
+                            float value = start + (end - start) * delta;
+                            property.GetSetMethod().Invoke(modifier, new object[] { value });
+                        }
+                    }
+                    modifier = modifier.GetInputModifier(0);
+                }
+
+                IPrimitive primitive = chain.Generate();
+                VertexPositionTangentTexture[] newVertices = new VertexPositionTangentTexture[primitive.Vertices.Length];
+                for (int i = 0; i < primitive.Vertices.Length; i++)
+                    newVertices[i] = new VertexPositionTangentTexture(primitive.Vertices[i].Position, primitive.Vertices[i].Normal, primitive.Vertices[i].Tangent, primitive.Vertices[i].BiNormal, new Vector2(primitive.Vertices[i].U, primitive.Vertices[i].V));
+                model.Meshes[0].VertexBuffer.SetData<VertexPositionTangentTexture>(newVertices);
             }
 
             public ModelNode ModelNode
@@ -52,10 +95,7 @@ namespace EngineTest
                         modelBuilder.CreateMaterial("Material");
                         modelBuilder.SetDiffuseTexture("Material", "Noise256base1024");
                         modelBuilder.SetEffect("Material", "Content\\effects\\Morph");
-                        IModel model = modelBuilder.CreateModel(chain, "Material");
-                        //modelDirector.CreateBox(5, 5, 5);
-                        //modelDirector.Scale(1, 3, 5);
-                        //IModel model = modelDirector.Generate("Material");
+                        model = modelBuilder.CreateModel(chain, "Material");
                         node = new ModelNode("Morph", model, modelBuilder.GraphicsDevice);
                     }
                     return node;
@@ -94,6 +134,7 @@ namespace EngineTest
 
         public override void Step()
         {
+            morph.Step((Time.CurrentTime - StartTime) / 10.0f);
             Mixer.ClearColor = Color.White;
             node.WorldState.Turn(Time.DeltaTime);
             node.WorldState.Tilt(Time.DeltaTime);

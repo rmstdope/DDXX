@@ -9,5 +9,6 @@ namespace Dope.DDXX.ModelBuilder
     {
         void ConnectToInput(int inputPin, IModifier outputGenerator);
         IPrimitive Generate();
+        IModifier GetInputModifier(int index);
     }
 }

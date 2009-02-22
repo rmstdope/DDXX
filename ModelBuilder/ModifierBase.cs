@@ -27,6 +27,14 @@ namespace Dope.DDXX.ModelBuilder
             inputPins[inputPin] = outputGenerator;
         }
 
+        public IModifier GetInputModifier(int inputPin)
+        {
+            ValidateInputPin(inputPin);
+            if (inputPins[inputPin] == null)
+                throw new ArgumentException("Input " + inputPin + "has not been connected yet.");
+            return inputPins[inputPin];
+        }
+
         protected IPrimitive GetInput(int inputPin)
         {
             ValidateInputPin(inputPin);

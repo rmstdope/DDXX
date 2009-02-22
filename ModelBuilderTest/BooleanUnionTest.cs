@@ -39,6 +39,16 @@ namespace Dope.DDXX.ModelBuilder
                 throw new Exception("The method or operation is not implemented.");
             }
 
+
+            #region IModifier Members
+
+
+            public IModifier GetInputModifier(int index)
+            {
+                throw new NotImplementedException();
+            }
+
+            #endregion
         }
 
         [Test]

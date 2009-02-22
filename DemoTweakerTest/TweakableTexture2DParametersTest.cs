@@ -105,7 +105,7 @@ namespace Dope.DDXX.DemoTweaker
         public void NumSpecificVariablesIsOne()
         {
             // Setup
-            FakeControl<int> control = new FakeControl<int>();
+            FakeControl<Type> control = new FakeControl<Type>();
             ITextureGenerator generator = mockery.NewMock<ITextureGenerator>();
             Stub.On(generator).GetProperty("NumInputPins").Will(Return.Value(0));
             target = new Texture2DParameters("Test", null, generator);
@@ -118,7 +118,7 @@ namespace Dope.DDXX.DemoTweaker
         public void NumSpecificVariablesIsFour()
         {
             // Setup
-            FakeControl<int> control = new FakeControl<int>();
+            FakeControl<Type> control = new FakeControl<Type>();
             ITextureGenerator generator1 = mockery.NewMock<ITextureGenerator>();
             ITextureGenerator generator2 = mockery.NewMock<ITextureGenerator>();
             ITextureGenerator generator3 = mockery.NewMock<ITextureGenerator>();
@@ -140,7 +140,7 @@ namespace Dope.DDXX.DemoTweaker
         public void InsertNew()
         {
             // Setup
-            FakeControl<int> control = new FakeControl<int>();
+            FakeControl<Type> control = new FakeControl<Type>();
             ITextureGenerator generator = mockery.NewMock<ITextureGenerator>();
             Stub.On(generator).GetProperty("NumInputPins").Will(Return.Value(0));
             target = new Texture2DParameters("Test", null, generator);

@@ -197,5 +197,15 @@ namespace Dope.DDXX.ModelBuilder
         }
 
         #endregion
+
+        #region IModifier Members
+
+
+        public IModifier GetInputModifier(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }
