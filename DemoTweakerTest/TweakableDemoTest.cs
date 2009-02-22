@@ -75,6 +75,85 @@ namespace Dope.DDXX.DemoTweaker
             }
 
             #endregion
+
+            #region IDemoEffectBuilder Members
+
+            public void AddEffect(string className, string effectName, int effectTrack, float startTime, float endTime)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void AddPostEffect(string className, string postEffectName, int effectTrack, float startTime, float endTime)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void AddTransition(string className, string transitionName, int destinationTrack, float startTime, float endTime)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void AddGenerator(string generatorName, string className)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void AddTexture(string textureName, string generatorName, int width, int height, int mipLevels)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void AddFloatParameter(string name, float value, float stepSize)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void AddIntParameter(string name, int value, float stepSize)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void AddStringParameter(string name, string value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void AddVector2Parameter(string name, Microsoft.Xna.Framework.Vector2 value, float stepSize)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void AddVector3Parameter(string name, Microsoft.Xna.Framework.Vector3 value, float stepSize)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void AddVector4Parameter(string name, Microsoft.Xna.Framework.Vector4 value, float stepSize)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void AddColorParameter(string parameterName, Color color)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void AddBoolParameter(string parameterName, bool color)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void AddSetupCall(string name, List<object> parameters)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void AddGeneratorInput(int num, string generatorName)
+            {
+                throw new NotImplementedException();
+            }
+
+            #endregion
         }
 
         private ITweakable tweakable;
@@ -101,7 +180,7 @@ namespace Dope.DDXX.DemoTweaker
             graphicsFactory = mockery.NewMock<IGraphicsFactory>();
             textureFactory = mockery.NewMock<ITextureFactory>();
             modelFactory = mockery.NewMock<IModelFactory>();
-            tweakable = new TweakableDemo(target, builder, factory);
+            tweakable = new TweakableDemo(target, factory);
             tracks = new List<ITrack>();
             Stub.On(target).GetProperty("Tracks").Will(Return.Value(tracks));
             Stub.On(factory).GetProperty("GraphicsFactory").Will(Return.Value(graphicsFactory));
@@ -308,7 +387,7 @@ namespace Dope.DDXX.DemoTweaker
             Expect.Once.On(factory).Method("CreateTweakableValue").
                 With(registrator.GetType().GetProperty("ClearColor"), registrator).
                 Will(Return.Value(new TweakableColor(registrator.GetType().GetProperty("ClearColor"), registrator, null)));
-            tweakable = new TweakableDemo(registrator, builder, factory);
+            tweakable = new TweakableDemo(registrator, factory);
             CreateXmlNode("<Demo><ClearColor>1,2,3,4</ClearColor></Demo>");
             // Exercise SUT
             tweakable.ReadFromXmlFile(node);

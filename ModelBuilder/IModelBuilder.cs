@@ -8,6 +8,7 @@ namespace Dope.DDXX.ModelBuilder
     {
         ITextureFactory TextureFactory { get; }
         IEffectFactory EffectFactory { get; }
+        IGraphicsDevice GraphicsDevice { get; }
         void CreateMaterial(string materialName);
         IModel CreateModel(IModifier generator, IMaterialHandler modelMaterial);
         IModel CreateModel(IModifier generator, string material);

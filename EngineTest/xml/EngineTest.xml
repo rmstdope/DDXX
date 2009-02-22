@@ -90,7 +90,12 @@
     <DrawOrder>0</DrawOrder>
   </Effect>-->
 
-  <Effect class="TextEffect" name="Lines" track="0" startTime="0" endTime="500">
+  <Effect class="Morph3DEffect" name="3D Morph" track="0" startTime="0" endTime="500">
+    <DrawOrder>0</DrawOrder>
+  </Effect>
+
+
+  <!--<Effect class="TextEffect" name="Lines" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
     <Scene>
       <AmbientColor>255, 255, 255, 255</AmbientColor>
@@ -99,7 +104,7 @@
   <PostEffect class="RadialBlurPostEffect" name="RadialBlur" track="0" startTime="0" endTime="500">
     <BlurColor>40, 40, 150, 255</BlurColor>
     <DrawOrder>0</DrawOrder>
-  </PostEffect>
+  </PostEffect>-->
   <!--<Effect class="MusicSynchronizedOverlay" name="MusicSync" track="0" startTime="0" endTime="500">
     <DrawOrder>1</DrawOrder>
   </Effect>-->

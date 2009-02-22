@@ -33,6 +33,9 @@ namespace Dope.DDXX.ModelBuilder
         public Scale()
             : base(1)
         {
+            x = 1;
+            y = 1;
+            z = 1;
         }
 
         public override IPrimitive Generate()

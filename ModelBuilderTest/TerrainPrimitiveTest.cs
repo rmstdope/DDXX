@@ -141,5 +141,27 @@ namespace Dope.DDXX.ModelBuilder
         }
 
         #endregion
+
+        #region ITextureGenerator Members
+
+
+        public int GetInputIndex(ITextureGenerator generator)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ITextureGenerator Output
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        #endregion
     }
 }

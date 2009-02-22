@@ -117,6 +117,14 @@ namespace Dope.DDXX.DemoFramework
             scene.ActiveCamera = camera;
         }
 
+        protected void CreateStandardCamera(float distance)
+        {
+            CameraNode camera = new CameraNode("Standard Camera", GraphicsDevice.AspectRatio);
+            camera.WorldState.MoveForward(-distance);
+            scene.AddNode(camera);
+            scene.ActiveCamera = camera;
+        }
+
         protected float EffectTime
         {
             get { return Time.CurrentTime - StartTime; }

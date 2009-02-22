@@ -20,6 +20,7 @@ namespace Dope.DDXX.ModelBuilder
 
         public ITextureFactory TextureFactory { get { return textureFactory; } }
         public IEffectFactory EffectFactory { get { return effectFactory; } }
+        public IGraphicsDevice GraphicsDevice { get { return textureFactory.GraphicsDevice; } }
 
         public ModelBuilder(IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, IEffectFactory effectFactory, IEffect defaultEffect)
         {

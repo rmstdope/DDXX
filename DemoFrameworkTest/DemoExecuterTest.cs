@@ -948,5 +948,23 @@ namespace Dope.DDXX.DemoFramework
         {
             throw new Exception("The method or operation is not implemented.");
         }
+
+        public int GetInputIndex(ITextureGenerator generator)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ITextureGenerator Output
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
     }
 }

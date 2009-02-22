@@ -44,7 +44,7 @@ namespace Dope.DDXX.DemoFramework
             graphics = graphicsFactory.GraphicsDeviceManager;
             graphics.PreparingDeviceSettings += new EventHandler<PreparingDeviceSettingsEventArgs>(graphics_PreparingDeviceSettings);
 
-            deviceParameters = new DeviceParameters(800, 600/*1280, 720*/, false, false, true, false);
+            deviceParameters = new DeviceParameters(1280, 720, false, false, true, false);
         }
 
         void graphics_PreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)
