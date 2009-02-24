@@ -294,7 +294,7 @@ namespace Dope.DDXX.DemoTweaker
         public void ReadPostEffectFromXml()
         {
             // Setup
-            CreateRegisterables(2);
+            CreateRegisterables(1);
             ITweakable tweakableRegisterable = mockery.NewMock<ITweakable>();
             CreateXmlNode("<Demo><PostEffect name=\"R0\" class=\"Class1\" track=\"0\" startTime=\"12.2\" endTime=\"13.3\"/></Demo>");
             Expect.Once.On(target).Method("AddPostEffect").With("Class1", "R0", 0, 12.2f, 13.3f);
@@ -305,44 +305,40 @@ namespace Dope.DDXX.DemoTweaker
         }
 
         [Test]
-        public void WriteEffectAndPostEffectToXml()
+        public void ReadTransitionFromXml()
         {
             // Setup
-            CreateRegisterables(2);
-            CreateXmlNode("<Demo><Effect name=\"R1\" /><PostEffect name=\"R0\" /></Demo>");
-            ITweakable tweakableRegisterable1 = mockery.NewMock<ITweakable>();
-            ITweakable tweakableRegisterable2 = mockery.NewMock<ITweakable>();
-            Expect.Once.On(factory).Method("CreateTweakableObject").With(registerables[0]).Will(Return.Value(tweakableRegisterable1));
-            Expect.Once.On(factory).Method("CreateTweakableObject").With(registerables[1]).Will(Return.Value(tweakableRegisterable2));
-            Expect.Once.On(tweakableRegisterable1).Method("WriteToXmlFile").With(document, node.ChildNodes[1]);
-            Expect.Once.On(tweakableRegisterable2).Method("WriteToXmlFile").With(document, node.ChildNodes[0]);
-            ExpectWriteToXml(textureFactory);
-            ExpectWriteToXml(modelFactory);
-            // Exercise SUT
-            tweakable.WriteToXmlFile(document, node);
-            // Verify
-            Assert.AreEqual("<Demo><Effect name=\"R1\" /><PostEffect name=\"R0\" /><TextureFactory /><ModelFactory /></Demo>", node.OuterXml);
-        }
-
-        [Test]
-        public void ReadUnhandledFromXml()
-        {
-            // Setup
-            CreateXmlNode("<Demo><Transition /> </Demo>");
+            CreateRegisterables(1);
+            ITweakable tweakableRegisterable = mockery.NewMock<ITweakable>();
+            CreateXmlNode("<Demo><Transition name=\"R0\" class=\"Class1\" destinationTrack=\"7\" startTime=\"12.2\" endTime=\"13.3\"/></Demo>");
+            Expect.Once.On(target).Method("AddTransition").With("Class1", "R0", 7, 12.2f, 13.3f);
+            Expect.Once.On(factory).Method("CreateTweakableObject").With(registerables[0]).Will(Return.Value(tweakableRegisterable));
+            Expect.Once.On(tweakableRegisterable).Method("ReadFromXmlFile").With(node.FirstChild);
             // Exercise SUT and verify
             tweakable.ReadFromXmlFile(node);
         }
 
         [Test]
-        public void WriteUnhandledToXml()
+        public void WriteEffectPostEffectAndTransitionToXml()
         {
             // Setup
-            CreateXmlNode("<Demo><Transition /> </Demo>");
+            CreateRegisterables(3);
+            CreateXmlNode("<Demo><Effect name=\"R2\" /><PostEffect name=\"R1\" /><Transition name=\"R0\" /></Demo>");
+            ITweakable tweakableRegisterable1 = mockery.NewMock<ITweakable>();
+            ITweakable tweakableRegisterable2 = mockery.NewMock<ITweakable>();
+            ITweakable tweakableRegisterable3 = mockery.NewMock<ITweakable>();
+            Expect.Once.On(factory).Method("CreateTweakableObject").With(registerables[0]).Will(Return.Value(tweakableRegisterable1));
+            Expect.Once.On(factory).Method("CreateTweakableObject").With(registerables[1]).Will(Return.Value(tweakableRegisterable2));
+            Expect.Once.On(factory).Method("CreateTweakableObject").With(registerables[2]).Will(Return.Value(tweakableRegisterable3));
+            Expect.Once.On(tweakableRegisterable1).Method("WriteToXmlFile").With(document, node.ChildNodes[2]);
+            Expect.Once.On(tweakableRegisterable2).Method("WriteToXmlFile").With(document, node.ChildNodes[1]);
+            Expect.Once.On(tweakableRegisterable3).Method("WriteToXmlFile").With(document, node.ChildNodes[0]);
             ExpectWriteToXml(textureFactory);
             ExpectWriteToXml(modelFactory);
             // Exercise SUT
             tweakable.WriteToXmlFile(document, node);
-            CreateXmlNode("<Demo><Transition /> <TextureFactory /><ModelFactory /></Demo>");
+            // Verify
+            Assert.AreEqual("<Demo><Effect name=\"R2\" /><PostEffect name=\"R1\" /><Transition name=\"R0\" /><TextureFactory /><ModelFactory /></Demo>", node.OuterXml);
         }
 
         [Test]

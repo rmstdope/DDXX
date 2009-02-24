@@ -93,9 +93,9 @@ namespace Dope.DDXX.DemoEffects
                     Method("Process").With("ZoomAdd", tempTexture2, tempTexture1);
                 Expect.Once.On(postProcessor).
                     Method("SetBlendParameters").
-                    With(BlendFunction.Add, Blend.BlendFactor, Blend.One, color);
+                    With(BlendFunction.Add, Blend.One, Blend.BlendFactor, color);
                 Expect.Once.On(postProcessor).
-                    Method("Process").With("Copy", tempTexture1, startTexture);
+                    Method("Process").With("Copy", startTexture, tempTexture1);
                 sut.Render();
             }
         }

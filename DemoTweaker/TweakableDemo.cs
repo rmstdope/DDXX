@@ -56,6 +56,7 @@ namespace Dope.DDXX.DemoTweaker
                     RegisterPostEffect(node);
                     break;
                 case "Transition":
+                    RegisterTransition(node);
                     break;
                 case "TextureFactory":
                     Factory.CreateTweakableObject(Factory.GraphicsFactory.TextureFactory).ReadFromXmlFile(node);
@@ -77,10 +78,9 @@ namespace Dope.DDXX.DemoTweaker
             {
                 case "Effect":
                 case "PostEffect":
+                case "Transition":
                     int index = Target.GetAllRegisterables().FindIndex(delegate(IRegisterable r) { return r.Name == GetStringAttribute(node, "name"); });
                     GetChild(index).WriteToXmlFile(xmlDocument, node);
-                    break;
-                case "Transition":
                     break;
                 case "TextureFactory":
                     textureFactoryWritten = true;
@@ -122,6 +122,14 @@ namespace Dope.DDXX.DemoTweaker
         {
             Target.AddPostEffect(GetStringAttribute(node, "class"), GetStringAttribute(node, "name"),
                 GetIntAttribute(node, "track"), GetFloatAttribute(node, "starttime"), GetFloatAttribute(node, "endtime"));
+            int index = Target.GetAllRegisterables().FindIndex(delegate(IRegisterable r) { return r.Name == GetStringAttribute(node, "name"); });
+            GetChild(index).ReadFromXmlFile(node);
+        }
+
+        private void RegisterTransition(XmlNode node)
+        {
+            Target.AddTransition(GetStringAttribute(node, "class"), GetStringAttribute(node, "name"),
+                GetIntAttribute(node, "destinationtrack"), GetFloatAttribute(node, "starttime"), GetFloatAttribute(node, "endtime"));
             int index = Target.GetAllRegisterables().FindIndex(delegate(IRegisterable r) { return r.Name == GetStringAttribute(node, "name"); });
             GetChild(index).ReadFromXmlFile(node);
         }

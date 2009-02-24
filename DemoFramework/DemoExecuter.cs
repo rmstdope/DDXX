@@ -304,10 +304,10 @@ namespace Dope.DDXX.DemoFramework
                 {
                     postProcessor.AllocateTexture(finalRenderTarget);
                     IRenderTarget2D finalRenderTarget2 = tracks[transition.DestinationTrack].Render(graphicsFactory.GraphicsDevice, renderTarget, renderTargetNoMultiSampling, depthStencilBuffer, clearColor);
-                    //postProcessor.AllocateTexture(finalRenderTarget2);
+                    ////postProcessor.AllocateTexture(finalRenderTarget2);
                     IRenderTarget2D newFinalRenderTarget = transition.Render(finalRenderTarget, finalRenderTarget2);
                     postProcessor.FreeTexture(finalRenderTarget);
-                    //postProcessor.FreeTexture(finalRenderTarget2);
+                    ////postProcessor.FreeTexture(finalRenderTarget2);
                     finalRenderTarget = newFinalRenderTarget;
                 }
             }
@@ -357,6 +357,8 @@ namespace Dope.DDXX.DemoFramework
                 foreach (IRegisterable registerable in track.PostEffectList)
                     allEffects.Add(registerable);
             }
+            foreach (IRegisterable registerable in transitions)
+                allEffects.Add(registerable);
             allEffects.Sort(Track.CompareRegisterableByTime);
             return allEffects;
         }

@@ -1,87 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Demo song="music_machinefunk_loop">
-  <ModelFactory>
-  </ModelFactory>
-  <TextureFactory>
-    <Texture name="Noise256base1024" width="256" height="256" miplevels="1">
-    	<Generator class="PerlinNoise">
-    		<NumOctaves>6</NumOctaves>
-    		<BaseFrequency>100</BaseFrequency>
-    		<Persistence>0.5</Persistence>
-    	</Generator>
-    	<Generator class="PerlinNoise">
-    		<NumOctaves>6</NumOctaves>
-    		<BaseFrequency>100</BaseFrequency>
-    		<Persistence>0.5</Persistence>
-    	</Generator>
-    	<Generator class="FactorBlend">
-    		<Factor>0</Factor>
-    	</Generator>
-    </Texture>
-    <Texture name="noise64" width="64" height="64" miplevels="1">
-    	<Generator class="PerlinNoise">
-    		<NumOctaves>6</NumOctaves>
-    		<BaseFrequency>16</BaseFrequency>
-    		<Persistence>0.5</Persistence>
-    	</Generator>
-    	<Generator class="Madd">
-    		<Add>0</Add>
-    		<Mul>1</Mul>
-    	</Generator>
-    </Texture>
-    <Texture name="Noise256" width="256" height="256" miplevels="0">
-    	<Generator class="PerlinNoise">
-    		<NumOctaves>6</NumOctaves>
-    		<BaseFrequency>4</BaseFrequency>
-    		<Persistence>0.5</Persistence>
-    	</Generator>
-    </Texture>
-    <Texture name="NormalNoise256" width="256" height="256" miplevels="0">
-    	<Generator class="PerlinNoise">
-    		<NumOctaves>6</NumOctaves>
-    		<BaseFrequency>4</BaseFrequency>
-    		<Persistence>0.5</Persistence>
-    	</Generator>
-    	<Generator class="Madd">
-    		<Add>0</Add>
-    		<Mul>2</Mul>
-    	</Generator>
-    	<Generator class="NormalMap" />
-    	<Generator class="Madd">
-    		<Add>1</Add>
-    		<Mul>1</Mul>
-    	</Generator>
-    	<Generator class="Madd">
-    		<Add>0</Add>
-    		<Mul>0.5</Mul>
-    	</Generator>
-    </Texture>
-    <Texture name="Circle" width="64" height="64" miplevels="0">
-    	<Generator class="Circle">
-    		<InnerRadius>0</InnerRadius>
-    		<OuterRadius>0.4</OuterRadius>
-    	</Generator>
-    </Texture>
-    <Texture name="Circle256" width="256" height="256" miplevels="0">
-    	<Generator class="Circle">
-    		<InnerRadius>0.2</InnerRadius>
-    		<OuterRadius>0.5</OuterRadius>
-    	</Generator>
-    </Texture>
-    <Texture name="Noise64" width="64" height="64" miplevels="0">
-    	<Generator class="PerlinNoise">
-    		<NumOctaves>6</NumOctaves>
-    		<BaseFrequency>16</BaseFrequency>
-    		<Persistence>0.5</Persistence>
-    	</Generator>
-    </Texture>
-    <Texture name="Circle64" width="64" height="64" miplevels="0">
-    	<Generator class="Circle">
-    		<InnerRadius>0.4</InnerRadius>
-    		<OuterRadius>0.5</OuterRadius>
-    	</Generator>
-    </Texture>
-  </TextureFactory>
+  <ClearColor>0, 0, 0, 0</ClearColor>
   <!--<Effect class="IntroText" name="Lines" track="0" startTime="0" endTime="500">
 		<DrawOrder>0</DrawOrder>
 		<Position>70, 500</Position>
@@ -93,11 +12,18 @@
   <Effect class="SimpleParticleEffect" name="Simple Particles" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
   </Effect>
-
-
-  <!--<Effect class="Morph3DEffect" name="3D Morph" track="0" startTime="0" endTime="500">
+  <PostEffect class="RadialBlurPostEffect" name="RadialBlur" track="0" startTime="0" endTime="500">
+    <BlurColor>40, 40, 150, 255</BlurColor>
     <DrawOrder>0</DrawOrder>
-  </Effect>-->
+  </PostEffect>
+  <Effect class="Morph3DEffect" name="3D Morph" track="1" startTime="0" endTime="500">
+    <DrawOrder>0</DrawOrder>
+  </Effect>
+  <PostEffect class="RadialBlurPostEffect" name="RadialBlur2" track="1" startTime="0" endTime="500">
+    <BlurColor>40, 40, 150, 255</BlurColor>
+    <DrawOrder>0</DrawOrder>
+  </PostEffect>
+  <Transition class="FadeTransition" name="Fade" startTime="5" endTime="10" destinationTrack="1"></Transition>
   
   <!--<Effect class="TextEffect" name="Lines" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
@@ -206,5 +132,86 @@
   <!--<Effect class="GridEffect" name="Grid" track="0" startTime="0" endTime="500">
 	  <DrawOrder>0</DrawOrder>
 	</Effect>-->
-  <ClearColor>0, 0, 0, 0</ClearColor>
+  <ModelFactory>
+  </ModelFactory>
+  <TextureFactory>
+    <Texture name="Noise256base1024" width="256" height="256" miplevels="1">
+      <Generator class="PerlinNoise">
+        <NumOctaves>6</NumOctaves>
+        <BaseFrequency>100</BaseFrequency>
+        <Persistence>0.5</Persistence>
+      </Generator>
+      <Generator class="PerlinNoise">
+        <NumOctaves>6</NumOctaves>
+        <BaseFrequency>100</BaseFrequency>
+        <Persistence>0.5</Persistence>
+      </Generator>
+      <Generator class="FactorBlend">
+        <Factor>0</Factor>
+      </Generator>
+    </Texture>
+    <Texture name="noise64" width="64" height="64" miplevels="1">
+      <Generator class="PerlinNoise">
+        <NumOctaves>6</NumOctaves>
+        <BaseFrequency>16</BaseFrequency>
+        <Persistence>0.5</Persistence>
+      </Generator>
+      <Generator class="Madd">
+        <Add>0</Add>
+        <Mul>1</Mul>
+      </Generator>
+    </Texture>
+    <Texture name="Noise256" width="256" height="256" miplevels="0">
+      <Generator class="PerlinNoise">
+        <NumOctaves>6</NumOctaves>
+        <BaseFrequency>4</BaseFrequency>
+        <Persistence>0.5</Persistence>
+      </Generator>
+    </Texture>
+    <Texture name="NormalNoise256" width="256" height="256" miplevels="0">
+      <Generator class="PerlinNoise">
+        <NumOctaves>6</NumOctaves>
+        <BaseFrequency>4</BaseFrequency>
+        <Persistence>0.5</Persistence>
+      </Generator>
+      <Generator class="Madd">
+        <Add>0</Add>
+        <Mul>2</Mul>
+      </Generator>
+      <Generator class="NormalMap" />
+      <Generator class="Madd">
+        <Add>1</Add>
+        <Mul>1</Mul>
+      </Generator>
+      <Generator class="Madd">
+        <Add>0</Add>
+        <Mul>0.5</Mul>
+      </Generator>
+    </Texture>
+    <Texture name="Circle" width="64" height="64" miplevels="0">
+      <Generator class="Circle">
+        <InnerRadius>0</InnerRadius>
+        <OuterRadius>0.4</OuterRadius>
+      </Generator>
+    </Texture>
+    <Texture name="Circle256" width="256" height="256" miplevels="0">
+      <Generator class="Circle">
+        <InnerRadius>0.2</InnerRadius>
+        <OuterRadius>0.5</OuterRadius>
+      </Generator>
+    </Texture>
+    <Texture name="Noise64" width="64" height="64" miplevels="0">
+      <Generator class="PerlinNoise">
+        <NumOctaves>6</NumOctaves>
+        <BaseFrequency>16</BaseFrequency>
+        <Persistence>0.5</Persistence>
+      </Generator>
+    </Texture>
+    <Texture name="Circle64" width="64" height="64" miplevels="0">
+      <Generator class="Circle">
+        <InnerRadius>0.4</InnerRadius>
+        <OuterRadius>0.5</OuterRadius>
+      </Generator>
+    </Texture>
+  </TextureFactory>
 </Demo>

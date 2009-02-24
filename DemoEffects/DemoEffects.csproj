@@ -90,6 +90,7 @@
     <Compile Include="DepthOfFieldPostEffect.cs">
       <Name>DepthOfFieldPostEffect</Name>
     </Compile>
+    <Compile Include="FadeTransition.cs" />
     <Compile Include="GlowPostEffect.cs">
       <Name>GlowPostEffect</Name>
     </Compile>

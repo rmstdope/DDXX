@@ -39,8 +39,8 @@ namespace Dope.DDXX.DemoEffects
                 PostProcessor.Process("ZoomAdd", textures[source], textures[1 - source]);
                 source = 1 - source;
             }
-            PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.BlendFactor, Blend.One, blurColor);
-            PostProcessor.Process("Copy", textures[source], startTexture);
+            PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.BlendFactor, blurColor);
+            PostProcessor.Process("Copy", startTexture, textures[source]);
         }
 
         protected override void Initialize()
