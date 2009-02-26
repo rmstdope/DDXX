@@ -43,7 +43,8 @@ namespace Dope.DDXX.DemoFramework
 
         public string SelectedResolution 
         {
-            get { return (string)resolution.SelectedItem; }  
+            get { return (string)resolution.SelectedItem; }
+            set { SelectResolution(value); }
         }
 
         public bool EnableRadio4_3 { set { radio_4_3.Enabled = value; } }
@@ -70,9 +71,24 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
+        private void SelectResolution(string res)
+        {
+            int i=0;
+            foreach (string s in resolution.Items)
+            {
+                if (s == res)
+                {
+                    resolution.SelectedIndex = i;
+                    return;
+                }
+                i++;
+            }
+        }
+
         private void ok_Click(object sender, EventArgs e)
         {
             logic.OK = true;
+            logic.SaveDefaultValues();
             Close();
         }
 

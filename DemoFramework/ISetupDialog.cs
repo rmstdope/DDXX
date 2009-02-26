@@ -8,7 +8,7 @@ namespace Dope.DDXX.DemoFramework
         bool Reference { get; set; }
         bool Windowed { get; set; }
         bool Multisampling { get; set; }
-        string SelectedResolution { get; }
+        string SelectedResolution { get; set; }
         string[] Resolution { set; }
         bool EnableRadio4_3 { set; }
         bool EnableRadio16_9 { set; }
