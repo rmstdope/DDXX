@@ -150,22 +150,6 @@ namespace Dope.DDXX.DemoFramework
 
         #endregion
 
-        #region IDemoMixer Members
-
-        public Microsoft.Xna.Framework.Graphics.Color ClearColor
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
-
-        #endregion
-
         #region IGraphicsDevice Members
 
         public ClipPlaneCollection ClipPlanes
@@ -854,12 +838,32 @@ namespace Dope.DDXX.DemoFramework
 
         #endregion
 
+
         #region IDemoMixer Members
 
+        public void SetClearColor(int track, Color color)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Color GetClearColor(int track)
+        {
+            throw new NotImplementedException();
+        }
 
         public CompiledMidi CompiledMidi
         {
             get { throw new NotImplementedException(); }
+        }
+
+        #endregion
+
+        #region IPostProcessor Members
+
+
+        public void SetValue(string parameter, ITexture2D value)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

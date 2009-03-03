@@ -79,6 +79,8 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -93,6 +95,7 @@
     <Compile Include="DepthOfFieldPostEffectTest.cs">
       <Name>DepthOfFieldPostEffectTest</Name>
     </Compile>
+    <Compile Include="FadeTransitionTest.cs" />
     <Compile Include="GlowPostEffectTest.cs">
       <Name>GlowPostEffectTest</Name>
     </Compile>
@@ -115,6 +118,7 @@
     <Compile Include="TextFadingEffectTest.cs">
       <Name>TextFadingEffectTest</Name>
     </Compile>
+    <Compile Include="TextureFadeTransitionTest.cs" />
     <Compile Include="WavePostEffectTest.cs">
       <Name>WavePostEffectTest</Name>
     </Compile>

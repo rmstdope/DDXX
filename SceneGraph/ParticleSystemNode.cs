@@ -76,7 +76,8 @@ namespace Dope.DDXX.SceneGraph
             }
 
 #if !XBOX
-            vertexBuffer.SetData<T>(vertices, 0, ActiveParticles);
+            if (ActiveParticles != 0)
+                vertexBuffer.SetData<T>(vertices, 0, ActiveParticles);
 #endif
         }
 

@@ -134,8 +134,8 @@ namespace EngineTest
 
         public override void Step()
         {
+            Mixer.SetClearColor(1, Color.Red);
             morph.Step((Time.CurrentTime - StartTime) / 10.0f);
-            //Mixer.ClearColor = Color.White;
             node.WorldState.Turn(Time.DeltaTime);
             node.WorldState.Tilt(Time.DeltaTime);
             Scene.Step();

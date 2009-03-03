@@ -36,7 +36,7 @@ namespace Dope.DDXX.DemoFramework
 
         private IDemoFactory demoFactory;
         private IDemoEffectTypes effectTypes;
-        private Color clearColor = new Color(0, 0, 0, 0);
+        private List<Color> clearColors = new List<Color>();
         private Dictionary<string, ITextureGenerator> generators = new Dictionary<string,ITextureGenerator>();
 
         private string songFilename;
@@ -147,7 +147,7 @@ namespace Dope.DDXX.DemoFramework
             }
             foreach (IDemoTransition transition in transitions)
             {
-                transition.Initialize(postProcessor);
+                transition.Initialize(postProcessor, graphicsFactory);
             }
 
             Time.CurrentTime = StartTime;
@@ -185,6 +185,7 @@ namespace Dope.DDXX.DemoFramework
             while (NumTracks <= track)
             {
                 tracks.Add(demoFactory.CreateTrack());
+                clearColors.Add(Color.Black);
             }
             tracks[track].Register(effect);
         }
@@ -298,12 +299,12 @@ namespace Dope.DDXX.DemoFramework
             IRenderTarget2D finalRenderTarget = null;
             if (tracks.Count != 0)
             {
-                finalRenderTarget = GetActiveTrack().Render(graphicsFactory.GraphicsDevice, renderTarget, renderTargetNoMultiSampling, depthStencilBuffer, clearColor);
+                finalRenderTarget = GetActiveTrack().Render(graphicsFactory.GraphicsDevice, renderTarget, renderTargetNoMultiSampling, depthStencilBuffer, clearColors[GetActiveTrackNum()]);
                 IDemoTransition transition = GetActiveTransition();
                 if (transition != null)
                 {
                     postProcessor.AllocateTexture(finalRenderTarget);
-                    IRenderTarget2D finalRenderTarget2 = tracks[transition.DestinationTrack].Render(graphicsFactory.GraphicsDevice, renderTarget, renderTargetNoMultiSampling, depthStencilBuffer, clearColor);
+                    IRenderTarget2D finalRenderTarget2 = tracks[transition.DestinationTrack].Render(graphicsFactory.GraphicsDevice, renderTarget, renderTargetNoMultiSampling, depthStencilBuffer, clearColors[transition.DestinationTrack]);
                     ////postProcessor.AllocateTexture(finalRenderTarget2);
                     IRenderTarget2D newFinalRenderTarget = transition.Render(finalRenderTarget, finalRenderTarget2);
                     postProcessor.FreeTexture(finalRenderTarget);
@@ -329,13 +330,18 @@ namespace Dope.DDXX.DemoFramework
 
         private ITrack GetActiveTrack()
         {
+            return tracks[GetActiveTrackNum()];
+        }
+
+        private int GetActiveTrackNum()
+        {
             int trackNum = 0;
             foreach (IDemoTransition transition in transitions)
             {
                 if (transition.EndTime <= Time.CurrentTime)
                     trackNum = transition.DestinationTrack;
             }
-            return tracks[trackNum];
+            return trackNum;
         }
 
 
@@ -526,12 +532,16 @@ namespace Dope.DDXX.DemoFramework
 
         #region IDemoMixer Members
 
-        public Color ClearColor
+        public void SetClearColor(int track, Color color)
         {
-            get { return clearColor; }
-            set { clearColor = value; }
+            clearColors[track] = color;
         }
 
+        public Color GetClearColor(int track)
+        {
+            return clearColors[track];
+        }
+        
         public CompiledMidi CompiledMidi
         {
             get { return soundFactory.Midi; }

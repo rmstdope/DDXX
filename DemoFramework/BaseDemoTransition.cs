@@ -9,6 +9,7 @@ namespace Dope.DDXX.DemoFramework
     {
         private int destinationTrack;
         private IPostProcessor postProcessor;
+        private IGraphicsFactory graphicsFactory;
 
         public int DestinationTrack
         {
@@ -21,15 +22,22 @@ namespace Dope.DDXX.DemoFramework
             get { return postProcessor; }
         }
 
+        protected ITextureFactory TextureFactory
+        {
+            get { return graphicsFactory.TextureFactory; }
+        }
+
         protected BaseDemoTransition(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
         {
         }
 
-        public void Initialize(/*IDevice device, */IPostProcessor postProcessor)
+        protected virtual void Initialize() { }
+        public void Initialize(IPostProcessor postProcessor, IGraphicsFactory graphicsFactory)
         {
-            //this.device = device;
             this.postProcessor = postProcessor;
+            this.graphicsFactory = graphicsFactory;
+            Initialize();
         }
 
         abstract public IRenderTarget2D Combine(IRenderTarget2D fromTexture, IRenderTarget2D toTexture);

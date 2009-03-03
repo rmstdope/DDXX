@@ -117,6 +117,7 @@
       <SubType>Code</SubType>
       <Name>TextFadingEffect</Name>
     </Compile>
+    <Compile Include="TextureFadeTransition.cs" />
     <Compile Include="WavePostEffect.cs">
       <Name>WavePostEffect</Name>
     </Compile>

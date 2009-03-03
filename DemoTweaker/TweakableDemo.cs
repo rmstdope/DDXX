@@ -128,6 +128,7 @@ namespace Dope.DDXX.DemoTweaker
 
         private void RegisterTransition(XmlNode node)
         {
+            // TODO: DestinationTrack existis both as attribute and node
             Target.AddTransition(GetStringAttribute(node, "class"), GetStringAttribute(node, "name"),
                 GetIntAttribute(node, "destinationtrack"), GetFloatAttribute(node, "starttime"), GetFloatAttribute(node, "endtime"));
             int index = Target.GetAllRegisterables().FindIndex(delegate(IRegisterable r) { return r.Name == GetStringAttribute(node, "name"); });

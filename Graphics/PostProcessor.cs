@@ -253,6 +253,11 @@ namespace Dope.DDXX.Graphics
             effect.Parameters[name].SetValue(value);
         }
 
+        public void SetValue(string name, ITexture2D value)
+        {
+            effect.Parameters[name].SetValue(value);
+        }
+
         public List<IRenderTarget2D> GetTemporaryTextures(int num, bool skipOutput)
         {
             List<IRenderTarget2D> tempTextures = new List<IRenderTarget2D>();

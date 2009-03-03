@@ -40,11 +40,22 @@ float RingsDistance;
 float RingsScale;
 
 float2 Time2D;
+float Time;
 
 sampler TextureSampler : register(s0) = sampler_state
 {
     AddressU	= Wrap;
     AddressV	= Wrap;
+};
+texture2D MiscTexture;
+sampler AlternateTextureSampler = sampler_state
+{
+		Texture		= <MiscTexture>;
+    AddressU	= Wrap;
+    AddressV	= Wrap;
+		MagFilter	=	Linear;
+		MinFilter	=	Linear;
+		MipFilter	=	Linear;
 };
 
 ///////////////////////////////////////////////////
@@ -377,6 +388,21 @@ float4
 CopyPixelShader(float2 Tex : TEXCOORD0) : COLOR0
 {
 	float4 color = float4(tex2D(TextureSampler, Tex.xy).rgb, 1.0);
+	return color;
+}
+
+//-----------------------------------------------------------------------------
+// Pixel Shader: TextureAlphaPixelShader
+// Desc: Copies the image and calculates alpha from the red channel of a third texture
+//-----------------------------------------------------------------------------
+float TextureAlphaFadeDelay;
+float TextureAlphaFadeLength;
+float4
+TextureAlphaPixelShader(float2 Tex : TEXCOORD0) : COLOR0
+{
+	float alpha = tex2D(AlternateTextureSampler, Tex.xy).r;
+	alpha = 1 - clamp((Time - TextureAlphaFadeDelay * alpha) / TextureAlphaFadeLength, 0, 1);
+	float4 color = float4(tex2D(TextureSampler, Tex.xy).rgb, alpha);
 	return color;
 }
 
@@ -976,6 +1002,20 @@ technique Copy
 	>
 	{
 		PixelShader				= compile ps_2_0 CopyPixelShader();
+		ZEnable						= false;
+		StencilEnable			= false;
+		CullMode = None;
+	}
+}
+
+technique TextureAlpha
+{
+	pass BasePass
+	<
+		float Scale = 1.0f;
+	>
+	{
+		PixelShader				= compile ps_2_0 TextureAlphaPixelShader();
 		ZEnable						= false;
 		StencilEnable			= false;
 		CullMode = None;

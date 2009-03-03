@@ -47,7 +47,7 @@ namespace EngineTest
 
         public override void Step()
         {
-            Mixer.ClearColor = Color.SteelBlue;
+            Mixer.SetClearColor(0, Color.SteelBlue);
         }
 
         public override void Render()

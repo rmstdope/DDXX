@@ -238,9 +238,9 @@ namespace Dope.DDXX.DemoFramework
             ExpectTweakerInitialize();
 
             Expect.Once.On(t1).
-                Method("Initialize").With(postProcessor);
+                Method("Initialize").With(postProcessor, graphicsFactory);
             Expect.Once.On(t2).
-                Method("Initialize").With(postProcessor);
+                Method("Initialize").With(postProcessor, graphicsFactory);
 
             executer.Initialize(graphicsFactory, deviceParameters);
         }
@@ -299,7 +299,7 @@ namespace Dope.DDXX.DemoFramework
             EnsureNumTracks(1);
             Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(1000.0f));
 
-            executer.ClearColor = Color.DarkSlateBlue;
+            executer.SetClearColor(0, Color.DarkSlateBlue);
 
             Expect.Once.On(tracks[0]).Method("Render").
                 With(device, renderTarget, renderTarget, depthStencilBuffer, Color.DarkSlateBlue).Will(Return.Value(renderTarget2));
@@ -320,7 +320,7 @@ namespace Dope.DDXX.DemoFramework
             Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(1000.0f));
             Stub.On(tracks[1]).GetProperty("EndTime").Will(Return.Value(1000.0f));
 
-            executer.ClearColor = Color.DarkSlateBlue;
+            executer.SetClearColor(0, Color.DarkSlateBlue);
 
             Expect.Once.On(tracks[0]).Method("Render").
                 With(device, renderTarget, renderTarget, depthStencilBuffer, Color.DarkSlateBlue).Will(Return.Value(renderTarget2));
@@ -343,7 +343,8 @@ namespace Dope.DDXX.DemoFramework
             Stub.On(tracks[0]).GetProperty("EndTime").Will(Return.Value(1000.0f));
             Stub.On(tracks[1]).GetProperty("EndTime").Will(Return.Value(1000.0f));
 
-            executer.ClearColor = Color.DarkSlateBlue;
+            executer.SetClearColor(0, Color.DarkSlateBlue);
+            executer.SetClearColor(1, Color.Black);
 
             Expect.Once.On(tracks[0]).Method("Render").
                 With(device, renderTarget, renderTarget, depthStencilBuffer, Color.DarkSlateBlue).Will(Return.Value(renderTarget2));
@@ -351,7 +352,7 @@ namespace Dope.DDXX.DemoFramework
             targets.Add(renderTarget3);
             Expect.Once.On(postProcessor).Method("AllocateTexture").With(renderTarget2);
             Expect.Once.On(tracks[1]).Method("Render").
-                With(device, renderTarget, renderTarget, depthStencilBuffer, Color.DarkSlateBlue).Will(Return.Value(renderTarget));
+                With(device, renderTarget, renderTarget, depthStencilBuffer, Color.Black).Will(Return.Value(renderTarget));
             //Expect.Once.On(postProcessor).Method("AllocateTexture").With(backBuffer1);
             Expect.Once.On(transition).Method("Render").With(renderTarget2, renderTarget).
                 Will(Return.Value(renderTarget3));
@@ -376,10 +377,10 @@ namespace Dope.DDXX.DemoFramework
             Stub.On(tracks[1]).GetProperty("EndTime").Will(Return.Value(1000.0f));
             Time.CurrentTime = 14;
 
-            executer.ClearColor = Color.DarkSlateBlue;
+            executer.SetClearColor(1, Color.BlanchedAlmond);
 
             Expect.Once.On(tracks[1]).Method("Render").
-                With(device, renderTarget, renderTarget, depthStencilBuffer, Color.DarkSlateBlue).Will(Return.Value(renderTarget2));
+                With(device, renderTarget, renderTarget, depthStencilBuffer, Color.BlanchedAlmond).Will(Return.Value(renderTarget2));
             Expect.Once.On(renderTarget2).Method("GetTexture").Will(Return.Value(texture2D));
             ExpectCopyToBackBuffer(renderTarget2);
             Expect.Once.On(tweakerHandler).

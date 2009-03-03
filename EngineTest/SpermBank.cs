@@ -69,7 +69,7 @@ namespace EngineTest
 
         public override void Step()
         {
-            Mixer.ClearColor = Color.Coral;
+            Mixer.SetClearColor(0, Color.Coral);
             foreach (ModelNode cell in sperms)
             {
                 //cell.WorldState.Turn(Time.DeltaTime * 0.8f);

@@ -6,7 +6,7 @@ using Dope.DDXX.Graphics;
 using Microsoft.Xna.Framework.Graphics;
 using Dope.DDXX.Utility;
 
-namespace TiVi
+namespace Dope.DDXX.DemoEffects
 {
     public class FadeTransition : BaseDemoTransition
     {

@@ -8,7 +8,8 @@ namespace Dope.DDXX.DemoFramework
 {
     public interface IDemoMixer
     {
-        Color ClearColor { get; set; }
+        void SetClearColor(int track, Color color);
+        Color GetClearColor(int track);
         CompiledMidi CompiledMidi { get; }
     }
 }
