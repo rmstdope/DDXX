@@ -31,73 +31,24 @@ namespace Dope.DDXX.DemoEffects
             base.TearDown();
         }
 
-        /// <summary>
-        /// Test initializing the effect using file 'file1'
-        /// </summary>
-        [Test]
-        public void TestInitialize1()
-        {
-            Expect.Once.On(textureFactory).Method("CreateFromName").
-                With("file1").Will(Return.Value(texture2D));
-
-            overlay.AddNoise = true;
-            overlay.Filename = "file1";
-            overlay.Initialize(graphicsFactory, postProcessor);
-        }
-
-        /// <summary>
-        /// Test initializing the effect using file 'file2'
-        /// </summary>
-        [Test]
-        public void TestInitialize2()
-        {
-            Expect.Once.On(textureFactory).Method("CreateFromName").
-                With("file2").Will(Return.Value(texture2D));
-
-            overlay.AddNoise = true;
-            overlay.Filename = "file2";
-            overlay.Initialize(graphicsFactory, postProcessor);
-        }
-
-        /// <summary>
-        /// Test initializing the effect without setting file name
-        /// </summary>
         [Test]
         [ExpectedException(typeof(DDXXException))]
-        public void TestInitializeFail1()
+        public void InitializeFailNoTexture()
         {
             overlay.Initialize(graphicsFactory, postProcessor);
         }
 
-        /// <summary>
-        /// Test initializing the effect without either add or subtract
-        /// </summary>
         [Test]
-        [ExpectedException(typeof(DDXXException))]
-        public void TestInitializeFail2()
-        {
-            overlay.Filename = "file2";
-            overlay.Initialize(graphicsFactory, postProcessor);
-        }
-
-        /// <summary>
-        /// Test initializing the effect with texture already set
-        /// </summary>
-        [Test]
-        public void TestInitializeTextureAlreadySet()
+        public void InitializeOk()
         {
             overlay.Texture = texture2D;
-            overlay.SubtractNoise = true;
             overlay.Initialize(graphicsFactory, postProcessor);
         }
 
-        /// <summary>
-        /// Test add rendering with INPUT_TEXTURE and no blend factor
-        /// </summary>
         [Test]
-        public void TestRenderAdd()
+        public void RenderAdd()
         {
-            TestInitialize1();
+            InitializeOk();
 
             Stub.On(postProcessor).
                 GetProperty("OutputTexture").
@@ -109,16 +60,14 @@ namespace Dope.DDXX.DemoEffects
             Expect.Once.On(postProcessor).Method("Process").
                 With("Blend", texture2D, outputTexture);
 
+            overlay.AddNoise = true;
             overlay.Render();
         }
 
-        /// <summary>
-        /// Test subtract rendering with INPUT_TEXTURE and no blend factor
-        /// </summary>
         [Test]
-        public void TestRenderSubtract()
+        public void RenderSubtract()
         {
-            TestInitialize1();
+            InitializeOk();
 
             Stub.On(postProcessor).
                 GetProperty("OutputTexture").
@@ -130,19 +79,14 @@ namespace Dope.DDXX.DemoEffects
             Expect.Once.On(postProcessor).Method("Process").
                 With("Blend", texture2D, outputTexture);
 
-            overlay.AddNoise = false;
             overlay.SubtractNoise = true;
             overlay.Render();
         }
 
-        /// <summary>
-        /// Test rendering with FULLSIZE_TEXTURE_1 and blend factor 0.5
-        /// </summary>
         [Test]
-        public void TestRenderWithBlendFactor()
+        public void RenderWithBlendFactor()
         {
-            TestInitialize1();
-            overlay.BlendFactor = 0.5f;
+            InitializeOk();
 
             Stub.On(postProcessor).
                 GetProperty("OutputTexture").
@@ -154,6 +98,8 @@ namespace Dope.DDXX.DemoEffects
             Expect.Once.On(postProcessor).Method("Process").
                 With("Blend", texture2D, outputTexture);
 
+            overlay.BlendFactor = 0.5f;
+            overlay.AddNoise = true;
             overlay.Render();
         }
     }

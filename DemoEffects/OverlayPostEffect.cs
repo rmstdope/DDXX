@@ -11,11 +11,9 @@ namespace Dope.DDXX.DemoEffects
     public class OverlayPostEffect : BaseDemoPostEffect
     {
         private ITexture2D texture;
-
-        private string filename;
-        private float blendFactor = 1.0f;
-        private bool addNoise = false;
-        private bool subtractNoise = false;
+        private float blendFactor;
+        private bool addNoise;
+        private bool subtractNoise;
         private float fadeInLength;
         private float fadeOutLength;
         private string technique;
@@ -58,38 +56,33 @@ namespace Dope.DDXX.DemoEffects
             set { blendFactor = value; }
         }
 
-        public string Filename
-        {
-            get { return filename; }
-            set { filename = value; }
-        }
-
         public ITexture2D Texture
         {
+            get { return texture; }
             set { texture = value; }
         }
 
         public OverlayPostEffect(string name, float start, float end)
             : base(name, start, end)
         {
+            blendFactor = 1.0f;
+            addNoise = false;
+            subtractNoise = true;
+            fadeInLength = 0.0f;
+            fadeOutLength = 0.0f;
             technique = "Blend";
         }
 
         protected override void Initialize()
         {
-            if (texture == null && filename == null)
-                throw new DDXXException("OverlayPostEffect.Filename or OverlayPostEffect.Texture must be set before Initialize is called.");
+            if (texture == null)
+                throw new DDXXException("OverlayPostEffect.Texture must be set before Initialize is called.");
 
             if (!addNoise && !subtractNoise)
                 throw new DDXXException("Either AddNoise or SubtractNoise must be set to true for OverlayPostEffect.");
 
             if (addNoise && subtractNoise)
                 throw new DDXXException("AddNoise and SubtractNoise cen not both be set for OverlayPostEffect.");
-
-            if (texture == null && filename != "")
-                texture = TextureFactory.CreateFromName(filename);
-            else
-                texture = TextureFactory.WhiteTexture;
         }
 
         public override void Render()
@@ -101,9 +94,7 @@ namespace Dope.DDXX.DemoEffects
             float factor = BlendFactor * GetFadeAlpha();
             PostProcessor.SetValue("Color", new float[] { factor, factor, factor, factor});
 
-            //PostProcessor.OutputTexture.GetTexture().Save("before.jpg", ImageFileFormat.Jpg);
             PostProcessor.Process(technique, texture, PostProcessor.OutputTexture);
-            //PostProcessor.OutputTexture.GetTexture().Save("after.jpg", ImageFileFormat.Jpg);
         }
 
         private float GetFadeAlpha()
