@@ -70,6 +70,8 @@
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
+    <Reference Include="NMock2, Version=2.0.0.44, Culture=neutral, PublicKeyToken=37d3be0adc87c2b7, processorArchitecture=MSIL" />
+    <Reference Include="nunit.framework, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
@@ -83,11 +85,12 @@
     <Compile Include="SimpleParticleEffect.cs" />
     <Compile Include="Morph3DEffect.cs" />
     <Compile Include="MusicSynchronizedOverlay.cs" />
+    <Compile Include="SmokeEffect.cs" />
+    <Compile Include="SmokeEffectTest.cs" />
     <Compile Include="VolumetricClouds.cs" />
     <Compile Include="City.cs" />
     <Compile Include="EmptyEffect.cs" />
     <Compile Include="EngineTest.cs" />
-    <Compile Include="GridEffect.cs" />
     <Compile Include="IntroText.cs" />
     <Compile Include="TextEffect.cs" />
     <Compile Include="ModelEffect.cs" />

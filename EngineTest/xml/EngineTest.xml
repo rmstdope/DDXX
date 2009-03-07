@@ -102,7 +102,7 @@
     <DrawOrder>0</DrawOrder>
   </Effect>-->
 
-  <Effect class="CubeSystem" name="Cubes" track="0" startTime="0" endTime="500">
+  <!--<Effect class="CubeSystem" name="Cubes" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
   </Effect>
   <PostEffect class="OverlayPostEffect" name="Overlay" track="0" startTime="0" endTime="500">
@@ -114,7 +114,8 @@
     <AddNoise>false</AddNoise>
     <BlendFactor>0.3</BlendFactor>
     <DrawOrder>0</DrawOrder>
-  </PostEffect>
+  </PostEffect>-->
+  
   <!--<PostEffect class="RadialBlurPostEffect" name="RadialBlur" track="0" startTime="0" endTime="500">
     <BlurColor>40, 40, 150, 255</BlurColor>
     <DrawOrder>0</DrawOrder>
@@ -239,4 +240,11 @@
   <!--<Effect class="GridEffect" name="Grid" track="0" startTime="0" endTime="500">
 	  <DrawOrder>0</DrawOrder>
 	</Effect>-->
+  <Effect class="SmokeEffect" name="Smoke" track="0" startTime="0" endTime="500">
+    <DrawOrder>0</DrawOrder>
+    <Viscosity>0</Viscosity>
+    <Diffusion>0.001</Diffusion>
+    <SourceDensity>40</SourceDensity>
+    <Force>5</Force>
+  </Effect>
 </Demo>
