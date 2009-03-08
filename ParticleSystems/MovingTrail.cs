@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.SceneGraph;
@@ -9,18 +9,16 @@ using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.ParticleSystems
 {
-    public class FloaterSystemNode : ParticleSystemNode<VertexPositionColorPoint>
+    public class MovingTrailNode : ParticleSystemNode<VertexPositionColorPoint>
     {
-        private float boundingRadius;
         private Color defaultColor = Color.White;
         private float colorDeviation = 0.4f;
         private float particleBaseSize;
         private float particleSpeed;
 
-        public FloaterSystemNode(string name, float boundingRadius, float particleBaseSize, float particleSpeed)
+        public MovingTrailNode(string name, float particleBaseSize, float particleSpeed)
             : base(name)
         {
-            this.boundingRadius = boundingRadius;
             this.particleBaseSize = particleBaseSize;
             this.particleSpeed = particleSpeed;
         }
@@ -32,12 +30,12 @@ namespace Dope.DDXX.ParticleSystems
 
         protected override ISystemParticle<VertexPositionColorPoint> Spawn()
         {
-            return new FloaterParticle(RandomPositionInSphere(boundingRadius), CreateColor(), particleBaseSize, particleSpeed);
+            return new MovingTrailParticle(CreateColor(), particleBaseSize, particleSpeed);
         }
 
         private Color CreateColor()
         {
-            return new Color(defaultColor.ToVector3() + 
+            return new Color(defaultColor.ToVector3() +
                 Rand.Vector3(-colorDeviation, colorDeviation));
         }
 
@@ -56,26 +54,26 @@ namespace Dope.DDXX.ParticleSystems
             return material;
         }
 
-        protected override int VertexSizeInBytes 
+        protected override int VertexSizeInBytes
         {
             get { return VertexPositionColorPoint.SizeInBytes; }
         }
 
-        protected override VertexElement[] VertexElements 
+        protected override VertexElement[] VertexElements
         {
             get { return VertexPositionColorPoint.VertexElements; }
         }
 
     }
 
-    public class FloaterParticle : SystemParticle<VertexPositionColorPoint>
+    public class MovingTrailParticle : SystemParticle<VertexPositionColorPoint>
     {
         private Vector3 phase;
         private Vector3 period;
         private Vector3 amplitude;
 
-        public FloaterParticle(Vector3 position, Color color, float size, float speed)
-            : base(position, color, size)
+        public MovingTrailParticle(Color color, float size, float speed)
+            : base(Vector3.Zero, color, size)
         {
             phase = new Vector3(Rand.Float(0, 2 * Math.PI), Rand.Float(0, 2 * Math.PI), Rand.Float(0, 2 * Math.PI));
             period = new Vector3(0.5f, 0.5f, 0.5f) + new Vector3(Rand.Float(0, 2 * Math.PI), Rand.Float(0, 2 * Math.PI), Rand.Float(0, 2 * Math.PI));

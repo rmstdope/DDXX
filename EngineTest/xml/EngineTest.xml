@@ -237,14 +237,14 @@
 		<Parameter name="BlendFactor" float="0.15" />
 		<Parameter name="DrawOrder" int="10" />
 	</PostEffect>-->
-  <!--<Effect class="GridEffect" name="Grid" track="0" startTime="0" endTime="500">
+  <Effect class="TestEffect2" name="Grid" track="0" startTime="0" endTime="500">
 	  <DrawOrder>0</DrawOrder>
-	</Effect>-->
-  <Effect class="SmokeEffect" name="Smoke" track="0" startTime="0" endTime="500">
+	</Effect>
+  <!--<Effect class="SmokeEffect" name="Smoke" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
     <Viscosity>0</Viscosity>
     <Diffusion>0.001</Diffusion>
     <SourceDensity>40</SourceDensity>
     <Force>5</Force>
-  </Effect>
+  </Effect>-->
 </Demo>

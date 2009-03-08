@@ -120,7 +120,7 @@ namespace Dope.DDXX.DemoFramework
         protected void CreateStandardCamera(float distance)
         {
             CameraNode camera = new CameraNode("Standard Camera", GraphicsDevice.AspectRatio);
-            camera.WorldState.MoveForward(-distance);
+            camera.WorldState.MoveBackward(distance);
             scene.AddNode(camera);
             scene.ActiveCamera = camera;
         }
