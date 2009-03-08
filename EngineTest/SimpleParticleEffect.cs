@@ -37,12 +37,12 @@ namespace EngineTest
             //Scene.AddNode(floaterSystem);
 
             fallingCurtainParticleSystem = new FallingCurtainSystemNode("Falling Curtain Particle System", 1.0f);
-            fallingCurtainParticleSystem.Initialize(GraphicsDevice, GraphicsFactory, 500);
+            fallingCurtainParticleSystem.Initialize(GraphicsFactory, 500);
             fallingCurtainParticleSystem.Material.DiffuseTexture = TextureFactory.CreateFromName("Circle256");
             Scene.AddNode(fallingCurtainParticleSystem);
 
             fallingCurtainParticleSystem2 = new FallingCurtainSystemNode("Falling Curtain Particle System", 1.3f);
-            fallingCurtainParticleSystem2.Initialize(GraphicsDevice, GraphicsFactory, 500);
+            fallingCurtainParticleSystem2.Initialize(GraphicsFactory, 500);
             fallingCurtainParticleSystem2.Material.DiffuseTexture = TextureFactory.CreateFromName("Circle256");
             Vector3 pos;
             pos.X = -2.0f;
@@ -53,7 +53,7 @@ namespace EngineTest
             Scene.AddNode(fallingCurtainParticleSystem2);
 
             fallingCurtainParticleSystem3 = new FallingCurtainSystemNode("Falling Curtain Particle System", 0.8f);
-            fallingCurtainParticleSystem3.Initialize(GraphicsDevice, GraphicsFactory, 500);
+            fallingCurtainParticleSystem3.Initialize(GraphicsFactory, 500);
             fallingCurtainParticleSystem3.Material.DiffuseTexture = TextureFactory.CreateFromName("Circle256");
             pos.X = 3.0f;
             pos.Y = -1.0f;

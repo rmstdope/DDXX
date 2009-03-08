@@ -44,9 +44,9 @@ namespace Dope.DDXX.SceneGraph
             DrawPass = DrawPass.Second;
         }
 
-        public void Initialize(IGraphicsDevice device, IGraphicsFactory graphicsFactory, int maxNumParticles)
+        public void Initialize(IGraphicsFactory graphicsFactory, int maxNumParticles)
         {
-            this.device = device;
+            this.device = graphicsFactory.GraphicsDevice;
             this.maxNumParticles = maxNumParticles;
             particles = new List<ISystemParticle<T>>();
             material = CreateDefaultMaterial(graphicsFactory);

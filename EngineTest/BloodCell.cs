@@ -92,7 +92,7 @@ namespace EngineTest
         {
             TextureDirector.CreateCircle(0.1f, 0.5f);
             FloaterSystemNode floaterSystem = new FloaterSystemNode("Floaters", 4, 0.1f, 1);
-            floaterSystem.Initialize(GraphicsDevice, GraphicsFactory, 100);
+            floaterSystem.Initialize(GraphicsFactory, 100);
             floaterSystem.Material.DiffuseTexture = TextureDirector.Generate("Circle64", 64, 64, 0, SurfaceFormat.Color);
             floaterSystem.Material.BlendFunction = BlendFunction.ReverseSubtract;
             floaterSystem.Material.SourceBlend = Blend.One;

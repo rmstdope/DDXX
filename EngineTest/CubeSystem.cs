@@ -19,7 +19,7 @@ namespace DFM2007Invitro
         private NaturalCubicSpline<InterpolatedVector3> spline = 
             new NaturalCubicSpline<InterpolatedVector3>();
         private PointLightNode light;
-        private FloaterSystemNode floaterSystem;
+        //private FloaterSystemNode floaterSystem;
 
         public CubeSystem(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
@@ -79,15 +79,15 @@ namespace DFM2007Invitro
 
         public override void Step()
         {
-            if (floaterSystem != null)
-            {
-                floaterSystem.WorldState.Turn(Time.DeltaTime * 0.4054f);
-                floaterSystem.WorldState.Roll(Time.DeltaTime * 0.1765f);
-                floaterSystem.WorldState.Tilt(Time.DeltaTime * 0.2543f);
-                floaterSystem.WorldState.Position = new Vector3(2 * (float)Math.Sin(Time.CurrentTime),
-                                                                2 * (float)Math.Cos(Time.CurrentTime),
-                                                                2 * (float)Math.Cos(Time.CurrentTime)) + camera.Position;
-            }
+            //if (floaterSystem != null)
+            //{
+            //    floaterSystem.WorldState.Turn(Time.DeltaTime * 0.4054f);
+            //    floaterSystem.WorldState.Roll(Time.DeltaTime * 0.1765f);
+            //    floaterSystem.WorldState.Tilt(Time.DeltaTime * 0.2543f);
+            //    floaterSystem.WorldState.Position = new Vector3(2 * (float)Math.Sin(Time.CurrentTime),
+            //                                                    2 * (float)Math.Cos(Time.CurrentTime),
+            //                                                    2 * (float)Math.Cos(Time.CurrentTime)) + camera.Position;
+            //}
             //camera.WorldState.Position = spline.GetValue(Time.CurrentTime % 10);
             light.WorldState.Position = camera.WorldState.Position;
             Scene.Step();

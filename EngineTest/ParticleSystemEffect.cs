@@ -35,7 +35,7 @@ namespace EngineTest
             //Scene.AddNode(floaterSystem);
 
             spiralSystem = new SpiralSystemNode("ps", 1.0f);
-            spiralSystem.Initialize(GraphicsDevice, GraphicsFactory, 10000);
+            spiralSystem.Initialize(GraphicsFactory, 10000);
             spiralSystem.Material.DiffuseTexture = director.Generate("Circle256", 256, 256, 0, SurfaceFormat.Color);
             Scene.AddNode(spiralSystem);
         }

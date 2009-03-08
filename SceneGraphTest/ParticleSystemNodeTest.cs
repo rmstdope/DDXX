@@ -58,7 +58,7 @@ namespace Dope.DDXX.SceneGraph
             ExpectVertexBuffer(0);
             ExpectSpawner(0);
             // Exercise SUT
-            system.Initialize(device, graphicsFactory, 0);
+            system.Initialize(graphicsFactory, 0);
             // Verify
             Assert.AreEqual(0, system.ActiveParticles);
         }
@@ -70,7 +70,7 @@ namespace Dope.DDXX.SceneGraph
             ExpectVertexBuffer(5);
             ExpectSpawner(2);
             // Exercise SUT
-            system.Initialize(device, graphicsFactory, 5);
+            system.Initialize(graphicsFactory, 5);
             // Verify
             Assert.AreEqual(2, system.ActiveParticles);
         }
@@ -82,7 +82,7 @@ namespace Dope.DDXX.SceneGraph
             ExpectVertexBuffer(20);
             ExpectSpawner(20);
             // Exercise SUT
-            system.Initialize(device, graphicsFactory, 20);
+            system.Initialize(graphicsFactory, 20);
             // Verify
             Assert.AreEqual(20, system.ActiveParticles);
         }

@@ -34,7 +34,7 @@ namespace EngineTest
             for (int i = 0; i < 1; i++)
             {
                 spiralSystem = new SpiralSystemNode("ps" + i, 1.0f);
-                spiralSystem.Initialize(GraphicsDevice, GraphicsFactory, 10000);
+                spiralSystem.Initialize(GraphicsFactory, 10000);
                 spiralSystem.Material.DiffuseTexture = texture;
                 Scene.AddNode(spiralSystem);
                 systems.Add(spiralSystem);
@@ -43,7 +43,7 @@ namespace EngineTest
             //systems[1].WorldState.MoveRight(10);
 
             FallingSystemNode fallingSystem = new FallingSystemNode("falling", 1.0f);
-            fallingSystem.Initialize(GraphicsDevice, GraphicsFactory, 100);
+            fallingSystem.Initialize(GraphicsFactory, 100);
             fallingSystem.Material.DiffuseTexture = texture;
             Scene.AddNode(fallingSystem);
             //systems.Add(fallingSystem);

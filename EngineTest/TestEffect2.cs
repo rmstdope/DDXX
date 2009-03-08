@@ -32,7 +32,7 @@ namespace EngineTest
             CreateStandardCamera(50);
 
             movingTrail = new MovingTrailNode("Moving Trail", 1.0f, 1.0f);
-            movingTrail.Initialize(GraphicsDevice, GraphicsFactory, 1);
+            movingTrail.Initialize(GraphicsFactory, 1);
             //movingTrail.Material.DiffuseTexture = TextureFactory.CreateFromName("Circle64");
             Scene.AddNode(movingTrail);
         }
