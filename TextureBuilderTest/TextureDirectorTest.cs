@@ -46,14 +46,14 @@ namespace Dope.DDXX.TextureBuilder
         public void Circle()
         {
             // Setup
-            director.CreateCircle(0.1f, 0.2f);
+            director.CreateCircle(0.1f, 0.2f, 0.2f, 0.5f, new Vector2(0.5f, 0.5f));
             // Exercise SUT
             director.Generate("name", 1, 2, 3, SurfaceFormat.Color);
             // Verify
             Assert.IsInstanceOfType(typeof(Circle), generatorUsed);
             Circle circle = generatorUsed as Circle;
-            Assert.AreEqual(0.1f, circle.InnerRadius);
-            Assert.AreEqual(0.2f, circle.OuterRadius);
+            Assert.AreEqual(0.1f, circle.SolidRadius);
+            Assert.AreEqual(0.2f, circle.GradientRadius1);
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace Dope.DDXX.TextureBuilder
         public void Modulate()
         {
             // Setup
-            director.CreateCircle(0.1f, 0.2f);
+            director.CreateCircle(0.1f, 0.2f, 0.2f, 0.5f, new Vector2(0.5f, 0.5f));
             director.CreatePerlinNoise(2, 4, 0.5f);
             director.Modulate();
             // Exercise SUT
@@ -126,7 +126,7 @@ namespace Dope.DDXX.TextureBuilder
         public void NormalMap()
         {
             // Setup
-            director.CreateCircle(0.1f, 0.2f);
+            director.CreateCircle(0.1f, 0.2f, 0.2f, 0.5f, new Vector2(0.5f, 0.5f));
             director.NormalMap();
             // Exercise SUT
             director.Generate("name", 1, 2, 3, SurfaceFormat.Color);
@@ -140,7 +140,7 @@ namespace Dope.DDXX.TextureBuilder
         public void Add()
         {
             // Setup
-            director.CreateCircle(0.1f, 0.2f);
+            director.CreateCircle(0.1f, 0.2f, 0.2f, 0.5f, new Vector2(0.5f, 0.5f));
             director.CreatePerlinNoise(2, 4, 0.5f);
             director.Add();
             // Exercise SUT

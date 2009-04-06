@@ -134,6 +134,7 @@
     <Compile Include="Time.cs">
       <Name>Time</Name>
     </Compile>
+    <Compile Include="TweakStepAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">

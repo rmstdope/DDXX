@@ -7,6 +7,7 @@ using Dope.DDXX.Graphics;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Dope.DDXX.TextureBuilder;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.DemoEffects
 {

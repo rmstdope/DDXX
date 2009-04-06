@@ -12,7 +12,7 @@ namespace Dope.DDXX.ParticleSystems
     public class MovingTrailNode : ParticleSystemNode<VertexPositionColorPoint>
     {
         private Color defaultColor = Color.White;
-        private float colorDeviation = 0.4f;
+        private float colorDeviation = 0.2f;
         private float particleBaseSize;
         private float particleSpeed;
 
@@ -41,7 +41,7 @@ namespace Dope.DDXX.ParticleSystems
 
         protected override bool ShouldSpawn()
         {
-            return false;
+            return true;
         }
 
         protected override IMaterialHandler CreateDefaultMaterial(IGraphicsFactory graphicsFactory)
@@ -68,28 +68,28 @@ namespace Dope.DDXX.ParticleSystems
 
     public class MovingTrailParticle : SystemParticle<VertexPositionColorPoint>
     {
-        private Vector3 phase;
-        private Vector3 period;
-        private Vector3 amplitude;
+        private Vector3 velocity;
+        private float alpha;
 
         public MovingTrailParticle(Color color, float size, float speed)
             : base(Vector3.Zero, color, size)
         {
-            phase = new Vector3(Rand.Float(0, 2 * Math.PI), Rand.Float(0, 2 * Math.PI), Rand.Float(0, 2 * Math.PI));
-            period = new Vector3(0.5f, 0.5f, 0.5f) + new Vector3(Rand.Float(0, 2 * Math.PI), Rand.Float(0, 2 * Math.PI), Rand.Float(0, 2 * Math.PI));
-            period /= speed;
-            amplitude = new Vector3(size * 1.0f, size * 1.0f, size * 1.0f) +
-                new Vector3(Rand.Float(0, size * 3.0f), Rand.Float(0, size * 3.0f), Rand.Float(0, size * 3.0f));
+            alpha = 1;
+            velocity = Rand.Vector3(-1, 1) * speed;
         }
 
         public override void Step(ref VertexPositionColorPoint destinationVertex)
         {
-            destinationVertex.Position = Position + new Vector3(amplitude.X * (float)Math.Sin(Time.CurrentTime / period.X + phase.X),
-                                                     amplitude.Y * (float)Math.Sin(Time.CurrentTime / period.Y + phase.Y),
-                                                     amplitude.Z * (float)Math.Sin(Time.CurrentTime / period.Z + phase.Z));
+            alpha -= Rand.Float(0.02f);
+            Position += (velocity * alpha * Time.DeltaTime);
+            destinationVertex.Position = Position;
             destinationVertex.PointSize = Size;
-            destinationVertex.Color = Color;
+            destinationVertex.Color = new Color(Color.ToVector3() * alpha);
         }
 
+        public override bool IsDead()
+        {
+            return alpha <= 0.0f;
+        }
     }
 }

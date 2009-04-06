@@ -13,7 +13,7 @@ namespace Dope.DDXX.TextureBuilder
         void ColorBlend(Vector4 zeroColor, Vector4 oneColor);
         void CreateBricks(int numBricksX, int numBricksY, float gapWidth);
         void CreateBrushNoise(int pointsPerLine);
-        void CreateCircle(float innerRadius, float outerRadius);
+        void CreateCircle(float solidRadius, float gradientRadius1, float gradientRadius2, float gradientBreak, Vector2 center);
         void CreateConstant(Vector4 color);
         void CreatePerlinNoise(int baseFrequncy, int numOctaves, float persistance);
         void CreateSquare(float size);

@@ -90,7 +90,7 @@ namespace EngineTest
 
         private void InitializeParticles()
         {
-            TextureDirector.CreateCircle(0.1f, 0.5f);
+            TextureDirector.CreateCircle(0.1f, 0.3f, 0.5f, 0.5f, new Vector2(0.5f, 0.5f));
             FloaterSystemNode floaterSystem = new FloaterSystemNode("Floaters", 4, 0.1f, 1);
             floaterSystem.Initialize(GraphicsFactory, 100);
             floaterSystem.Material.DiffuseTexture = TextureDirector.Generate("Circle64", 64, 64, 0, SurfaceFormat.Color);

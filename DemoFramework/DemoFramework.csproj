@@ -182,9 +182,6 @@
     <Compile Include="TweakerStatus.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="TweakStepAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SetupForm.resx">

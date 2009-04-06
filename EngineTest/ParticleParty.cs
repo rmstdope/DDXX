@@ -8,6 +8,7 @@ using Dope.DDXX.TextureBuilder;
 using Dope.DDXX.Utility;
 using Microsoft.Xna.Framework.Graphics;
 using Dope.DDXX.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace EngineTest
 {
@@ -27,7 +28,7 @@ namespace EngineTest
             CreateStandardCamera(out camera, 50);
 
             TextureDirector director = new TextureDirector(TextureFactory);
-            director.CreateCircle(0.2f, 0.5f);
+            director.CreateCircle(0.2f, 0.35f, 0.5f, 0.5f, new Vector2(0.5f, 0.5f));
 
             SpiralSystemNode spiralSystem;
             ITexture2D texture = director.Generate("Circle256", 256, 256, 0, SurfaceFormat.Color);

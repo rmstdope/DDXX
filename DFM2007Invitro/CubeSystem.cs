@@ -70,13 +70,13 @@ namespace DFM2007Invitro
             light.WorldState.Position = new Vector3(0, 2, -5);
             Scene.AddNode(light);
 
-            TextureDirector.CreateCircle(0.2f, 0.5f);
+            TextureDirector.CreateCircle(0.2f, 0.35f, 0.5f, 0.5f, new Vector2(0.5f, 0.5f));
             floaterSystem = new FloaterSystemNode("FloaterSystem", 8, 0.02f, 6.0f);
             floaterSystem.Initialize(GraphicsFactory, 2000);
             floaterSystem.Material.DiffuseTexture = TextureDirector.Generate("Circle64", 64, 64, 0, SurfaceFormat.Color);
             Scene.AddNode(floaterSystem);
 
-            TextureDirector.CreateCircle(0.2f, 0.5f);
+            TextureDirector.CreateCircle(0.2f, 0.35f, 0.5f, 0.5f, new Vector2(0.5f, 0.5f));
             SpiralSystemNode spiralSystem = new SpiralSystemNode("ps", 0.05f);
             spiralSystem.Initialize(GraphicsFactory, 10000);
             spiralSystem.Material.DiffuseTexture = TextureDirector.Generate("Circle256", 256, 256, 0, SurfaceFormat.Color);

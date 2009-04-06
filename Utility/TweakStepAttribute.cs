@@ -1,6 +1,6 @@
 using System;
 
-namespace Dope.DDXX.DemoFramework
+namespace Dope.DDXX.Utility
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public sealed class TweakStepAttribute : Attribute

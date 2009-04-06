@@ -60,7 +60,7 @@ namespace EngineTest
         {
             ModelBuilder.SetEffect("Default", "Content\\effects\\DefaultEffect");
             // Base circle
-            textureDirector.CreateCircle(0.0f, 1.5f);
+            textureDirector.CreateCircle(0.0f, 0.75f, 1.5f, 0.5f, new Vector2(0.5f, 0.5f));
             textureDirector.Madd(0.3f, 0.0f);
             // Add brush noise
             textureDirector.CreateBrushNoise(3);

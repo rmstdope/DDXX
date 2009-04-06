@@ -43,7 +43,7 @@ namespace Dope.DDXX.TextureBuilder
         {
             // Setup
             Circle circle = new Circle();
-            circle.InnerRadius = 0;
+            circle.SolidRadius = 0;
             // Exercise SUT and verify
             Assert.AreEqual(new Vector4(1, 1, 1, 1), circle.GetPixel(new Vector2(0.5f, 0.5f), Vector2.Zero));
             Assert.AreEqual(new Vector4(0.5f, 0.5f, 0.5f, 0.5f), circle.GetPixel(new Vector2(0.75f, 0.5f), Vector2.Zero));
@@ -61,8 +61,8 @@ namespace Dope.DDXX.TextureBuilder
         {
             // Setup
             Circle circle = new Circle();
-            circle.InnerRadius = 0;
-            circle.OuterRadius = 0.25f;
+            circle.SolidRadius = 0;
+            circle.GradientRadius1 = 0.25f;
             // Exercise SUT and verify
             Assert.AreEqual(new Vector4(1, 1, 1, 1), circle.GetPixel(new Vector2(0.5f, 0.5f), Vector2.Zero));
             Assert.AreEqual(new Vector4(0.5f, 0.5f, 0.5f, 0.5f), circle.GetPixel(new Vector2(0.625f, 0.5f), Vector2.Zero));
@@ -80,8 +80,8 @@ namespace Dope.DDXX.TextureBuilder
         {
             // Setup
             Circle circle = new Circle();
-            circle.InnerRadius = 0.25f;
-            circle.OuterRadius = 0.5f;
+            circle.SolidRadius = 0.25f;
+            circle.GradientRadius1 = 0.5f;
             // Exercise SUT and verify
             Assert.AreEqual(new Vector4(1, 1, 1, 1), circle.GetPixel(new Vector2(0.5f, 0.5f), Vector2.Zero));
             Assert.AreEqual(new Vector4(1, 1, 1, 1), circle.GetPixel(new Vector2(0.75f, 0.5f), Vector2.Zero));
@@ -94,11 +94,11 @@ namespace Dope.DDXX.TextureBuilder
         {
             // Setup
             Circle circle = new Circle();
-            circle.InnerRadius = 0.2f;
+            circle.SolidRadius = 0.2f;
             // Exercise SUT
-            circle.OuterRadius = 0.1f;
+            circle.GradientRadius1 = 0.1f;
             // Verify
-            Assert.AreEqual(0.1f, circle.InnerRadius);
+            Assert.AreEqual(0.1f, circle.SolidRadius);
         }
 
         [Test]
@@ -106,11 +106,50 @@ namespace Dope.DDXX.TextureBuilder
         {
             // Setup
             Circle circle = new Circle();
-            circle.OuterRadius = 0.1f;
+            circle.GradientRadius1 = 0.1f;
             // Exercise SUT
-            circle.InnerRadius = 0.2f;
+            circle.SolidRadius = 0.2f;
             // Verify
-            Assert.AreEqual(0.2f, circle.OuterRadius);
+            Assert.AreEqual(0.2f, circle.GradientRadius1);
+        }
+
+        [Test]
+        public void NonCentriccircle()
+        {
+            // Setup
+            Circle circle = new Circle();
+            circle.Center = new Vector2(0, 0);
+            // Exercise SUT and verify
+            Assert.AreEqual(new Vector4(1, 1, 1, 1), circle.GetPixel(new Vector2(0.0f, 0.0f), Vector2.Zero));
+            Assert.AreEqual(new Vector4(1, 1, 1, 1), circle.GetPixel(new Vector2(1.0f, 0.0f), Vector2.Zero));
+            Assert.AreEqual(new Vector4(1, 1, 1, 1), circle.GetPixel(new Vector2(0.0f, 1.0f), Vector2.Zero));
+            Assert.AreEqual(new Vector4(1, 1, 1, 1), circle.GetPixel(new Vector2(1.0f, 1.0f), Vector2.Zero));
+            Assert.AreEqual(new Vector4(0, 0, 0, 0), circle.GetPixel(new Vector2(0.5f, 0.5f), Vector2.Zero));
+        }
+
+        [Test]
+        public void MultipleGradients()
+        {
+            // Setup
+            Circle circle = new Circle();
+            circle.GradientBreak = 0.4f;
+            circle.SolidRadius = 0.0f;
+            circle.GradientRadius1 = 0.2f;
+            circle.GradientRadius2 = 0.4f;
+            // Exercise SUT and verify
+            Assert.AreEqual(new Vector4(1, 1, 1, 1), circle.GetPixel(new Vector2(0.5f, 0.5f), Vector2.Zero));
+            CompareVectors(new Vector4(0.7f, 0.7f, 0.7f, 0.7f), circle.GetPixel(new Vector2(0.4f, 0.5f), Vector2.Zero));
+            CompareVectors(new Vector4(0.4f, 0.4f, 0.4f, 0.4f), circle.GetPixel(new Vector2(0.3f, 0.5f), Vector2.Zero));
+            CompareVectors(new Vector4(0.2f, 0.2f, 0.2f, 0.2f), circle.GetPixel(new Vector2(0.2f, 0.5f), Vector2.Zero));
+            CompareVectors(new Vector4(0.0f, 0.0f, 0.0f, 0.0f), circle.GetPixel(new Vector2(0.1f, 0.5f), Vector2.Zero));
+        }
+
+        private void CompareVectors(Vector4 v1, Vector4 v2)
+        {
+            Assert.AreEqual(v1.X, v2.X, 0.00001f);
+            Assert.AreEqual(v1.Y, v2.Y, 0.00001f);
+            Assert.AreEqual(v1.Z, v2.Z, 0.00001f);
+            Assert.AreEqual(v1.W, v2.W, 0.00001f);
         }
 
     }

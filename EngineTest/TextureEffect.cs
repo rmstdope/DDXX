@@ -23,7 +23,7 @@ namespace EngineTest
         {
             TextureDirector director = new TextureDirector(TextureFactory);
             // Base circle
-            director.CreateCircle(0.0f, 1.5f);
+            director.CreateCircle(0.0f, 0.75f, 1.5f, 0.5f, new Vector2(0.5f, 0.5f));
             // Add brush noise
             director.CreateBrushNoise(3);
             director.ModulateColor(new Vector4(0.05f));

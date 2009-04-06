@@ -71,7 +71,7 @@ namespace Dope.DDXX.DemoFramework
             get
             {
                 if (modelBuilder == null)
-                    modelBuilder = new ModelBuilder.ModelBuilder(GraphicsFactory, TextureFactory, EffectFactory, EffectFactory.CreateFromFile("Content\\effects\\DefaultEffect"));
+                    modelBuilder = new ModelBuilder.ModelBuilder(GraphicsFactory, TextureFactory, EffectFactory, graphicsFactory.CreateBasicEffect()/*EffectFactory.CreateFromFile("Content\\effects\\DefaultEffect")*/);
                 return modelBuilder;
             }
         }

@@ -13,7 +13,7 @@ namespace EngineTest
     class TestEffect2 : BaseDemoEffect
     {
         private ModelNode node;
-        private MovingTrailNode movingTrail;
+        //private MovingTrailNode movingTrail;
 
         public TestEffect2(string name, float start, float end)
             : base(name, start, end)
@@ -24,17 +24,19 @@ namespace EngineTest
         {
             ModelBuilder.CreateMaterial("Material");
             ModelBuilder.SetDiffuseTexture("Material", TextureFactory.CreateFromName("Noise256base1024"));
+            ModelBuilder.SetDiffuseColor("Material", Color.BlanchedAlmond);
+            ModelBuilder.SetEffect("Material", "Content\\effects\\CubeEffect");
             ModelDirector.CreateBox(3, 3, 3);
             IModel model = ModelDirector.Generate("Material");
             node = new ModelNode("Kuben", model, GraphicsDevice);
-            //Scene.AddNode(node);
+            Scene.AddNode(node);
 
-            CreateStandardCamera(50);
+            CreateStandardCamera(10);
 
-            movingTrail = new MovingTrailNode("Moving Trail", 1.0f, 1.0f);
-            movingTrail.Initialize(GraphicsFactory, 1);
+            //movingTrail = new MovingTrailNode("Moving Trail", 1.0f, 10.0f);
+            //movingTrail.Initialize(GraphicsFactory, 20);
             //movingTrail.Material.DiffuseTexture = TextureFactory.CreateFromName("Circle64");
-            Scene.AddNode(movingTrail);
+            //Scene.AddNode(movingTrail);
         }
 
         public override void Step()

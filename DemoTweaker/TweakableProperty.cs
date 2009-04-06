@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Dope.DDXX.DemoFramework;
 using Dope.DDXX.UserInterface;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.DemoTweaker
 {

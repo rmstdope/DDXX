@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Demo song="music_machinefunk_loop">
+<Demo>
+  <!--<song="music_machinefunk_loop">-->
 
 
   <!-- TextureFactory Section -->
@@ -60,14 +61,20 @@
     </Texture>
     <Texture name="Circle" width="64" height="64" miplevels="0">
     	<Generator class="Circle">
-    		<InnerRadius>0</InnerRadius>
-    		<OuterRadius>0.4</OuterRadius>
+    		<SolidRadius>0</SolidRadius>
+    		<GradientRadius1>0.4</GradientRadius1>
+    		<GradientRadius2>0.4</GradientRadius2>
+    		<GradientBreak>0.5</GradientBreak>
+    		<Center>0.5, 0.5</Center>
     	</Generator>
     </Texture>
     <Texture name="Circle256" width="256" height="256" miplevels="0">
     	<Generator class="Circle">
-    		<InnerRadius>0.2</InnerRadius>
-    		<OuterRadius>0.5</OuterRadius>
+    		<SolidRadius>0.2</SolidRadius>
+    		<GradientRadius1>0.5</GradientRadius1>
+    		<GradientRadius2>0.5</GradientRadius2>
+    		<GradientBreak>0.5</GradientBreak>
+    		<Center>0.5, 0.5</Center>
     	</Generator>
     </Texture>
     <Texture name="Noise64" width="64" height="64" miplevels="0">
@@ -79,13 +86,61 @@
     </Texture>
     <Texture name="Circle64" width="64" height="64" miplevels="0">
     	<Generator class="Circle">
-    		<InnerRadius>0.4</InnerRadius>
-    		<OuterRadius>0.5</OuterRadius>
+    		<SolidRadius>0.4</SolidRadius>
+    		<GradientRadius1>0.5</GradientRadius1>
+    		<GradientRadius2>0.5</GradientRadius2>
+    		<GradientBreak>0.5</GradientBreak>
+    		<Center>0.5, 0.5</Center>
     	</Generator>
+    </Texture>
+    <Texture name="LightMap" width="128" height="128" miplevels="1">
+    	<Generator class="Circle">
+    		<SolidRadius>0</SolidRadius>
+    		<GradientRadius1>0.15</GradientRadius1>
+    		<GradientRadius2>0.4</GradientRadius2>
+    		<GradientBreak>0.4</GradientBreak>
+    		<Center>0.5, 0</Center>
+    	</Generator>
+    	<Generator class="ColorModulation">
+    		<Color>1, 0.7058824, 0.5686275, 1</Color>
+    	</Generator>
+    	<Generator class="Circle">
+    		<SolidRadius>0</SolidRadius>
+    		<GradientRadius1>0.005</GradientRadius1>
+    		<GradientRadius2>0.1</GradientRadius2>
+    		<GradientBreak>0.2</GradientBreak>
+    		<Center>0.25, 0.75</Center>
+    	</Generator>
+    	<Generator class="ColorModulation">
+    		<Color>1, 0.7058824, 0.5686275, 1</Color>
+    	</Generator>
+      <Generator class="Add" />
+      <Generator class="Circle">
+    		<SolidRadius>0</SolidRadius>
+    		<GradientRadius1>0.01</GradientRadius1>
+    		<GradientRadius2>0.1</GradientRadius2>
+    		<GradientBreak>0.2</GradientBreak>
+    		<Center>0.75, 0.75</Center>
+    	</Generator>
+    	<Generator class="ColorModulation">
+    		<Color>1, 0.7058824, 0.5686275, 1</Color>
+    	</Generator>
+      <Generator class="Add" />
+      <Generator class="Circle">
+    		<SolidRadius>0</SolidRadius>
+    		<GradientRadius1>0.015</GradientRadius1>
+    		<GradientRadius2>0.15</GradientRadius2>
+    		<GradientBreak>0.2</GradientBreak>
+    		<Center>0.4, 0.4</Center>
+    	</Generator>
+    	<Generator class="ColorModulation">
+    		<Color>1, 0.7058824, 0.5686275, 1</Color>
+    	</Generator>
+    	<Generator class="Add" />
     </Texture>
   </TextureFactory>
 
-  
+
   <!-- ModelFactory Section -->
 
   <ModelFactory>
@@ -115,7 +170,7 @@
     <BlendFactor>0.3</BlendFactor>
     <DrawOrder>0</DrawOrder>
   </PostEffect>-->
-  
+
   <!--<PostEffect class="RadialBlurPostEffect" name="RadialBlur" track="0" startTime="0" endTime="500">
     <BlurColor>40, 40, 150, 255</BlurColor>
     <DrawOrder>0</DrawOrder>
@@ -132,7 +187,7 @@
     <Texture>Noise256</Texture>
   	<FadeDelay>8.9</FadeDelay>
   </Transition>-->
-  
+
   <!--<Effect class="TextEffect" name="Lines" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
     <Scene>
@@ -237,9 +292,9 @@
 		<Parameter name="BlendFactor" float="0.15" />
 		<Parameter name="DrawOrder" int="10" />
 	</PostEffect>-->
-  <Effect class="TestEffect2" name="Grid" track="0" startTime="0" endTime="500">
-	  <DrawOrder>0</DrawOrder>
-	</Effect>
+  <!--<Effect class="TestEffect2" name="Grid" track="0" startTime="0" endTime="500">
+    <DrawOrder>0</DrawOrder>
+  </Effect>-->
   <!--<Effect class="SmokeEffect" name="Smoke" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
     <Viscosity>0</Viscosity>
@@ -247,4 +302,7 @@
     <SourceDensity>40</SourceDensity>
     <Force>5</Force>
   </Effect>-->
+  <Effect class="ComicEffect" name="Comic" track="0" startTime="0" endTime="500">
+    <DrawOrder>0</DrawOrder>
+  </Effect>
 </Demo>

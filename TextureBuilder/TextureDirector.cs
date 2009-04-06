@@ -40,11 +40,14 @@ namespace Dope.DDXX.TextureBuilder
             generatorStack.Push(noise);
         }
 
-        public void CreateCircle(float innerRadius, float outerRadius)
+        public void CreateCircle(float solidRadius, float gradientRadius1, float gradientRadius2, float gradientBreak, Vector2 center)
         {
             Circle circle = new Circle();
-            circle.InnerRadius = innerRadius;
-            circle.OuterRadius = outerRadius;
+            circle.SolidRadius = solidRadius;
+            circle.GradientRadius1 = gradientRadius1;
+            circle.GradientRadius2 = gradientRadius2;
+            circle.GradientBreak = gradientBreak;
+            circle.Center = center;
             generatorStack.Push(circle);
         }
 

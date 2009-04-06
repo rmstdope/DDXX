@@ -27,7 +27,7 @@ namespace DFM2007Invitro
             CreateStandardCamera(out camera, 50);
 
             TextureDirector director = new TextureDirector(TextureFactory);
-            director.CreateCircle(0.2f, 0.5f);
+            director.CreateCircle(0.2f, 0.35f, 0.5f, 0.5f, new Vector2(0.5f, 0.5f));
 
             //floaterSystem = new FloaterSystemNode("ps", 0.0f, 0.6f, 3);
             //floaterSystem.Initialize(GraphicsDevice, GraphicsFactory, 100);

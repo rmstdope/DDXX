@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="BlitSine.cs" />
     <Compile Include="BloodCell.cs" />
+    <Compile Include="ComicEffect.cs" />
     <Compile Include="CubeSystem.cs" />
     <Compile Include="SimpleParticleEffect.cs" />
     <Compile Include="Morph3DEffect.cs" />

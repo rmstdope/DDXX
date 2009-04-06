@@ -4,6 +4,7 @@ using System.Text;
 using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Graphics;
 using Microsoft.Xna.Framework.Graphics;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.DemoEffects
 {

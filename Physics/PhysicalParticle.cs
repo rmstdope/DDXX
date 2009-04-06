@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.Physics
 {
-    public class PhysicalParticle : Dope.DDXX.Physics.IPhysicalParticle
+    public class PhysicalParticle : IPhysicalParticle
     {
         private Vector3 position;
         private Vector3 oldPosition;
@@ -65,7 +65,8 @@ namespace Dope.DDXX.Physics
 
         private void UpdateLastDelta()
         {
-            lastDeltaTime = Time.DeltaTime;
+            if (Time.DeltaTime != 0.0f)
+                lastDeltaTime = Time.DeltaTime;
         }
 
         private void UpdatePosition(Vector3 velocity, Vector3 velocityMod)
