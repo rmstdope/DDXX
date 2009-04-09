@@ -15,8 +15,10 @@ namespace TiVi
     {
         private CameraNode camera;
         private IModel cylinder;
+        private IModel plane;
         private ITexture2D lightTexture;
-        private IModelNode node;
+        private ITexture2D brickTexture;
+        //private IModelNode node;
 
         public ComicEffect(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
@@ -28,34 +30,63 @@ namespace TiVi
             CreateStandardCamera(out camera, 3);
             CreateLightTexture();
             CreateCylinder();
+            CreatePlane();
 
-            node = new ModelNode("Cylinder", cylinder, GraphicsDevice);
-            Scene.AddNode(node);
+            for (int y = 0; y < 10; y++)
+            {
+                for (int x = 0; x < 10; x++)
+                {
+                    IModelNode node = new ModelNode("Cylinder", cylinder, GraphicsDevice);
+                    node.WorldState.Position = new Vector3(x - 5, 0.5f, y - 5);
+                    Scene.AddNode(node);
+
+                    node = new ModelNode("Plane", plane, GraphicsDevice);
+                    node.WorldState.Position = new Vector3(x - 5, 1, y - 5);
+                    Scene.AddNode(node);
+                }
+            }
         }
 
         private void CreateLightTexture()
         {
             lightTexture = TextureFactory.CreateFromName("LightMap");
+            //brickTexture = TextureFactory.CreateFromName("Square");
+            TextureDirector.CreateSquare(0.9f);
+            TextureDirector.CreateBrushNoise(3);
+            TextureDirector.ModulateColor(new Vector4(0.2f, 0.2f, 0.2f, 0.2f));
+            TextureDirector.Modulate();
+            brickTexture = TextureDirector.Generate("Square", 64, 64, 1, SurfaceFormat.Color);
+        }
+
+        private void CreatePlane()
+        {
+            ModelBuilder.CreateMaterial("LightMap");
+            ModelBuilder.SetEffect("LightMap", "Content\\effects\\LightMap2");
+            ModelBuilder.SetDiffuseTexture("LightMap", brickTexture);
+            ModelBuilder.SetNormalTexture("LightMap", lightTexture);
+            ModelDirector.CreatePlane(1.0f, 1.0f, 1, 1);
+            ModelDirector.Rotate(MathHelper.PiOver2, 0, 0);
+            plane = ModelDirector.Generate("LightMap");
         }
 
         private void CreateCylinder()
         {
-            ModelBuilder.CreateMaterial("SolidColor");
-            ModelBuilder.SetDiffuseTexture("SolidColor", lightTexture);
-
             ModelBuilder.CreateMaterial("Reflective");
             ModelBuilder.SetEffect("Reflective", "Content\\effects\\LightMap");
             ModelBuilder.SetDiffuseTexture("Reflective", lightTexture);
-            //ModelDirector.CreateSphere(1.0f, 8);//.CreateChamferBox(1, 1, 1, 0.1f, 5);
             ModelDirector.CreateCylinder(0.05f, 8, 1.0f, 1, false, 1, 1);
             cylinder = ModelDirector.Generate("Reflective");
         }
 
         public override void Step()
         {
-            node.WorldState.Turn(Time.DeltaTime);
-            node.WorldState.Tilt(0.32f * Time.DeltaTime);
-            node.WorldState.Roll(0.86f * Time.DeltaTime);
+            camera.WorldState.Reset();
+            camera.WorldState.Turn(Time.CurrentTime / 2);
+            camera.WorldState.MoveBackward(8);
+            camera.WorldState.MoveUp(0.4f);
+            //node.WorldState.Turn(Time.DeltaTime);
+            //node.WorldState.Tilt(0.32f * Time.DeltaTime);
+            //node.WorldState.Roll(0.86f * Time.DeltaTime);
             Scene.Step();
         }
 

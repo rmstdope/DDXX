@@ -226,6 +226,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="effects\LightMap2.fx">
+      <Name>LightMap2</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="models\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\v3.0\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

@@ -32,12 +32,12 @@ namespace Dope.DDXX.UserInterface
             int screenHeight = resources.SpriteBatch.GraphicsDevice.PresentationParameters.BackBufferHeight;
             int x1 = (int)(screenWidth * GetX1(resources));
             int y1 = (int)(screenHeight * GetY1(resources));
-            int width = (int)(screenWidth * GetWidth(resources));
-            int height = (int)(screenHeight * GetHeight(resources));
+            int x2 = (int)(screenWidth * (GetX1(resources) + GetWidth(resources)));
+            int y2 = (int)(screenHeight * (GetY1(resources) + GetHeight(resources)));
             if (vertical)
-                DrawVerticalLine(resources.SpriteBatch, resources.WhiteTexture, x1, y1, height, Color);
+                DrawVerticalLine(resources.SpriteBatch, resources.WhiteTexture, x1, y1, y2 - y1 + 1, Color);
             else
-                DrawHorizontalLine(resources.SpriteBatch, resources.WhiteTexture, x1, y1, width, Color);
+                DrawHorizontalLine(resources.SpriteBatch, resources.WhiteTexture, x1, y1, x2 - x1 + 1, Color);
             resources.SpriteBatch.End();
 
             //line.Begin();

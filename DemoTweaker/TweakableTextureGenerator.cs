@@ -70,9 +70,10 @@ namespace Dope.DDXX.DemoTweaker
                 }
                 else
                 {
-                    new LineControl(new Vector4(x + sizeX, y + halfSizeY, spacingX, 0), 
+                    new LineControl(new Vector4(x + sizeX, y + halfSizeY, spacingX + halfSizeX, 0), 
                         255, Color.White, status.RootControl);
-                    //new LineControl(new Vector4(x + height / 4, y - status.VariableSpacing * 0.1f, 0, status.VariableSpacing * 0.1f), 255, Color.White, status.RootControl);
+                    new LineControl(new Vector4(x + sizeX + spacingX + halfSizeX, y + halfSizeY - sizeY, 0, sizeY), 
+                        255, Color.White, status.RootControl);
                 }
             }
         }

@@ -28,6 +28,8 @@ namespace Dope.DDXX.Graphics
                             break;
                         case EffectParameterType.Sampler2D:
                             break;
+                        case EffectParameterType.Sampler:
+                            break;
                         default:
                             throw new DDXXException("Invalid type.");
                     }
