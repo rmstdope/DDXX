@@ -37,14 +37,15 @@ namespace Dope.DDXX.DemoTweaker
 
             this.userInterface = userInterface;
 
-            CreateBaseControls();
-            CreateTimeControls();
-            status.RootControl = timelineWindow;
             status.StartTime = registrator.StartTime;
         }
 
         public void Draw()
         {
+            CreateBaseControls();
+            CreateTimeControls();
+            status.RootControl = timelineWindow;
+
             CreateTimeLine(timelineWindow);
             CreateTweakableControls();
             CreateInputControls();

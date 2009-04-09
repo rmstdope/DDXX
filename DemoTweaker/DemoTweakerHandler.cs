@@ -220,6 +220,7 @@ namespace Dope.DDXX.DemoTweaker
 
         private void HandleExitDraw()
         {
+            CreateBaseControls();
             BoxControl tweakableWindow = new BoxControl(new Vector4(0, 0.05f, 1, 0.95f),
                 settings.Alpha, settings.TimeColor, mainWindow);
             new TextControl("Should old XML file be overwritten?", new Vector4(0, 0, 1, 0.90f), Positioning.VerticalCenter | Positioning.Center, 255, Color.White, tweakableWindow);

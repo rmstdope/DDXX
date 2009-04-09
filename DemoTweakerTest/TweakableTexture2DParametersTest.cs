@@ -65,7 +65,7 @@ namespace Dope.DDXX.DemoTweaker
                 set { }
             }
             public void AddChild(IControl control) { throw new NotImplementedException(); }
-            public void DrawControl(IDrawResources resources) { throw new NotImplementedException(); }
+            public int DrawControl(IDrawResources resources) { throw new NotImplementedException(); }
             public Vector4 Rectangle { get { throw new NotImplementedException(); } }
             public void RemoveChildren() { throw new NotImplementedException(); }
             public void RemoveFromParent() { throw new NotImplementedException(); }

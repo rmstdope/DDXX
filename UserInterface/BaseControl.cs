@@ -29,11 +29,13 @@ namespace Dope.DDXX.UserInterface
                 (parent as BaseControl).Children.Add(this);
         }
 
-        public void DrawControl(IDrawResources resources)
+        public int DrawControl(IDrawResources resources)
         {
+            int num = 1;
             Draw(resources);
             foreach (IControl child in Children)
-                child.DrawControl(resources);
+                num += child.DrawControl(resources);
+            return num;
         }
 
         public abstract void Draw(IDrawResources resources);

@@ -35,7 +35,8 @@ namespace Dope.DDXX.UserInterface
             spriteBatch.GraphicsDevice.RenderState.BlendFunction = BlendFunction.Add;
             spriteBatch.GraphicsDevice.RenderState.SourceBlend = Blend.SourceAlpha;
             spriteBatch.GraphicsDevice.RenderState.DestinationBlend = Blend.InverseSourceAlpha;
-            control.DrawControl(this);
+            int num = control.DrawControl(this);
+            Console.WriteLine("Drew {0} controls.", num);
         }
 
 
