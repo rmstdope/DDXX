@@ -17,7 +17,7 @@ namespace Dope.DDXX.DemoTweaker
         public TweakableTextureGenerator(ITextureGenerator target, ITweakableFactory factory)
             : base(target, factory)
         {
-            texture = Factory.GraphicsFactory.TextureFactory.CreateFromGenerator("", 64, 64, 1, TextureUsage.None, SurfaceFormat.Color, Target);
+            Regenerate(new TweakerStatus(1, 1));
         }
 
         public override int NumVisableVariables
@@ -49,7 +49,7 @@ namespace Dope.DDXX.DemoTweaker
         {
             float sizeY = status.VariableSpacing * 0.9f;
             float halfSizeY = sizeY / 2;
-            float sizeX = sizeY / 2;
+            float sizeX = 4 * sizeY / 6;
             float halfSizeX = sizeX / 2;
             float spacingY = status.VariableSpacing * 0.1f;
             float spacingX = sizeX * 0.1f;
@@ -59,34 +59,56 @@ namespace Dope.DDXX.DemoTweaker
 
             int indent = 1 - GetIndentation(Target);
             float x = 0.55f - (sizeX + spacingX) * indent + 0.225f - sizeY / 2;
-            new BoxControl(new Vector4(x, y, sizeY / 2, sizeY), 255, texture, status.RootControl);
             for (int i = 0; i < Target.NumInputPins; i++)
             {
                 int inputIndent = 1 - GetIndentation(Target.GetInput(i));
                 if (inputIndent == indent)
                 {
-                    new LineControl(new Vector4(x + halfSizeX, y - spacingY, 0, spacingY), 
+                    float distanceY = spacingY + (spacingY + sizeY) * GetDistanceToInput(i);
+                    if (distanceY > y)
+                        distanceY = y;
+                    new LineControl(new Vector4(x + halfSizeX, y - distanceY,
+                        0, distanceY), 
                         255, Color.White, status.RootControl);
                 }
                 else
                 {
                     new LineControl(new Vector4(x + sizeX, y + halfSizeY, spacingX + halfSizeX, 0), 
                         255, Color.White, status.RootControl);
-                    new LineControl(new Vector4(x + sizeX + spacingX + halfSizeX, y + halfSizeY - sizeY, 0, sizeY), 
+                    new LineControl(new Vector4(x + sizeX + spacingX + halfSizeX, y - spacingY, 0, spacingY + halfSizeY), 
                         255, Color.White, status.RootControl);
                 }
             }
+            new BoxControl(new Vector4(x, y, -1, sizeY), 255, texture, status.RootControl);
+        }
+
+        private int GetDistanceToInput(int index)
+        {
+            int num = 0;
+            for (int i = index - 1; i >= 0; i--)
+                num += Target.GetInput(i).NumGeneratorsInChain;
+            return num;
         }
 
         private int GetIndentation(ITextureGenerator generator)
         {
             if (generator.Output != null)
             {
-                int index = generator.Output.GetInputIndex(generator);
+                int index = generator.Output.NumInputPins - 1 - generator.Output.GetInputIndex(generator);
                 return index + GetIndentation(generator.Output);
             }
             return 0;
         }
 
+        public override void CreateBaseControls(TweakerStatus status, ITweakerSettings settings)
+        {
+            base.CreateBaseControls(status, settings);
+            new BoxControl(new Vector4(-1, 0, -1, 1), 255, texture, status.RootControl);
+        }
+
+        public override void Regenerate(TweakerStatus status)
+        {
+            texture = Factory.GraphicsFactory.TextureFactory.CreateFromGenerator("", 64, 64, 1, TextureUsage.None, SurfaceFormat.Color, Target);
+        }
     }
 }

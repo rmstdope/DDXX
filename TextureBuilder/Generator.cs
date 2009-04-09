@@ -123,5 +123,16 @@ namespace Dope.DDXX.TextureBuilder
                 throw new ArgumentOutOfRangeException("inputPin", "Must be less than number of input pins. Was " + inputPin);
         }
 
+        public int NumGeneratorsInChain
+        {
+            get 
+            {
+                int num = 1;
+                foreach (ITextureGenerator generator in inputPins)
+                    num += generator.NumGeneratorsInChain;
+                return num; 
+            }
+        }
+
     }
 }

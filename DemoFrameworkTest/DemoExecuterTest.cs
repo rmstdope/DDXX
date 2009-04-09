@@ -967,5 +967,10 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
+        public int NumGeneratorsInChain
+        {
+            get { throw new NotImplementedException(); }
+        }
+
     }
 }

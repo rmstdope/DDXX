@@ -8,6 +8,7 @@ namespace Dope.DDXX.Graphics
     public interface ITextureGenerator
     {
         int NumInputPins { get; }
+        int NumGeneratorsInChain { get; }
         ITextureGenerator GetInput(int inputPin);
         Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize);
         void ConnectToInput(int inputPin, ITextureGenerator outputGenerator);

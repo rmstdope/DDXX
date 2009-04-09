@@ -84,7 +84,7 @@ namespace Dope.DDXX.DemoTweaker
                 propertyHandlers[status.Selection - NumSpecificVariables].DecreaseValue(status.Index);
         }
 
-        public void CreateBaseControls(TweakerStatus status, ITweakerSettings settings)
+        public virtual void CreateBaseControls(TweakerStatus status, ITweakerSettings settings)
         {
         }
 

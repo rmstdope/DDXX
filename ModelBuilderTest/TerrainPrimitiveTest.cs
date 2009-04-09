@@ -163,5 +163,15 @@ namespace Dope.DDXX.ModelBuilder
         }
 
         #endregion
+
+        #region ITextureGenerator Members
+
+
+        public int NumGeneratorsInChain
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        #endregion
     }
 }

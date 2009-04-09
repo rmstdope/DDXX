@@ -106,6 +106,7 @@ namespace Dope.DDXX.DemoTweaker
 
         private void CreateTweakableControls()
         {
+            tweakable.CreateBaseControls(status, settings);
             float y = 0.05f;
             for (int i = DrawStart; i < DrawStart + tweakable.NumVisableVariables; i++)
             {
@@ -115,7 +116,6 @@ namespace Dope.DDXX.DemoTweaker
                 tweakable.CreateChildControl(status, i, y, settings);
                 y += status.VariableSpacing;
             }
-            tweakable.CreateBaseControls(status, settings);
         }
 
         private int DrawStart

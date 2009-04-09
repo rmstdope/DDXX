@@ -90,11 +90,15 @@ namespace Dope.DDXX.UserInterface
 
         public float GetX1(IDrawResources resources)
         {
+            if (rectangle.X == -1)
+                return GetParentX1(resources) + GetParentWidth(resources) / 2 - GetWidth(resources) / 2;
             return GetParentX1(resources) + GetParentWidth(resources) * rectangle.X;
         }
 
         public float GetY1(IDrawResources resources)
         {
+            if (rectangle.Y == -1)
+                return GetParentY1(resources) + GetParentHeight(resources) / 2 - GetHeight(resources) / 2;
             return GetParentY1(resources) + GetParentHeight(resources) * rectangle.Y;
         }
 

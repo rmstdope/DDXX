@@ -167,5 +167,24 @@ namespace Dope.DDXX.TextureBuilder
             generator1.GetInputIndex(generator2);
         }
 
+        [Test]
+        public void NumGeneratorsInSingleGenerator()
+        {
+            SimpleGenerator g1 = new SimpleGenerator(0);
+            Assert.AreEqual(1, g1.NumGeneratorsInChain);
+        }
+
+        [Test]
+        public void NumGeneratorsInChain()
+        {
+            SimpleGenerator g1 = new SimpleGenerator(2);
+            SimpleGenerator g2 = new SimpleGenerator(1);
+            SimpleGenerator g3 = new SimpleGenerator(0);
+            SimpleGenerator g4 = new SimpleGenerator(0);
+            g2.ConnectToInput(0, g4);
+            g1.ConnectToInput(0, g2);
+            g1.ConnectToInput(1, g3);
+            Assert.AreEqual(4, g1.NumGeneratorsInChain);
+        }
     }
 }

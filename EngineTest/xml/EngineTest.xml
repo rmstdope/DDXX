@@ -50,18 +50,12 @@
     		<GradientBreak>0.4</GradientBreak>
     		<Center>0.5, 0</Center>
     	</Generator>
-    	<Generator class="ColorModulation">
-    		<Color>1, 0.7058824, 0.5686275, 1</Color>
-    	</Generator>
     	<Generator class="Circle">
     		<SolidRadius>0</SolidRadius>
-    		<GradientRadius1>0.005</GradientRadius1>
-    		<GradientRadius2>0.1</GradientRadius2>
-    		<GradientBreak>0.2</GradientBreak>
-    		<Center>0.25, 0.75</Center>
-    	</Generator>
-    	<Generator class="ColorModulation">
-    		<Color>1, 0.7058824, 0.5686275, 1</Color>
+    		<GradientRadius1>0.01</GradientRadius1>
+    		<GradientRadius2>0.14</GradientRadius2>
+    		<GradientBreak>0.3</GradientBreak>
+    		<Center>0.2, 0.75</Center>
     	</Generator>
     	<Generator class="Add" />
     	<Generator class="Circle">
@@ -71,21 +65,18 @@
     		<GradientBreak>0.2</GradientBreak>
     		<Center>0.75, 0.75</Center>
     	</Generator>
-    	<Generator class="ColorModulation">
-    		<Color>1, 0.7058824, 0.5686275, 1</Color>
-    	</Generator>
     	<Generator class="Add" />
     	<Generator class="Circle">
     		<SolidRadius>0</SolidRadius>
     		<GradientRadius1>0.015</GradientRadius1>
     		<GradientRadius2>0.15</GradientRadius2>
     		<GradientBreak>0.2</GradientBreak>
-    		<Center>0.4, 0.4</Center>
+    		<Center>0.36, 0.3400001</Center>
     	</Generator>
+    	<Generator class="Add" />
     	<Generator class="ColorModulation">
     		<Color>1, 0.7058824, 0.5686275, 1</Color>
     	</Generator>
-    	<Generator class="Add" />
     </Texture>
     <Texture name="Square" width="64" height="64" miplevels="0">
     	<Generator class="Square">
