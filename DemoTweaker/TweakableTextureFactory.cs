@@ -22,7 +22,7 @@ namespace Dope.DDXX.DemoTweaker
 
         public override int NumVisableVariables
         {
-            get { return 5; }
+            get { return 3; }
         }
 
         protected override int NumSpecificVariables

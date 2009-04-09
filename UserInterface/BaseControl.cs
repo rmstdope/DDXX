@@ -36,7 +36,7 @@ namespace Dope.DDXX.UserInterface
             foreach (IControl child in Children)
                 num += child.DrawControl(resources);
             return num;
-        }
+            }
 
         public abstract void Draw(IDrawResources resources);
 

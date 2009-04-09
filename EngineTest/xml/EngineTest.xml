@@ -95,10 +95,10 @@
     		<KernelSize>15</KernelSize>
     	</Generator>
     	<Generator class="BrushNoise">
-    		<PointsPerLine>2</PointsPerLine>
+    		<PointsPerLine>5</PointsPerLine>
     	</Generator>
     	<Generator class="ColorModulation">
-    		<Color>0.1, 0.1, 0.1, 0.1</Color>
+    		<Color>0.05, 0.05, 0.05, 0.05</Color>
     	</Generator>
     	<Generator class="Madd">
     		<Add>0</Add>

@@ -42,9 +42,12 @@ namespace Dope.DDXX.UserInterface
             int y1 = (int)(screenHeight * GetY1(resources));
             int width = (int)(screenWidth * GetWidth(resources));
             int height = (int)(screenHeight * GetHeight(resources));
-            resources.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+            if (Color.A == 255)
+                resources.SpriteBatch.Begin(SpriteBlendMode.None, SpriteSortMode.Immediate, SaveStateMode.None);
+            else
+                resources.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
             if (Texture != null)
-                resources.SpriteBatch.Draw(Texture, new Rectangle(x1, y1, width, height), new Color(255, 255, 255, 255));
+                resources.SpriteBatch.Draw(Texture, new Rectangle(x1, y1, width, height), Color);
             else
                 resources.SpriteBatch.Draw(resources.WhiteTexture, new Rectangle(x1, y1, width, height), Color);
             resources.SpriteBatch.End();
