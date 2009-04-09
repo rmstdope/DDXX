@@ -24,6 +24,12 @@ namespace Dope.DDXX.DemoTweaker
         public TweakableTexture2DParameters(Texture2DParameters target, ITweakableFactory factory)
             : base(target, factory)
         {
+            Reinitialize();
+        }
+
+        private void Reinitialize()
+        {
+            generators.Clear();
             ListGenerators(Target.Generator);
             generators.Reverse();
             cachedChildren = new ITweakable[generators.Count];
@@ -75,21 +81,30 @@ namespace Dope.DDXX.DemoTweaker
 
         public override IMenuControl InsertNew(TweakerStatus status, IDrawResources drawResources, bool after)
         {
-            List<Type> generators = EnumerateGenerators(ValidateAndGetStackSize());
+            List<Type> generators = EnumerateGenerators(1);//ValidateAndGetStackSize());
             menuControl = Factory.CreateMenuControl<Type>();
             for (int i = 0; i < generators.Count; i++)
                 menuControl.AddOption(generators[i].Name, generators[i]);
             menuControl.Title = "Select Generator";
-            insertAfter = after;
+            //insertAfter = after;
             return menuControl;
         }
 
         public override void ChoiceMade(TweakerStatus status, int index)
         {
             Type type = menuControl.Action;
-            ITextureGenerator generator = createGenerator(type);
-            generators.Insert(status.Selection + (insertAfter ? 1 : 0), generator);
-            cachedChildren = new ITweakable[generators.Count];
+            ITextureGenerator newGenerator = createGenerator(type);
+            ITextureGenerator generator = generators[status.Selection];
+            foreach (ITextureGenerator heystack in generators)
+            {
+                for (int i = 0; i < heystack.NumInputPins; i++)
+                    if (heystack.GetInput(i) == generator)
+                        heystack.ConnectToInput(i, newGenerator);
+            }
+            newGenerator.ConnectToInput(0, generator);
+            Reinitialize();
+            //generators.Insert(status.Selection + (insertAfter ? 1 : 0), generator);
+            //cachedChildren = new ITweakable[generators.Count];
         }
 
         private int ValidateAndGetStackSize()
@@ -105,7 +120,7 @@ namespace Dope.DDXX.DemoTweaker
             return size;
         }
 
-        private List<Type> EnumerateGenerators(int maxPins)
+        private List<Type> EnumerateGenerators(int numPins)
         {
             List<Type> generators = new List<Type>();
             foreach (Type type in typeof(Constant).Assembly.GetTypes())
@@ -114,7 +129,7 @@ namespace Dope.DDXX.DemoTweaker
                     !type.IsAbstract && type.IsPublic)
                 {
                     ITextureGenerator generator = createGenerator(type);
-                    if (generator.NumInputPins <= maxPins)
+                    if (generator.NumInputPins == numPins)
                         generators.Add(type);
                 }
             }
@@ -127,5 +142,9 @@ namespace Dope.DDXX.DemoTweaker
             return constructor.Invoke(new object[] { }) as ITextureGenerator;
         }
 
+        public override void Regenerate(TweakerStatus status)
+        {
+            cachedChildren = new ITweakable[generators.Count];
+        }
     }
 }
