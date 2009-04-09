@@ -103,8 +103,6 @@ namespace Dope.DDXX.DemoTweaker
             }
             newGenerator.ConnectToInput(0, generator);
             Reinitialize();
-            //generators.Insert(status.Selection + (insertAfter ? 1 : 0), generator);
-            //cachedChildren = new ITweakable[generators.Count];
         }
 
         private int ValidateAndGetStackSize()

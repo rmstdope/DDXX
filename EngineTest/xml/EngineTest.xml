@@ -91,7 +91,9 @@
     	<Generator class="Square">
     		<Size>0.92</Size>
     	</Generator>
-    	<Generator class="GaussianBlur" />
+    	<Generator class="GaussianBlur">
+    		<KernelSize>15</KernelSize>
+    	</Generator>
     	<Generator class="BrushNoise">
     		<PointsPerLine>2</PointsPerLine>
     	</Generator>
