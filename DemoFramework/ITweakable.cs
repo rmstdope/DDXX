@@ -23,7 +23,7 @@ namespace Dope.DDXX.DemoFramework
         void ReadFromXmlFile(XmlNode node);
         void WriteToXmlFile(XmlDocument xmlDocument, XmlNode node);
         void Regenerate(TweakerStatus status);
-        IMenuControl InsertNew(TweakerStatus status, IDrawResources drawResources, bool after);
+        IMenuControl InsertNew(TweakerStatus status, IDrawResources drawResources);
         void ChoiceMade(TweakerStatus status, int index);
     }
 }

@@ -198,7 +198,7 @@ namespace Dope.DDXX.DemoTweaker
             if (inputDriver.KeyPressedSlowRepeat(Keys.PageDown))
                 tweakable.DecreaseValue(status);
             if (inputDriver.KeyPressedNoRepeat(Keys.Insert))
-                menuControl = tweakable.InsertNew(status, userInterface.DrawResources, inputDriver.KeyPressed(Keys.LeftControl));
+                menuControl = tweakable.InsertNew(status, userInterface.DrawResources);
 
             StringInput(inputDriver);
 

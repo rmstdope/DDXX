@@ -178,7 +178,7 @@ namespace Dope.DDXX.DemoTweaker
         {
         }
 
-        public virtual IMenuControl InsertNew(TweakerStatus status, IDrawResources drawResources, bool after)
+        public virtual IMenuControl InsertNew(TweakerStatus status, IDrawResources drawResources)
         {
             return null;
         }

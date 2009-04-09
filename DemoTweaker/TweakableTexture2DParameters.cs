@@ -18,7 +18,6 @@ namespace Dope.DDXX.DemoTweaker
     {
         private List<ITextureGenerator> generators = new List<ITextureGenerator>();
         private ITweakable[] cachedChildren;
-        private bool insertAfter;
         private IMenuControl<Type> menuControl;
 
         public TweakableTexture2DParameters(Texture2DParameters target, ITweakableFactory factory)
@@ -79,14 +78,13 @@ namespace Dope.DDXX.DemoTweaker
             new BoxControl(new Vector4(0.55f + 0.225f - height / 2, y, -1, height), 255, Target.Texture, status.RootControl);
         }
 
-        public override IMenuControl InsertNew(TweakerStatus status, IDrawResources drawResources, bool after)
+        public override IMenuControl InsertNew(TweakerStatus status, IDrawResources drawResources)
         {
-            List<Type> generators = EnumerateGenerators(1);//ValidateAndGetStackSize());
+            List<Type> generators = EnumerateGenerators(1);
             menuControl = Factory.CreateMenuControl<Type>();
             for (int i = 0; i < generators.Count; i++)
                 menuControl.AddOption(generators[i].Name, generators[i]);
             menuControl.Title = "Select Generator";
-            //insertAfter = after;
             return menuControl;
         }
 

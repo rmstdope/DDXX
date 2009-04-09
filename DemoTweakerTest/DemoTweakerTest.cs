@@ -93,7 +93,6 @@ namespace Dope.DDXX.DemoTweaker
             SimulateKeypress(Keys.Tab);
             // Verify
             Assert.AreEqual(2.4f, status.StartTime);
-            Assert.IsInstanceOfType(typeof(BoxControl), status.RootControl);
         }
 
         [Test]
@@ -449,7 +448,7 @@ namespace Dope.DDXX.DemoTweaker
         #region ITweakable Members
 
 
-        public IMenuControl InsertNew(TweakerStatus status, IDrawResources drawResources, bool after)
+        public IMenuControl InsertNew(TweakerStatus status, IDrawResources drawResources)
         {
             throw new NotImplementedException();
         }

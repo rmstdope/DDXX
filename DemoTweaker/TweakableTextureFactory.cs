@@ -138,7 +138,7 @@ namespace Dope.DDXX.DemoTweaker
             TextureParameters[status.Selection].Regenerate();
         }
 
-        public override IMenuControl InsertNew(TweakerStatus status, IDrawResources drawResources, bool after)
+        public override IMenuControl InsertNew(TweakerStatus status, IDrawResources drawResources)
         {
             string newName = "Texture - " + Rand.Int(0, 65535);
             TextureDirector director = new TextureDirector(Target);

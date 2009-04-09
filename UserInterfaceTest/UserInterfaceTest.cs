@@ -275,9 +275,15 @@ namespace Dope.DDXX.UserInterface
         private void ExpectLineDrawCall(int x, int width, int y, int height, Color color)
         {
             if (width == 0)
+            {
                 width = 1;
+                height++;
+            }
             if (height == 0)
+            {
                 height = 1;
+                width++;
+            }
             Expect.Once.On(spriteBatch).
                 Method("Draw").
                 With(texture2D, new Rectangle(x, y, width, height), color);

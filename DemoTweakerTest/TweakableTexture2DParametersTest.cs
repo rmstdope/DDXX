@@ -147,7 +147,7 @@ namespace Dope.DDXX.DemoTweaker
             tweakable = new TweakableTexture2DParameters(target, factory);
             Expect.Once.On(factory).Method("CreateMenuControl").Will(Return.Value(control));
             // Exercise SUT
-            Assert.AreEqual(control, tweakable.InsertNew(status, drawResources, false));
+            Assert.AreEqual(control, tweakable.InsertNew(status, drawResources));
             foreach (string generatorName in control.Texts)
                 Assert.AreNotEqual(TwoInputGenerator, generatorName);
         }

@@ -57,7 +57,7 @@ namespace Dope.DDXX.DemoTweaker
         public void NumVisable()
         {
             // Exercise SUT and verify
-            Assert.AreEqual(5, tweakable.NumVisableVariables);
+            Assert.AreEqual(3, tweakable.NumVisableVariables);
         }
 
         [Test]
