@@ -44,6 +44,7 @@ namespace Dope.DDXX.TextureBuilder
             }
         }
 
+        [TweakStep(0.005f)]
         public float GapWidth
         {
             get { return gapWidth; }

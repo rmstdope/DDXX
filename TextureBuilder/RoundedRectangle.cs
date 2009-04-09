@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.TextureBuilder
 {
@@ -13,18 +14,21 @@ namespace Dope.DDXX.TextureBuilder
         private Vector2 size;
         private float roundRadius;
 
+        [TweakStep(0.01f)]
         public float RoundRadius
         {
             get { return roundRadius; }
             set { roundRadius = value; Recalc(); }
         }
 
+        [TweakStep(0.01f)]
         public Vector2 Center
         {
             get { return center; }
             set { center = value; Recalc(); }
         }
 
+        [TweakStep(0.01f)]
         public Vector2 Size
         {
             get { return size; }

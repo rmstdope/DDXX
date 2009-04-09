@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.TextureBuilder
 {
@@ -10,12 +11,14 @@ namespace Dope.DDXX.TextureBuilder
         private Vector4 zeroColor;
         private Vector4 oneColor;
 
+        [TweakStep(0.1f)]
         public Vector4 ZeroColor
         {
             get { return zeroColor; }
             set { zeroColor = value; }
         }
 
+        [TweakStep(0.1f)]
         public Vector4 OneColor
         {
             get { return oneColor; }

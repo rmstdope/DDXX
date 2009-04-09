@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.TextureBuilder
 {
@@ -13,24 +14,28 @@ namespace Dope.DDXX.TextureBuilder
         private float turbSize;
         private float turbPower;
 
+        [TweakStep(0.1f)]
         public float VeinPeriodX
         {
             get { return veinPeriodX; }
             set { veinPeriodX = value; }
         }
 
+        [TweakStep(0.1f)]
         public float VeinPeriodY
         {
             get { return veinPeriodY; }
             set { veinPeriodY = value; }
         }
 
+        [TweakStep(1.0f)]
         public float TurbSize
         {
             get { return turbSize; }
             set { turbSize = value; }
         }
 
+        [TweakStep(1.0f)]
         public float TurbPower
         {
             get { return turbPower; }

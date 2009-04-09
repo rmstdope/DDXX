@@ -50,12 +50,12 @@ namespace TiVi
         private void CreateLightTexture()
         {
             lightTexture = TextureFactory.CreateFromName("LightMap");
-            //brickTexture = TextureFactory.CreateFromName("Square");
-            TextureDirector.CreateSquare(0.9f);
-            TextureDirector.CreateBrushNoise(3);
-            TextureDirector.ModulateColor(new Vector4(0.2f, 0.2f, 0.2f, 0.2f));
-            TextureDirector.Modulate();
-            brickTexture = TextureDirector.Generate("Square", 64, 64, 1, SurfaceFormat.Color);
+            brickTexture = TextureFactory.CreateFromName("Square");
+            //TextureDirector.CreateSquare(0.9f);
+            //TextureDirector.CreateBrushNoise(3);
+            //TextureDirector.ModulateColor(new Vector4(0.2f, 0.2f, 0.2f, 0.2f));
+            //TextureDirector.Subtract();
+            //brickTexture = TextureDirector.Generate("Square", 64, 64, 1, SurfaceFormat.Color);
         }
 
         private void CreatePlane()

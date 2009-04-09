@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.TextureBuilder
 {
@@ -21,12 +22,14 @@ namespace Dope.DDXX.TextureBuilder
             get { return numOctaves; }
         }
 
+        [TweakStep(0.1f)]
         public float BaseFrequency
         {
             set { baseFrequency= value; }
             get { return baseFrequency; }
         }
 
+        [TweakStep(0.05f)]
         public float Persistence
         {
             set { persistence = value; }

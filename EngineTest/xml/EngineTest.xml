@@ -6,32 +6,6 @@
   <!-- TextureFactory Section -->
 
   <TextureFactory>
-    <Texture name="Noise256base1024" width="256" height="256" miplevels="1">
-    	<Generator class="PerlinNoise">
-    		<NumOctaves>6</NumOctaves>
-    		<BaseFrequency>1024</BaseFrequency>
-    		<Persistence>0.5</Persistence>
-    	</Generator>
-    	<Generator class="PerlinNoise">
-    		<NumOctaves>6</NumOctaves>
-    		<BaseFrequency>100</BaseFrequency>
-    		<Persistence>0.5</Persistence>
-    	</Generator>
-    	<Generator class="FactorBlend">
-    		<Factor>0</Factor>
-    	</Generator>
-    </Texture>
-    <Texture name="noise64" width="64" height="64" miplevels="1">
-    	<Generator class="PerlinNoise">
-    		<NumOctaves>6</NumOctaves>
-    		<BaseFrequency>16</BaseFrequency>
-    		<Persistence>0.5</Persistence>
-    	</Generator>
-    	<Generator class="Madd">
-    		<Add>0</Add>
-    		<Mul>1</Mul>
-    	</Generator>
-    </Texture>
     <Texture name="Noise256" width="256" height="256" miplevels="0">
     	<Generator class="PerlinNoise">
     		<NumOctaves>6</NumOctaves>
@@ -64,31 +38,6 @@
     		<SolidRadius>0</SolidRadius>
     		<GradientRadius1>0.4</GradientRadius1>
     		<GradientRadius2>0.4</GradientRadius2>
-    		<GradientBreak>0.5</GradientBreak>
-    		<Center>0.5, 0.5</Center>
-    	</Generator>
-    </Texture>
-    <Texture name="Circle256" width="256" height="256" miplevels="0">
-    	<Generator class="Circle">
-    		<SolidRadius>0.2</SolidRadius>
-    		<GradientRadius1>0.5</GradientRadius1>
-    		<GradientRadius2>0.5</GradientRadius2>
-    		<GradientBreak>0.5</GradientBreak>
-    		<Center>0.5, 0.5</Center>
-    	</Generator>
-    </Texture>
-    <Texture name="Noise64" width="64" height="64" miplevels="0">
-    	<Generator class="PerlinNoise">
-    		<NumOctaves>6</NumOctaves>
-    		<BaseFrequency>16</BaseFrequency>
-    		<Persistence>0.5</Persistence>
-    	</Generator>
-    </Texture>
-    <Texture name="Circle64" width="64" height="64" miplevels="0">
-    	<Generator class="Circle">
-    		<SolidRadius>0.4</SolidRadius>
-    		<GradientRadius1>0.5</GradientRadius1>
-    		<GradientRadius2>0.5</GradientRadius2>
     		<GradientBreak>0.5</GradientBreak>
     		<Center>0.5, 0.5</Center>
     	</Generator>
@@ -135,6 +84,23 @@
     	</Generator>
     	<Generator class="ColorModulation">
     		<Color>1, 0.7058824, 0.5686275, 1</Color>
+    	</Generator>
+    	<Generator class="Add" />
+    </Texture>
+    <Texture name="Square" width="64" height="64" miplevels="0">
+    	<Generator class="Square">
+    		<Size>0.92</Size>
+    	</Generator>
+    	<Generator class="GaussianBlur" />
+    	<Generator class="BrushNoise">
+    		<PointsPerLine>2</PointsPerLine>
+    	</Generator>
+    	<Generator class="ColorModulation">
+    		<Color>0.1, 0.1, 0.1, 0.1</Color>
+    	</Generator>
+    	<Generator class="Madd">
+    		<Add>0</Add>
+    		<Mul>-1</Mul>
     	</Generator>
     	<Generator class="Add" />
     </Texture>

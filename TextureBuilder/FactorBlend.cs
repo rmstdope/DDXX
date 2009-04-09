@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.TextureBuilder
 {
@@ -9,6 +10,7 @@ namespace Dope.DDXX.TextureBuilder
     {
         private float factor;
 
+        [TweakStep(0.1f)]
         public float Factor
         {
             get { return factor; }

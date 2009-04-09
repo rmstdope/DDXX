@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.TextureBuilder
 {
@@ -10,12 +11,14 @@ namespace Dope.DDXX.TextureBuilder
         private float mul;
         private float add;
 
+        [TweakStep(0.1f)]
         public float Add
         {
             get { return add; }
             set { add = value; }
         }
 
+        [TweakStep(0.1f)]
         public float Mul
         {
             get { return mul; }
