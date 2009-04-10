@@ -13,6 +13,8 @@ namespace TiVi
 {
     public class ComicEffect : BaseDemoEffect
     {
+        private ISpriteBatch spriteBatch;
+        private ITexture2D texture;
         private CameraNode camera;
         private IModel cylinder;
         private IModel plane;
@@ -45,6 +47,8 @@ namespace TiVi
                     Scene.AddNode(node);
                 }
             }
+            spriteBatch = GraphicsFactory.CreateSpriteBatch();
+            texture = TextureFactory.CreateFromName("Noise256");
         }
 
         private void CreateLightTexture()
@@ -93,6 +97,12 @@ namespace TiVi
         public override void Render()
         {
             Scene.Render();
+            spriteBatch.Begin(SpriteBlendMode.None);
+            spriteBatch.Draw(texture, new Rectangle(0, 0, 256, 256), Color.White);
+            spriteBatch.Draw(texture, new Rectangle(256, 0, 256, 256), Color.White);
+            spriteBatch.Draw(texture, new Rectangle(0, 256, 256, 256), Color.White);
+            spriteBatch.Draw(texture, new Rectangle(256, 256, 256, 256), Color.White);
+            spriteBatch.End();
         }
     }
 }

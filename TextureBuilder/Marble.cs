@@ -51,7 +51,7 @@ namespace Dope.DDXX.TextureBuilder
             this.turbPower = 32;
             perlinGenerator = new PerlinTurbulence();
             perlinGenerator.NumOctaves = 6;
-            perlinGenerator.BaseFrequency = turbSize;
+            perlinGenerator.BaseFrequency = (int)turbSize;
             perlinGenerator.Persistence = 0.5f;
         }
 

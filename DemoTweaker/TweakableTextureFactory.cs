@@ -10,11 +10,14 @@ using Dope.DDXX.UserInterface;
 using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Utility;
 using Dope.DDXX.TextureBuilder;
+using System.Reflection;
 
 namespace Dope.DDXX.DemoTweaker
 {
     public class TweakableTextureFactory : TweakableObjectBase<ITextureFactory>
     {
+        private IMenuControl<Type> menuControl;
+
         public TweakableTextureFactory(ITextureFactory target, ITweakableFactory factory)
             : base(target, factory)
         {
@@ -140,16 +143,49 @@ namespace Dope.DDXX.DemoTweaker
 
         public override IMenuControl InsertNew(TweakerStatus status, IDrawResources drawResources)
         {
+            List<Type> generators = EnumerateGenerators(0);
+            menuControl = Factory.CreateMenuControl<Type>();
+            for (int i = 0; i < generators.Count; i++)
+                menuControl.AddOption(generators[i].Name, generators[i]);
+            menuControl.Title = "Select Base Generator";
+            return menuControl;
+        }
+
+        public override void ChoiceMade(TweakerStatus status, int index)
+        {
+            Type type = menuControl.Action;
+            ITextureGenerator newGenerator = createGenerator(type);
             string newName = "Texture - " + Rand.Int(0, 65535);
             TextureDirector director = new TextureDirector(Target);
-            director.AddGenerator(new Constant());
+            director.AddGenerator(newGenerator);
             director.Generate(newName, 64, 64, 1, SurfaceFormat.Color);
-            int index = TextureParameters.FindIndex(delegate(Texture2DParameters param)
+            int newIndex = TextureParameters.FindIndex(delegate(Texture2DParameters param)
             {
                 return param.Name == newName;
             });
-            status.Selection = index;
-            return null;
+            status.Selection = newIndex;
+        }
+
+        private ITextureGenerator createGenerator(Type type)
+        {
+            ConstructorInfo constructor = type.GetConstructor(new Type[] { });
+            return constructor.Invoke(new object[] { }) as ITextureGenerator;
+        }
+
+        private List<Type> EnumerateGenerators(int numPins)
+        {
+            List<Type> generators = new List<Type>();
+            foreach (Type type in typeof(Constant).Assembly.GetTypes())
+            {
+                if (type.GetInterface("ITextureGenerator") != null &&
+                    !type.IsAbstract && type.IsPublic)
+                {
+                    ITextureGenerator generator = createGenerator(type);
+                    if (generator.NumInputPins == numPins)
+                        generators.Add(type);
+                }
+            }
+            return generators;
         }
 
     }

@@ -10,7 +10,7 @@ namespace Dope.DDXX.TextureBuilder
     public class PerlinNoise : Generator
     {
         private int numOctaves;
-        private float baseFrequency;
+        private int baseFrequency;
         private float persistence;
         private Vector4 color;
         private Vector4 colorDiff;
@@ -22,8 +22,7 @@ namespace Dope.DDXX.TextureBuilder
             get { return numOctaves; }
         }
 
-        [TweakStep(0.1f)]
-        public float BaseFrequency
+        public int BaseFrequency
         {
             set { baseFrequency= value; }
             get { return baseFrequency; }
@@ -54,8 +53,16 @@ namespace Dope.DDXX.TextureBuilder
             return color + colorDiff * value;
         }
 
-        private float Noise(int x, int y)
+        private float Noise(int x, int y, int frequency)
         {
+            if (x < 0)
+                x += frequency;
+            if (x >= frequency)
+                x -= frequency;
+            if (y < 0)
+                y += frequency;
+            if (y >= frequency)
+                y -= frequency;
             int n = x + y * 57;
             n = (n << 13) ^ n;
             float v = (float)(1.0 - ((n * (n * n * 15731 + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0);
@@ -78,27 +85,27 @@ namespace Dope.DDXX.TextureBuilder
 	        return a * (1 - f) + b * f;
         }
 
-        private float SmoothNoise(int x, int y)
+        private float SmoothNoise(int x, int y, int frequency)
         {
-            float corners = (Noise(x - 1, y - 1) + Noise(x + 1, y - 1) +
-                Noise(x - 1, y + 1) + Noise(x + 1, y + 1)) / 16;
-            float sides = (Noise(x - 1, y) + Noise(x + 1, y) +
-                Noise(x, y - 1) + Noise(x, y + 1)) / 8;
-            float center = Noise(x, y) / 4;
+            float corners = (Noise(x - 1, y - 1, frequency) + Noise(x + 1, y - 1, frequency) +
+                Noise(x - 1, y + 1, frequency) + Noise(x + 1, y + 1, frequency)) / 16;
+            float sides = (Noise(x - 1, y, frequency) + Noise(x + 1, y, frequency) +
+                Noise(x, y - 1, frequency) + Noise(x, y + 1, frequency)) / 8;
+            float center = Noise(x, y, frequency) / 4;
             return (corners + sides + center);
         }
 
-        private float InterpolatedNoise(float x, float y)
+        private float InterpolatedNoise(float x, float y, int frequency)
         {
             int integerX = (int)x;
             float fractionalX = x - integerX;
             int integerY = (int)y;
             float fractionalY = y - integerY;
 
-            float v1 = SmoothNoise(integerX, integerY);
-            float v2 = SmoothNoise(integerX + 1, integerY);
-            float v3 = SmoothNoise(integerX, integerY + 1);
-            float v4 = SmoothNoise(integerX + 1, integerY + 1);
+            float v1 = SmoothNoise(integerX, integerY, frequency);
+            float v2 = SmoothNoise(integerX + 1, integerY, frequency);
+            float v3 = SmoothNoise(integerX, integerY + 1, frequency);
+            float v4 = SmoothNoise(integerX + 1, integerY + 1, frequency);
 
             float i1 = Interpolate(v1, v2, fractionalX);
             float i2 = Interpolate(v3, v4, fractionalX);
@@ -111,14 +118,13 @@ namespace Dope.DDXX.TextureBuilder
             float total = 0;
             for (int i = 0; i < numOctaves; i++)
             {
-                //int i = 0;
-                float frequency = baseFrequency * (float)Math.Pow(2, i);
+                int frequency = baseFrequency * (int)Math.Pow(2, i);
                 float amplitude = (float)Math.Pow(persistence, i);
 
                 if (createTurbulence)
-                    total += (float)Math.Abs(InterpolatedNoise(position.X * frequency, position.Y * frequency) * amplitude);
+                    total += (float)Math.Abs(InterpolatedNoise(position.X * frequency, position.Y * frequency, frequency) * amplitude);
                 else
-                    total += InterpolatedNoise(position.X * frequency, position.Y * frequency) * amplitude;
+                    total += InterpolatedNoise(position.X * frequency, position.Y * frequency, frequency) * amplitude;
             }
             if (createTurbulence)
                 return total;
