@@ -96,10 +96,16 @@ namespace Dope.DDXX.DemoTweaker
             foreach (ITextureGenerator heystack in generators)
             {
                 for (int i = 0; i < heystack.NumInputPins; i++)
+                {
                     if (heystack.GetInput(i) == generator)
+                    {
                         heystack.ConnectToInput(i, newGenerator);
+                    }
+                }
             }
             newGenerator.ConnectToInput(0, generator);
+            if (Target.Generator == generator)
+                Target.Generator = newGenerator;
             Reinitialize();
         }
 

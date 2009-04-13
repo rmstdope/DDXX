@@ -48,6 +48,7 @@ namespace Dope.DDXX.Graphics
         public ITextureGenerator Generator
         {
             get { return generator; }
+            set { generator = value; }
         }
 
         public bool IsGenerated
