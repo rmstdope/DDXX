@@ -33,7 +33,7 @@ namespace Dope.DDXX.SceneGraph
         private LightState lightState = new LightState();
         private IAnimationController animationController;
 
-        private ModelNode node;
+        private IModelNode node;
 
         [SetUp]
         public override void SetUp()
@@ -154,7 +154,7 @@ namespace Dope.DDXX.SceneGraph
         {
             // Setup
             CreateWithSinglePart(true);
-            node.UseZBuffer = false;
+            node.UseDepthBuffer = false;
             Stub.On(animationController).GetProperty("WorldMatrices").Will(Return.Value(new Matrix[] { worldMatrix }));
             Expect.Once.On(modelMeshPart1).GetProperty("MaterialHandler").Will(Return.Value(materialHandler1));
             Expect.Once.On(materialHandler1).Method("SetupRendering").

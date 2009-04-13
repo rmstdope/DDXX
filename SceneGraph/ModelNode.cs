@@ -14,7 +14,7 @@ namespace Dope.DDXX.SceneGraph
         private LightState lightState;
         private IGraphicsDevice device;
         private CullMode cullMode = CullMode.CullCounterClockwiseFace;
-        private bool useZBuffer = true;
+        private bool useDepthBuffer = true;
 
         public IModel Model
         {
@@ -28,10 +28,10 @@ namespace Dope.DDXX.SceneGraph
             set { cullMode = value; }
         }
 
-        public bool UseZBuffer
+        public bool UseDepthBuffer
         {
-            get { return useZBuffer; }
-            set { useZBuffer = value; }
+            get { return useDepthBuffer; }
+            set { useDepthBuffer = value; }
         }
 
         public ModelNode(string name, IModel model, IGraphicsDevice device) 
@@ -66,8 +66,8 @@ namespace Dope.DDXX.SceneGraph
                             scene.ActiveCamera.ProjectionMatrix, scene.AmbientColor, lightState);
                 }
                 device.RenderState.CullMode = cullMode;
-                device.RenderState.DepthBufferEnable = useZBuffer;
-                device.RenderState.DepthBufferWriteEnable = useZBuffer;
+                device.RenderState.DepthBufferEnable = useDepthBuffer;
+                device.RenderState.DepthBufferWriteEnable = useDepthBuffer;
                 mesh.Draw();
             }
         }
