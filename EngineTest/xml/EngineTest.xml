@@ -9,13 +9,45 @@
     <Texture name="Noise256" width="256" height="256" miplevels="0">
     	<Generator class="PerlinNoise">
     		<NumOctaves>6</NumOctaves>
+    		<RandomSeed1>10997</RandomSeed1>
+    		<BaseFrequency>10</BaseFrequency>
+    		<Persistence>0.5</Persistence>
+    	</Generator>
+    </Texture>
+    <Texture name="Turbulence256" width="256" height="256" miplevels="0">
+    	<Generator class="PerlinTurbulence">
+    		<NumOctaves>6</NumOctaves>
+    		<RandomSeed1>44940</RandomSeed1>
     		<BaseFrequency>4</BaseFrequency>
+    		<Persistence>0.5</Persistence>
+    	</Generator>
+    </Texture>
+    <Texture name="OldMarble256" width="256" height="256" miplevels="0">
+    	<Generator class="OldMarble">
+    		<VeinPeriodX>3</VeinPeriodX>
+    		<VeinPeriodY>1.5</VeinPeriodY>
+    		<TurbSize>1</TurbSize>
+    		<TurbPower>4.5</TurbPower>
+    	</Generator>
+    </Texture>
+    <Texture name="NewMarble256" width="256" height="256" miplevels="0">
+    	<Generator class="Marble">
+    		<Saturation>0.4000001</Saturation>
+    		<Hue>0.3200005</Hue>
+    		<Luminance>0.33</Luminance>
+    		<VeinPeriodX>1.4</VeinPeriodX>
+    		<VeinPeriodY>2.5</VeinPeriodY>
+    		<TurbPower>2</TurbPower>
+    		<NumOctaves>6</NumOctaves>
+    		<RandomSeed1>33110</RandomSeed1>
+    		<BaseFrequency>3</BaseFrequency>
     		<Persistence>0.5</Persistence>
     	</Generator>
     </Texture>
     <Texture name="NormalNoise256" width="256" height="256" miplevels="0">
     	<Generator class="PerlinNoise">
     		<NumOctaves>6</NumOctaves>
+    		<RandomSeed1>39887</RandomSeed1>
     		<BaseFrequency>4</BaseFrequency>
     		<Persistence>0.5</Persistence>
     	</Generator>

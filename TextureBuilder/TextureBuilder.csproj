@@ -129,6 +129,7 @@
     <Compile Include="NormalMap.cs">
       <Name>NormalMap</Name>
     </Compile>
+    <Compile Include="OldMarble.cs" />
     <Compile Include="PerlinNoise.cs">
       <Name>PerlinNoise</Name>
     </Compile>

@@ -9,6 +9,7 @@ namespace Dope.DDXX.TextureBuilder
 {
     public class PerlinNoise : Generator
     {
+        private int randomSeed1;
         private int numOctaves;
         private int baseFrequency;
         private float persistence;
@@ -20,6 +21,12 @@ namespace Dope.DDXX.TextureBuilder
         {
             set { numOctaves = value; }
             get { return numOctaves; }
+        }
+
+        public int RandomSeed1
+        {
+            set { randomSeed1 = value; }
+            get { return randomSeed1; }
         }
 
         public int BaseFrequency
@@ -41,6 +48,7 @@ namespace Dope.DDXX.TextureBuilder
             this.numOctaves = 6;
             this.baseFrequency = 4;
             this.persistence = 0.5f;
+            this.randomSeed1 = Rand.Int(0, 65535);
             color = new Vector4(0, 0, 0, 0);
             colorDiff = new Vector4(1, 1, 1, 1);
         }
@@ -63,10 +71,13 @@ namespace Dope.DDXX.TextureBuilder
                 y += frequency;
             if (y >= frequency)
                 y -= frequency;
-            int n = x + y * 57;
+            int n = x + randomSeed1 + y * (randomSeed1 + frequency);
             n = (n << 13) ^ n;
-            float v = (float)(1.0 - ((n * (n * n * 15731 + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0);
+            float v = (float)(((n * (n * n * 15731 + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0);
+            v = 1.0f - v;
             return v;
+            //Random r = new Random(n * (n * n * 15731 + 789221) + 1376312589);
+            //return (float)r.NextDouble();
         }
 
         //private Vector2 CubicInterpolation(Vector2 v0, Vector2 v1, Vector2 v2, Vector2 v3, float delta)
@@ -119,12 +130,17 @@ namespace Dope.DDXX.TextureBuilder
             for (int i = 0; i < numOctaves; i++)
             {
                 int frequency = baseFrequency * (int)Math.Pow(2, i);
-                float amplitude = (float)Math.Pow(persistence, i);
+                float amplitude = (float)Math.Pow(persistence, i + 1);
+                float noise = InterpolatedNoise(position.X * frequency, position.Y * frequency, frequency);
+                //Console.WriteLine("Frequency is {0}", frequency);
+                //Console.WriteLine("Amplitude is {0}", amplitude);
+                //Console.WriteLine("Noise is {0}", noise);
+                noise *= amplitude;
 
                 if (createTurbulence)
-                    total += (float)Math.Abs(InterpolatedNoise(position.X * frequency, position.Y * frequency, frequency) * amplitude);
+                    total += (float)Math.Abs(noise);
                 else
-                    total += InterpolatedNoise(position.X * frequency, position.Y * frequency, frequency) * amplitude;
+                    total += noise;
             }
             if (createTurbulence)
                 return total;

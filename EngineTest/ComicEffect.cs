@@ -14,7 +14,10 @@ namespace TiVi
     public class ComicEffect : BaseDemoEffect
     {
         private ISpriteBatch spriteBatch;
-        private ITexture2D texture;
+        private ITexture2D texture1;
+        private ITexture2D texture2;
+        private ITexture2D texture3;
+        private ITexture2D texture4;
         private CameraNode camera;
         private IModel cylinder;
         private IModel plane;
@@ -48,7 +51,10 @@ namespace TiVi
                 }
             }
             spriteBatch = GraphicsFactory.CreateSpriteBatch();
-            texture = TextureFactory.CreateFromName("Noise256");
+            texture1 = TextureFactory.CreateFromName("Noise256");
+            texture2 = TextureFactory.CreateFromName("Turbulence256");
+            texture3 = TextureFactory.CreateFromName("OldMarble256");
+            texture4 = TextureFactory.CreateFromName("NewMarble256");
         }
 
         private void CreateLightTexture()
@@ -98,10 +104,10 @@ namespace TiVi
         {
             Scene.Render();
             spriteBatch.Begin(SpriteBlendMode.None);
-            spriteBatch.Draw(texture, new Rectangle(0, 0, 256, 256), Color.White);
-            spriteBatch.Draw(texture, new Rectangle(256, 0, 256, 256), Color.White);
-            spriteBatch.Draw(texture, new Rectangle(0, 256, 256, 256), Color.White);
-            spriteBatch.Draw(texture, new Rectangle(256, 256, 256, 256), Color.White);
+            spriteBatch.Draw(texture1, new Rectangle(0, 0, 256, 256), Color.White);
+            spriteBatch.Draw(texture2, new Rectangle(256, 0, 256, 256), Color.White);
+            spriteBatch.Draw(texture3, new Rectangle(0, 256, 256, 256), Color.White);
+            spriteBatch.Draw(texture4, new Rectangle(256, 256, 256, 256), Color.White);
             spriteBatch.End();
         }
     }
