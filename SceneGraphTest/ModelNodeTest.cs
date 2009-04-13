@@ -86,6 +86,8 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(materialHandler1).Method("SetupRendering").
                 With(new Matrix[] { worldMatrix }, viewMatrix, projectionMatrix, sceneAmbient, null);
             Expect.Once.On(renderState).SetProperty("CullMode").To(CullMode.CullCounterClockwiseFace);
+            Expect.Once.On(renderState).SetProperty("DepthBufferEnable").To(true);
+            Expect.Once.On(renderState).SetProperty("DepthBufferWriteEnable").To(true);
             Expect.Once.On(modelMesh1).Method("Draw");
 
             // Exercise SUT
@@ -101,6 +103,8 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(materialHandler1).Method("SetupRendering").
                 With(new Matrix[] { worldMatrix }, viewMatrix, projectionMatrix, sceneAmbient, null);
             Expect.Once.On(renderState).SetProperty("CullMode").To(CullMode.CullCounterClockwiseFace);
+            Expect.Once.On(renderState).SetProperty("DepthBufferEnable").To(true);
+            Expect.Once.On(renderState).SetProperty("DepthBufferWriteEnable").To(true);
             Expect.Once.On(modelMesh1).Method("Draw");
 
             // Exercise SUT
@@ -118,6 +122,8 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(materialHandler1).Method("SetupRendering").
                 With(new Matrix[] { worldMatrix }, viewMatrix, projectionMatrix, sceneAmbient, lightState);
             Expect.Once.On(renderState).SetProperty("CullMode").To(CullMode.CullCounterClockwiseFace);
+            Expect.Once.On(renderState).SetProperty("DepthBufferEnable").To(true);
+            Expect.Once.On(renderState).SetProperty("DepthBufferWriteEnable").To(true);
             Expect.Once.On(modelMesh1).Method("Draw");
 
             // Exercise SUT
@@ -135,6 +141,27 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(materialHandler1).Method("SetupRendering").
                 With(new Matrix[] { worldMatrix }, viewMatrix, projectionMatrix, sceneAmbient, null);
             Expect.Once.On(renderState).SetProperty("CullMode").To(CullMode.None);
+            Expect.Once.On(renderState).SetProperty("DepthBufferEnable").To(true);
+            Expect.Once.On(renderState).SetProperty("DepthBufferWriteEnable").To(true);
+            Expect.Once.On(modelMesh1).Method("Draw");
+
+            // Exercise SUT
+            node.Render(scene, DrawPass.First);
+        }
+
+        [Test]
+        public void RenderOnePartNoDepth()
+        {
+            // Setup
+            CreateWithSinglePart(true);
+            node.UseZBuffer = false;
+            Stub.On(animationController).GetProperty("WorldMatrices").Will(Return.Value(new Matrix[] { worldMatrix }));
+            Expect.Once.On(modelMeshPart1).GetProperty("MaterialHandler").Will(Return.Value(materialHandler1));
+            Expect.Once.On(materialHandler1).Method("SetupRendering").
+                With(new Matrix[] { worldMatrix }, viewMatrix, projectionMatrix, sceneAmbient, null);
+            Expect.Once.On(renderState).SetProperty("CullMode").To(CullMode.CullCounterClockwiseFace);
+            Expect.Once.On(renderState).SetProperty("DepthBufferEnable").To(false);
+            Expect.Once.On(renderState).SetProperty("DepthBufferWriteEnable").To(false);
             Expect.Once.On(modelMesh1).Method("Draw");
 
             // Exercise SUT
@@ -157,6 +184,8 @@ namespace Dope.DDXX.SceneGraph
             Expect.Once.On(materialHandler3).Method("SetupRendering").
                 With(new Matrix[] { worldMatrix }, viewMatrix, projectionMatrix, sceneAmbient, null);
             Expect.Exactly(2).On(renderState).SetProperty("CullMode").To(CullMode.CullCounterClockwiseFace);
+            Expect.Exactly(2).On(renderState).SetProperty("DepthBufferEnable").To(true);
+            Expect.Exactly(2).On(renderState).SetProperty("DepthBufferWriteEnable").To(true);
             Expect.Once.On(modelMesh1).Method("Draw");
             Expect.Once.On(modelMesh2).Method("Draw");
 

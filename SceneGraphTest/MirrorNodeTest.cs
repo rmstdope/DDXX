@@ -1184,7 +1184,6 @@ namespace Dope.DDXX.SceneGraph
             }
             set
             {
-                throw new Exception("The method or operation is not implemented.");
             }
         }
 
@@ -1208,7 +1207,6 @@ namespace Dope.DDXX.SceneGraph
             }
             set
             {
-                throw new Exception("The method or operation is not implemented.");
             }
         }
 

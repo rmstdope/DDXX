@@ -293,7 +293,10 @@
     <SourceDensity>40</SourceDensity>
     <Force>5</Force>
   </Effect>-->
-  <Effect class="ComicEffect" name="Comic" track="0" startTime="0" endTime="500">
+  <!--<Effect class="ComicEffect" name="Comic" track="0" startTime="0" endTime="500">
+    <DrawOrder>0</DrawOrder>
+  </Effect>-->
+  <Effect class="TerrainFlyover" name="Terrain" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
   </Effect>
 </Demo>
