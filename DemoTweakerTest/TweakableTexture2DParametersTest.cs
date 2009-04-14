@@ -83,7 +83,8 @@ namespace Dope.DDXX.DemoTweaker
             public void RemoveChild(IControl control) { throw new NotImplementedException(); }
         }
         #endregion
-        
+
+        private const string ZeroInputGenerator = "PerlinNoise";
         private const string OneInputGenerator = "Madd";
         private const string TwoInputGenerator = "FactorBlend";
         private TweakableTexture2DParameters tweakable;
@@ -148,8 +149,9 @@ namespace Dope.DDXX.DemoTweaker
             Expect.Once.On(factory).Method("CreateMenuControl").Will(Return.Value(control));
             // Exercise SUT
             Assert.AreEqual(control, tweakable.InsertNew(status, drawResources));
-            foreach (string generatorName in control.Texts)
-                Assert.AreNotEqual(TwoInputGenerator, generatorName);
+            Assert.IsFalse(control.Texts.Contains(ZeroInputGenerator));
+            Assert.IsTrue(control.Texts.Contains(OneInputGenerator));
+            //Assert.IsTrue(control.Texts.Contains(TwoInputGenerator));
         }
 
         [Test]

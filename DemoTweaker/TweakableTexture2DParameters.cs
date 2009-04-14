@@ -74,66 +74,56 @@ namespace Dope.DDXX.DemoTweaker
             if (index == status.Selection)
                 new BoxControl(new Vector4(0, y, 1, height), settings.Alpha, settings.SelectedColor, status.RootControl);
             new TextControl(Target.Name + " (<ITexture2D>)", new Vector4(0, y, 0.45f, height), Positioning.Right | Positioning.VerticalCenter, settings.TextAlpha, Color.White, status.RootControl);
-
             new BoxControl(new Vector4(0.55f + 0.225f - height / 2, y, -1, height), 255, Target.Texture, status.RootControl);
         }
 
         public override IMenuControl InsertNew(TweakerStatus status, IDrawResources drawResources)
         {
-            List<Type> generators = EnumerateGenerators(1);
             menuControl = Factory.CreateMenuControl<Type>();
-            for (int i = 0; i < generators.Count; i++)
-                menuControl.AddOption(generators[i].Name, generators[i]);
+            foreach (Type generator in EnumerateGenerators(new int[] { 1, 2}))
+                menuControl.AddOption(generator.Name, generator);
             menuControl.Title = "Select Generator";
             return menuControl;
         }
 
         public override void ChoiceMade(TweakerStatus status, int index)
         {
-            Type type = menuControl.Action;
-            ITextureGenerator newGenerator = createGenerator(type);
+            ITextureGenerator newGenerator = createGenerator(menuControl.Action);
             ITextureGenerator generator = generators[status.Selection];
+            ConnectGeneratorAfter(newGenerator, generator);
+            Reinitialize();
+        }
+
+        private void ConnectGeneratorAfter(ITextureGenerator newGenerator, ITextureGenerator generator)
+        {
             if (generator.Output != null)
                 generator.Output.ConnectToInput(generator.Output.GetInputIndex(generator), newGenerator);
             newGenerator.ConnectToInput(0, generator);
             if (Target.Generator == generator)
                 Target.Generator = newGenerator;
-            Reinitialize();
         }
 
-        private int ValidateAndGetStackSize()
+        private IEnumerable<Type> EnumerateGenerators(int[] numPins)
         {
-            int size = 0;
-            foreach (ITextureGenerator generator in generators)
-            {
-                size -= generator.NumInputPins;
-                if (size < 0)
-                    throw new DDXXException("Invalid ITextureGenerator stack. Will not render.");
-                size++;
-            }
-            return size;
-        }
-
-        private List<Type> EnumerateGenerators(int numPins)
-        {
-            List<Type> generators = new List<Type>();
             foreach (Type type in typeof(Constant).Assembly.GetTypes())
             {
                 if (type.GetInterface("ITextureGenerator") != null &&
-                    !type.IsAbstract && type.IsPublic)
+                    !type.IsAbstract && type.IsPublic &&
+                    GeneratorHasNumPins(type, new List<int>(numPins)))
                 {
-                    ITextureGenerator generator = createGenerator(type);
-                    if (generator.NumInputPins == numPins)
-                        generators.Add(type);
+                    yield return type;
                 }
             }
-            return generators;
+        }
+
+        private bool GeneratorHasNumPins(Type type, IList<int> numPins)
+        {
+            return (numPins.Contains(createGenerator(type).NumInputPins));
         }
 
         private ITextureGenerator createGenerator(Type type)
         {
-            ConstructorInfo constructor = type.GetConstructor(new Type[] { });
-            return constructor.Invoke(new object[] { }) as ITextureGenerator;
+            return type.GetConstructor(new Type[] { }).Invoke(new object[] { }) as ITextureGenerator;
         }
 
         public override void Regenerate(TweakerStatus status)
