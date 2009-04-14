@@ -127,6 +127,13 @@
     		<AMinusB>false</AMinusB>
     	</Generator>
     </Texture>
+    <Texture name="Texture - 29084" width="64" height="64" miplevels="1">
+    	<Generator class="Ellipse">
+    		<RadiusX>0.4</RadiusX>
+    		<RadiusY>0.25</RadiusY>
+    		<GradientStart>0</GradientStart>
+    	</Generator>
+    </Texture>
   </TextureFactory>
 
 

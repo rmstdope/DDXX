@@ -104,6 +104,7 @@
     <Compile Include="Convolution.cs">
       <Name>Convolution</Name>
     </Compile>
+    <Compile Include="Ellipse.cs" />
     <Compile Include="FactorBlend.cs">
       <Name>FactorBlend</Name>
     </Compile>

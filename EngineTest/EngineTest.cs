@@ -16,8 +16,8 @@ namespace EngineTest
     {
         static void Main(string[] args)
         {
-            try
-            {
+            //try
+            //{
                 Assembly[] assemblies = new Assembly[] { 
                     Assembly.GetExecutingAssembly(),
                     typeof(GlowPostEffect).Assembly,
@@ -27,11 +27,11 @@ namespace EngineTest
 
                 if (window.SetupDialog())
                     window.Run();
-            }
-            catch (Exception e)
-            {
-                System.Windows.Forms.MessageBox.Show(e.ToString(), "Exception was Thrown");
-            }
+            //}
+            //catch (Exception e)
+            //{
+            //    System.Windows.Forms.MessageBox.Show(e.ToString(), "Exception was Thrown");
+            //}
         }
     }
 }

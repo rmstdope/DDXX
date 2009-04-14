@@ -66,15 +66,15 @@ namespace Dope.DDXX.TextureBuilder
 
         public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
         {
-            PerlinNoise g = new PerlinNoise();
-            g.NumOctaves = 2;
-            g.BaseFrequency = 4;
-            g.Persistence = 0.5f;
+            //PerlinNoise g = new PerlinNoise();
+            //g.NumOctaves = 2;
+            //g.BaseFrequency = 4;
+            //g.Persistence = 0.5f;
             //textureCoordinate.X += 0.03f * g.GetPixel(textureCoordinate, texelSize).X;
             //textureCoordinate.Y += 0.03f * g.GetPixel(textureCoordinate, texelSize).X;
             RowType row = GetRowType(textureCoordinate.Y);
             if (row == RowType.GAP)
-                return new Vector4();
+                return Vector4.Zero;
             else
                 return GetBlockColor(row, textureCoordinate.X);
         }
