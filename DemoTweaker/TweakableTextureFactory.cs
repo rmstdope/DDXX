@@ -151,7 +151,7 @@ namespace Dope.DDXX.DemoTweaker
             return menuControl;
         }
 
-        public override void ChoiceMade(TweakerStatus status, int index)
+        public override IMenuControl ChoiceMade(TweakerStatus status, int index)
         {
             Type type = menuControl.Action;
             ITextureGenerator newGenerator = createGenerator(type);
@@ -164,6 +164,7 @@ namespace Dope.DDXX.DemoTweaker
                 return param.Name == newName;
             });
             status.Selection = newIndex;
+            return null;
         }
 
         private ITextureGenerator createGenerator(Type type)

@@ -24,6 +24,6 @@ namespace Dope.DDXX.DemoFramework
         void WriteToXmlFile(XmlDocument xmlDocument, XmlNode node);
         void Regenerate(TweakerStatus status);
         IMenuControl InsertNew(TweakerStatus status, IDrawResources drawResources);
-        void ChoiceMade(TweakerStatus status, int index);
+        IMenuControl ChoiceMade(TweakerStatus status, int index);
     }
 }

@@ -20,6 +20,7 @@ namespace Dope.DDXX.TextureBuilder
         public FactorBlend()
             : base(2)
         {
+            factor = 0.5f;
         }
 
         public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)

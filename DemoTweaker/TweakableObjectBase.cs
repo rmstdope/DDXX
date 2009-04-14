@@ -183,8 +183,9 @@ namespace Dope.DDXX.DemoTweaker
             return null;
         }
 
-        public virtual void ChoiceMade(TweakerStatus status, int index)
+        public virtual IMenuControl ChoiceMade(TweakerStatus status, int index)
         {
+            return null;
         }
 
         private bool HasProperty(string name)

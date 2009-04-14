@@ -14,29 +14,24 @@ namespace EngineTest
 {
     static class EngineTest
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
         static void Main(string[] args)
         {
-            Assembly[] assemblies = new Assembly[] { 
-                Assembly.GetExecutingAssembly(),
-                typeof(GlowPostEffect).Assembly,
-                typeof(TextureDirector).Assembly };
-            FileUtility.SetLoadPaths(new string[] { "./", "../../../xml/" });
-            DemoWindow window = new DemoWindow("Pelle", "EngineTest.xml", assemblies, new DemoTweakerHandler(new TweakerSettings()));
+            try
+            {
+                Assembly[] assemblies = new Assembly[] { 
+                    Assembly.GetExecutingAssembly(),
+                    typeof(GlowPostEffect).Assembly,
+                    typeof(TextureDirector).Assembly };
+                FileUtility.SetLoadPaths(new string[] { "./", "../../../xml/" });
+                DemoWindow window = new DemoWindow("Pelle", "EngineTest.xml", assemblies, new DemoTweakerHandler(new TweakerSettings()));
 
-            //CompiledMidi midi = window.Content.Load<CompiledMidi>("Content\\sound\\music_machinefunk_loop");
-            //System.Diagnostics.Debug.WriteLine("CompiledMidi loaded. Number of tracks: " + 
-            //    midi.Tracks.Count);
-            //int i = 0;
-            //foreach (CompiledMidi.CompiledMidiTrack track in midi.Tracks)
-            //{
-            //    System.Diagnostics.Debug.WriteLine("Track " + i + " contains " + track.NotesAndTimes.Length/2 + " notes.");
-            //    i++;
-            //}
-            if (window.SetupDialog())
-                window.Run();
+                if (window.SetupDialog())
+                    window.Run();
+            }
+            catch (Exception e)
+            {
+                System.Windows.Forms.MessageBox.Show(e.ToString(), "Exception was Thrown");
+            }
         }
     }
 }

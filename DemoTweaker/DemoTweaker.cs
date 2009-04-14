@@ -177,10 +177,7 @@ namespace Dope.DDXX.DemoTweaker
             if (inputDriver.KeyPressedSlowRepeat(Keys.Down))
                 menuControl.Next();
             if (inputDriver.KeyPressedNoRepeat(Keys.Enter))
-            {
-                tweakable.ChoiceMade(status, menuControl.Selected);
-                menuControl = null;
-            }
+                menuControl = tweakable.ChoiceMade(status, menuControl.Selected);
         }
 
         private IDemoTweaker HandleTweakerInput(IInputDriver inputDriver)

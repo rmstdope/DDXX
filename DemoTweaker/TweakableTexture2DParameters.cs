@@ -19,6 +19,7 @@ namespace Dope.DDXX.DemoTweaker
         private List<ITextureGenerator> generators = new List<ITextureGenerator>();
         private ITweakable[] cachedChildren;
         private IMenuControl<Type> menuControl;
+        private Type combineType;
 
         public TweakableTexture2DParameters(Texture2DParameters target, ITweakableFactory factory)
             : base(target, factory)
@@ -80,45 +81,62 @@ namespace Dope.DDXX.DemoTweaker
         public override IMenuControl InsertNew(TweakerStatus status, IDrawResources drawResources)
         {
             menuControl = Factory.CreateMenuControl<Type>();
-            foreach (Type generator in EnumerateGenerators(new int[] { 1, 2}))
+            foreach (Type generator in EnumerateGenerators(1))
                 menuControl.AddOption(generator.Name, generator);
-            menuControl.Title = "Select Generator";
+            foreach (Type generator in EnumerateGenerators(2))
+                menuControl.AddOption(generator.Name + " with ...", generator);
+            menuControl.Title = "Select Generator To Add";
             return menuControl;
         }
 
-        public override void ChoiceMade(TweakerStatus status, int index)
+        public override IMenuControl ChoiceMade(TweakerStatus status, int index)
         {
+            if (GeneratorHasNumPins(menuControl.Action, 2))
+            {
+                combineType = menuControl.Action;
+                menuControl = Factory.CreateMenuControl<Type>();
+                foreach (Type generator in EnumerateGenerators(0))
+                    menuControl.AddOption(generator.Name, generator);
+                menuControl.Title = "Select Secondary Input";
+                return menuControl;
+            }
             ITextureGenerator newGenerator = createGenerator(menuControl.Action);
-            ITextureGenerator generator = generators[status.Selection];
-            ConnectGeneratorAfter(newGenerator, generator);
+            if (GeneratorHasNumPins(menuControl.Action, 0))
+            {
+                ITextureGenerator tempGenerator = createGenerator(combineType);
+                tempGenerator.ConnectToInput(1, newGenerator);
+                newGenerator = tempGenerator;
+            }
+            ConnectGeneratorAfter(generators[status.Selection], newGenerator);
             Reinitialize();
+            return null;
         }
 
-        private void ConnectGeneratorAfter(ITextureGenerator newGenerator, ITextureGenerator generator)
+        private void ConnectGeneratorAfter(ITextureGenerator oldGenerator, ITextureGenerator newGenerator)
         {
-            if (generator.Output != null)
-                generator.Output.ConnectToInput(generator.Output.GetInputIndex(generator), newGenerator);
-            newGenerator.ConnectToInput(0, generator);
-            if (Target.Generator == generator)
+            if (oldGenerator.Output != null)
+                oldGenerator.Output.ConnectToInput(oldGenerator.Output.GetInputIndex(oldGenerator), newGenerator);
+            newGenerator.ConnectToInput(0, oldGenerator);
+            if (Target.Generator == oldGenerator)
                 Target.Generator = newGenerator;
         }
 
-        private IEnumerable<Type> EnumerateGenerators(int[] numPins)
+        private IEnumerable<Type> EnumerateGenerators(int numPins)
         {
             foreach (Type type in typeof(Constant).Assembly.GetTypes())
             {
                 if (type.GetInterface("ITextureGenerator") != null &&
                     !type.IsAbstract && type.IsPublic &&
-                    GeneratorHasNumPins(type, new List<int>(numPins)))
+                    GeneratorHasNumPins(type, numPins))
                 {
                     yield return type;
                 }
             }
         }
 
-        private bool GeneratorHasNumPins(Type type, IList<int> numPins)
+        private bool GeneratorHasNumPins(Type type, int numPins)
         {
-            return (numPins.Contains(createGenerator(type).NumInputPins));
+            return (numPins == createGenerator(type).NumInputPins);
         }
 
         private ITextureGenerator createGenerator(Type type)

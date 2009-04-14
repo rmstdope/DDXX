@@ -19,7 +19,7 @@ namespace Dope.DDXX.DemoTweaker
         #region FakeControl
         private class FakeControl<T> : IMenuControl<T>
         {
-            private T action;
+            public T action;
 
             public FakeControl(T action)
             {
@@ -84,9 +84,9 @@ namespace Dope.DDXX.DemoTweaker
         }
         #endregion
 
-        private const string ZeroInputGenerator = "PerlinNoise";
-        private const string OneInputGenerator = "Madd";
-        private const string TwoInputGenerator = "FactorBlend";
+        private Type ZeroInputGenerator;
+        private Type OneInputGenerator;
+        private Type TwoInputGenerator;
         private TweakableTexture2DParameters tweakable;
         private Mockery mockery;
         private Texture2DParameters target;
@@ -102,6 +102,9 @@ namespace Dope.DDXX.DemoTweaker
         [SetUp]
         public void SetUp()
         {
+            ZeroInputGenerator = typeof(PerlinNoise);
+            OneInputGenerator = typeof(Madd);
+            TwoInputGenerator = typeof(FactorBlend);
             mockery = new Mockery();
             factory = mockery.NewMock<ITweakableFactory>();
             drawResources = mockery.NewMock<IDrawResources>();
@@ -149,9 +152,9 @@ namespace Dope.DDXX.DemoTweaker
             Expect.Once.On(factory).Method("CreateMenuControl").Will(Return.Value(control));
             // Exercise SUT
             Assert.AreEqual(control, tweakable.InsertNew(status, drawResources));
-            Assert.IsFalse(control.Texts.Contains(ZeroInputGenerator));
-            Assert.IsTrue(control.Texts.Contains(OneInputGenerator));
-            //Assert.IsTrue(control.Texts.Contains(TwoInputGenerator));
+            Assert.IsFalse(control.Actions.Contains(ZeroInputGenerator));
+            Assert.IsTrue(control.Actions.Contains(OneInputGenerator));
+            Assert.IsTrue(control.Actions.Contains(TwoInputGenerator));
         }
 
         [Test]
@@ -182,6 +185,32 @@ namespace Dope.DDXX.DemoTweaker
             Assert.AreSame(colorModulationGenerator, target.Generator);
             Assert.IsInstanceOfType(typeof(ColorModulation), target.Generator.GetInput(0));
             Assert.AreSame(perlinNoiseGenerator, target.Generator.GetInput(0).GetInput(0));
+        }
+
+        [Test]
+        public void AddTwoInputGenerator()
+        {
+            // Setup
+            CreateTweakable(perlinNoiseGenerator);
+            Expect.Exactly(2).On(factory).Method("CreateMenuControl").Will(Return.Value(control));
+            tweakable.InsertNew(status, drawResources);
+            control.action = typeof(Add);
+            // Exercise SUT and verify
+            Assert.AreSame(control, tweakable.ChoiceMade(status, 0));
+        }
+
+        [Test]
+        public void AddTwoInputGeneratorCont()
+        {
+            // Setup
+            AddTwoInputGenerator();
+            control.action = typeof(Marble);
+            // Exercise SUT and verify
+            Assert.IsNull(tweakable.ChoiceMade(status, 0));
+            // Verify
+            Assert.IsInstanceOfType(typeof(Add), target.Generator);
+            Assert.AreSame(perlinNoiseGenerator, target.Generator.GetInput(0));
+            Assert.IsInstanceOfType(typeof(Marble), target.Generator.GetInput(1));
         }
 
         private void CreateTweakable(ITextureGenerator rootGenerator)

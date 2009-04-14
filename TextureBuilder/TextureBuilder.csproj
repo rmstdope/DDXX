@@ -143,6 +143,7 @@
     <Compile Include="Square.cs">
       <Name>Square</Name>
     </Compile>
+    <Compile Include="Subtract.cs" />
     <Compile Include="TextureDirector.cs">
       <Name>TextureDirector</Name>
     </Compile>

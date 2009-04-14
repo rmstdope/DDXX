@@ -112,22 +112,20 @@
     </Texture>
     <Texture name="Square" width="64" height="64" miplevels="0">
     	<Generator class="Square">
-    		<Size>0.92</Size>
+    		<Size>0.9</Size>
     	</Generator>
     	<Generator class="GaussianBlur">
-    		<KernelSize>15</KernelSize>
+    		<KernelSize>7</KernelSize>
     	</Generator>
     	<Generator class="BrushNoise">
     		<PointsPerLine>5</PointsPerLine>
     	</Generator>
     	<Generator class="ColorModulation">
-    		<Color>0.05, 0.05, 0.05, 0.05</Color>
+    		<Color>0.15, 0.15, 0.15, 0.15</Color>
     	</Generator>
-    	<Generator class="Madd">
-    		<Add>0</Add>
-    		<Mul>-1</Mul>
+    	<Generator class="Subtract">
+    		<AMinusB>false</AMinusB>
     	</Generator>
-    	<Generator class="Add" />
     </Texture>
   </TextureFactory>
 

@@ -453,7 +453,7 @@ namespace Dope.DDXX.DemoTweaker
             throw new NotImplementedException();
         }
 
-        public void ChoiceMade(TweakerStatus status, int index)
+        public IMenuControl ChoiceMade(TweakerStatus status, int index)
         {
             throw new NotImplementedException();
         }
