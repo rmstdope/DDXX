@@ -16,5 +16,6 @@ namespace Dope.DDXX.DemoFramework
         void ReadFromXmlFile(XmlNode node);
         void WriteToXmlFile(XmlDocument xmlDocument, XmlNode node);
         void Regenerate();
+        bool HandleExitPressed();
     }
 }

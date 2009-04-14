@@ -180,6 +180,16 @@ namespace Dope.DDXX.DemoTweaker
                 menuControl = tweakable.ChoiceMade(status, menuControl.Selected);
         }
 
+        public bool HandleExitPressed()
+        {
+            if (menuControl != null)
+            {
+                menuControl = null;
+                return true;
+            }
+            return false;
+        }
+
         private IDemoTweaker HandleTweakerInput(IInputDriver inputDriver)
         {
             IDemoTweaker tweaker = null;

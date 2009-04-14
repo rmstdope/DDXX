@@ -165,7 +165,10 @@ namespace Dope.DDXX.DemoTweaker
             if (inputDriver.BackPressedNoRepeat())
             {
                 if (tweakerStack.Count > 0)
-                    tweakerStack.Pop();
+                {
+                    if (!tweakerStack.Peek().HandleExitPressed())
+                        tweakerStack.Pop();
+                }
                 else
                     exiting = true;
             }
