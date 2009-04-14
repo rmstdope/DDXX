@@ -93,16 +93,8 @@ namespace Dope.DDXX.DemoTweaker
             Type type = menuControl.Action;
             ITextureGenerator newGenerator = createGenerator(type);
             ITextureGenerator generator = generators[status.Selection];
-            foreach (ITextureGenerator heystack in generators)
-            {
-                for (int i = 0; i < heystack.NumInputPins; i++)
-                {
-                    if (heystack.GetInput(i) == generator)
-                    {
-                        heystack.ConnectToInput(i, newGenerator);
-                    }
-                }
-            }
+            if (generator.Output != null)
+                generator.Output.ConnectToInput(generator.Output.GetInputIndex(generator), newGenerator);
             newGenerator.ConnectToInput(0, generator);
             if (Target.Generator == generator)
                 Target.Generator = newGenerator;

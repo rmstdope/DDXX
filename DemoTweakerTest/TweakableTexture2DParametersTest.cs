@@ -19,10 +19,17 @@ namespace Dope.DDXX.DemoTweaker
         #region FakeControl
         private class FakeControl<T> : IMenuControl<T>
         {
+            private T action;
+
+            public FakeControl(T action)
+            {
+                this.action = action;
+            }
+
             public List<T> Actions = new List<T>();
             public List<string> Texts = new List<string>();
 
-            public T Action { get { throw new NotImplementedException(); } }
+            public T Action { get { return action; } }
             public void AddOption(string text, T action) { Texts.Add(text); Actions.Add(action); }
             public void ClearOptions() { throw new NotImplementedException(); }
             public void Next() { throw new NotImplementedException(); }
@@ -85,6 +92,11 @@ namespace Dope.DDXX.DemoTweaker
         private ITweakableFactory factory;
         private TweakerStatus status;
         private IDrawResources drawResources;
+        private FakeControl<Type> control;
+        private ITextureGenerator perlinNoiseGenerator;
+        private ITextureGenerator colorModulationGenerator;
+        private ITextureGenerator marbleGenerator;
+        private ITextureGenerator addGenerator;
 
         [SetUp]
         public void SetUp()
@@ -94,6 +106,11 @@ namespace Dope.DDXX.DemoTweaker
             drawResources = mockery.NewMock<IDrawResources>();
             status = new TweakerStatus(1, 1);
             Stub.On(factory).Method("CreateTweakableValue").Will(Return.Value(null));
+            control = new FakeControl<Type>(typeof(ColorModulation));
+            perlinNoiseGenerator = new PerlinNoise();
+            colorModulationGenerator = new ColorModulation();
+            marbleGenerator = new Marble();
+            addGenerator = new Add();
         }
 
         [TearDown]
@@ -106,11 +123,7 @@ namespace Dope.DDXX.DemoTweaker
         public void NumSpecificVariablesIsOne()
         {
             // Setup
-            FakeControl<Type> control = new FakeControl<Type>();
-            ITextureGenerator generator = mockery.NewMock<ITextureGenerator>();
-            Stub.On(generator).GetProperty("NumInputPins").Will(Return.Value(0));
-            target = new Texture2DParameters("Test", null, generator);
-            tweakable = new TweakableTexture2DParameters(target, factory);
+            CreateTweakable(perlinNoiseGenerator);
             // Exercise SUT
             Assert.AreEqual(1, tweakable.NumVariables);
         }
@@ -119,20 +132,10 @@ namespace Dope.DDXX.DemoTweaker
         public void NumSpecificVariablesIsFour()
         {
             // Setup
-            FakeControl<Type> control = new FakeControl<Type>();
-            ITextureGenerator generator1 = mockery.NewMock<ITextureGenerator>();
-            ITextureGenerator generator2 = mockery.NewMock<ITextureGenerator>();
-            ITextureGenerator generator3 = mockery.NewMock<ITextureGenerator>();
-            ITextureGenerator generator4 = mockery.NewMock<ITextureGenerator>();
-            Stub.On(generator1).GetProperty("NumInputPins").Will(Return.Value(2));
-            Stub.On(generator2).GetProperty("NumInputPins").Will(Return.Value(1));
-            Stub.On(generator3).GetProperty("NumInputPins").Will(Return.Value(0));
-            Stub.On(generator4).GetProperty("NumInputPins").Will(Return.Value(0));
-            Stub.On(generator1).Method("GetInput").With(0).Will(Return.Value(generator2));
-            Stub.On(generator1).Method("GetInput").With(1).Will(Return.Value(generator3));
-            Stub.On(generator2).Method("GetInput").With(0).Will(Return.Value(generator4));
-            target = new Texture2DParameters("Test", null, generator1);
-            tweakable = new TweakableTexture2DParameters(target, factory);
+            colorModulationGenerator.ConnectToInput(0, perlinNoiseGenerator);
+            addGenerator.ConnectToInput(0, colorModulationGenerator);
+            addGenerator.ConnectToInput(1, marbleGenerator);
+            CreateTweakable(addGenerator);
             // Exercise SUT
             Assert.AreEqual(4, tweakable.NumVariables);
         }
@@ -141,16 +144,48 @@ namespace Dope.DDXX.DemoTweaker
         public void InsertNew()
         {
             // Setup
-            FakeControl<Type> control = new FakeControl<Type>();
-            ITextureGenerator generator = mockery.NewMock<ITextureGenerator>();
-            Stub.On(generator).GetProperty("NumInputPins").Will(Return.Value(0));
-            target = new Texture2DParameters("Test", null, generator);
-            tweakable = new TweakableTexture2DParameters(target, factory);
+            CreateTweakable(perlinNoiseGenerator);
             Expect.Once.On(factory).Method("CreateMenuControl").Will(Return.Value(control));
             // Exercise SUT
             Assert.AreEqual(control, tweakable.InsertNew(status, drawResources));
             foreach (string generatorName in control.Texts)
                 Assert.AreNotEqual(TwoInputGenerator, generatorName);
+        }
+
+        [Test]
+        public void AddGeneratorAtEnd()
+        {
+            // Setup
+            CreateTweakable(perlinNoiseGenerator);
+            Expect.Once.On(factory).Method("CreateMenuControl").Will(Return.Value(control));
+            tweakable.InsertNew(status, drawResources);
+            // Exercise SUT
+            tweakable.ChoiceMade(status, 0);
+            // Verify
+            Assert.IsInstanceOfType(typeof(ColorModulation), target.Generator);
+            Assert.AreSame(perlinNoiseGenerator, target.Generator.GetInput(0));
+        }
+
+        [Test]
+        public void AddGeneratorInBetween()
+        {
+            // Setup
+            colorModulationGenerator.ConnectToInput(0, perlinNoiseGenerator);
+            CreateTweakable(colorModulationGenerator);
+            Expect.Once.On(factory).Method("CreateMenuControl").Will(Return.Value(control));
+            tweakable.InsertNew(status, drawResources);
+            // Exercise SUT
+            tweakable.ChoiceMade(status, 0);
+            // Verify
+            Assert.AreSame(colorModulationGenerator, target.Generator);
+            Assert.IsInstanceOfType(typeof(ColorModulation), target.Generator.GetInput(0));
+            Assert.AreSame(perlinNoiseGenerator, target.Generator.GetInput(0).GetInput(0));
+        }
+
+        private void CreateTweakable(ITextureGenerator rootGenerator)
+        {
+            target = new Texture2DParameters("Test", null, rootGenerator);
+            tweakable = new TweakableTexture2DParameters(target, factory);
         }
 
     }
