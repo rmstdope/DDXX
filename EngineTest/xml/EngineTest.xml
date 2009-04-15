@@ -9,17 +9,17 @@
     <Texture name="Noise256" width="256" height="256" miplevels="0">
     	<Generator class="PerlinNoise">
     		<NumOctaves>6</NumOctaves>
-    		<RandomSeed1>10997</RandomSeed1>
     		<BaseFrequency>10</BaseFrequency>
     		<Persistence>0.5</Persistence>
+    		<RandomSeed>10996</RandomSeed>
     	</Generator>
     </Texture>
     <Texture name="Turbulence256" width="256" height="256" miplevels="0">
     	<Generator class="PerlinTurbulence">
     		<NumOctaves>6</NumOctaves>
-    		<RandomSeed1>44940</RandomSeed1>
     		<BaseFrequency>4</BaseFrequency>
     		<Persistence>0.5</Persistence>
+    		<RandomSeed>44940</RandomSeed>
     	</Generator>
     </Texture>
     <Texture name="OldMarble256" width="256" height="256" miplevels="0">
@@ -39,17 +39,17 @@
     		<VeinPeriodY>2.5</VeinPeriodY>
     		<TurbPower>2</TurbPower>
     		<NumOctaves>6</NumOctaves>
-    		<RandomSeed1>33110</RandomSeed1>
     		<BaseFrequency>3</BaseFrequency>
     		<Persistence>0.5</Persistence>
+    		<RandomSeed>33110</RandomSeed>
     	</Generator>
     </Texture>
     <Texture name="NormalNoise256" width="256" height="256" miplevels="0">
     	<Generator class="PerlinNoise">
     		<NumOctaves>6</NumOctaves>
-    		<RandomSeed1>39887</RandomSeed1>
     		<BaseFrequency>4</BaseFrequency>
     		<Persistence>0.5</Persistence>
+    		<RandomSeed>39887</RandomSeed>
     	</Generator>
     	<Generator class="Madd">
     		<Add>0</Add>
@@ -132,6 +132,11 @@
     		<RadiusX>0.4</RadiusX>
     		<RadiusY>0.25</RadiusY>
     		<GradientStart>0</GradientStart>
+    	</Generator>
+    </Texture>
+    <Texture name="WhiteNoise" width="256" height="256" miplevels="1">
+    	<Generator class="WhiteNoise">
+    		<RandomSeed>7</RandomSeed>
     	</Generator>
     </Texture>
   </TextureFactory>
@@ -298,10 +303,10 @@
     <SourceDensity>40</SourceDensity>
     <Force>5</Force>
   </Effect>-->
-  <!--<Effect class="ComicEffect" name="Comic" track="0" startTime="0" endTime="500">
-    <DrawOrder>0</DrawOrder>
-  </Effect>-->
-  <Effect class="TerrainFlyover" name="Terrain" track="0" startTime="0" endTime="500">
+  <Effect class="ComicEffect" name="Comic" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
   </Effect>
+  <!--<Effect class="TerrainFlyover" name="Terrain" track="0" startTime="0" endTime="500">
+    <DrawOrder>0</DrawOrder>
+  </Effect>-->
 </Demo>

@@ -7,9 +7,8 @@ using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.TextureBuilder
 {
-    public class PerlinNoise : Generator
+    public class PerlinNoise : RandomGenerator
     {
-        private int randomSeed1;
         private int numOctaves;
         private int baseFrequency;
         private float persistence;
@@ -21,12 +20,6 @@ namespace Dope.DDXX.TextureBuilder
         {
             set { numOctaves = value; }
             get { return numOctaves; }
-        }
-
-        public int RandomSeed1
-        {
-            set { randomSeed1 = value; }
-            get { return randomSeed1; }
         }
 
         public int BaseFrequency
@@ -48,7 +41,6 @@ namespace Dope.DDXX.TextureBuilder
             this.numOctaves = 6;
             this.baseFrequency = 4;
             this.persistence = 0.5f;
-            this.randomSeed1 = Rand.Int(0, 65535);
             color = new Vector4(0, 0, 0, 0);
             colorDiff = new Vector4(1, 1, 1, 1);
         }
@@ -59,25 +51,6 @@ namespace Dope.DDXX.TextureBuilder
             //Vector4 hsla = new Vector4(169 / 255.0f, 255 / 255.0f, 0.75f + value / 3, value);
             //return HslaToRgba(hsla);
             return color + colorDiff * value;
-        }
-
-        private float Noise(int x, int y, int frequency)
-        {
-            if (x < 0)
-                x += frequency;
-            if (x >= frequency)
-                x -= frequency;
-            if (y < 0)
-                y += frequency;
-            if (y >= frequency)
-                y -= frequency;
-            int n = x + randomSeed1 + y * (randomSeed1 + frequency);
-            n = (n << 13) ^ n;
-            float v = (float)(((n * (n * n * 15731 + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0);
-            v = 1.0f - v;
-            return v;
-            //Random r = new Random(n * (n * n * 15731 + 789221) + 1376312589);
-            //return (float)r.NextDouble();
         }
 
         //private Vector2 CubicInterpolation(Vector2 v0, Vector2 v1, Vector2 v2, Vector2 v3, float delta)
@@ -98,11 +71,11 @@ namespace Dope.DDXX.TextureBuilder
 
         private float SmoothNoise(int x, int y, int frequency)
         {
-            float corners = (Noise(x - 1, y - 1, frequency) + Noise(x + 1, y - 1, frequency) +
-                Noise(x - 1, y + 1, frequency) + Noise(x + 1, y + 1, frequency)) / 16;
-            float sides = (Noise(x - 1, y, frequency) + Noise(x + 1, y, frequency) +
-                Noise(x, y - 1, frequency) + Noise(x, y + 1, frequency)) / 8;
-            float center = Noise(x, y, frequency) / 4;
+            float corners = (PseudoRandom(x - 1, y - 1, frequency) + PseudoRandom(x + 1, y - 1, frequency) +
+                PseudoRandom(x - 1, y + 1, frequency) + PseudoRandom(x + 1, y + 1, frequency)) / 16;
+            float sides = (PseudoRandom(x - 1, y, frequency) + PseudoRandom(x + 1, y, frequency) +
+                PseudoRandom(x, y - 1, frequency) + PseudoRandom(x, y + 1, frequency)) / 8;
+            float center = PseudoRandom(x, y, frequency) / 4;
             return (corners + sides + center);
         }
 

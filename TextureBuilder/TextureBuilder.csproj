@@ -138,6 +138,7 @@
       <Name>PerlinTurbulence</Name>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RandomGenerator.cs" />
     <Compile Include="RoundedRectangle.cs">
       <Name>RoundedRectangle</Name>
     </Compile>
@@ -148,6 +149,7 @@
     <Compile Include="TextureDirector.cs">
       <Name>TextureDirector</Name>
     </Compile>
+    <Compile Include="WhiteNoise.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Graphics\Graphics.csproj">

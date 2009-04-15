@@ -8,7 +8,6 @@ namespace Dope.DDXX.TextureBuilder
 {
     public class GaussianBlur : Generator
     {
-        private float standardDeviation;
         private int kernelSize;
         private float[,] kernel;
 

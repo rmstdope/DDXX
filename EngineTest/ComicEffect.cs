@@ -51,7 +51,7 @@ namespace TiVi
                 }
             }
             spriteBatch = GraphicsFactory.CreateSpriteBatch();
-            texture1 = TextureFactory.CreateFromName("Noise256");
+            texture1 = TextureFactory.CreateFromName("WhiteNoise");
             texture2 = TextureFactory.CreateFromName("Turbulence256");
             texture3 = TextureFactory.CreateFromName("OldMarble256");
             texture4 = TextureFactory.CreateFromName("NewMarble256");
