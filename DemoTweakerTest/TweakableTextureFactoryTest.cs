@@ -224,7 +224,7 @@ namespace Dope.DDXX.DemoTweaker
             ITexture2D texture = mockery.NewMock<ITexture2D>();
             ITextureGenerator circle = new Circle();
             ITextureGenerator constant = new Constant();
-            ITextureGenerator modulate = new Modulate();
+            ITextureGenerator modulate = new Multiply();
             modulate.ConnectToInput(0, circle);
             modulate.ConnectToInput(1, constant);
             list.Add(new Texture2DParameters("Tex", texture, modulate));
@@ -246,7 +246,7 @@ namespace Dope.DDXX.DemoTweaker
 	<Texture name=""Tex"">
 		<Generator class=""Constant"" />
 		<Generator class=""Circle"" />
-		<Generator class=""Modulate"" />
+		<Generator class=""Multiply"" />
 	</Texture>
 </TextureFactory>", node.OuterXml);
         }

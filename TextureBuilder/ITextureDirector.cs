@@ -23,7 +23,7 @@ namespace Dope.DDXX.TextureBuilder
         ITexture2D Generate(string name, int width, int height, int numMipLevels, SurfaceFormat format);
         ITexture2D GenerateChain(int width, int height);
         void Madd(float mul, float add);
-        void Modulate();
+        void Multiply();
         void ModulateColor(Vector4 color);
         void NormalMap();
         void Subtract();

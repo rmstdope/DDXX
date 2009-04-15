@@ -99,11 +99,11 @@ namespace Dope.DDXX.TextureBuilder
             generatorStack.Push(convolution);
         }
 
-        public void Modulate()
+        public void Multiply()
         {
-            Modulate modulate = new Modulate();
-            ConnectFromStack(modulate, 2);
-            generatorStack.Push(modulate);
+            Multiply multiply = new Multiply();
+            ConnectFromStack(multiply, 2);
+            generatorStack.Push(multiply);
         }
 
         public void ModulateColor(Vector4 color)

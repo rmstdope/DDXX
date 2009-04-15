@@ -75,12 +75,12 @@ namespace Dope.DDXX.TextureBuilder
             // Setup
             director.CreateCircle(0.1f, 0.2f, 0.2f, 0.5f, new Vector2(0.5f, 0.5f));
             director.CreatePerlinNoise(2, 4, 0.5f);
-            director.Modulate();
+            director.Multiply();
             // Exercise SUT
             director.Generate("name", 1, 2, 3, SurfaceFormat.Color);
             // Verify
-            Assert.IsInstanceOfType(typeof(Modulate), generatorUsed);
-            Modulate modulate = generatorUsed as Modulate;
+            Assert.IsInstanceOfType(typeof(Multiply), generatorUsed);
+            Multiply modulate = generatorUsed as Multiply;
             Assert.IsInstanceOfType(typeof(PerlinNoise), modulate.GetInput(0));
             Assert.IsInstanceOfType(typeof(Circle), modulate.GetInput(1));
         }
@@ -92,7 +92,7 @@ namespace Dope.DDXX.TextureBuilder
             // Setup
             director.CreatePerlinNoise(2, 4, 0.5f);
             // Exercise SUT
-            director.Modulate();
+            director.Multiply();
         }
 
         [Test]

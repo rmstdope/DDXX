@@ -104,6 +104,7 @@
     <Compile Include="Convolution.cs">
       <Name>Convolution</Name>
     </Compile>
+    <Compile Include="Divide.cs" />
     <Compile Include="Ellipse.cs" />
     <Compile Include="FactorBlend.cs">
       <Name>FactorBlend</Name>
@@ -124,12 +125,11 @@
     <Compile Include="Marble.cs">
       <Name>Marble</Name>
     </Compile>
-    <Compile Include="Modulate.cs">
-      <Name>Modulate</Name>
-    </Compile>
+    <Compile Include="Multiply.cs" />
     <Compile Include="NormalMap.cs">
       <Name>NormalMap</Name>
     </Compile>
+    <Compile Include="OffsetDistort.cs" />
     <Compile Include="OldMarble.cs" />
     <Compile Include="PerlinNoise.cs">
       <Name>PerlinNoise</Name>
@@ -142,6 +142,7 @@
     <Compile Include="RoundedRectangle.cs">
       <Name>RoundedRectangle</Name>
     </Compile>
+    <Compile Include="SineDistort.cs" />
     <Compile Include="SinePlasma.cs" />
     <Compile Include="Square.cs">
       <Name>Square</Name>

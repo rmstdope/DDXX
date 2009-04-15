@@ -35,7 +35,7 @@ namespace EngineTest
             // Create border
             director.CreateSquare(0.9f);
             director.GaussianBlur();
-            director.Modulate();
+            director.Multiply();
             texture = director.Generate("Cirvle64", 64, 64, 1, SurfaceFormat.Color);
             //texture = director.GenerateChain(512, 512);
 #if !(XBOX360)

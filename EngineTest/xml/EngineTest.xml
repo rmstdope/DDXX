@@ -65,13 +65,23 @@
     		<Mul>0.5</Mul>
     	</Generator>
     </Texture>
-    <Texture name="Circle" width="64" height="64" miplevels="0">
+    <Texture name="Circle" width="256" height="256" miplevels="0">
     	<Generator class="Circle">
-    		<SolidRadius>0</SolidRadius>
-    		<GradientRadius1>0.4</GradientRadius1>
-    		<GradientRadius2>0.4</GradientRadius2>
+    		<SolidRadius>0.05</SolidRadius>
+    		<GradientRadius1>0.12</GradientRadius1>
+    		<GradientRadius2>0.2600001</GradientRadius2>
     		<GradientBreak>0.5</GradientBreak>
     		<Center>0.5, 0.5</Center>
+    	</Generator>
+    	<Generator class="Circle">
+    		<SolidRadius>0</SolidRadius>
+    		<GradientRadius1>0.3100001</GradientRadius1>
+    		<GradientRadius2>0.45</GradientRadius2>
+    		<GradientBreak>0.5</GradientBreak>
+    		<Center>0.5, 0.5</Center>
+    	</Generator>
+    	<Generator class="SineDistort">
+    		<Multiplier>0.2</Multiplier>
     	</Generator>
     </Texture>
     <Texture name="LightMap" width="128" height="128" miplevels="1">

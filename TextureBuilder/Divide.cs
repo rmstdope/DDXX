@@ -1,23 +1,33 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.TextureBuilder
 {
-    public class Modulate : Generator
+    public class Divide : Generator
     {
-        public Modulate()
+        private bool aDividedByB;
+
+        public bool ADividedByB
+        {
+            get { return aDividedByB; }
+            set { aDividedByB = value; }
+        }
+
+        public Divide()
             : base(2)
         {
+            aDividedByB = true;
         }
 
         public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
         {
             Vector4 input1 = GetInputPixel(0, textureCoordinate, texelSize);
             Vector4 input2 = GetInputPixel(1, textureCoordinate, texelSize);
-            return new Vector4(input1.X * input2.X, input1.Y * input2.Y,
-                input1.Z * input2.Z, input1.W * input2.W);
+            if (aDividedByB)
+                return input1 / input2;
+            return input2 / input1;
         }
     }
 }
