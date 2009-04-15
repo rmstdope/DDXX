@@ -143,6 +143,7 @@
     <Compile Include="RoundedRectangle.cs">
       <Name>RoundedRectangle</Name>
     </Compile>
+    <Compile Include="Sine.cs" />
     <Compile Include="SineDistort.cs" />
     <Compile Include="SinePlasma.cs" />
     <Compile Include="Square.cs">
