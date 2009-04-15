@@ -127,16 +127,12 @@
     		<AMinusB>false</AMinusB>
     	</Generator>
     </Texture>
-    <Texture name="Texture - 29084" width="64" height="64" miplevels="1">
-    	<Generator class="Ellipse">
-    		<RadiusX>0.4</RadiusX>
-    		<RadiusY>0.25</RadiusY>
-    		<GradientStart>0</GradientStart>
-    	</Generator>
-    </Texture>
-    <Texture name="WhiteNoise" width="256" height="256" miplevels="1">
-    	<Generator class="WhiteNoise">
-    		<RandomSeed>7</RandomSeed>
+    <Texture name="WhiteNoise" width="64" height="64" miplevels="1">
+    	<Generator class="SinePlasma">
+    		<OffsetX>0</OffsetX>
+    		<OffsetY>0</OffsetY>
+    		<NumSinesX>5</NumSinesX>
+    		<NumSinesY>9</NumSinesY>
     	</Generator>
     </Texture>
   </TextureFactory>

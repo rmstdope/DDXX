@@ -142,6 +142,7 @@
     <Compile Include="RoundedRectangle.cs">
       <Name>RoundedRectangle</Name>
     </Compile>
+    <Compile Include="SinePlasma.cs" />
     <Compile Include="Square.cs">
       <Name>Square</Name>
     </Compile>
