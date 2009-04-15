@@ -126,6 +126,7 @@
       <Name>Marble</Name>
     </Compile>
     <Compile Include="Multiply.cs" />
+    <Compile Include="Negate.cs" />
     <Compile Include="NormalMap.cs">
       <Name>NormalMap</Name>
     </Compile>
