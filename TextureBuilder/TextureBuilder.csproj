@@ -118,6 +118,8 @@
     <Compile Include="GaussianBlur.cs">
       <Name>GaussianBlur</Name>
     </Compile>
+    <Compile Include="Gradient.cs" />
+    <Compile Include="GradientColor.cs" />
     <Compile Include="ITextureDirector.cs" />
     <Compile Include="Madd.cs">
       <Name>Madd</Name>

@@ -54,7 +54,7 @@ namespace TiVi
             texture1 = TextureFactory.CreateFromName("Circle");
             texture2 = TextureFactory.CreateFromName("Turbulence256");
             texture3 = TextureFactory.CreateFromName("OldMarble256");
-            texture4 = TextureFactory.CreateFromName("NewMarble256");
+            texture4 = TextureFactory.CreateFromName("Gradient");
         }
 
         private void CreateLightTexture()

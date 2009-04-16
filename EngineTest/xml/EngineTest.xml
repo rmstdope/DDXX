@@ -6,7 +6,7 @@
   <!-- TextureFactory Section -->
 
   <TextureFactory>
-    <Texture name="Noise256" width="256" height="256" miplevels="0">
+    <Texture name="Noise256" width="64" height="64" miplevels="0">
     	<Generator class="PerlinNoise">
     		<NumOctaves>6</NumOctaves>
     		<BaseFrequency>10</BaseFrequency>
@@ -14,7 +14,7 @@
     		<RandomSeed>10996</RandomSeed>
     	</Generator>
     </Texture>
-    <Texture name="Turbulence256" width="256" height="256" miplevels="0">
+    <Texture name="Turbulence256" width="64" height="64" miplevels="0">
     	<Generator class="PerlinTurbulence">
     		<NumOctaves>6</NumOctaves>
     		<BaseFrequency>4</BaseFrequency>
@@ -22,7 +22,7 @@
     		<RandomSeed>44940</RandomSeed>
     	</Generator>
     </Texture>
-    <Texture name="OldMarble256" width="256" height="256" miplevels="0">
+    <Texture name="OldMarble256" width="64" height="64" miplevels="0">
     	<Generator class="OldMarble">
     		<VeinPeriodX>3</VeinPeriodX>
     		<VeinPeriodY>1.5</VeinPeriodY>
@@ -30,7 +30,7 @@
     		<TurbPower>4.5</TurbPower>
     	</Generator>
     </Texture>
-    <Texture name="NewMarble256" width="256" height="256" miplevels="0">
+    <Texture name="NewMarble256" width="64" height="64" miplevels="0">
     	<Generator class="Marble">
     		<Saturation>0.4000001</Saturation>
     		<Hue>0.3200005</Hue>
@@ -44,7 +44,7 @@
     		<RandomSeed>33110</RandomSeed>
     	</Generator>
     </Texture>
-    <Texture name="NormalNoise256" width="256" height="256" miplevels="0">
+    <Texture name="NormalNoise256" width="64" height="64" miplevels="0">
     	<Generator class="PerlinNoise">
     		<NumOctaves>6</NumOctaves>
     		<BaseFrequency>4</BaseFrequency>
@@ -65,7 +65,7 @@
     		<Mul>0.5</Mul>
     	</Generator>
     </Texture>
-    <Texture name="Circle" width="256" height="256" miplevels="0">
+    <Texture name="Circle" width="64" height="64" miplevels="0">
     	<Generator class="Circle">
     		<SolidRadius>0.05</SolidRadius>
     		<GradientRadius1>0.12</GradientRadius1>
@@ -82,6 +82,12 @@
     	</Generator>
     	<Generator class="SineDistort">
     		<Multiplier>0.2</Multiplier>
+    	</Generator>
+    	<Generator class="GradientColor">
+    		<Color1>0, 0, 0, 1</Color1>
+    		<Color2>0.5411765, 0.1686275, 0.8862745, 1</Color2>
+    		<Color3>0.9607843, 0.9607843, 0.9607843, 1</Color3>
+    		<Color2Position>0.5</Color2Position>
     	</Generator>
     </Texture>
     <Texture name="LightMap" width="128" height="128" miplevels="1">
@@ -143,6 +149,18 @@
     		<OffsetY>0</OffsetY>
     		<NumSinesX>5</NumSinesX>
     		<NumSinesY>9</NumSinesY>
+    	</Generator>
+    </Texture>
+    <Texture name="Gradient" width="256" height="256" miplevels="1">
+    	<Generator class="Gradient">
+    		<NoiseAmount>0.4799998</NoiseAmount>
+    		<GradientOnX>true</GradientOnX>
+    	</Generator>
+    	<Generator class="GradientColor">
+    		<Color1>0.9, 0.3, 0.3, 1</Color1>
+    		<Color2>0.5411765, 0.1686275, 0.8862745, 1</Color2>
+    		<Color3>0.9, 0.3, 0.9, 1</Color3>
+    		<Color2Position>0.5</Color2Position>
     	</Generator>
     </Texture>
   </TextureFactory>
