@@ -93,7 +93,7 @@ namespace Dope.DDXX.TextureBuilder
                     break;
                 default:
                     vec = DistanceToTwoClosestPoints(textureCoordinate);
-                    value = vec.Y * vec.X;
+                    value = vec.Y * vec.X / maxDistance;
                     break;
             }
             return Vector4FromFloat(value / maxDistance);
