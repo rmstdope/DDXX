@@ -13,6 +13,18 @@ namespace Dope.DDXX.TextureBuilder
         private int numPoints;
         private List<Vector2> points;
         private float maxDistance;
+        private int algorithm;
+        private const int NumAlgorithms = 3;
+
+        public int Algorithm
+        {
+            get { return algorithm; }
+            set 
+            { 
+                if (value >= 0 && value < NumAlgorithms)
+                    algorithm = value; 
+            }
+        }
 
         public int RandomSeed
         {
@@ -68,8 +80,40 @@ namespace Dope.DDXX.TextureBuilder
 
         public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
         {
-            float dist = DistanceToClosestPoint(textureCoordinate);
-            return Vector4FromFloat(dist / maxDistance);
+            Vector2 vec;
+            float value;
+            switch (algorithm)
+            {
+                case 0:
+                    value = DistanceToClosestPoint(textureCoordinate);
+                    break;
+                case 1:
+                    vec = DistanceToTwoClosestPoints(textureCoordinate);
+                    value = vec.Y - vec.X;
+                    break;
+                default:
+                    vec = DistanceToTwoClosestPoints(textureCoordinate);
+                    value = vec.Y * vec.X;
+                    break;
+            }
+            return Vector4FromFloat(value / maxDistance);
+        }
+
+        private Vector2 DistanceToTwoClosestPoints(Vector2 textureCoordinate)
+        {
+            Vector2 min = Vector2.One;
+            foreach (Vector2 vector in points)
+            {
+                float distance = Distance(textureCoordinate, vector);
+                if (distance < min.X)
+                {
+                    min.Y = min.X;
+                    min.X = distance;
+                }
+                else if (distance < min.Y)
+                    min.Y = distance;
+            }
+            return min;
         }
 
         private float DistanceToClosestPoint(Vector2 textureCoordinate)

@@ -145,6 +145,9 @@
     </Texture>
     <Texture name="Cellular" width="256" height="256" miplevels="1">
     	<Generator class="Cellular">
+    		<Algorithm>2</Algorithm>
+    		<RandomSeed>29243</RandomSeed>
+    		<NumPoints>10</NumPoints>
     	</Generator>
     </Texture>
     <Texture name="Gradient" width="256" height="256" miplevels="1">
