@@ -71,6 +71,11 @@ namespace Dope.DDXX.DemoFramework
 
         protected override void Initialize()
         {
+            GraphicsDeviceCapabilities caps = GraphicsDevice.GraphicsDeviceCapabilities;
+            if (caps.MaxPixelShaderProfile < ShaderProfile.PS_2_0 ||
+                caps.MaxVertexShaderProfile < ShaderProfile.VS_2_0)
+                throw new DDXXException("Your graphics device does not seem to support shader model 2. (VS=" + 
+                    caps.MaxVertexShaderProfile + ", PS=" + caps.MaxPixelShaderProfile + ")");
             TextureFactory textureFactory = new TextureFactory(graphicsFactory);
             EffectFactory effectFactory = new EffectFactory(graphicsFactory);
             ModelFactory modelFactory = new ModelFactory(graphicsFactory, textureFactory);
