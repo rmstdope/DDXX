@@ -35,8 +35,8 @@ namespace EngineTest
             {
                 System.Windows.Forms.MessageBox.Show(e.ToString(), "Exception was Thrown");
             }
-        }
 #endif
+        }
     }
 }
 

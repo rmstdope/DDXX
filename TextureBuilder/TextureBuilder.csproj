@@ -89,6 +89,7 @@
     <Compile Include="BrushNoise.cs">
       <Name>BrushNoise</Name>
     </Compile>
+    <Compile Include="Cellular.cs" />
     <Compile Include="Circle.cs">
       <Name>Circle</Name>
     </Compile>
