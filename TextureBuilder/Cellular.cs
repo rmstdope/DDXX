@@ -63,6 +63,7 @@ namespace Dope.DDXX.TextureBuilder
         {
             numPoints = 25;
             randomSeed = Rand.Int(0, 65535);
+            Recalculate();
         }
 
         public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
