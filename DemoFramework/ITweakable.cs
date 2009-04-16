@@ -25,5 +25,6 @@ namespace Dope.DDXX.DemoFramework
         void Regenerate(TweakerStatus status);
         IMenuControl InsertNew(TweakerStatus status, IDrawResources drawResources);
         IMenuControl ChoiceMade(TweakerStatus status, int index);
+        void Delete(TweakerStatus status);
     }
 }

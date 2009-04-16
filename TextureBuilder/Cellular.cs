@@ -52,9 +52,9 @@ namespace Dope.DDXX.TextureBuilder
             if (delta.Y < 0)
                 delta.Y = -delta.Y;
             if (delta.X > 0.5f)
-                delta.X -= 0.5f;
+                delta.X = 1.0f - delta.X;
             if (delta.Y > 0.5f)
-                delta.Y -= 0.5f;
+                delta.Y = 1.0f - delta.Y;
             return delta.Length();
         }
 
@@ -77,7 +77,7 @@ namespace Dope.DDXX.TextureBuilder
             float min = 1.0f;
             foreach (Vector2 vector in points)
             {
-                float distance = (textureCoordinate - vector).Length();
+                float distance = Distance(textureCoordinate, vector);
                 if (distance < min)
                     min = distance;
             }

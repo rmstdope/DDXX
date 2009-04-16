@@ -143,12 +143,8 @@
     		<AMinusB>false</AMinusB>
     	</Generator>
     </Texture>
-    <Texture name="WhiteNoise" width="64" height="64" miplevels="1">
-    	<Generator class="SinePlasma">
-    		<OffsetX>0</OffsetX>
-    		<OffsetY>0</OffsetY>
-    		<NumSinesX>5</NumSinesX>
-    		<NumSinesY>9</NumSinesY>
+    <Texture name="Cellular" width="256" height="256" miplevels="1">
+    	<Generator class="Cellular">
     	</Generator>
     </Texture>
     <Texture name="Gradient" width="256" height="256" miplevels="1">

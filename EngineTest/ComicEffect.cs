@@ -53,7 +53,7 @@ namespace TiVi
             spriteBatch = GraphicsFactory.CreateSpriteBatch();
             texture1 = TextureFactory.CreateFromName("Circle");
             texture2 = TextureFactory.CreateFromName("Turbulence256");
-            texture3 = TextureFactory.CreateFromName("OldMarble256");
+            texture3 = TextureFactory.CreateFromName("Cellular");
             texture4 = TextureFactory.CreateFromName("Gradient");
         }
 
@@ -104,10 +104,10 @@ namespace TiVi
         {
             Scene.Render();
             spriteBatch.Begin(SpriteBlendMode.None);
-            spriteBatch.Draw(texture1, new Rectangle(0, 0, 256, 256), Color.White);
-            spriteBatch.Draw(texture2, new Rectangle(256, 0, 256, 256), Color.White);
+            spriteBatch.Draw(texture3, new Rectangle(0, 0, 256, 256), Color.White);
+            spriteBatch.Draw(texture3, new Rectangle(256, 0, 256, 256), Color.White);
             spriteBatch.Draw(texture3, new Rectangle(0, 256, 256, 256), Color.White);
-            spriteBatch.Draw(texture4, new Rectangle(256, 256, 256, 256), Color.White);
+            spriteBatch.Draw(texture3, new Rectangle(256, 256, 256, 256), Color.White);
             spriteBatch.End();
         }
     }

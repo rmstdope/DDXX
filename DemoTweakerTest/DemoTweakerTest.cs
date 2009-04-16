@@ -283,7 +283,7 @@ namespace Dope.DDXX.DemoTweaker
         private IDemoTweaker SimulateKeypress(Keys key, bool doubleEnter)
         {
             Keys[] allKeys = new Keys[] {
-                Keys.Up, Keys.Down, Keys.Tab, Keys.PageUp, Keys.PageDown, Keys.Insert,
+                Keys.Up, Keys.Down, Keys.Tab, Keys.PageUp, Keys.PageDown, Keys.Insert, Keys.Delete,
                 Keys.D0, Keys.NumPad0, Keys.D1, Keys.NumPad1, Keys.D2, Keys.NumPad2, Keys.D3, Keys.NumPad3, 
                 Keys.D4, Keys.NumPad4, Keys.D5, Keys.NumPad5, Keys.D6, Keys.NumPad6, Keys.D7, Keys.NumPad7, 
                 Keys.D8, Keys.NumPad8, Keys.D9, Keys.NumPad9, Keys.Decimal, Keys.OemPeriod, Keys.Subtract, 
@@ -460,5 +460,15 @@ namespace Dope.DDXX.DemoTweaker
 
         #endregion
 
+
+        #region ITweakable Members
+
+
+        public void Delete(TweakerStatus status)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

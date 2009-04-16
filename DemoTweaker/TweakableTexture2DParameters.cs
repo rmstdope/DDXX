@@ -112,6 +112,24 @@ namespace Dope.DDXX.DemoTweaker
             return null;
         }
 
+        public override void Delete(TweakerStatus status)
+        {
+            if (generators[status.Selection].NumInputPins == 1)
+            {
+                ITextureGenerator before = generators[status.Selection].GetInput(0);
+                ITextureGenerator after = generators[status.Selection].Output;
+                if (after != null)
+                    after.ConnectToInput(after.GetInputIndex(generators[status.Selection]), before);
+                else
+                {
+                    before.Output = null;
+                    Target.Generator = before;
+                    status.Selection--;
+                }
+                Reinitialize();
+            }
+        }
+
         private void ConnectGeneratorAfter(ITextureGenerator oldGenerator, ITextureGenerator newGenerator)
         {
             if (oldGenerator.Output != null)

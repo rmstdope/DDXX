@@ -96,6 +96,7 @@ namespace Dope.DDXX.DemoTweaker
         private FakeControl<Type> control;
         private ITextureGenerator perlinNoiseGenerator;
         private ITextureGenerator colorModulationGenerator;
+        private ITextureGenerator sineGenerator;
         private ITextureGenerator marbleGenerator;
         private ITextureGenerator addGenerator;
 
@@ -115,6 +116,7 @@ namespace Dope.DDXX.DemoTweaker
             colorModulationGenerator = new ColorModulation();
             marbleGenerator = new Marble();
             addGenerator = new Add();
+            sineGenerator = new Sine();
         }
 
         [TearDown]
@@ -211,6 +213,34 @@ namespace Dope.DDXX.DemoTweaker
             Assert.IsInstanceOfType(typeof(Add), target.Generator);
             Assert.AreSame(perlinNoiseGenerator, target.Generator.GetInput(0));
             Assert.IsInstanceOfType(typeof(Marble), target.Generator.GetInput(1));
+        }
+
+        [Test]
+        public void DeleteLastInChain()
+        {
+            // Setup
+            colorModulationGenerator.ConnectToInput(0, perlinNoiseGenerator);
+            CreateTweakable(colorModulationGenerator);
+            // Exercise SUT
+            status.Selection = 1;
+            tweakable.Delete(status);
+            // Verify
+            Assert.AreSame(perlinNoiseGenerator, target.Generator);
+        }
+
+        [Test]
+        public void DeleteMiddleOfChain()
+        {
+            // Setup
+            sineGenerator.ConnectToInput(0, colorModulationGenerator);
+            colorModulationGenerator.ConnectToInput(0, perlinNoiseGenerator);
+            CreateTweakable(sineGenerator);
+            // Exercise SUT
+            status.Selection = 1;
+            tweakable.Delete(status);
+            // Verify
+            Assert.AreSame(sineGenerator, target.Generator);
+            Assert.AreSame(perlinNoiseGenerator, target.Generator.GetInput(0));
         }
 
         private void CreateTweakable(ITextureGenerator rootGenerator)

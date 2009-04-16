@@ -206,6 +206,8 @@ namespace Dope.DDXX.DemoTweaker
                 tweakable.DecreaseValue(status);
             if (inputDriver.KeyPressedNoRepeat(Keys.Insert))
                 menuControl = tweakable.InsertNew(status, userInterface.DrawResources);
+            if (inputDriver.KeyPressedNoRepeat(Keys.Delete))
+                tweakable.Delete(status);
 
             StringInput(inputDriver);
 

@@ -188,6 +188,10 @@ namespace Dope.DDXX.DemoTweaker
             return null;
         }
 
+        public virtual void Delete(TweakerStatus status)
+        {
+        }
+
         private bool HasProperty(string name)
         {
             return propertyHandlers.Exists(delegate(ITweakableProperty a) { return a.Name == name; });
