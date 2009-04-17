@@ -81,9 +81,13 @@ namespace Dope.DDXX.DemoTweaker
         public override IMenuControl InsertNew(TweakerStatus status, IDrawResources drawResources)
         {
             menuControl = Factory.CreateMenuControl<Type>();
-            foreach (Type generator in EnumerateGenerators(1))
+            List<Type> list = new List<Type>(EnumerateGenerators(1));
+            list.Sort(delegate(Type t1, Type t2) { return t1.Name.CompareTo(t2.Name); });
+            foreach (Type generator in list)
                 menuControl.AddOption(generator.Name, generator);
-            foreach (Type generator in EnumerateGenerators(2))
+            list = new List<Type>(EnumerateGenerators(2));
+            list.Sort(delegate(Type t1, Type t2) { return t1.Name.CompareTo(t2.Name); });
+            foreach (Type generator in list)
                 menuControl.AddOption(generator.Name + " with ...", generator);
             menuControl.Title = "Select Generator To Add";
             return menuControl;

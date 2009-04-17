@@ -144,6 +144,7 @@ namespace Dope.DDXX.DemoTweaker
         public override IMenuControl InsertNew(TweakerStatus status, IDrawResources drawResources)
         {
             List<Type> generators = EnumerateGenerators(0);
+            generators.Sort(delegate(Type t1, Type t2) { return t1.Name.CompareTo(t2.Name); });
             menuControl = Factory.CreateMenuControl<Type>();
             for (int i = 0; i < generators.Count; i++)
                 menuControl.AddOption(generators[i].Name, generators[i]);
