@@ -154,6 +154,7 @@
       <Name>Square</Name>
     </Compile>
     <Compile Include="Subtract.cs" />
+    <Compile Include="Swirl.cs" />
     <Compile Include="TextureDirector.cs">
       <Name>TextureDirector</Name>
     </Compile>
