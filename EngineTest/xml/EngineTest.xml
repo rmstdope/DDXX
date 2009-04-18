@@ -162,6 +162,12 @@
     		<Color2Position>0.5</Color2Position>
     	</Generator>
     </Texture>
+    <Texture name="Texture - 263" width="64" height="64" miplevels="1">
+    	<Generator class="Checkers">
+    		<NumRepeatsY>1</NumRepeatsY>
+    		<NumRepeatsX>1</NumRepeatsX>
+    	</Generator>
+    </Texture>
   </TextureFactory>
 
 

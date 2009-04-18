@@ -90,6 +90,7 @@
       <Name>BrushNoise</Name>
     </Compile>
     <Compile Include="Cellular.cs" />
+    <Compile Include="Checkers.cs" />
     <Compile Include="Circle.cs">
       <Name>Circle</Name>
     </Compile>
