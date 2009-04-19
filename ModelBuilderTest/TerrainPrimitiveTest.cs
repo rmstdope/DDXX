@@ -173,5 +173,15 @@ namespace Dope.DDXX.ModelBuilder
         }
 
         #endregion
+
+        #region ITextureGenerator Members
+
+
+        public Vector4[,] GenerateTexture(int width, int height)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

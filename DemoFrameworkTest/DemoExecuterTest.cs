@@ -972,5 +972,15 @@ namespace Dope.DDXX.DemoFramework
             get { throw new NotImplementedException(); }
         }
 
+
+        #region ITextureGenerator Members
+
+
+        public Vector4[,] GenerateTexture(int width, int height)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

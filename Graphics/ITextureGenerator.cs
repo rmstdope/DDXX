@@ -14,5 +14,6 @@ namespace Dope.DDXX.Graphics
         void ConnectToInput(int inputPin, ITextureGenerator outputGenerator);
         int GetInputIndex(ITextureGenerator generator);
         ITextureGenerator Output { get; set; }
+        Vector4[,] GenerateTexture(int width, int height);
     }
 }

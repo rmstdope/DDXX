@@ -367,7 +367,14 @@ namespace EngineTest
         {
             sprite = GraphicsFactory.CreateSpriteBatch();
             texture = TextureFactory.CreateFromFunction(N, N, 1, TextureUsage.None, SurfaceFormat.Color,
-                delegate(Vector2 pos, Vector2 size) { return new Vector4(0.0f, 0.0f, 0.0f, 0.0f); });
+                delegate(int width, int height)
+                {
+                    Vector4[,] vec = new Vector4[N, N];
+                    for (int i = 0; i < N; i++)
+                        for (int j = 0; j < N; j++)
+                            vec[i, j] = Vector4.Zero;
+                    return vec;
+                });
             colorData = new uint[texture.Width * texture.Height];
             DrawTexture();            
         }

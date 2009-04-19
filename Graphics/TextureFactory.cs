@@ -91,7 +91,7 @@ namespace Dope.DDXX.Graphics
         {
             if (files.Find(delegate(Texture2DParameters item) { return name == item.Name; }) != null)
                 throw new DDXXException("Texture with name " + name + " already created.");
-            ITexture2D texture = CreateFromFunction(width, height, numMipLevels, usage, format, generator.GetPixel);
+            ITexture2D texture = CreateFromFunction(width, height, numMipLevels, usage, format, generator.GenerateTexture);
             if (name != null && name != "")
                 files.Add(new Texture2DParameters(name, texture, generator));
             return texture;
@@ -102,7 +102,7 @@ namespace Dope.DDXX.Graphics
             target.Regenerate();
         }
 
-        public ITexture2D CreateFromFunction(int width, int height, int numLevels, TextureUsage usage, SurfaceFormat format, Fill2DTextureCallback callbackFunction)
+        public ITexture2D CreateFromFunction(int width, int height, int numLevels, TextureUsage usage, SurfaceFormat format, Generate2DTextureCallback callbackFunction)
         {
             ITexture2D texture = factory.CreateTexture2D(width, height, numLevels, usage, format);
 
@@ -111,26 +111,23 @@ namespace Dope.DDXX.Graphics
             return texture;
         }
 
-        private void SetFromFunction(ITexture2D texture, Fill2DTextureCallback callbackFunction)
+        private void SetFromFunction(ITexture2D texture, Generate2DTextureCallback callbackFunction)
         {
-            Color[] data = new Color[texture.Width * texture.Height];
             int i = 0;
-            Vector2 texelSize = new Vector2(1 / (float)(texture.Width - 1), 1 / (float)(texture.Height - 1));
+            Color[] data = new Color[texture.Width * texture.Height];
+            Vector4[,] vectorData = callbackFunction(texture.Width, texture.Height);
             for (int y = 0; y < texture.Height; y++)
             {
-                float yPos = y * texelSize.Y;
                 for (int x = 0; x < texture.Width; x++)
                 {
-                    float xPos = x * texelSize.X;
-                    data[i++] = new Color(callbackFunction(new Vector2(xPos, yPos), texelSize));
+                    data[i++] = new Color(vectorData[x, y]);
                 }
             }
-
             texture.SetData<Color>(data);
 
             int levelWidth = texture.Width;
             int levelHeight = texture.Height;
-            //texture.Save("before.dds", ImageFileFormat.Dds);
+            texture.Save("before.dds", ImageFileFormat.Dds);
             for (int j = 0; j < texture.LevelCount - 1; j++)
             {
                 levelHeight = levelHeight / 2;
@@ -157,7 +154,7 @@ namespace Dope.DDXX.Graphics
                 texture.SetData<Color>(j + 1, null, newData, 0, newData.Length, SetDataOptions.None);
                 data = newData;
             }
-            //texture.Save("after.dds", ImageFileFormat.Dds);
+            texture.Save("after.dds", ImageFileFormat.Dds);
         }
 
         private Vector4 GetData(Color[] data, int x, int y, int width, int height)
@@ -178,7 +175,7 @@ namespace Dope.DDXX.Graphics
             get
             {
                 if (whiteTexture == null)
-                    whiteTexture = CreateFromFunction(1, 1, 1, TextureUsage.None, SurfaceFormat.Color, delegate(Vector2 x, Vector2 y) { return Vector4.One; });
+                    whiteTexture = CreateFromFunction(1, 1, 1, TextureUsage.None, SurfaceFormat.Color, delegate(int w, int h) { Vector4[,] array = new Vector4[1, 1]; array[0, 0] = Vector4.One; return array; });
                 return whiteTexture;
             }
         }

@@ -139,5 +139,23 @@ namespace Dope.DDXX.TextureBuilder
             }
         }
 
+        public Vector4[,] GenerateTexture(int width, int height)
+        {
+            Vector4[,] data = new Vector4[width, height];
+            Vector2 texelSize = new Vector2(1.0f / width, 1.0f / height);
+            Vector2 pos = texelSize / 2;
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    data[x, y] = GetPixel(pos, texelSize);
+                    pos.X += texelSize.X;
+                }
+                pos.X = texelSize.X / 2;
+                pos.Y += texelSize.Y;
+            }
+            return data;
+        }
+
     }
 }

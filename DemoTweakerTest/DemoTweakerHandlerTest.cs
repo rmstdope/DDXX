@@ -47,7 +47,7 @@ namespace Dope.DDXX.DemoTweaker
             {
                 throw new Exception("The method or operation is not implemented.");
             }
-            public ITexture2D CreateFromFunction(int width, int height, int numLevels, TextureUsage usage, SurfaceFormat format, Fill2DTextureCallback callbackFunction)
+            public ITexture2D CreateFromFunction(int width, int height, int numLevels, TextureUsage usage, SurfaceFormat format, Generate2DTextureCallback callbackFunction)
             {
                 throw new Exception("The method or operation is not implemented.");
             }

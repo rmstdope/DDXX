@@ -49,7 +49,7 @@ namespace EngineTest
 
         protected override void Initialize()
         {
-            circleTexture = TextureFactory.CreateFromFunction(512, 512, 0, TextureUsage.None, SurfaceFormat.Color, circleCallback);
+            //circleTexture = TextureFactory.CreateFromFunction(512, 512, 0, TextureUsage.None, SurfaceFormat.Color, circleCallback);
             circleSprite = GraphicsFactory.CreateSpriteBatch();
             circles = new BlitCircle[NUM_CIRCLES];
             Random rand = new Random();

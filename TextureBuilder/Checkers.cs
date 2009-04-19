@@ -32,8 +32,8 @@ namespace Dope.DDXX.TextureBuilder
 
         public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
         {
-            float xWidth = 1.0001f / (numRepeatsX * 2);
-            float yWidth = 1.0001f / (numRepeatsY * 2);
+            float xWidth = 1.0f / (numRepeatsX * 2);
+            float yWidth = 1.0f / (numRepeatsY * 2);
             int wrapX = (int)(textureCoordinate.X / xWidth);
             int wrapY = (int)(textureCoordinate.Y / yWidth);
             if (((wrapX + wrapY) & 1) == 1)

@@ -149,6 +149,10 @@
     		<RandomSeed>29243</RandomSeed>
     		<NumPoints>25</NumPoints>
     	</Generator>
+    	<Generator class="Swirl">
+    		<SwirlFactor>200</SwirlFactor>
+    		<SwirlPower>4</SwirlPower>
+    	</Generator>
     </Texture>
     <Texture name="Gradient" width="256" height="256" miplevels="1">
     	<Generator class="Gradient">
