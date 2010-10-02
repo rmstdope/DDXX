@@ -30,7 +30,7 @@ namespace Dope.DDXX.TextureBuilder
             numRepeatsY = 1;
         }
 
-        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        protected override Vector4 GetPixel()
         {
             float xWidth = 1.0f / (numRepeatsX * 2);
             float yWidth = 1.0f / (numRepeatsY * 2);

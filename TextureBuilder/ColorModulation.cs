@@ -22,9 +22,9 @@ namespace Dope.DDXX.TextureBuilder
         {
         }
 
-        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        protected override Vector4 GetPixel()
         {
-            Vector4 input = GetInputPixel(0, textureCoordinate, texelSize);
+            Vector4 input = GetInputPixel(0, 0, 0);
             return new Vector4(color.X * input.X, color.Y * input.Y, color.Z * input.Z, color.W * input.W);
         }
     }

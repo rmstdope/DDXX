@@ -64,7 +64,7 @@ namespace Dope.DDXX.TextureBuilder
             NumBricksY = 5;
         }
 
-        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        protected override Vector4 GetPixel()
         {
             //PerlinNoise g = new PerlinNoise();
             //g.NumOctaves = 2;

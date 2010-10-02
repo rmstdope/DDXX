@@ -76,7 +76,7 @@ namespace Dope.DDXX.TextureBuilder
             center = new Vector2(0.5f, 0.5f);
         }
 
-        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        protected override Vector4 GetPixel()
         {
             Vector2 recenteredCoordinate = textureCoordinate - center;// new Vector2(0.5f, 0.5f);
             if (recenteredCoordinate.X > 0.5f)

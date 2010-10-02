@@ -61,16 +61,14 @@ namespace Dope.DDXX.Graphics
             if (!IsGenerated)
                 return;
 
+            Vector4[,] pixels = generator.GenerateTexture(texture.Width, texture.Height);
             Color[] data = new Color[texture.Width * texture.Height];
             int i = 0;
-            Vector2 texelSize = new Vector2(1 / (float)(texture.Width - 1), 1 / (float)(texture.Height - 1));
             for (int y = 0; y < texture.Height; y++)
             {
-                float yPos = y * texelSize.Y;
                 for (int x = 0; x < texture.Width; x++)
                 {
-                    float xPos = x * texelSize.X;
-                    data[i++] = new Color(generator.GetPixel(new Vector2(xPos, yPos), texelSize));
+                    data[i++] = new Color(pixels[x, y]);
                 }
             }
 

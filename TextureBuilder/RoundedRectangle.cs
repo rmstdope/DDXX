@@ -50,7 +50,7 @@ namespace Dope.DDXX.TextureBuilder
             Recalc();
         }
 
-        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        protected override Vector4 GetPixel()
         {
             if (textureCoordinate.X < corners.X ||
                 textureCoordinate.Y < corners.Y ||

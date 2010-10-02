@@ -26,8 +26,9 @@ namespace Dope.DDXX.ModelBuilder
             IPrimitive primitive = GetInput(0);
             foreach (Vertex vertex in primitive.Vertices)
             {
-                vertex.Position += vertex.Normal *
-                    heightMapGenerator.GetPixel(vertex.UV, Vector2.Zero).X;
+                // TODO: Broken! 
+                //vertex.Position += vertex.Normal *
+                //    heightMapGenerator.GetPixel(vertex.UV, Vector2.Zero).X;
             }
             ComputeNormals(primitive);
             return primitive;

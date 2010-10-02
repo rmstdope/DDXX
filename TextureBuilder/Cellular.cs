@@ -44,16 +44,16 @@ namespace Dope.DDXX.TextureBuilder
             points = new List<Vector2>();
             for (int i = 0; i < numPoints; i++)
                 points.Add(new Vector2((float)rand.NextDouble(), (float)rand.NextDouble()));
-            maxDistance = 0.0f;
-            for (int i = 0; i < points.Count; i++)
-            {
-                for (int j = i + 1; j < points.Count; j++)
-                {
-                    float distance = Distance(points[i], points[j]) / 2;
-                    if (distance > maxDistance)
-                        maxDistance = distance;
-                }
-            }
+            //maxDistance = 0.0f;
+            //for (int i = 0; i < points.Count; i++)
+            //{
+            //    for (int j = i + 1; j < points.Count; j++)
+            //    {
+            //        float distance = Distance(points[i], points[j]) / 2;
+            //        if (distance > maxDistance)
+            //            maxDistance = distance;
+            //    }
+            //}
         }
 
         private float Distance(Vector2 vector1, Vector2 vector2)
@@ -78,7 +78,7 @@ namespace Dope.DDXX.TextureBuilder
             Recalculate();
         }
 
-        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        protected override Vector4 GetPixel()
         {
             Vector2 vec;
             float value;
@@ -93,10 +93,11 @@ namespace Dope.DDXX.TextureBuilder
                     break;
                 default:
                     vec = DistanceToTwoClosestPoints(textureCoordinate);
-                    value = vec.Y * vec.X / maxDistance;
+                    value = vec.Y * vec.X;// / maxDistance;
                     break;
             }
-            return Vector4FromFloat(value / maxDistance);
+            maxDistance = Math.Max(value, maxDistance);
+            return Vector4FromFloat(value);// / maxDistance);
         }
 
         private Vector2 DistanceToTwoClosestPoints(Vector2 textureCoordinate)
@@ -127,5 +128,22 @@ namespace Dope.DDXX.TextureBuilder
             }
             return min;
         }
+
+        protected override void StartGeneration()
+        {
+            maxDistance = 0.0f;
+        }
+
+        protected override void EndGeneration(Vector4[,] pixels, int width, int height)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    pixels[x, y] /= maxDistance;
+                }
+            }
+        }
+
     }
 }

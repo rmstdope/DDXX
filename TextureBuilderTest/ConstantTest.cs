@@ -17,7 +17,8 @@ namespace Dope.DDXX.TextureBuilder
             Constant constant = new Constant();
             constant.Color = new Vector4();
             // Verify
-            Assert.AreEqual(new Vector4(), constant.GetPixel(new Vector2(), Vector2.Zero));
+            Vector4[,] data = constant.GenerateTexture(1, 1);
+            Assert.AreEqual(Vector4.Zero, data[0, 0]);
         }
 
         [Test]
@@ -27,7 +28,8 @@ namespace Dope.DDXX.TextureBuilder
             Constant constant = new Constant();
             constant.Color = new Vector4(1, 2, 3, 4);
             // Verify
-            Assert.AreEqual(new Vector4(1, 2, 3, 4), constant.GetPixel(new Vector2(3, 3), Vector2.Zero));
+            Vector4[,] data = constant.GenerateTexture(1, 1);
+            Assert.AreEqual(new Vector4(1, 2, 3, 4), data[0, 0]);
         }
     
     }

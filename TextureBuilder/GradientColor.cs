@@ -52,9 +52,9 @@ namespace Dope.DDXX.TextureBuilder
             color2Position = 0.5f;
         }
 
-        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        protected override Vector4 GetPixel()
         {
-            float value = GetInputPixel(0, textureCoordinate, texelSize).X;
+            float value = GetInputPixel(0, 0, 0).X;
             if (value <= color2Position)
             {
                 float d = value / color2Position;

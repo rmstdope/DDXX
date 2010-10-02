@@ -20,7 +20,7 @@ namespace Dope.DDXX.TextureBuilder
         {
         }
 
-        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        protected override Vector4 GetPixel()
         {
             float[] points = new float[pointsPerLine + 2];
             float[] colors = new float[pointsPerLine + 2];

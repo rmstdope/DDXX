@@ -50,7 +50,7 @@ public class Dummy {}
 public class TestGenerator : Generator
 {
   public TestGenerator() : base(0) {}
-  public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+  protected override Vector4 GetPixel()
   {
     return Vector4.Zero;
   }

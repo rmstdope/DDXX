@@ -179,7 +179,25 @@ namespace Dope.DDXX.ModelBuilder
 
         public Vector4[,] GenerateTexture(int width, int height)
         {
-            throw new NotImplementedException();
+            Vector4[,] data = new Vector4[width, height];
+            Vector2 size = new Vector2(1.0f / (width - 1), 1.0f / (height - 1));
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    float xVal = 0.0f;
+                    float yVal = 0.0f;
+                    if (pixelValue.X == 0)
+                        xVal = x * size.X;
+                    if (pixelValue.Y == 0)
+                        yVal = y * size.Y;
+                    if (pixelValue.X == 0 || pixelValue.Y == 0)
+                        data[x, y] = new Vector4(xVal + yVal, 0, 0, 0);
+                    else
+                        data[x, y] = pixelValue;
+                }
+            }
+            return data;
         }
 
         #endregion

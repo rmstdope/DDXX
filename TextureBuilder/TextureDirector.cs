@@ -194,18 +194,18 @@ namespace Dope.DDXX.TextureBuilder
                 throw new DDXXException("Not enough elements on the stack.");
         }
 
-        public ITexture2D GenerateChain(int width, int height)
-        {
-            List<ITextureGenerator> list = new List<ITextureGenerator>();
-            ITextureGenerator[] generators = generatorStack.ToArray();
-            foreach (ITextureGenerator traversing in generators)
-                AddGeneratorRecursively(traversing, list);
-            SideBySideGenerator generator = new SideBySideGenerator(list.Count);
-            for (int i = 0; i < list.Count; i++)
-                generator.ConnectToInput(i, list[i]);
+        //public ITexture2D GenerateChain(int width, int height)
+        //{
+        //    List<ITextureGenerator> list = new List<ITextureGenerator>();
+        //    ITextureGenerator[] generators = generatorStack.ToArray();
+        //    foreach (ITextureGenerator traversing in generators)
+        //        AddGeneratorRecursively(traversing, list);
+        //    SideBySideGenerator generator = new SideBySideGenerator(list.Count);
+        //    for (int i = 0; i < list.Count; i++)
+        //        generator.ConnectToInput(i, list[i]);
 
-            return textureFactory.CreateFromGenerator("Chain", width, height, 1, TextureUsage.None, SurfaceFormat.Color, generator);
-        }
+        //    return textureFactory.CreateFromGenerator("Chain", width, height, 1, TextureUsage.None, SurfaceFormat.Color, generator);
+        //}
 
         private void AddGeneratorRecursively(ITextureGenerator generator, List<ITextureGenerator> list)
         {
@@ -214,33 +214,33 @@ namespace Dope.DDXX.TextureBuilder
             list.Add(generator);
         }
 
-        private class SideBySideGenerator : Generator
-        {
-            private int dimension;
+        //private class SideBySideGenerator : Generator
+        //{
+        //    private int dimension;
 
-            public SideBySideGenerator(int numInputs)
-                : base(numInputs)
-            {
-                dimension = (int)Math.Ceiling(Math.Sqrt(numInputs));
-            }
+        //    public SideBySideGenerator(int numInputs)
+        //        : base(numInputs)
+        //    {
+        //        dimension = (int)Math.Ceiling(Math.Sqrt(numInputs));
+        //    }
 
-            public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
-            {
-                float width = (1.0f / dimension);
-                float height = (1.0f / dimension);
-                int xNum = (int)(textureCoordinate.X / width);
-                int yNum = (int)(textureCoordinate.Y / height);
-                int num = xNum + yNum * dimension;
-                if (num >= NumInputPins)
-                    return new Vector4(0, 0, 0, 0);
-                Vector2 newCoord = textureCoordinate;
-                newCoord.X -= xNum * width;
-                newCoord.X /= width;
-                newCoord.Y -= yNum * height;
-                newCoord.Y /= height;
-                return GetInputPixel(num, newCoord, texelSize);
-            }
-        }
+        //    protected override Vector4 GetPixel()
+        //    {
+        //        float width = (1.0f / dimension);
+        //        float height = (1.0f / dimension);
+        //        int xNum = (int)(textureCoordinate.X / width);
+        //        int yNum = (int)(textureCoordinate.Y / height);
+        //        int num = xNum + yNum * dimension;
+        //        if (num >= NumInputPins)
+        //            return new Vector4(0, 0, 0, 0);
+        //        Vector2 newCoord = textureCoordinate;
+        //        newCoord.X -= xNum * width;
+        //        newCoord.X /= width;
+        //        newCoord.Y -= yNum * height;
+        //        newCoord.Y /= height;
+        //        return GetInputPixel(num, newCoord, texelSize);
+        //    }
+        //}
 
     }
 }

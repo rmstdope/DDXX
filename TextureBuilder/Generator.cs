@@ -13,6 +13,20 @@ namespace Dope.DDXX.TextureBuilder
         private int numInputPins;
         private ITextureGenerator output;
         private ITextureGenerator[] inputPins;
+        private int height;
+        private int width;
+        private int x;
+        private int y;
+        private Vector2 textureCoordinateRename;
+        private Vector2 texelSizeRename;
+        private List<Vector4[,]> inputs;
+
+        public int Height { get { return height; } }
+        public int Width { get { return width; } }
+        public int X { get { return x; } }
+        public int Y { get { return y; } }
+        public Vector2 textureCoordinate { get { return textureCoordinateRename; } }
+        public Vector2 texelSize { get { return texelSizeRename; } }
 
         public int NumInputPins
         {
@@ -80,7 +94,7 @@ namespace Dope.DDXX.TextureBuilder
             return new Vector4(r, g, b, hsla.W);
         }
 
-        public abstract Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize);
+        protected abstract Vector4 GetPixel();
 
         public ITextureGenerator Output 
         {
@@ -117,7 +131,35 @@ namespace Dope.DDXX.TextureBuilder
             ValidateInputPin(inputPin);
             if (inputPins[inputPin] == null)
                 throw new ArgumentException("Input " + inputPin + "has not been connected yet.");
-            return inputPins[inputPin].GetPixel(textureCoordinate, texelSize);
+            float x = textureCoordinate.X * (width - 1);
+            float y = textureCoordinate.Y * (height - 1);
+            int x1 = (int)x;
+            int y1 = (int)y;
+            float fracX = x - x1;
+            float fracY = y - y1;
+            Vector4 v1 = inputs[inputPin][x1, y1];
+            Vector4 v2 = inputs[inputPin][x1 + 1, y1];
+            Vector4 v3 = inputs[inputPin][x1, y1 + 1];
+            Vector4 v4 = inputs[inputPin][x1 + 1, y1 + 1];
+            return Vector4.Lerp(Vector4.Lerp(v1, v2, fracX), Vector4.Lerp(v3, v4, fracX), fracY);
+        }
+
+        protected Vector4 GetInputPixel(int inputPin, int offsetX, int offsetY)
+        {
+            ValidateInputPin(inputPin);
+            if (inputPins[inputPin] == null)
+                throw new ArgumentException("Input " + inputPin + "has not been connected yet.");
+            int newX = x + offsetX;
+            int newY = y + offsetY;
+            if (newX < 0)
+                newX += Width;
+            if (newX >= Width)
+                newX -= Width;
+            if (newY < 0)
+                newY += Height;
+            if (newY >= Height)
+                newY -= Height;
+            return inputs[inputPin][newX, newY];
         }
 
         private void ValidateInputPin(int inputPin)
@@ -142,20 +184,41 @@ namespace Dope.DDXX.TextureBuilder
         public Vector4[,] GenerateTexture(int width, int height)
         {
             Vector4[,] data = new Vector4[width, height];
-            Vector2 texelSize = new Vector2(1.0f / width, 1.0f / height);
-            Vector2 pos = texelSize / 2;
-            for (int y = 0; y < height; y++)
+            Initialize(width, height);
+            for (y = 0; y < height; y++)
             {
-                for (int x = 0; x < width; x++)
+                for (x = 0; x < width; x++)
                 {
-                    data[x, y] = GetPixel(pos, texelSize);
-                    pos.X += texelSize.X;
+                    data[x, y] = GetPixel();
+                    textureCoordinateRename.X += texelSizeRename.X;
                 }
-                pos.X = texelSize.X / 2;
-                pos.Y += texelSize.Y;
+                textureCoordinateRename.X = texelSizeRename.X / 2;
+                textureCoordinateRename.Y += texelSizeRename.Y;
             }
+            Finalize(data);
             return data;
         }
+
+        private void Initialize(int width, int height)
+        {
+            this.width = width;
+            this.height = height;
+            texelSizeRename = new Vector2(1.0f / width, 1.0f / height);
+            textureCoordinateRename = texelSizeRename / 2;
+            inputs = new List<Vector4[,]>();
+            for (int i = 0; i < numInputPins; i++)
+                inputs.Add(inputPins[i].GenerateTexture(width, height));
+            StartGeneration();
+        }
+
+        private void Finalize(Vector4[,] data)
+        {
+            EndGeneration(data, width, height);
+            inputs = null;
+        }
+
+        protected virtual void StartGeneration() { }
+        protected virtual void EndGeneration(Vector4[,] pixels, int width, int height) { }
 
     }
 }

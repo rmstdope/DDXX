@@ -6,12 +6,10 @@ using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.TextureBuilder
 {
-    public class OldMarble : Generator
+    public class OldMarble : PerlinTurbulence
     {
-        private PerlinTurbulence perlinGenerator;
         private float veinPeriodX;
         private float veinPeriodY;
-        private float turbSize;
         private float turbPower;
 
         [TweakStep(0.1f)]
@@ -29,13 +27,6 @@ namespace Dope.DDXX.TextureBuilder
         }
 
         [TweakStep(1.0f)]
-        public float TurbSize
-        {
-            get { return turbSize; }
-            set { turbSize = value; }
-        }
-
-        [TweakStep(1.0f)]
         public float TurbPower
         {
             get { return turbPower; }
@@ -43,21 +34,18 @@ namespace Dope.DDXX.TextureBuilder
         }
 
         public OldMarble()
-            : base(0)
+            : base()
         {
-            this.turbSize = 8;
             this.veinPeriodX = 1.0f;
             this.veinPeriodY = 1.0f;
             this.turbPower = 32;
-            perlinGenerator = new PerlinTurbulence();
-            perlinGenerator.NumOctaves = 6;
-            perlinGenerator.BaseFrequency = (int)turbSize;
-            perlinGenerator.Persistence = 0.5f;
+            this.NumOctaves = 6;
+            this.Persistence = 0.5f;
         }
 
-        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        protected override Vector4 GetPixel()
         {
-            float value = perlinGenerator.GetPixel(textureCoordinate, texelSize).X;
+            float value = base.GetPixel().X;
             value = value * 2 - 1;
             value = (float)Math.Cos((textureCoordinate.X * veinPeriodX +
                 textureCoordinate.Y * veinPeriodY + value * turbPower) * (float)Math.PI);

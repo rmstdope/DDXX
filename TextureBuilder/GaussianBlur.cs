@@ -10,6 +10,13 @@ namespace Dope.DDXX.TextureBuilder
     {
         private int kernelSize;
         private float[,] kernel;
+        private bool wrap;
+
+        public bool Wrap
+        {
+            get { return wrap; }
+            set { wrap = value; }
+        }
 
         [TweakStep(2)]
         public int KernelSize
@@ -56,7 +63,7 @@ namespace Dope.DDXX.TextureBuilder
             CalculateKernel();
         }
 
-        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        protected override Vector4 GetPixel()
         {
             float weightSum = 0;
             Vector4 value = Vector4.Zero;
@@ -64,16 +71,23 @@ namespace Dope.DDXX.TextureBuilder
             {
                 for (int x = 0; x < kernelSize; x++)
                 {
-                    Vector2 newCoordinate = textureCoordinate +
-                        new Vector2(texelSize.X * (x - kernelSize / 2),
-                                    texelSize.Y * (y - kernelSize / 2));
-                    if (newCoordinate.X >= 0 &&
-                        newCoordinate.X <= 1 &&
-                        newCoordinate.Y >= 0 &&
-                        newCoordinate.Y <= 1)
+                    if (wrap)
                     {
-                        value += kernel[x, y] * GetInputPixel(0, newCoordinate, texelSize);
+                        value += kernel[x, y] * GetInputPixel(0, (x - kernelSize / 2), (y - kernelSize / 2));
                         weightSum += kernel[x, y];
+                    }
+                    else
+                    {
+                        int newX = X + (x - kernelSize / 2);
+                        int newY = Y + (y - kernelSize / 2);
+                        if (newX >= 0 &&
+                            newX < Width &&
+                            newY >= 0 &&
+                            newY < Height)
+                        {
+                            value += kernel[x, y] * GetInputPixel(0, (x - kernelSize / 2), (y - kernelSize / 2));
+                            weightSum += kernel[x, y];
+                        }
                     }
                 }
             }

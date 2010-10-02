@@ -22,7 +22,7 @@ namespace Dope.DDXX.TextureBuilder
         {
         }
 
-        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        protected override Vector4 GetPixel()
         {
             if (textureCoordinate.X < (1 - size) / 2)
                 return Vector4.Zero;

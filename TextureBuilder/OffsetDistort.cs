@@ -24,7 +24,7 @@ namespace Dope.DDXX.TextureBuilder
             multiplier = 0.1f;
         }
 
-        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        protected override Vector4 GetPixel()
         {
             Vector4 sample = GetInputPixel(1, textureCoordinate, texelSize);
             Vector2 offset = new Vector2((sample.X * 2 - 1) * multiplier, (sample.Y * 2 - 1) * multiplier);

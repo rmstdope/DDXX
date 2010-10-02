@@ -26,8 +26,8 @@
     	<Generator class="OldMarble">
     		<VeinPeriodX>3</VeinPeriodX>
     		<VeinPeriodY>1.5</VeinPeriodY>
-    		<TurbSize>1</TurbSize>
-    		<TurbPower>4.5</TurbPower>
+        <BaseFrequency>1</BaseFrequency>
+        <TurbPower>4.5</TurbPower>
     	</Generator>
     </Texture>
     <Texture name="NewMarble256" width="64" height="64" miplevels="0">

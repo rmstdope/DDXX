@@ -67,9 +67,9 @@ namespace Dope.DDXX.TextureBuilder
             luminance = 0.04f;
         }
 
-        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        protected override Vector4 GetPixel()
         {
-            float value = base.GetPixel(textureCoordinate, texelSize).X;
+            float value = base.GetPixel().X;
             value = value * 2 - 1;
             value = (float)Math.Cos((textureCoordinate.X * veinPeriodX +
                 textureCoordinate.Y * veinPeriodY + value * turbPower) * (float)Math.PI);

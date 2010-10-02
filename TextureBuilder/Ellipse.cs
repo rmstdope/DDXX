@@ -41,7 +41,7 @@ namespace Dope.DDXX.TextureBuilder
             gradientStart = 0.5f;
         }
 
-        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        protected override Vector4 GetPixel()
         {
             Vector2 newCoords = textureCoordinate - new Vector2(0.5f, 0.5f);
             float value = newCoords.X * newCoords.X / (radiusX * radiusX) +

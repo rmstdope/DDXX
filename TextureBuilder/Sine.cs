@@ -23,9 +23,9 @@ namespace Dope.DDXX.TextureBuilder
             period = MathHelper.TwoPi;
         }
 
-        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        protected override Vector4 GetPixel()
         {
-            Vector4 value = GetInputPixel(0, textureCoordinate, texelSize);
+            Vector4 value = GetInputPixel(0, 0, 0);//textureCoordinate, texelSize);
             Vector4 newValue = new Vector4((float)Math.Sin(value.X * period), (float)Math.Sin(value.Y * period),
                 (float)Math.Sin(value.Z * period), (float)Math.Sin(value.W * period));
             return (Vector4.One + newValue) * 0.5f;

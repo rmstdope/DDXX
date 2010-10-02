@@ -21,7 +21,7 @@ namespace Dope.DDXX.TextureBuilder
         void FromFile(string filename);
         void GaussianBlur();
         ITexture2D Generate(string name, int width, int height, int numMipLevels, SurfaceFormat format);
-        ITexture2D GenerateChain(int width, int height);
+        //ITexture2D GenerateChain(int width, int height);
         void Madd(float mul, float add);
         void Multiply();
         void ModulateColor(Vector4 color);

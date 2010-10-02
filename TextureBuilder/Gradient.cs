@@ -35,16 +35,18 @@ namespace Dope.DDXX.TextureBuilder
             noise = new PerlinTurbulence();
         }
 
-        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        protected override Vector4 GetPixel()
         {
+            // TODO: Fix noise
             float pos;
             float random;
-            if (gradientOnX)
-                random = 0.5f - noise.GetPixel(new Vector2(textureCoordinate.Y, 0), texelSize).X;
-            else
-                random = 0.5f - noise.GetPixel(new Vector2(textureCoordinate.X, 0), texelSize).X;
-            random *= noiseAmount;
-            random += 0.5f;
+            //if (gradientOnX)
+            //    random = 0.5f - noise.GetPixel(new Vector2(textureCoordinate.Y, 0), texelSize).X;
+            //else
+            //    random = 0.5f - noise.GetPixel(new Vector2(textureCoordinate.X, 0), texelSize).X;
+            //random *= noiseAmount;
+            //random += 0.5f;
+            random = 0.5f;
             if (gradientOnX)
                 pos = textureCoordinate.X;
             else

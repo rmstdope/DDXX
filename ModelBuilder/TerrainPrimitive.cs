@@ -32,12 +32,12 @@ namespace Dope.DDXX.ModelBuilder
         public override IPrimitive Generate()
         {
             IPrimitive primitive = base.Generate();
+            Vector4[,] grid = heightMapGenerator.GenerateTexture(WidthSegments + 1, HeightSegments + 1);
             for (int y = 0; y < HeightSegments + 1; y++)
             {
                 for (int x = 0; x < WidthSegments + 1; x++)
                 {
-                    Vector4 heightValue = heightMapGenerator.GetPixel(
-                        new Vector2(x / (float)WidthSegments, y / (float)HeightSegments), new Vector2(1.0f / WidthSegments, 1.0f / HeightSegments));
+                    Vector4 heightValue = grid[x, y];
                     Vertex vertex = primitive.Vertices[y * (WidthSegments + 1) + x];
                     Vector3 position = new Vector3(vertex.Position.X, heightValue.X * heightScale, -vertex.Position.Y);
                     vertex.Position = position;

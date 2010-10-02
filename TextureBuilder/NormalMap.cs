@@ -12,12 +12,12 @@ namespace Dope.DDXX.TextureBuilder
         {
         }
 
-        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        protected override Vector4 GetPixel()
         {
-            float s1 = GetInputPixel(0, textureCoordinate + new Vector2(-texelSize.X, 0), texelSize).X;
-            float s2 = GetInputPixel(0, textureCoordinate + new Vector2(0, -texelSize.Y), texelSize).X;
-            float s3 = GetInputPixel(0, textureCoordinate + new Vector2(texelSize.X, 0), texelSize).X;
-            float s4 = GetInputPixel(0, textureCoordinate + new Vector2(0, texelSize.Y), texelSize).X;
+            float s1 = GetInputPixel(0, -1, 0).X;
+            float s2 = GetInputPixel(0, 0, -1).X;
+            float s3 = GetInputPixel(0, 1, 0).X;
+            float s4 = GetInputPixel(0, 0, 1).X;
 
             Vector3 normal = new Vector3((s1 - s3), 1.0f, (s2 - s4));
             normal.Normalize();

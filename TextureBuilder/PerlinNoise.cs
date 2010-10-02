@@ -45,7 +45,7 @@ namespace Dope.DDXX.TextureBuilder
             colorDiff = new Vector4(1, 1, 1, 1);
         }
 
-        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        protected override Vector4 GetPixel()
         {
             float value = CreatePerlinNoise(textureCoordinate);
             //Vector4 hsla = new Vector4(169 / 255.0f, 255 / 255.0f, 0.75f + value / 3, value);

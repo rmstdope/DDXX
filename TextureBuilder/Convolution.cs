@@ -20,7 +20,7 @@ namespace Dope.DDXX.TextureBuilder
             set { kernel = value; }
         }
 
-        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        protected override Vector4 GetPixel()
         {
             float weightSum = 0;
             Vector4 value = Vector4.Zero;
@@ -28,16 +28,15 @@ namespace Dope.DDXX.TextureBuilder
             {
                 for (int x = 0; x < kernel.GetLength(0); x++)
                 {
-                    Vector2 newCoordinate = textureCoordinate +
-                        new Vector2(texelSize.X * (x - kernel.GetLength(0) / 2),
-                                    texelSize.Y * (y - kernel.GetLength(1) / 2));
-                    if (newCoordinate.X >= 0 &&
-                        newCoordinate.X <= 1 &&
-                        newCoordinate.Y >= 0 &&
-                        newCoordinate.Y <= 1)
+                    int newX = X + (x - kernel.GetLength(1) / 2);
+                    int newY = Y + (y - kernel.GetLength(0) / 2);
+                    if (newX >= 0 &&
+                        newX < Width &&
+                        newY >= 0 &&
+                        newY >= Height)
                     {
-                        value += kernel[x,y] * GetInputPixel(0, newCoordinate, texelSize);
-                        weightSum += kernel[x,y];
+                        value += kernel[x, y] * GetInputPixel(0, (x - kernel.GetLength(0) / 2), (y - kernel.GetLength(1) / 2));
+                        weightSum += kernel[x, y];
                     }
                 }
             }

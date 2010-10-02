@@ -30,10 +30,10 @@ namespace Dope.DDXX.TextureBuilder
         {
         }
 
-        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        protected override Vector4 GetPixel()
         {
             Vector4 colorDiff = oneColor - zeroColor;
-            return zeroColor + colorDiff * GetInputPixel(0, textureCoordinate, texelSize).X;
+            return zeroColor + colorDiff * GetInputPixel(0, 0, 0).X;
         }
     }
 }

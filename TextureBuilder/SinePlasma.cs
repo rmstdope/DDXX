@@ -47,7 +47,7 @@ namespace Dope.DDXX.TextureBuilder
             numSinesY = 6;
         }
 
-        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        protected override Vector4 GetPixel()
         {
             float value;
             float x = 0.25f * (float)Math.Sin((offsetX + textureCoordinate.X) * (MathHelper.TwoPi * numSinesX));

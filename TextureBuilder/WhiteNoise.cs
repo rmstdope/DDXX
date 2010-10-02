@@ -14,7 +14,7 @@ namespace Dope.DDXX.TextureBuilder
         {
         }
 
-        public override Vector4 GetPixel(Vector2 textureCoordinate, Vector2 texelSize)
+        protected override Vector4 GetPixel()
         {
             int x = (int)(10 * textureCoordinate.X / texelSize.X);
             int y = (int)(10 * textureCoordinate.Y / texelSize.Y);
