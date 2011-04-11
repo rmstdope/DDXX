@@ -8,66 +8,61 @@ using Dope.DDXX.Animation;
 
 namespace Dope.DDXX.Graphics
 {
-    public class CustomModel : IModel
+    public class CustomModel
     {
-        private ReadOnlyCollection<IModelMesh> meshes;
+        private IAnimationController animationController;
+        private ReadOnlyCollection<CustomModelMesh> meshes;
 
-        public CustomModel(IModelMesh mesh)
+        public CustomModel(CustomModelMesh mesh)
         {
-            List<IModelMesh> list = new List<IModelMesh>();
+            List<CustomModelMesh> list = new List<CustomModelMesh>(1);
             list.Add(mesh);
-            meshes = new ReadOnlyCollection<IModelMesh>(list);
+            meshes = new ReadOnlyCollection<CustomModelMesh>(list);
+            this.animationController = null;
         }
 
-        public ModelBoneCollection Bones
+        public CustomModel(CustomModelMesh mesh, IAnimationController animationController)
         {
-            get { throw new Exception("The method or operation is not implemented."); }
+            List<CustomModelMesh> list = new List<CustomModelMesh>(1);
+            list.Add(mesh);
+            meshes = new ReadOnlyCollection<CustomModelMesh>(list);
+            this.animationController = animationController;
         }
 
-        public ReadOnlyCollection<IModelMesh> Meshes
+        public CustomModel(CustomModelMesh[] meshArray)
         {
-            get { return meshes; }
+            List<CustomModelMesh> list = new List<CustomModelMesh>(meshArray);
+            meshes = new ReadOnlyCollection<CustomModelMesh>(list);
+            this.animationController = null;
         }
 
-        public ModelBone Root
+        public CustomModel(CustomModelMesh[] meshArray, IAnimationController animationController)
         {
-            get { throw new Exception("The method or operation is not implemented."); }
+            List<CustomModelMesh> list = new List<CustomModelMesh>(meshArray);
+            meshes = new ReadOnlyCollection<CustomModelMesh>(list);
+            this.animationController = animationController;
         }
 
-        public object Tag
+        public IAnimationController AnimationController { get { return animationController; } }
+        //public ModelBoneCollection Bones { get { return baseModel.Bones; } }
+        public ReadOnlyCollection<CustomModelMesh> Meshes { get { return meshes; } }
+        //public ModelBone Root { get { return baseModel.Root; } }
+        //public object Tag { get { return baseModel.Tag; } set { baseModel.Tag = value; } }
+        //public void CopyAbsoluteBoneTransformsTo(Matrix[] destinationBoneTransforms)
+        //{
+        //    baseModel.CopyAbsoluteBoneTransformsTo(destinationBoneTransforms);
+        //}
+        //public void CopyBoneTransformsFrom(Matrix[] sourceBoneTransforms)
+        //{
+        //    baseModel.CopyBoneTransformsFrom(sourceBoneTransforms);
+        //}
+        //public void CopyBoneTransformsTo(Matrix[] destinationBoneTransforms)
+        //{
+        //    baseModel.CopyBoneTransformsTo(destinationBoneTransforms);
+        //}
+        public void Draw(Matrix world, Matrix view, Matrix projection)
         {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
+            /// TODO
         }
-
-        public void CopyAbsoluteBoneTransformsTo(Matrix[] destinationBoneTransforms)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void CopyBoneTransformsFrom(Matrix[] sourceBoneTransforms)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public void CopyBoneTransformsTo(Matrix[] destinationBoneTransforms)
-        {
-            throw new Exception("The method or operation is not implemented.");
-        }
-
-        public IAnimationController AnimationController
-        {
-            get
-            {
-                return null;
-            }
-        }
-
     }
 }

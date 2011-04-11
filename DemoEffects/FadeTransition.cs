@@ -5,6 +5,7 @@ using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Graphics;
 using Microsoft.Xna.Framework.Graphics;
 using Dope.DDXX.Utility;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.DemoEffects
 {
@@ -15,7 +16,7 @@ namespace Dope.DDXX.DemoEffects
         {
         }
 
-        public override IRenderTarget2D Combine(IRenderTarget2D fromTexture, IRenderTarget2D toTexture)
+        public override RenderTarget2D Combine(RenderTarget2D fromTexture, RenderTarget2D toTexture)
         {
             PostProcessor.StartFrame(fromTexture);
             PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.BlendFactor, Blend.InverseBlendFactor, GetFactor());

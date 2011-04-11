@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Content.Pipeline;
 using Dope.DDXX.MidiExtractor;
 using System.Runtime.Serialization;
 
-namespace Dope.DDXX.MidiProcessorLib
+namespace Dope.DDXX.MidiProcessor
 {
     [Serializable]
     public class MidiSource : ISerializable

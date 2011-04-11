@@ -15,7 +15,7 @@ namespace EngineTest
     public class ModelEffect : BaseDemoEffect
     {
         private Scene scene;
-        private IModel model;
+        private CustomModel model;
         private CameraNode camera;
         private ModelNode node;
         private MirrorNode mirror;
@@ -31,13 +31,13 @@ namespace EngineTest
             scene = new Scene();
             scene.AmbientColor = new Color(180,180,180);
 
-            TextureDirector tDirector = new TextureDirector(TextureFactory);
-            tDirector.FromFile("Content\\textures\\BENEDETI2");
-            tDirector.Madd(0.7f, 0);
-            tDirector.NormalMap();
-            tDirector.Madd(1, 1);
-            tDirector.Madd(0.5f, 0);
-            ITexture2D normalMap = tDirector.Generate("NormalBENEDETI2", 256, 256, 1, SurfaceFormat.Color);
+            TextureDirector textureDirector = new TextureDirector(TextureFactory);
+            textureDirector.FromFile("Content\\textures\\BENEDETI2");
+            textureDirector.Madd(0.7f, 0);
+            textureDirector.NormalMap();
+            textureDirector.Madd(1, 1);
+            textureDirector.Madd(0.5f, 0);
+            Texture2D normalMap = textureDirector.Generate("NormalBENEDETI2", 256, 256, false, SurfaceFormat.Color);
 
             model = ModelFactory.CreateFromName("Content/models/ChamferBox2", "Content/effects/NormalMapping");
             model.Meshes[0].MeshParts[0].MaterialHandler.AmbientColor = Color.Chocolate;
@@ -55,7 +55,7 @@ namespace EngineTest
             scene.AddNode(mirror);
 
 
-            ModelDirector mDirector = new ModelDirector(ModelBuilder);
+            ModelDirector modelDirector = new ModelDirector(ModelBuilder);
             //ModelBuilder.GetMaterial("Default").Effect = EffectFactory.CreateFromFile("Content\\effects\\NormalMapping");
             ModelBuilder.SetDiffuseTexture("Default", "Content\\textures\\BENEDETI2");
             ModelBuilder.SetNormalTexture("Default", normalMap);
@@ -65,9 +65,9 @@ namespace EngineTest
             ModelBuilder.SetSpecularPower("Default", 16);
             ModelBuilder.SetShininess("Default", 1.5f);
             ModelBuilder.SetEffect("Default", "Content\\effects\\NormalMapping");
-            mDirector.CreateChamferBox(10, 10, 10, 1, 4);
-            mDirector.UvMapSphere();
-            IModel genModel = mDirector.Generate("Default");
+            modelDirector.CreateChamferBox(10, 10, 10, 1, 4);
+            modelDirector.UvMapSphere();
+            CustomModel genModel = modelDirector.Generate("Default");
 
             genNode = new ModelNode("Generated", genModel, GraphicsDevice);
             scene.AddNode(genNode);
@@ -84,7 +84,9 @@ namespace EngineTest
             scene.AddNode(light2);
 
             // Create camera
-            camera = new CameraNode("Test Camera", GraphicsDevice.AspectRatio);
+            camera = new CameraNode("Test Camera", 
+                (float)GraphicsDevice.PresentationParameters.BackBufferWidth /
+                (float)GraphicsDevice.PresentationParameters.BackBufferHeight);
             camera.WorldState.MoveBackward(60);
             scene.AddNode(camera);
             scene.ActiveCamera = camera;

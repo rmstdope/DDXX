@@ -9,7 +9,7 @@ namespace Dope.DDXX.UserInterface
 {
     public class MenuControl<T> : WindowControl, IMenuControl<T>
     {
-        private readonly ISpriteFont font;
+        private readonly SpriteFont font;
         private List<string> optionTexts;
         private List<T> optionActions;
         private int selected;
@@ -70,7 +70,7 @@ namespace Dope.DDXX.UserInterface
             base.Draw(resources);
             Vector2 pos = new Vector2(GetDrawX1(resources) + 5, GetDrawY1(resources) + 5);
 
-            resources.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+            resources.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             int num = 0;
             foreach (string text in optionTexts)
             {

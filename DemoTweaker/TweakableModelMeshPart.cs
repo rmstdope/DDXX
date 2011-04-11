@@ -11,9 +11,9 @@ using Dope.DDXX.DemoFramework;
 
 namespace Dope.DDXX.DemoTweaker
 {
-    public class TweakableModelMeshPart : TweakableObjectBase<IModelMeshPart>
+    public class TweakableCustomModelMeshPart : TweakableObjectBase<CustomModelMeshPart>
     {
-        public TweakableModelMeshPart(IModelMeshPart target, ITweakableFactory factory)
+        public TweakableCustomModelMeshPart(CustomModelMeshPart target, ITweakableFactory factory)
             : base(target, factory)
         {
         }
@@ -50,7 +50,7 @@ namespace Dope.DDXX.DemoTweaker
                 new BoxControl(new Vector4(0, y, 1, height), settings.Alpha, settings.SelectedColor, status.RootControl);
             new TextControl("ModelMeshPart", new Vector4(0, y, 0.45f, height), Positioning.Right | Positioning.VerticalCenter, settings.TextAlpha, Color.White, status.RootControl);
 
-            new TextControl("<IModelMeshPart>",
+            new TextControl("<ModelMeshPart>",
                 new Vector4(0.55f, y, 0.45f, height), Positioning.Center | Positioning.VerticalCenter,
                 settings.TextAlpha, Color.White, status.RootControl);
         }

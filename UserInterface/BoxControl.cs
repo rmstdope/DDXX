@@ -12,7 +12,7 @@ namespace Dope.DDXX.UserInterface
         public Color Color;
         public Color ShadowColor;
         public Color OutlineColor;
-        public ITexture2D Texture;
+        public Texture2D Texture;
 
         public BoxControl(Vector4 rectangle, byte alpha, Color color, BaseControl parent)
             : base(rectangle, parent)
@@ -22,7 +22,7 @@ namespace Dope.DDXX.UserInterface
             OutlineColor = new Color(255, 255, 255, alpha);
         }
 
-        public BoxControl(Vector4 rectangle, byte alpha, ITexture2D texture, BaseControl parent)
+        public BoxControl(Vector4 rectangle, byte alpha, Texture2D texture, BaseControl parent)
             : base(rectangle, parent)
         {
             Texture = texture;
@@ -43,16 +43,16 @@ namespace Dope.DDXX.UserInterface
             int width = (int)(screenWidth * GetWidth(resources));
             int height = (int)(screenHeight * GetHeight(resources));
             if (Color.A == 255)
-                resources.SpriteBatch.Begin(SpriteBlendMode.None, SpriteSortMode.Immediate, SaveStateMode.None);
+                resources.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
             else
-                resources.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+                resources.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             if (Texture != null)
                 resources.SpriteBatch.Draw(Texture, new Rectangle(x1, y1, width, height), Color);
             else
                 resources.SpriteBatch.Draw(resources.WhiteTexture, new Rectangle(x1, y1, width, height), Color);
             resources.SpriteBatch.End();
 
-            resources.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+            resources.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             DrawHorizontalLine(resources.SpriteBatch, resources.WhiteTexture, x1 + 1, y1 + 1, width, ShadowColor);
             DrawHorizontalLine(resources.SpriteBatch, resources.WhiteTexture, x1 + 1, y1 + 1 + height, width, ShadowColor);
             DrawVerticalLine(resources.SpriteBatch, resources.WhiteTexture, x1 + 1, y1 + 1, height, ShadowColor);

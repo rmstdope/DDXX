@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
-using Dope.DDXX.MidiProcessorLib;
+//using Dope.DDXX.MidiProcessor;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -10,6 +11,6 @@ namespace Dope.DDXX.DemoFramework
     {
         void SetClearColor(int track, Color color);
         Color GetClearColor(int track);
-        CompiledMidi CompiledMidi { get; }
+        //CompiledMidi CompiledMidi { get; }
     }
 }

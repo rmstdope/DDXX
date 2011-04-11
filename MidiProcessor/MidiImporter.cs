@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
 using System.IO;
 using Dope.DDXX.MidiExtractor;
 
-namespace Dope.DDXX.MidiProcessorLib
+namespace Dope.DDXX.MidiProcessor
 {
     /// <summary>
     /// This class will be instantiated by the XNA Content Pipeline

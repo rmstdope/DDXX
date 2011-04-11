@@ -24,10 +24,10 @@ namespace Dope.DDXX.GameFramework
 
         protected override void Initialize()
         {
-            ITextureFactory textureFactory = new TextureFactory(graphicsFactory);
+            TextureFactory textureFactory = new TextureFactory(graphicsFactory);
             IInputDriver inputDriver = InputDriver.GetInstance();
-            IEffectFactory effectFactory = new EffectFactory(graphicsFactory);
-            IPostProcessor postProcessor = new PostProcessor();
+            EffectFactory effectFactory = new EffectFactory(graphicsFactory);
+            PostProcessor postProcessor = new PostProcessor();
 
             gameExecuter.Initialize(this, startFsa, graphicsFactory, inputDriver, textureFactory, effectFactory, postProcessor);
             base.Initialize();

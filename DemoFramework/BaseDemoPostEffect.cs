@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.SceneGraph;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
     public abstract class BaseDemoPostEffect : Registerable, IDemoPostEffect
     {
         private int drawOrder;
-        private IPostProcessor postProcessor;
+        private PostProcessor postProcessor;
         private IGraphicsFactory graphicsFactory;
 
         protected IGraphicsFactory GraphicsFactory
@@ -17,17 +18,17 @@ namespace Dope.DDXX.DemoFramework
             get { return graphicsFactory; }
         }
 
-        protected IGraphicsDevice GraphicsDevice
+        protected GraphicsDevice GraphicsDevice
         {
-            get { return graphicsFactory.GraphicsDeviceManager.GraphicsDevice; }
+            get { return graphicsFactory.GraphicsDevice; }
         }
 
-        protected IPostProcessor PostProcessor
+        protected PostProcessor PostProcessor
         {
             get { return postProcessor; }
         }
 
-        protected ITextureFactory TextureFactory
+        protected TextureFactory TextureFactory
         {
             get { return graphicsFactory.TextureFactory; }
         }
@@ -48,7 +49,7 @@ namespace Dope.DDXX.DemoFramework
 
         public abstract void Render();
 
-        public void Initialize(IGraphicsFactory graphicsFactory, IPostProcessor postProcessor)
+        public void Initialize(IGraphicsFactory graphicsFactory, PostProcessor postProcessor)
         {
             this.graphicsFactory = graphicsFactory;
             this.postProcessor = postProcessor;

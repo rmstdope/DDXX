@@ -13,17 +13,17 @@ namespace TiVi
 {
     public class ComicEffect : BaseDemoEffect
     {
-        private ISpriteBatch spriteBatch;
-        private ITexture2D texture1;
-        private ITexture2D texture2;
-        private ITexture2D texture3;
-        private ITexture2D texture4;
+        private SpriteBatch spriteBatch;
+        private Texture2D texture1;
+        private Texture2D texture2;
+        private Texture2D texture3;
+        private Texture2D texture4;
         private CameraNode camera;
-        private IModel cylinder;
-        private IModel plane;
-        private ITexture2D lightTexture;
-        private ITexture2D brickTexture;
-        //private IModelNode node;
+        private CustomModel cylinder;
+        private CustomModel plane;
+        private Texture2D lightTexture;
+        private Texture2D brickTexture;
+        //private ModelNode node;
 
         public ComicEffect(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
@@ -41,7 +41,7 @@ namespace TiVi
             {
                 for (int x = 0; x < 10; x++)
                 {
-                    IModelNode node = new ModelNode("Cylinder", cylinder, GraphicsDevice);
+                    ModelNode node = new ModelNode("Cylinder", cylinder, GraphicsDevice);
                     node.WorldState.Position = new Vector3(x - 5, 0.5f, y - 5);
                     Scene.AddNode(node);
 
@@ -50,7 +50,7 @@ namespace TiVi
                     Scene.AddNode(node);
                 }
             }
-            spriteBatch = GraphicsFactory.CreateSpriteBatch();
+            spriteBatch = new SpriteBatch(GraphicsDevice);
             texture1 = TextureFactory.CreateFromName("Circle");
             texture2 = TextureFactory.CreateFromName("Turbulence256");
             texture3 = TextureFactory.CreateFromName("Cellular");
@@ -103,7 +103,7 @@ namespace TiVi
         public override void Render()
         {
             Scene.Render();
-            spriteBatch.Begin(SpriteBlendMode.None);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
             spriteBatch.Draw(texture3, new Rectangle(0, 0, 256, 256), Color.White);
             spriteBatch.Draw(texture3, new Rectangle(256, 0, 256, 256), Color.White);
             spriteBatch.Draw(texture3, new Rectangle(0, 256, 256, 256), Color.White);

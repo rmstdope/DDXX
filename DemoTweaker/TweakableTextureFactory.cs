@@ -14,11 +14,11 @@ using System.Reflection;
 
 namespace Dope.DDXX.DemoTweaker
 {
-    public class TweakableTextureFactory : TweakableObjectBase<ITextureFactory>
+    public class TweakableTextureFactory : TweakableObjectBase<TextureFactory>
     {
         private IMenuControl<Type> menuControl;
 
-        public TweakableTextureFactory(ITextureFactory target, ITweakableFactory factory)
+        public TweakableTextureFactory(TextureFactory target, ITweakableFactory factory)
             : base(target, factory)
         {
         }
@@ -113,7 +113,7 @@ namespace Dope.DDXX.DemoTweaker
                 tweakableGenerator.ReadFromXmlFile(child);
             }
             director.Generate(GetStringAttribute(node, "name"), GetIntAttribute(node, "width"),
-                GetIntAttribute(node, "height"), GetIntAttribute(node, "miplevels"), SurfaceFormat.Color);
+                GetIntAttribute(node, "height"), GetBoolAttribute(node, "mipmap"), SurfaceFormat.Color);
         }
 
         public override void CreateControl(TweakerStatus status, int index, float y, ITweakerSettings settings)
@@ -123,7 +123,7 @@ namespace Dope.DDXX.DemoTweaker
                 new BoxControl(new Vector4(0, y, 1, height), settings.Alpha, settings.SelectedColor, status.RootControl);
             new TextControl("TextureFactory", new Vector4(0, y, 0.45f, height), Positioning.Right | Positioning.VerticalCenter, settings.TextAlpha, Color.White, status.RootControl);
 
-            new TextControl("<ITextureFactory>",
+            new TextControl("<TextureFactory>",
                 new Vector4(0.55f, y, 0.45f, height), Positioning.Center | Positioning.VerticalCenter,
                 settings.TextAlpha, Color.White, status.RootControl);
         }
@@ -159,7 +159,7 @@ namespace Dope.DDXX.DemoTweaker
             string newName = "Texture - " + Rand.Int(0, 65535);
             TextureDirector director = new TextureDirector(Target);
             director.AddGenerator(newGenerator);
-            director.Generate(newName, 64, 64, 1, SurfaceFormat.Color);
+            director.Generate(newName, 64, 64, false, SurfaceFormat.Color);
             int newIndex = TextureParameters.FindIndex(delegate(Texture2DParameters param)
             {
                 return param.Name == newName;
@@ -179,7 +179,7 @@ namespace Dope.DDXX.DemoTweaker
             List<Type> generators = new List<Type>();
             foreach (Type type in typeof(Constant).Assembly.GetTypes())
             {
-                if (type.GetInterface("ITextureGenerator") != null &&
+                if (type.GetInterface("TextureGenerator") != null &&
                     !type.IsAbstract && type.IsPublic)
                 {
                     ITextureGenerator generator = createGenerator(type);

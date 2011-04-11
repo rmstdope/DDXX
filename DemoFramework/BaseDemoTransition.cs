@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
     public abstract class BaseDemoTransition : Registerable, IDemoTransition
     {
         private int destinationTrack;
-        private IPostProcessor postProcessor;
+        private PostProcessor postProcessor;
         private IGraphicsFactory graphicsFactory;
 
         public int DestinationTrack
@@ -17,12 +18,12 @@ namespace Dope.DDXX.DemoFramework
             set { destinationTrack = value; }
         }
 
-        public IPostProcessor PostProcessor
+        public PostProcessor PostProcessor
         {
             get { return postProcessor; }
         }
 
-        protected ITextureFactory TextureFactory
+        protected TextureFactory TextureFactory
         {
             get { return graphicsFactory.TextureFactory; }
         }
@@ -33,16 +34,16 @@ namespace Dope.DDXX.DemoFramework
         }
 
         protected virtual void Initialize() { }
-        public void Initialize(IPostProcessor postProcessor, IGraphicsFactory graphicsFactory)
+        public void Initialize(PostProcessor postProcessor, IGraphicsFactory graphicsFactory)
         {
             this.postProcessor = postProcessor;
             this.graphicsFactory = graphicsFactory;
             Initialize();
         }
 
-        abstract public IRenderTarget2D Combine(IRenderTarget2D fromTexture, IRenderTarget2D toTexture);
+        abstract public RenderTarget2D Combine(RenderTarget2D fromTexture, RenderTarget2D toTexture);
 
-        public IRenderTarget2D Render(IRenderTarget2D fromTexture, IRenderTarget2D toTexture)
+        public RenderTarget2D Render(RenderTarget2D fromTexture, RenderTarget2D toTexture)
         {
             return Combine(fromTexture, toTexture);
         }

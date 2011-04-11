@@ -235,7 +235,7 @@ float2 DownSample4xKernel[16]
 >;
 
 float4
-Copy(float2 Tex : TEXCOORD0) : COLOR0
+CopyPS(float2 Tex : TEXCOORD0) : COLOR0
 {
 	return tex2D(TextureSampler, Tex);
 }
@@ -245,7 +245,7 @@ Copy(float2 Tex : TEXCOORD0) : COLOR0
 // Desc: Create rings with sin function.
 //-----------------------------------------------------------------------------
 float4
-Rings(float2 TexCoords1 : TEXCOORD0) : COLOR0
+RingsPS(float2 TexCoords1 : TEXCOORD0) : COLOR0
 {
 	float2 fromCenter = TexCoords1 - 0.5f;
 
@@ -266,7 +266,7 @@ Rings(float2 TexCoords1 : TEXCOORD0) : COLOR0
 // Desc: Waves the texture with cos and sin functions.
 //-----------------------------------------------------------------------------
 float4
-Wave(float2 TexCoords1 : TEXCOORD0) : COLOR0
+WavePS(float2 TexCoords1 : TEXCOORD0) : COLOR0
 {
 	float2 posDistortion = float2(TexCoords1.x * WaveStrength.x + 
 																TexCoords1.y * WaveStrength.y,
@@ -290,7 +290,7 @@ Wave(float2 TexCoords1 : TEXCOORD0) : COLOR0
 // Desc: Zooms the texture as well as adds it to the original one.
 //-----------------------------------------------------------------------------
 float4
-ZoomAdd(float2 Tex : TEXCOORD0) : COLOR0
+ZoomAddPS(float2 Tex : TEXCOORD0) : COLOR0
 {
 	float4 originalColor = tex2D(TextureSampler, Tex);
 	float4 zoomColor = tex2D(TextureSampler, Tex * ZoomFactor + (1 - ZoomFactor) / 2);
@@ -305,7 +305,7 @@ ZoomAdd(float2 Tex : TEXCOORD0) : COLOR0
 // Desc: Downsamples the texture to one fourth the size (in each dimension).
 //-----------------------------------------------------------------------------
 float4
-DownSample4x(float2 Tex : TEXCOORD0) : COLOR0
+DownSample4xPS(float2 Tex : TEXCOORD0) : COLOR0
 {
 	float4 color = 0;
 
@@ -700,7 +700,7 @@ FinalHDR_PixelShader(float2 Tex : TEXCOORD0,
 // Desc: First step of HDR luminance downsampling, includes conversion to greyscale
 //-----------------------------------------------------------------------------
 float4
-HDRLuminanceGreyDS(float2 Tex : TEXCOORD0) : COLOR0
+HDRLuminanceGreyDSPS(float2 Tex : TEXCOORD0) : COLOR0
 {
 	const float3 LuminanceWeights = float3(0.33f, 0.34f, 0.33f);
 	
@@ -714,7 +714,7 @@ HDRLuminanceGreyDS(float2 Tex : TEXCOORD0) : COLOR0
 // Desc: Consecutive steps of HDR luminance downsampling
 //-----------------------------------------------------------------------------
 float4
-HDRLuminanceDS(float2 Tex : TEXCOORD0) : COLOR0
+HDRLuminanceDSPS(float2 Tex : TEXCOORD0) : COLOR0
 {
 	float4 sample = tex2D( TextureSampler, Tex );
 
@@ -734,7 +734,7 @@ technique Rings
 		float Scale = 1.0f;
 	>
 	{
-		PixelShader = compile ps_2_0 Rings();
+		PixelShader = compile ps_2_0 RingsPS();
 		ZEnable						= false;
 		StencilEnable			= false;
 		CullMode = None;
@@ -748,7 +748,7 @@ technique Wave
 		float Scale = 1.0f;
 	>
 	{
-		PixelShader = compile ps_2_0 Wave();
+		PixelShader = compile ps_2_0 WavePS();
 		ZEnable						= false;
 		StencilEnable			= false;
 		CullMode = None;
@@ -762,7 +762,7 @@ technique ZoomAdd
 		float Scale = 1.0f;
 	>
 	{
-		PixelShader = compile ps_2_0 ZoomAdd();
+		PixelShader = compile ps_2_0 ZoomAddPS();
 		ZEnable						= false;
 		StencilEnable			= false;
 		CullMode = None;
@@ -777,7 +777,7 @@ technique DownSample4x
 		float Scale = 0.25f;
 	>
 	{
-		PixelShader = compile ps_2_0 DownSample4x();
+		PixelShader = compile ps_2_0 DownSample4xPS();
 		ZEnable						= false;
 		StencilEnable			= false;
 		CullMode = None;
@@ -791,7 +791,7 @@ technique UpSample4x
 		float Scale = 4.0f;
 	>
 	{
-		PixelShader = compile ps_2_0 Copy();
+		PixelShader = compile ps_2_0 CopyPS();
 		ZEnable						= false;
 		StencilEnable			= false;
 		CullMode = None;
@@ -903,7 +903,7 @@ technique HDRLuminanceGreyDS
 		float Scale = 1.0f;
 	>
 	{
-		PixelShader				= compile ps_2_0 HDRLuminanceGreyDS();
+		PixelShader				= compile ps_2_0 HDRLuminanceGreyDSPS();
 		ZEnable						= false;
 		StencilEnable			= false;
 		CullMode = None;
@@ -917,7 +917,7 @@ technique HDRLuminanceDS
 		float Scale = 1.0f;
 	>
 	{
-		PixelShader				= compile ps_2_0 HDRLuminanceDS();
+		PixelShader				= compile ps_2_0 HDRLuminanceDSPS();
 		ZEnable						= false;
 		StencilEnable			= false;
 		CullMode = None;
@@ -1078,7 +1078,7 @@ technique DepthOfField
 	}
 }
 
-technique Color
+technique SolidColor
 {
 	pass BasePass
 	<

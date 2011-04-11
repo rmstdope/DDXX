@@ -27,7 +27,7 @@ namespace TiVi
             ModelBuilder.SetDiffuseTexture("Default1", "FLOWER6P.jpg");
             modelDirector = new ModelDirector(ModelBuilder);
             modelDirector.CreateBox(2, 2, 2);
-            IModel model = modelDirector.Generate("Default1");
+            CustomModel model = modelDirector.Generate("Default1");
             //box = CreateSimpleModelNode(model, "TiVi.fxo", "Simple");
             //Scene.AddNode(box);
 

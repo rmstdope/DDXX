@@ -9,7 +9,6 @@ using Dope.DDXX.SceneGraph;
 using Microsoft.Xna.Framework;
 using Dope.DDXX.Utility;
 using Dope.DDXX.ModelBuilder;
-using Dope.DDXX.ParticleSystems;
 
 namespace DFM2007Invitro
 {
@@ -50,7 +49,7 @@ namespace DFM2007Invitro
                 {
                     ModelDirector.CreateChamferBox(1, 1, 1, 0.1f, 4);
                     ModelDirector.UvMapBox();
-                    IModel chamferBoxModel = ModelDirector.Generate("Default");
+                    CustomModel chamferBoxModel = ModelDirector.Generate("Default");
                     ModelNode box = new ModelNode("Chamfer", chamferBoxModel, GraphicsDevice);
                     box.WorldState.MoveRight(x * 3f);
                     box.WorldState.MoveForward(z * 3f);

@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.Graphics
 {
-    public interface IModelMeshPart
+    public interface ModelMeshPart
     {
         // Summary:
         //     Gets the offset to add to each vertex index in the index buffer.
@@ -19,7 +19,7 @@ namespace Dope.DDXX.Graphics
         //
         // Returns:
         //     The material effect for this mesh part.
-        IEffect Effect { get; set; }
+        Effect Effect { get; set; }
         //
         // Summary:
         //     Gets the number of vertices used during a draw call.
@@ -62,7 +62,7 @@ namespace Dope.DDXX.Graphics
         //
         // Returns:
         //     The vertex declaration for this model mesh part.
-        IVertexDeclaration VertexDeclaration { get; }
+        VertexDeclaration VertexDeclaration { get; }
         //
         // Summary:
         //     Gets the size, in bytes, of the elements in this vertex stream.
@@ -71,6 +71,6 @@ namespace Dope.DDXX.Graphics
         //     The size, in bytes, of the elements in this vertex stream.
         int VertexStride { get; }
 
-        IMaterialHandler MaterialHandler { get; }
+        MaterialHandler MaterialHandler { get; }
     }
 }

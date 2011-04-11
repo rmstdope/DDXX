@@ -102,12 +102,12 @@ namespace Dope.DDXX.UserInterface
             return GetParentY1(resources) + GetParentHeight(resources) * rectangle.Y;
         }
 
-        protected void DrawVerticalLine(ISpriteBatch spriteBatch, ITexture2D whiteTexture, int x, int y, int height, Color color)
+        protected void DrawVerticalLine(SpriteBatch spriteBatch, Texture2D whiteTexture, int x, int y, int height, Color color)
         {
             spriteBatch.Draw(whiteTexture, new Rectangle(x, y, 1, height), color);
         }
 
-        protected void DrawHorizontalLine(ISpriteBatch spriteBatch, ITexture2D whiteTexture, int x, int y, int width, Color color)
+        protected void DrawHorizontalLine(SpriteBatch spriteBatch, Texture2D whiteTexture, int x, int y, int width, Color color)
         {
             spriteBatch.Draw(whiteTexture, new Rectangle(x, y, width, 1), color);
         }

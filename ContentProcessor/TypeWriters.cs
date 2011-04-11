@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using Dope.DDXX.Animation;
+using Microsoft.Xna.Framework.Content.Pipeline;
 
 namespace ContentProcessor
 {

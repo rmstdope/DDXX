@@ -4,6 +4,7 @@ using System.Text;
 using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Graphics;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.DemoEffects
 {
@@ -24,7 +25,7 @@ namespace Dope.DDXX.DemoEffects
 
         public override void Render()
         {
-            List<IRenderTarget2D> textures = PostProcessor.GetTemporaryTextures(2, false);
+            List<RenderTarget2D> textures = PostProcessor.GetTemporaryTextures(2, false);
 
             PostProcessor.SetValue("BloomScale", 1.0f);
             PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);

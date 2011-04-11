@@ -5,12 +5,13 @@ using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Utility;
 using Dope.DDXX.Graphics;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.DemoEffects
 {
     public class OverlayPostEffect : BaseDemoPostEffect
     {
-        private ITexture2D texture;
+        private Texture2D texture;
         private float blendFactor;
         private bool addNoise;
         private bool subtractNoise;
@@ -56,7 +57,7 @@ namespace Dope.DDXX.DemoEffects
             set { blendFactor = value; }
         }
 
-        public ITexture2D Texture
+        public Texture2D Texture
         {
             get { return texture; }
             set { texture = value; }

@@ -14,7 +14,7 @@ namespace Dope.DDXX.DemoEffects
         public class TextureLayer
         {
             public string TextureName;
-            public ITexture2D Texture;
+            public Texture2D Texture;
             public float Period;
             public Color ColorModulation;
             public TextureLayer(string texture, float period, Color colorModulation)
@@ -27,7 +27,7 @@ namespace Dope.DDXX.DemoEffects
         }
 
         private List<TextureLayer> textureLayers;
-        private ISpriteBatch sprite;
+        private SpriteBatch sprite;
 
         public SpinningBackgroundEffect(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
@@ -37,7 +37,7 @@ namespace Dope.DDXX.DemoEffects
 
         protected override void Initialize()
         {
-            sprite = GraphicsFactory.CreateSpriteBatch();
+            sprite = new SpriteBatch(GraphicsDevice);
 
             foreach (TextureLayer layer in textureLayers)
             {
@@ -61,8 +61,8 @@ namespace Dope.DDXX.DemoEffects
 
         public override void Render()
         {
-            sprite.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
-            GraphicsDevice.RenderState.DepthBufferEnable = false;
+            sprite.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            GraphicsDevice.DepthStencilState.DepthBufferEnable = false;
             foreach (TextureLayer layer in textureLayers)
             {
                 float angle;

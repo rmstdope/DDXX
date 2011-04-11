@@ -11,8 +11,8 @@ namespace EngineTest
 {
     public class IntroText : BaseDemoEffect
     {
-        private ISpriteBatch spriteBatch;
-        private ISpriteFont font;
+        private SpriteBatch spriteBatch;
+        private SpriteFont font;
         private Vector2 position;
 
         public Vector2 Position
@@ -28,7 +28,7 @@ namespace EngineTest
 
         protected override void Initialize()
         {
-            spriteBatch = GraphicsFactory.CreateSpriteBatch();
+            spriteBatch = new SpriteBatch(GraphicsDevice);
             font = GraphicsFactory.SpriteFontFromFile("Content\\fonts\\Porscha");
         }
 

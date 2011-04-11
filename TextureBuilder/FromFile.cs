@@ -9,13 +9,13 @@ namespace Dope.DDXX.TextureBuilder
 {
     public class FromFile : Generator
     {
-        private ITextureFactory textureFactory;
+        private TextureFactory textureFactory;
         private string filename;
         private Color[] data;
         private int width;
         private int height;
 
-        public ITextureFactory TextureFactory
+        public TextureFactory TextureFactory
         {
             get { return textureFactory; }
             set { textureFactory = value; }
@@ -36,7 +36,7 @@ namespace Dope.DDXX.TextureBuilder
         {
             if (data == null)
             {
-                ITexture2D texture = textureFactory.CreateFromName(filename);
+                Texture2D texture = textureFactory.CreateFromName(filename);
                 width = texture.Width;
                 height = texture.Height;
                 data = new Color[width * height];

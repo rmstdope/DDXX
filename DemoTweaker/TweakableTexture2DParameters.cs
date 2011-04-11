@@ -74,7 +74,7 @@ namespace Dope.DDXX.DemoTweaker
             float height = status.VariableSpacing * 0.9f;
             if (index == status.Selection)
                 new BoxControl(new Vector4(0, y, 1, height), settings.Alpha, settings.SelectedColor, status.RootControl);
-            new TextControl(Target.Name + " (<ITexture2D>)", new Vector4(0, y, 0.45f, height), Positioning.Right | Positioning.VerticalCenter, settings.TextAlpha, Color.White, status.RootControl);
+            new TextControl(Target.Name + " (<Texture2D>)", new Vector4(0, y, 0.45f, height), Positioning.Right | Positioning.VerticalCenter, settings.TextAlpha, Color.White, status.RootControl);
             new BoxControl(new Vector4(0.55f + 0.225f - height / 2, y, -1, height), 255, Target.Texture, status.RootControl);
         }
 
@@ -147,7 +147,7 @@ namespace Dope.DDXX.DemoTweaker
         {
             foreach (Type type in typeof(Constant).Assembly.GetTypes())
             {
-                if (type.GetInterface("ITextureGenerator") != null &&
+                if (type.GetInterface("TextureGenerator") != null &&
                     !type.IsAbstract && type.IsPublic &&
                     GeneratorHasNumPins(type, numPins))
                 {

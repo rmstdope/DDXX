@@ -5,6 +5,7 @@ using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Utility;
 using Dope.DDXX.Graphics;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.DemoEffects
 {
@@ -25,8 +26,8 @@ namespace Dope.DDXX.DemoEffects
 
         public override void Render()
         {
-            List<IRenderTarget2D> textures = PostProcessor.GetTemporaryTextures(2, true);
-            IRenderTarget2D startTexture = PostProcessor.OutputTexture;
+            List<RenderTarget2D> textures = PostProcessor.GetTemporaryTextures(2, true);
+            RenderTarget2D startTexture = PostProcessor.OutputTexture;
             PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);
             PostProcessor.SetValue("ZoomFactor", 0.20f);
             PostProcessor.Process("ZoomAdd", startTexture, textures[0]);

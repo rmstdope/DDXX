@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Dope.DDXX.SceneGraph;
 using Dope.DDXX.Utility;
-using Dope.DDXX.MidiProcessorLib;
+using Dope.DDXX.MidiProcessor;
 
 namespace EngineTest
 {
@@ -48,7 +48,7 @@ namespace EngineTest
         private List<MusicPlane> planes;
         private List<ModelNode> unusedNodes;
         private CameraNode camera;
-        private ISpriteBatch spriteBatch;
+        private SpriteBatch spriteBatch;
 
         public MusicSynchronizedOverlay(string name, float start, float end)
             : base(name, start, end)
@@ -60,7 +60,7 @@ namespace EngineTest
             planes = new List<MusicPlane>();
             unusedNodes = new List<ModelNode>();
             CreateStandardCamera(out camera, 10);
-            spriteBatch = GraphicsFactory.CreateSpriteBatch();
+            spriteBatch = new SpriteBatch(GraphicsDevice);
 
             for (int i = 0; i < 10; i++)
             {
@@ -71,7 +71,7 @@ namespace EngineTest
                 ModelDirector.CreatePlane(1, 200, 1, 1);
                 ModelDirector.Rotate(MathHelper.PiOver2 * 0.95f, 0, 0);
                 ModelDirector.Translate(0, 2, 0);
-                IModel model = ModelDirector.Generate(material);
+                CustomModel model = ModelDirector.Generate(material);
                 ModelNode modelNode = new ModelNode("x", model, GraphicsDevice);
                 unusedNodes.Add(modelNode);
             }

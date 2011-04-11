@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.Graphics
 {
@@ -8,7 +9,7 @@ namespace Dope.DDXX.Graphics
     {
         private string name;
         private string effect;
-        private IModel model;
+        private CustomModel model;
 
         public string Name
         {
@@ -20,7 +21,7 @@ namespace Dope.DDXX.Graphics
             get { return effect; }
         }
 
-        public IModel Model
+        public CustomModel Model
         {
             get { return model; }
         }
@@ -30,7 +31,7 @@ namespace Dope.DDXX.Graphics
             get { return false; }
         }
 
-        public ModelParameters(string name, string effect, IModel model)
+        public ModelParameters(string name, string effect, CustomModel model)
         {
             this.name = name;
             this.effect = effect;

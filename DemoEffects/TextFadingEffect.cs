@@ -11,8 +11,8 @@ namespace Dope.DDXX.DemoEffects
 {
     public class TextFadingEffect : BaseDemoEffect
     {
-        private ISpriteBatch spriteBatch;
-        private ISpriteFont font;
+        private SpriteBatch spriteBatch;
+        private SpriteFont font;
         private string fontName;
         private Vector3 textPosition;
         private string text;
@@ -79,7 +79,7 @@ namespace Dope.DDXX.DemoEffects
         protected override void Initialize()
         {
             font = GraphicsFactory.SpriteFontFromFile(FontName);
-            spriteBatch = GraphicsFactory.CreateSpriteBatch();
+            spriteBatch = new SpriteBatch(GraphicsDevice);
         }
 
         public override void Step()

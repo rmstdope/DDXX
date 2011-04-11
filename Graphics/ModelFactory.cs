@@ -2,23 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Utility;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.Graphics
 {
     public class ModelFactory : IModelFactory
     {
         private IGraphicsFactory factory;
-        private ITextureFactory textureFactory;
+        private TextureFactory textureFactory;
         private List<ModelParameters> models;
 
-        public ModelFactory(IGraphicsFactory factory, ITextureFactory textureFactory)
+        public ModelFactory(IGraphicsFactory factory, TextureFactory textureFactory)
         {
             this.factory = factory;
             this.textureFactory = textureFactory;
             models = new List<ModelParameters>();
         }
 
-        public IModel CreateFromName(string file, string effect)
+        public CustomModel CreateFromName(string file, string effect)
         {
             ModelParameters modelParam = models.Find(delegate(ModelParameters parameters)
             {
@@ -26,13 +27,13 @@ namespace Dope.DDXX.Graphics
             });
             if (modelParam != null)
                 return modelParam.Model;
-            IModel model = factory.ModelFromFile(file);
-            foreach (IModelMesh mesh in model.Meshes)
+            CustomModel model = factory.ModelFromFile(file);
+            foreach (CustomModelMesh mesh in model.Meshes)
             {
-                foreach (IModelMeshPart part in mesh.MeshParts)
+                foreach (CustomModelMeshPart part in mesh.MeshParts)
                 {
-                    IEffect newEffect = factory.EffectFromFile(effect);
-                    part.Effect = newEffect;
+                    Effect newEffect = factory.EffectFromFile(effect);
+                    part.MaterialHandler.Effect = newEffect;
                 }
             }
             models.Add(new ModelParameters(file, effect, model));

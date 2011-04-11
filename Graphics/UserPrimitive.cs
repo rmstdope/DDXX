@@ -5,17 +5,17 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.Graphics
 {
-    public class UserPrimitive<T> : IUserPrimitive<T>, IDisposable
+    public class UserPrimitive<T> : IDisposable
         where T:struct
     {
-        private IMaterialHandler material;
+        private MaterialHandler material;
         private PrimitiveType primitiveType;
-        private IVertexDeclaration vertexDeclaration;
+        private VertexDeclaration vertexDeclaration;
         private int numVertices;
         private int bufferSize;
         private T[] vertices;
 
-        public UserPrimitive(IVertexDeclaration vertexDeclaration, IMaterialHandler material, PrimitiveType primitiveType, int bufferSize)
+        public UserPrimitive(VertexDeclaration vertexDeclaration, MaterialHandler material, PrimitiveType primitiveType, int bufferSize)
         {
             this.material = material;
             this.primitiveType = primitiveType;
@@ -24,7 +24,7 @@ namespace Dope.DDXX.Graphics
             this.vertexDeclaration = vertexDeclaration;
         }
 
-        public IMaterialHandler Material 
+        public MaterialHandler Material 
         {
             get { return material; }
         }
@@ -38,8 +38,6 @@ namespace Dope.DDXX.Graphics
         {
             if (primitiveType == PrimitiveType.LineList)
                 return numVertices / 2;
-            else if (primitiveType == PrimitiveType.PointList)
-                return numVertices;
             else if (primitiveType == PrimitiveType.LineStrip)
                 return numVertices - 1;
             else if (primitiveType == PrimitiveType.TriangleList)
@@ -58,15 +56,11 @@ namespace Dope.DDXX.Graphics
         {
             if (numVertices > 0)
             {
-                vertexDeclaration.GraphicsDevice.VertexDeclaration = vertexDeclaration;
-                material.Effect.Begin();
-                foreach (IEffectPass pass in material.Effect.CurrentTechnique.Passes)
+                foreach (EffectPass pass in material.Effect.CurrentTechnique.Passes)
                 {
-                    pass.Begin();
-                    vertexDeclaration.GraphicsDevice.DrawUserPrimitives<T>(primitiveType, vertices, 0, NumPrimitives(numVertices));
-                    pass.End();
+                    pass.Apply();
+                    vertexDeclaration.GraphicsDevice.DrawUserPrimitives<T>(primitiveType, vertices, 0, NumPrimitives(numVertices), vertexDeclaration);
                 }
-                material.Effect.End();
                 numVertices = 0;
             }
         }

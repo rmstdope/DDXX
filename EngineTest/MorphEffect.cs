@@ -48,11 +48,10 @@ namespace EngineTest
             }
         }
 
-        private ITexture2D[] textures;
+        private Texture2D[] textures;
         private List<PixelMorph> pixels = new List<PixelMorph>();
-        private IVertexDeclaration vertexDeclaration;
         private VertexPositionColorPoint[] vertices;
-        private IMaterialHandler material;
+        private MaterialHandler material;
         
         public MorphEffect(string name, float start, float end)
             : base(name, start, end)
@@ -61,7 +60,7 @@ namespace EngineTest
 
         protected override void Initialize()
         {
-            textures = new ITexture2D[2];
+            textures = new Texture2D[2];
             textures[0] = GraphicsFactory.Texture2DFromFile("Content/textures/boni");
             textures[1] = GraphicsFactory.Texture2DFromFile("Content/textures/dope");
 
@@ -93,7 +92,7 @@ namespace EngineTest
                     }
                 }
             }
-            vertexDeclaration = GraphicsFactory.CreateVertexDeclaration(VertexPositionColorPoint.VertexElements);
+            //vertexDeclaration = GraphicsFactory.CreateVertexDeclaration(VertexPositionColorPoint.VertexElements);
             vertices = new VertexPositionColorPoint[pixels.Count];
             for (int i = 0; i < pixels.Count; i++)
             {
@@ -105,7 +104,7 @@ namespace EngineTest
             material.SourceBlend = Blend.One;
             material.DestinationBlend = Blend.InverseSourceColor;
             TextureDirector.CreateCircle(0.4f, 0.45f, 0.5f, 0.5f, new Vector2(0.5f, 0.5f));
-            material.DiffuseTexture = TextureDirector.Generate("Circle64", 64, 64, 4, SurfaceFormat.Color);
+            material.DiffuseTexture = TextureDirector.Generate("Circle64", 64, 64, true, SurfaceFormat.Color);
         }
 
         public override void Step()
@@ -127,15 +126,12 @@ namespace EngineTest
                 vertices[i].PointSize = size;
             }
             material.SetupRendering(new Matrix[] { Matrix.Identity }, Matrix.Identity, Matrix.Identity, Color.White, new LightState());
-            GraphicsDevice.VertexDeclaration = vertexDeclaration;
-            material.Effect.Begin();
-            foreach (IEffectPass pass in material.Effect.CurrentTechnique.Passes)
+            foreach (EffectPass pass in material.Effect.CurrentTechnique.Passes)
             {
-                pass.Begin();
-                GraphicsDevice.DrawUserPrimitives<VertexPositionColorPoint>(PrimitiveType.PointList, vertices, 0, pixels.Count);
-                pass.End();
+                pass.Apply();
+                // Points?
+                //GraphicsDevice.DrawUserPrimitives<VertexPositionColorPoint>(PrimitiveType.LineList, vertices, 0, pixels.Count);
             }
-            material.Effect.End();
         }
     }
 }

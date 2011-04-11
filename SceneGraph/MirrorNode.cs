@@ -51,13 +51,13 @@ namespace Dope.DDXX.SceneGraph
             if (node is ModelNode)
             {
                 ModelNode modelNode = node as ModelNode;
-                switch (modelNode.CullMode)
+                switch (modelNode.RasterizerState.CullMode)
                 {
                     case CullMode.CullClockwiseFace:
-                        modelNode.CullMode = CullMode.CullCounterClockwiseFace;
+                        modelNode.RasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
                         break;
                     case CullMode.CullCounterClockwiseFace:
-                        modelNode.CullMode = CullMode.CullClockwiseFace;
+                        modelNode.RasterizerState.CullMode = CullMode.CullClockwiseFace;
                         break;
                 }
                 //modelNode.Model.UseStencil = !modelNode.Model.UseStencil;
@@ -71,9 +71,9 @@ namespace Dope.DDXX.SceneGraph
             if (node is ModelNode)
             {
                 ModelNode modelNode = node as ModelNode;
-                foreach (IModelMesh mesh in modelNode.Model.Meshes)
+                foreach (CustomModelMesh mesh in modelNode.Model.Meshes)
                 {
-                    foreach (IModelMeshPart part in mesh.MeshParts)
+                    foreach (CustomModelMeshPart part in mesh.MeshParts)
                     {
                         part.MaterialHandler.AmbientColor = new Color(part.MaterialHandler.AmbientColor.ToVector3() * value);
                         part.MaterialHandler.DiffuseColor = new Color(part.MaterialHandler.DiffuseColor.ToVector3() * value);

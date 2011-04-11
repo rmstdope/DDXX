@@ -12,9 +12,9 @@ namespace EngineTest
     public class VolumetricClouds : BaseDemoEffect
     {
         private ModelNode volumeCube;
-        private IEffect frontEffect;
-        private IEffect backEffect;
-        private IRenderTarget2D renderTarget;
+        private Effect frontEffect;
+        private Effect backEffect;
+        private RenderTarget2D renderTarget;
 
         public VolumetricClouds(string name, float start, float end)
             : base(name, start, end)
@@ -29,34 +29,34 @@ namespace EngineTest
             CameraNode camera;
             CreateStandardCamera(out camera, 5);
 
-            renderTarget = GraphicsFactory.CreateRenderTarget2D(BackbufferWidth, BackbufferHeight, 1, SurfaceFormat.Color, MultiSampleType.None, 0);
+            renderTarget = new RenderTarget2D(GraphicsDevice, BackbufferWidth, BackbufferHeight, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents);
 
             ModelDirector.CreateBox(1, 1, 1);
             //ModelDirector.Translate(0.5f, 0.5f, 0.5f);
             ModelBuilder.SetEffect("Default", "Content\\effects\\VolumetricRayCastingBack");
-            IModel model = ModelDirector.Generate("Default");
+            CustomModel model = ModelDirector.Generate("Default");
             volumeCube = new ModelNode("Volume cube", model, GraphicsDevice);
             Scene.AddNode(volumeCube);
         }
 
         public override void Step()
         {
-            volumeCube.Model.Meshes[0].MeshParts[0].Effect = backEffect;
-            volumeCube.CullMode = CullMode.CullClockwiseFace;
+            volumeCube.Model.Meshes[0].MeshParts[0].MaterialHandler.Effect = backEffect;
+            volumeCube.RasterizerState.CullMode = CullMode.CullClockwiseFace;
             volumeCube.WorldState.Turn(Time.DeltaTime);
             volumeCube.WorldState.Roll(Time.DeltaTime / 2.345f);
 
-            IRenderTarget2D originalRenderTarget = GraphicsDevice.GetRenderTarget(0) as IRenderTarget2D;
-            GraphicsDevice.SetRenderTarget(0, renderTarget);
+            RenderTarget2D originalRenderTarget = GraphicsDevice.GetRenderTargets()[0].RenderTarget as RenderTarget2D;
+            GraphicsDevice.SetRenderTarget(renderTarget);
             Scene.Render();
-            GraphicsDevice.SetRenderTarget(0, originalRenderTarget);
+            GraphicsDevice.SetRenderTarget(originalRenderTarget);
         }
 
         public override void Render()
         {
-            volumeCube.Model.Meshes[0].MeshParts[0].Effect = frontEffect;
-            volumeCube.Model.Meshes[0].MeshParts[0].MaterialHandler.DiffuseTexture = renderTarget.GetTexture();
-            volumeCube.CullMode = CullMode.CullCounterClockwiseFace;
+            volumeCube.Model.Meshes[0].MeshParts[0].MaterialHandler.Effect = frontEffect;
+            volumeCube.Model.Meshes[0].MeshParts[0].MaterialHandler.DiffuseTexture = renderTarget;
+            volumeCube.RasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
             Scene.Render();
         }
     }

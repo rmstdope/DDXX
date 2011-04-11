@@ -24,23 +24,23 @@ namespace Dope.DDXX.Graphics
 
     public class Texture2DParameters : TextureParameters
     {
-        private ITexture2D texture;
+        private Texture2D texture;
         private ITextureGenerator generator;
 
-        public Texture2DParameters(string fileName, ITexture2D texture)
+        public Texture2DParameters(string fileName, Texture2D texture)
             : base(fileName)
         {
             this.texture = texture;
         }
 
-        public Texture2DParameters(string name, ITexture2D texture, ITextureGenerator generator)
+        public Texture2DParameters(string name, Texture2D texture, ITextureGenerator generator)
             : base(name)
         {
             this.texture = texture;
             this.generator = generator;
         }
 
-        public ITexture2D Texture
+        public Texture2D Texture
         {
             get { return texture; }
         }
@@ -100,7 +100,7 @@ namespace Dope.DDXX.Graphics
                         i++;
                     }
                 }
-                texture.SetData<Color>(j + 1, null, newData, 0, newData.Length, SetDataOptions.None);
+                texture.SetData<Color>(j + 1, null, newData, 0, newData.Length);
                 data = newData;
             }
         }
@@ -121,15 +121,15 @@ namespace Dope.DDXX.Graphics
 
     public class TextureCubeParameters : TextureParameters
     {
-        private ITextureCube texture;
+        private TextureCube texture;
 
-        public TextureCubeParameters(string fileName, ITextureCube texture)
+        public TextureCubeParameters(string fileName, TextureCube texture)
             : base(fileName)
         {
             this.texture = texture;
         }
 
-        public ITextureCube Texture
+        public TextureCube Texture
         {
             get { return texture; }
         }

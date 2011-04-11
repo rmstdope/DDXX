@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Dope.DDXX.MidiProcessorLib
+namespace Dope.DDXX.MidiProcessor
 {
     public class CompiledMidi
     {

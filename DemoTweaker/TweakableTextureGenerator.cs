@@ -12,7 +12,7 @@ namespace Dope.DDXX.DemoTweaker
 {
     public class TweakableTextureGenerator : TweakableObjectBase<ITextureGenerator>
     {
-        private ITexture2D texture;
+        private Texture2D texture;
 
         public TweakableTextureGenerator(ITextureGenerator target, ITweakableFactory factory)
             : base(target, factory)
@@ -108,7 +108,7 @@ namespace Dope.DDXX.DemoTweaker
 
         public override void Regenerate(TweakerStatus status)
         {
-            texture = Factory.GraphicsFactory.TextureFactory.CreateFromGenerator("", 64, 64, 1, TextureUsage.None, SurfaceFormat.Color, Target);
+            texture = Factory.GraphicsFactory.TextureFactory.CreateFromGenerator("", 64, 64, false, SurfaceFormat.Color, Target);
         }
     }
 }

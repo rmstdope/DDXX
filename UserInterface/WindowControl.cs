@@ -17,16 +17,16 @@ namespace Dope.DDXX.UserInterface
         private Color selectedTextColor;
         private readonly float screenWidth;
         private readonly float screenHeight;
-        private readonly ISpriteFont titleFont;
-        private readonly ISpriteFont subTitleFont;
-        protected readonly ISpriteFont textFont;
+        private readonly SpriteFont titleFont;
+        private readonly SpriteFont subTitleFont;
+        protected readonly SpriteFont textFont;
         private string title;
         private string subTitle;
         private Vector2 titleTextSize;
         private Vector2 subTitleTextSize;
         private Vector2 combinedTitleTextSize;
         private Vector2 drawSize;
-        private ITexture2D texture;
+        private Texture2D texture;
         private bool fixedWindow;
 
         public Color SelectedTextColor
@@ -70,7 +70,7 @@ namespace Dope.DDXX.UserInterface
             }
         }
 
-        public ITexture2D Texture
+        public Texture2D Texture
         {
             get { return texture; }
             set { texture = value; }
@@ -153,14 +153,14 @@ namespace Dope.DDXX.UserInterface
                 height = GetWindowHeight();
             }
 
-            resources.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+            resources.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             if (Texture != null)
                 resources.SpriteBatch.Draw(Texture, new Rectangle(x1, y1, width, height), new Color(255, 255, 255, 255));
             else
                 resources.SpriteBatch.Draw(resources.WhiteTexture, new Rectangle(x1, y1, width, height), boxColor);
             resources.SpriteBatch.End();
 
-            resources.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+            resources.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             DrawHorizontalLine(resources.SpriteBatch, resources.WhiteTexture, x1 + 1, y1 + 1, width, shadowColor);
             DrawHorizontalLine(resources.SpriteBatch, resources.WhiteTexture, x1 + 1, y1 + 1 + height, width, shadowColor);
             DrawVerticalLine(resources.SpriteBatch, resources.WhiteTexture, x1 + 1, y1 + 1, height, shadowColor);
@@ -177,7 +177,7 @@ namespace Dope.DDXX.UserInterface
                                       y1 + 10 / 2);
             if (title != "")
             {
-                resources.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+                resources.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
                 resources.SpriteBatch.DrawString(titleFont, title, pos + new Vector2(1, 1), shadowColor);
                 resources.SpriteBatch.DrawString(titleFont, title, pos, textColor);
                 resources.SpriteBatch.End();
@@ -186,7 +186,7 @@ namespace Dope.DDXX.UserInterface
             {
                 pos.X = x1 + (width - subTitleTextSize.X) / 2;
                 pos.Y += titleTextSize.Y;
-                resources.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+                resources.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
                 resources.SpriteBatch.DrawString(subTitleFont, subTitle, pos + new Vector2(1, 1), shadowColor);
                 resources.SpriteBatch.DrawString(subTitleFont, subTitle, pos, textColor);
                 resources.SpriteBatch.End();

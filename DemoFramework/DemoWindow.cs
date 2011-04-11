@@ -14,7 +14,7 @@ namespace Dope.DDXX.DemoFramework
 {
     public class DemoWindow : Game
     {
-        private IDeviceManager graphics;
+        private GraphicsDeviceManager graphicsDeviceManager;
         private DemoExecuter executer;
         private IGraphicsFactory graphicsFactory;
         private string xmlFile;
@@ -41,8 +41,10 @@ namespace Dope.DDXX.DemoFramework
                 InputDriver.GetInstance(), new PostProcessor(), effectTypes, 
                 tweakerHandler);
 
-            graphics = graphicsFactory.GraphicsDeviceManager;
-            graphics.PreparingDeviceSettings += new EventHandler<PreparingDeviceSettingsEventArgs>(graphics_PreparingDeviceSettings);
+            graphicsDeviceManager = graphicsFactory.GraphicsDeviceManager;
+            graphicsDeviceManager.GraphicsProfile = GraphicsProfile.Reach;
+            graphicsDeviceManager.PreparingDeviceSettings += new EventHandler<PreparingDeviceSettingsEventArgs>(graphics_PreparingDeviceSettings);
+            //bool reach = GraphicsAdapter.DefaultAdapter.IsProfileSupported(GraphicsProfile.Reach);
 
             deviceParameters = new DeviceParameters(1280, 720, false, false, true, false);
         }
@@ -53,17 +55,16 @@ namespace Dope.DDXX.DemoFramework
             if (deviceParameters.FullScreen)
             {
                 e.GraphicsDeviceInformation.PresentationParameters.IsFullScreen = true;
-                e.GraphicsDeviceInformation.PresentationParameters.FullScreenRefreshRateInHz = 60;
             }
             else
             {
                 e.GraphicsDeviceInformation.PresentationParameters.IsFullScreen = false;
             }
-            e.GraphicsDeviceInformation.DeviceType = deviceParameters.DeviceType;
-            if (deviceParameters.DeviceType == DeviceType.Reference)
-            {
-                //e.GraphicsDeviceInformation.CreationOptions = CreateOptions.SoftwareVertexProcessing;
-            }
+            e.GraphicsDeviceInformation.GraphicsProfile = deviceParameters.GraphicsProfile;
+            //if (deviceParameters.DeviceType == DeviceType.Reference)
+            //{
+            //    //e.GraphicsDeviceInformation.CreationOptions = CreateOptions.SoftwareVertexProcessing;
+            //}
             e.GraphicsDeviceInformation.PresentationParameters.BackBufferWidth = deviceParameters.BackBufferWidth;
             e.GraphicsDeviceInformation.PresentationParameters.BackBufferHeight = deviceParameters.BackBufferHeight;
 #endif
@@ -71,11 +72,8 @@ namespace Dope.DDXX.DemoFramework
 
         protected override void Initialize()
         {
-            GraphicsDeviceCapabilities caps = GraphicsDevice.GraphicsDeviceCapabilities;
-            if (caps.MaxPixelShaderProfile < ShaderProfile.PS_2_0 ||
-                caps.MaxVertexShaderProfile < ShaderProfile.VS_2_0)
-                throw new DDXXException("Your graphics device does not seem to support shader model 2. (VS=" + 
-                    caps.MaxVertexShaderProfile + ", PS=" + caps.MaxPixelShaderProfile + ")");
+            if (!GraphicsAdapter.DefaultAdapter.IsProfileSupported(GraphicsProfile.Reach))
+                throw new DDXXException("Your graphics device does not seem to support shader model 2.");
             TextureFactory textureFactory = new TextureFactory(graphicsFactory);
             EffectFactory effectFactory = new EffectFactory(graphicsFactory);
             ModelFactory modelFactory = new ModelFactory(graphicsFactory, textureFactory);

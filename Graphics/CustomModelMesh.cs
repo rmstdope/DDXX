@@ -7,102 +7,44 @@ using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.Graphics
 {
-    public class CustomModelMesh : IModelMesh
+    public class CustomModelMesh
     {
-        private ReadOnlyCollection<IModelMeshPart> parts;
-        private IGraphicsDevice device;
-        private IVertexBuffer vertexBuffer;
-        private IIndexBuffer indexBuffer;
-        private int vertexSizeInBytes;
-        private IVertexDeclaration vertexDeclaration;
-        private PrimitiveType primitiveType;
+        private ReadOnlyCollection<CustomModelMeshPart> parts;
+        private GraphicsDevice graphicsDevice;
 
-        public CustomModelMesh(IGraphicsDevice device, IVertexBuffer vertexBuffer,
-            IIndexBuffer indexBuffer, int vertexSizeInBytes, IVertexDeclaration vertexDeclaration,
-            PrimitiveType primitiveType, IModelMeshPart[] partArray)
+        public CustomModelMesh(GraphicsDevice graphicsDevice, CustomModelMeshPart[] partArray)
         {
-            List<IModelMeshPart> list = new List<IModelMeshPart>(partArray);
-            parts = new ReadOnlyCollection<IModelMeshPart>(list);
-            this.device = device;
-            this.vertexBuffer = vertexBuffer;
-            this.indexBuffer = indexBuffer;
-            this.vertexSizeInBytes = vertexSizeInBytes;
-            this.vertexDeclaration = vertexDeclaration;
-            this.primitiveType = primitiveType;
+            List<CustomModelMeshPart> list = new List<CustomModelMeshPart>(partArray);
+            parts = new ReadOnlyCollection<CustomModelMeshPart>(list);
+            this.graphicsDevice = graphicsDevice;
         }
 
-        public BoundingSphere BoundingSphere
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public ModelEffectCollectionAdapter Effects
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public IIndexBuffer IndexBuffer
-        {
-            get { return indexBuffer; }
-        }
-
-        public ReadOnlyCollection<IModelMeshPart> MeshParts
+        //public BoundingSphere BoundingSphere { get; }
+        //public ModelEffectCollection Effects { get; }
+        public ReadOnlyCollection<CustomModelMeshPart> MeshParts
         {
             get { return parts; }
         }
-
-        public string Name
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public ModelBone ParentBone
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public object Tag
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
-
-        public IVertexBuffer VertexBuffer
-        {
-            get { return vertexBuffer; }
-        }
+        //public string Name { get; }
+        //public ModelBone ParentBone { get; }
+        //public object Tag { get; set; }
 
         public void Draw()
         {
-            device.Indices = indexBuffer;
-            device.Vertices[0].SetSource(vertexBuffer, 0, vertexSizeInBytes);
-            device.VertexDeclaration = vertexDeclaration;
-            foreach (IModelMeshPart part in parts)
+            foreach (CustomModelMeshPart part in parts)
             {
-                part.Effect.Begin(SaveStateMode.SaveState);
-                foreach (IEffectPass pass in part.Effect.CurrentTechnique.Passes)
+                graphicsDevice.Indices = part.IndexBuffer;
+                graphicsDevice.SetVertexBuffer(part.VertexBuffer);
+                foreach (EffectPass pass in part.MaterialHandler.Effect.CurrentTechnique.Passes)
                 {
-                    pass.Begin();
-                    if (indexBuffer == null)
-                        device.DrawPrimitives(primitiveType, part.BaseVertex, part.PrimitiveCount);
+                    pass.Apply();
+                    if (part.IndexBuffer == null)
+                        graphicsDevice.DrawPrimitives(part.PrimitiveType, part.VertexOffset, part.PrimitiveCount);
                     else
-                        device.DrawIndexedPrimitives(primitiveType, part.BaseVertex, 0, 
+                        graphicsDevice.DrawIndexedPrimitives(part.PrimitiveType, part.VertexOffset, 0, 
                             part.NumVertices, part.StartIndex, part.PrimitiveCount);
-                    pass.End();
                 }
-                part.Effect.End();
             }
-        }
-
-        public void Draw(SaveStateMode saveStateMode)
-        {
-            throw new Exception("The method or operation is not implemented.");
         }
     }
 }

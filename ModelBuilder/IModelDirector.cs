@@ -1,11 +1,12 @@
 ﻿using System;
 using Dope.DDXX.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.ModelBuilder
 {
     public interface IModelDirector
     {
-        IModelBuilder ModelBuilder { get; }
+        ModelBuilder ModelBuilder { get; }
         void Amplitude(AmplitudeFunction function);
         void CreateBox(float width, float length, float height);
         void CreateChamferBox(float width, float length, float height, float fillet, int filletSegments);
@@ -17,8 +18,8 @@ namespace Dope.DDXX.ModelBuilder
         void CreateTorus(float smallRadius, float largeRadius, int side, int segments);
         void CreateTube(float innerRadius, float outerRadius, float height, int segments, int heightSegments);
         void CreateTunnel(float radius, int segments, float height, int heightSegments, int wrapU, int wrapV, bool mirrorTexture);
-        IModel Generate(string materialName);
-        IModel Generate(IMaterialHandler material);
+        CustomModel Generate(string materialName);
+        CustomModel Generate(MaterialHandler material);
         void HeightMap(ITextureGenerator generator);
         void NormalFlip();
         void Rotate(double x, double y, double z);

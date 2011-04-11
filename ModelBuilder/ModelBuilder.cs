@@ -13,16 +13,16 @@ namespace Dope.DDXX.ModelBuilder
     public class ModelBuilder : IModelBuilder
     {
         private IGraphicsFactory graphicsFactory;
-        private ITextureFactory textureFactory;
-        private IEffectFactory effectFactory;
-        private Dictionary<string, IMaterialHandler> materials = new Dictionary<string, IMaterialHandler>();
-        private IEffect defaultEffect;
+        private TextureFactory textureFactory;
+        private EffectFactory effectFactory;
+        private Dictionary<string, MaterialHandler> materials = new Dictionary<string, MaterialHandler>();
+        private Effect defaultEffect;
 
-        public ITextureFactory TextureFactory { get { return textureFactory; } }
-        public IEffectFactory EffectFactory { get { return effectFactory; } }
-        public IGraphicsDevice GraphicsDevice { get { return textureFactory.GraphicsDevice; } }
+        public TextureFactory TextureFactory { get { return textureFactory; } }
+        public EffectFactory EffectFactory { get { return effectFactory; } }
+        public GraphicsDevice GraphicsDevice { get { return textureFactory.GraphicsDevice; } }
 
-        public ModelBuilder(IGraphicsFactory graphicsFactory, ITextureFactory textureFactory, IEffectFactory effectFactory, IEffect defaultEffect)
+        public ModelBuilder(IGraphicsFactory graphicsFactory, TextureFactory textureFactory, EffectFactory effectFactory, Effect defaultEffect)
         {
             this.defaultEffect = defaultEffect;
             this.graphicsFactory = graphicsFactory;
@@ -31,7 +31,7 @@ namespace Dope.DDXX.ModelBuilder
             CreateMaterial("Default");
         }
 
-        public IMaterialHandler GetMaterial(string name)
+        public MaterialHandler GetMaterial(string name)
         {
             if (materials.ContainsKey(name))
                 return materials[name];
@@ -41,37 +41,37 @@ namespace Dope.DDXX.ModelBuilder
 
         public void SetDiffuseTexture(string materialName, string fileName)
         {
-            IMaterialHandler material = GetMaterial(materialName);
+            MaterialHandler material = GetMaterial(materialName);
             if (fileName == null || fileName == "")
                 material.DiffuseTexture = null;
             else
                 material.DiffuseTexture = textureFactory.CreateFromName(fileName);
         }
 
-        public void SetDiffuseTexture(string materialName, ITexture2D texture)
+        public void SetDiffuseTexture(string materialName, Texture2D texture)
         {
-            IMaterialHandler material = GetMaterial(materialName);
+            MaterialHandler material = GetMaterial(materialName);
             material.DiffuseTexture = texture;
         }
 
         public void SetNormalTexture(string materialName, string fileName)
         {
-            IMaterialHandler material = GetMaterial(materialName);
+            MaterialHandler material = GetMaterial(materialName);
             if (fileName == null || fileName == "")
                 material.NormalTexture = null;
             else
                 material.NormalTexture = textureFactory.CreateFromName(fileName);
         }
 
-        public void SetNormalTexture(string materialName, ITexture2D texture)
+        public void SetNormalTexture(string materialName, Texture2D texture)
         {
-            IMaterialHandler material = GetMaterial(materialName);
+            MaterialHandler material = GetMaterial(materialName);
             material.NormalTexture = texture;
         }
 
         public void SetReflectiveTexture(string materialName, string fileName)
         {
-            IMaterialHandler material = GetMaterial(materialName);
+            MaterialHandler material = GetMaterial(materialName);
             if (fileName == null || fileName == "")
                 material.ReflectiveTexture = null;
             else
@@ -80,28 +80,28 @@ namespace Dope.DDXX.ModelBuilder
 
         public void SetReflectiveFactor(string materialName, float factor)
         {
-            IMaterialHandler material = GetMaterial(materialName);
+            MaterialHandler material = GetMaterial(materialName);
             material.ReflectiveFactor = factor;
         }
 
         public void SetTransparency(string materialName, float factor)
         {
-            IMaterialHandler material = GetMaterial(materialName);
+            MaterialHandler material = GetMaterial(materialName);
             material.Transparency = factor;
         }
 
-        public IModel CreateModel(IModifier generator, string material)
+        public CustomModel CreateModel(IModifier generator, string material)
         {
             return CreateModel(generator, GetMaterial(material));
         }
 
-        public IModel CreateModel(IModifier generator, IMaterialHandler modelMaterial)
+        public CustomModel CreateModel(IModifier generator, MaterialHandler modelMaterial)
         {
-            IModel model;
+            CustomModel model;
 
             IPrimitive primitive = generator.Generate();
             primitive.Calculate();
-            IModelMesh mesh = CreateModelMesh(graphicsFactory, primitive.Vertices, primitive.Indices, modelMaterial);
+            CustomModelMesh mesh = CreateModelMesh(graphicsFactory, primitive.Vertices, primitive.Indices, modelMaterial);
             //if (body == null)
                 model = new CustomModel(mesh);
             //else
@@ -109,28 +109,26 @@ namespace Dope.DDXX.ModelBuilder
             return model;
         }
 
-        private IModelMesh CreateModelMesh(IGraphicsFactory factory, Vertex[] vertices, short[] indices, IMaterialHandler material)
+        private CustomModelMesh CreateModelMesh(IGraphicsFactory factory, Vertex[] vertices, short[] indices, MaterialHandler material)
         {
-            IIndexBuffer indexBuffer = CreateIndexBuffer(indices);
-            IVertexBuffer vertexBuffer = CreateVertexBuffer(vertices);
+            IndexBuffer indexBuffer = CreateIndexBuffer(indices);
+            VertexBuffer vertexBuffer = CreateVertexBuffer(vertices);
             int vertexSize = GetVertexSize(vertices);
-            IVertexDeclaration vertexDeclaration = GetVertexDeclaration(vertices);
             FillVertexBuffer(vertexBuffer, vertices);
             FillIndexBuffer(indexBuffer, indices);
 
-            IModelMeshPart part = new CustomModelMeshPart(material, 0, vertices.Length, 0, indices.Length / 3);
-            IModelMesh mesh = new CustomModelMesh(graphicsFactory.GraphicsDevice, vertexBuffer, indexBuffer, vertexSize, 
-                vertexDeclaration, PrimitiveType.TriangleList, new IModelMeshPart[] { part });
+            CustomModelMeshPart part = new CustomModelMeshPart(vertexBuffer, 0, vertices.Length, indexBuffer, 0, indices.Length / 3, PrimitiveType.TriangleList, material);
+            CustomModelMesh mesh = new CustomModelMesh(graphicsFactory.GraphicsDevice, new CustomModelMeshPart[] { part });
             
             return mesh;
         }
 
-        private void FillIndexBuffer(IIndexBuffer indexBuffer, short[] indices)
+        private void FillIndexBuffer(IndexBuffer indexBuffer, short[] indices)
         {
             indexBuffer.SetData<short>(indices);
         }
 
-        private void FillVertexBuffer(IVertexBuffer vertexBuffer, Vertex[] vertices)
+        private void FillVertexBuffer(VertexBuffer vertexBuffer, Vertex[] vertices)
         {
             if (TextureCoordinatesUsed(vertices))
             {
@@ -146,13 +144,6 @@ namespace Dope.DDXX.ModelBuilder
                     newVertices[i] = new VertexPositionNormal(vertices[i].Position, vertices[i].Normal);
                 vertexBuffer.SetData<VertexPositionNormal>(newVertices);
             }
-        }
-
-        private IVertexDeclaration GetVertexDeclaration(Vertex[] vertices)
-        {
-            if (TextureCoordinatesUsed(vertices))
-                return graphicsFactory.CreateVertexDeclaration(VertexPositionTangentTexture.VertexElements);
-            return graphicsFactory.CreateVertexDeclaration(VertexPositionNormal.VertexElements);
         }
 
         private bool TextureCoordinatesUsed(Vertex[] vertices)
@@ -173,64 +164,64 @@ namespace Dope.DDXX.ModelBuilder
             return VertexPositionNormal.SizeInBytes;
         }
 
-        private IVertexBuffer CreateVertexBuffer(Vertex[] vertices)
+        private VertexBuffer CreateVertexBuffer(Vertex[] vertices)
         {
             if (TextureCoordinatesUsed(vertices))
-                return graphicsFactory.CreateVertexBuffer(typeof(VertexPositionTangentTexture), vertices.Length, BufferUsage.None);
-            return graphicsFactory.CreateVertexBuffer(typeof(VertexPositionNormal), vertices.Length, BufferUsage.None);
+                return new VertexBuffer(GraphicsDevice, new VertexDeclaration(VertexPositionTangentTexture.VertexElements), vertices.Length, BufferUsage.None);
+            return new VertexBuffer(GraphicsDevice, new VertexDeclaration(VertexPositionNormal.VertexElements), vertices.Length, BufferUsage.None);
         }
 
-        private IIndexBuffer CreateIndexBuffer(short[] indices)
+        private IndexBuffer CreateIndexBuffer(short[] indices)
         {
-            IIndexBuffer indexBuffer = graphicsFactory.CreateIndexBuffer(typeof(short), indices.Length, BufferUsage.None);
+            IndexBuffer indexBuffer = new IndexBuffer(GraphicsDevice, typeof(short), indices.Length, BufferUsage.None);
             return indexBuffer;
         }
 
         public void SetDiffuseColor(string materialName, Color color)
         {
-            IMaterialHandler material = GetMaterial(materialName);
+            MaterialHandler material = GetMaterial(materialName);
             material.DiffuseColor = color;
         }
 
         public void SetAmbientColor(string materialName, Color color)
         {
-            IMaterialHandler material = GetMaterial(materialName);
+            MaterialHandler material = GetMaterial(materialName);
             material.AmbientColor = color;
         }
 
         public void SetSpecularColor(string materialName, Color color)
         {
-            IMaterialHandler material = GetMaterial(materialName);
+            MaterialHandler material = GetMaterial(materialName);
             material.SpecularColor = color;
         }
 
         public void SetSpecularPower(string materialName, float power)
         {
-            IMaterialHandler material = GetMaterial(materialName);
+            MaterialHandler material = GetMaterial(materialName);
             material.SpecularPower = power;
         }
 
         public void SetShininess(string materialName, float shininess)
         {
-            IMaterialHandler material = GetMaterial(materialName);
+            MaterialHandler material = GetMaterial(materialName);
             material.Shininess = shininess;
         }
 
         public void SetEffect(string materialName, string effectName)
         {
-            IMaterialHandler material = GetMaterial(materialName);
+            MaterialHandler material = GetMaterial(materialName);
             material.Effect = effectFactory.CreateFromFile(effectName);
         }
 
         public void SetBlendMode(string materialName, BlendFunction blendFunction, Blend sourceBlend, Blend destinationBlend)
         {
-            IMaterialHandler material = GetMaterial(materialName);
-            material.BlendFunction = blendFunction;
-            material.SourceBlend = sourceBlend;
-            material.DestinationBlend = destinationBlend;
+            MaterialHandler material = GetMaterial(materialName);
+            material.BlendState.ColorBlendFunction = blendFunction;
+            material.BlendState.ColorSourceBlend = sourceBlend;
+            material.BlendState.ColorDestinationBlend = destinationBlend;
         }
 
-        public void SetMaterial(string materialName, IMaterialHandler material)
+        public void SetMaterial(string materialName, MaterialHandler material)
         {
             materials[materialName] = material;
         }
@@ -239,11 +230,11 @@ namespace Dope.DDXX.ModelBuilder
         {
             if (!materials.ContainsKey(materialName))
             {
-                materials[materialName] = new MaterialHandler(defaultEffect.Clone(graphicsFactory.GraphicsDevice), new EffectConverter());
+                materials[materialName] = new MaterialHandler(defaultEffect.Clone(), new EffectConverter());
                 materials[materialName].DiffuseColor = new Color(200, 200, 200);
                 materials[materialName].SpecularColor = new Color(255, 255, 255);
                 materials[materialName].SpecularPower = 32;
-                if (!(defaultEffect is IBasicEffect))
+                if (!(defaultEffect is BasicEffect))
                 {
                     materials[materialName].AmbientColor = new Color(100, 100, 100);
                     materials[materialName].ReflectiveFactor = 0;

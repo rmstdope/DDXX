@@ -10,35 +10,40 @@ namespace Dope.DDXX.SceneGraph
 {
     public class ModelNode : NodeBase, IModelNode
     {
-        private IModel model;
+        private CustomModel model;
         private LightState lightState;
-        private IGraphicsDevice device;
-        private CullMode cullMode = CullMode.CullCounterClockwiseFace;
-        private bool useDepthBuffer = true;
+        private GraphicsDevice device;
+        private RasterizerState rasterizerState;
+        private DepthStencilState depthStencilState;
 
-        public IModel Model
+        public CustomModel Model
         {
             get { return model; }
             set { model = value; }
         }
 
-        public CullMode CullMode
+        public RasterizerState RasterizerState
         {
-            get { return cullMode; }
-            set { cullMode = value; }
+            get { return rasterizerState; }
+            set { rasterizerState = value; }
         }
 
-        public bool UseDepthBuffer
+        public DepthStencilState DepthStencilState
         {
-            get { return useDepthBuffer; }
-            set { useDepthBuffer = value; }
+            get { return depthStencilState; }
+            set { depthStencilState = value; }
         }
 
-        public ModelNode(string name, IModel model, IGraphicsDevice device) 
+        public ModelNode(string name, CustomModel model, GraphicsDevice device) 
             : base(name)
         {
             this.model = model;
             this.device = device;
+            this.rasterizerState = new RasterizerState();
+            this.depthStencilState = new DepthStencilState();
+
+            rasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
+            depthStencilState.DepthBufferEnable = false;
         }
 
         protected override void SetLightStateNode(LightState state)
@@ -54,9 +59,9 @@ namespace Dope.DDXX.SceneGraph
 
         protected override void RenderNode(IScene scene)
         {
-            foreach (IModelMesh mesh in model.Meshes)
+            foreach (CustomModelMesh mesh in model.Meshes)
             {
-                foreach (IModelMeshPart part in mesh.MeshParts)
+                foreach (CustomModelMeshPart part in mesh.MeshParts)
                 {
                     if (model.AnimationController == null)
                         part.MaterialHandler.SetupRendering(new Matrix[] { WorldMatrix }, scene.ActiveCamera.ViewMatrix,
@@ -65,9 +70,8 @@ namespace Dope.DDXX.SceneGraph
                         part.MaterialHandler.SetupRendering(model.AnimationController.WorldMatrices, scene.ActiveCamera.ViewMatrix,
                             scene.ActiveCamera.ProjectionMatrix, scene.AmbientColor, lightState);
                 }
-                device.RenderState.CullMode = cullMode;
-                device.RenderState.DepthBufferEnable = useDepthBuffer;
-                device.RenderState.DepthBufferWriteEnable = useDepthBuffer;
+                device.RasterizerState = rasterizerState;
+                device.DepthStencilState = depthStencilState;
                 mesh.Draw();
             }
         }

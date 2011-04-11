@@ -8,6 +8,7 @@ using Dope.DDXX.TextureBuilder;
 using Microsoft.Xna.Framework.Graphics;
 using Dope.DDXX.ModelBuilder;
 using Dope.DDXX.Utility;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -19,7 +20,7 @@ namespace Dope.DDXX.DemoFramework
         private ModelDirector modelDirector;
         private TextureDirector textureDirector;
         private IDemoMixer mixer;
-        private IPostProcessor postProcessor;
+        private PostProcessor postProcessor;
         private IScene scene;
 
         protected BaseDemoEffect(string name, float startTime, float endTime)
@@ -35,22 +36,22 @@ namespace Dope.DDXX.DemoFramework
             get { return graphicsFactory; }
         }
 
-        protected IGraphicsDevice GraphicsDevice
+        protected GraphicsDevice GraphicsDevice
         {
             get { return graphicsFactory.GraphicsDevice; }
         }
 
-        protected IEffectFactory EffectFactory
+        protected EffectFactory EffectFactory
         {
             get { return graphicsFactory.EffectFactory; }
         }
 
-        protected IModelFactory ModelFactory
+        protected ModelFactory ModelFactory
         {
             get { return graphicsFactory.ModelFactory; }
         }
 
-        protected ITextureFactory TextureFactory
+        protected TextureFactory TextureFactory
         {
             get { return graphicsFactory.TextureFactory; }
         }
@@ -60,7 +61,7 @@ namespace Dope.DDXX.DemoFramework
             get { return mixer; }
         }
 
-        protected IPostProcessor PostProcessor 
+        protected PostProcessor PostProcessor 
         {
             get { return postProcessor; }
         }
@@ -71,7 +72,7 @@ namespace Dope.DDXX.DemoFramework
             get
             {
                 if (modelBuilder == null)
-                    modelBuilder = new ModelBuilder.ModelBuilder(GraphicsFactory, TextureFactory, EffectFactory, graphicsFactory.CreateBasicEffect()/*EffectFactory.CreateFromFile("Content\\effects\\DefaultEffect")*/);
+                    modelBuilder = new ModelBuilder.ModelBuilder(GraphicsFactory, TextureFactory, EffectFactory, new BasicEffect(GraphicsDevice));
                 return modelBuilder;
             }
         }
@@ -111,7 +112,9 @@ namespace Dope.DDXX.DemoFramework
 
         protected void CreateStandardCamera(out CameraNode camera, float distance)
         {
-            camera = new CameraNode("Standard Camera", GraphicsDevice.AspectRatio);
+            camera = new CameraNode("Standard Camera", 
+                (float)GraphicsDevice.PresentationParameters.BackBufferWidth /
+                (float)GraphicsDevice.PresentationParameters.BackBufferHeight);
             camera.WorldState.MoveForward(-distance);
             scene.AddNode(camera);
             scene.ActiveCamera = camera;
@@ -119,7 +122,9 @@ namespace Dope.DDXX.DemoFramework
 
         protected void CreateStandardCamera(float distance)
         {
-            CameraNode camera = new CameraNode("Standard Camera", GraphicsDevice.AspectRatio);
+            CameraNode camera = new CameraNode("Standard Camera", 
+                (float)GraphicsDevice.PresentationParameters.BackBufferWidth /
+                (float)GraphicsDevice.PresentationParameters.BackBufferHeight);
             camera.WorldState.MoveBackward(distance);
             scene.AddNode(camera);
             scene.ActiveCamera = camera;
@@ -154,7 +159,7 @@ namespace Dope.DDXX.DemoFramework
 
         public abstract void Render();
 
-        public void Initialize(IGraphicsFactory graphicsFactory, IDemoMixer mixer, IPostProcessor postProcessor)
+        public void Initialize(IGraphicsFactory graphicsFactory, IDemoMixer mixer, PostProcessor postProcessor)
         {
             this.graphicsFactory = graphicsFactory;
             this.mixer = mixer;

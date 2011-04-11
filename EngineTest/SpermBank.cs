@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Dope.DDXX.Utility;
 using Microsoft.Xna.Framework;
 using Dope.DDXX.Graphics;
-using Dope.DDXX.ParticleSystems;
 
 namespace EngineTest
 {
@@ -32,7 +31,7 @@ namespace EngineTest
         private void InitializeSperms()
         {
             TextureDirector.CreatePerlinNoise(1, 6, 0.5f);
-            ModelBuilder.SetDiffuseTexture("Default", TextureDirector.Generate("Noise64", 64, 64, 0, SurfaceFormat.Color));
+            ModelBuilder.SetDiffuseTexture("Default", TextureDirector.Generate("Noise64", 64, 64, false, SurfaceFormat.Color));
             //ModelBuilder.SetDiffuseTexture("Default", TextureFactory.CreateFromFile("Content\\textures\\CARPTBLU"));
             ModelBuilder.SetAmbientColor("Default", Color.Red);
             ModelBuilder.SetDiffuseColor("Default", Color.Red);
@@ -42,7 +41,7 @@ namespace EngineTest
             ModelBuilder.SetEffect("Default", "Content\\effects\\BloodCell");
             ModelDirector.CreateSphere(1, 32);
             ModelDirector.Scale(1.8f, 1, 1);
-            IModel model = ModelDirector.Generate("Default");
+            CustomModel model = ModelDirector.Generate("Default");
             for (int i = 0; i < 1; i++)
             {
                 ModelNode head = new ModelNode("Cell", model, GraphicsDevice);

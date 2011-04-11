@@ -10,9 +10,9 @@ using Dope.DDXX.DemoFramework;
 
 namespace Dope.DDXX.DemoTweaker
 {
-    public class TweakableMaterial : TweakableObjectBase<IMaterialHandler>
+    public class TweakableMaterial : TweakableObjectBase<MaterialHandler>
     {
-        public TweakableMaterial(IMaterialHandler target, ITweakableFactory factory)
+        public TweakableMaterial(MaterialHandler target, ITweakableFactory factory)
             : base(target, factory)
         {
         }

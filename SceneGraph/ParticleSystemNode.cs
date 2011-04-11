@@ -13,21 +13,20 @@ namespace Dope.DDXX.SceneGraph
         where T : struct
     {
         protected T[] vertices;
-        private IGraphicsDevice device;
-        protected IVertexBuffer vertexBuffer;
+        private GraphicsDevice device;
+        protected VertexBuffer vertexBuffer;
         protected List<ISystemParticle<T>> particles;
 
-        protected abstract IMaterialHandler CreateDefaultMaterial(IGraphicsFactory graphicsFactory);
+        protected abstract MaterialHandler CreateDefaultMaterial(IGraphicsFactory graphicsFactory);
         protected abstract int NumInitialSpawns { get; }
         protected abstract ISystemParticle<T> Spawn();
         protected abstract bool ShouldSpawn();
         protected int maxNumParticles;
-        private IMaterialHandler material;
+        private MaterialHandler material;
         protected abstract int VertexSizeInBytes { get; }
         protected abstract VertexElement[] VertexElements { get; }
-        private IVertexDeclaration vertexDeclaration;
 
-        public IMaterialHandler Material
+        public MaterialHandler Material
         {
             get { return material; }
             set { material = value; }
@@ -52,9 +51,9 @@ namespace Dope.DDXX.SceneGraph
             material = CreateDefaultMaterial(graphicsFactory);
 
 #if !XBOX
-            vertexBuffer = graphicsFactory.CreateVertexBuffer(typeof(T), maxNumParticles, /*BufferUsage.WriteOnly |*/ BufferUsage.WriteOnly);
+            VertexDeclaration declaration = new VertexDeclaration(VertexElements);
+            vertexBuffer = new VertexBuffer(device, declaration, maxNumParticles, BufferUsage.WriteOnly);
 #endif
-            vertexDeclaration = graphicsFactory.CreateVertexDeclaration(VertexElements);
 
             for (int i = 0; i < NumInitialSpawns; i++)
                 particles.Add(Spawn());
@@ -89,22 +88,19 @@ namespace Dope.DDXX.SceneGraph
             material.SetupRendering(new Matrix[] { WorldMatrix }, scene.ActiveCamera.ViewMatrix, scene.ActiveCamera.ProjectionMatrix, scene.AmbientColor, new LightState());
 
 #if !XBOX
-            device.Vertices[0].SetSource(vertexBuffer, 0, VertexSizeInBytes);
-            device.VertexDeclaration = vertexDeclaration;
+            device.SetVertexBuffer(vertexBuffer);
 #endif
 
-            material.Effect.Begin();
-            foreach (IEffectPass pass in material.Effect.CurrentTechnique.Passes)
+            foreach (EffectPass pass in material.Effect.CurrentTechnique.Passes)
             {
-                pass.Begin();
+                pass.Apply();
 #if !XBOX
-                device.DrawPrimitives(PrimitiveType.PointList, 0, ActiveParticles);
+                /// TODO Where are point lists?
+                //device.DrawPrimitives(PrimitiveType.PointList, 0, ActiveParticles);
 #else
                 device.DrawUserPrimitives<T>(PrimitiveType.PointList, vertices, 0, ActiveParticles);
 #endif
-                pass.End();
             }
-            material.Effect.End();
         }
 
         protected Vector3 RandomPositionInSphere(float radius)

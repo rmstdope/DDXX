@@ -7,7 +7,7 @@ namespace Dope.DDXX.TextureBuilder
 {
     public interface ITextureDirector
     {
-        ITextureFactory TextureFactory { get; }
+        TextureFactory TextureFactory { get; }
         void Add();
         void AddGenerator(ITextureGenerator generator);
         void ColorBlend(Vector4 zeroColor, Vector4 oneColor);
@@ -20,8 +20,8 @@ namespace Dope.DDXX.TextureBuilder
         void FactorBlend(float factor);
         void FromFile(string filename);
         void GaussianBlur();
-        ITexture2D Generate(string name, int width, int height, int numMipLevels, SurfaceFormat format);
-        //ITexture2D GenerateChain(int width, int height);
+        Texture2D Generate(string name, int width, int height, bool mipMap, SurfaceFormat format);
+        //Texture2D GenerateChain(int width, int height);
         void Madd(float mul, float add);
         void Multiply();
         void ModulateColor(Vector4 color);

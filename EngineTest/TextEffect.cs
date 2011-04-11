@@ -38,7 +38,7 @@ namespace EngineTest
                     return text.Substring(textPosition) + text.Substring(0, numChars - (text.Length - textPosition));
                 }
             }
-            public void Advance(ISpriteFont font)
+            public void Advance(SpriteFont font)
             {
                 fraction += speed;
                 if (fraction >= font.MeasureString(text[textPosition].ToString()).X + font.Spacing)
@@ -49,7 +49,7 @@ namespace EngineTest
                         textPosition = 0;
                 }
             }
-            public float GetHeight(ISpriteFont font)
+            public float GetHeight(SpriteFont font)
             {
                 return (int)(font.MeasureString("A").Y + 0.5f);
             }
@@ -58,17 +58,17 @@ namespace EngineTest
         private CameraNode camera;
         private LineNode[] lines;
         private ISpline<InterpolatedVector3>[] splines;
-        private IRenderTarget2D textRenderTarget;
-        private IRenderTarget2D highlightRenderTarget;
-        private ISpriteBatch spriteBatch;
-        private ISpriteFont font;
+        private RenderTarget2D textRenderTarget;
+        private RenderTarget2D highlightRenderTarget;
+        private SpriteBatch spriteBatch;
+        private SpriteFont font;
         private List<TextData> textData;
         private List<BlitSine> highlights;
 
         private const int NumLines = 50;
 
-        private ITexture2D circleTexture;
-        private IModel model;
+        private Texture2D circleTexture;
+        private CustomModel model;
 
         public TextEffect(string name, float start, float end)
             : base(name, start, end)
@@ -81,9 +81,9 @@ namespace EngineTest
 
         protected override void Initialize()
         {
-            spriteBatch = GraphicsFactory.CreateSpriteBatch();
-            textRenderTarget = GraphicsFactory.CreateRenderTarget2D(256, 256, 1, SurfaceFormat.Color, MultiSampleType.None, 0);
-            highlightRenderTarget = GraphicsFactory.CreateRenderTarget2D(256, 256, 1, SurfaceFormat.Color, MultiSampleType.None, 0);
+            spriteBatch = new SpriteBatch(GraphicsFactory.GraphicsDevice);
+            textRenderTarget = new RenderTarget2D(GraphicsFactory.GraphicsDevice, 256, 256, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents);
+            highlightRenderTarget = new RenderTarget2D(GraphicsFactory.GraphicsDevice, 256, 256, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents);
             font = GraphicsFactory.SpriteFontFromFile("Content\\fonts\\PorschaSmall");
 
             CreateStandardCamera(out camera, 15);
@@ -97,7 +97,7 @@ namespace EngineTest
             //    AddKeyFrame(i, 3, new Vector3(-2, 8, 0));
             //    AddKeyFrame(i, 4, new Vector3(4, -6, 0));
             //    splines[i].Calculate();
-            //    IMaterialHandler material = new MaterialHandler(EffectFactory.CreateFromFile("Content\\effects\\ColorLine"), new EffectConverter());
+            //    MaterialHandler material = new MaterialHandler(EffectFactory.CreateFromFile("Content\\effects\\ColorLine"), new EffectConverter());
             //    material.DiffuseColor = new Color(new Vector3((i + 1) / (float)NumLines, (i + 1) / (float)NumLines, (i + 1) / (float)NumLines));
             //    lines[i] = new LineNode("Line", GraphicsFactory,
             //        material,
@@ -149,14 +149,14 @@ namespace EngineTest
             ModelBuilder.SetDiffuseColor("Room", new Color(50, 50, 50));
             ModelBuilder.SetDiffuseTexture("Room", "Content\\textures\\yellowswirls_untiled");
             ModelBuilder.SetEffect("Room", "Content\\effects\\HighlightedText");
-            IModel roomModel = ModelDirector.Generate("Room");
-            IModelNode modelNode = new ModelNode("Room", roomModel, GraphicsDevice);
+            CustomModel roomModel = ModelDirector.Generate("Room");
+            ModelNode modelNode = new ModelNode("Room", roomModel, GraphicsDevice);
             Scene.AddNode(modelNode);
         }
 
         private void CreatePlane(float rotation)
         {
-            IModelNode modelNode = new ModelNode("Plane", model, GraphicsDevice);
+            ModelNode modelNode = new ModelNode("Plane", model, GraphicsDevice);
             modelNode.WorldState.Turn(rotation);
             modelNode.WorldState.MoveUp(1.5f);
             modelNode.WorldState.MoveForward(5.0f);
@@ -175,13 +175,13 @@ namespace EngineTest
         public override void Step()
         {
             const float OffsetY = 3;
-            IRenderTarget2D oldRt = GraphicsDevice.GetRenderTarget(0) as IRenderTarget2D;
-            GraphicsDevice.SetRenderTarget(0, highlightRenderTarget);
+            RenderTarget2D oldRt = GraphicsDevice.GetRenderTargets()[0].RenderTarget as RenderTarget2D;
+            GraphicsDevice.SetRenderTarget(highlightRenderTarget);
             GraphicsDevice.Clear(ClearOptions.Target, new Color(20, 20, 20), 0, 0);            
-            spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
-            GraphicsDevice.RenderState.DestinationBlend = Blend.One;
-            GraphicsDevice.RenderState.SourceBlend = Blend.One;
-            GraphicsDevice.RenderState.AlphaTestEnable = false;
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            GraphicsDevice.BlendState.ColorDestinationBlend = Blend.One;
+            GraphicsDevice.BlendState.ColorSourceBlend = Blend.One;
+            //GraphicsDevice..RenderState.AlphaTestEnable = false;
             spriteBatch.Draw(circleTexture, new Rectangle(0, 0, 256, 256), Color.White);
             foreach (BlitSine sine in highlights)
             {
@@ -189,7 +189,7 @@ namespace EngineTest
             }
             spriteBatch.End();
 
-            GraphicsDevice.SetRenderTarget(0, textRenderTarget);
+            GraphicsDevice.SetRenderTarget(textRenderTarget);
             GraphicsDevice.Clear(ClearOptions.Target, Color.Black, 0, 0);
             spriteBatch.Begin();
             float y = -OffsetY;
@@ -200,13 +200,13 @@ namespace EngineTest
                 data.Advance(font);
             }
             spriteBatch.End();
-            spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
-            GraphicsDevice.RenderState.DestinationBlend = Blend.Zero;
-            GraphicsDevice.RenderState.SourceBlend = Blend.DestinationColor;
-            spriteBatch.Draw(highlightRenderTarget.GetTexture(), new Rectangle(0, 0, 256, 256), Color.White);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            GraphicsDevice.BlendState.ColorDestinationBlend = Blend.Zero;
+            GraphicsDevice.BlendState.ColorSourceBlend = Blend.DestinationColor;
+            spriteBatch.Draw(highlightRenderTarget, new Rectangle(0, 0, 256, 256), Color.White);
             spriteBatch.End();
             
-            GraphicsDevice.SetRenderTarget(0, oldRt);
+            GraphicsDevice.SetRenderTarget(oldRt);
 
             //for (int i = 0; i < NumLines; i++)
             //{
@@ -225,7 +225,7 @@ namespace EngineTest
             //spriteBatch.Draw(highlightRenderTarget.GetTexture(),
             //    new Rectangle(256, 0, 256, 256), Color.White);
             //spriteBatch.End();
-            model.Meshes[0].MeshParts[0].MaterialHandler.DiffuseTexture = textRenderTarget.GetTexture();
+            model.Meshes[0].MeshParts[0].MaterialHandler.DiffuseTexture = textRenderTarget;
             model.Meshes[0].MeshParts[0].MaterialHandler.AmbientColor = new Color(5, 5, 5);
             Scene.Render();
         }

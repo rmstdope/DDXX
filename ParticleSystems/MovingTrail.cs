@@ -44,9 +44,9 @@ namespace Dope.DDXX.ParticleSystems
             return true;
         }
 
-        protected override IMaterialHandler CreateDefaultMaterial(IGraphicsFactory graphicsFactory)
+        protected override MaterialHandler CreateDefaultMaterial(IGraphicsFactory graphicsFactory)
         {
-            IMaterialHandler material = new MaterialHandler(graphicsFactory.EffectFromFile("Content\\effects\\PointSpriteParticles"), new EffectConverter());
+            MaterialHandler material = new MaterialHandler(graphicsFactory.EffectFromFile("Content\\effects\\PointSpriteParticles"), new EffectConverter());
             material.DiffuseTexture = graphicsFactory.TextureFactory.WhiteTexture;
             material.BlendFunction = BlendFunction.Add;
             material.SourceBlend = Blend.One;

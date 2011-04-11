@@ -23,7 +23,7 @@ namespace EngineTest
             scale = new Vector2(Rand.Float(30, 90), Rand.Float(30, 90));
         }
 
-        public void Draw(ISpriteBatch spriteBatch, ITexture2D texture)
+        public void Draw(SpriteBatch spriteBatch, Texture2D texture)
         {
             float x = offset.X + Time.CurrentTime / period.X;
             float y = offset.Y + Time.CurrentTime / period.Y;

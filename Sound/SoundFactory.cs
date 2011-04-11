@@ -2,25 +2,26 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework.Audio;
-using Dope.DDXX.MidiProcessorLib;
 using Dope.DDXX.Graphics;
+//using Dope.DDXX.MidiProcessor;
+using Microsoft.Xna.Framework.Content;
 
 namespace Dope.DDXX.Sound
 {
     public class SoundFactory : ISoundFactory
     {
-        private IContentManager contentManager;
+        private ContentManager contentManager;
         private AudioEngine audioEngine;
         private WaveBank waveBank;
         private SoundBank soundBank;
-        private CompiledMidi midi;
+        //private CompiledMidi midi;
 
-        public SoundFactory(IContentManager contentManager)
+        public SoundFactory(ContentManager contentManager)
         {
             this.contentManager = contentManager;
         }
 
-        public CompiledMidi Midi { get { return midi; } }
+        //public CompiledMidi Midi { get { return midi; } }
 
         public void Initialize(string resourceName)
         {
@@ -29,7 +30,7 @@ namespace Dope.DDXX.Sound
             soundBank = new SoundBank(audioEngine, "Content\\sound\\" + resourceName + ".xsb");
             try
             {
-                midi = contentManager.Load<CompiledMidi>("Content\\sound\\" + resourceName);
+                //midi = contentManager.Load<CompiledMidi>("Content\\sound\\" + resourceName);
             }
             catch (Exception) { }
         }

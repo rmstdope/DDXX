@@ -6,13 +6,14 @@ using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Graphics;
 using Microsoft.Xna.Framework.Graphics;
 using Dope.DDXX.Utility;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.DemoEffects
 {
     public class TextureFadeTransition : BaseDemoTransition
     {
         //private string textureName;
-        private ITexture2D texture;
+        private Texture2D texture;
         private float fadeDelay;
 
         //public string TextureName
@@ -21,7 +22,7 @@ namespace Dope.DDXX.DemoEffects
         //    set { textureName = value; }
         //}
 
-        public ITexture2D Texture
+        public Texture2D Texture
         {
             get { return texture; }
             set { texture = value; }
@@ -45,7 +46,7 @@ namespace Dope.DDXX.DemoEffects
             //texture = TextureFactory.CreateFromName(textureName);
         }
 
-        public override IRenderTarget2D Combine(IRenderTarget2D fromTexture, IRenderTarget2D toTexture)
+        public override RenderTarget2D Combine(RenderTarget2D fromTexture, RenderTarget2D toTexture)
         {
             PostProcessor.StartFrame(fromTexture);
             PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.SourceAlpha, Blend.InverseSourceAlpha, Color.Black);

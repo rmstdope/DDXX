@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.TextureBuilder;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.ModelBuilder
 {
     public class ModelDirector : IModelDirector
     {
-        private IModelBuilder modelBuilder;
+        private ModelBuilder modelBuilder;
         private IModifier primitive;
 
-        public IModelBuilder ModelBuilder
+        public ModelBuilder ModelBuilder
         {
             get { return modelBuilder; }
         }
 
-        public ModelDirector(IModelBuilder modelBuilder)
+        public ModelDirector(ModelBuilder modelBuilder)
         {
             this.modelBuilder = modelBuilder;
         }
@@ -228,12 +229,12 @@ namespace Dope.DDXX.ModelBuilder
             primitive = heightMap;
         }
 
-        public IModel Generate(string materialName)
+        public CustomModel Generate(string materialName)
         {
             return modelBuilder.CreateModel(primitive, materialName);
         }
 
-        public IModel Generate(IMaterialHandler material)
+        public CustomModel Generate(MaterialHandler material)
         {
             return modelBuilder.CreateModel(primitive, material);
         }

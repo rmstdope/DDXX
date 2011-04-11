@@ -10,7 +10,7 @@ namespace Dope.DDXX.GameFramework
 {
     public interface IGameExecuter
     {
-        void Initialize(IGameCallback game, IFsa startFsa, IGraphicsFactory graphicsFactory, IInputDriver inputDriver, ITextureFactory textureFactory, IEffectFactory effectFactory, IPostProcessor postProcessor);
+        void Initialize(IGameCallback game, IFsa startFsa, IGraphicsFactory graphicsFactory, IInputDriver inputDriver, TextureFactory textureFactory, EffectFactory effectFactory, PostProcessor postProcessor);
         void Step();
         void Render();
     }

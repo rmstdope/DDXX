@@ -41,7 +41,7 @@ namespace EngineTest
         {
             modelDirector.CreateBox(10, 10, 10);
             modelDirector.Translate(0, 5, 0);
-            IModel model = modelDirector.Generate("Default");
+            CustomModel model = modelDirector.Generate("Default");
             ModelNode house = new ModelNode("Ground", model, GraphicsDevice);
             Scene.AddNode(house);
         }
@@ -50,9 +50,9 @@ namespace EngineTest
         {
             modelDirector.CreatePlane(50, 50, 1, 1);
             modelDirector.Rotate(Math.PI / 2, 0, 0);
-            IModel model = modelDirector.Generate("Default");
+            CustomModel model = modelDirector.Generate("Default");
             ModelNode ground = new ModelNode("Ground", model, GraphicsDevice);
-            ground.CullMode = CullMode.None;
+            ground.RasterizerState.CullMode = CullMode.None;
             Scene.AddNode(ground);
         }
 
@@ -70,7 +70,7 @@ namespace EngineTest
             textureDirector.CreatePerlinNoise(512, 6, 0.5f);
             textureDirector.Madd(0.04f, 0);
             textureDirector.Add();
-            ModelBuilder.SetDiffuseTexture("Default", textureDirector.Generate("Noise256", 256, 256, 0, SurfaceFormat.Color));
+            ModelBuilder.SetDiffuseTexture("Default", textureDirector.Generate("Noise256", 256, 256, false, SurfaceFormat.Color));
         }
 
         private void SetBrickTexture()
@@ -95,7 +95,7 @@ namespace EngineTest
             textureDirector.Madd(0.3f, 0);
             textureDirector.Subtract();
             //textureDirector.Generate(256, 256, 0, SurfaceFormat.Color).Save("bricks.dds", ImageFileFormat.Dds);
-            ModelBuilder.SetDiffuseTexture("Default", textureDirector.Generate("Noise256", 256, 256, 0, SurfaceFormat.Color));
+            ModelBuilder.SetDiffuseTexture("Default", textureDirector.Generate("Noise256", 256, 256, false, SurfaceFormat.Color));
         }
 
         public override void Step()

@@ -11,14 +11,14 @@ namespace Dope.DDXX.SceneGraph
     public class LineNode : NodeBase
     {
         private ISpline<InterpolatedVector3> positionSpline;
-        private IUserPrimitive<VertexPositionColor> primitive;
+        private UserPrimitive<VertexPositionColor> primitive;
         private float endTime;
 
-        public LineNode(string name, IGraphicsFactory graphicsFactory, IMaterialHandler material, ISpline<InterpolatedVector3> positionSpline, int segments)
+        public LineNode(string name, IGraphicsFactory graphicsFactory, MaterialHandler material, ISpline<InterpolatedVector3> positionSpline, int segments)
             : base(name)
         {
             this.positionSpline = positionSpline;
-            primitive = new UserPrimitive<VertexPositionColor>(graphicsFactory.CreateVertexDeclaration(VertexPositionColor.VertexElements), material, PrimitiveType.LineStrip, segments);
+            primitive = new UserPrimitive<VertexPositionColor>(VertexPositionColor.VertexDeclaration, material, PrimitiveType.LineStrip, segments);
             endTime = positionSpline.EndTime;
         }
 

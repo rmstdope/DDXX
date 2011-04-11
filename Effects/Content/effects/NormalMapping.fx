@@ -42,7 +42,7 @@ struct VS_OUTPUT
 	float3x3 tangentToWorld	: TEXCOORD3;
 };
 
-VS_OUTPUT VertexShader( VS_INPUT input )
+VS_OUTPUT MyVertexShader( VS_INPUT input )
 {
 	VS_OUTPUT output;
     
@@ -73,7 +73,7 @@ VS_OUTPUT VertexShader( VS_INPUT input )
 	return output;
 }
 
-float4 PixelShader( VS_OUTPUT input ) : COLOR0
+float4 MyPixelShader( VS_OUTPUT input ) : COLOR0
 {
 	// look up the normal from the normal map, and transform from tangent space
 	// into world space using the matrix created above.  normalize the result
@@ -112,8 +112,8 @@ Technique NormalMapping
 {
 	Pass Go
 	{
-		VertexShader = compile vs_1_1 VertexShader();
-		PixelShader = compile ps_2_0 PixelShader();
+		VertexShader = compile vs_1_1 MyVertexShader();
+		PixelShader = compile ps_2_0 MyPixelShader();
 		ZEnable = true;
 		ZWriteEnable = true;
 		FillMode = Solid;

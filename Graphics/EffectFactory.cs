@@ -10,9 +10,9 @@ namespace Dope.DDXX.Graphics
         private class FileEntry
         {
             public string file;
-            public IEffect effect;
+            public Effect effect;
 
-            public FileEntry(string file, IEffect effect)
+            public FileEntry(string file, Effect effect)
             {
                 this.file = file;
                 this.effect = effect;
@@ -27,12 +27,12 @@ namespace Dope.DDXX.Graphics
             this.factory = factory;
         }
 
-        public IBasicEffect CreateBasicEffect()
+        public BasicEffect CreateBasicEffect()
         {
-            return factory.CreateBasicEffect();
+            return new BasicEffect(factory.GraphicsDevice);
         }
 
-        public IEffect CreateFromFile(string file)
+        public Effect CreateFromFile(string file)
         {
             FileEntry needle = new FileEntry(file, null);
             FileEntry result = files.Find(delegate(FileEntry item)
@@ -44,9 +44,9 @@ namespace Dope.DDXX.Graphics
             });
             if (result != null)
             {
-                return result.effect.Clone(result.effect.GraphicsDevice);
+                return result.effect.Clone();
             }
-            IEffect effect = factory.EffectFromFile(file);
+            Effect effect = factory.EffectFromFile(file);
             needle.effect = effect;
             files.Add(needle);
             return effect;

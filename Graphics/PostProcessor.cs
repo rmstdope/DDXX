@@ -11,33 +11,33 @@ namespace Dope.DDXX.Graphics
     {
         private class TextureContainer
         {
-            private IRenderTarget2D renderTarget;
-            private ITexture2D texture;
+            private RenderTarget2D renderTarget;
+            private Texture2D texture;
 
-            public IRenderTarget2D RenderTarget
+            public RenderTarget2D RenderTarget
             {
                 get { return renderTarget; }
                 set { renderTarget = value; }
             }
-            public ITexture2D Texture
+            public Texture2D Texture
             {
-                get { if (texture == null) return renderTarget.GetTexture(); else return texture; }
+                get { if (texture == null) return renderTarget as Texture2D; else return texture; }
                 set { texture = value; }
             }
             public float scale;
             public bool allocated;
-            public TextureContainer(IRenderTarget2D texture)
+            public TextureContainer(RenderTarget2D texture)
             {
                 this.renderTarget = texture;
                 scale = 1.0f;
             }
         }
         private IGraphicsFactory graphicsFactory;
-        private IRenderTarget2D lastUsedTexture;
+        private RenderTarget2D lastUsedTexture;
         private TextureContainer inputTextureContainer = new TextureContainer(null);
         private TextureContainer sourceTextureContainer = new TextureContainer(null);
-        private ISpriteBatch spriteBatch;
-        private IEffect effect;
+        private SpriteBatch spriteBatch;
+        private Effect effect;
         private BlendFunction blendOperation = BlendFunction.Add;
         private Blend sourceBlend = Blend.One;
         private Blend destinatonBlend = Blend.Zero;
@@ -53,19 +53,19 @@ namespace Dope.DDXX.Graphics
         {
             this.graphicsFactory = graphicsFactory;
             effect = graphicsFactory.EffectFactory.CreateFromFile("Content\\effects\\PostEffects");
-            spriteBatch = graphicsFactory.CreateSpriteBatch();
+            spriteBatch = new SpriteBatch(graphicsFactory.GraphicsDevice);
 
             HandleAnnotations();
         }
 
         private void HandleAnnotations()
         {
-            foreach (IEffectParameter parameterTo in effect.Parameters)
+            foreach (EffectParameter parameterTo in effect.Parameters)
             {
-                IEffectAnnotation annotation = parameterTo.Annotations["ConvertPixelsToTexels"];
+                EffectAnnotation annotation = parameterTo.Annotations["ConvertPixelsToTexels"];
                 if (annotation != null)
                 {
-                    IEffectParameter parameterFrom = effect.Parameters[annotation.GetValueString()];
+                    EffectParameter parameterFrom = effect.Parameters[annotation.GetValueString()];
                     int numElements = parameterFrom.Elements.Count;
                     float[] values = parameterFrom.GetValueSingleArray(numElements * 2);
                     for (int j = 0; j < numElements; j++)
@@ -78,12 +78,12 @@ namespace Dope.DDXX.Graphics
             }
         }
 
-        public IRenderTarget2D OutputTexture
+        public RenderTarget2D OutputTexture
         {
             get { return lastUsedTexture; }
         }
 
-        public void StartFrame(IRenderTarget2D startTexture)
+        public void StartFrame(RenderTarget2D startTexture)
         {
             inputTextureContainer.RenderTarget = startTexture;
             inputTextureContainer.scale = 1.0f;
@@ -98,7 +98,7 @@ namespace Dope.DDXX.Graphics
             this.blendFactor = blendFactor;
         }
 
-        public void Process(string technique, IRenderTarget2D source, IRenderTarget2D destination)
+        public void Process(string technique, RenderTarget2D source, RenderTarget2D destination)
         {
             effect.Parameters["Time2D"].SetValue(new float[] { 
                 (1.23f * Time.CurrentTime * Time.CurrentTime) % 1,
@@ -110,21 +110,21 @@ namespace Dope.DDXX.Graphics
 
             ProcessPasses(technique, sourceContainer, destinationContainer);
 
-            graphicsFactory.GraphicsDevice.SetRenderTarget(0, null);//.ResolveRenderTarget(0);
+            graphicsFactory.GraphicsDevice.SetRenderTarget(null);
             lastUsedTexture = destination;
 
             //sourceContainer.Texture.GetTexture().Save("source.jpg", ImageFileFormat.Jpg);
             //destinationContainer.Texture.GetTexture().Save("destination.jpg", ImageFileFormat.Jpg);
         }
 
-        public void Process(string technique, ITexture2D source, IRenderTarget2D destination)
+        public void Process(string technique, Texture2D source, RenderTarget2D destination)
         {
 
             sourceTextureContainer.Texture = source;
-            Process(technique, (IRenderTarget2D)null, destination);
+            Process(technique, (RenderTarget2D)null, destination);
         }
 
-        private TextureContainer GetContainer(IRenderTarget2D source, bool useSourceIfNotFound)
+        private TextureContainer GetContainer(RenderTarget2D source, bool useSourceIfNotFound)
         {
             if (source == inputTextureContainer.RenderTarget)
                 return inputTextureContainer;
@@ -140,18 +140,17 @@ namespace Dope.DDXX.Graphics
 
         private void SetupProcessParameters(string technique, TextureContainer destination)
         {
-            graphicsFactory.GraphicsDevice.SetRenderTarget(0, destination.RenderTarget);
+            graphicsFactory.GraphicsDevice.SetRenderTarget(destination.RenderTarget);
             effect.CurrentTechnique = effect.Techniques[technique];
         }
 
         private void ProcessPasses(string technique, TextureContainer source, TextureContainer destination)
         {
-            spriteBatch.Begin(SpriteBlendMode.None, SpriteSortMode.Immediate, SaveStateMode.None);
-            effect.Begin();
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
             SetupRenderState();
-            foreach (IEffectPass pass in effect.CurrentTechnique.Passes)
+            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
-                pass.Begin();
+                pass.Apply();
                 float fromScale = source.scale;
                 float toScale;
 #if (XBOX)
@@ -179,9 +178,7 @@ namespace Dope.DDXX.Graphics
                         new Rectangle(0, 0, (int)(sourceWidth * fromScale), (int)(sourceHeight * fromScale)),
                         Color.White);
                 spriteBatch.End();
-                pass.End();
             }
-            effect.End();
         }
 
         private void SetupRenderState()
@@ -190,19 +187,18 @@ namespace Dope.DDXX.Graphics
                 Blend.One == sourceBlend &&
                 Blend.Zero == destinatonBlend)
             {
-                graphicsFactory.GraphicsDevice.RenderState.AlphaBlendEnable = false;
+                graphicsFactory.GraphicsDevice.BlendState = BlendState.NonPremultiplied;
             }
             else
             {
-                graphicsFactory.GraphicsDevice.RenderState.AlphaBlendEnable = true;
-                graphicsFactory.GraphicsDevice.RenderState.BlendFunction = blendOperation;
-                graphicsFactory.GraphicsDevice.RenderState.SourceBlend = sourceBlend;
-                graphicsFactory.GraphicsDevice.RenderState.DestinationBlend = destinatonBlend;
-                graphicsFactory.GraphicsDevice.RenderState.BlendFactor = blendFactor;
+                graphicsFactory.GraphicsDevice.BlendState.ColorBlendFunction = blendOperation;
+                graphicsFactory.GraphicsDevice.BlendState.ColorSourceBlend = sourceBlend;
+                graphicsFactory.GraphicsDevice.BlendState.ColorDestinationBlend = destinatonBlend;
+                graphicsFactory.GraphicsDevice.BlendState.BlendFactor = blendFactor;
             }
         }
 
-        //private VertexPositionTexture[] CreateVertexStruct(string technique, TextureContainer source, TextureContainer destination, IEffectPass pass)
+        //private VertexPositionTexture[] CreateVertexStruct(string technique, TextureContainer source, TextureContainer destination, EffectPass pass)
         //{
         //    VertexPositionTexture[] vertices = new VertexPositionTexture[4];
         //    float fromScale = source.scale;
@@ -227,8 +223,8 @@ namespace Dope.DDXX.Graphics
         public void DebugWriteAllTextures()
         {
 #if (!XBOX)
-            for (int i = 0; i < textures.Count; i++)
-                textures[i].RenderTarget.GetTexture().Save("Container" + i + ".jpg", ImageFileFormat.Jpg);
+            //for (int i = 0; i < textures.Count; i++) {
+            //    xxx(textures[i].RenderTarget as Texture2D).SaveAsJpeg("Container" + i + ".jpg");
 #endif
         }
 
@@ -253,14 +249,14 @@ namespace Dope.DDXX.Graphics
             effect.Parameters[name].SetValue(value);
         }
 
-        public void SetValue(string name, ITexture2D value)
+        public void SetValue(string name, Texture2D value)
         {
             effect.Parameters[name].SetValue(value);
         }
 
-        public List<IRenderTarget2D> GetTemporaryTextures(int num, bool skipOutput)
+        public List<RenderTarget2D> GetTemporaryTextures(int num, bool skipOutput)
         {
-            List<IRenderTarget2D> tempTextures = new List<IRenderTarget2D>();
+            List<RenderTarget2D> tempTextures = new List<RenderTarget2D>();
             foreach (TextureContainer container in textures)
             {
                 if (!container.allocated)
@@ -281,20 +277,20 @@ namespace Dope.DDXX.Graphics
             int numToAdd = num - tempTextures.Count;
             for (int i = 0; i < numToAdd; i++)
             {
-                IRenderTarget2D newTexture = graphicsFactory.TextureFactory.CreateFullsizeRenderTarget();
+                RenderTarget2D newTexture = graphicsFactory.TextureFactory.CreateFullsizeRenderTarget();
                 textures.Add(new TextureContainer(newTexture));
                 tempTextures.Add(newTexture);
             }
             if (tempTextures[0] == lastUsedTexture)
             {
-                IRenderTarget2D temp = tempTextures[0];
+                RenderTarget2D temp = tempTextures[0];
                 tempTextures[0] = tempTextures[1];
                 tempTextures[1] = temp;
             }
             return tempTextures;
         }
 
-        public void AllocateTexture(IRenderTarget2D texture)
+        public void AllocateTexture(RenderTarget2D texture)
         {
             foreach (TextureContainer container in textures)
             {
@@ -309,7 +305,7 @@ namespace Dope.DDXX.Graphics
             throw new DDXXException("Texture not found.");
         }
 
-        public void FreeTexture(IRenderTarget2D texture)
+        public void FreeTexture(RenderTarget2D texture)
         {
             foreach (TextureContainer container in textures)
             {

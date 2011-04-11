@@ -1,26 +1,27 @@
 ﻿using System;
 using Dope.DDXX.Graphics;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.ModelBuilder
 {
     public interface IModelBuilder
     {
-        ITextureFactory TextureFactory { get; }
-        IEffectFactory EffectFactory { get; }
-        IGraphicsDevice GraphicsDevice { get; }
+        TextureFactory TextureFactory { get; }
+        EffectFactory EffectFactory { get; }
+        GraphicsDevice GraphicsDevice { get; }
         void CreateMaterial(string materialName);
-        IModel CreateModel(IModifier generator, IMaterialHandler modelMaterial);
-        IModel CreateModel(IModifier generator, string material);
-        IMaterialHandler GetMaterial(string name);
+        CustomModel CreateModel(IModifier generator, MaterialHandler modelMaterial);
+        CustomModel CreateModel(IModifier generator, string material);
+        MaterialHandler GetMaterial(string name);
         void SetAmbientColor(string materialName, Color color);
         void SetBlendMode(string materialName, BlendFunction blendFunction, Blend sourceBlend, Blend destinationBlend);
         void SetDiffuseColor(string materialName, Color color);
-        void SetDiffuseTexture(string materialName, ITexture2D texture);
+        void SetDiffuseTexture(string materialName, Texture2D texture);
         void SetDiffuseTexture(string materialName, string fileName);
         void SetEffect(string materialName, string effectName);
-        void SetMaterial(string materialName, IMaterialHandler material);
-        void SetNormalTexture(string materialName, ITexture2D texture);
+        void SetMaterial(string materialName, MaterialHandler material);
+        void SetNormalTexture(string materialName, Texture2D texture);
         void SetNormalTexture(string materialName, string fileName);
         void SetReflectiveFactor(string materialName, float factor);
         void SetTransparency(string materialName, float factor);

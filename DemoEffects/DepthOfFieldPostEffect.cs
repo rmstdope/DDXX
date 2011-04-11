@@ -4,6 +4,7 @@ using System.Text;
 using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Graphics;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.DemoEffects
 {
@@ -30,7 +31,7 @@ namespace Dope.DDXX.DemoEffects
             if (numPasses > 1)
                 numTextures = 2;
             //numTextures = 2;
-            List<IRenderTarget2D> textures = PostProcessor.GetTemporaryTextures(numTextures, false);
+            List<RenderTarget2D> textures = PostProcessor.GetTemporaryTextures(numTextures, false);
 
             PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);
             //PostProcessor.Process("DepthOfFieldVertical", PostProcessor.OutputTexture, textures[0]);

@@ -9,19 +9,27 @@ namespace Dope.DDXX.UserInterface
 {
     public class UserInterface : IUserInterface, IDrawResources
     {
-        private ISpriteBatch spriteBatch;
-        private ITexture2D whiteTexture;
-        private Dictionary<FontSize, ISpriteFont> spriteFonts;
+        private SpriteBatch spriteBatch;
+        private Texture2D whiteTexture;
+        private Dictionary<FontSize, SpriteFont> spriteFonts;
         private float aspectRatio;
+        private BlendState blendState;
 
         public UserInterface()
         {
-            spriteFonts = new Dictionary<FontSize, ISpriteFont>();
+            spriteFonts = new Dictionary<FontSize, SpriteFont>();
+            blendState = new BlendState();
+            blendState.ColorBlendFunction = BlendFunction.Add;
+            blendState.ColorSourceBlend = Blend.SourceAlpha;
+            blendState.ColorDestinationBlend = Blend.InverseSourceAlpha;
+            blendState.AlphaBlendFunction = BlendFunction.Add;
+            blendState.AlphaSourceBlend = Blend.SourceAlpha;
+            blendState.AlphaDestinationBlend = Blend.InverseSourceAlpha;
         }
 
-        public void Initialize(IGraphicsFactory graphicsFactory, ITextureFactory textureFactory)
+        public void Initialize(IGraphicsFactory graphicsFactory, TextureFactory textureFactory)
         {
-            spriteBatch = graphicsFactory.CreateSpriteBatch();
+            spriteBatch = new SpriteBatch(graphicsFactory.GraphicsDevice);
             if (!spriteFonts.ContainsKey(FontSize.Medium))
                 spriteFonts[FontSize.Medium] = graphicsFactory.SpriteFontFromFile("Content/fonts/TweakerFont");
             whiteTexture = textureFactory.WhiteTexture;
@@ -31,16 +39,13 @@ namespace Dope.DDXX.UserInterface
 
         public void DrawControl(IControl control)
         {
-            spriteBatch.GraphicsDevice.RenderState.AlphaBlendEnable = true;
-            spriteBatch.GraphicsDevice.RenderState.BlendFunction = BlendFunction.Add;
-            spriteBatch.GraphicsDevice.RenderState.SourceBlend = Blend.SourceAlpha;
-            spriteBatch.GraphicsDevice.RenderState.DestinationBlend = Blend.InverseSourceAlpha;
+            spriteBatch.GraphicsDevice.BlendState = blendState;
             int num = control.DrawControl(this);
             Console.WriteLine("Drew {0} controls.", num);
         }
 
 
-        public void SetFont(FontSize size, ISpriteFont font)
+        public void SetFont(FontSize size, SpriteFont font)
         {
             spriteFonts[size] = font;
         }
@@ -48,17 +53,17 @@ namespace Dope.DDXX.UserInterface
 
         #region IDrawResources Members
 
-        public ISpriteBatch SpriteBatch
+        public SpriteBatch SpriteBatch
         {
             get { return spriteBatch; }
         }
 
-        public ISpriteFont GetSpriteFont(FontSize size)
+        public SpriteFont GetSpriteFont(FontSize size)
         {
             return spriteFonts[size];
         }
 
-        public ITexture2D WhiteTexture
+        public Texture2D WhiteTexture
         {
             get { return whiteTexture; }
         }

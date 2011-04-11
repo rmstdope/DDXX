@@ -31,7 +31,7 @@ namespace EngineTest
             director.CreateCircle(0.2f, 0.35f, 0.5f, 0.5f, new Vector2(0.5f, 0.5f));
 
             SpiralSystemNode spiralSystem;
-            ITexture2D texture = director.Generate("Circle256", 256, 256, 0, SurfaceFormat.Color);
+            Texture2D texture = director.Generate("Circle256", 256, 256, true, SurfaceFormat.Color);
             for (int i = 0; i < 1; i++)
             {
                 spiralSystem = new SpiralSystemNode("ps" + i, 1.0f);

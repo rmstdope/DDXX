@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.UserInterface
 {
@@ -13,9 +14,9 @@ namespace Dope.DDXX.UserInterface
     }
     public interface IUserInterface
     {
-        void Initialize(IGraphicsFactory graphicsFactory, ITextureFactory textureFactory);
+        void Initialize(IGraphicsFactory graphicsFactory, TextureFactory textureFactory);
         void DrawControl(IControl control);
-        void SetFont(FontSize size, ISpriteFont font);
+        void SetFont(FontSize size, SpriteFont font);
         IDrawResources DrawResources { get; }
     }
 }

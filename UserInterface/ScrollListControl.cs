@@ -50,7 +50,7 @@ namespace Dope.DDXX.UserInterface
             base.Draw(resources);
             Vector2 pos = new Vector2(GetDrawX1(resources) + 5, GetDrawY1(resources) + 5);
 
-            resources.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+            resources.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             foreach (string text in shownText)
             {
                 resources.SpriteBatch.DrawString(textFont, text, pos + new Vector2(1, 1), shadowColor);

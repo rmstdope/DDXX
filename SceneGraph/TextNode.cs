@@ -6,11 +6,11 @@ namespace Dope.DDXX.SceneGraph
 {
     public class TextNode : NodeBase
     {
-        private ISpriteBatch spriteBatch;
-        private ISpriteFont spriteFont;
+        private SpriteBatch spriteBatch;
+        private SpriteFont spriteFont;
         private string text;
 
-        public TextNode(string name, ISpriteBatch spriteBatch, ISpriteFont spriteFont)
+        public TextNode(string name, SpriteBatch spriteBatch, SpriteFont spriteFont)
             : base(name)
         {
             this.spriteBatch = spriteBatch;
@@ -40,7 +40,7 @@ namespace Dope.DDXX.SceneGraph
             Vector2 size = spriteFont.MeasureString(text);
             screenPos.X -= size.X / 2;
             screenPos.Y -= size.Y / 2;
-            spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             spriteBatch.DrawString(spriteFont, text, new Vector2(screenPos.X, screenPos.Y), Color.White);
             spriteBatch.End();
         }

@@ -325,8 +325,8 @@ namespace EngineTest
 
     public class SmokeEffect : BaseDemoEffect
     {
-        private ISpriteBatch sprite;
-        private ITexture2D texture;
+        private SpriteBatch sprite;
+        private Texture2D texture;
         private uint[] colorData;
         private SmokeSimulator simulator;
         int dotX;
@@ -365,8 +365,8 @@ namespace EngineTest
 
         protected override void Initialize()
         {
-            sprite = GraphicsFactory.CreateSpriteBatch();
-            texture = TextureFactory.CreateFromFunction(N, N, 1, TextureUsage.None, SurfaceFormat.Color,
+            sprite = new SpriteBatch(GraphicsDevice);
+            texture = TextureFactory.CreateFromFunction(N, N, false, SurfaceFormat.Color,
                 delegate(int width, int height)
                 {
                     Vector4[,] vec = new Vector4[N, N];
@@ -430,7 +430,7 @@ namespace EngineTest
         public override void Render()
         {
             sprite.Begin();
-            GraphicsDevice.RenderState.DepthBufferEnable = false;
+            GraphicsDevice.DepthStencilState.DepthBufferEnable = false;
             {
                 int sWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
                 int sHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;

@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Dope.DDXX.UserInterface;
-using Dope.DDXX.MidiProcessorLib;
+//using Dope.DDXX.MidiProcessor;
 
 namespace Dope.DDXX.DemoFramework
 {
@@ -22,13 +22,13 @@ namespace Dope.DDXX.DemoFramework
         private ICue song;
 
         private IGraphicsFactory graphicsFactory;
-        private IPostProcessor postProcessor;
+        private PostProcessor postProcessor;
         private IDemoTweakerHandler tweakerHandler;
         private IUserInterface userInterface;
-        private ISpriteBatch spriteBatch;
-        private IRenderTarget2D renderTarget;
-        private IRenderTarget2D renderTargetNoMultiSampling;
-        private IDepthStencilBuffer depthStencilBuffer;
+        private SpriteBatch spriteBatch;
+        private RenderTarget2D renderTarget;
+        private RenderTarget2D renderTargetNoMultiSampling;
+        private SamplerState samplerState;
 
         private IInputDriver inputDriver;
         private List<ITrack> tracks = new List<ITrack>();
@@ -106,7 +106,7 @@ namespace Dope.DDXX.DemoFramework
             get { return effectTypes; }
         }
 
-        public DemoExecuter(IDemoFactory demoFactory, ISoundFactory soundFactory, IInputDriver inputDriver, IPostProcessor postProcessor, IDemoEffectTypes effectTypes, IDemoTweakerHandler tweakerHandler)
+        public DemoExecuter(IDemoFactory demoFactory, ISoundFactory soundFactory, IInputDriver inputDriver, PostProcessor postProcessor, IDemoEffectTypes effectTypes, IDemoTweakerHandler tweakerHandler)
         {
             this.demoFactory = demoFactory;
             this.soundFactory = soundFactory;
@@ -115,6 +115,10 @@ namespace Dope.DDXX.DemoFramework
             this.effectTypes = effectTypes;
             this.tweakerHandler = tweakerHandler;
             userInterface = new UserInterface.UserInterface();
+            samplerState = new SamplerState();
+            samplerState.AddressU = TextureAddressMode.Clamp;
+            samplerState.AddressV = TextureAddressMode.Clamp;
+            samplerState.AddressW = TextureAddressMode.Clamp;
         }
 
         public void Initialize(IGraphicsFactory graphicsFactory, IDeviceParameters deviceParameters)
@@ -125,13 +129,13 @@ namespace Dope.DDXX.DemoFramework
         public void Initialize(IGraphicsFactory graphicsFactory, string xmlFile, IDeviceParameters deviceParameters)
         {
             this.graphicsFactory = graphicsFactory;
-            this.spriteBatch = graphicsFactory.CreateSpriteBatch();
-            this.renderTarget = graphicsFactory.TextureFactory.CreateFullsizeRenderTarget(deviceParameters.RenderTargetFormat, deviceParameters.MultiSampleType, 0);
-            if (deviceParameters.MultiSampleType == MultiSampleType.None)
+            this.spriteBatch = new SpriteBatch(graphicsFactory.GraphicsDevice);
+            this.renderTarget = graphicsFactory.TextureFactory.CreateFullsizeRenderTarget(deviceParameters.RenderTargetFormat, deviceParameters.DepthStencilFormat, deviceParameters.MultiSampleCount);
+            //if (deviceParameters.MultiSampleType == MultiSampleType.None)
                 this.renderTargetNoMultiSampling = this.renderTarget;
-            else
-                this.renderTargetNoMultiSampling = graphicsFactory.TextureFactory.CreateFullsizeRenderTarget();
-            this.depthStencilBuffer = graphicsFactory.TextureFactory.CreateFullsizeDepthStencil(deviceParameters.DepthStencilFormat, deviceParameters.MultiSampleType);
+            //else
+            //    this.renderTargetNoMultiSampling = graphicsFactory.TextureFactory.CreateFullsizeRenderTarget();
+            //this.depthStencilBuffer = graphicsFactory.TextureFactory.CreateFullsizeDepthStencil(deviceParameters.DepthStencilFormat, deviceParameters.MultiSampleType);
 
             InitializeTweaker(graphicsFactory);
 
@@ -274,17 +278,17 @@ namespace Dope.DDXX.DemoFramework
 #endif
         public void Render()
         {
-            ITexture2D renderedTexture = RenderTracks();
+            Texture2D renderedTexture = RenderTracks();
 
 #if (!XBOX)
-            if (inputDriver.KeyPressedNoRepeat(tweakerHandler.Settings.ScreenshotKey))
-                renderedTexture.Save("Screenshot" + screenshotNum++ + ".jpg", ImageFileFormat.Jpg);
+            //if (inputDriver.KeyPressedNoRepeat(tweakerHandler.Settings.ScreenshotKey))
+            //    renderedTexture.Save("Screenshot" + screenshotNum++ + ".jpg", ImageFileFormat.Jpg);
 #endif
 
             if (renderedTexture != null)
             {
-                graphicsFactory.GraphicsDevice.SetRenderTarget(0, null);
-                spriteBatch.Begin(SpriteBlendMode.None, SpriteSortMode.Immediate, SaveStateMode.None);
+                graphicsFactory.GraphicsDevice.SetRenderTarget(null);
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, samplerState, null, null);
                 spriteBatch.Draw(renderedTexture, new Rectangle(0, 0, 
                     graphicsFactory.GraphicsDevice.PresentationParameters.BackBufferWidth,
                     graphicsFactory.GraphicsDevice.PresentationParameters.BackBufferHeight), Color.White);
@@ -294,19 +298,19 @@ namespace Dope.DDXX.DemoFramework
             tweakerHandler.Draw();
         }
 
-        private ITexture2D RenderTracks()
+        private Texture2D RenderTracks()
         {
-            IRenderTarget2D finalRenderTarget = null;
+            RenderTarget2D finalRenderTarget = null;
             if (tracks.Count != 0)
             {
-                finalRenderTarget = GetActiveTrack().Render(graphicsFactory.GraphicsDevice, renderTarget, renderTargetNoMultiSampling, depthStencilBuffer, clearColors[GetActiveTrackNum()]);
+                finalRenderTarget = GetActiveTrack().Render(graphicsFactory.GraphicsDevice, renderTarget, renderTargetNoMultiSampling, clearColors[GetActiveTrackNum()]);
                 IDemoTransition transition = GetActiveTransition();
                 if (transition != null)
                 {
                     postProcessor.AllocateTexture(finalRenderTarget);
-                    IRenderTarget2D finalRenderTarget2 = tracks[transition.DestinationTrack].Render(graphicsFactory.GraphicsDevice, renderTarget, renderTargetNoMultiSampling, depthStencilBuffer, clearColors[transition.DestinationTrack]);
+                    RenderTarget2D finalRenderTarget2 = tracks[transition.DestinationTrack].Render(graphicsFactory.GraphicsDevice, renderTarget, renderTargetNoMultiSampling, clearColors[transition.DestinationTrack]);
                     ////postProcessor.AllocateTexture(finalRenderTarget2);
-                    IRenderTarget2D newFinalRenderTarget = transition.Render(finalRenderTarget, finalRenderTarget2);
+                    RenderTarget2D newFinalRenderTarget = transition.Render(finalRenderTarget, finalRenderTarget2);
                     postProcessor.FreeTexture(finalRenderTarget);
                     ////postProcessor.FreeTexture(finalRenderTarget2);
                     finalRenderTarget = newFinalRenderTarget;
@@ -314,7 +318,7 @@ namespace Dope.DDXX.DemoFramework
             }
             if (finalRenderTarget == null)
                 return null;
-            return finalRenderTarget.GetTexture();
+            return finalRenderTarget;
         }
 
         private IDemoTransition GetActiveTransition()
@@ -409,11 +413,11 @@ namespace Dope.DDXX.DemoFramework
             lastAddedAsset = generator;
         }
 
-        public void AddTexture(string textureName, string generatorName, int width, int height, int mipLevels)
+        public void AddTexture(string textureName, string generatorName, int width, int height, bool mipMap)
         {
             if (!generators.ContainsKey(generatorName))
                 throw new DDXXException("Generator " + generatorName + " has never been registered.");
-            graphicsFactory.TextureFactory.CreateFromGenerator(textureName, width, height, mipLevels, TextureUsage.None, SurfaceFormat.Color, generators[generatorName]);
+            graphicsFactory.TextureFactory.CreateFromGenerator(textureName, width, height, mipMap, SurfaceFormat.Color, generators[generatorName]);
         }
 
         public void AddFloatParameter(string name, float value, float stepSize)
@@ -542,10 +546,10 @@ namespace Dope.DDXX.DemoFramework
             return clearColors[track];
         }
         
-        public CompiledMidi CompiledMidi
-        {
-            get { return soundFactory.Midi; }
-        }
+        //public CompiledMidi CompiledMidi
+        //{
+        //    get { return soundFactory.Midi; }
+        //}
 
         #endregion
 

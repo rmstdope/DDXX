@@ -11,15 +11,14 @@ namespace Dope.DDXX.Graphics
     public interface ITextureFactory
     {
         bool TextureExists(string name);
-        IGraphicsDevice GraphicsDevice { get; }
-        ITexture2D CreateFromName(string name);
-        ITextureCube CreateCubeFromFile(string name);
-        IRenderTarget2D CreateFullsizeRenderTarget(SurfaceFormat format, MultiSampleType multiSampleType, int multiSampleQuality);
-        IRenderTarget2D CreateFullsizeRenderTarget();
-        IDepthStencilBuffer CreateFullsizeDepthStencil(DepthFormat format, MultiSampleType multiSampleType);
-        ITexture2D CreateFromFunction(int width, int height, int numLevels, TextureUsage usage, SurfaceFormat format, Generate2DTextureCallback callbackFunction);
-        ITexture2D CreateFromGenerator(string name, int width, int height, int numMipLevels, TextureUsage usage, SurfaceFormat format, ITextureGenerator generator);
-        ITexture2D WhiteTexture { get; }
+        GraphicsDevice GraphicsDevice { get; }
+        Texture2D CreateFromName(string name);
+        TextureCube CreateCubeFromFile(string name);
+        RenderTarget2D CreateFullsizeRenderTarget(SurfaceFormat format, DepthFormat depthformat, int preferredMultiSampleCount);
+        RenderTarget2D CreateFullsizeRenderTarget();
+        Texture2D CreateFromFunction(int width, int height, bool mipMap, SurfaceFormat format, Generate2DTextureCallback callbackFunction);
+        Texture2D CreateFromGenerator(string name, int width, int height, bool mipMap, SurfaceFormat format, ITextureGenerator generator);
+        Texture2D WhiteTexture { get; }
         List<Texture2DParameters> Texture2DParameters { get; }
         void Update(Texture2DParameters Target);
     }

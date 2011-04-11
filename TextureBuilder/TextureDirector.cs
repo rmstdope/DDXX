@@ -11,24 +11,24 @@ namespace Dope.DDXX.TextureBuilder
     public class TextureDirector : ITextureDirector
     {
         Stack<ITextureGenerator> generatorStack;
-        ITextureFactory textureFactory;
+        TextureFactory textureFactory;
 
-        public ITextureFactory TextureFactory
+        public TextureFactory TextureFactory
         {
             get { return textureFactory; }
         }
 
-        public TextureDirector(ITextureFactory textureFactory)
+        public TextureDirector(TextureFactory textureFactory)
         {
             generatorStack = new Stack<ITextureGenerator>();
             this.textureFactory = textureFactory;
         }
 
-        public ITexture2D Generate(string name, int width, int height, int numMipLevels, SurfaceFormat format)
+        public Texture2D Generate(string name, int width, int height, bool mipMap, SurfaceFormat format)
         {
             if (generatorStack.Count == 0)
                 throw new DDXXException("At least one generator must be added before a texture can be generator.");
-            return textureFactory.CreateFromGenerator(name, width, height, numMipLevels, TextureUsage.None, format, generatorStack.Pop());
+            return textureFactory.CreateFromGenerator(name, width, height, mipMap, format, generatorStack.Pop());
         }
 
         public void CreatePerlinNoise(int baseFrequncy, int numOctaves, float persistance)
@@ -194,7 +194,7 @@ namespace Dope.DDXX.TextureBuilder
                 throw new DDXXException("Not enough elements on the stack.");
         }
 
-        //public ITexture2D GenerateChain(int width, int height)
+        //public Texture2D GenerateChain(int width, int height)
         //{
         //    List<ITextureGenerator> list = new List<ITextureGenerator>();
         //    ITextureGenerator[] generators = generatorStack.ToArray();

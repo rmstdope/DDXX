@@ -8,33 +8,39 @@ using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.Graphics
 {
-    public class MaterialHandler : IMaterialHandler
+    public class MaterialHandler
     {
-        private IEffect effect;
-        private IEffectConverter effectConverter;
-        private BlendFunction blendFunction;
-        private Blend sourceBlend;
-        private Blend destinationBlend;
+        private Effect effect;
+        private EffectConverter effectConverter;
+        private BlendState blendState;
+        //private BlendFunction blendFunction;
+        //private Blend sourceBlend;
+        //private Blend destinationBlend;
 
-        public BlendFunction BlendFunction
+        public BlendState BlendState
         {
-            get { return blendFunction; }
-            set { blendFunction = value; }
+            get { return blendState; }
+            set { blendState = value; }
         }
+        //public BlendFunction BlendFunction
+        //{
+        //    get { return blendFunction; }
+        //    set { blendFunction = value; }
+        //}
 
-        public Blend SourceBlend
-        {
-            get { return sourceBlend; }
-            set { sourceBlend = value; }
-        }
+        //public Blend SourceBlend
+        //{
+        //    get { return sourceBlend; }
+        //    set { sourceBlend = value; }
+        //}
 
-        public Blend DestinationBlend
-        {
-            get { return destinationBlend; }
-            set { destinationBlend = value; }
-        }
+        //public Blend DestinationBlend
+        //{
+        //    get { return destinationBlend; }
+        //    set { destinationBlend = value; }
+        //}
 
-        public IEffect Effect
+        public Effect Effect
         {
             get { return effect; }
             set 
@@ -45,13 +51,14 @@ namespace Dope.DDXX.Graphics
             }
         }
 
-        public MaterialHandler(IEffect effect, IEffectConverter effectConverter)
+        public MaterialHandler(Effect effect, EffectConverter effectConverter)
         {
             this.effect = effect;
             this.effectConverter = effectConverter;
-            this.blendFunction = BlendFunction.Add;
-            this.sourceBlend = Blend.One;
-            this.destinationBlend = Blend.Zero;
+            this.BlendState = new BlendState();
+            this.BlendState.ColorBlendFunction = BlendFunction.Add;
+            this.BlendState.ColorSourceBlend = Blend.One;
+            this.BlendState.ColorDestinationBlend = Blend.Zero;
         }
 
         public void SetupRendering(Matrix[] worldMatrices, Matrix viewMatrix, Matrix projectionMatrix,
@@ -63,33 +70,21 @@ namespace Dope.DDXX.Graphics
         public void SetupRendering(Matrix[] worldMatrices, Matrix viewMatrix, Matrix projectionMatrix, 
             Color ambientLight, LightState lightState)
         {
-            if (effect is IBasicEffect)
-                SetupEffect(worldMatrices, viewMatrix, projectionMatrix, ambientLight, lightState, effect as IBasicEffect);
+            if (effect is BasicEffect)
+                SetupEffect(worldMatrices, viewMatrix, projectionMatrix, ambientLight, lightState, effect as BasicEffect);
             else
-                SetupEffect(worldMatrices, viewMatrix, projectionMatrix, ambientLight, lightState, effect as IEffect);
+                SetupEffect(worldMatrices, viewMatrix, projectionMatrix, ambientLight, lightState, effect);
 
             SetupBlending();
         }
 
         private void SetupBlending()
         {
-            if (blendFunction == BlendFunction.Add &&
-                sourceBlend == Blend.One &&
-                destinationBlend == Blend.Zero)
-            {
-                effect.GraphicsDevice.RenderState.AlphaBlendEnable = false;
-            }
-            else
-            {
-                effect.GraphicsDevice.RenderState.AlphaBlendEnable = true;
-                effect.GraphicsDevice.RenderState.BlendFunction = blendFunction;
-                effect.GraphicsDevice.RenderState.SourceBlend = sourceBlend;
-                effect.GraphicsDevice.RenderState.DestinationBlend = destinationBlend;
-            }
+            effect.GraphicsDevice.BlendState = blendState;
         }
 
         private void SetupEffect(Matrix[] worldMatrices, Matrix viewMatrix, Matrix projectionMatrix, 
-            Color ambientLight, LightState lightState, IEffect effect)
+            Color ambientLight, LightState lightState, Effect effect)
         {
             effect.Parameters["World"].SetValue(worldMatrices);
             effect.Parameters["View"].SetValue(viewMatrix);
@@ -105,13 +100,13 @@ namespace Dope.DDXX.Graphics
         }
 
         private void SetupEffect(Matrix[] worldMatrices, Matrix viewMatrix, Matrix projectionMatrix, 
-            Color ambientLight, LightState lightState, IBasicEffect effect)
+            Color ambientLight, LightState lightState, BasicEffect effect)
         {
             effect.LightingEnabled = true;
             effect.AmbientLightColor = ambientLight.ToVector3();
             for (int i = 0; i < lightState.NumLights; i++)
             {
-                IBasicDirectionalLight light = GetDirectionalLight(effect, i);
+                DirectionalLight light = GetDirectionalLight(effect, i);
                 light.Enabled = true;
                 light.DiffuseColor = lightState.DiffuseColor[i];
                 light.SpecularColor = lightState.DiffuseColor[i];
@@ -127,7 +122,7 @@ namespace Dope.DDXX.Graphics
             effect.World = worldMatrices[0];
         }
 
-        private IBasicDirectionalLight GetDirectionalLight(IBasicEffect effect, int i)
+        private DirectionalLight GetDirectionalLight(BasicEffect effect, int i)
         {
             switch (i)
             {
@@ -143,14 +138,14 @@ namespace Dope.DDXX.Graphics
         {
             get
             {
-                if (effect is IBasicEffect)
-                    throw new DDXXException("AmbientColor does not work for IBasicEffect effects.");
+                if (effect is BasicEffect)
+                    throw new DDXXException("AmbientColor does not work for BasicEffect effects.");
                 return new Color(effect.Parameters["AmbientColor"].GetValueVector3());
             }
             set
             {
-                if (effect is IBasicEffect)
-                    throw new DDXXException("AmbientColor does not work for IBasicEffect effects.");
+                if (effect is BasicEffect)
+                    throw new DDXXException("AmbientColor does not work for BasicEffect effects.");
                 effect.Parameters["AmbientColor"].SetValue(value.ToVector3());
             }
         }
@@ -159,15 +154,15 @@ namespace Dope.DDXX.Graphics
         {
             get
             {
-                if (effect is IBasicEffect)
-                    return new Color((effect as IBasicEffect).DiffuseColor);
+                if (effect is BasicEffect)
+                    return new Color((effect as BasicEffect).DiffuseColor);
                 else
                     return new Color(effect.Parameters["DiffuseColor"].GetValueVector3());
             }
             set
             {
-                if (effect is IBasicEffect)
-                    (effect as IBasicEffect).DiffuseColor = value.ToVector3();
+                if (effect is BasicEffect)
+                    (effect as BasicEffect).DiffuseColor = value.ToVector3();
                 else
                     effect.Parameters["DiffuseColor"].SetValue(value.ToVector3());
             }
@@ -177,14 +172,14 @@ namespace Dope.DDXX.Graphics
         {
             get
             {
-                if (effect is IBasicEffect)
-                    return new Color((effect as IBasicEffect).SpecularColor);
+                if (effect is BasicEffect)
+                    return new Color((effect as BasicEffect).SpecularColor);
                 return new Color(effect.Parameters["SpecularColor"].GetValueVector3());
             }
             set
             {
-                if (effect is IBasicEffect)
-                    (effect as IBasicEffect).SpecularColor = value.ToVector3();
+                if (effect is BasicEffect)
+                    (effect as BasicEffect).SpecularColor = value.ToVector3();
                 else
                     effect.Parameters["SpecularColor"].SetValue(value.ToVector3());
             }
@@ -194,14 +189,14 @@ namespace Dope.DDXX.Graphics
         {
             get
             {
-                if (effect is IBasicEffect)
-                    return (effect as IBasicEffect).SpecularPower;
+                if (effect is BasicEffect)
+                    return (effect as BasicEffect).SpecularPower;
                 return effect.Parameters["SpecularPower"].GetValueSingle();
             }
             set
             {
-                if (effect is IBasicEffect)
-                    (effect as IBasicEffect).SpecularPower = value;
+                if (effect is BasicEffect)
+                    (effect as BasicEffect).SpecularPower = value;
                 else
                     effect.Parameters["SpecularPower"].SetValue(value);
             }
@@ -211,14 +206,14 @@ namespace Dope.DDXX.Graphics
         {
             get
             {
-                if (effect is IBasicEffect)
-                    throw new DDXXException("Shininess does not work for IBasicEffect effects.");
+                if (effect is BasicEffect)
+                    throw new DDXXException("Shininess does not work for BasicEffect effects.");
                 return effect.Parameters["Shininess"].GetValueSingle();
             }
             set
             {
-                if (effect is IBasicEffect)
-                    throw new DDXXException("Shininess does not work for IBasicEffect effects.");
+                if (effect is BasicEffect)
+                    throw new DDXXException("Shininess does not work for BasicEffect effects.");
                 effect.Parameters["Shininess"].SetValue(value);
             }
         }
@@ -227,69 +222,69 @@ namespace Dope.DDXX.Graphics
         {
             get
             {
-                if (effect is IBasicEffect)
-                    throw new DDXXException("Transparency does not work for IBasicEffect effects.");
+                if (effect is BasicEffect)
+                    throw new DDXXException("Transparency does not work for BasicEffect effects.");
                 return effect.Parameters["Transparency"].GetValueSingle();
             }
             set
             {
-                if (effect is IBasicEffect)
-                    throw new DDXXException("Transparency does not work for IBasicEffect effects.");
+                if (effect is BasicEffect)
+                    throw new DDXXException("Transparency does not work for BasicEffect effects.");
                 effect.Parameters["Transparency"].SetValue(value);
             }
         }
 
-        public ITexture2D DiffuseTexture 
+        public Texture2D DiffuseTexture 
         {
             get
             {
-                if (effect is IBasicEffect)
-                    return (effect as IBasicEffect).Texture;
+                if (effect is BasicEffect)
+                    return (effect as BasicEffect).Texture;
                 return effect.Parameters["Texture"].GetValueTexture2D();
             }
             set
             {
-                if (effect is IBasicEffect)
+                if (effect is BasicEffect)
                 {
-                    (effect as IBasicEffect).Texture = value;
+                    (effect as BasicEffect).Texture = value;
                     if (value == null)
-                        (effect as IBasicEffect).TextureEnabled = false;
+                        (effect as BasicEffect).TextureEnabled = false;
                     else
-                        (effect as IBasicEffect).TextureEnabled = true;
+                        (effect as BasicEffect).TextureEnabled = true;
                 }
                 else
                     effect.Parameters["Texture"].SetValue(value);
             }
         }
 
-        public ITexture2D NormalTexture
+        public Texture2D NormalTexture
         {
             get
             {
-                if (effect is IBasicEffect)
-                    throw new DDXXException("NormalTexture does not work for IBasicEffect effects.");
+                if (effect is BasicEffect)
+                    throw new DDXXException("NormalTexture does not work for BasicEffect effects.");
                 return effect.Parameters["NormalMap"].GetValueTexture2D();
             }
             set
             {
-                if (effect is IBasicEffect)
-                    throw new DDXXException("NormalTexture does not work for IBasicEffect effects.");
+                if (effect is BasicEffect)
+                    throw new DDXXException("NormalTexture does not work for BasicEffect effects.");
                 effect.Parameters["NormalMap"].SetValue(value);
             }
         }
 
-        public ITextureCube ReflectiveTexture
+        public TextureCube ReflectiveTexture
         {
             get
             {
-                if (effect is IBasicEffect)
-                    throw new DDXXException("ReflectiveTexture does not work for IBasicEffect effects.");
+                if (effect is BasicEffect)
+                    throw new DDXXException("ReflectiveTexture does not work for BasicEffect effects.");
                 return effect.Parameters["ReflectiveMap"].GetValueTextureCube();
             }
             set
             {
-                if (effect is IBasicEffect)
-                    throw new DDXXException("ReflectiveTexture does not work for IBasicEffect effects.");
+                if (effect is BasicEffect)
+                    throw new DDXXException("ReflectiveTexture does not work for BasicEffect effects.");
                 effect.Parameters["ReflectiveMap"].SetValue(value);
             }
         }
@@ -298,14 +293,14 @@ namespace Dope.DDXX.Graphics
         {
             get
             {
-                if (effect is IBasicEffect)
-                    throw new DDXXException("ReflectiveFactor does not work for IBasicEffect effects.");
+                if (effect is BasicEffect)
+                    throw new DDXXException("ReflectiveFactor does not work for BasicEffect effects.");
                 return effect.Parameters["ReflectiveFactor"].GetValueSingle();
             }
             set
             {
-                if (effect is IBasicEffect)
-                    throw new DDXXException("ReflectiveFactor does not work for IBasicEffect effects.");
+                if (effect is BasicEffect)
+                    throw new DDXXException("ReflectiveFactor does not work for BasicEffect effects.");
                 effect.Parameters["ReflectiveFactor"].SetValue(value);
             }
         }

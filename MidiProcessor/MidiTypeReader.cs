@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework.Content;
 
-namespace Dope.DDXX.MidiProcessorLib
+namespace Dope.DDXX.MidiProcessor
 {
     public class MidiTypeReader : ContentTypeReader<CompiledMidi>
     {

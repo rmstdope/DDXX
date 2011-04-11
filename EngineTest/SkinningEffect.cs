@@ -23,7 +23,7 @@ namespace EngineTest
         protected override void Initialize()
         {
             CreateStandardCamera(out camera, 100);
-            IModel model = ModelFactory.CreateFromName("Content/models/dude", "Content/effects/Skinning");
+            CustomModel model = ModelFactory.CreateFromName("Content/models/dude", "Content/effects/Skinning");
             node = new ModelNode("", model, GraphicsDevice);
             node.Model.AnimationController.Speed = 1.0f;
             node.Model.AnimationController.PlayMode = PlayMode.Loop;

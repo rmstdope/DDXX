@@ -10,17 +10,17 @@ using Dope.DDXX.DemoFramework;
 
 namespace Dope.DDXX.DemoTweaker
 {
-    public class TweakableModel : TweakableObjectBase<IModel>
+    public class TweakableModel : TweakableObjectBase<Model>
     {
-        List<IModelMeshPart> parts;
+        List<ModelMeshPart> parts;
 
-        public TweakableModel(IModel target, ITweakableFactory factory)
+        public TweakableModel(Model target, ITweakableFactory factory)
             : base(target, factory)
         {
-            parts = new List<IModelMeshPart>();
-            foreach (IModelMesh mesh in Target.Meshes)
+            parts = new List<ModelMeshPart>();
+            foreach (ModelMesh mesh in Target.Meshes)
             {
-                foreach (IModelMeshPart part in mesh.MeshParts)
+                foreach (ModelMeshPart part in mesh.MeshParts)
                 {
                     parts.Add(part);
                 }
@@ -59,7 +59,7 @@ namespace Dope.DDXX.DemoTweaker
                 new BoxControl(new Vector4(0, y, 1, height), settings.Alpha, settings.SelectedColor, status.RootControl);
             new TextControl("Model", new Vector4(0, y, 0.45f, height), Positioning.Right | Positioning.VerticalCenter, settings.TextAlpha, Color.White, status.RootControl);
 
-            new TextControl("<IModel>",
+            new TextControl("<Model>",
                 new Vector4(0.55f, y, 0.45f, height), Positioning.Center | Positioning.VerticalCenter,
                 settings.TextAlpha, Color.White, status.RootControl);
         }

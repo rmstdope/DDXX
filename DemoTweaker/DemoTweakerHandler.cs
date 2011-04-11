@@ -83,21 +83,21 @@ namespace Dope.DDXX.DemoTweaker
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(IDemoRegistrator), typeof(TweakableDemo)));
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(int), typeof(TweakableInt32)));
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(IRegisterable), typeof(TweakableRegisterable)));
-            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(ITexture2D), typeof(TweakableTextureValue)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(Texture2D), typeof(TweakableTextureValue)));
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(Texture2DParameters), typeof(TweakableTexture2DParameters)));
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(float), typeof(TweakableSingle)));
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(string), typeof(TweakableString)));
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(Vector2), typeof(TweakableVector2)));
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(Vector3), typeof(TweakableVector3)));
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(Vector4), typeof(TweakableVector4)));
-            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(ITextureFactory), typeof(TweakableTextureFactory)));
-            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(IModelFactory), typeof(TweakableModelFactory)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(TextureFactory), typeof(TweakableTextureFactory)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(ModelFactory), typeof(TweakableModelFactory)));
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(ITextureGenerator), typeof(TweakableTextureGenerator)));
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(IScene), typeof(TweakableScene)));
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(INode), typeof(TweakableNode)));
-            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(IModel), typeof(TweakableModel)));
-            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(IModelMeshPart), typeof(TweakableModelMeshPart)));
-            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(IMaterialHandler), typeof(TweakableMaterial)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(Model), typeof(TweakableModel)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(CustomModelMeshPart), typeof(TweakableCustomModelMeshPart)));
+            typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(MaterialHandler), typeof(TweakableMaterial)));
             typeTweakableMapping.Add(new KeyValuePair<Type, Type>(typeof(IDemoRegistrator), typeof(TweakableDemo)));
         }
 

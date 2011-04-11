@@ -53,7 +53,7 @@ namespace Dope.DDXX.DemoEffects
                 rect.Center = new Vector2(0.5f, 0.5f);
                 rect.RoundRadius = rounding;
                 Texture = TextureFactory.CreateFromGenerator("AspectFrame", GraphicsDevice.PresentationParameters.BackBufferWidth,
-                    GraphicsDevice.PresentationParameters.BackBufferHeight, 1, TextureUsage.None, SurfaceFormat.Color, rect);
+                    GraphicsDevice.PresentationParameters.BackBufferHeight, false, SurfaceFormat.Color, rect);
             }
         }
 

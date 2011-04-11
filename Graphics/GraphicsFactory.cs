@@ -12,16 +12,16 @@ namespace Dope.DDXX.Graphics
 {
     public class GraphicsFactory : IGraphicsFactory
     {
-        private IDeviceManager deviceManager;
-        private IContentManager contentManager;
-        private ITextureFactory textureFactory;
-        private IModelFactory modelFactory;
-        private IEffectFactory effectFactory;
+        private GraphicsDeviceManager deviceManager;
+        private ContentManager contentManager;
+        private TextureFactory textureFactory;
+        private ModelFactory modelFactory;
+        private EffectFactory effectFactory;
 
         public GraphicsFactory(Game game, IServiceProvider serviceProvider)
         {
-            deviceManager = new GraphicsDeviceManagerAdapter(new GraphicsDeviceManager(game));
-            contentManager = new ContentManagerAdapter(new ContentManager(serviceProvider));
+            deviceManager = new GraphicsDeviceManager(game);
+            contentManager = new ContentManager(serviceProvider);
             textureFactory = new TextureFactory(this);
             modelFactory = new ModelFactory(this, textureFactory);
             effectFactory = new EffectFactory(this);
@@ -34,109 +34,60 @@ namespace Dope.DDXX.Graphics
             deviceManager.IsFullScreen = fullscreen;
         }
 
-        public IDeviceManager GraphicsDeviceManager
+        public GraphicsDeviceManager GraphicsDeviceManager
         {
             get { return deviceManager; }
         }
 
-        public IContentManager ContentManager
+        public ContentManager ContentManager
         {
             get { return contentManager; }
         }
 
-        public IGraphicsDevice GraphicsDevice
+        public GraphicsDevice GraphicsDevice
         {
             get { return deviceManager.GraphicsDevice; }
         }
 
-        public ITextureFactory TextureFactory 
+        public TextureFactory TextureFactory 
         {
             get { return textureFactory; } 
         }
         
-        public IModelFactory ModelFactory 
+        public ModelFactory ModelFactory 
         {
             get { return modelFactory; }
         }
         
-        public IEffectFactory EffectFactory 
+        public EffectFactory EffectFactory 
         {
             get { return effectFactory; }
         }
 
-        private GraphicsDevice DxGraphicsDevice
+        public Texture2D Texture2DFromFile(string srcFile)
         {
-            get { return (deviceManager.GraphicsDevice as GraphicsDeviceAdapter).DxGraphicsDevice; }
+            return contentManager.Load<Texture2D>(srcFile);
         }
 
-        public IRenderTarget2D CreateRenderTarget2D(int width, int height, int numLevels,
-            SurfaceFormat format, MultiSampleType multiSampleType, int multiSampleQuality)
+        public TextureCube TextureCubeFromFile(string srcFile)
         {
-            return new RenderTarget2DAdapter(new RenderTarget2D(DxGraphicsDevice, width, height, numLevels, 
-                format, multiSampleType, multiSampleQuality, RenderTargetUsage.PreserveContents));
+            return contentManager.Load<TextureCube>(srcFile);
         }
 
-        public ITexture2D CreateTexture2D(int width, int height, int numLevels,
-            TextureUsage usage, SurfaceFormat format)
-        {
-            return new Texture2DAdapter(new Texture2D(DxGraphicsDevice, width, height, numLevels, usage, format));
-        }
-
-        public IDepthStencilBuffer CreateDepthStencilBuffer(int width, int height, DepthFormat format, MultiSampleType multiSampleType)
-        {
-            return new DepthStencilBufferAdapter(new DepthStencilBuffer(DxGraphicsDevice, width, height, format, multiSampleType, 0));
-        }
-
-        public ITexture2D Texture2DFromFile(string srcFile)
-        {
-            return new Texture2DAdapter(contentManager.Load<Texture2D>(srcFile));
-        }
-
-        public ITextureCube TextureCubeFromFile(string srcFile)
-        {
-            return new TextureCubeAdapter(contentManager.Load<TextureCube>(srcFile));
-        }
-
-        public IVertexBuffer CreateVertexBuffer(Type typeVertexType, int numVerts, BufferUsage usage)
-        {
-            return new VertexBufferAdapter(new VertexBuffer(DxGraphicsDevice, typeVertexType, numVerts, usage));
-        }
-
-        public ISpriteBatch CreateSpriteBatch()
-        {
-            return new SpriteBatchAdapter(new SpriteBatch(DxGraphicsDevice));
-        }
-
-        public IEffect EffectFromFile(string filename)
+        public Effect EffectFromFile(string filename)
         {
             Effect effect = contentManager.Load<Effect>(filename);
-            return new EffectAdapter(effect.Clone(DxGraphicsDevice));
+            return effect.Clone();
         }
 
-        public ISpriteFont SpriteFontFromFile(string name)
+        public SpriteFont SpriteFontFromFile(string name)
         {
-            return new SpriteFontAdapter(contentManager.Load<SpriteFont>(name));
+            return contentManager.Load<SpriteFont>(name);
         }
 
-        public IModel ModelFromFile(string name)
+        public CustomModel ModelFromFile(string name)
         {
-            return new ModelAdapter(contentManager.Load<Model>(name));
-        }
-
-
-        public IIndexBuffer CreateIndexBuffer(Type indexType, int elementCount, BufferUsage usage)
-        {
-            return new IndexBufferAdapter(new IndexBuffer(DxGraphicsDevice, indexType, elementCount, usage));
-        }
-
-        public IVertexDeclaration CreateVertexDeclaration(VertexElement[] elements)
-        {
-            return new VertexDeclarationAdapter(new VertexDeclaration(DxGraphicsDevice, elements));
-        }
-
-        public IBasicEffect CreateBasicEffect()
-        {
-            return new BasicEffectAdapter(new BasicEffect(DxGraphicsDevice, null));
+            return contentManager.Load<CustomModel>(name);
         }
 
     }

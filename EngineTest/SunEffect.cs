@@ -6,7 +6,6 @@ using Dope.DDXX.Graphics;
 using Dope.DDXX.Physics;
 using Dope.DDXX.SceneGraph;
 using Dope.DDXX.Utility;
-using Dope.DDXX.ParticleSystems;
 using Dope.DDXX.ModelBuilder;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -24,8 +23,8 @@ namespace EngineTest
             public Vector2 Scale;
         }
 
-        private ITexture2D circleTexture;
-        private ISpriteBatch circleSprite;
+        private Texture2D circleTexture;
+        private SpriteBatch circleSprite;
         private BlitCircle[] circles;
 
         public SunEffect(string name, float startTime, float endTime)
@@ -50,7 +49,7 @@ namespace EngineTest
         protected override void Initialize()
         {
             //circleTexture = TextureFactory.CreateFromFunction(512, 512, 0, TextureUsage.None, SurfaceFormat.Color, circleCallback);
-            circleSprite = GraphicsFactory.CreateSpriteBatch();
+            circleSprite = new SpriteBatch(GraphicsDevice);
             circles = new BlitCircle[NUM_CIRCLES];
             Random rand = new Random();
             for (int i = 0; i < NUM_CIRCLES; i++)

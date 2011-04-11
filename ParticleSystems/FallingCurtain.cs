@@ -58,9 +58,9 @@ namespace Dope.DDXX.ParticleSystems
             return (Time.CurrentTime > nextTime);
         }
 
-        protected override IMaterialHandler CreateDefaultMaterial(IGraphicsFactory graphicsFactory)
+        protected override MaterialHandler CreateDefaultMaterial(IGraphicsFactory graphicsFactory)
         {
-            IMaterialHandler material = new MaterialHandler(graphicsFactory.EffectFromFile("Content\\effects\\PointSpriteParticles"), new EffectConverter());
+            MaterialHandler material = new MaterialHandler(graphicsFactory.EffectFromFile("Content\\effects\\PointSpriteParticles"), new EffectConverter());
             material.BlendFunction = BlendFunction.Add;
             material.SourceBlend = Blend.One;
             material.DestinationBlend = Blend.InverseSourceColor;

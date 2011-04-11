@@ -251,6 +251,11 @@ namespace Dope.DDXX.DemoTweaker
             throw new DDXXException("<" + node.Name + "> tag must have a " + name + " attribute.");
         }
 
+        protected bool GetBoolAttribute(XmlNode node, string name)
+        {
+            return bool.Parse(GetStringAttribute(node, name));
+        }
+
         protected int GetIntAttribute(XmlNode node, string name)
         {
             return int.Parse(GetStringAttribute(node, name), System.Globalization.NumberFormatInfo.InvariantInfo);

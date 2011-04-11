@@ -1,4 +1,5 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProjectGuid>{797591FA-968E-41D7-BFEF-85E13FCCA4CF}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -8,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Dope.DDXX.Graphics</RootNamespace>
     <AssemblyName>Dope.DDXX.Graphics</AssemblyName>
-    <XnaFrameworkVersion>v3.0</XnaFrameworkVersion>
+    <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
     <Thumbnail>
     </Thumbnail>
@@ -16,12 +17,15 @@
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <XnaUpgrade>
     </XnaUpgrade>
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <XnaOutputType>Library</XnaOutputType>
+    <XnaProfile>HiDef</XnaProfile>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -62,9 +66,39 @@
     <XnaCompressContent>True</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Xna.Framework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86" />
-    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86" />
-    <Reference Include="Microsoft.Xna.Framework.Game, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Avatar, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Content.Pipeline, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.GamerServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Input.Touch, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Net, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Storage, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Video, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Xact, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
@@ -72,211 +106,57 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BasicDirectionalLightAdapter.cs">
-      <Name>BasicDirectionalLightAdapter</Name>
-    </Compile>
-    <Compile Include="BasicEffectAdapter.cs">
-      <Name>BasicEffectAdapter</Name>
-    </Compile>
-    <Compile Include="ContentManagerAdapter.cs">
-      <Name>ContentManagerAdapter</Name>
-    </Compile>
     <Compile Include="CustomModel.cs">
-      <Name>CustomModel</Name>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="CustomModelMesh.cs">
-      <Name>CustomModelMesh</Name>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="CustomModelMeshPart.cs">
-      <Name>CustomModelMeshPart</Name>
-    </Compile>
-    <Compile Include="DepthStencilBufferAdapter.cs">
-      <Name>DepthStencilBufferAdapter</Name>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="DeviceParameters.cs" />
-    <Compile Include="EffectAdapter.cs">
-      <Name>EffectAdapter</Name>
-    </Compile>
-    <Compile Include="EffectAnnotationAdapter.cs">
-      <Name>EffectAnnotationAdapter</Name>
-    </Compile>
-    <Compile Include="EffectAnnotationCollectionAdapter.cs">
-      <Name>EffectAnnotationCollectionAdapter</Name>
-    </Compile>
     <Compile Include="EffectConverter.cs">
       <Name>EffectConverter</Name>
     </Compile>
     <Compile Include="EffectFactory.cs">
       <Name>EffectFactory</Name>
     </Compile>
-    <Compile Include="EffectFunctionAdapter.cs">
-      <Name>EffectFunctionAdapter</Name>
-    </Compile>
-    <Compile Include="EffectFunctionCollectionAdapter.cs">
-      <Name>EffectFunctionCollectionAdapter</Name>
-    </Compile>
-    <Compile Include="EffectParameterAdapter.cs">
-      <Name>EffectParameterAdapter</Name>
-    </Compile>
-    <Compile Include="EffectParameterCollectionAdapter.cs">
-      <Name>EffectParameterCollectionAdapter</Name>
-    </Compile>
-    <Compile Include="EffectPassAdapter.cs">
-      <Name>EffectPassAdapter</Name>
-    </Compile>
-    <Compile Include="EffectPassCollectionAdapter.cs">
-      <Name>EffectPassCollectionAdapter</Name>
-    </Compile>
-    <Compile Include="EffectTechniqueAdapter.cs">
-      <Name>EffectTechniqueAdapter</Name>
-    </Compile>
-    <Compile Include="EffectTechniqueCollectionAdapter.cs">
-      <Name>EffectTechniqueCollectionAdapter</Name>
-    </Compile>
-    <Compile Include="GraphicsDeviceAdapter.cs">
-      <Name>GraphicsDeviceAdapter</Name>
-    </Compile>
-    <Compile Include="GraphicsDeviceManagerAdapter.cs">
-      <Name>GraphicsDeviceManagerAdapter</Name>
-    </Compile>
     <Compile Include="GraphicsFactory.cs">
       <Name>GraphicsFactory</Name>
     </Compile>
-    <Compile Include="GraphicsResourceAdapter.cs">
-      <Name>GraphicsResourceAdapter</Name>
-    </Compile>
-    <Compile Include="IBasicDirectionalLight.cs">
-      <Name>IBasicDirectionalLight</Name>
-    </Compile>
-    <Compile Include="IBasicEffect.cs">
-      <Name>IBasicEffect</Name>
-    </Compile>
-    <Compile Include="ICollectionAdapter.cs">
-      <Name>ICollectionAdapter</Name>
-    </Compile>
-    <Compile Include="IContentManager.cs">
-      <Name>IContentManager</Name>
-    </Compile>
-    <Compile Include="IDepthStencilBuffer.cs">
-      <Name>IDepthStencilBuffer</Name>
-    </Compile>
-    <Compile Include="IDeviceParameters.cs" />
-    <Compile Include="IEffect.cs">
-      <Name>IEffect</Name>
-    </Compile>
-    <Compile Include="IEffectAnnotation.cs">
-      <Name>IEffectAnnotation</Name>
+    <Compile Include="IDeviceParameters.cs">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="IEffectConverter.cs">
-      <Name>IEffectConverter</Name>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="IEffectFactory.cs">
-      <Name>IEffectFactory</Name>
-    </Compile>
-    <Compile Include="IEffectFunction.cs">
-      <Name>IEffectFunction</Name>
-    </Compile>
-    <Compile Include="IEffectParameter.cs">
-      <Name>IEffectParameter</Name>
-    </Compile>
-    <Compile Include="IEffectPass.cs">
-      <Name>IEffectPass</Name>
-    </Compile>
-    <Compile Include="IEffectTechnique.cs">
-      <Name>IEffectTechnique</Name>
-    </Compile>
-    <Compile Include="IGraphicsDevice.cs">
-      <Name>IGraphicsDevice</Name>
-    </Compile>
-    <Compile Include="IDeviceManager.cs">
-      <Name>IDeviceManager</Name>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="IGraphicsFactory.cs">
-      <Name>IGraphicsFactory</Name>
-    </Compile>
-    <Compile Include="IGraphicsResource.cs">
-      <Name>IGraphicsResource</Name>
-    </Compile>
-    <Compile Include="IIndexBuffer.cs">
-      <Name>IIndexBuffer</Name>
-    </Compile>
-    <Compile Include="IMaterialHandler.cs">
-      <Name>IMaterialHandler</Name>
-    </Compile>
-    <Compile Include="IModel.cs">
-      <Name>IModel</Name>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="IModelFactory.cs">
-      <Name>IModelFactory</Name>
-    </Compile>
-    <Compile Include="IModelMesh.cs">
-      <Name>IModelMesh</Name>
-    </Compile>
-    <Compile Include="IModelMeshPart.cs">
-      <Name>IModelMeshPart</Name>
-    </Compile>
-    <Compile Include="IndexBufferAdapter.cs">
-      <Name>IndexBufferAdapter</Name>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="IPostProcessor.cs" />
-    <Compile Include="IRenderState.cs">
-      <Name>IRenderState</Name>
-    </Compile>
-    <Compile Include="IRenderTarget.cs">
-      <Name>IRenderTarget</Name>
-    </Compile>
-    <Compile Include="IRenderTarget2D.cs">
-      <Name>IRenderTarget2D</Name>
-    </Compile>
-    <Compile Include="IRenderTargetCube.cs">
-      <Name>IRenderTargetCube</Name>
-    </Compile>
-    <Compile Include="IResolveTexture2D.cs" />
-    <Compile Include="ISpriteBatch.cs">
-      <Name>ISpriteBatch</Name>
-    </Compile>
-    <Compile Include="ISpriteFont.cs">
-      <Name>ISpriteFont</Name>
-    </Compile>
-    <Compile Include="ITexture.cs">
-      <Name>ITexture</Name>
-    </Compile>
-    <Compile Include="ITexture2D.cs">
-      <Name>ITexture2D</Name>
-    </Compile>
-    <Compile Include="ITexture3D.cs">
-      <Name>ITexture3D</Name>
-    </Compile>
-    <Compile Include="ITextureCube.cs">
-      <Name>ITextureCube</Name>
-    </Compile>
     <Compile Include="ITextureFactory.cs">
-      <Name>ITextureFactory</Name>
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ITextureGenerator.cs" />
-    <Compile Include="IUserPrimitive.cs" />
-    <Compile Include="IVertexBuffer.cs">
-      <Name>IVertexBuffer</Name>
-    </Compile>
-    <Compile Include="IVertexDeclaration.cs">
-      <Name>IVertexDeclaration</Name>
-    </Compile>
-    <Compile Include="IVertexStream.cs">
-      <Name>IVertexStream</Name>
-    </Compile>
-    <Compile Include="IVertexStreamCollection.cs">
-      <Name>IVertexStreamCollection</Name>
+    <Compile Include="ITextureGenerator.cs">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="LightState.cs">
       <Name>LightState</Name>
@@ -284,85 +164,21 @@
     <Compile Include="MaterialHandler.cs">
       <Name>MaterialHandler</Name>
     </Compile>
-    <Compile Include="ModelAdapter.cs">
-      <Name>ModelAdapter</Name>
-    </Compile>
-    <Compile Include="ModelEffectCollectionAdapter.cs">
-      <Name>ModelEffectCollectionAdapter</Name>
-    </Compile>
     <Compile Include="ModelFactory.cs">
       <Name>ModelFactory</Name>
     </Compile>
-    <Compile Include="ModelMeshAdapter.cs">
-      <Name>ModelMeshAdapter</Name>
-    </Compile>
-    <Compile Include="ModelMeshCollectionAdapter.cs">
-      <Name>ModelMeshCollectionAdapter</Name>
-    </Compile>
-    <Compile Include="ModelMeshPartAdapter.cs">
-      <Name>ModelMeshPartAdapter</Name>
-    </Compile>
-    <Compile Include="ModelMeshPartCollectionAdapter.cs">
-      <Name>ModelMeshPartCollectionAdapter</Name>
-    </Compile>
     <Compile Include="ModelParameters.cs" />
     <Compile Include="PostProcessor.cs" />
-    <Compile Include="RenderStateAdapter.cs">
-      <Name>RenderStateAdapter</Name>
-    </Compile>
-    <Compile Include="RenderTarget2DAdapter.cs">
-      <Name>RenderTarget2DAdapter</Name>
-    </Compile>
-    <Compile Include="RenderTargetAdapter.cs">
-      <Name>RenderTargetAdapter</Name>
-    </Compile>
-    <Compile Include="RenderTargetCubeAdapter.cs">
-      <Name>RenderTargetCubeAdapter</Name>
-    </Compile>
-    <Compile Include="ResolveTexture2DAdapter.cs" />
-    <Compile Include="SpriteBatchAdapter.cs">
-      <Name>SpriteBatchAdapter</Name>
-    </Compile>
-    <Compile Include="SpriteFontAdapter.cs">
-      <Name>SpriteFontAdapter</Name>
-    </Compile>
-    <Compile Include="Texture2DAdapter.cs">
-      <Name>Texture2DAdapter</Name>
-    </Compile>
-    <Compile Include="Texture3DAdapter.cs">
-      <Name>Texture3DAdapter</Name>
-    </Compile>
-    <Compile Include="TextureAdapter.cs">
-      <Name>TextureAdapter</Name>
-    </Compile>
-    <Compile Include="TextureCubeAdapter.cs">
-      <Name>TextureCubeAdapter</Name>
-    </Compile>
     <Compile Include="TextureFactory.cs">
       <Name>TextureFactory</Name>
     </Compile>
     <Compile Include="TextureParameters.cs" />
     <Compile Include="UserPrimitive.cs" />
-    <Compile Include="VertexBufferAdapter.cs">
-      <Name>VertexBufferAdapter</Name>
-    </Compile>
-    <Compile Include="VertexDeclarationAdapter.cs">
-      <Name>VertexDeclarationAdapter</Name>
-    </Compile>
-    <Compile Include="VertexPositionColorPoint.cs">
-      <Name>VertexPositionColorPoint</Name>
-    </Compile>
     <Compile Include="VertexPositionNormal.cs">
       <Name>VertexPositionNormal</Name>
     </Compile>
     <Compile Include="VertexPositionTangentTexture.cs">
       <Name>VertexPositionTangentTexture</Name>
-    </Compile>
-    <Compile Include="VertexStreamAdapter.cs">
-      <Name>VertexStreamAdapter</Name>
-    </Compile>
-    <Compile Include="VertexStreamCollectionAdapter.cs">
-      <Name>VertexStreamCollectionAdapter</Name>
     </Compile>
     <Compile Include="VertexTransformedTexture.cs">
       <Name>VertexTransformedTexture</Name>
@@ -382,7 +198,7 @@
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
-      <ProductName>.NET Framework Client Profile</ProductName>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
@@ -413,6 +229,11 @@
     <BootstrapperPackage Include="Microsoft.Xna.Framework.3.0">
       <Visible>False</Visible>
       <ProductName>Microsoft XNA Framework Redistributable 3.0</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Xna.Framework.4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft XNA Framework Redistributable 4.0</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>

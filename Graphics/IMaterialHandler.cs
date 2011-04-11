@@ -8,7 +8,7 @@ namespace Dope.DDXX.Graphics
 {
     public interface IMaterialHandler
     {
-        IEffect Effect { get; set; }
+        Effect Effect { get; set; }
         void SetupRendering(Matrix[] worldMatrices, Matrix viewMatrix, Matrix projectionMatrx, Color ambientLight, LightState lightState);
         void SetupRendering(Matrix[] worldMatrices, Matrix viewMatrix, Matrix projectionMatrx, Color ambientLight);
         Color AmbientColor { get; set; }
@@ -17,9 +17,9 @@ namespace Dope.DDXX.Graphics
         float SpecularPower { get; set; }
         float Shininess { get; set; }
         float Transparency { get; set; }
-        ITexture2D DiffuseTexture { get; set; }
-        ITexture2D NormalTexture { get; set; }
-        ITextureCube ReflectiveTexture { get; set; }
+        Texture2D DiffuseTexture { get; set; }
+        Texture2D NormalTexture { get; set; }
+        TextureCube ReflectiveTexture { get; set; }
         float ReflectiveFactor { get; set; }
         BlendFunction BlendFunction { get; set; }
         Blend SourceBlend { get; set; }

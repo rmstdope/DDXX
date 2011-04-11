@@ -11,8 +11,8 @@ namespace EngineTest
 {
     public class TextureEffect : BaseDemoEffect
     {
-        private ITexture2D texture;
-        private ISpriteBatch spriteBatch;
+        private Texture2D texture;
+        private SpriteBatch spriteBatch;
 
         public TextureEffect(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
@@ -36,13 +36,13 @@ namespace EngineTest
             director.CreateSquare(0.9f);
             director.GaussianBlur();
             director.Multiply();
-            texture = director.Generate("Cirvle64", 64, 64, 1, SurfaceFormat.Color);
+            texture = director.Generate("Circle64", 64, 64, false, SurfaceFormat.Color);
             //texture = director.GenerateChain(512, 512);
 #if !(XBOX360)
-            texture.Save("square-my.dds", ImageFileFormat.Dds);
+            //texture.Save("square-my.dds", ImageFileFormat.Dds);
 #endif
 
-            spriteBatch = GraphicsFactory.CreateSpriteBatch();
+            spriteBatch = new SpriteBatch(GraphicsFactory.GraphicsDevice);
         }
 
         public override void Step()
@@ -52,12 +52,10 @@ namespace EngineTest
 
         public override void Render()
         {
-            spriteBatch.Begin(SpriteBlendMode.None);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
             for (int i = 0; i < 8; i++)
             {
-                GraphicsDevice.SamplerStates[i].MagFilter = TextureFilter.Point;
-                GraphicsDevice.SamplerStates[i].MinFilter = TextureFilter.Point;
-                GraphicsDevice.SamplerStates[i].MipFilter = TextureFilter.Point;
+                GraphicsDevice.SamplerStates[i].Filter = TextureFilter.Point;
             }
             spriteBatch.Draw(texture, Vector2.Zero, Color.White);
             spriteBatch.End();

@@ -16,16 +16,16 @@ namespace EngineTest
     {
         private class Morph
         {
-            private IModelDirector modelDirector;
-            private IModelBuilder modelBuilder;
+            private ModelDirector modelDirector;
+            private ModelBuilder modelBuilder;
             private IModifier primitive;
             private List<IModifier> from;
             private List<IModifier> to;
             private ModelNode node;
             private IModifier chain;
-            private IModel model;
+            private CustomModel model;
 
-            public Morph(IModifier primitive, List<IModifier> from, List<IModifier> to, IModelDirector modelDirector)
+            public Morph(IModifier primitive, List<IModifier> from, List<IModifier> to, ModelDirector modelDirector)
             {
                 this.primitive = primitive;
                 this.from = new List<IModifier>(from);
@@ -83,7 +83,7 @@ namespace EngineTest
                 VertexPositionTangentTexture[] newVertices = new VertexPositionTangentTexture[primitive.Vertices.Length];
                 for (int i = 0; i < primitive.Vertices.Length; i++)
                     newVertices[i] = new VertexPositionTangentTexture(primitive.Vertices[i].Position, primitive.Vertices[i].Normal, primitive.Vertices[i].Tangent, primitive.Vertices[i].BiNormal, new Vector2(primitive.Vertices[i].U, primitive.Vertices[i].V));
-                model.Meshes[0].VertexBuffer.SetData<VertexPositionTangentTexture>(newVertices);
+                model.Meshes[0].MeshParts[0].VertexBuffer.SetData<VertexPositionTangentTexture>(newVertices);
             }
 
             public ModelNode ModelNode

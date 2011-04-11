@@ -25,8 +25,8 @@ namespace Dope.DDXX.Graphics
         [SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields")]
         public static readonly VertexElement[] VertexElements = new VertexElement[] 
         {
-            new VertexElement(0, 0, VertexElementFormat.Vector4, VertexElementMethod.Default, VertexElementUsage.Position, 1),
-            new VertexElement(0, 16, VertexElementFormat.Vector2, VertexElementMethod.Default, VertexElementUsage.TextureCoordinate, 0)
+            new VertexElement(0, VertexElementFormat.Vector4, VertexElementUsage.Position, 1),
+            new VertexElement(16, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 0)
         };
 
         //

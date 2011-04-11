@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.SceneGraph;
 using Dope.DDXX.Utility;
-using Dope.DDXX.ParticleSystems;
+using Microsoft.Xna.Framework;
 
 namespace EngineTest
 {
@@ -27,7 +27,7 @@ namespace EngineTest
             ModelBuilder.SetDiffuseColor("Material", Color.BlanchedAlmond);
             ModelBuilder.SetEffect("Material", "Content\\effects\\CubeEffect");
             ModelDirector.CreateBox(3, 3, 3);
-            IModel model = ModelDirector.Generate("Material");
+            CustomModel model = ModelDirector.Generate("Material");
             node = new ModelNode("Kuben", model, GraphicsDevice);
             Scene.AddNode(node);
 

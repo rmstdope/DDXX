@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoFramework
 {
     public interface IDemoTransition : IRegisterable
     {
         int DestinationTrack { get; set; }
-        void Initialize(IPostProcessor postProcessor, IGraphicsFactory graphicsFactory);
-        IRenderTarget2D Render(IRenderTarget2D fromTexture, IRenderTarget2D toTexture);
+        void Initialize(PostProcessor postProcessor, IGraphicsFactory graphicsFactory);
+        RenderTarget2D Render(RenderTarget2D fromTexture, RenderTarget2D toTexture);
     }
 }

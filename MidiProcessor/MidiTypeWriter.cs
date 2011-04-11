@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 
 using Dope.DDXX.MidiExtractor;
 
-namespace Dope.DDXX.MidiProcessorLib
+namespace Dope.DDXX.MidiProcessor
 {
     /// <summary>
     /// This class will be instantiated by the XNA Framework Content Pipeline

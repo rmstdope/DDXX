@@ -27,7 +27,7 @@ namespace Dope.DDXX.UserInterface
 
         public override void Draw(IDrawResources resources)
         {
-            resources.SpriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+            resources.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             int screenWidth = resources.SpriteBatch.GraphicsDevice.PresentationParameters.BackBufferWidth;
             int screenHeight = resources.SpriteBatch.GraphicsDevice.PresentationParameters.BackBufferHeight;
             int x1 = (int)(screenWidth * GetX1(resources));

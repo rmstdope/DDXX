@@ -10,8 +10,8 @@ namespace EngineTest
 {
     public class Simple2DEffect : BaseDemoEffect
     {
-        private ISpriteBatch spriteBatch;
-        private ITexture2D texture;
+        private SpriteBatch spriteBatch;
+        private Texture2D texture;
 
         public Simple2DEffect(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
@@ -21,7 +21,7 @@ namespace EngineTest
         protected override void Initialize()
         {
             texture = GraphicsFactory.Texture2DFromFile("Content\\textures\\Noise2");
-            spriteBatch = GraphicsFactory.CreateSpriteBatch();
+            spriteBatch = new SpriteBatch(GraphicsDevice);
         }
 
         public override void Step()
@@ -30,7 +30,7 @@ namespace EngineTest
 
         public override void Render()
         {
-            spriteBatch.Begin(SpriteBlendMode.None, SpriteSortMode.Immediate, SaveStateMode.None);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
             spriteBatch.Draw(texture, new Vector2(), Color.White);
             spriteBatch.End();
         }

@@ -23,7 +23,7 @@ struct VertexShaderOutput
 };
 
 VertexShaderOutput
-VertexShader(VertexShaderInput input)
+MyVertexShader(VertexShaderInput input)
 {
 	VertexShaderOutput output;
     
@@ -51,7 +51,7 @@ VertexShader(VertexShaderInput input)
 }
 
 float4
-PixelShader(VertexShaderOutput input) : COLOR0
+MyPixelShader(VertexShaderOutput input) : COLOR0
 {
 	float3 diffuseTexture = tex2D(DiffuseTextureSampler, input.texCoord);
     
@@ -64,7 +64,7 @@ Technique NormalMapping
 {
     Pass Go
     {
-        VertexShader = compile vs_1_1 VertexShader();
-        PixelShader = compile ps_2_0 PixelShader();
+        VertexShader = compile vs_1_1 MyVertexShader();
+        PixelShader = compile ps_2_0 MyPixelShader();
     }
 }

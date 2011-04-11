@@ -9,14 +9,14 @@ namespace Dope.DDXX.Graphics
 {
     public class TextureFactory : ITextureFactory
     {
-        private ITexture2D whiteTexture;
+        private Texture2D whiteTexture;
 
         private IGraphicsFactory factory;
         private List<Texture2DParameters> files = new List<Texture2DParameters>();
         private List<TextureCubeParameters> cubeFiles = new List<TextureCubeParameters>();
 
 
-        public IGraphicsDevice GraphicsDevice
+        public GraphicsDevice GraphicsDevice
         {
             get { return factory.GraphicsDevice; }
         }
@@ -31,67 +31,46 @@ namespace Dope.DDXX.Graphics
             return files.Find(delegate(Texture2DParameters item) { return name == item.Name; }) != null;
         }
 
-        public ITexture2D CreateFromName(string file)
+        public Texture2D CreateFromName(string file)
         {
             Texture2DParameters result = files.Find(delegate(Texture2DParameters item) { return file == item.Name; });
             if (result != null)
             {
                 return result.Texture;
             }
-            ITexture2D texture = factory.Texture2DFromFile(file);
+            Texture2D texture = factory.Texture2DFromFile(file);
             files.Add(new Texture2DParameters(file, texture));
             return texture;
         }
 
-        public ITextureCube CreateCubeFromFile(string file)
+        public TextureCube CreateCubeFromFile(string file)
         {
             TextureCubeParameters result = cubeFiles.Find(delegate(TextureCubeParameters item) { return file == item.Name; });
             if (result != null)
             {
                 return result.Texture;
             }
-            ITextureCube texture = factory.TextureCubeFromFile(file);
+            TextureCube texture = factory.TextureCubeFromFile(file);
             cubeFiles.Add(new TextureCubeParameters(file, texture));
             return texture;
         }
 
-        private IRenderTarget2D CreateRenderTarget(int width, int height)
+        public RenderTarget2D CreateFullsizeRenderTarget()
         {
-            return factory.CreateRenderTarget2D(width, height, 1, SurfaceFormat.Color, MultiSampleType.None, 0);
+            return new RenderTarget2D(GraphicsDevice, GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight);
         }
 
-        private IRenderTarget2D CreateRenderTarget(int width, int height, SurfaceFormat format, MultiSampleType multiSampleType, int multiSampleQuality)
+        public RenderTarget2D CreateFullsizeRenderTarget(SurfaceFormat format, DepthFormat depthformat, int preferredMultiSampleCount)
         {
-            return factory.CreateRenderTarget2D(width, height, 1, format, multiSampleType, multiSampleQuality);
+            return new RenderTarget2D(GraphicsDevice, GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight,
+                false, format, depthformat, preferredMultiSampleCount, RenderTargetUsage.DiscardContents);
         }
 
-        public IRenderTarget2D CreateFullsizeRenderTarget()
-        {
-            return this.CreateRenderTarget(GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight);
-        }
-
-        public IRenderTarget2D CreateFullsizeRenderTarget(SurfaceFormat format, MultiSampleType multiSampleType, int multiSampleQuality)
-        {
-            return this.CreateRenderTarget(GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight,
-                format, multiSampleType, multiSampleQuality);
-        }
-
-        public IDepthStencilBuffer CreateFullsizeDepthStencil(DepthFormat format, MultiSampleType multiSampleType)
-        {
-            return this.CreateDepthStencil(GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight,
-                format, multiSampleType);
-        }
-
-        private IDepthStencilBuffer CreateDepthStencil(int width, int height, DepthFormat format, MultiSampleType multiSampleType)
-        {
-            return factory.CreateDepthStencilBuffer(width, height, format, multiSampleType);
-        }
-
-        public ITexture2D CreateFromGenerator(string name, int width, int height, int numMipLevels, TextureUsage usage, SurfaceFormat format, ITextureGenerator generator)
+        public Texture2D CreateFromGenerator(string name, int width, int height, bool mipMap, SurfaceFormat format, ITextureGenerator generator)
         {
             if (files.Find(delegate(Texture2DParameters item) { return name == item.Name; }) != null)
                 throw new DDXXException("Texture with name " + name + " already created.");
-            ITexture2D texture = CreateFromFunction(width, height, numMipLevels, usage, format, generator.GenerateTexture);
+            Texture2D texture = CreateFromFunction(width, height, mipMap, format, generator.GenerateTexture);
             if (name != null && name != "")
                 files.Add(new Texture2DParameters(name, texture, generator));
             return texture;
@@ -102,16 +81,16 @@ namespace Dope.DDXX.Graphics
             target.Regenerate();
         }
 
-        public ITexture2D CreateFromFunction(int width, int height, int numLevels, TextureUsage usage, SurfaceFormat format, Generate2DTextureCallback callbackFunction)
+        public Texture2D CreateFromFunction(int width, int height, bool mipMap, SurfaceFormat format, Generate2DTextureCallback callbackFunction)
         {
-            ITexture2D texture = factory.CreateTexture2D(width, height, numLevels, usage, format);
+            Texture2D texture = new Texture2D(GraphicsDevice, width, height, mipMap, format);
 
             SetFromFunction(texture, callbackFunction);
 
             return texture;
         }
 
-        private void SetFromFunction(ITexture2D texture, Generate2DTextureCallback callbackFunction)
+        private void SetFromFunction(Texture2D texture, Generate2DTextureCallback callbackFunction)
         {
             int i = 0;
             Color[] data = new Color[texture.Width * texture.Height];
@@ -127,7 +106,7 @@ namespace Dope.DDXX.Graphics
 
             int levelWidth = texture.Width;
             int levelHeight = texture.Height;
-            texture.Save("before.dds", ImageFileFormat.Dds);
+            //texture.Save("before.dds", ImageFileFormat.Dds);
             for (int j = 0; j < texture.LevelCount - 1; j++)
             {
                 levelHeight = levelHeight / 2;
@@ -151,10 +130,10 @@ namespace Dope.DDXX.Graphics
                         i++;
                     }
                 }
-                texture.SetData<Color>(j + 1, null, newData, 0, newData.Length, SetDataOptions.None);
+                texture.SetData<Color>(j + 1, null, newData, 0, newData.Length);
                 data = newData;
             }
-            texture.Save("after.dds", ImageFileFormat.Dds);
+            //texture.Save("after.dds", ImageFileFormat.Dds);
         }
 
         private Vector4 GetData(Color[] data, int x, int y, int width, int height)
@@ -170,12 +149,12 @@ namespace Dope.DDXX.Graphics
             return data[y * width + x].ToVector4();
         }
 
-        public ITexture2D WhiteTexture
+        public Texture2D WhiteTexture
         {
             get
             {
                 if (whiteTexture == null)
-                    whiteTexture = CreateFromFunction(1, 1, 1, TextureUsage.None, SurfaceFormat.Color, delegate(int w, int h) { Vector4[,] array = new Vector4[1, 1]; array[0, 0] = Vector4.One; return array; });
+                    whiteTexture = CreateFromFunction(1, 1, false, SurfaceFormat.Color, delegate(int w, int h) { Vector4[,] array = new Vector4[1, 1]; array[0, 0] = Vector4.One; return array; });
                 return whiteTexture;
             }
         }

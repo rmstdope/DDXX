@@ -10,8 +10,8 @@ namespace Dope.DDXX.DemoFramework
 {
     public class Track : ITrack
     {
-        private IPostProcessor postProcessor;
-        private ISpriteBatch spriteBatch;
+        private PostProcessor postProcessor;
+        private SpriteBatch spriteBatch;
 
         List<IDemoEffect> effects = new List<IDemoEffect>();
         List<IDemoPostEffect> postEffects = new List<IDemoPostEffect>();
@@ -154,9 +154,9 @@ namespace Dope.DDXX.DemoFramework
             }
         }
 
-        public void Initialize(IGraphicsFactory graphicsFactory, IDemoMixer mixer, IPostProcessor postProcessor)
+        public void Initialize(IGraphicsFactory graphicsFactory, IDemoMixer mixer, PostProcessor postProcessor)
         {
-            this.spriteBatch = graphicsFactory.CreateSpriteBatch();
+            this.spriteBatch = new SpriteBatch(graphicsFactory.GraphicsDevice);
             this.postProcessor = postProcessor;
             foreach (IDemoEffect effect in effects)
                 effect.Initialize(graphicsFactory, mixer, postProcessor);
@@ -171,10 +171,10 @@ namespace Dope.DDXX.DemoFramework
                     effect.Step();
         }
 
-        public IRenderTarget2D Render(IGraphicsDevice device, IRenderTarget2D renderTarget, IRenderTarget2D renderTargetNoMultiSampling, IDepthStencilBuffer depthStencilBuffer, Color backgroundColor)
+        public RenderTarget2D Render(GraphicsDevice device, RenderTarget2D renderTarget, RenderTarget2D renderTargetNoMultiSampling, Color backgroundColor)
         {
-            device.SetRenderTarget(0, renderTarget);
-            device.DepthStencilBuffer = depthStencilBuffer;
+            device.SetRenderTarget(renderTarget);
+            //device.DepthStencilState.DepthBufferEnable = true;
 
             //if (D3DDriver.GetInstance().Description.useStencil)
             //    device.Clear(ClearFlags.Target | ClearFlags.ZBuffer | ClearFlags.Stencil, backgroundColor, 1.0f, 0);
@@ -182,15 +182,15 @@ namespace Dope.DDXX.DemoFramework
             device.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, backgroundColor, 1.0f, 0);
 
             RenderEffects(device);
-            device.SetRenderTarget(0, null);//.ResolveRenderTarget(0);
-            device.DepthStencilBuffer = null;
+            device.SetRenderTarget(null);//.ResolveRenderTarget(0);
+            //device.DepthStencilState.DepthBufferEnable = false;
             if (renderTargetNoMultiSampling != renderTarget)
             {
-                device.SetRenderTarget(0, renderTargetNoMultiSampling);
-                spriteBatch.Begin(SpriteBlendMode.None, SpriteSortMode.Immediate, SaveStateMode.None);
-                spriteBatch.Draw(renderTarget.GetTexture(), Vector2.Zero, Color.White);
+                device.SetRenderTarget(renderTargetNoMultiSampling);
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
+                spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
                 spriteBatch.End();
-                device.SetRenderTarget(0, null);//.ResolveRenderTarget(0);
+                device.SetRenderTarget(null);//.ResolveRenderTarget(0);
             }
 
             postProcessor.StartFrame(renderTargetNoMultiSampling);
@@ -199,7 +199,7 @@ namespace Dope.DDXX.DemoFramework
             return postProcessor.OutputTexture;
         }
 
-        private void RenderEffects(IGraphicsDevice device)
+        private void RenderEffects(GraphicsDevice device)
         {
             //device.BeginScene();
             IDemoEffect[] activeEffects = GetEffects(Time.CurrentTime);
@@ -237,7 +237,7 @@ namespace Dope.DDXX.DemoFramework
                         effect.Render();
         }
 
-        public void UpdateListener(IEffectChangeListener effectChangeListener)
+        public void UpdateListener(EffectChangeListener effectChangeListener)
         {
             //foreach (IDemoEffect effect in effects)
             //    (effect as TweakableContainer).UpdateListener(effectChangeListener);

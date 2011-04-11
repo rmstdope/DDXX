@@ -6,7 +6,7 @@
   <!-- TextureFactory Section -->
 
   <TextureFactory>
-    <Texture name="Noise256" width="64" height="64" miplevels="0">
+    <Texture name="Noise256" width="64" height="64" mipmap="true">
     	<Generator class="PerlinNoise">
     		<NumOctaves>6</NumOctaves>
     		<BaseFrequency>10</BaseFrequency>
@@ -14,7 +14,7 @@
     		<RandomSeed>10996</RandomSeed>
     	</Generator>
     </Texture>
-    <Texture name="Turbulence256" width="64" height="64" miplevels="0">
+    <Texture name="Turbulence256" width="64" height="64" mipmap="true">
     	<Generator class="PerlinTurbulence">
     		<NumOctaves>6</NumOctaves>
     		<BaseFrequency>4</BaseFrequency>
@@ -22,15 +22,18 @@
     		<RandomSeed>44940</RandomSeed>
     	</Generator>
     </Texture>
-    <Texture name="OldMarble256" width="64" height="64" miplevels="0">
+    <Texture name="OldMarble256" width="64" height="64" mipmap="true">
     	<Generator class="OldMarble">
     		<VeinPeriodX>3</VeinPeriodX>
     		<VeinPeriodY>1.5</VeinPeriodY>
-        <BaseFrequency>1</BaseFrequency>
-        <TurbPower>4.5</TurbPower>
+    		<TurbPower>4.5</TurbPower>
+    		<NumOctaves>6</NumOctaves>
+    		<BaseFrequency>1</BaseFrequency>
+    		<Persistence>0.5</Persistence>
+    		<RandomSeed>0</RandomSeed>
     	</Generator>
     </Texture>
-    <Texture name="NewMarble256" width="64" height="64" miplevels="0">
+    <Texture name="NewMarble256" width="64" height="64" mipmap="true">
     	<Generator class="Marble">
     		<Saturation>0.4000001</Saturation>
     		<Hue>0.3200005</Hue>
@@ -44,7 +47,7 @@
     		<RandomSeed>33110</RandomSeed>
     	</Generator>
     </Texture>
-    <Texture name="NormalNoise256" width="64" height="64" miplevels="0">
+    <Texture name="NormalNoise256" width="64" height="64" mipmap="true">
     	<Generator class="PerlinNoise">
     		<NumOctaves>6</NumOctaves>
     		<BaseFrequency>4</BaseFrequency>
@@ -65,7 +68,7 @@
     		<Mul>0.5</Mul>
     	</Generator>
     </Texture>
-    <Texture name="Circle" width="64" height="64" miplevels="0">
+    <Texture name="Circle" width="64" height="64" mipmap="true">
     	<Generator class="Circle">
     		<SolidRadius>0.05</SolidRadius>
     		<GradientRadius1>0.12</GradientRadius1>
@@ -90,7 +93,7 @@
     		<Color2Position>0.5</Color2Position>
     	</Generator>
     </Texture>
-    <Texture name="LightMap" width="128" height="128" miplevels="1">
+    <Texture name="LightMap" width="128" height="128" mipmap="false">
     	<Generator class="Circle">
     		<SolidRadius>0</SolidRadius>
     		<GradientRadius1>0.15</GradientRadius1>
@@ -126,11 +129,12 @@
     		<Color>1, 0.7058824, 0.5686275, 1</Color>
     	</Generator>
     </Texture>
-    <Texture name="Square" width="64" height="64" miplevels="0">
+    <Texture name="Square" width="64" height="64" mipmap="true">
     	<Generator class="Square">
     		<Size>0.9</Size>
     	</Generator>
     	<Generator class="GaussianBlur">
+    		<Wrap>false</Wrap>
     		<KernelSize>7</KernelSize>
     	</Generator>
     	<Generator class="BrushNoise">
@@ -143,7 +147,7 @@
     		<AMinusB>false</AMinusB>
     	</Generator>
     </Texture>
-    <Texture name="Cellular" width="256" height="256" miplevels="1">
+    <Texture name="Cellular" width="256" height="256" mipmap="false">
     	<Generator class="Cellular">
     		<Algorithm>2</Algorithm>
     		<RandomSeed>29243</RandomSeed>
@@ -154,7 +158,7 @@
     		<SwirlPower>4</SwirlPower>
     	</Generator>
     </Texture>
-    <Texture name="Gradient" width="256" height="256" miplevels="1">
+    <Texture name="Gradient" width="256" height="256" mipmap="false">
     	<Generator class="Gradient">
     		<NoiseAmount>0.4799998</NoiseAmount>
     		<GradientOnX>true</GradientOnX>
@@ -166,7 +170,7 @@
     		<Color2Position>0.5</Color2Position>
     	</Generator>
     </Texture>
-    <Texture name="Texture - 263" width="64" height="64" miplevels="1">
+    <Texture name="Texture - 263" width="64" height="64" mipmap="false">
     	<Generator class="Checkers">
     		<NumRepeatsY>1</NumRepeatsY>
     		<NumRepeatsX>1</NumRepeatsX>

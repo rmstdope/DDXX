@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Dope.DDXX.DemoFramework;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.DemoTweaker
 {

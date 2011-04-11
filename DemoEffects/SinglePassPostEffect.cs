@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.DemoEffects
 {
@@ -18,7 +19,7 @@ namespace Dope.DDXX.DemoEffects
 
         public override void Render()
         {
-            List<IRenderTarget2D> textures = PostProcessor.GetTemporaryTextures(1, false);
+            List<RenderTarget2D> textures = PostProcessor.GetTemporaryTextures(1, false);
 
             SetParameters();
             PostProcessor.Process(TechniqueName, PostProcessor.OutputTexture, textures[0]);

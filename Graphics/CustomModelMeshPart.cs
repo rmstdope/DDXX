@@ -5,92 +5,43 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.Graphics
 {
-    public class CustomModelMeshPart : IModelMeshPart
+    public class CustomModelMeshPart
     {
-        private IEffect effect;
-        private int baseVertex;
+        //private Effect effect;
+        private IndexBuffer indexBuffer;
         private int numVertices;
-        private int startIndex;
         private int primitiveCount;
-        private IMaterialHandler materialHandler;
+        private PrimitiveType primitiveType;
+        private int startIndex;
+        //private object tag;
+        private VertexBuffer vertexBuffer;
+        private int vertexOffset;
+        private MaterialHandler materialHandler;
 
-        public CustomModelMeshPart(IMaterialHandler material, int baseVertex, int numVertices, int startIndex, int primitiveCount)
+        //public Effect Effect { get { return effect; } set { effect = value; } }
+        public VertexBuffer VertexBuffer { get { return vertexBuffer; } }
+        public int VertexOffset { get { return vertexOffset; } }
+        public int NumVertices { get { return numVertices; } }
+        public IndexBuffer IndexBuffer { get { return indexBuffer; } }
+        public int StartIndex { get { return startIndex; } }
+        public int PrimitiveCount { get { return primitiveCount; } }
+        public PrimitiveType PrimitiveType { get { return primitiveType; } }
+        public MaterialHandler MaterialHandler { get { return materialHandler; } }
+        //public object Tag { get; set; }
+
+        public CustomModelMeshPart(VertexBuffer vertexBuffer, int vertexOffset, int numVertices, 
+            IndexBuffer indexBuffer, int startIndex, 
+            int primitiveCount, PrimitiveType primitiveType,
+            MaterialHandler material)
         {
-            this.effect = material.Effect;
-            this.baseVertex = baseVertex;
+            this.vertexBuffer = vertexBuffer;
+            this.vertexOffset = vertexOffset;
             this.numVertices = numVertices;
+            this.indexBuffer = indexBuffer;
             this.startIndex = startIndex;
             this.primitiveCount = primitiveCount;
-            this.materialHandler = material;// new MaterialHandler(effect, new EffectConverter());
+            this.primitiveType = primitiveType;
+            this.materialHandler = material;
         }
-
-        #region IModelMeshPart Members
-
-        public int BaseVertex
-        {
-            get { return baseVertex; }
-        }
-
-        public IEffect Effect
-        {
-            get
-            {
-                return effect;
-            }
-            set
-            {
-                effect = value;
-                MaterialHandler.Effect = value;
-            }
-        }
-
-        public int NumVertices
-        {
-            get { return numVertices; }
-        }
-
-        public int PrimitiveCount
-        {
-            get { return primitiveCount; }
-        }
-
-        public int StartIndex
-        {
-            get { return startIndex; }
-        }
-
-        public int StreamOffset
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public object Tag
-        {
-            get
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-            set
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-        }
-
-        public IVertexDeclaration VertexDeclaration
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public int VertexStride
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
-
-        public IMaterialHandler MaterialHandler
-        {
-            get { return materialHandler; }
-        }
-
-        #endregion
     }
 }

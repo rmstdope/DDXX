@@ -17,18 +17,17 @@ namespace Dope.DDXX.GameFramework
         private IFsa fsa;
         private IGraphicsFactory graphicsFactory;
         private IInputDriver inputDriver;
-        private ITextureFactory textureFactory;
-        private IEffectFactory effectFactory;
-        private IRenderTarget2D renderTarget;
-        private IDepthStencilBuffer depthStencilBuffer;
-        private IPostProcessor postProcessor;
-        private ISpriteBatch spriteBatch;
+        private TextureFactory textureFactory;
+        private EffectFactory effectFactory;
+        private RenderTarget2D renderTarget;
+        private PostProcessor postProcessor;
+        private SpriteBatch spriteBatch;
 
         public GameExecuter()
         {
         }
 
-        public void Initialize(IGameCallback game, IFsa startFsa, IGraphicsFactory graphicsFactory, IInputDriver inputDriver, ITextureFactory textureFactory, IEffectFactory effectFactory, IPostProcessor postProcessor)
+        public void Initialize(IGameCallback game, IFsa startFsa, IGraphicsFactory graphicsFactory, IInputDriver inputDriver, TextureFactory textureFactory, EffectFactory effectFactory, PostProcessor postProcessor)
         {
             this.game = game;
             this.fsa = startFsa;
@@ -38,9 +37,8 @@ namespace Dope.DDXX.GameFramework
             this.effectFactory = effectFactory;
             this.postProcessor = postProcessor;
             
-            renderTarget = textureFactory.CreateFullsizeRenderTarget(SurfaceFormat.Color, MultiSampleType.None, 0);
-            depthStencilBuffer = textureFactory.CreateFullsizeDepthStencil(graphicsFactory.GraphicsDevice.PresentationParameters.AutoDepthStencilFormat, MultiSampleType.None);
-            spriteBatch = graphicsFactory.CreateSpriteBatch();
+            renderTarget = textureFactory.CreateFullsizeRenderTarget(SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0);
+            spriteBatch = new SpriteBatch(graphicsFactory.GraphicsDevice);
             postProcessor.Initialize(graphicsFactory);
 
             fsa.Initialize(graphicsFactory);
@@ -57,8 +55,8 @@ namespace Dope.DDXX.GameFramework
         public void Render()
         {
             // Render to render target
-            graphicsFactory.GraphicsDevice.SetRenderTarget(0, renderTarget);
-            graphicsFactory.GraphicsDevice.DepthStencilBuffer = depthStencilBuffer;
+            graphicsFactory.GraphicsDevice.SetRenderTarget(renderTarget);
+            graphicsFactory.GraphicsDevice.DepthStencilState.DepthBufferEnable = true;
             graphicsFactory.GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Black, 1.0f, 0);
             //NodeFactory.Instance.GetScene().Render();
             fsa.Render();
@@ -66,8 +64,8 @@ namespace Dope.DDXX.GameFramework
             // Post processing
             //postProcessor.StartFrame(renderTarget);
 
-            //IRenderTarget2D startTexture = postProcessor.OutputTexture;
-            //List<IRenderTarget2D> textures = postProcessor.GetTemporaryTextures(2, true);
+            //RenderTarget2D startTexture = postProcessor.OutputTexture;
+            //List<RenderTarget2D> textures = postProcessor.GetTemporaryTextures(2, true);
             //postProcessor.SetValue("Luminance", 0.3f);
             //postProcessor.SetValue("Exposure", 0.12f);
             //postProcessor.SetValue("WhiteCutoff", 0.12f);
@@ -89,9 +87,9 @@ namespace Dope.DDXX.GameFramework
             //userInterface.DrawControl(rootControl);
 
             // Render to backbuffer
-            graphicsFactory.GraphicsDevice.SetRenderTarget(0, null);
-            spriteBatch.Begin(SpriteBlendMode.None, SpriteSortMode.Immediate, SaveStateMode.None);
-            spriteBatch.Draw(postProcessor.OutputTexture.GetTexture(), new Rectangle(0, 0, graphicsFactory.GraphicsDevice.PresentationParameters.BackBufferWidth,
+            graphicsFactory.GraphicsDevice.SetRenderTarget(null);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
+            spriteBatch.Draw(postProcessor.OutputTexture, new Rectangle(0, 0, graphicsFactory.GraphicsDevice.PresentationParameters.BackBufferWidth,
                 graphicsFactory.GraphicsDevice.PresentationParameters.BackBufferHeight), Color.White);
             spriteBatch.End();
         }

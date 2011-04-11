@@ -10,18 +10,18 @@ namespace Dope.DDXX.Graphics
     public interface IPostProcessor
     {
         void Initialize(IGraphicsFactory graphicsFactory);
-        IRenderTarget2D OutputTexture { get; }
-        void StartFrame(IRenderTarget2D startTexture);
-        void Process(string technique, IRenderTarget2D sourceTexture, IRenderTarget2D destinationTexture);
-        void Process(string technique, ITexture2D sourceTexture, IRenderTarget2D destinationTexture);
+        RenderTarget2D OutputTexture { get; }
+        void StartFrame(RenderTarget2D startTexture);
+        void Process(string technique, RenderTarget2D sourceTexture, RenderTarget2D destinationTexture);
+        void Process(string technique, Texture2D sourceTexture, RenderTarget2D destinationTexture);
         void SetBlendParameters(BlendFunction blendFunctions, Blend sourceBlend, Blend destinatonBlend, Color blendFactor);
         void SetValue(string parameter, float value);
         void SetValue(string parameter, float[] value);
         void SetValue(string parameter, Vector2 value);
         void SetValue(string parameter, Vector4 value);
-        void SetValue(string parameter, ITexture2D value);
-        List<IRenderTarget2D> GetTemporaryTextures(int num, bool skipOutput);
-        void AllocateTexture(IRenderTarget2D texture);
-        void FreeTexture(IRenderTarget2D texture);
+        void SetValue(string parameter, Texture2D value);
+        List<RenderTarget2D> GetTemporaryTextures(int num, bool skipOutput);
+        void AllocateTexture(RenderTarget2D texture);
+        void FreeTexture(RenderTarget2D texture);
     }
 }

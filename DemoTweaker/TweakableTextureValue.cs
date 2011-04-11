@@ -10,7 +10,7 @@ using Dope.DDXX.DemoFramework;
 
 namespace Dope.DDXX.DemoTweaker
 {
-    public class TweakableTextureValue : TweakableProperty<ITexture2D>
+    public class TweakableTextureValue : TweakableProperty<Texture2D>
     {
         public TweakableTextureValue(PropertyInfo property, object target, ITweakableFactory factory)
             : base(property, target, factory)

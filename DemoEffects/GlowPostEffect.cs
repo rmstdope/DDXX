@@ -5,6 +5,7 @@ using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Graphics;
 using Microsoft.Xna.Framework.Graphics;
 using Dope.DDXX.Utility;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.DemoEffects
 {
@@ -69,15 +70,15 @@ namespace Dope.DDXX.DemoEffects
 
         public override void Render()
         {
-            IRenderTarget2D startTexture = PostProcessor.OutputTexture;
-            List<IRenderTarget2D> textures = PostProcessor.GetTemporaryTextures(2, true);
+            RenderTarget2D startTexture = PostProcessor.OutputTexture;
+            List<RenderTarget2D> textures = PostProcessor.GetTemporaryTextures(2, true);
 
             PostProcessor.SetValue("Luminance", luminance);
             PostProcessor.SetValue("Exposure", exposure);
             PostProcessor.SetValue("WhiteCutoff", whiteCutoff);
             PostProcessor.SetValue("BloomScale", bloomScale);
             PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);
-            IRenderTarget2D afterDownSample = textures[1];
+            RenderTarget2D afterDownSample = textures[1];
             if (downSamples == 1)
                 PostProcessor.Process("DownSample4x", startTexture, textures[1]);
             else if (downSamples > 1)

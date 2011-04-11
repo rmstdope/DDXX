@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Dope.DDXX.Utility;
 using Microsoft.Xna.Framework;
 using Dope.DDXX.Graphics;
-using Dope.DDXX.ParticleSystems;
 using Dope.DDXX.TextureBuilder;
 
 namespace EngineTest
@@ -22,8 +21,8 @@ namespace EngineTest
         private float pulseAmplitude;
         private PointLightNode light;
 
-        private IMaterialHandler material;
-        public IMaterialHandler Material
+        private MaterialHandler material;
+        public MaterialHandler Material
         {
             get { return material; }
             set { material = value; }
@@ -82,7 +81,7 @@ namespace EngineTest
             material.AmbientColor = Color.Black;
             material.DiffuseColor = Color.Red;
             material.Shininess = 0.0f;
-            IModel model = ModelDirector.Generate(material);
+            CustomModel model = ModelDirector.Generate(material);
             artery = new ModelNode("Artery", model, GraphicsDevice);
             Scene.AddNode(artery);
             artery.WorldState.Tilt(MathHelper.PiOver2);
@@ -91,19 +90,19 @@ namespace EngineTest
         private void InitializeParticles()
         {
             TextureDirector.CreateCircle(0.1f, 0.3f, 0.5f, 0.5f, new Vector2(0.5f, 0.5f));
-            FloaterSystemNode floaterSystem = new FloaterSystemNode("Floaters", 4, 0.1f, 1);
-            floaterSystem.Initialize(GraphicsFactory, 100);
-            floaterSystem.Material.DiffuseTexture = TextureDirector.Generate("Circle64", 64, 64, 0, SurfaceFormat.Color);
-            floaterSystem.Material.BlendFunction = BlendFunction.ReverseSubtract;
-            floaterSystem.Material.SourceBlend = Blend.One;
-            floaterSystem.Material.DestinationBlend = Blend.One;
-            Scene.AddNode(floaterSystem);
+            //FloaterSystemNode floaterSystem = new FloaterSystemNode("Floaters", 4, 0.1f, 1);
+            //floaterSystem.Initialize(GraphicsFactory, 100);
+            //floaterSystem.Material.DiffuseTexture = TextureDirector.Generate("Circle64", 64, 64, 0, SurfaceFormat.Color);
+            //floaterSystem.Material.BlendFunction = BlendFunction.ReverseSubtract;
+            //floaterSystem.Material.SourceBlend = Blend.One;
+            //floaterSystem.Material.DestinationBlend = Blend.One;
+            //Scene.AddNode(floaterSystem);
         }
 
         private void InitializeCells()
         {
             TextureDirector.CreatePerlinNoise(1, 6, 0.5f);
-            ModelBuilder.SetDiffuseTexture("Default", TextureDirector.Generate("Noise64", 64, 64, 0, SurfaceFormat.Color));
+            ModelBuilder.SetDiffuseTexture("Default", TextureDirector.Generate("Noise64", 64, 64, false, SurfaceFormat.Color));
             //ModelBuilder.SetDiffuseTexture("Default", TextureFactory.CreateFromFile("Content\\textures\\CARPTBLU"));
             ModelBuilder.SetAmbientColor("Default", Color.Red);
             ModelBuilder.SetDiffuseColor("Default", new Color(255, 100, 100));
@@ -114,7 +113,7 @@ namespace EngineTest
             ModelDirector.CreateSphere(1, 32);
             ModelDirector.Amplitude(cellFunction);
             ModelDirector.Scale(0.3f);
-            IModel model = ModelDirector.Generate("Default");
+            CustomModel model = ModelDirector.Generate("Default");
             for (int i = 0; i < 20; i++)
             {
                 ModelNode cell = new ModelNode("Cell", model, GraphicsDevice);

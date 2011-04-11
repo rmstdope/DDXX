@@ -12,6 +12,6 @@ namespace Dope.DDXX.DemoFramework
         IScene Scene { get; }
         void Step();
         void Render();
-        void Initialize(IGraphicsFactory graphicsFactory, IDemoMixer mixer, IPostProcessor postProcessor);
+        void Initialize(IGraphicsFactory graphicsFactory, IDemoMixer mixer, PostProcessor postProcessor);
     }
 }

@@ -8,13 +8,13 @@ namespace Dope.DDXX.SceneGraph
 {
     public interface ISystemParticleSpawner
     {
-        IMaterialHandler MaterialHandler { get; }
+        MaterialHandler MaterialHandler { get; }
         BlendFunction BlendFunction { get; }
         Blend SourceBlend { get; }
         Blend DestinationBlend { get; }
         ISystemParticle<float> Spawn();
         Type VertexType { get; }
-        IVertexDeclaration VertexDeclaration { get; }
+        VertexDeclaration VertexDeclaration { get; }
         int NumInitialSpawns { get; }
         int MaxNumParticles { get; }
         bool ShouldSpawn();

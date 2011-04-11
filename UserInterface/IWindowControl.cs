@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
 using Dope.DDXX.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.UserInterface
 {
@@ -11,7 +12,7 @@ namespace Dope.DDXX.UserInterface
         Color SelectedTextColor { get; set; }
         string SubTitle { get; set; }
         Color TextColor { get; set; }
-        ITexture2D Texture { get; set; }
+        Texture2D Texture { get; set; }
         string Title { get; set; }
     }
 }

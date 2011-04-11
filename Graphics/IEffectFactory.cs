@@ -1,10 +1,11 @@
 ﻿using System;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dope.DDXX.Graphics
 {
     public interface IEffectFactory
     {
-        IBasicEffect CreateBasicEffect();
-        IEffect CreateFromFile(string file);
+        BasicEffect CreateBasicEffect();
+        Effect CreateFromFile(string file);
     }
 }

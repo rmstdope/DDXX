@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.DemoFramework
 {
-    public interface IEffectChangeListener
+    public interface EffectChangeListener
     {
         void SetStartTime(string className, string effectName, float value);
         void SetEndTime(string className, string effectName, float value);

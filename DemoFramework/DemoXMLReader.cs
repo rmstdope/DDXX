@@ -92,7 +92,7 @@ namespace Dope.DDXX.DemoFramework
         #endregion
     }
 
-    public class DemoXMLReader : IEffectChangeListener
+    public class DemoXMLReader : EffectChangeListener
     {
         private IDemoEffectBuilder effectBuilder;
         private XmlDocument doc;
@@ -159,16 +159,16 @@ namespace Dope.DDXX.DemoFramework
         {
             int width = 128;
             int height = 128;
-            int mipLevels = 0;
+            bool mipmap = false;
             if (node.Attributes.GetNamedItem("width") != null)
                 width = int.Parse(node.Attributes.GetNamedItem("width").Value);
             if (node.Attributes.GetNamedItem("height") != null)
                 height = int.Parse(node.Attributes.GetNamedItem("height").Value);
-            if (node.Attributes.GetNamedItem("miplevels") != null)
-                mipLevels = int.Parse(node.Attributes.GetNamedItem("miplevels").Value);
+            if (node.Attributes.GetNamedItem("mipmap") != null)
+                mipmap = bool.Parse(node.Attributes.GetNamedItem("mipmap").Value);
 
             effectBuilder.AddTexture(node.Attributes.GetNamedItem("name").Value,
-                node.Attributes.GetNamedItem("generator").Value, width, height, mipLevels);
+                node.Attributes.GetNamedItem("generator").Value, width, height, mipmap);
         }
 
         private void HandleDemoAttributes(XmlDocument doc, XmlNode demoNode)
