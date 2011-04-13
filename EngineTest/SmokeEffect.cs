@@ -10,7 +10,6 @@ using Microsoft.Xna.Framework;
 using Dope.DDXX.Utility;
 using Dope.DDXX.ModelBuilder;
 using System.Diagnostics;
-using NUnit.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace EngineTest

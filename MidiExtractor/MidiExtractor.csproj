@@ -114,6 +114,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompiledMidi.cs" />
     <Compile Include="EventParser.cs" />
     <Compile Include="IEventParser.cs" />
     <Compile Include="IMTrk.cs" />

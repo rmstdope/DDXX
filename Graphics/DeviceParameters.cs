@@ -31,11 +31,13 @@ namespace Dope.DDXX.Graphics
         public DeviceParameters(int width, int height, bool fullScreen, bool hiDef, bool preferMultiSampling, bool useStencil)
         {
             this.graphicsProfile = hiDef? GraphicsProfile.HiDef : GraphicsProfile.Reach;
+            this.referenceDevice = false;
             this.renderTargetFormat = SurfaceFormat.Color;
             this.backBufferFormat = SurfaceFormat.Color;
             this.backBufferWidth = width;
             this.backBufferHeight = height;
             this.fullScreen = fullScreen;
+            this.multiSampleCount = 0;
             //this.multiSampleType = GetMultiSampling(preferMultiSampling, graphicsProfile, backBufferFormat, fullScreen);
             this.depthStencilFormat = GetDepthStencilFormat(useStencil, graphicsProfile, backBufferFormat, renderTargetFormat);
         }

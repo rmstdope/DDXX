@@ -6,10 +6,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MidiProcessor</RootNamespace>
-    <AssemblyName>MidiProcessor</AssemblyName>
+    <RootNamespace>Dope.DDXX.MidiProcessor</RootNamespace>
+    <AssemblyName>Dope.DDXX.MidiProcessor</AssemblyName>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,7 +50,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CompiledMidi.cs" />
     <Compile Include="MidiImporter.cs" />
     <Compile Include="MidiProcessor.cs" />
     <Compile Include="MidiSource.cs" />

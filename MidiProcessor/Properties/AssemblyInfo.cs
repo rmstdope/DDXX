@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Motorola")]
 [assembly: AssemblyProduct("MidiProcessor")]
-[assembly: AssemblyCopyright("Copyright © Motorola 2011")]
+[assembly: AssemblyCopyright("Copyright © Dope 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

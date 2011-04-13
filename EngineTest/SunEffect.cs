@@ -30,6 +30,7 @@ namespace EngineTest
         public SunEffect(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
         {
+            circleTexture = null;
         }
 
         private Vector4 circleCallback(Vector2 texCoord, Vector2 texelSize)

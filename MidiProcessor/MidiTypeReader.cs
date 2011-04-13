@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework.Content;
+using Dope.DDXX.MidiExtractor;
 
 namespace Dope.DDXX.MidiProcessor
 {

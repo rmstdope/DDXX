@@ -223,10 +223,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ContentProcessor\ContentProcessor.csproj">
-      <Project>{01FF3AC6-34FA-4CD4-8F28-B7EFAC351F50}</Project>
-      <Name>ContentProcessor</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Graphics\Graphics.csproj">
       <Project>{797591FA-968E-41D7-BFEF-85E13FCCA4CF}</Project>
       <Name>Graphics</Name>
@@ -235,9 +231,9 @@
       <Project>{D8131D4F-45AF-4942-B77F-17714A6B64DF}</Project>
       <Name>Input</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MidiProcessor\MidiProcessor.csproj">
-      <Project>{317AD6CC-CED7-46F9-B4B1-707C1D01159E}</Project>
-      <Name>MidiProcessor</Name>
+    <ProjectReference Include="..\MidiExtractor\MidiExtractor.csproj">
+      <Project>{675A104D-E80D-4E5F-9048-37A6BB33A0D1}</Project>
+      <Name>MidiExtractor</Name>
     </ProjectReference>
     <ProjectReference Include="..\ModelBuilder\ModelBuilder.csproj">
       <Project>{2C34DF5D-D096-45DF-84C9-E78A3691F182}</Project>

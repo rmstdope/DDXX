@@ -24,7 +24,7 @@
     </XnaUpgrade>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <XnaOutputType>Library</XnaOutputType>
-    <XnaProfile>HiDef</XnaProfile>
+    <XnaProfile>Reach</XnaProfile>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -130,10 +130,6 @@
     <ProjectReference Include="..\Graphics\Graphics.csproj">
       <Project>{797591FA-968E-41D7-BFEF-85E13FCCA4CF}</Project>
       <Name>Graphics</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MidiProcessor\MidiProcessor.csproj">
-      <Project>{317AD6CC-CED7-46F9-B4B1-707C1D01159E}</Project>
-      <Name>MidiProcessor</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utility\Utility.csproj">
       <Project>{70F76E25-311C-4DFC-9412-89470F537BDF}</Project>

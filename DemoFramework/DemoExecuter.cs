@@ -274,7 +274,7 @@ namespace Dope.DDXX.DemoFramework
         }
 
 #if (!XBOX)
-        private int screenshotNum = 0;
+        //private int screenshotNum = 0;
 #endif
         public void Render()
         {
