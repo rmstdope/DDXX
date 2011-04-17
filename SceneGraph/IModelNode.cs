@@ -6,7 +6,8 @@ namespace Dope.DDXX.SceneGraph
 {
     public interface IModelNode : INode
     {
-        RasterizerState RasterizerState { get; set; }
+        CullMode CullMode { get; }
+        RasterizerState RasterizerState { set; }
         DepthStencilState DepthStencilState { get; set; }
         CustomModel Model { get; set; }
     }

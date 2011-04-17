@@ -60,7 +60,7 @@ namespace DemoEffects
                 flashAlpha = 1;
             flashAlpha = (float)(Math.Max(0, Math.Min(1, flashAlpha)));
             PostProcessor.SetValue("Color", new Vector4(fadeColor.R / 255.0f, fadeColor.G / 255.0f, fadeColor.B / 255.0f, flashAlpha));
-            PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.SourceAlpha, Blend.InverseSourceAlpha, Color.Black);
+            PostProcessor.BlendState = BlendState.NonPremultiplied;
             //PostProcessor.OutputTexture.GetTexture().Save("before.jpg", ImageFileFormat.Jpg);
             PostProcessor.Process("Color", TextureFactory.WhiteTexture, PostProcessor.OutputTexture);
             //PostProcessor.OutputTexture.GetTexture().Save("after.jpg", ImageFileFormat.Jpg);

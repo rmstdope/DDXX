@@ -187,7 +187,7 @@ namespace Dope.DDXX.DemoFramework
             if (renderTargetNoMultiSampling != renderTarget)
             {
                 device.SetRenderTarget(renderTargetNoMultiSampling);
-                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
                 spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
                 spriteBatch.End();
                 device.SetRenderTarget(null);//.ResolveRenderTarget(0);

@@ -19,7 +19,7 @@ namespace Dope.DDXX.DemoEffects
         {
             List<RenderTarget2D> textures = PostProcessor.GetTemporaryTextures(1, false);
 
-            PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);
+            PostProcessor.BlendState = BlendState.Opaque;
             PostProcessor.Process("Monochrome", PostProcessor.OutputTexture, textures[0]);
         }
 

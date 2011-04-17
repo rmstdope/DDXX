@@ -63,7 +63,7 @@ namespace Dope.DDXX.Graphics
         public RenderTarget2D CreateFullsizeRenderTarget(SurfaceFormat format, DepthFormat depthformat, int preferredMultiSampleCount)
         {
             return new RenderTarget2D(GraphicsDevice, GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight,
-                false, format, depthformat, preferredMultiSampleCount, RenderTargetUsage.DiscardContents);
+                false, format, depthformat, preferredMultiSampleCount, RenderTargetUsage.PreserveContents);
         }
 
         public Texture2D CreateFromGenerator(string name, int width, int height, bool mipMap, SurfaceFormat format, ITextureGenerator generator)

@@ -14,7 +14,7 @@ namespace Dope.DDXX.Graphics
         void StartFrame(RenderTarget2D startTexture);
         void Process(string technique, RenderTarget2D sourceTexture, RenderTarget2D destinationTexture);
         void Process(string technique, Texture2D sourceTexture, RenderTarget2D destinationTexture);
-        void SetBlendParameters(BlendFunction blendFunctions, Blend sourceBlend, Blend destinatonBlend, Color blendFactor);
+        BlendState BlendState { set; }
         void SetValue(string parameter, float value);
         void SetValue(string parameter, float[] value);
         void SetValue(string parameter, Vector2 value);

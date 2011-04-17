@@ -288,7 +288,7 @@ namespace Dope.DDXX.DemoFramework
             if (renderedTexture != null)
             {
                 graphicsFactory.GraphicsDevice.SetRenderTarget(null);
-                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, samplerState, null, null);
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque, samplerState, null, null);
                 spriteBatch.Draw(renderedTexture, new Rectangle(0, 0, 
                     graphicsFactory.GraphicsDevice.PresentationParameters.BackBufferWidth,
                     graphicsFactory.GraphicsDevice.PresentationParameters.BackBufferHeight), Color.White);

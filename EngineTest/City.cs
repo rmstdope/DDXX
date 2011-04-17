@@ -52,7 +52,7 @@ namespace EngineTest
             modelDirector.Rotate(Math.PI / 2, 0, 0);
             CustomModel model = modelDirector.Generate("Default");
             ModelNode ground = new ModelNode("Ground", model, GraphicsDevice);
-            ground.RasterizerState.CullMode = CullMode.None;
+            ground.RasterizerState = RasterizerState.CullNone;
             Scene.AddNode(ground);
         }
 

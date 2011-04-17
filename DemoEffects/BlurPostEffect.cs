@@ -27,8 +27,8 @@ namespace Dope.DDXX.DemoEffects
         {
             List<RenderTarget2D> textures = PostProcessor.GetTemporaryTextures(2, false);
 
+            PostProcessor.BlendState = BlendState.Opaque;
             PostProcessor.SetValue("BloomScale", 1.0f);
-            PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);
             PostProcessor.Process("HorizontalBloom", PostProcessor.OutputTexture, textures[0]);
             PostProcessor.Process("VerticalBloom", textures[0], textures[1]);
             for (int i = 0; i < numPasses - 1; i++)

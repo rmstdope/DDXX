@@ -49,7 +49,7 @@ namespace Dope.DDXX.DemoEffects
         public override RenderTarget2D Combine(RenderTarget2D fromTexture, RenderTarget2D toTexture)
         {
             PostProcessor.StartFrame(fromTexture);
-            PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.SourceAlpha, Blend.InverseSourceAlpha, Color.Black);
+            PostProcessor.BlendState = BlendState.NonPremultiplied;
             PostProcessor.SetValue("MiscTexture", texture);
             PostProcessor.SetValue("Time", Time.CurrentTime - StartTime);
             PostProcessor.SetValue("TextureAlphaFadeDelay", fadeDelay);

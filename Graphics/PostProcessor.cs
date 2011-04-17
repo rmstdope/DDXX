@@ -38,15 +38,14 @@ namespace Dope.DDXX.Graphics
         private TextureContainer sourceTextureContainer = new TextureContainer(null);
         private SpriteBatch spriteBatch;
         private Effect effect;
-        private BlendFunction blendOperation = BlendFunction.Add;
-        private Blend sourceBlend = Blend.One;
-        private Blend destinatonBlend = Blend.Zero;
-        private Color blendFactor = Color.Black;
         //private bool shouldClear;
         private List<TextureContainer> textures = new List<TextureContainer>();
 
+        public BlendState BlendState { set; private get; }
+
         public PostProcessor()
         {
+            BlendState = BlendState.Opaque;
         }
 
         public void Initialize(IGraphicsFactory graphicsFactory)
@@ -90,14 +89,6 @@ namespace Dope.DDXX.Graphics
             lastUsedTexture = startTexture;
         }
 
-        public void SetBlendParameters(BlendFunction blendOperation, Blend sourceBlend, Blend destinatonBlend, Color blendFactor)
-        {
-            this.blendOperation = blendOperation;
-            this.sourceBlend = sourceBlend;
-            this.destinatonBlend = destinatonBlend;
-            this.blendFactor = blendFactor;
-        }
-
         public void Process(string technique, RenderTarget2D source, RenderTarget2D destination)
         {
             effect.Parameters["Time2D"].SetValue(new float[] { 
@@ -108,7 +99,14 @@ namespace Dope.DDXX.Graphics
             TextureContainer destinationContainer = GetContainer(destination, false);
             SetupProcessParameters(technique, destinationContainer);
 
+            //graphicsFactory.GraphicsDevice.SetRenderTarget(null);
+            //System.IO.FileStream stream1 = System.IO.File.OpenWrite("before.jpg");
+            //destinationContainer.Texture.SaveAsJpeg(stream1, 1280, 720);
+            //stream1.Close();
             ProcessPasses(technique, sourceContainer, destinationContainer);
+            //System.IO.FileStream stream2 = System.IO.File.OpenWrite("after.jpg");
+            //destinationContainer.Texture.SaveAsJpeg(stream2, 1280, 720);
+            //stream2.Close();
 
             graphicsFactory.GraphicsDevice.SetRenderTarget(null);
             lastUsedTexture = destination;
@@ -146,8 +144,7 @@ namespace Dope.DDXX.Graphics
 
         private void ProcessPasses(string technique, TextureContainer source, TextureContainer destination)
         {
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
-            SetupRenderState();
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState);
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
@@ -178,23 +175,6 @@ namespace Dope.DDXX.Graphics
                         new Rectangle(0, 0, (int)(sourceWidth * fromScale), (int)(sourceHeight * fromScale)),
                         Color.White);
                 spriteBatch.End();
-            }
-        }
-
-        private void SetupRenderState()
-        {
-            if (BlendFunction.Add == blendOperation &&
-                Blend.One == sourceBlend &&
-                Blend.Zero == destinatonBlend)
-            {
-                graphicsFactory.GraphicsDevice.BlendState = BlendState.NonPremultiplied;
-            }
-            else
-            {
-                graphicsFactory.GraphicsDevice.BlendState.ColorBlendFunction = blendOperation;
-                graphicsFactory.GraphicsDevice.BlendState.ColorSourceBlend = sourceBlend;
-                graphicsFactory.GraphicsDevice.BlendState.ColorDestinationBlend = destinatonBlend;
-                graphicsFactory.GraphicsDevice.BlendState.BlendFactor = blendFactor;
             }
         }
 

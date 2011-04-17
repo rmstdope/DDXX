@@ -52,7 +52,7 @@ namespace EngineTest
 
         public override void Render()
         {
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
             for (int i = 0; i < 8; i++)
             {
                 GraphicsDevice.SamplerStates[i].Filter = TextureFilter.Point;

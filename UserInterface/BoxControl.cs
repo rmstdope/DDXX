@@ -43,7 +43,7 @@ namespace Dope.DDXX.UserInterface
             int width = (int)(screenWidth * GetWidth(resources));
             int height = (int)(screenHeight * GetHeight(resources));
             if (Color.A == 255)
-                resources.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
+                resources.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
             else
                 resources.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             if (Texture != null)

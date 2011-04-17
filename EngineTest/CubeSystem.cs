@@ -35,13 +35,13 @@ namespace DFM2007Invitro
             spline.AddKeyFrame(new KeyFrame<InterpolatedVector3>(10.0f, new InterpolatedVector3(new Vector3(0, 1.02f, 0))));
             spline.Calculate();
 
+            ModelBuilder.SetEffect("Default", "Content\\effects\\NormalMapping");
             ModelBuilder.SetDiffuseTexture("Default", TextureFactory.CreateFromName("Noise256"));
             ModelBuilder.SetNormalTexture("Default", TextureFactory.CreateFromName("NormalNoise256"));
             ModelBuilder.SetDiffuseColor("Default", new Color(60, 90, 250));
             ModelBuilder.SetAmbientColor("Default", new Color(60, 90, 250));
             ModelBuilder.SetSpecularColor("Default", new Color(200, 200, 200));
             ModelBuilder.SetSpecularPower("Default", 32);
-            ModelBuilder.SetEffect("Default", "Content\\effects\\NormalMapping");
             ModelBuilder.SetShininess("Default", 1.0f);
             for (int z = -5; z < 6; z++)
             {
@@ -87,7 +87,7 @@ namespace DFM2007Invitro
             //                                                    2 * (float)Math.Cos(Time.CurrentTime),
             //                                                    2 * (float)Math.Cos(Time.CurrentTime)) + camera.Position;
             //}
-            //camera.WorldState.Position = spline.GetValue(Time.CurrentTime % 10);
+            camera.WorldState.Position = spline.GetValue(Time.CurrentTime % 10);
             light.WorldState.Position = camera.WorldState.Position;
             Scene.Step();
         }

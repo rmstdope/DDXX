@@ -32,7 +32,7 @@ namespace Dope.DDXX.DemoEffects
 
         protected override void SetParameters()
         {
-            PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);
+            PostProcessor.BlendState = BlendState.Opaque;
             PostProcessor.SetValue("RingsDistance", distance);
             PostProcessor.SetValue("RingsScale", scale);
             float t = Time.CurrentTime;

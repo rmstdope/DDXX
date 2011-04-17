@@ -30,7 +30,7 @@ namespace EngineTest
 
         public override void Render()
         {
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
             spriteBatch.Draw(texture, new Vector2(), Color.White);
             spriteBatch.End();
         }

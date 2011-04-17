@@ -195,19 +195,19 @@
     <DrawOrder>0</DrawOrder>
   </Effect>-->
 
-  <!--<Effect class="CubeSystem" name="Cubes" track="0" startTime="0" endTime="500">
+  <Effect class="CubeSystem" name="Cubes" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
   </Effect>
   <PostEffect class="OverlayPostEffect" name="Overlay" track="0" startTime="0" endTime="500">
-    <Texture>Noise256base1024</Texture>
+    <Texture>Noise256</Texture>
     <Technique>Blend</Technique>
     <FadeOutLength>0</FadeOutLength>
     <FadeInLength>0</FadeInLength>
     <SubtractNoise>true</SubtractNoise>
     <AddNoise>false</AddNoise>
-    <BlendFactor>0.3</BlendFactor>
+    <BlendFactor>0.4</BlendFactor>
     <DrawOrder>0</DrawOrder>
-  </PostEffect>-->
+  </PostEffect>
 
   <!--<PostEffect class="RadialBlurPostEffect" name="RadialBlur" track="0" startTime="0" endTime="500">
     <BlurColor>40, 40, 150, 255</BlurColor>
@@ -340,9 +340,9 @@
     <SourceDensity>40</SourceDensity>
     <Force>5</Force>
   </Effect>-->
-  <Effect class="ComicEffect" name="Comic" track="0" startTime="0" endTime="500">
+  <!--<Effect class="ComicEffect" name="Comic" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
-  </Effect>
+  </Effect>-->
   <!--<Effect class="TerrainFlyover" name="Terrain" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
   </Effect>-->

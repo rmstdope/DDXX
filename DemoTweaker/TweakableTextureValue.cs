@@ -7,6 +7,7 @@ using Dope.DDXX.Graphics;
 using Microsoft.Xna.Framework.Graphics;
 using Dope.DDXX.UserInterface;
 using Dope.DDXX.DemoFramework;
+using Dope.DDXX.Utility;
 
 namespace Dope.DDXX.DemoTweaker
 {
@@ -83,7 +84,10 @@ namespace Dope.DDXX.DemoTweaker
 
         public override void SetFromString(string value)
         {
-            SetTexture(GetTextureIndexFromName(value));
+            int index = GetTextureIndexFromName(value);
+            if (index == -1)
+                throw new DDXXException("Could not find texture with name " + value + ".");
+            SetTexture(index);
         }
 
         public override void SetFromString(int index, string value)

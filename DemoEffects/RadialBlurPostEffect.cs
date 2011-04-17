@@ -28,7 +28,7 @@ namespace Dope.DDXX.DemoEffects
         {
             List<RenderTarget2D> textures = PostProcessor.GetTemporaryTextures(2, true);
             RenderTarget2D startTexture = PostProcessor.OutputTexture;
-            PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);
+            PostProcessor.BlendState = BlendState.Opaque;
             PostProcessor.SetValue("ZoomFactor", 0.20f);
             PostProcessor.Process("ZoomAdd", startTexture, textures[0]);
             float invZoomFactor = 0.8f;
@@ -40,7 +40,7 @@ namespace Dope.DDXX.DemoEffects
                 PostProcessor.Process("ZoomAdd", textures[source], textures[1 - source]);
                 source = 1 - source;
             }
-            PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.BlendFactor, blurColor);
+            PostProcessor.BlendState = BlendState.Opaque;
             PostProcessor.Process("Copy", startTexture, textures[source]);
         }
 

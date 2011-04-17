@@ -17,6 +17,7 @@ namespace Dope.DDXX.DemoEffects
         private float bloomScale;
         private int downSamples;
         private bool advancedGlow;
+        private BlendState addBlend;
 
         [TweakStep(0.1f)]
         public float BloomScale
@@ -66,6 +67,10 @@ namespace Dope.DDXX.DemoEffects
             WhiteCutoff = 0.1f;
             BloomScale = 1.4f;
             DownSamples = 1;
+            addBlend = new BlendState();
+            addBlend.ColorBlendFunction = addBlend.AlphaBlendFunction = BlendFunction.Add;
+            addBlend.ColorSourceBlend = addBlend.AlphaSourceBlend = Blend.One;
+            addBlend.ColorDestinationBlend = addBlend.AlphaDestinationBlend = Blend.One;
         }
 
         public override void Render()
@@ -77,7 +82,7 @@ namespace Dope.DDXX.DemoEffects
             PostProcessor.SetValue("Exposure", exposure);
             PostProcessor.SetValue("WhiteCutoff", whiteCutoff);
             PostProcessor.SetValue("BloomScale", bloomScale);
-            PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);
+            PostProcessor.BlendState = BlendState.Opaque;
             RenderTarget2D afterDownSample = textures[1];
             if (downSamples == 1)
                 PostProcessor.Process("DownSample4x", startTexture, textures[1]);
@@ -100,7 +105,7 @@ namespace Dope.DDXX.DemoEffects
             PostProcessor.Process("HorizontalBloom", textures[0], textures[1]);
             if (downSamples == 0)
             {
-                PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.One, Color.Black);
+                PostProcessor.BlendState = addBlend;
                 PostProcessor.Process("VerticalBloom", textures[1], startTexture);
             }
             else
@@ -108,14 +113,14 @@ namespace Dope.DDXX.DemoEffects
             //textures[0].GetTexture().Save("save3.jpg", ImageFileFormat.Jpg);
             if (downSamples == 1)
             {
-                PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.One, Color.Black);
+                PostProcessor.BlendState = addBlend;
                 PostProcessor.Process("UpSample4x", textures[0], startTexture);
             }
             else if (downSamples > 1)
             {
                 PostProcessor.Process("UpSample4x", textures[0], textures[1]);
                 //textures[1].GetTexture().Save("save4.jpg", ImageFileFormat.Jpg);
-                PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.One, Color.Black);
+                PostProcessor.BlendState = addBlend;
                 PostProcessor.Process("UpSample4x", textures[1], startTexture);
                 //t.Save("save9.jpg", ImageFileFormat.Jpg);
             }

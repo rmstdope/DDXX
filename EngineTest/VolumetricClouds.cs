@@ -42,21 +42,28 @@ namespace EngineTest
         public override void Step()
         {
             volumeCube.Model.Meshes[0].MeshParts[0].MaterialHandler.Effect = backEffect;
-            volumeCube.RasterizerState.CullMode = CullMode.CullClockwiseFace;
+            volumeCube.RasterizerState = RasterizerState.CullClockwise;
             volumeCube.WorldState.Turn(Time.DeltaTime);
             volumeCube.WorldState.Roll(Time.DeltaTime / 2.345f);
 
-            RenderTarget2D originalRenderTarget = GraphicsDevice.GetRenderTargets()[0].RenderTarget as RenderTarget2D;
+            RenderTargetBinding[] originalRenderTarget = GraphicsDevice.GetRenderTargets();
             GraphicsDevice.SetRenderTarget(renderTarget);
             Scene.Render();
-            GraphicsDevice.SetRenderTarget(originalRenderTarget);
+            if (originalRenderTarget.Length >= 1)
+            {
+                GraphicsDevice.SetRenderTarget(originalRenderTarget[0].RenderTarget as RenderTarget2D);
+            }
+            else
+            {
+                GraphicsDevice.SetRenderTarget(null);
+            }
         }
 
         public override void Render()
         {
             volumeCube.Model.Meshes[0].MeshParts[0].MaterialHandler.Effect = frontEffect;
             volumeCube.Model.Meshes[0].MeshParts[0].MaterialHandler.DiffuseTexture = renderTarget;
-            volumeCube.RasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
+            volumeCube.RasterizerState = RasterizerState.CullCounterClockwise;
             Scene.Render();
         }
     }

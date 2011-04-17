@@ -19,7 +19,12 @@ namespace Dope.DDXX.DemoEffects
         public override RenderTarget2D Combine(RenderTarget2D fromTexture, RenderTarget2D toTexture)
         {
             PostProcessor.StartFrame(fromTexture);
-            PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.BlendFactor, Blend.InverseBlendFactor, GetFactor());
+            BlendState blend = new BlendState();
+            blend.ColorBlendFunction = blend.AlphaBlendFunction = BlendFunction.Add;
+            blend.ColorSourceBlend = blend.AlphaSourceBlend = Blend.BlendFactor;
+            blend.ColorDestinationBlend = blend.AlphaDestinationBlend = Blend.InverseBlendFactor;
+            blend.BlendFactor = GetFactor();
+            PostProcessor.BlendState = blend;
             PostProcessor.Process("Copy", fromTexture, toTexture);
             return toTexture;
         }

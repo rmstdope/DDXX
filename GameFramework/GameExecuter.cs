@@ -88,7 +88,7 @@ namespace Dope.DDXX.GameFramework
 
             // Render to backbuffer
             graphicsFactory.GraphicsDevice.SetRenderTarget(null);
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
             spriteBatch.Draw(postProcessor.OutputTexture, new Rectangle(0, 0, graphicsFactory.GraphicsDevice.PresentationParameters.BackBufferWidth,
                 graphicsFactory.GraphicsDevice.PresentationParameters.BackBufferHeight), Color.White);
             spriteBatch.End();

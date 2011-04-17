@@ -18,6 +18,8 @@ namespace Dope.DDXX.DemoEffects
         private float fadeInLength;
         private float fadeOutLength;
         private string technique;
+        private readonly BlendState addBlend;
+        private readonly BlendState subBlend;
 
         public string Technique
         {
@@ -72,6 +74,15 @@ namespace Dope.DDXX.DemoEffects
             fadeInLength = 0.0f;
             fadeOutLength = 0.0f;
             technique = "Blend";
+
+            addBlend = new BlendState();
+            addBlend.ColorBlendFunction = addBlend.AlphaBlendFunction = BlendFunction.Add;
+            addBlend.ColorSourceBlend = addBlend.AlphaSourceBlend = Blend.One;
+            addBlend.ColorDestinationBlend = addBlend.AlphaDestinationBlend = Blend.InverseSourceColor;
+            subBlend = new BlendState();
+            subBlend.ColorBlendFunction = subBlend.AlphaBlendFunction = BlendFunction.ReverseSubtract;
+            subBlend.ColorSourceBlend = subBlend.AlphaSourceBlend = Blend.One;
+            subBlend.ColorDestinationBlend = subBlend.AlphaDestinationBlend = Blend.One;
         }
 
         protected override void Initialize()
@@ -89,9 +100,9 @@ namespace Dope.DDXX.DemoEffects
         public override void Render()
         {
             if (addNoise)
-                PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.InverseSourceColor, Color.White);
+                PostProcessor.BlendState = addBlend;
             if (subtractNoise)
-                PostProcessor.SetBlendParameters(BlendFunction.ReverseSubtract, Blend.One, Blend.One, Color.White);
+                PostProcessor.BlendState = subBlend;
             float factor = BlendFactor * GetFadeAlpha();
             PostProcessor.SetValue("Color", new float[] { factor, factor, factor, factor});
 

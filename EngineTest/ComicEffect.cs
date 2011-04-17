@@ -103,7 +103,7 @@ namespace TiVi
         public override void Render()
         {
             Scene.Render();
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
             spriteBatch.Draw(texture3, new Rectangle(0, 0, 256, 256), Color.White);
             spriteBatch.Draw(texture3, new Rectangle(256, 0, 256, 256), Color.White);
             spriteBatch.Draw(texture3, new Rectangle(0, 256, 256, 256), Color.White);

@@ -51,13 +51,13 @@ namespace Dope.DDXX.SceneGraph
             if (node is ModelNode)
             {
                 ModelNode modelNode = node as ModelNode;
-                switch (modelNode.RasterizerState.CullMode)
+                switch (modelNode.CullMode)
                 {
                     case CullMode.CullClockwiseFace:
-                        modelNode.RasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
+                        modelNode.RasterizerState = RasterizerState.CullCounterClockwise;
                         break;
                     case CullMode.CullCounterClockwiseFace:
-                        modelNode.RasterizerState.CullMode = CullMode.CullClockwiseFace;
+                        modelNode.RasterizerState = RasterizerState.CullClockwise;
                         break;
                 }
                 //modelNode.Model.UseStencil = !modelNode.Model.UseStencil;

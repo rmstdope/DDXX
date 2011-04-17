@@ -33,7 +33,7 @@ namespace Dope.DDXX.DemoEffects
             //numTextures = 2;
             List<RenderTarget2D> textures = PostProcessor.GetTemporaryTextures(numTextures, false);
 
-            PostProcessor.SetBlendParameters(BlendFunction.Add, Blend.One, Blend.Zero, Color.Black);
+            PostProcessor.BlendState = BlendState.Opaque;
             //PostProcessor.Process("DepthOfFieldVertical", PostProcessor.OutputTexture, textures[0]);
             //PostProcessor.Process("DepthOfFieldHorizontal", textures[0], textures[1]);
             //PostProcessor.Process("DepthOfFieldVertical", textures[1], textures[0]);
