@@ -42,6 +42,7 @@ namespace Dope.DDXX.Graphics
         private List<TextureContainer> textures = new List<TextureContainer>();
 
         public BlendState BlendState { set; private get; }
+        public GraphicsDevice GraphicsDevice { get { return graphicsFactory.GraphicsDevice; } }
 
         public PostProcessor()
         {

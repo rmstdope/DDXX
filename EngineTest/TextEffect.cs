@@ -64,6 +64,8 @@ namespace EngineTest
         private SpriteFont font;
         private List<TextData> textData;
         private List<BlitSine> highlights;
+        private BlendState blend1;
+        private BlendState blend2;
 
         private const int NumLines = 50;
 
@@ -77,6 +79,14 @@ namespace EngineTest
             lines = new LineNode[NumLines];
             textData = new List<TextData>();
             highlights = new List<BlitSine>();
+            blend1 = new BlendState();
+            blend1.AlphaBlendFunction = blend1.ColorBlendFunction = BlendFunction.Add;
+            blend1.AlphaSourceBlend = blend1.ColorSourceBlend = Blend.One;
+            blend1.AlphaDestinationBlend = blend1.ColorDestinationBlend = Blend.One;
+            blend2 = new BlendState();
+            blend2.AlphaBlendFunction = blend2.ColorBlendFunction = BlendFunction.Add;
+            blend2.AlphaSourceBlend = blend2.ColorSourceBlend = Blend.DestinationColor;
+            blend2.AlphaDestinationBlend = blend2.ColorDestinationBlend = Blend.Zero;
         }
 
         protected override void Initialize()
@@ -132,8 +142,9 @@ namespace EngineTest
             highlights.Add(new BlitSine());
 
             ModelDirector.CreatePlane(3, 3, 1, 1);
-            ModelBuilder.SetDiffuseTexture("Default", circleTexture);
             ModelBuilder.SetEffect("Default", "Content\\effects\\HighlightedText");
+            ModelBuilder.SetDiffuseTexture("Default", circleTexture);
+            ModelBuilder.SetDiffuseColor("Default", new Color(150, 150, 150));
             model = ModelDirector.Generate("Default");
 
             CreatePlane(0.0f);
@@ -146,7 +157,7 @@ namespace EngineTest
             ModelDirector.Translate(0, 1.5f, 0);
             ModelDirector.NormalFlip();
             ModelBuilder.CreateMaterial("Room");
-            ModelBuilder.SetDiffuseColor("Room", new Color(50, 50, 50));
+            ModelBuilder.SetDiffuseColor("Room", new Color(150, 150, 150));
             ModelBuilder.SetDiffuseTexture("Room", "Content\\textures\\yellowswirls_untiled");
             ModelBuilder.SetEffect("Room", "Content\\effects\\HighlightedText");
             CustomModel roomModel = ModelDirector.Generate("Room");
@@ -175,13 +186,10 @@ namespace EngineTest
         public override void Step()
         {
             const float OffsetY = 3;
-            RenderTarget2D oldRt = GraphicsDevice.GetRenderTargets()[0].RenderTarget as RenderTarget2D;
+            RenderTargetBinding[] oldRt = GraphicsDevice.GetRenderTargets();
             GraphicsDevice.SetRenderTarget(highlightRenderTarget);
             GraphicsDevice.Clear(ClearOptions.Target, new Color(20, 20, 20), 0, 0);            
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-            GraphicsDevice.BlendState.ColorDestinationBlend = Blend.One;
-            GraphicsDevice.BlendState.ColorSourceBlend = Blend.One;
-            //GraphicsDevice..RenderState.AlphaTestEnable = false;
+            spriteBatch.Begin(SpriteSortMode.Immediate, blend1);
             spriteBatch.Draw(circleTexture, new Rectangle(0, 0, 256, 256), Color.White);
             foreach (BlitSine sine in highlights)
             {
@@ -200,13 +208,13 @@ namespace EngineTest
                 data.Advance(font);
             }
             spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-            GraphicsDevice.BlendState.ColorDestinationBlend = Blend.Zero;
-            GraphicsDevice.BlendState.ColorSourceBlend = Blend.DestinationColor;
+            spriteBatch.Begin(SpriteSortMode.Immediate, blend2);
             spriteBatch.Draw(highlightRenderTarget, new Rectangle(0, 0, 256, 256), Color.White);
             spriteBatch.End();
-            
-            GraphicsDevice.SetRenderTarget(oldRt);
+
+            GraphicsDevice.SetRenderTargets(oldRt);
+            //System.IO.Stream stream = System.IO.File.Open("test.jpg", System.IO.FileMode.Create);
+            //textRenderTarget.SaveAsJpeg(stream, 256, 256);
 
             //for (int i = 0; i < NumLines; i++)
             //{
@@ -226,7 +234,7 @@ namespace EngineTest
             //    new Rectangle(256, 0, 256, 256), Color.White);
             //spriteBatch.End();
             model.Meshes[0].MeshParts[0].MaterialHandler.DiffuseTexture = textRenderTarget;
-            model.Meshes[0].MeshParts[0].MaterialHandler.AmbientColor = new Color(5, 5, 5);
+            //model.Meshes[0].MeshParts[0].MaterialHandler.AmbientColor = new Color(50, 50, 50);
             Scene.Render();
         }
     }

@@ -40,7 +40,12 @@ namespace Dope.DDXX.DemoEffects
                 PostProcessor.Process("ZoomAdd", textures[source], textures[1 - source]);
                 source = 1 - source;
             }
-            PostProcessor.BlendState = BlendState.Opaque;
+            BlendState blendState = new BlendState();
+            blendState.ColorBlendFunction = blendState.AlphaBlendFunction = BlendFunction.Add;
+            blendState.ColorSourceBlend = blendState.AlphaSourceBlend = Blend.One;
+            blendState.AlphaDestinationBlend = blendState.ColorDestinationBlend = Blend.BlendFactor;
+            blendState.BlendFactor = blurColor;
+            PostProcessor.BlendState = blendState;
             PostProcessor.Process("Copy", startTexture, textures[source]);
         }
 

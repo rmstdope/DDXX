@@ -44,15 +44,18 @@ float Time;
 
 sampler TextureSampler : register(s0) = sampler_state
 {
-    AddressU	= Wrap;
-    AddressV	= Wrap;
+		AddressU	= Clamp;
+		AddressV	= Clamp;
+		MagFilter	=	Linear;
+		MinFilter	=	Linear;
+		MipFilter	=	Linear;
 };
 texture2D MiscTexture;
 sampler AlternateTextureSampler = sampler_state
 {
 		Texture		= <MiscTexture>;
-    AddressU	= Wrap;
-    AddressV	= Wrap;
+		AddressU	= Clamp;
+		AddressV	= Clamp;
 		MagFilter	=	Linear;
 		MinFilter	=	Linear;
 		MipFilter	=	Linear;

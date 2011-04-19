@@ -195,10 +195,10 @@
     <DrawOrder>0</DrawOrder>
   </Effect>-->
 
-  <Effect class="CubeSystem" name="Cubes" track="0" startTime="0" endTime="500">
+  <!--<Effect class="CubeSystem" name="Cubes" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
-  </Effect>
-  <PostEffect class="OverlayPostEffect" name="Overlay" track="0" startTime="0" endTime="500">
+  </Effect>-->
+  <!--<PostEffect class="OverlayPostEffect" name="Overlay" track="0" startTime="0" endTime="500">
     <Texture>Noise256</Texture>
     <Technique>Blend</Technique>
     <FadeOutLength>0</FadeOutLength>
@@ -207,7 +207,7 @@
     <AddNoise>false</AddNoise>
     <BlendFactor>0.4</BlendFactor>
     <DrawOrder>0</DrawOrder>
-  </PostEffect>
+  </PostEffect>-->
 
   <!--<PostEffect class="RadialBlurPostEffect" name="RadialBlur" track="0" startTime="0" endTime="500">
     <BlurColor>40, 40, 150, 255</BlurColor>
@@ -215,8 +215,8 @@
   </PostEffect>-->
   <!--<Effect class="Morph3DEffect" name="3D Morph" track="1" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
-  </Effect>
-  <PostEffect class="RadialBlurPostEffect" name="RadialBlur2" track="1" startTime="0" endTime="500">
+  </Effect>-->
+  <!--<PostEffect class="RadialBlurPostEffect" name="RadialBlur2" track="1" startTime="0" endTime="500">
     <BlurColor>40, 40, 150, 255</BlurColor>
     <DrawOrder>0</DrawOrder>
   </PostEffect>
@@ -226,7 +226,7 @@
   	<FadeDelay>8.9</FadeDelay>
   </Transition>-->
 
-  <!--<Effect class="TextEffect" name="Lines" track="0" startTime="0" endTime="500">
+  <Effect class="TextEffect" name="Lines" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
     <Scene>
       <AmbientColor>255, 255, 255, 255</AmbientColor>
@@ -235,7 +235,7 @@
   <PostEffect class="RadialBlurPostEffect" name="RadialBlur" track="0" startTime="0" endTime="500">
     <BlurColor>40, 40, 150, 255</BlurColor>
     <DrawOrder>0</DrawOrder>
-  </PostEffect>-->
+  </PostEffect>
   <!--<Effect class="MusicSynchronizedOverlay" name="MusicSync" track="0" startTime="0" endTime="500">
     <DrawOrder>1</DrawOrder>
   </Effect>-->

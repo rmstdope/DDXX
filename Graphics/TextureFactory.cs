@@ -57,7 +57,8 @@ namespace Dope.DDXX.Graphics
 
         public RenderTarget2D CreateFullsizeRenderTarget()
         {
-            return new RenderTarget2D(GraphicsDevice, GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight);
+            return new RenderTarget2D(GraphicsDevice, GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight,
+                false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, 0, RenderTargetUsage.PreserveContents);
         }
 
         public RenderTarget2D CreateFullsizeRenderTarget(SurfaceFormat format, DepthFormat depthformat, int preferredMultiSampleCount)

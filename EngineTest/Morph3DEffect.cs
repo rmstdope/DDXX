@@ -93,7 +93,7 @@ namespace EngineTest
                     if (node == null)
                     {
                         modelBuilder.CreateMaterial("Material");
-                        modelBuilder.SetDiffuseTexture("Material", "Noise256base1024");
+                        modelBuilder.SetDiffuseTexture("Material", "Noise256");
                         modelBuilder.SetEffect("Material", "Content\\effects\\Morph");
                         model = modelBuilder.CreateModel(chain, "Material");
                         node = new ModelNode("Morph", model, modelBuilder.GraphicsDevice);

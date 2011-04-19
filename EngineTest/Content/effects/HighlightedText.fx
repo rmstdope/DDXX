@@ -3,11 +3,11 @@
 sampler2D DefaultEffectSampler = sampler_state
 {
     Texture	= <Texture>;
-    MinFilter	= linear;
-    MagFilter	= linear;
-    MipFilter	= linear;
-	AddressU	= Mirror;
-	AddressV	= Mirror;
+    MinFilter	= Linear;
+    MagFilter	= Linear;
+    MipFilter	= Linear;
+	AddressU	= Clamp;
+	AddressV	= Clamp;
 };
 
 struct INPUT
@@ -34,7 +34,8 @@ DefaultVertexShader(INPUT input)
 float4
 DefaultPixelShader(INPUT input) : COLOR
 {
-	return float4(tex2D(DefaultEffectSampler, input.texCoord) * DiffuseColor + AmbientLightColor * AmbientColor, 1);
+	//return tex2D(DefaultEffectSampler, input.texCoord);
+	return float4(tex2D(DefaultEffectSampler, input.texCoord) * (DiffuseColor + AmbientLightColor * AmbientColor), 1);
 }
 
 Technique Default
