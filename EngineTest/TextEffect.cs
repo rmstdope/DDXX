@@ -142,9 +142,9 @@ namespace EngineTest
             highlights.Add(new BlitSine());
 
             ModelDirector.CreatePlane(3, 3, 1, 1);
-            ModelBuilder.SetEffect("Default", "Content\\effects\\HighlightedText");
             ModelBuilder.SetDiffuseTexture("Default", circleTexture);
             ModelBuilder.SetDiffuseColor("Default", new Color(150, 150, 150));
+            ModelBuilder.SetEffect("Default", "Content\\effects\\HighlightedText");
             model = ModelDirector.Generate("Default");
 
             CreatePlane(0.0f);

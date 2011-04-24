@@ -10,13 +10,13 @@ namespace Dope.DDXX.UserInterface
 {
     public class LineControl : BaseControl
     {
-        public Color Color;
+        private Color Color;
         private bool vertical;
 
         public LineControl(Vector4 rectangle, byte alpha, Color color, BaseControl parent)
             : base(rectangle, parent)
         {
-            Color = new Color(color.R, color.G, color.B, alpha);
+            Color = new Color((color.R * alpha) / 255, (color.G * alpha) / 255, (color.B * alpha) / 255, alpha);
             if (rectangle.Z == 0)
                 vertical = true;
             else if (rectangle.W == 0)

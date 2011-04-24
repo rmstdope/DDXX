@@ -173,8 +173,10 @@ namespace Dope.DDXX.DemoTweaker
                     exiting = true;
             }
 
-            if (inputDriver.KeyPressedNoRepeat(Keys.F1))
-                visable = !visable;
+            if (inputDriver.KeyPressed(Keys.LeftControl))
+                visable = false;
+            else
+                visable = true;
 
             if (inputDriver.KeyPressedNoRepeat(Keys.F2))
                 settings.SetTransparency(Transparency.Low);

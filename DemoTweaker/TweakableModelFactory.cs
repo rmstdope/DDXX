@@ -67,7 +67,7 @@ namespace Dope.DDXX.DemoTweaker
                     AddAttribute(xmlDocument, newNode, "name", parameter.Name);
                     //AddAttribute(xmlDocument, newNode, "width", parameter.Model.Width.ToString());
                     //AddAttribute(xmlDocument, newNode, "height", parameter.Model.Height.ToString());
-                    //AddAttribute(xmlDocument, newNode, "miplevels", parameter.Model.LevelCount > 1 ? "0" : "1");
+                    //AddAttribute(xmlDocument, newNode, "mipmap", parameter.Model.LevelCount > 1 ? "0" : "1");
                     UpdateModel(xmlDocument, newNode, parameter);
                 }
             }
@@ -110,7 +110,7 @@ namespace Dope.DDXX.DemoTweaker
             //    tweakableGenerator.ReadFromXmlFile(child);
             //}
             //director.Generate(GetStringAttribute(node, "name"), GetIntAttribute(node, "width"),
-            //    GetIntAttribute(node, "height"), GetIntAttribute(node, "miplevels"), SurfaceFormat.Color);
+            //    GetIntAttribute(node, "height"), GetIntAttribute(node, "mipmap"), SurfaceFormat.Color);
         }
 
         public override void CreateControl(TweakerStatus status, int index, float y, ITweakerSettings settings)

@@ -139,7 +139,9 @@
       <Name>Convolution</Name>
     </Compile>
     <Compile Include="Divide.cs" />
+    <Compile Include="EdgeDetect.cs" />
     <Compile Include="Ellipse.cs" />
+    <Compile Include="Emboss.cs" />
     <Compile Include="FactorBlend.cs">
       <Name>FactorBlend</Name>
     </Compile>

@@ -9,26 +9,26 @@ namespace Dope.DDXX.UserInterface
 {
     public class BoxControl : BaseControl
     {
-        public Color Color;
-        public Color ShadowColor;
-        public Color OutlineColor;
-        public Texture2D Texture;
+        private Color Color;
+        private Color ShadowColor;
+        private Color OutlineColor;
+        private Texture2D Texture;
 
         public BoxControl(Vector4 rectangle, byte alpha, Color color, BaseControl parent)
             : base(rectangle, parent)
         {
-            Color = new Color(color.R, color.G, color.B, alpha);
+            Color = new Color((color.R * alpha) / 255, (color.G * alpha) / 255, (color.B * alpha) / 255, alpha);
             ShadowColor = new Color(0, 0, 0, alpha);
-            OutlineColor = new Color(255, 255, 255, alpha);
+            OutlineColor = new Color(alpha, alpha, alpha, alpha);
         }
 
         public BoxControl(Vector4 rectangle, byte alpha, Texture2D texture, BaseControl parent)
             : base(rectangle, parent)
         {
             Texture = texture;
-            Color = new Color(255, 255, 255, alpha);
+            Color = new Color(alpha, alpha, alpha, alpha);
             ShadowColor = new Color(0, 0, 0, alpha);
-            OutlineColor = new Color(255, 255, 255, alpha);
+            OutlineColor = new Color(alpha, alpha, alpha, alpha);
         }
 
         public override void Draw(IDrawResources resources)

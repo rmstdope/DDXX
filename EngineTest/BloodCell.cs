@@ -89,7 +89,7 @@ namespace EngineTest
 
         private void InitializeParticles()
         {
-            TextureDirector.CreateCircle(0.1f, 0.3f, 0.5f, 0.5f, new Vector2(0.5f, 0.5f));
+            //TextureDirector.CreateCircle(0.1f, 0.3f, 0.5f, 0.5f, new Vector2(0.5f, 0.5f));
             //FloaterSystemNode floaterSystem = new FloaterSystemNode("Floaters", 4, 0.1f, 1);
             //floaterSystem.Initialize(GraphicsFactory, 100);
             //floaterSystem.Material.DiffuseTexture = TextureDirector.Generate("Circle64", 64, 64, 0, SurfaceFormat.Color);
@@ -101,15 +101,14 @@ namespace EngineTest
 
         private void InitializeCells()
         {
-            TextureDirector.CreatePerlinNoise(1, 6, 0.5f);
-            ModelBuilder.SetDiffuseTexture("Default", TextureDirector.Generate("Noise64", 64, 64, false, SurfaceFormat.Color));
+            ModelBuilder.SetEffect("Default", "Content\\effects\\BloodCell");
+            ModelBuilder.SetDiffuseTexture("Default", TextureFactory.CreateFromName("Noise64"));
             //ModelBuilder.SetDiffuseTexture("Default", TextureFactory.CreateFromFile("Content\\textures\\CARPTBLU"));
             ModelBuilder.SetAmbientColor("Default", Color.Red);
             ModelBuilder.SetDiffuseColor("Default", new Color(255, 100, 100));
             ModelBuilder.SetSpecularColor("Default", Color.White);
             ModelBuilder.SetShininess("Default", 0.5f);
             ModelBuilder.SetSpecularPower("Default", 8);
-            ModelBuilder.SetEffect("Default", "Content\\effects\\BloodCell");
             ModelDirector.CreateSphere(1, 32);
             ModelDirector.Amplitude(cellFunction);
             ModelDirector.Scale(0.3f);

@@ -147,7 +147,7 @@ namespace Dope.DDXX.DemoTweaker
         {
             foreach (Type type in typeof(Constant).Assembly.GetTypes())
             {
-                if (type.GetInterface("TextureGenerator") != null &&
+                if (type.GetInterface("ITextureGenerator") != null &&
                     !type.IsAbstract && type.IsPublic &&
                     GeneratorHasNumPins(type, numPins))
                 {

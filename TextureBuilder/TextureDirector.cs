@@ -83,20 +83,9 @@ namespace Dope.DDXX.TextureBuilder
 
         public void GaussianBlur()
         {
-            Convolution convolution = new Convolution();
-            convolution.Kernel = new float[,] {{ 
-                0.002216f, 0.008764f, 0.026995f, 0.064759f, 0.120985f, 0.176033f, 0.199471f, 
-                0.176033f, 0.120985f, 0.064759f, 0.026995f, 0.008764f, 0.002216f,
-            }};
-            ConnectFromStack(convolution, 1);
-            generatorStack.Push(convolution);
-            convolution = new Convolution();
-            convolution.Kernel = new float[,] { 
-                {0.002216f}, {0.008764f}, {0.026995f}, {0.064759f}, {0.120985f}, {0.176033f}, {0.199471f}, 
-                {0.176033f}, {0.120985f}, {0.064759f}, {0.026995f}, {0.008764f}, {0.002216f},
-            };
-            ConnectFromStack(convolution, 1);
-            generatorStack.Push(convolution);
+            GaussianBlur blur = new GaussianBlur();
+            ConnectFromStack(blur, 1);
+            generatorStack.Push(blur);
         }
 
         public void Multiply()

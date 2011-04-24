@@ -70,7 +70,7 @@ namespace Dope.DDXX.DemoTweaker
                     AddAttribute(xmlDocument, newNode, "name", parameter.Name);
                     AddAttribute(xmlDocument, newNode, "width", parameter.Texture.Width.ToString());
                     AddAttribute(xmlDocument, newNode, "height", parameter.Texture.Height.ToString());
-                    AddAttribute(xmlDocument, newNode, "miplevels", parameter.Texture.LevelCount > 1 ? "0" : "1");
+                    AddAttribute(xmlDocument, newNode, "mipmap", parameter.Texture.LevelCount > 1 ? "true" : "false");
                     UpdateTexture(xmlDocument, newNode, parameter);
                 }
             }
@@ -179,7 +179,7 @@ namespace Dope.DDXX.DemoTweaker
             List<Type> generators = new List<Type>();
             foreach (Type type in typeof(Constant).Assembly.GetTypes())
             {
-                if (type.GetInterface("TextureGenerator") != null &&
+                if (type.GetInterface("ITextureGenerator") != null &&
                     !type.IsAbstract && type.IsPublic)
                 {
                     ITextureGenerator generator = createGenerator(type);

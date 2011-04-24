@@ -119,7 +119,6 @@
     <Compile Include="LineControl.cs" />
     <Compile Include="ListControl.cs" />
     <Compile Include="MenuControl.cs" />
-    <Compile Include="MenuControlOld.cs" />
     <Compile Include="Positioning.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScrollListControl.cs" />

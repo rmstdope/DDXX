@@ -10,6 +10,7 @@ namespace Dope.DDXX.Graphics
     {
         public void Convert(Effect oldEffect, Effect newEffect)
         {
+            oldEffect.CurrentTechnique.Passes[0].Apply();
             foreach (EffectParameter fromParameter in oldEffect.Parameters)
             {
                 EffectParameter toParameter = newEffect.Parameters[fromParameter.Name];
@@ -26,10 +27,6 @@ namespace Dope.DDXX.Graphics
                         case EffectParameterType.TextureCube:
                             toParameter.SetValue(fromParameter.GetValueTextureCube());
                             break;
-                        //case EffectParameterType.Sampler2D:
-                        //    break;
-                        //case EffectParameterType.Sampler:
-                        //    break;
                         default:
                             throw new DDXXException("Invalid type.");
                     }

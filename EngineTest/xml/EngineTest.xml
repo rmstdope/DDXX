@@ -176,6 +176,14 @@
     		<NumRepeatsX>1</NumRepeatsX>
     	</Generator>
     </Texture>
+    <Texture name="Noise64" width="64" height="64" mipmap="true">
+    	<Generator class="PerlinNoise">
+    		<NumOctaves>6</NumOctaves>
+    		<BaseFrequency>1</BaseFrequency>
+    		<Persistence>0.5</Persistence>
+    		<RandomSeed>0</RandomSeed>
+    	</Generator>
+    </Texture>
   </TextureFactory>
 
 
@@ -226,7 +234,7 @@
   	<FadeDelay>8.9</FadeDelay>
   </Transition>-->
 
-  <Effect class="TextEffect" name="Lines" track="0" startTime="0" endTime="500">
+  <!--<Effect class="TextEffect" name="Lines" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
     <Scene>
       <AmbientColor>255, 255, 255, 255</AmbientColor>
@@ -235,7 +243,7 @@
   <PostEffect class="RadialBlurPostEffect" name="RadialBlur" track="0" startTime="0" endTime="500">
     <BlurColor>40, 40, 150, 255</BlurColor>
     <DrawOrder>0</DrawOrder>
-  </PostEffect>
+  </PostEffect>-->
   <!--<Effect class="MusicSynchronizedOverlay" name="MusicSync" track="0" startTime="0" endTime="500">
     <DrawOrder>1</DrawOrder>
   </Effect>-->
@@ -249,22 +257,22 @@
     <DrawOrder>1</DrawOrder>
   </PostEffect>-->
 
-  <!--<Effect class="BloodCell" name="Lines" track="0" startTime="0" endTime="500">
+  <Effect class="BloodCell" name="Lines" track="0" startTime="0" endTime="500">
 		<DrawOrder>0</DrawOrder>
 		<PulseSpeed>14</PulseSpeed>
 		<PulseFrequency>100</PulseFrequency>
 		<PulseAmplitude>0.03000001</PulseAmplitude>
 	</Effect>
 	<PostEffect class="GlowPostEffect" name="Glow" track="0" startTime="0" endTime="500">
-		<BloomScale>1.5</BloomScale>
-		<WhiteCutoff>0.5</WhiteCutoff>
-		<Exposure>0.26</Exposure>
-		<Luminance>0.16</Luminance>
+		<BloomScale>1.7</BloomScale>
+		<WhiteCutoff>0.3300002</WhiteCutoff>
+		<Exposure>0.25</Exposure>
+		<Luminance>0.23</Luminance>
 		<DownSamples>1</DownSamples>
 		<AdvancedGlow>false</AdvancedGlow>
 		<DrawOrder>1</DrawOrder>
 	</PostEffect>
-	<PostEffect class="WavePostEffect" name="Wave" track="0" startTime="0" endTime="500">
+  <!--<PostEffect class="WavePostEffect" name="Wave" track="0" startTime="0" endTime="500">
 		<DrawOrder>2</DrawOrder>
 		<Scale>4</Scale>
 		<Strength>30, 20, 25, 27</Strength>
