@@ -218,13 +218,18 @@ namespace Dope.DDXX.DemoTweaker
             propertyHandlers = new List<ITweakableProperty>();
             foreach (PropertyInfo property in array)
             {
-                if (property.CanRead && property.CanWrite)
-                {
-                    ITweakableProperty tweakable = factory.CreateTweakableValue(property, Target);
-                    if (tweakable != null)
-                        propertyHandlers.Add(tweakable);
-                }
+                AddPropertyIfValid(property);
             }            
+        }
+
+        protected void AddPropertyIfValid(PropertyInfo property)
+        {
+            if (property.CanRead && property.CanWrite)
+            {
+                ITweakableProperty tweakable = factory.CreateTweakableValue(property, Target);
+                if (tweakable != null)
+                    propertyHandlers.Add(tweakable);
+            }
         }
 
         protected Color GetTextColor(TweakerStatus status, int selection, int index)

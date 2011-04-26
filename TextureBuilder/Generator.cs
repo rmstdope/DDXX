@@ -135,12 +135,18 @@ namespace Dope.DDXX.TextureBuilder
             float y = textureCoordinate.Y * (height - 1);
             int x1 = (int)x;
             int y1 = (int)y;
+            int x2 = x1 + 1;
+            int y2 = y1 + 1;
+            if (x2 >= Width)
+                x2 -= Width;
+            if (y2 >= Height)
+                y2 -= Height;
             float fracX = x - x1;
             float fracY = y - y1;
             Vector4 v1 = inputs[inputPin][x1, y1];
-            Vector4 v2 = inputs[inputPin][x1 + 1, y1];
-            Vector4 v3 = inputs[inputPin][x1, y1 + 1];
-            Vector4 v4 = inputs[inputPin][x1 + 1, y1 + 1];
+            Vector4 v2 = inputs[inputPin][x2, y1];
+            Vector4 v3 = inputs[inputPin][x1, y2];
+            Vector4 v4 = inputs[inputPin][x2, y2];
             return Vector4.Lerp(Vector4.Lerp(v1, v2, fracX), Vector4.Lerp(v3, v4, fracX), fracY);
         }
 

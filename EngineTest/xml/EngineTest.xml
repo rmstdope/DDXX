@@ -147,7 +147,7 @@
     		<AMinusB>false</AMinusB>
     	</Generator>
     </Texture>
-    <Texture name="Cellular" width="256" height="256" mipmap="false">
+    <Texture name="Cellular" width="64" height="64" mipmap="false">
     	<Generator class="Cellular">
     		<Algorithm>2</Algorithm>
     		<RandomSeed>29243</RandomSeed>

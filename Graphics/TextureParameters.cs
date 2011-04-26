@@ -25,19 +25,31 @@ namespace Dope.DDXX.Graphics
     public class Texture2DParameters : TextureParameters
     {
         private Texture2D texture;
-        private ITextureGenerator generator;
+        private GraphicsDevice graphicsDevice;
+        public ITextureGenerator Generator;
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public bool MipMap { get; set; }
+        public SurfaceFormat Format { get; set; }
 
-        public Texture2DParameters(string fileName, Texture2D texture)
+        public Texture2DParameters(GraphicsDevice graphicsDevice, string fileName, Texture2D texture)
             : base(fileName)
         {
+            this.graphicsDevice = graphicsDevice;
             this.texture = texture;
         }
 
-        public Texture2DParameters(string name, Texture2D texture, ITextureGenerator generator)
+        public Texture2DParameters(GraphicsDevice graphicsDevice, string name, Texture2D texture, ITextureGenerator generator)
             : base(name)
         {
-            this.texture = texture;
-            this.generator = generator;
+            this.graphicsDevice = graphicsDevice;
+            this.texture = null;
+            Generator = generator;
+            Width = texture.Width;
+            Height = texture.Height;
+            MipMap = texture.LevelCount > 1;
+            Format = texture.Format;
+            Regenerate();
         }
 
         public Texture2D Texture
@@ -45,15 +57,9 @@ namespace Dope.DDXX.Graphics
             get { return texture; }
         }
 
-        public ITextureGenerator Generator
-        {
-            get { return generator; }
-            set { generator = value; }
-        }
-
         public bool IsGenerated
         {
-            get { return generator != null; }
+            get { return Generator != null; }
         }
 
         public void Regenerate()
@@ -61,21 +67,22 @@ namespace Dope.DDXX.Graphics
             if (!IsGenerated)
                 return;
 
-            Vector4[,] pixels = generator.GenerateTexture(texture.Width, texture.Height);
-            Color[] data = new Color[texture.Width * texture.Height];
+            Vector4[,] pixels = Generator.GenerateTexture(Width, Height);
+            Color[] data = new Color[Width * Height];
             int i = 0;
-            for (int y = 0; y < texture.Height; y++)
+            for (int y = 0; y < Height; y++)
             {
-                for (int x = 0; x < texture.Width; x++)
+                for (int x = 0; x < Width; x++)
                 {
                     data[i++] = new Color(pixels[x, y]);
                 }
             }
 
+            VerifyTexture();
             texture.SetData<Color>(data);
 
-            int levelWidth = texture.Width;
-            int levelHeight = texture.Height;
+            int levelWidth = Width;
+            int levelHeight = Height;
             //texture.Save("before.dds", ImageFileFormat.Dds);
             for (int j = 0; j < texture.LevelCount - 1; j++)
             {
@@ -102,6 +109,16 @@ namespace Dope.DDXX.Graphics
                 }
                 texture.SetData<Color>(j + 1, null, newData, 0, newData.Length);
                 data = newData;
+            }
+        }
+
+        private void VerifyTexture()
+        {
+            if (texture == null || texture.Width != Width || texture.Height != Height || 
+                (texture.LevelCount == 1 && MipMap) || (texture.LevelCount > 1 && !MipMap) ||
+                texture.Format != Format)
+            {
+                texture = new Texture2D(graphicsDevice, Width, Height, MipMap, Format);
             }
         }
 

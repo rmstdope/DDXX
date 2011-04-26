@@ -163,6 +163,7 @@
     <Compile Include="Marble.cs">
       <Name>Marble</Name>
     </Compile>
+    <Compile Include="Median.cs" />
     <Compile Include="Multiply.cs" />
     <Compile Include="Negate.cs" />
     <Compile Include="NormalMap.cs">

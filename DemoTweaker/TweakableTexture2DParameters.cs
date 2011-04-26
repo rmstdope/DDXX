@@ -24,6 +24,7 @@ namespace Dope.DDXX.DemoTweaker
         public TweakableTexture2DParameters(Texture2DParameters target, ITweakableFactory factory)
             : base(target, factory)
         {
+
             Reinitialize();
         }
 

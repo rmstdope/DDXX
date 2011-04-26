@@ -39,7 +39,7 @@ namespace Dope.DDXX.Graphics
                 return result.Texture;
             }
             Texture2D texture = factory.Texture2DFromFile(file);
-            files.Add(new Texture2DParameters(file, texture));
+            files.Add(new Texture2DParameters(factory.GraphicsDevice, file, texture));
             return texture;
         }
 
@@ -73,7 +73,10 @@ namespace Dope.DDXX.Graphics
                 throw new DDXXException("Texture with name " + name + " already created.");
             Texture2D texture = CreateFromFunction(width, height, mipMap, format, generator.GenerateTexture);
             if (name != null && name != "")
-                files.Add(new Texture2DParameters(name, texture, generator));
+            {
+                Texture2DParameters texture2dParameters = new Texture2DParameters(factory.GraphicsDevice, name, texture, generator);
+                files.Add(texture2dParameters);
+            }
             return texture;
         }
 
