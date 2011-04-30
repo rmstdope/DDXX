@@ -184,6 +184,15 @@
     		<RandomSeed>0</RandomSeed>
     	</Generator>
     </Texture>
+    <Texture name="CircleX" width="512" height="512" mipmap="true">
+    	<Generator class="Circle">
+    		<SolidRadius>0.3</SolidRadius>
+    		<GradientRadius1>0.5</GradientRadius1>
+    		<GradientRadius2>0.5</GradientRadius2>
+    		<GradientBreak>0</GradientBreak>
+    		<Center>0.5, 0.5</Center>
+    	</Generator>
+    </Texture>
   </TextureFactory>
 
 
@@ -257,7 +266,7 @@
     <DrawOrder>1</DrawOrder>
   </PostEffect>-->
 
-  <Effect class="BloodCell" name="Lines" track="0" startTime="0" endTime="500">
+  <!--<Effect class="BloodCell" name="Lines" track="0" startTime="0" endTime="500">
 		<DrawOrder>0</DrawOrder>
 		<PulseSpeed>14</PulseSpeed>
 		<PulseFrequency>100</PulseFrequency>
@@ -272,22 +281,22 @@
 		<AdvancedGlow>false</AdvancedGlow>
 		<DrawOrder>1</DrawOrder>
 	</PostEffect>
-  <!--<PostEffect class="WavePostEffect" name="Wave" track="0" startTime="0" endTime="500">
-		<DrawOrder>2</DrawOrder>
-		<Scale>4</Scale>
-		<Strength>30, 20, 25, 27</Strength>
-	</PostEffect>
-	<PostEffect class="OverlayPostEffect" name="Noise" track="0" startTime="0" endTime="500">
-		<Filename>Noise256base1024</Filename>
-		<Technique>Noise</Technique>
+  <PostEffect class="WavePostEffect" name="Wave" track="0" startTime="0" endTime="500">
+    <DrawOrder>2</DrawOrder>
+    <Scale>4</Scale>
+    <Strength>30, 20, 25, 27</Strength>
+  </PostEffect>
+  <PostEffect class="OverlayPostEffect" name="Noise" track="0" startTime="0" endTime="500">
+		<Texture>Noise256</Texture>
+		<Technique>Blend</Technique>
 		<AddNoise>true</AddNoise>
-		<FadeOutLength>0</FadeOutLength>
-		<FadeInLength>0</FadeInLength>
-		<SubtractNoise>false</SubtractNoise>
-		<BlendFactor>0.15</BlendFactor>
+    <SubtractNoise>false</SubtractNoise>
+    <FadeOutLength>0</FadeOutLength>
+    <FadeInLength>0</FadeInLength>
+    <BlendFactor>0.15</BlendFactor>
 		<DrawOrder>7</DrawOrder>
 	</PostEffect>
-	<PostEffect class="RadialBlurPostEffect" name="RadialBlur" track="0" startTime="0" endTime="500">
+  <PostEffect class="RadialBlurPostEffect" name="RadialBlur" track="0" startTime="0" endTime="500">
     <BlurColor>100, 100, 100, 255</BlurColor>
     <DrawOrder>0</DrawOrder>
 	</PostEffect>-->
@@ -324,11 +333,11 @@
 		<Parameter name="Scale" float="4" />
 		<Parameter name="Strength" Vector4="9, 9, 11, 12" />
 	</PostEffect>
-	<PostEffect class="RadialBlurPostEffect" track="0" startTime="0" endTime="500">
-		<Parameter name="BlurColor" Color="250, 150, 50, 255" />
-		<Parameter name="DrawOrder" int="4" />
-	</PostEffect>
-	<PostEffect class="OverlayPostEffect" name="OverlayNoise" track="0" startTime="0" endTime="10000">
+	<PostEffect class="RadialBlurPostEffect" name="RadialBlur" track="0" startTime="0" endTime="500">
+    <BlurColor>250,150,50,255</BlurColor>
+    <DrawOrder>4</DrawOrder>
+  </PostEffect>
+  <PostEffect class="OverlayPostEffect" name="OverlayNoise" track="0" startTime="0" endTime="10000">
 		<Parameter name="Filename" string="noise256" />
 		<Parameter name="Technique" string="Noise" />
 		<Parameter name="AddNoise" bool="true" />
@@ -354,4 +363,34 @@
   <!--<Effect class="TerrainFlyover" name="Terrain" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
   </Effect>-->
+  <!--<Effect class="SpermBank" name="Bank" track="0" startTime="0" endTime="500">
+    <DrawOrder>0</DrawOrder>
+  </Effect>-->
+  <!--<Effect class="Tubes" name="Tubes" track="0" startTime="0" endTime="500">
+    <DrawOrder>0</DrawOrder>
+  </Effect>-->
+  <!--<Effect class="TextureEffect" name="TextureE" track="0" startTime="0" endTime="500">
+    <DrawOrder>0</DrawOrder>
+  </Effect>-->
+  <Effect class="SkinningEffect" name="Test" track="0" startTime="0" endTime="500">
+    <DrawOrder>0</DrawOrder>
+  </Effect>
+
+  <!--<Effect class="SunEffect" name="Sun" track="0" startTime="0" endTime="500">
+    <DrawOrder>0</DrawOrder>
+  </Effect>
+  <PostEffect class="GlowPostEffect" name="Glow" track="0" startTime="0" endTime="500">
+    <BloomScale>1.5</BloomScale>
+    <WhiteCutoff>0.9099998</WhiteCutoff>
+    <Exposure>0.09999993</Exposure>
+    <Luminance>0.03000001</Luminance>
+    <DownSamples>2</DownSamples>
+    <AdvancedGlow>true</AdvancedGlow>
+    <DrawOrder>1</DrawOrder>
+  </PostEffect>
+  <PostEffect class="RadialBlurPostEffect" name="RadialBlur" track="0" startTime="0" endTime="500">
+    <BlurColor>250, 150, 50, 255</BlurColor>
+    <DrawOrder>4</DrawOrder>
+  </PostEffect>-->
+
 </Demo>

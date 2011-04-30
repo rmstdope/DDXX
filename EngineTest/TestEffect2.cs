@@ -23,7 +23,7 @@ namespace EngineTest
         protected override void Initialize()
         {
             ModelBuilder.CreateMaterial("Material");
-            ModelBuilder.SetDiffuseTexture("Material", TextureFactory.CreateFromName("Noise256base1024"));
+            ModelBuilder.SetDiffuseTexture("Material", TextureFactory.CreateFromName("Noise256"));
             ModelBuilder.SetDiffuseColor("Material", Color.BlanchedAlmond);
             ModelBuilder.SetEffect("Material", "Content\\effects\\CubeEffect");
             ModelDirector.CreateBox(3, 3, 3);

@@ -330,7 +330,7 @@ namespace EngineTest
         private SmokeSimulator simulator;
         int dotX;
         int dotY;
-        const int N = 50;
+        const int N = 20;
 
         public SmokeEffect(string name, float startTime, float endTime)
             : base(name, startTime, endTime)
@@ -428,16 +428,16 @@ namespace EngineTest
 
         public override void Render()
         {
+            DepthStencilState oldState = GraphicsDevice.DepthStencilState;
+            GraphicsDevice.DepthStencilState = DepthStencilState.None;
             sprite.Begin();
-            GraphicsDevice.DepthStencilState.DepthBufferEnable = false;
-            {
-                int sWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
-                int sHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
-                int tWidth = texture.Width;
-                int tHeight = texture.Height;
-                sprite.Draw(texture, new Rectangle(0, 0, sWidth, sHeight), Color.White);
-            }
+            int sWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
+            int sHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
+            int tWidth = texture.Width;
+            int tHeight = texture.Height;
+            sprite.Draw(texture, new Rectangle(0, 0, sWidth, sHeight), Color.White);
             sprite.End();
+            GraphicsDevice.DepthStencilState = oldState;
         }
     }
 }

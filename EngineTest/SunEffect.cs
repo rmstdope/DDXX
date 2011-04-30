@@ -49,6 +49,8 @@ namespace EngineTest
 
         protected override void Initialize()
         {
+            TextureDirector.CreateCircle(0.3f, 0.5f, 0.5f, 0.0f, new Vector2(0.5f, 0.5f));
+            circleTexture = TextureDirector.Generate("CircleX", 512, 512, true, SurfaceFormat.Color);
             //circleTexture = TextureFactory.CreateFromFunction(512, 512, 0, TextureUsage.None, SurfaceFormat.Color, circleCallback);
             circleSprite = new SpriteBatch(GraphicsDevice);
             circles = new BlitCircle[NUM_CIRCLES];

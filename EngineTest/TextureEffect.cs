@@ -53,10 +53,10 @@ namespace EngineTest
         public override void Render()
         {
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
-            for (int i = 0; i < 8; i++)
-            {
-                GraphicsDevice.SamplerStates[i].Filter = TextureFilter.Point;
-            }
+//            for (int i = 0; i < 8; i++)
+//            {
+//                GraphicsDevice.SamplerStates[i].Filter = TextureFilter.Point;
+//            }
             spriteBatch.Draw(texture, Vector2.Zero, Color.White);
             spriteBatch.End();
         }

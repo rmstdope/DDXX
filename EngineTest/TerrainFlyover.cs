@@ -36,7 +36,7 @@ namespace EngineTest
             Scene.AddNode(terrainModel);
             terrainModel.WorldState.MoveUp(-7);
             terrainModel.WorldState.MoveForward(30);
-            terrainModel.DepthStencilState.DepthBufferEnable = true;
+            terrainModel.DepthStencilState = DepthStencilState.Default;
         }
 
         public override void Step()
