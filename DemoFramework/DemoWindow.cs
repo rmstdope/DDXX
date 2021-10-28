@@ -10,6 +10,7 @@ using Dope.DDXX.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+
 namespace Dope.DDXX.DemoFramework
 {
     public class DemoWindow : Game
@@ -112,12 +113,13 @@ namespace Dope.DDXX.DemoFramework
 
         public bool SetupDialog()
         {
-#if !XBOX
+#if WINDOWS
             SetupLogic logic = new SetupLogic();
             SetupForm setup = new SetupForm(logic);
-            setup.ShowDialog();
-            deviceParameters = logic.DeviceParameters;
-            return logic.OK;
+            //setup.ShowDialog();
+            //deviceParameters = logic.DeviceParameters;
+            //return logic.OK;
+            return true;
 #else
             return true;
 #endif

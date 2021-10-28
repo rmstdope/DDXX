@@ -77,7 +77,7 @@ namespace EngineTest
             madd.Mul = 0.2f;
             madd.ConnectToInput(0, heightMap);
             ModelDirector.HeightMap(madd);
-            material.NormalTexture = TextureFactory.CreateFromName("NormalNoise256");
+            //material.NormalTexture = TextureFactory.CreateFromName("NormalNoise256");
             material.AmbientColor = Color.Black;
             material.DiffuseColor = Color.Red;
             material.Shininess = 0.0f;

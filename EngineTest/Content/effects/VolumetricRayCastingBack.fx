@@ -32,7 +32,7 @@ technique Technique1
 {
     pass Pass1
     {
-        VertexShader = compile vs_2_0 VertexShaderFunction();
-        PixelShader = compile ps_2_0 PixelShaderFunction();
+        VertexShader = compile VS_SHADERMODEL VertexShaderFunction();
+        PixelShader = compile PS_SHADERMODEL PixelShaderFunction();
     }
 }

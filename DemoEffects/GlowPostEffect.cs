@@ -111,6 +111,7 @@ namespace Dope.DDXX.DemoEffects
             else
                 PostProcessor.Process("VerticalBloom", textures[1], textures[0]);
             //textures[0].GetTexture().Save("save3.jpg", ImageFileFormat.Jpg);
+            //return;
             if (downSamples == 1)
             {
                 PostProcessor.BlendState = addBlend;

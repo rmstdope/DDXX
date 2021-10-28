@@ -8,7 +8,7 @@ using Dope.DDXX.Utility;
 
 namespace EngineTest
 {
-    public class NormalMapEffect : BaseDemoEffect
+    /*public class NormalMapEffect : BaseDemoEffect
     {
         private Scene scene;
         private ModelNode node;
@@ -58,5 +58,5 @@ namespace EngineTest
         {
             scene.Render();
         }
-    }
+    }*/
 }

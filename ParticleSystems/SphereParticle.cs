@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX;
 using System.Drawing;
 using Dope.DDXX.SceneGraph;
 using Dope.DDXX.Utility;
-using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Graphics;
 
+/*
 namespace Dope.DDXX.ParticleSystems
 {
     public class SphereParticleSpawner : ISystemParticleSpawner
@@ -138,3 +137,4 @@ namespace Dope.DDXX.ParticleSystems
 
     }
 }
+*/

@@ -2,20 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
+//using Microsoft.DirectX;
+//using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.Physics;
 using Dope.DDXX.SceneGraph;
 using Dope.DDXX.Utility;
-using Dope.DDXX.ParticleSystems;
-using Dope.DDXX.MeshBuilder;
+//using Dope.DDXX.ParticleSystems;
+//using Dope.DDXX.MeshBuilder;
 using Dope.DDXX.TextureBuilder;
 
 namespace EngineTest
 {
-    public class TestEffect : BaseDemoEffect
+    /*public class TestEffect : BaseDemoEffect
     {
         private ParticleSystemNode floaterSystem;
         private ParticleSystemNode starSystem;
@@ -386,5 +386,5 @@ namespace EngineTest
             line.End();
         }
 
-    }
+    }*/
 }

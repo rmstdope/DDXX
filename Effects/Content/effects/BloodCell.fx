@@ -63,19 +63,20 @@ Technique Default
 {
 	Pass BasePass
 	{
-		VertexShader			= compile vs_2_0 DefaultVertexShader();
-		PixelShader				= compile ps_2_0 DefaultPixelShader();
+		VertexShader			= compile VS_SHADERMODEL DefaultVertexShader();
+		PixelShader				= compile PS_SHADERMODEL DefaultPixelShader();
 		ZEnable						= true;
 		ZWriteEnable			= true;
 		//AlphaBlendEnable	= false;
 		//FillMode					= Solid;
 		ZFunc							= Less;
-		ColorWriteEnable	= 0xF;
+		ColorWriteEnable = true;
 	}
+	
 	pass DofPass
 	{
-		VertexShader			= compile vs_2_0 PureDoFVertexShader();
-		PixelShader				= compile ps_2_0 PureDoFPixelShader();
+		VertexShader			= compile VS_SHADERMODEL PureDoFVertexShader();
+		PixelShader				= compile PS_SHADERMODEL PureDoFPixelShader();
 		//AlphaTestEnable		= false;
 		//AlphaBlendEnable	= false;
 		//FillMode					= Solid;
@@ -83,6 +84,6 @@ Technique Default
 		ZWriteEnable			= false;
 		ZFunc							= Equal;
 		//StencilEnable			= false;
-		ColorWriteEnable	= 0x8;
+		ColorWriteEnable	= alpha;
 	}
 }

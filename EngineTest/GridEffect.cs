@@ -12,7 +12,7 @@ using Dope.DDXX.ModelBuilder;
 
 namespace EngineTest
 {
-    public class GridEffect : BaseDemoEffect
+    /*public class GridEffect : BaseDemoEffect
     {
         private CameraNode camera;
         private DummyNode gridNode;
@@ -113,5 +113,5 @@ namespace EngineTest
         {
             Scene.Render();
         }
-    }
+    }*/
 }

@@ -107,10 +107,10 @@ technique PointSprite
 {
 	pass BasePass
 	{
-		VertexShader			= compile vs_2_0 PointSizeVertexShader();
-		PixelShader				= compile ps_2_0 SimplePixelShader();
+		VertexShader			= compile VS_SHADERMODEL PointSizeVertexShader();
+		PixelShader				= compile PS_SHADERMODEL SimplePixelShader();
 		CullMode					= None;
-		PointSpriteEnable = true;
+		//PointSpriteEnable = true;
 		ZEnable						= true;
 		ZWriteEnable			= false;
 		FillMode					= Solid;

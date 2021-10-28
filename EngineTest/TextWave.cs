@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Graphics;
-using Microsoft.DirectX.Direct3D;
+//using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using Microsoft.DirectX;
+//using Microsoft.DirectX;
 using Dope.DDXX.Utility;
 
 namespace EngineTest
 {
-    public class TextWave : BaseDemoEffect
+    /*public class TextWave : BaseDemoEffect
     {
         private IFont font;
         private ISprite sprite;
@@ -96,5 +96,5 @@ namespace EngineTest
             effect.EndPass();
             effect.End();
         }
-    }
+    }*/
 }

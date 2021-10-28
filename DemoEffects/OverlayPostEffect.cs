@@ -104,7 +104,7 @@ namespace Dope.DDXX.DemoEffects
             if (subtractNoise)
                 PostProcessor.BlendState = subBlend;
             float factor = BlendFactor * GetFadeAlpha();
-            PostProcessor.SetValue("Color", new float[] { factor, factor, factor, factor});
+            PostProcessor.SetValue("Color", new Vector4(factor, factor, factor, factor));
 
             PostProcessor.Process(technique, texture, PostProcessor.OutputTexture);
         }

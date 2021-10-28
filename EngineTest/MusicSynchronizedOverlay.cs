@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Dope.DDXX.SceneGraph;
 using Dope.DDXX.Utility;
-using Dope.DDXX.MidiProcessor;
+//using Dope.DDXX.MidiProcessor;
 
 namespace EngineTest
 {
@@ -77,37 +77,37 @@ namespace EngineTest
             }
         }
 
-        int index = 0;
+        //int index = 0;
         public override void Step()
         {
-            const int TrackNum = 9;
-            CompiledMidi.CompiledMidiTrack track = Mixer.CompiledMidi.Tracks[TrackNum];
-            if (index < track.NotesAndTimes.Length &&
-                Time.CurrentTime > track.NotesAndTimes[index] && 
-                unusedNodes.Count > 0)
-            {
-                MusicPlane plane = new MusicPlane(unusedNodes[0], track.NotesAndTimes[index]);
-                unusedNodes.RemoveAt(0);
-                plane.ModelNode.WorldState.Reset();
-                plane.ModelNode.WorldState.Roll(Rand.Float(MathHelper.TwoPi));
-                Scene.AddNode(plane.ModelNode);
-                planes.Add(plane);
-                index += 2;
-            }
-            planes.RemoveAll(delegate(MusicPlane plane) 
-            {
-                if (plane.HasEnded)
-                {
-                    unusedNodes.Add(plane.ModelNode);
-                    Scene.RemoveNode(plane.ModelNode);
-                    return true;
-                }
-                return false;
-            });
-            planes.ForEach(delegate(MusicPlane plane) 
-            { 
-                plane.SetColor(); 
-            });
+            /*            const int TrackNum = 9;
+                        CompiledMidi.CompiledMidiTrack track = Mixer.CompiledMidi.Tracks[TrackNum];
+                        if (index < track.NotesAndTimes.Length &&
+                            Time.CurrentTime > track.NotesAndTimes[index] && 
+                            unusedNodes.Count > 0)
+                        {
+                            MusicPlane plane = new MusicPlane(unusedNodes[0], track.NotesAndTimes[index]);
+                            unusedNodes.RemoveAt(0);
+                            plane.ModelNode.WorldState.Reset();
+                            plane.ModelNode.WorldState.Roll(Rand.Float(MathHelper.TwoPi));
+                            Scene.AddNode(plane.ModelNode);
+                            planes.Add(plane);
+                            index += 2;
+                        }
+                        planes.RemoveAll(delegate(MusicPlane plane) 
+                        {
+                            if (plane.HasEnded)
+                            {
+                                unusedNodes.Add(plane.ModelNode);
+                                Scene.RemoveNode(plane.ModelNode);
+                                return true;
+                            }
+                            return false;
+                        });
+                        planes.ForEach(delegate(MusicPlane plane) 
+                        { 
+                            plane.SetColor(); 
+                        });*/
             Scene.Step();
         }
 

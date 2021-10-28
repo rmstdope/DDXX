@@ -55,8 +55,8 @@ Technique Skinning
 {
 	Pass BasePass
 	{
-		VertexShader = compile vs_2_0 SkinningVertexShader();
-		PixelShader = compile ps_2_0 SkinningPixelShader();
+		VertexShader = compile VS_SHADERMODEL SkinningVertexShader();
+		PixelShader = compile PS_SHADERMODEL SkinningPixelShader();
 		ZEnable = true;
 		ZWriteEnable = true;
 	}

@@ -18,7 +18,7 @@ namespace Dope.DDXX.UserInterface
             : base(rectangle, parent)
         {
             Color = new Color((color.R * alpha) / 255, (color.G * alpha) / 255, (color.B * alpha) / 255, alpha);
-            ShadowColor = new Color(0, 0, 0, alpha);
+            ShadowColor = new Color((byte)0, (byte)0, (byte)0, alpha);
             OutlineColor = new Color(alpha, alpha, alpha, alpha);
         }
 
@@ -27,7 +27,7 @@ namespace Dope.DDXX.UserInterface
         {
             Texture = texture;
             Color = new Color(alpha, alpha, alpha, alpha);
-            ShadowColor = new Color(0, 0, 0, alpha);
+            ShadowColor = new Color((byte)0, (byte)0, (byte)0, alpha);
             OutlineColor = new Color(alpha, alpha, alpha, alpha);
         }
 

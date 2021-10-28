@@ -489,7 +489,7 @@ namespace Dope.DDXX.DemoFramework
                 if (s.Length == 4)
                     color = new Color(byte.Parse(s[i++]), byte.Parse(s[i++]), byte.Parse(s[i++]), byte.Parse(s[i++]));
                 else
-                    color = new Color(byte.Parse(s[i++]), byte.Parse(s[i++]), byte.Parse(s[i++]), 255);
+                    color = new Color(byte.Parse(s[i++]), byte.Parse(s[i++]), byte.Parse(s[i++]), (byte)255);
             }
             return color;
         }

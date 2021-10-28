@@ -57,16 +57,16 @@ float4 PixelShaderFunction(PixelShaderInput input) : COLOR0
 
 	texCoord = input.TextureUV;
 
-	return float4(input.Color * tex2D(TextureSampler, texCoord), 1);
+	return float4(input.Color.rgb * tex2D(TextureSampler, texCoord).rgb, 1);
 }
 
 technique Technique1
 {
 	pass Pass1
-	{				
-		VertexShader			= compile vs_2_0 VertexShaderFunction();
-		PixelShader				= compile ps_2_0 PixelShaderFunction();
-		PointSpriteEnable = true;
+	{
+		VertexShader = compile VS_SHADERMODEL VertexShaderFunction();
+		PixelShader = compile PS_SHADERMODEL PixelShaderFunction();
+		//PointSpriteEnable = true;
 		ZEnable						= false;
 		ZWriteEnable			= false;
 		FillMode					= Solid;

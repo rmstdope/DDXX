@@ -54,7 +54,7 @@ float4
 MyPixelShader(VertexShaderOutput input) : COLOR0
 {
 	float3 diffuseTexture = tex2D(DiffuseTextureSampler, input.texCoord);
-    
+
 	// return the combined result.
 	float3 color = (input.color + AmbientLightColor * AmbientColor) * diffuseTexture;
 	return float4(color, 1);
@@ -62,9 +62,9 @@ MyPixelShader(VertexShaderOutput input) : COLOR0
 
 Technique NormalMapping
 {
-    Pass Go
-    {
-        VertexShader = compile vs_1_1 MyVertexShader();
-        PixelShader = compile ps_2_0 MyPixelShader();
-    }
+	Pass Go
+	{
+		VertexShader = compile VS_SHADERMODEL MyVertexShader();
+		PixelShader = compile PS_SHADERMODEL MyPixelShader();
+	}
 }

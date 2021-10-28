@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.Physics;
 
-namespace Dope.DDXX.MeshBuilder
+namespace Dope.DDXX.ModelBuilder
 {
     public class ClothPrimitive : PlanePrimitive
     {
@@ -18,7 +18,7 @@ namespace Dope.DDXX.MeshBuilder
             pinned.Add(index);
         }
 
-        public override void Generate(out Vertex[] vertices, out short[] indices, out IBody body)
+        public override IPrimitive Generate()
         {
             IPhysicalParticle p1;
             IPhysicalParticle p2;
@@ -27,11 +27,10 @@ namespace Dope.DDXX.MeshBuilder
             int x;
             int y;
 
-            base.Generate(out vertices, out indices, out body);
+            IPrimitive primitive = base.Generate();
 
-            body = new Body();
-            for (int i = 0; i < vertices.Length; i++)
-                body.AddParticle(new PhysicalParticle(vertices[i].Position, 1, 0.01f));
+            for (int i = 0; i < primitive.Vertices.Length; i++)
+                primitive.Body.AddParticle(new PhysicalParticle(primitive.Vertices[i].Position, 1, 0.01f));
             for (y = 0; y < HeightSegments; y++)
             {
                 for (x = 0; x < WidthSegments; x++)
@@ -40,35 +39,36 @@ namespace Dope.DDXX.MeshBuilder
                     // | \/     
                     // | /\      
                     // p3  p4
-                    p1 = body.Particles[(y + 0) * (WidthSegments + 1) + x + 0];
-                    p2 = body.Particles[(y + 0) * (WidthSegments + 1) + x + 1];
-                    p3 = body.Particles[(y + 1) * (WidthSegments + 1) + x + 0];
-                    p4 = body.Particles[(y + 1) * (WidthSegments + 1) + x + 1];
-                    AddStickConstraint(body, p1, p2, HORIZONTAL_STIFFNESS);
-                    AddStickConstraint(body, p1, p3, VERTICAL_STIFFNESS);
-                    AddStickConstraint(body, p1, p4, DIAGONAL_STIFFNESS);
-                    AddStickConstraint(body, p1, p4, DIAGONAL_STIFFNESS);
+                    p1 = primitive.Body.Particles[(y + 0) * (WidthSegments + 1) + x + 0];
+                    p2 = primitive.Body.Particles[(y + 0) * (WidthSegments + 1) + x + 1];
+                    p3 = primitive.Body.Particles[(y + 1) * (WidthSegments + 1) + x + 0];
+                    p4 = primitive.Body.Particles[(y + 1) * (WidthSegments + 1) + x + 1];
+                    AddStickConstraint(primitive.Body, p1, p2, HORIZONTAL_STIFFNESS);
+                    AddStickConstraint(primitive.Body, p1, p3, VERTICAL_STIFFNESS);
+                    AddStickConstraint(primitive.Body, p1, p4, DIAGONAL_STIFFNESS);
+                    AddStickConstraint(primitive.Body, p1, p4, DIAGONAL_STIFFNESS);
                 }
                 // p1
                 // |
                 // |
                 // p3
-                p1 = body.Particles[(y + 0) * (WidthSegments + 1) + x + 0];
-                p3 = body.Particles[(y + 1) * (WidthSegments + 1) + x + 0];
-                AddStickConstraint(body, p1, p3, VERTICAL_STIFFNESS);
+                p1 = primitive.Body.Particles[(y + 0) * (WidthSegments + 1) + x + 0];
+                p3 = primitive.Body.Particles[(y + 1) * (WidthSegments + 1) + x + 0];
+                AddStickConstraint(primitive.Body, p1, p3, VERTICAL_STIFFNESS);
             }
             for (x = 0; x < WidthSegments; x++)
             {
                 // p1--p2
-                p1 = body.Particles[(y + 0) * (WidthSegments + 1) + x + 0];
-                p2 = body.Particles[(y + 0) * (WidthSegments + 1) + x + 1];
-                AddStickConstraint(body, p1, p2, HORIZONTAL_STIFFNESS);
+                p1 = primitive.Body.Particles[(y + 0) * (WidthSegments + 1) + x + 0];
+                p2 = primitive.Body.Particles[(y + 0) * (WidthSegments + 1) + x + 1];
+                AddStickConstraint(primitive.Body, p1, p2, HORIZONTAL_STIFFNESS);
             }
             foreach (int index in pinned)
             {
-                body.AddConstraint(new PositionConstraint(body.Particles[index],
-                    body.Particles[index].Position));
+                primitive.Body.AddConstraint(new PositionConstraint(primitive.Body.Particles[index],
+                    primitive.Body.Particles[index].Position));
             }
+            return primitive;
         }
 
         private void AddStickConstraint(IBody body, IPhysicalParticle p1, IPhysicalParticle p2, float stiffness)

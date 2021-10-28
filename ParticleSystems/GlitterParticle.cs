@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.SceneGraph;
-using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Graphics;
-using Microsoft.DirectX;
 using System.Drawing;
 using Dope.DDXX.Utility;
 
+/*
 namespace Dope.DDXX.ParticleSystems
 {
     public class GlitterParticleSpawner : ISystemParticleSpawner
@@ -134,3 +133,4 @@ namespace Dope.DDXX.ParticleSystems
         }
     }
 }
+*/

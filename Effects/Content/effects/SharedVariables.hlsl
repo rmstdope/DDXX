@@ -1,7 +1,7 @@
 #ifndef SHARED_VARIABLES_FX
 #define SHARED_VARIABLES_FX
 
-#include <EffectConstants.h>
+#include "EffectConstants.h"
 
 /**
  * This file contains all effect variables that are shared between different effects
@@ -154,15 +154,15 @@ sampler BaseTextureSamplerBordered = sampler_state
     MagFilter = Point;
     AddressU	= Border;
     AddressV	= Border;
-	BorderColor = 0;
+    //BorderColor = 0;
 };
 
 samplerCUBE ReflectiveTextureSampler = sampler_state
 {
     Texture = (ReflectiveTexture);
-    MipFilter = LINEAR;
-    MinFilter = LINEAR;
-    MagFilter = LINEAR;
+    MipFilter = Linear;
+    MinFilter = Linear;
+    MagFilter = Linear;
     //AddressU	= WRAP;
     //AddressV	= WRAP;
     //AddressW	= WRAP;
@@ -170,9 +170,9 @@ samplerCUBE ReflectiveTextureSampler = sampler_state
 sampler NormalTextureSampler = sampler_state
 {
     Texture = (NormalTexture);
-    MipFilter = LINEAR;
-    MinFilter = LINEAR;
-    MagFilter = LINEAR;
+    MipFilter = Linear;
+    MinFilter = Linear;
+    MagFilter = Linear;
     //AddressU	= WRAP;
     //AddressV	= WRAP;
     //AddressW	= WRAP;
@@ -180,12 +180,12 @@ sampler NormalTextureSampler = sampler_state
 samplerCUBE NormalizationTextureSampler = sampler_state
 {
     Texture = (NormalizationTexture);
-    MipFilter = LINEAR;
-    MinFilter = POINT;
-    MagFilter = POINT;
-    AddressU	= CLAMP;
-    AddressV	= CLAMP;
-    AddressW	= CLAMP;
+    MipFilter = Linear;
+    MinFilter = Point;
+    MagFilter = Point;
+    AddressU	= Clamp;
+    AddressV	= Clamp;
+    AddressW	= Clamp;
 };
 sampler AttenuationTextureXYSampler = sampler_state
 {

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Dope.DDXX.DemoEffects;
 using Dope.DDXX.DemoFramework;
 using Dope.DDXX.Graphics;
 using Microsoft.Xna.Framework.Graphics;

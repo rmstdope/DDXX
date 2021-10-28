@@ -62,12 +62,14 @@ namespace Dope.DDXX.Graphics
         {
             foreach (EffectParameter parameterTo in effect.Parameters)
             {
+                if (parameterTo.Annotations.Count > 0)
+                    return;
                 EffectAnnotation annotation = parameterTo.Annotations["ConvertPixelsToTexels"];
                 if (annotation != null)
                 {
-                    EffectParameter parameterFrom = effect.Parameters[annotation.GetValueString()];
+                    EffectParameter parameterFrom = effect.Parameters[annotation.ToString()];//.GetValueString()];
                     int numElements = parameterFrom.Elements.Count;
-                    float[] values = parameterFrom.GetValueSingleArray(numElements * 2);
+                    float[] values = parameterFrom.GetValueSingleArray();// numElements * 2);
                     for (int j = 0; j < numElements; j++)
                     {
                         values[j * 2 + 0] /= graphicsFactory.GraphicsDevice.PresentationParameters.BackBufferWidth;
@@ -92,10 +94,7 @@ namespace Dope.DDXX.Graphics
 
         public void Process(string technique, RenderTarget2D source, RenderTarget2D destination)
         {
-            effect.Parameters["Time2D"].SetValue(new float[] { 
-                (1.23f * Time.CurrentTime * Time.CurrentTime) % 1,
-                (2.495f * Time.CurrentTime) % 1
-            });
+            effect.Parameters["Time2D"].SetValue(new Vector2((1.23f * Time.CurrentTime * Time.CurrentTime) % 1, (2.495f * Time.CurrentTime) % 1));
             TextureContainer sourceContainer = GetContainer(source, true);
             TextureContainer destinationContainer = GetContainer(destination, false);
             SetupProcessParameters(technique, destinationContainer);
@@ -145,23 +144,26 @@ namespace Dope.DDXX.Graphics
 
         private void ProcessPasses(string technique, TextureContainer source, TextureContainer destination)
         {
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState, SamplerState.AnisotropicWrap);
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
                 float fromScale = source.scale;
                 float toScale;
-#if (XBOX)
-                // Workaround for bug in annotations
-                if (technique == "DownSample4x")
-                    toScale = fromScale * 0.25f;
-                else if (technique == "UpSample4x")
+                if (technique.StartsWith("Up"))
+                {
                     toScale = fromScale * 4.0f;
+
+                }
+                else if (technique.StartsWith("Down"))
+                {
+                    toScale = fromScale * 0.25f;
+                }
                 else
+                {
                     toScale = fromScale;
-#else
-                toScale = fromScale * pass.Annotations["Scale"].GetValueSingle();
-#endif
+                }
+                //toScale = fromScale * float.Parse(pass.Annotations["Scale"].ToString());//.GetValueSingle();
                 if (toScale > 1.0f)
                     throw new DDXXException("Can not scale larger than back buffer size");
                 int destHeight = graphicsFactory.GraphicsDevice.PresentationParameters.BackBufferHeight;

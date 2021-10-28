@@ -42,8 +42,8 @@ Technique Default
 {
 	Pass BasePass
 	{
-		VertexShader = compile vs_2_0 DefaultVertexShader();
-		PixelShader = compile ps_2_0 DefaultPixelShader();
+		VertexShader = compile VS_SHADERMODEL DefaultVertexShader();
+		PixelShader = compile PS_SHADERMODEL DefaultPixelShader();
 		ZEnable = true;
 		ZWriteEnable = true;
 	}

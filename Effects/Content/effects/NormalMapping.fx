@@ -112,8 +112,8 @@ Technique NormalMapping
 {
 	Pass Go
 	{
-		VertexShader = compile vs_1_1 MyVertexShader();
-		PixelShader = compile ps_2_0 MyPixelShader();
+		VertexShader = compile VS_SHADERMODEL MyVertexShader();
+		PixelShader = compile PS_SHADERMODEL MyPixelShader();
 		ZEnable = true;
 		ZWriteEnable = true;
 		FillMode = Solid;

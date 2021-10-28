@@ -6,7 +6,7 @@ using Dope.DDXX.SceneGraph;
 using Dope.DDXX.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
+/*
 namespace Dope.DDXX.ParticleSystems
 {
     public class FallingCurtainSystemNode : ParticleSystemNode<VertexPositionColorPoint>
@@ -114,3 +114,4 @@ namespace Dope.DDXX.ParticleSystems
         }
     }
 }
+*/

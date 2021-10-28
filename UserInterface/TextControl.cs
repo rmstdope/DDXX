@@ -111,7 +111,7 @@ namespace Dope.DDXX.UserInterface
                 pos.X -= size.X / 2;
 
             Color col1 = new Color(color.R, color.G, color.B, alpha);
-            Color col2 = new Color(0, 0, 0, alpha);
+            Color col2 = new Color((byte)0, (byte)0, (byte)0, alpha);
             resources.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             resources.SpriteBatch.DrawString(resources.GetSpriteFont(FontSize.Medium), text, pos + new Vector2(ShadowOffset, ShadowOffset), col2);
             resources.SpriteBatch.DrawString(resources.GetSpriteFont(FontSize.Medium), text, pos, col1);

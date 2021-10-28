@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.DemoFramework;
-using Dope.DDXX.ParticleSystems;
+//using Dope.DDXX.ParticleSystems;
 using Dope.DDXX.SceneGraph;
 using Dope.DDXX.TextureBuilder;
 using Dope.DDXX.Utility;
@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework;
 
 namespace EngineTest
 {
-    public class ParticleParty : BaseDemoEffect
+    /*public class ParticleParty : BaseDemoEffect
     {
         private CameraNode camera;
         private List<NodeBase> systems;
@@ -64,5 +64,5 @@ namespace EngineTest
         {
             Scene.Render();
         }
-    }
+    }*/
 }

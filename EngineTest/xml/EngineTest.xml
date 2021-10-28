@@ -215,19 +215,19 @@
   <!--<Effect class="CubeSystem" name="Cubes" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
   </Effect>-->
-  <!--<PostEffect class="OverlayPostEffect" name="Overlay" track="0" startTime="0" endTime="500">
+	<!--<PostEffect class="OverlayPostEffect" name="Overlay" track="0" startTime="0" endTime="500">
     <Texture>Noise256</Texture>
     <Technique>Blend</Technique>
     <FadeOutLength>0</FadeOutLength>
     <FadeInLength>0</FadeInLength>
     <SubtractNoise>true</SubtractNoise>
     <AddNoise>false</AddNoise>
-    <BlendFactor>0.4</BlendFactor>
+    <BlendFactor>0.3</BlendFactor>
     <DrawOrder>0</DrawOrder>
   </PostEffect>-->
 
   <!--<PostEffect class="RadialBlurPostEffect" name="RadialBlur" track="0" startTime="0" endTime="500">
-    <BlurColor>40, 40, 150, 255</BlurColor>
+    <BlurColor>140, 140, 250, 255</BlurColor>
     <DrawOrder>0</DrawOrder>
   </PostEffect>-->
   <!--<Effect class="Morph3DEffect" name="3D Morph" track="1" startTime="0" endTime="500">
@@ -248,8 +248,8 @@
     <Scene>
       <AmbientColor>255, 255, 255, 255</AmbientColor>
     </Scene>
-  </Effect>
-  <PostEffect class="RadialBlurPostEffect" name="RadialBlur" track="0" startTime="0" endTime="500">
+  </Effect>-->
+  <!--<PostEffect class="RadialBlurPostEffect" name="RadialBlur" track="0" startTime="0" endTime="500">
     <BlurColor>40, 40, 150, 255</BlurColor>
     <DrawOrder>0</DrawOrder>
   </PostEffect>-->
@@ -266,22 +266,22 @@
     <DrawOrder>1</DrawOrder>
   </PostEffect>-->
 
-  <!--<Effect class="BloodCell" name="Lines" track="0" startTime="0" endTime="500">
+  <Effect class="BloodCell" name="Lines" track="0" startTime="0" endTime="500">
 		<DrawOrder>0</DrawOrder>
 		<PulseSpeed>14</PulseSpeed>
 		<PulseFrequency>100</PulseFrequency>
 		<PulseAmplitude>0.03000001</PulseAmplitude>
 	</Effect>
 	<PostEffect class="GlowPostEffect" name="Glow" track="0" startTime="0" endTime="500">
-		<BloomScale>1.7</BloomScale>
-		<WhiteCutoff>0.3300002</WhiteCutoff>
+		<BloomScale>2.7</BloomScale>
+		<WhiteCutoff>0.2300002</WhiteCutoff>
 		<Exposure>0.25</Exposure>
 		<Luminance>0.23</Luminance>
 		<DownSamples>1</DownSamples>
-		<AdvancedGlow>false</AdvancedGlow>
+		<AdvancedGlow>true</AdvancedGlow>
 		<DrawOrder>1</DrawOrder>
 	</PostEffect>
-  <PostEffect class="WavePostEffect" name="Wave" track="0" startTime="0" endTime="500">
+	<!--<PostEffect class="WavePostEffect" name="Wave" track="0" startTime="0" endTime="500">
     <DrawOrder>2</DrawOrder>
     <Scale>4</Scale>
     <Strength>30, 20, 25, 27</Strength>
@@ -372,9 +372,9 @@
   <!--<Effect class="TextureEffect" name="TextureE" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
   </Effect>-->
-  <Effect class="SkinningEffect" name="Test" track="0" startTime="0" endTime="500">
+	<!--Effect class="SkinningEffect" name="Test" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>
-  </Effect>
+  </Effect-->
 
   <!--<Effect class="SunEffect" name="Sun" track="0" startTime="0" endTime="500">
     <DrawOrder>0</DrawOrder>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Dope.DDXX.DemoFramework;
 using Dope.DDXX.SceneGraph;
-using Dope.DDXX.ParticleSystems;
+//using Dope.DDXX.ParticleSystems;
 using Dope.DDXX.TextureBuilder;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
@@ -11,7 +11,7 @@ using Dope.DDXX.Utility;
 
 namespace EngineTest
 {
-    class SimpleParticleEffect : BaseDemoEffect
+    /*class SimpleParticleEffect : BaseDemoEffect
     {
         private CameraNode camera;
         //private FloaterSystemNode floaterSystem;
@@ -74,5 +74,5 @@ namespace EngineTest
         {
             Scene.Render();
         }
-    }
+    }*/
 }

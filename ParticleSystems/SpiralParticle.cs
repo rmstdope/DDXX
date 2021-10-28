@@ -7,6 +7,7 @@ using Dope.DDXX.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+/*
 namespace Dope.DDXX.ParticleSystems
 {
     public class SpiralSystemNode : ParticleSystemNode<VertexPositionColorPoint>
@@ -150,3 +151,4 @@ namespace Dope.DDXX.ParticleSystems
         }
     }
 }
+*/

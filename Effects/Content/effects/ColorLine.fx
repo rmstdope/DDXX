@@ -32,7 +32,7 @@ Technique ColorLine
 {
 	Pass BasePass
 	{
-		VertexShader = compile vs_2_0 ColorLineVertexShader();
-		PixelShader = compile ps_2_0 ColorLinePixelShader();
+		VertexShader = compile VS_SHADERMODEL ColorLineVertexShader();
+		PixelShader = compile PS_SHADERMODEL ColorLinePixelShader();
 	}
 }

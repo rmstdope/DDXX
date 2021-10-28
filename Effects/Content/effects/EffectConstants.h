@@ -49,4 +49,12 @@
 #define MAX_NUM_BONES 40
 #define PIx2 6.283185307179586476925286766559
 
+#if OPENGL
+#define VS_SHADERMODEL vs_3_0
+#define PS_SHADERMODEL ps_3_0
+#else
+#define VS_SHADERMODEL vs_4_0_level_9_1
+#define PS_SHADERMODEL ps_4_0_level_9_1
+#endif
+
 #endif

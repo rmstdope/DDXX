@@ -7,6 +7,7 @@ using Dope.DDXX.Graphics;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
+/*
 namespace Dope.DDXX.ParticleSystems
 {
     public class FloaterSystemNode : ParticleSystemNode<VertexPositionColorPoint>
@@ -95,3 +96,4 @@ namespace Dope.DDXX.ParticleSystems
 
     }
 }
+*/

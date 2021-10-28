@@ -1,5 +1,8 @@
+#include "EffectConstants.h"
+
 #define MAX_NUM_LIGHTS 4
-#define MAX_NUM_BONES 59
+#define MAX_NUM_BONES 16
+//#define MAX_NUM_BONES 59
 
 /*******************************
  * Light properties

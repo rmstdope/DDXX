@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX;
+using Microsoft.Xna.Framework;
 
 namespace Dope.DDXX.ParticleSystems
 {

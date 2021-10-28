@@ -1,29 +1,30 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.DirectX.Direct3D;
 using Dope.DDXX.Graphics;
 using Dope.DDXX.SceneGraph;
-using Microsoft.DirectX;
 using System.Drawing;
 using Dope.DDXX.Utility;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace Dope.DDXX.ParticleSystems
+/*namespace Dope.DDXX.ParticleSystems
 {
     public class CloudParticleSpawner : ISystemParticleSpawner
     {
-        private VertexDeclaration vertexDeclaration;
+        //private VertexDeclaration vertexDeclaration;
         private int maxNumParticles;
-        private BlendOperation blendOperation = BlendOperation.Add;
+        //private BlendOperation blendOperation = BlendOperation.Add;
         private Color color = Color.FromArgb(200, Color.White);
         private int colorDistortion;
 
-        public CloudParticleSpawner(IGraphicsFactory graphicsFactory, IDevice device, int maxNumParticles)
+        public CloudParticleSpawner(IGraphicsFactory graphicsFactory, int maxNumParticles)
         {
             this.maxNumParticles = maxNumParticles;
             VertexElement[] elements = new VertexElement[]
             {
-                new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
+                new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
+                new VertexElement(12, VertexElementFormat.Single, VertexElementUsage.PointSize, 0),
+                new VertexElement(16, VertexElementFormat.Color, VertexElementUsage.Color, 0),
                 new VertexElement(0, 12, DeclarationType.Float1, DeclarationMethod.Default, DeclarationUsage.PointSize, 0),
                 new VertexElement(0, 16, DeclarationType.Color, DeclarationMethod.Default, DeclarationUsage.Color, 0),
                 VertexElement.VertexDeclarationEnd 
@@ -137,3 +138,4 @@ namespace Dope.DDXX.ParticleSystems
         }
     }
 }
+*/
